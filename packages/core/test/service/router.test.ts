@@ -33,8 +33,11 @@ class Test4Controller extends Test3Controller { }
     description: 'controller5',
     tagName: '5'
 })
-//@ts-igonre
 class Test5Controller extends Test4Controller { }
+
+@Controller('/6', undefined)
+class Test6Controller extends Test5Controller { }
+
 
 describe('test/service/router.test.ts', () => {
     it('批量设置@controller装饰器参数 ', async () => {
@@ -94,6 +97,19 @@ describe('test/service/router.test.ts', () => {
             Test5Controller
         )).toStrictEqual({
             prefix: '/4/5',
+            routerOptions: {
+              sensitive: true,
+              middleware: [ 'hello5' ],
+              description: 'controller5',
+              tagName: '5',
+              mergeOption: false,
+            }
+        })
+        expect(getClassMetadata(
+            CONTROLLER_KEY,
+            Test6Controller
+        )).toStrictEqual({
+            prefix: '/4/5/6',
             routerOptions: {
               sensitive: true,
               middleware: [ 'hello5' ],

@@ -17,18 +17,18 @@
     "typeRoots": [ "./types", "./node_modules/@types"],
     "outDir": "dist",
     "baseUrl": ".",
-    "rootDir": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
+    "preserveSymlinks": true
   },
+  "include": ["./src/**/*.ts"],
   "exclude": [
     "dist",
     "node_modules",
     "test"
   ],
-  "references":[
-    {"path":"./packages/core"}
+  "references": [
+    {"path": "./packages/core"}
   ]
-   
 }

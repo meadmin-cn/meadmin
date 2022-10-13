@@ -16,11 +16,17 @@
     "pretty": true,
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "dist",
-    "baseUrl": "./src",
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "typeRoots": [ "./types", "./node_modules/@types"],
     "paths": {
-      "@meadmin/*": ["./*"]
-    },
-    "typeRoots": [ "./types", "./node_modules/@types"]
-  }
+      "@meadmin/*": ["./src/*"]
+    }
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "test"
+  ]
 }

@@ -1,16 +1,25 @@
 import {merge} from '../../src'
 describe('test/util/index.test.ts', () => {
-    it('merge src bull ', async () => {
+    it('merge src null ', async () => {
         expect(merge(
            {a:1},
             null
         )).toStrictEqual({a:1})
     });
-    it('merge target bull ', async () => {
+    it('merge target null ', async () => {
         expect(merge(
             null,
            {a:1}
-        )).toStrictEqual(null)
+        )).toStrictEqual({a:1})
+    });
+    it('merge target null src null ', async () => {
+        expect(merge(
+            null,
+            null
+        )).toEqual(null)
+    });
+    it('merge error ', async () => {
+        expect(()=>merge(2,0)).toThrowError('can not merge meta that type of number')
     });
     it('merge object ', async () => {
         expect(merge(
@@ -32,5 +41,8 @@ describe('test/util/index.test.ts', () => {
     });
     it('merge array', async () => {
         expect(merge([1,2],[2,3,4])).toStrictEqual([1,2,2,3,4])
+    });
+    it('merge array null', async () => {
+        expect(merge([1,2],null)).toStrictEqual([1,2])
     });
 });

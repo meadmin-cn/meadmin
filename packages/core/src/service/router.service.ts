@@ -1,11 +1,11 @@
-import { merge } from "../util";
-import { CONTROLLER_KEY,getClassMetadata, listModule, Provide, Scope, ScopeEnum } from "@midwayjs/core";
+import { merge } from '@meadmin/util';
+import { CONTROLLER_KEY,getClassMetadata, listModule, Provide, Scope, ScopeEnum } from '@midwayjs/core';
 
 @Provide()
 @Scope(ScopeEnum.Singleton)
 export class RouterService {
     //递归合并@controller装饰器的父类参数到子类
-    protected mergeControllerOption(controllerOption, controllerClz: Object) {
+    protected mergeControllerOption(controllerOption, controllerClz: Record<string, unknown>) {
         if (controllerOption.routerOptions && controllerOption.routerOptions.mergeOption !== false) {
             const prototype = Object.getPrototypeOf(controllerClz);
             const parentOption = getClassMetadata(
@@ -13,7 +13,6 @@ export class RouterService {
                 prototype
             )
             if (parentOption) {
-                controllerOption.routerOptions = controllerOption.routerOptions ?? {};
                 controllerOption.prefix = (parentOption.prefix+controllerOption.prefix ).replace(/\/\//g, '/');
                 controllerOption.routerOptions = merge(parentOption.routerOptions,controllerOption.routerOptions);
                 return this.mergeControllerOption(controllerOption, prototype)

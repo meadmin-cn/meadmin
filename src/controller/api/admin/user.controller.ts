@@ -1,5 +1,5 @@
-import { Controller, Get, Inject, Query } from "@midwayjs/core";
-import { UserService } from "@/service/user.service";
+import { Controller, Get, Inject, Query } from '@midwayjs/core';
+import { UserService } from '@/service/user.service';
 import { BaseController } from './base.controller';
 
 @Controller('/user')

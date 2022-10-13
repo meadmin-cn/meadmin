@@ -11,7 +11,7 @@
     "@midwayjs/koa": "^3.0.0",
     "@midwayjs/logger": "^2.14.0",
     "@midwayjs/validate": "^3.0.0",
-    "@meadmin-cn/core":"workspace:^"
+    "@meadmin-cn/core":"workspace:^1.0.0"
   },
   "devDependencies": {
     "@midwayjs/cli": "^1.2.90",

@@ -9,4 +9,7 @@ module '@midwayjs/core' {
         mergeOption?:boolean;
     }): ClassDecorator;
 }
+declare global {
+        type AA = number;
+}
 export {};

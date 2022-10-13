@@ -11,7 +11,7 @@ export function merge(target: any, src: any) {
         return target.concat(src || []);
     }
     if (typeof target === 'object') {
-        function customizer(objValue, srcValue) {
+        const customizer = function(objValue: any, srcValue: any) {
             if (Array.isArray(objValue)) {
               return objValue.concat(srcValue);
             }

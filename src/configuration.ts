@@ -6,7 +6,7 @@ import { join } from 'path';
 // import { DefaultErrorFilter } from './filter/default.filter';
 // import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from './middleware/report.middleware';
-import * as meadmin from "@meadmin-cn/core";
+import * as meadmin from '@meadmin-cn/core';
 @Configuration({
   imports: [
     koa,
@@ -30,3 +30,5 @@ export class ContainerLifeCycle {
     // this.app.useFilter([NotFoundFilter, DefaultErrorFilter]);
   }
 }
+const a:AA = 3
+console.log( a);

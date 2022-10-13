@@ -1,4 +1,4 @@
-import { Controller, Inject } from "@midwayjs/core";
+import { Controller, Inject } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 
 @Controller('/api')

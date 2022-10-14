@@ -3,7 +3,7 @@ export * from './types/midwayjs';
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
     meadmin?: PowerPartial<{
-      a:number;
+      a: number;
       b: string;
     }>;
   }

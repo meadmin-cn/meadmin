@@ -1,15 +1,18 @@
-import {MiddlewareParamArray} from '@midwayjs/core';
+import { MiddlewareParamArray } from '@midwayjs/core';
 module '@midwayjs/core' {
-    export declare function Controller(prefix?: string, routerOptions?: {
-        sensitive?: boolean;
-        middleware?: MiddlewareParamArray;
-        description?: string;
-        tagName?: string;
-        ignoreGlobalPrefix?: boolean;
-        mergeOption?:boolean;
-    }): ClassDecorator;
+  export declare function Controller(
+    prefix?: string,
+    routerOptions?: {
+      sensitive?: boolean;
+      middleware?: MiddlewareParamArray;
+      description?: string;
+      tagName?: string;
+      ignoreGlobalPrefix?: boolean;
+      mergeOption?: boolean;
+    }
+  ): ClassDecorator;
 }
 declare global {
-        type AA = number;
+  type AA = number;
 }
 export {};

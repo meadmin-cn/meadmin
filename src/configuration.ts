@@ -15,7 +15,7 @@ import * as meadmin from '@meadmin-cn/core';
       component: info,
       enabledEnvironment: ['local'],
     },
-    meadmin
+    meadmin,
   ],
   importConfigs: [join(__dirname, './config')],
 })
@@ -30,5 +30,3 @@ export class ContainerLifeCycle {
     // this.app.useFilter([NotFoundFilter, DefaultErrorFilter]);
   }
 }
-const a:AA = 3
-console.log( a);

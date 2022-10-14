@@ -14,7 +14,7 @@ import { RouterService } from './service/router.service';
 export class MeadminConfiguration {
   @Inject()
   routerService: RouterService;
-  onConfigLoad(){
+  onConfigLoad() {
     this.routerService.initControllerOption();
   }
   async onReady() {

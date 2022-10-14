@@ -1,4 +1,8 @@
-export const customKey = {
-  a: 1,
-  b: 'hello',
+import { MeadminConfig } from '../interfaces';
+
+export const meadmin: MeadminConfig = {
+  swagger: {
+    path: '/swagger/',
+    module: {},
+  },
 };

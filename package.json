@@ -50,7 +50,7 @@
     "dist"
   ],
   "lint-staged": {
-    "**/*": "mwts fix"
+    
   },
   "repository": {
     "type": "git",

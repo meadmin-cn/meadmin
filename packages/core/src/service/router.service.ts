@@ -1,4 +1,4 @@
-import { merge } from '@meadmin/util';
+import { merge } from '../util';
 import {
   CONTROLLER_KEY,
   getClassMetadata,

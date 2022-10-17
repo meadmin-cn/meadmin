@@ -2,7 +2,7 @@
   "name": "@meadmin-cn/core",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.ts",
+  "main": "dist/index",
   "typings": "index.d.ts",
   "scripts": {
     "build": "cross-env midway-bin build -c",
@@ -35,8 +35,6 @@
   },
   "dependencies": {
     "@midwayjs/koa": "^3.0.0",
-    "@midwayjs/swagger": "^3.6.0",
-    "lodash": "^4.17.21",
-    "swagger-ui-dist": "^4.14.3"
+    "lodash": "^4.17.21"
   }
 }

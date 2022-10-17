@@ -1,0 +1,20 @@
+Progress: resolved 0, reused 1, downloaded 0, added 0
+Progress: resolved 24, reused 24, downloaded 0, added 0
+ WARN  deprecated superagent@8.0.2: Please use v8.0.0 until https://github.com/visionmedia/superagent/issues/1743 is resolved
+Progress: resolved 374, reused 371, downloaded 0, added 0
+ WARN  deprecated sane@4.1.0: some dependency vulnerabilities fixed, support for node < 10 dropped, and newer ECMAScript syntax/features added
+Progress: resolved 1092, reused 1075, downloaded 3, added 0
+ WARN  deprecated source-map-resolve@0.5.3: See https://github.com/lydell/source-map-resolve#deprecated
+ WARN  deprecated resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+ WARN  deprecated source-map-url@0.4.1: See https://github.com/lydell/source-map-url#deprecated
+ WARN  deprecated urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+Packages: +8 -1
+++++++++-
+Progress: resolved 1204, reused 1178, downloaded 4, added 8, done
+.../esbuild@0.15.11/node_modules/esbuild postinstall$ node install.js
+.../esbuild@0.15.11/node_modules/esbuild postinstall: Done
+
+dependencies:
++ vite 3.1.8
+
+Done in 5.2s

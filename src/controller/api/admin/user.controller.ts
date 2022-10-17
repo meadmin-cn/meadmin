@@ -12,4 +12,9 @@ export class UserController extends BaseController {
     const user = await this.userService.getUser({ uid });
     return this.success(user);
   }
+  @Get('/info', { summary: '用户信息详情' })
+  async info(@Query('uid') uid) {
+    const user = await this.userService.getUser({ uid });
+    return this.success(user);
+  }
 }

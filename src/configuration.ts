@@ -7,6 +7,7 @@ import { join } from 'path';
 // import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from './middleware/report.middleware';
 import * as meadmin from '@meadmin-cn/core';
+import * as meSwagger from '@meadmin-cn/swagger';
 @Configuration({
   imports: [
     koa,
@@ -16,6 +17,7 @@ import * as meadmin from '@meadmin-cn/core';
       enabledEnvironment: ['local'],
     },
     meadmin,
+    meSwagger,
   ],
   importConfigs: [join(__dirname, './config')],
 })

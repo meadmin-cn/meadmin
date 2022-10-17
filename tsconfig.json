@@ -15,6 +15,7 @@
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "typeRoots": [ "./types", "./node_modules/@types"],
+    "types": ["./packages/*/index.d.ts"],
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
@@ -23,7 +24,6 @@
     },
     "preserveSymlinks": true
   },
-  "include": ["./src/**/*.ts"],
   "exclude": [
     "dist",
     "node_modules",

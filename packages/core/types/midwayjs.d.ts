@@ -12,7 +12,4 @@ module '@midwayjs/core' {
     }
   ): ClassDecorator;
 }
-declare global {
-  type AA = number;
-}
 export {};

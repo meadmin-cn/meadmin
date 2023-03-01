@@ -1,0 +1,41 @@
+{
+    "name": "webpack-plugin-autogeneration-import-file",
+    "version": "1.0.0",
+    "description": "webpack  自动生成 引入文件插件",
+    "type": "module",
+    "main": "dist/index.cjs",
+    "module": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+      ".": {
+        "import": {
+          "types": "./types/esm/index.d.ts",
+          "default":"./dist/index.js"
+        },
+        "require":  {
+          "types": "./types/esm/index.d.ts",
+          "default":"./dist/index.cjs"
+        }
+      }      
+    },
+    "files": [
+      "dist"
+    ],
+    "scripts": {
+      "test": "npm run build && cd ./test && npm run dev",
+      "clean": "rimraf dist",
+      "build": "rimraf dist && microbundle --target node  -f esm,cjs"
+    },
+    "author": "meadmin",
+    "license": "MIT",
+    "devDependencies": {
+      "@types/micromatch": "^4.0.2",
+      "@types/node": "^18.0.1",
+      "microbundle": "^0.15.0",
+      "rimraf": "^3.0.2"
+    },
+    "dependencies": {
+      "fast-glob": "^3.2.11",
+      "micromatch": "^4.0.5"
+    }
+  }

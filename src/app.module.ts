@@ -5,20 +5,13 @@ import { ConfigModule } from '@nestjs/config';
 import config from '@/config';
 
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: config,
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
-  static async register(): Promise<DynamicModule> {
-    return {
-      module: AppModule,
-      imports: [
-        ConfigModule.forRoot({
-          isGlobal: true,
-          load: await config(),
-        }),
-      ],
-    };
-  }
-}
+export class AppModule {}

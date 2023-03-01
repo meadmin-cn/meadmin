@@ -1,26 +1,11 @@
-import { walkSync } from '@/utils/file';
-import { ConfigFactory, registerAs } from '@nestjs/config';
-import { relative, sep } from 'node:path';
-export default async () => {
-  return Promise.all(
-    walkSync(
-      __dirname,
-      async (relativePath: string, filePath: string) => {
-        return registerAs(
-          relativePath.slice(0, -3).replace(sep, '.'),
-          (await import(`./${relativePath}`)).default as ConfigFactory,
-        );
-      },
-      (filePath) => {
-        const relativePath = relative(__dirname, filePath);
-        if (
-          [/^[^.]+\.(js|ts)$/, /^(?!index.(js|ts)$)/].every((item) =>
-            item.test(relativePath),
-          )
-        ) {
-          return [relativePath, filePath];
-        }
-      },
-    ),
-  );
-};
+//自动生成，不可更改
+import { registerAs } from '@nestjs/config';
+import app from './app';
+import admin from './admin/index';
+//import code
+
+export default [
+  registerAs('app.ts'.replace('.ts', '').replace(/\//g, '.'), app),
+  registerAs('admin/index.ts'.replace('.ts', '').replace(/\//g, '.'), admin),
+  //register code
+];

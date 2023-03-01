@@ -4,12 +4,13 @@ import { ConfigService } from '@nestjs/config';
 declare const module: any;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule.register());
+  const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const port = configService.get('app.port');
   await app.listen(port, async () => {
     console.log(`Application is running on: ${await app.getUrl()}`);
   });
+  console.log(configService);
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());

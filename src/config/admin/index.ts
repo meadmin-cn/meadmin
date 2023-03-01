@@ -1,4 +1,3 @@
 export default () => ({
-  prefix: 'admin',
-  apiPrefix: 'admin/api',
+  test: 'test', //测试配置
 });

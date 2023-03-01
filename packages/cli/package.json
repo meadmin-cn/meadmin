@@ -1,0 +1,32 @@
+{
+  "name": "@meadmin/cli",
+  "version": "1.0.0",
+  "description": "A command line runner using nest-commander",
+  "bin": {
+    "meadmin": "dist/main.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "source": "src/main.ts",
+  "main": "dist/main.js",
+  "module": "dist/main.mjs",
+  "types": "dist/main.d.ts",
+  "scripts": {
+    "build": "rimraf dist && microbundle --target node -f es"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^9.0.0",
+    "@nestjs/core": "^9.0.0",
+    "nest-commander": "^3.5.0"
+  },
+  "dependencies": {
+    "webpack-plugin-autogeneration-import-file": "workspace:^1.0.0"
+  },
+  "devDependencies": {
+    "microbundle": "^0.15.0",
+    "rimraf": "^3.0.2",
+    "tslib": "^2.5.0",
+    "typescript": "^4.9.5"
+  }
+}

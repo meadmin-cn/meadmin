@@ -1,7 +1,7 @@
-import { Module } from "@nestjs/common";
-import { AutoImport } from "./command/autoImport";
+import { Module } from '@nestjs/common';
+import { AutoImport } from './command/autoImport';
 
 @Module({
-    providers: [AutoImport]
+  providers: [AutoImport],
 })
-export class AppModule { }
+export class AppModule {}

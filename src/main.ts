@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@/app.module';
 import { ConfigService } from '@nestjs/config';
-declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,10 +9,5 @@ async function bootstrap() {
   await app.listen(port, async () => {
     console.log(`Application is running on: ${await app.getUrl()}`);
   });
-  console.log(configService);
-  if (module.hot) {
-    module.hot.accept();
-    module.hot.dispose(() => app.close());
-  }
 }
 bootstrap();

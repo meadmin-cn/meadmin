@@ -1,14 +1,17 @@
 # webpack-plugin-autogeneration-import-file
+
 webpack 自动生成 引入文件插件
 
-支持vite2 和 vite^3.0.0-beta
+支持 vite2 和 vite^3.0.0-beta
 
 ## 快速开始
+
 1. 安装
-   
-    `npm i webpack-plugin-autogeneration-import-file -D`
-2. vite.config.js中使用
-   
+
+   `npm i webpack-plugin-autogeneration-import-file -D`
+
+2. vite.config.js 中使用
+
 ```
 //vite.config.js
 import { getName, createPlugin } from 'webpack-plugin-autogeneration-import-file';
@@ -42,11 +45,12 @@ module.exports = {
   ],
 };
 ```
-   
+
 ## 插件配置说明(dirOptions)
+
 ```
 interface codeTemplate { //代码模板
-    key: string, //标识符 
+    key: string, //标识符
     template: string,//模板 codeTemplate.template里的{{name}}会被替换为name {{path}}会被替换为被导入的相对路径 {{fileName}} 会被替换为相对变了文件夹的文件路径
     value?: string //根据模板自动生成，不可传入
 }
@@ -59,15 +63,16 @@ type dirOptions = { //插件配置
     codeTemplates?: codeTemplate[] //代码模板 默认值为："[{key: '//code',template: 'export { default as {{name}} } from "{{path}}"\n'}]"
     template?: string//文件模板 会递归循环codeTemplates把template里的codeTemplate.key替换为对应的codeTemplate.value 默认值为："当前文件由vite-plugin-autogeneration-import-file自动生成\n//code"
 }[]
-``` 
+```
 
 ### resolver 类型
- ```
- resolver(componentInclude: number[], directiveInclude?: number[]): any[]
- ```
- componentInclude 为需要导入的组件模式的索引(dirOptions的index)
- 
- directiveInclude 为需要导入的指令模式的索引(dirOptions的index)
 
- unplugin-vue-components 会按对应索引项的`vite-plugin-autogeneration-import-file`模式去动态引入组件/指令
+```
+resolver(componentInclude: number[], directiveInclude?: number[]): any[]
+```
 
+componentInclude 为需要导入的组件模式的索引(dirOptions 的 index)
+
+directiveInclude 为需要导入的指令模式的索引(dirOptions 的 index)
+
+unplugin-vue-components 会按对应索引项的`vite-plugin-autogeneration-import-file`模式去动态引入组件/指令

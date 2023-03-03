@@ -6,7 +6,9 @@ module.exports = {
     'type-enum': [
       2,
       'always',
-      releaseItConfig.plugins['@release-it/conventional-changelog'].preset.types.map((item) => item.type),
+      releaseItConfig.plugins[
+        '@release-it/conventional-changelog'
+      ].preset.types.map((item) => item.type),
     ],
   },
 };

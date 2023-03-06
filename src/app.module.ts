@@ -1,16 +1,11 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
-import config from '@/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CommonModule } from './core/core';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: config,
-    }),
-  ],
+  imports: [CommonModule.forRoot()],
   controllers: [AppController],
   providers: [AppService],
 })

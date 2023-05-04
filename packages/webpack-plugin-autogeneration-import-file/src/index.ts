@@ -141,7 +141,7 @@ export const createPlugin = () => {
       });
     });
     str && fs.writeFileSync(toFile, str);
-    console.log(
+    console.info(
       '[' + new Date().toLocaleTimeString() + `] mk ${toFile} success\n`,
     );
   };
@@ -244,7 +244,7 @@ export const createPlugin = () => {
                 if (changeFiles.length) {
                   toFileContents.set(item.toFile, str);
                   fs.writeFileSync(item.toFile, str);
-                  console.log(
+                  console.info(
                     '[' +
                       new Date().toLocaleTimeString() +
                       '] ' +
@@ -288,7 +288,7 @@ export const createPlugin = () => {
                   } else {
                     tmpRemovePaths = [];
                   }
-                  console.log(
+                  console.info(
                     '[' +
                       new Date().toLocaleTimeString() +
                       '] ' +

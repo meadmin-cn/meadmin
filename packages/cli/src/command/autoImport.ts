@@ -32,10 +32,10 @@ export class AutoImport extends AbstractCommand {
       args,
     );
     spawnObj.stdout.on('data', function (chunk) {
-      console.info('\n' + chunk.toString());
+      console.info(chunk.toString());
     });
     spawnObj.stderr.on('error', (data) => {
-      console.error('\n' + data.toString());
+      console.error(data.toString());
     });
     spawnObj.on('close', function (code) {
       console.info('close code : ' + code);

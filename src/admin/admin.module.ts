@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminModule as AdminMModule } from './admin/admin.module';
-import { UserModule } from './user/user.module';
+import { Admin } from './admin/entities/admin.entity';
 
 @Module({
-  imports: [AdminMModule, UserModule],
+  imports: [AdminMModule],
 })
 export class AdminModule {}

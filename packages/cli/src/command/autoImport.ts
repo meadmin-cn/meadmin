@@ -13,10 +13,10 @@ export class AutoImport extends AbstractCommand {
     options: Record<string, any>,
   ): Promise<void> {
     const autoImportModel = new autoImport(options.config.autoImport);
-    await autoImportModel.build();
     if (options.watch) {
       autoImportModel.hmr();
     }
+    await autoImportModel.build();
     if (options.spawn && options.spawn.length) {
       this.spawnCommand(options.spawn[0], options.spawn.slice(1));
     }

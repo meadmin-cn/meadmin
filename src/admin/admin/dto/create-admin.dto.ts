@@ -7,7 +7,7 @@ export class CreateAdminDto {
       return args.property + ' 长度必须在1-20之间';
     },
   })
-  username: string;
+  username: string; // 用户名
   @Length(1, 20)
   nickname: string;
   @Length(6, 20)

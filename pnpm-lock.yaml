@@ -14,6 +14,7 @@ importers:
       '@nestjs/mapped-types': '*'
       '@nestjs/platform-express': ^9.0.0
       '@nestjs/schematics': ^9.0.0
+      '@nestjs/swagger': ^6.3.0
       '@nestjs/testing': ^9.0.0
       '@nestjs/typeorm': ^9.0.1
       '@release-it/conventional-changelog': ^5.1.1
@@ -52,6 +53,7 @@ importers:
       '@nestjs/core': 9.3.9_q6agyr4hwia55oswpsa7zjxcpm
       '@nestjs/mapped-types': 1.2.2_sm5si6oczf3vcbfl6qa276t67m
       '@nestjs/platform-express': 9.3.9_77foi4w27ghy47yutmnzv7krjy
+      '@nestjs/swagger': 6.3.0_ldzmua2hsw2tga2e42i6lmmdty
       '@nestjs/typeorm': 9.0.1_i46jfotztmfvcq3u4mvfx7qife
       class-transformer: 0.5.1
       class-validator: 0.14.0
@@ -2218,6 +2220,35 @@ packages:
     transitivePeerDependencies:
       - chokidar
     dev: true
+
+  /@nestjs/swagger/6.3.0_ldzmua2hsw2tga2e42i6lmmdty:
+    resolution: {integrity: sha512-Gnig189oa1tD+h0BYIfUwhp/wvvmTn6iO3csR2E4rQrDTgCxSxZDlNdfZo3AC+Rmf8u0KX4ZAX1RZN1qXTtC7A==}
+    peerDependencies:
+      '@fastify/static': ^6.0.0
+      '@nestjs/common': ^9.0.0
+      '@nestjs/core': ^9.0.0
+      class-transformer: '*'
+      class-validator: '*'
+      reflect-metadata: ^0.1.12
+    peerDependenciesMeta:
+      '@fastify/static':
+        optional: true
+      class-transformer:
+        optional: true
+      class-validator:
+        optional: true
+    dependencies:
+      '@nestjs/common': 9.3.9_welcnyot5bzd5wa2aovbkxpi4i
+      '@nestjs/core': 9.3.9_q6agyr4hwia55oswpsa7zjxcpm
+      '@nestjs/mapped-types': 1.2.2_sm5si6oczf3vcbfl6qa276t67m
+      class-transformer: 0.5.1
+      class-validator: 0.14.0
+      js-yaml: 4.1.0
+      lodash: 4.17.21
+      path-to-regexp: 3.2.0
+      reflect-metadata: 0.1.13
+      swagger-ui-dist: 4.18.2
+    dev: false
 
   /@nestjs/testing/9.3.9_yqmogfxzeu633isbftgaoi4ho4:
     resolution: {integrity: sha512-+mPvSVvSC2SAkYgZZv1mOI2xsdGc1pmq7/sem7iin/JDoFtlvoGSK+pfZHD3IV3EpYtq1v/8/5gi+UFH9yZnDg==}
@@ -9461,6 +9492,10 @@ packages:
       picocolors: 1.0.0
       stable: 0.1.8
     dev: true
+
+  /swagger-ui-dist/4.18.2:
+    resolution: {integrity: sha512-oVBoBl9Dg+VJw8uRWDxlyUyHoNEDC0c1ysT6+Boy6CTgr2rUcLcfPon4RvxgS2/taNW6O0+US+Z/dlAsWFjOAQ==}
+    dev: false
 
   /symbol-observable/4.0.0:
     resolution: {integrity: sha512-b19dMThMV4HVFynSAM1++gBHAbk2Tc/osgLIBZMKsyqh34jb2e8Os7T6ZW/Bt3pJFdBTd2JwAnAAEQV7rSNvcQ==}

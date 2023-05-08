@@ -15,6 +15,9 @@ import { UpdateAdminDto } from './dto/update-admin.dto';
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
+  /**
+   * 创建管理员
+   */
   @Post()
   create(@Body() createAdminDto: CreateAdminDto) {
     return this.adminService.create(createAdminDto);
@@ -32,7 +35,7 @@ export class AdminController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto) {
-    return this.adminService.update(+id, updateAdminDto);
+    return updateAdminDto; // this.adminService.update(+id, updateAdminDto);
   }
 
   @Delete(':id')

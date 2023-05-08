@@ -14,7 +14,7 @@ export default {
         {
           key: '//register code',
           template:
-            "registerAs('{{fileName}}'.replace('.ts','').replace(/\\//g,'.'), {{name}}),\n    ",
+            "registerAs('{{fileName}}'.replace('.ts', '').replace(/\\//g, '.'), {{name}}),\n  ",
         },
       ],
     },

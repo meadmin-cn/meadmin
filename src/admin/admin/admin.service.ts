@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
+import { Admin } from './entities/admin.entity';
 
 @Injectable()
 export class AdminService {
@@ -8,8 +9,9 @@ export class AdminService {
     return 'This action adds a new admin';
   }
 
-  findAll() {
-    return `This action returns all admin`;
+  async findAll() {
+    const list = await Admin.find();
+    return list;
   }
 
   findOne(id: number) {

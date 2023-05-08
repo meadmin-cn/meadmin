@@ -13,10 +13,10 @@ export class AutoImport extends AbstractCommand {
     options: Record<string, any>,
   ): Promise<void> {
     const autoImportModel = new autoImport(options.config.autoImport);
-    await autoImportModel.build();
     if (options.watch) {
       autoImportModel.hmr();
     }
+    await autoImportModel.build();
     if (options.spawn && options.spawn.length) {
       this.spawnCommand(options.spawn[0], options.spawn.slice(1));
     }
@@ -32,16 +32,16 @@ export class AutoImport extends AbstractCommand {
       args,
     );
     spawnObj.stdout.on('data', function (chunk) {
-      console.log('\n' + chunk.toString());
+      chunk && console.info(chunk.toString());
     });
-    spawnObj.stderr.on('data', (data) => {
-      console.error('\n' + data.toString());
+    spawnObj.stderr.on('error', (data) => {
+      data && console.error(data.toString());
     });
     spawnObj.on('close', function (code) {
-      console.log('close code : ' + code);
+      console.info('close code : ' + code);
     });
     spawnObj.on('exit', (code) => {
-      console.log('exit code : ' + code);
+      console.info('exit code : ' + code);
     });
   }
 

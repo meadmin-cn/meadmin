@@ -35,3 +35,4 @@ lerna-debug.log*
 !.vscode/extensions.json
 .eslintcache
 .env
+src/config/index.ts

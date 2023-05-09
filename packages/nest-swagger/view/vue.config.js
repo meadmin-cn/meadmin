@@ -3,7 +3,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const productionGzipExtensions = ["js", "css"];
 module.exports = {
-  publicPath: ".",
+  publicPath: ".",//基础路径改为相对路径
   outputDir: "dist",
   lintOnSave: false,
   productionSourceMap: false,

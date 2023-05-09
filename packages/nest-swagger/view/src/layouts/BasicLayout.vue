@@ -480,7 +480,7 @@ export default {
         i18n: tmpI18n,
         configSupport: false,
         i18nInstance: this.getCurrentI18nInstance(),
-        //覆盖url地址,多个服务的组合
+        //覆盖url地址,多个服务的组合 获取文件地址更改为自定义地址
         url: window.base_url+"me-swagger-api-services"
       };
       this.initSwagger(swaggerOptions);

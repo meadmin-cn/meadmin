@@ -728,12 +728,13 @@ SwaggerBootstrapUi.prototype.analysisApi = function (instance) {
       // 这里判断url请求是否已加载过
       // 防止出现根路径的情况
       // 如果是springdoc-openapi,无需判断,因为springdoc-openapi会把basePath带上
-      if (!that.springdoc) {
-        var idx = api.indexOf('/');
-        if (idx == 0) {
-          api = api.substr(1);
-        }
-      }
+      // 移除根路径判断 已在返回时做处理
+      // if (!that.springdoc) { 
+      //   var idx = api.indexOf('/');
+      //   if (idx == 0) {
+      //     api = api.substr(1);
+      //   }
+      // }
       // 测试
       // api = 'run.json';
       // 此处加上transformResponse参数,防止Long类型在前端丢失精度

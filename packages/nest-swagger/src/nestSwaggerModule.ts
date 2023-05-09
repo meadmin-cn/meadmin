@@ -15,7 +15,7 @@ import { Knife4jServiceObject } from './interfaces/knife4j';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
-const swaggerViewPath = join(__dirname, '../../view/knife4j/');
+const swaggerViewPath = join(__dirname, '../view/knife4j/');
 const moduleDocument = {} as Record<
   string,
   {
@@ -126,6 +126,12 @@ export class NestSwaggerModule {
             item.module
           }`
         : `${finalPath}-${item.module}-yaml`;
+      console.log(
+        finalJSONDocumentPath,
+        finalYAMLDocumentPath,
+        finalPath,
+        swaggerViewPath,
+      );
       NestSwaggerModule.serveDocuments(
         item.module,
         app,

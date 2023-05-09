@@ -126,12 +126,6 @@ export class NestSwaggerModule {
             item.module
           }`
         : `${finalPath}-${item.module}-yaml`;
-      console.log(
-        finalJSONDocumentPath,
-        finalYAMLDocumentPath,
-        finalPath,
-        swaggerViewPath,
-      );
       NestSwaggerModule.serveDocuments(
         item.module,
         app,

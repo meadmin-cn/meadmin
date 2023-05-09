@@ -1,14 +1,11 @@
 {
   "extends": "../tsconfig.build.json",
   "compilerOptions": {
-    "rootDir":".",
+    "rootDir":"./src",
     "outDir": "./dist",                                   /* Specify an output folder for all emitted files. */
   },
   "include": [
     "./src/**/*.ts",
-    "./view/knife4j/**/*.html",
-    "./view/knife4j/*.html"
-
   ],
   "exclude": [
     "node_modules",

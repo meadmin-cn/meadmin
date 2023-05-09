@@ -1,13 +1,14 @@
 {
+  "extends": "../tsconfig.build.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "noImplicitAny": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "sourceMap": true,
-    "types": ["node"],
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true
+    "rootDir":"./src",
+    "outDir": "./dist",                                   /* Specify an output folder for all emitted files. */
   },
-  "include": ["src/*.ts", "test/*.ts"]
+  "include": [
+    "./src/**/*.ts",
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
 }

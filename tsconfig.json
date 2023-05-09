@@ -18,10 +18,9 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@/*": ["src/*"],
-      "@meadmin/nest-swagger":["./packages/nest-swagger/src"]
+      "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*", "integration/**/*"],
+  "include": ["src/**/*","packages/**/*","integration/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

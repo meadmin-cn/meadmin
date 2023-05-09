@@ -2,6 +2,12 @@
     "files": [],
     "references": [
       {
+        "path": "./webpack-plugin-autogeneration-import-file"
+      },
+      {
+        "path": "./cli"
+      },
+      {
         "path": "./nest-swagger"
       },
     ]

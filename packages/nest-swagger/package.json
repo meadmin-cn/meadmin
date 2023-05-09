@@ -2,16 +2,15 @@
   "name": "@meadmin/nest-swagger",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc -p tsconfig.json"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@nestjs/common": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/platform-fastify": "^9.4.0",
     "@types/js-yaml": "^4.0.5",
@@ -21,6 +20,9 @@
   "dependencies": {
     "@nestjs/swagger": "^6.3.0",
     "js-yaml": "^4.1.0"
+  },
+  "peerDependencies":{
+    "@nestjs/common": "^9.0.0"
   },
   "files": [
     "./view/knife4j/"

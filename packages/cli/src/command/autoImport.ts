@@ -34,7 +34,7 @@ export class AutoImport extends AbstractCommand {
     spawnObj.stdout.on('data', function (chunk) {
       chunk && console.info(chunk.toString());
     });
-    spawnObj.stderr.on('error', (data) => {
+    spawnObj.stderr.on('data', (data) => {
       data && console.error(data.toString());
     });
     spawnObj.on('close', function (code) {

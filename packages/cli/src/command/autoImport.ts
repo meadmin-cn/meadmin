@@ -30,19 +30,8 @@ export class AutoImport extends AbstractCommand {
           ? '.cmd'
           : ''),
       args,
+      { stdio: 'inherit' },
     );
-    spawnObj.stdout.on('data', function (chunk) {
-      chunk && console.info(chunk.toString());
-    });
-    spawnObj.stderr.on('data', (data) => {
-      data && console.error(data.toString());
-    });
-    spawnObj.on('close', function (code) {
-      console.info('close code : ' + code);
-    });
-    spawnObj.on('exit', (code) => {
-      console.info('exit code : ' + code);
-    });
   }
 
   @Option({

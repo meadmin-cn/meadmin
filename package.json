@@ -7,10 +7,10 @@
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "tsc --build tsconfig.build.json && nest build",
+    "build": "tsc --build tsconfig.build.json && rimraf dist && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "tsc --build tsconfig.build.json && meadmin auto-import --watch --spawn \"pnpm exec nest start --watch\"",
+    "start:dev": "tsc --build tsconfig.build.json && rimraf dist && meadmin auto-import --watch --spawn \"pnpm exec nest start --watch\"",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

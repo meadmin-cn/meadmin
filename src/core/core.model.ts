@@ -1,8 +1,12 @@
-import { DynamicModule, Module, ModuleMetadata } from '@nestjs/common';
+import { DynamicModule, Global, Module, ModuleMetadata } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import database from '@/config/database';
 import config from '@/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ResponseService } from './service/response.service';
+import { ApiController } from './controller/api.controller';
+
+@Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -10,6 +14,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       load: config,
     }),
   ],
+  providers: [ResponseService],
+  exports: [ResponseService],
 })
 export class CoreModule {
   static forRoot(): DynamicModule {

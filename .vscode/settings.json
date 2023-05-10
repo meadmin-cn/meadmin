@@ -2,5 +2,6 @@
     "typescript.tsdk": "node_modules\\typescript\\lib",
     "conventionalCommits.scopes": [
         "cli"
-    ]
+    ],
+    "files.eol": "\n"
 }

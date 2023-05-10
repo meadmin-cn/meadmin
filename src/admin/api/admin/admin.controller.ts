@@ -10,10 +10,13 @@ import {
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
+import { AdminApiController } from '../api.controller';
 
-@Controller('admin')
-export class AdminController {
-  constructor(private readonly adminService: AdminService) {}
+@Controller({ path: '/admin' })
+export class AdminController extends AdminApiController {
+  constructor(private adminService: AdminService) {
+    super();
+  }
 
   /**
    * 创建管理员
@@ -25,7 +28,8 @@ export class AdminController {
 
   @Get()
   findAll() {
-    return this.adminService.findAll();
+    console.log('----aa---', this.response);
+    return this.response.success({ list: this.adminService.findAll() });
   }
 
   @Get(':id')

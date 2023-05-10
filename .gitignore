@@ -35,4 +35,3 @@ tsconfig.tsbuildinfo
 !.vscode/extensions.json
 .eslintcache
 .env
-src/config/index.ts

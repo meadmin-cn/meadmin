@@ -6,15 +6,4 @@
       "@meadmin/nest-swagger":["./packages/nest-swagger/src"]
     }
   },
-  "references": [
-    {
-      "path": "./packages/webpack-plugin-autogeneration-import-file"
-    },
-    {
-      "path": "./packages/cli"
-    },
-    {
-      "path": "./packages/nest-swagger"
-    }
-  ]
 }

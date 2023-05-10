@@ -1,9 +1,8 @@
-import { ModuleRef, NestFactory } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@/app.module';
 import { ConfigService } from '@nestjs/config';
-import { DynamicModule, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, NestSwaggerModule } from '@meadmin/nest-swagger';
-import { AdminModule } from './admin/admin.module';
 import { AdminApiModule } from './admin/api/api.module';
 
 async function bootstrap() {

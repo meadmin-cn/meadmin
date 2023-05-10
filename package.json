@@ -7,10 +7,10 @@
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "nest build",
+    "build": "tsc --build && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "meadmin auto-import --watch --spawn \"pnpm exec nest start --watch\"",
+    "start:dev": "tsc --build && meadmin auto-import --watch --spawn \"pnpm exec nest start --watch\"",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -23,7 +23,6 @@
     "build:packages": "tsc -b -v packages"
   },
   "dependencies": {
-    "@meadmin/nest-swagger": "workspace:^1.0.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",

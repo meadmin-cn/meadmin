@@ -2,7 +2,8 @@
   "extends": "../tsconfig.build.json",
   "compilerOptions": {
     "rootDir":"./src",
-    "outDir": "./dist",                                   /* Specify an output folder for all emitted files. */
+    "outDir": "./dist", 
+    "tsBuildInfoFile":"./dist/tsconfig.tsbuildinfo",
   },
   "include": [
     "./src/**/*.ts",

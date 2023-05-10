@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
       "composite": true,
+      "incremental":true,
       "module": "node16",
       "declaration": true,
       "noImplicitAny": false,
@@ -17,6 +18,6 @@
       "allowJs": false,
       "strict": true,
       "strictNullChecks": false,
-      "types": ["node"]
+      "types": ["node"],
     }
   }

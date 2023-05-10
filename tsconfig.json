@@ -6,5 +6,5 @@
       "@meadmin/nest-swagger":["./packages/nest-swagger/src"]
     }
   },
-  "include": ["src/**/*","integration/**/*","packages/nest-swagger/src/**/*"],
+  "include": ["src/**/*","integration/**/*","packages/**/*"],
 }

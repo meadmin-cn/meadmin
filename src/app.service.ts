@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { DiscoveryService } from '@nestjs/core';
 
 @Injectable()
-export class AppService {
-  getHello(): string {
-    return 'Hello World!789';
+export class AppService extends DiscoveryService {
+  onModuleInit() {
+    console.log(`The module has been initialized.`, this.getModules());
   }
 }

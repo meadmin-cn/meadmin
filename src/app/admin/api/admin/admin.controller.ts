@@ -12,7 +12,7 @@ import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { AdminApiController } from '../api.controller';
 
-@Controller({ path: '/admin' })
+@Controller('admin')
 export class AdminController extends AdminApiController {
   constructor(private adminService: AdminService) {
     super();

@@ -148,5 +148,6 @@ export class NestSwaggerModule {
         res.send(JSON.stringify(services));
       });
     NestSwaggerModule.serveStatic(finalPath, app);
+    return finalPath;
   }
 }

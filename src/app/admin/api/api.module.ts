@@ -3,14 +3,6 @@ import { AdminModule } from './admin/admin.module';
 import { RouterModule } from '@nestjs/core';
 
 @Module({
-  imports: [
-    AdminModule,
-    RouterModule.register([
-      {
-        path: 'admin/api',
-        module: AdminModule,
-      },
-    ]),
-  ],
+  imports: [AdminModule],
 })
 export class AdminApiModule {}

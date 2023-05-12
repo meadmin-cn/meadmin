@@ -4,7 +4,8 @@ import database from '@/config/database';
 import config from '@/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ResponseService } from './service/response.service';
-import { ApiController } from './controller/api.controller';
+import { AppService } from './service/app.service';
+import { DiscoveryService } from './service/discovery.service';
 
 @Global()
 @Module({
@@ -14,7 +15,7 @@ import { ApiController } from './controller/api.controller';
       load: config,
     }),
   ],
-  providers: [ResponseService],
+  providers: [ResponseService, AppService, DiscoveryService],
   exports: [ResponseService],
 })
 export class CoreModule {

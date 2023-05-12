@@ -1,4 +1,4 @@
-import { isMobile } from '@/core/classVlidate/rules/isMobile';
+import { isMobile } from '@/app/core/classVlidate/rules/isMobile';
 import { IsEmail, Length, ValidationArguments } from 'class-validator';
 
 export class CreateAdminDto {

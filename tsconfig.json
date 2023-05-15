@@ -6,6 +6,6 @@
       "@meadmin/nest-swagger":["./packages/nest-swagger/src"]
     }
   },
-  "include": ["src/**/*","integration/**/*","packages/**/*"],
-  "exclude": ["node_modules", "test", "dist"],
+  "include": ["src/**/*","integration/**/*","packages/**/*","test/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

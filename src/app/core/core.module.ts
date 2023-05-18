@@ -7,6 +7,7 @@ import { ResponseService } from './service/response.service';
 import { AppService } from './service/app.service';
 import { DiscoveryService } from './service/discovery.service';
 import { ControllerService } from './service/controller.service';
+import { SwaggerService } from './service/swagger.service';
 
 @Global()
 @Module({
@@ -16,7 +17,13 @@ import { ControllerService } from './service/controller.service';
       load: config,
     }),
   ],
-  providers: [ResponseService, AppService, DiscoveryService, ControllerService],
+  providers: [
+    ResponseService,
+    AppService,
+    DiscoveryService,
+    ControllerService,
+    SwaggerService,
+  ],
   exports: [ResponseService],
 })
 export class CoreModule {

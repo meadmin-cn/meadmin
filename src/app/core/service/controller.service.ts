@@ -10,7 +10,7 @@ export class ControllerService {
     protected readonly reflector: Reflector,
   ) {}
   private readonly InitedController = new Set<new (...args: any[]) => any>();
-  private readonly logger: LoggerService = new Logger('MeAdminInit', {
+  private readonly logger: LoggerService = new Logger('MeAdmin', {
     timestamp: true,
   });
 

@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ResponseService } from './service/response.service';
 import { AppService } from './service/app.service';
 import { DiscoveryService } from './service/discovery.service';
+import { ControllerService } from './service/controller.service';
 
 @Global()
 @Module({
@@ -15,7 +16,7 @@ import { DiscoveryService } from './service/discovery.service';
       load: config,
     }),
   ],
-  providers: [ResponseService, AppService, DiscoveryService],
+  providers: [ResponseService, AppService, DiscoveryService, ControllerService],
   exports: [ResponseService],
 })
 export class CoreModule {

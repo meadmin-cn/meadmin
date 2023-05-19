@@ -38,7 +38,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let message = '出错了，请稍后再试';
     if (exception instanceof HttpException) {
       code = exception.getStatus() === 401 ? 401 : 400;
-      message = formatToString(exception.getResponse());
+      message = formatToString(
+        (exception.getResponse() as any).message ?? exception.getResponse(),
+      );
     } else {
       this.logService.error(exception.message, exception.stack);
     }

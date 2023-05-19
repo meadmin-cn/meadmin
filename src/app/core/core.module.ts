@@ -1,4 +1,10 @@
-import { DynamicModule, Global, Module, ModuleMetadata } from '@nestjs/common';
+import {
+  DynamicModule,
+  Global,
+  Logger,
+  Module,
+  ModuleMetadata,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import database from '@/config/database';
 import config from '@/config';
@@ -23,8 +29,9 @@ import { SwaggerService } from './service/swagger.service';
     DiscoveryService,
     ControllerService,
     SwaggerService,
+    Logger,
   ],
-  exports: [ResponseService],
+  exports: [ResponseService, Logger],
 })
 export class CoreModule {
   static forRoot(): DynamicModule {

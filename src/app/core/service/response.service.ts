@@ -10,7 +10,7 @@ export class ResponseService {
    * @returns
    */
   private response(
-    code: 200 | 401 | 500,
+    code: 200 | 401 | 400 | 500,
     message: string,
     data: Record<string, any> | null,
   ) {
@@ -34,10 +34,10 @@ export class ResponseService {
   /**
    * 失败返回
    * @param message
-   * @param code 401登录异常需要退出重登，500出错
+   * @param code 401登录异常需要退出重登，400业务错误，500代码出错
    * @returns
    */
-  public error(message: string, code: 401 | 500 = 500) {
+  public error(message: string, code: 401 | 400 | 500 = 500) {
     return this.response(code, message, null);
   }
 }

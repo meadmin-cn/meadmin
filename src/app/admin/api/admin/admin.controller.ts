@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { AdminApiController } from '../api.controller';
+import { ForbiddenException } from '@/app/core/exception/forbidden-exception';
 
 @Controller('admin')
 export class AdminController extends AdminApiController {
@@ -29,6 +31,7 @@ export class AdminController extends AdminApiController {
   @Get()
   findAll() {
     console.log('----aa---', this.response);
+    throw new ForbiddenException('11');
     return this.response.success({ list: this.adminService.findAll() });
   }
 

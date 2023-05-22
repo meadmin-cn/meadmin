@@ -1,4 +1,4 @@
-import { OnAppCreated } from '@/interfaces/hooks/on-app.created.interface';
+import { OnAppCreated } from '@/interfaces/hooks/on-app-created.interface';
 import { INestApplication, Injectable } from '@nestjs/common';
 import { ControllerService } from './controller.service';
 import { SwaggerService } from './swagger.service';

@@ -1,24 +1,17 @@
 {
   "name": "@meadmin/cli",
   "version": "1.0.0",
-  "description": "A command line runner using nest-commander",
-  "bin": {
-    "meadmin": "dist/main.js"
-  },
-  "files": [
-    "dist"
-  ],
-  "main": "dist/main.js",
-  "types": "dist/main.d.ts",
+  "description": "meadmin cli",
+  "bin": {"meadmin":"dist/index.js"},
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "peerDependencies": {
-    "@nestjs/common": "^9.0.0",
-    "@nestjs/core": "^9.0.0",
-    "nest-commander": "^3.5.0"
-  },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
+    "cac": "^6.7.14",
+    "typescript": "^4.9.5",
     "webpack-plugin-autogeneration-import-file": "workspace:^1.0.0"
   },
   "devDependencies": {

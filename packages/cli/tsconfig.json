@@ -4,9 +4,11 @@
     "rootDir":"./src",
     "outDir": "./dist",  
     "tsBuildInfoFile":"./dist/tsconfig.tsbuildinfo",
+    "experimentalDecorators": true,
+    "resolveJsonModule": true
   },
   "include": [
-    "./src/**/*.ts",
+    "./src/**/*.ts"
   ],
   "exclude": [
     "node_modules",

@@ -2,7 +2,7 @@ import {
   getNonTransientInstances,
   getTransientInstances,
 } from '@/helpers/transient-instances';
-import { OnAppCreated } from '@/interfaces/hooks/on-app-created.interface';
+import { OnAppCreated } from '@/interfaces/hooks/on-app-created';
 import { INestApplication, OnModuleInit } from '@nestjs/common';
 import { isFunction, isNil } from '@nestjs/common/utils/shared.utils';
 import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';

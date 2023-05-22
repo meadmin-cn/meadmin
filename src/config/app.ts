@@ -1,4 +1,4 @@
-import { AppConfig } from '@/interfaces/config/app.inerface';
+import { AppConfig } from '@/interfaces/config/app';
 
 export default (): AppConfig => ({
   port: parseInt(process.env.APP_PORT ?? '3000', 10), //启动端口

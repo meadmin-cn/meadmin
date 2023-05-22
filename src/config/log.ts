@@ -1,5 +1,5 @@
 import { formatToString } from '@/helpers/format';
-import { LogConfig } from '@/interfaces/config/log.inerface';
+import { LogConfig } from '@/interfaces/config/log';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 const formats = [

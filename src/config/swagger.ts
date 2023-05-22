@@ -1,5 +1,5 @@
 import { AdminApiModule } from '@/app/admin/api/api.module';
-import { SwaggerConfig } from '@/interfaces/config/swagger.interface';
+import { SwaggerConfig } from '@/interfaces/config/swagger';
 import { DocumentBuilder } from '@meadmin/nest-swagger';
 
 export default (): SwaggerConfig => ({

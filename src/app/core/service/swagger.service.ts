@@ -1,4 +1,4 @@
-import { SwaggerConfig } from '@/interfaces/config/swagger.interface';
+import { SwaggerConfig } from '@/interfaces/config/swagger';
 import {
   INestApplication,
   Injectable,

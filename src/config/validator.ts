@@ -1,4 +1,4 @@
-import { ValodatorConfig } from '@/interfaces/config/validator.interface';
+import { ValodatorConfig } from '@/interfaces/config/validator';
 
 // 验证器配置 参考 https://docs.nestjs.com/techniques/validation https://github.com/typestack/class-validator#validation-decorators
 export default (): ValodatorConfig => ({

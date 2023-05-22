@@ -1,4 +1,4 @@
-import { DatabaseConfig } from '@/interfaces/config/database.inerface';
+import { DatabaseConfig } from '@/interfaces/config/database';
 import { DatabaseLogger } from '@/logger/database';
 import { join } from 'node:path';
 //数据库配置 数组形式便于声明多数据库

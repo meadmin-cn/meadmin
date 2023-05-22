@@ -9,7 +9,7 @@ import { IsEmail, Length, ValidationArguments } from 'class-validator';
 import { ApiHideProperty, ApiProperty } from '@meadmin/nest-swagger';
 
 @Entity()
-export class AdminEntity extends BaseEntity {
+export class Admin extends BaseEntity {
   @ApiHideProperty()
   @Column({ primary: true, generated: true, unsigned: true, comment: 'ID' })
   id: number;

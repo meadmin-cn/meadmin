@@ -2,7 +2,9 @@
   "name": "@meadmin/cli",
   "version": "1.0.0",
   "description": "meadmin cli",
-  "bin": {"meadmin":"dist/index.js"},
+  "bin": {
+    "meadmin": "dist/index.js"
+  },
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "cac": "^6.7.14",
+    "enquirer": "^2.3.6",
     "typescript": "^4.9.5",
     "webpack-plugin-autogeneration-import-file": "workspace:^1.0.0"
   },

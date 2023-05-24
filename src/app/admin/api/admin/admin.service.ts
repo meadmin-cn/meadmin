@@ -6,23 +6,22 @@ import { Admin } from './entities/admin.entity';
 @Injectable()
 export class AdminService {
   create(createAdminDto: CreateAdminDto) {
-    return 'This action adds a new admin';
+    return Admin.save(createAdminDto);
   }
 
-  async findAll() {
-    const list = await Admin.find();
-    return list;
+  findAll() {
+    return Admin.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} admin`;
+    return Admin.findOneBy({ id });
   }
 
   update(id: number, updateAdminDto: UpdateAdminDto) {
-    return `This action updates a #${id} admin`;
+    return Admin.update(id, updateAdminDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} admin`;
+    return Admin.delete(id);
   }
 }

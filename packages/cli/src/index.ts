@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 const { version } = JSON.parse(
   readFileSync(__dirname + '/../package.json').toString(),
 );
-const cli = cac('meadmin-cli');
+const cli = cac('meadmin');
 Commands.forEach((item) => {
   const commandConfig = Reflect.getMetadata(COMMAND, item);
   if (commandConfig) {

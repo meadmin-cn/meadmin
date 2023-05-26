@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/swagger';
-import { Create__Name__Dto } from './create-__-name__.dto';
+import { __Base__ } from '__-base__';
 
-export class Update__Name__Dto extends PartialType(Create__Name__Dto) {}
+export class Update__Name__Dto extends PartialType(__Base__) {}

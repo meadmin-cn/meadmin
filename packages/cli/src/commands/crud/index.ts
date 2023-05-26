@@ -1,6 +1,7 @@
 import { Command, Option } from '../../decorators';
 import { resovePath } from '../../utils/formatting';
 import { AbstractCommand } from '../abstract.command';
+import { CreateDtoService } from './service/create-dto.service';
 import { EntityService } from './service/entity.service';
 @Command('crud <path>', '创建crud')
 export class Crud extends AbstractCommand {
@@ -13,12 +14,12 @@ export class Crud extends AbstractCommand {
   private file: string;
   private name: string;
   private entityPath: string;
+  private createDtoPath: string;
 
   public async runCommand() {
     this.file = this.base + '/' + (this.files as string);
     this.name = this.file.split('/').pop()!;
     this.setEntity();
-    console.log(this.entityPath);
   }
 
   public setEntity() {
@@ -28,5 +29,14 @@ export class Crud extends AbstractCommand {
     );
     entity.writeFile();
     this.entityPath = entity.toPath;
+  }
+
+  public setCreateDto() {
+    const createDto = new CreateDtoService(
+      this.file + '/dto/' + this.name,
+      this.entityPath,
+    );
+    createDto.writeFile();
+    this.createDtoPath = createDto.toPath;
   }
 }

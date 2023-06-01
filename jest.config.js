@@ -10,7 +10,7 @@ module.exports = {
     ],
     'rootDir': '.',
     'testEnvironment': 'node',
-    'testRegex': '.*spec.ts$',
+    'testRegex': '.*\\.spec\\.ts$',
     'transform': {
         '^.+\\.(t|j)s$': 'ts-jest',
     },

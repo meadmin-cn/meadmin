@@ -5,25 +5,21 @@ describe('crud createDto service', () => {
   describe('path为类名', () => {
     let service: CreateDtoService;
     beforeAll(() => {
-      service = new CreateDtoService('aaBbCc', 'aaBbBase');
+      service = new CreateDtoService('CreateAaBbCc', 'AaBbCc');
     });
     it('检测 name和path', () => {
-      expect(service.className).toBe('AaBbCc');
+      expect(service.className).toBe('CreateAaBbCcDto');
       expect(service.toPath).toBe(
-        resolve('aa-bb-cc.dto.ts').replace(/\\/g, '/'),
+        resolve('create-aa-bb-cc.dto.ts').replace(/\\/g, '/'),
       );
-      expect(service.baseName).toBe('AaBbBase');
-      expect(service.basePath).toBe(
-        resolve('aa-bb-base.ts').replace(/\\/g, '/'),
-      );
+      expect(service.baseName).toBe('AaBbCc');
+      expect(service.basePath).toBe(resolve('aa-bb-cc.ts').replace(/\\/g, '/'));
     });
     it('检测内容', () => {
       expect(service.getContent()).toBe(
-        `import { Entity } from 'typeorm';
-import { AaBbBase } from 'aa-bb-base';
+        `import { AaBbCc } from './aa-bb-cc';
 
-@Entity()
-export class AaBbCc extends AaBbBase {}
+export class CreateAaBbCcDto extends AaBbCc {}
 `,
       );
     });
@@ -31,25 +27,26 @@ export class AaBbCc extends AaBbBase {}
   describe('path为路径', () => {
     let service: CreateDtoService;
     beforeAll(() => {
-      service = new CreateDtoService('dd/aaBbCc.dto', 'dd/aaBbBase');
+      service = new CreateDtoService(
+        'dd/create-aa-bb-cc.dto',
+        'dd/aa-bb-cc.entity',
+      );
     });
     it('检测 name和path', () => {
-      expect(service.className).toBe('AaBbCc');
+      expect(service.className).toBe('CreateAaBbCcDto');
       expect(service.toPath).toBe(
-        resolve('dd/aa-bb-cc.dto.ts').replace(/\\/g, '/'),
+        resolve('dd/create-aa-bb-cc.dto.ts').replace(/\\/g, '/'),
       );
-      expect(service.baseName).toBe('AaBbBase');
+      expect(service.baseName).toBe('AaBbCc');
       expect(service.basePath).toBe(
-        resolve('dd/aa-bb-base.ts').replace(/\\/g, '/'),
+        resolve('dd/aa-bb-cc.entity.ts').replace(/\\/g, '/'),
       );
     });
     it('检测内容', () => {
       expect(service.getContent()).toBe(
-        `import { Entity } from 'typeorm';
-import { AaBbBase } from 'aa-bb-base';
+        `import { AaBbCc } from './aa-bb-cc.entity';
 
-@Entity()
-export class AaBbCc extends AaBbBase {}
+export class CreateAaBbCcDto extends AaBbCc {}
 `,
       );
     });

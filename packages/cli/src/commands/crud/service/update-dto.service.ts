@@ -11,14 +11,14 @@ import {
 } from '../../../utils/formatting';
 import { Log } from '../../../utils/log';
 
-export class CreateDtoService {
+export class UpdateDtoService {
   private template = readFileSync(
-    resolve(__dirname, '../../../../template/crud/dto/create.dto.ts'),
+    resolve(__dirname, '../../../../template/crud/dto/update.dto.ts'),
     'utf-8',
   );
 
   public baseName: string; //基类名称
-  public className: string; //entity类名
+  public className: string; //create-dto类名
 
   public constructor(public toPath: string, public basePath: string) {
     this.toPath = resovePath(normalizeToKebabOrSnakeCase(toPath), [
@@ -32,8 +32,11 @@ export class CreateDtoService {
     );
     this.basePath = resovePath(normalizeToKebabOrSnakeCase(basePath));
     this.baseName = upFirstCase(
-      toHump(relativePath('', basePath, ['.entity', '.ts']).split('/').pop()!),
+      toHump(relativePath('', basePath, ['.dto', '.ts']).split('/').pop()!),
     );
+    if (this.basePath.endsWith('.dto.ts')) {
+      this.baseName += 'Dto';
+    }
   }
 
   public getContent() {

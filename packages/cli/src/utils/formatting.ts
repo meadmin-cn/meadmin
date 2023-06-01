@@ -87,5 +87,6 @@ export function relativePath(from: string, to: string, suffix = ['.ts']) {
       path = path.slice(0, 0 - item.length);
     }
   });
-  return path.replace(/\\/g, '/');
+  path = path.replace(/\\/g, '/');
+  return path.startsWith('.') ? path : './' + path;
 }

@@ -49,23 +49,23 @@ describe('formatting', () => {
     });
   });
   describe('relativePath', () => {
-    it('/aa  /aa/bb/cc.entity.ts to bb/cc', () => {
+    it('/aa  /aa/bb/cc.entity.ts to ./bb/cc', () => {
       expect(
         relativePath('/aa', '/aa/bb/cc.entity.ts', ['.entity', '.ts']),
-      ).toBe('bb/cc');
+      ).toBe('./bb/cc');
     });
-    it('aa/bb/cc.entity.ts to aa/bb/cc', () => {
+    it('aa/bb/cc.entity.ts to ./aa/bb/cc', () => {
       expect(relativePath('', 'aa/bb/cc.entity.ts', ['.entity', '.ts'])).toBe(
-        'aa/bb/cc',
+        './aa/bb/cc',
       );
     });
-    it('aa/a.ts aa/bb/cc.entity.ts to bb/cc', () => {
+    it('aa/a.ts aa/bb/cc.entity.ts to ./bb/cc', () => {
       expect(
         relativePath('aa/a.ts', 'aa/bb/cc.entity.ts', ['.entity', '.ts']),
-      ).toBe('bb/cc');
+      ).toBe('./bb/cc');
     });
-    it('aa to aa', () => {
-      expect(relativePath('', 'aa', ['.entity', '.ts'])).toBe('aa');
+    it('aa to ./aa', () => {
+      expect(relativePath('', 'aa', ['.entity', '.ts'])).toBe('./aa');
     });
   });
 });

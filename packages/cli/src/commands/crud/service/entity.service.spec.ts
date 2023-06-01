@@ -20,10 +20,10 @@ describe('crud entity service', () => {
     it('检测内容', () => {
       expect(service.getContent()).toBe(
         `import { Entity } from 'typeorm';
-import { AaBbBase } from 'aa-bb-base';
+import { AaBbBase as Base } from './aa-bb-base';
 
 @Entity()
-export class AaBbCc extends AaBbBase {}
+export class AaBbCc extends Base {}
 `,
       );
     });
@@ -46,10 +46,10 @@ export class AaBbCc extends AaBbBase {}
     it('检测内容', () => {
       expect(service.getContent()).toBe(
         `import { Entity } from 'typeorm';
-import { AaBbBase } from 'aa-bb-base';
+import { AaBbBase as Base } from './aa-bb-base';
 
 @Entity()
-export class AaBbCc extends AaBbBase {}
+export class AaBbCc extends Base {}
 `,
       );
     });

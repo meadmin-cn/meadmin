@@ -9,6 +9,7 @@ import {
   relativePath,
   normalizeToKebabOrSnakeCase,
 } from '../../../utils/formatting';
+import { Log } from '../../../utils/log';
 
 export class EntityService {
   private template = readFileSync(
@@ -34,7 +35,6 @@ export class EntityService {
   }
 
   public getContent() {
-    console.log(this.toPath, this.basePath);
     return this.template
       .replace(/__Base__/g, this.baseName)
       .replace(/__base__/g, lowerFirstCase(this.baseName))
@@ -47,7 +47,7 @@ export class EntityService {
     const path = dirname(this.toPath);
     mkdirSync(path, { recursive: true });
     writeFileSync(this.toPath, this.getContent());
-    console.info(`make ${this.toPath} success`);
+    Log.success(`make ${this.toPath} success`);
     return true;
   }
 }

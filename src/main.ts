@@ -1,11 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@/app/app.module';
-import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { callAppCreatedHook } from './hooks/on-app-created.hook';
 import { DiscoveryService } from './app/core/service/discovery.service';
 import log from '@/config/log';
 import { WinstonModule } from 'nest-winston';
+import { Config } from './config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -25,9 +25,8 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
   // 验证
-  const configService = app.get(ConfigService);
-  app.useGlobalPipes(new ValidationPipe(configService.get('validator')));
-  const port = configService.get('app.port');
+  app.useGlobalPipes(new ValidationPipe(Config.validator));
+  const port = Config.app.port;
   await app.listen(port, async () => {
     console.info(`Application is running on: ${await app.getUrl()}`);
   });

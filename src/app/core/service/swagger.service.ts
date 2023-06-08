@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { DiscoveryService } from './discovery.service';
-import swaggerConfig from '@/config/swagger';
 import { NestSwaggerModule } from '@meadmin/nest-swagger';
+import { Config } from '@/config';
 
 @Injectable()
 export class SwaggerService {
@@ -47,7 +47,7 @@ export class SwaggerService {
    * @param app
    */
   async init(app: INestApplication) {
-    let config = await swaggerConfig();
+    let config = Config.swagger;
     if (config.open) {
       config = await this.swaggerConfigModule(config);
       const finalPath = NestSwaggerModule.setup(

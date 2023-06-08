@@ -5,3 +5,7 @@ import { registerAs } from '@nestjs/config';
 export default [
   //register code
 ];
+
+export class Config {
+  //config code
+}

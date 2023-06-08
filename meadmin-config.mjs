@@ -16,6 +16,18 @@ export default {
           template:
             "registerAs('{{fileName}}'.replace('.ts', '').replace(/\\//g, '.'), {{name}}),\n  ",
         },
+        {
+          key: '//config code',
+          template:
+            `private static _{{name}}: Readonly<ReturnType<typeof {{name}}>>;
+  public static get {{name}}() {
+    if (!this._{{name}}) {
+      this._{{name}} = {{name}}();
+    }
+    return this._{{name}};
+  }
+  `,
+        },
       ],
     },
   ],

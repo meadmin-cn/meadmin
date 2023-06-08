@@ -1,6 +1,6 @@
 import { Controller, Inject, UseFilters } from '@nestjs/common';
 import { ResponseService } from '../service/response.service';
-import { AllExceptionsFilter } from '../exception/all-exception.filter';
+import { AllExceptionsFilter } from '../exception/filter/all-exception.filter';
 
 @Controller('api')
 @UseFilters(AllExceptionsFilter)

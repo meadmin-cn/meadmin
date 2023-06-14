@@ -14,6 +14,8 @@ import { AppService } from './service/app.service';
 import { DiscoveryService } from './service/discovery.service';
 import { ControllerService } from './service/controller.service';
 import { SwaggerService } from './service/swagger.service';
+import { APP_FILTER } from '@nestjs/core';
+import { AllExceptionsFilter } from './exception/filter/all-exception.filter';
 
 @Global()
 @Module({
@@ -30,6 +32,10 @@ import { SwaggerService } from './service/swagger.service';
     ControllerService,
     SwaggerService,
     Logger,
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
   ],
   exports: [ResponseService, Logger],
 })

@@ -5,7 +5,11 @@ describe('crud updateDto service', () => {
   describe('path为类名', () => {
     let service: UpdateDtoService;
     beforeAll(() => {
-      service = new UpdateDtoService('UpdateAaBbCc', 'CreateAaBbCc');
+      service = new UpdateDtoService(
+        'UpdateAaBbCc',
+        'CreateAaBbCc',
+        'CreateAaBbCc',
+      );
     });
     it('检测 name和path', () => {
       expect(service.className).toBe('UpdateAaBbCcDto');
@@ -33,6 +37,7 @@ export class UpdateAaBbCcDto extends PartialType(CreateAaBbCc) {}
       service = new UpdateDtoService(
         'dd/update-aa-bb-cc.dto',
         'dd/create-aa-bb-cc.dto',
+        'CreateAaBbCcDto',
       );
     });
     it('检测 name和path', () => {

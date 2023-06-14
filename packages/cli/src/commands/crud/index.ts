@@ -16,8 +16,11 @@ export class Crud extends AbstractCommand {
   private file: string;
   private name: string;
   private entityPath: string;
+  private entityName: string;
   private createDtoPath: string;
+  private createDtoName: string;
   private updateDtoPath: string;
+  private updateDtoName: string;
 
   public async runCommand() {
     this.file = this.base + '/' + (this.files as string);
@@ -34,23 +37,28 @@ export class Crud extends AbstractCommand {
     );
     entity.writeFile();
     this.entityPath = entity.toPath;
+    this.entityName = entity.className;
   }
 
   public setCreateDto() {
     const createDto = new CreateDtoService(
       this.file + '/dto/create-' + this.name,
       this.entityPath,
+      this.entityName,
     );
     createDto.writeFile();
     this.createDtoPath = createDto.toPath;
+    this.createDtoName = createDto.className;
   }
 
   public setUpdateDto() {
     const updateDto = new UpdateDtoService(
       this.file + '/dto/update-' + this.name,
       this.createDtoPath,
+      this.createDtoName,
     );
     updateDto.writeFile();
     this.updateDtoPath = updateDto.toPath;
+    this.updateDtoName = updateDto.className;
   }
 }

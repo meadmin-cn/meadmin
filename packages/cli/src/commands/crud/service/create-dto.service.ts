@@ -17,10 +17,13 @@ export class CreateDtoService {
     'utf-8',
   );
 
-  public baseName: string; //基类名称
   public className: string; //entity类名
 
-  public constructor(public toPath: string, public basePath: string) {
+  public constructor(
+    public toPath: string,
+    public basePath: string,
+    public baseName: string,
+  ) {
     this.toPath = resovePath(normalizeToKebabOrSnakeCase(toPath), [
       '.dto',
       '.ts',
@@ -31,9 +34,6 @@ export class CreateDtoService {
       ),
     );
     this.basePath = resovePath(normalizeToKebabOrSnakeCase(basePath));
-    this.baseName = upFirstCase(
-      toHump(relativePath('', basePath, ['.entity', '.ts']).split('/').pop()!),
-    );
   }
 
   public getContent() {

@@ -17,10 +17,13 @@ export class UpdateDtoService {
     'utf-8',
   );
 
-  public baseName: string; //基类名称
   public className: string; //create-dto类名
 
-  public constructor(public toPath: string, public basePath: string) {
+  public constructor(
+    public toPath: string,
+    public basePath: string,
+    public baseName: string,
+  ) {
     this.toPath = resovePath(normalizeToKebabOrSnakeCase(toPath), [
       '.dto',
       '.ts',
@@ -31,12 +34,6 @@ export class UpdateDtoService {
       ),
     );
     this.basePath = resovePath(normalizeToKebabOrSnakeCase(basePath));
-    this.baseName = upFirstCase(
-      toHump(relativePath('', basePath, ['.dto', '.ts']).split('/').pop()!),
-    );
-    if (this.basePath.endsWith('.dto.ts')) {
-      this.baseName += 'Dto';
-    }
   }
 
   public getContent() {

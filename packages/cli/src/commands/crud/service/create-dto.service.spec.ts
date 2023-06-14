@@ -5,7 +5,7 @@ describe('crud createDto service', () => {
   describe('path为类名', () => {
     let service: CreateDtoService;
     beforeAll(() => {
-      service = new CreateDtoService('CreateAaBbCc', 'AaBbCc');
+      service = new CreateDtoService('CreateAaBbCc', 'AaBbCc', 'AaBbCc');
     });
     it('检测 name和path', () => {
       expect(service.className).toBe('CreateAaBbCcDto');
@@ -30,6 +30,7 @@ export class CreateAaBbCcDto extends AaBbCc {}
       service = new CreateDtoService(
         'dd/create-aa-bb-cc.dto',
         'dd/aa-bb-cc.entity',
+        'AaBbCc',
       );
     });
     it('检测 name和path', () => {

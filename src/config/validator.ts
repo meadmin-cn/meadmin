@@ -8,6 +8,10 @@ export default (): ValodatorConfig => ({
   skipMissingProperties: false, // 如果设置为 true，则验证器将跳过验证对象中所有为 null 或未定义的属性的验证。
   whitelist: true, // 如果设置为 true，验证器将去除任何不使用任何验证装饰器的属性的已验证（返回）对象。
   transform: true, // 如果设置为 true，自动将有效负载转换为根据其 DTO 类类型化的对象
+  transformOptions: {
+    enableImplicitConversion: true,
+    excludeExtraneousValues: false,
+  },
   forbidNonWhitelisted: false, // 如果设置为 true，验证器将抛出异常而不是剥离非白名单属性。
   forbidUnknownValues: false, // 如果设置为 true，验证未知对象的尝试会立即失败。
   disableErrorMessages: false, // 如果设置为 true，验证错误将不会返回给客户端。

@@ -10,7 +10,7 @@ export default (): ValodatorConfig => ({
   transform: true, // 如果设置为 true，自动将有效负载转换为根据其 DTO 类类型化的对象
   transformOptions: {
     enableImplicitConversion: true,
-    excludeExtraneousValues: false,
+    enableCircularCheck: true,
   },
   forbidNonWhitelisted: false, // 如果设置为 true，验证器将抛出异常而不是剥离非白名单属性。
   forbidUnknownValues: false, // 如果设置为 true，验证未知对象的尝试会立即失败。

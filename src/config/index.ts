@@ -5,8 +5,6 @@ import database from './database';
 import log from './log';
 import swagger from './swagger';
 import validator from './validator';
-import adminAa from './admin/aa';
-import admin from './admin/index';
 //import code
 
 export default [
@@ -15,8 +13,6 @@ export default [
   registerAs('log.ts'.replace('.ts', '').replace(/\//g, '.'), log),
   registerAs('swagger.ts'.replace('.ts', '').replace(/\//g, '.'), swagger),
   registerAs('validator.ts'.replace('.ts', '').replace(/\//g, '.'), validator),
-  registerAs('admin/aa.ts'.replace('.ts', '').replace(/\//g, '.'), adminAa),
-  registerAs('admin/index.ts'.replace('.ts', '').replace(/\//g, '.'), admin),
   //register code
 ];
 
@@ -55,20 +51,6 @@ export class Config {
       this._validator = validator();
     }
     return this._validator;
-  }
-  private static _adminAa: Readonly<ReturnType<typeof adminAa>>;
-  public static get adminAa() {
-    if (!this._adminAa) {
-      this._adminAa = adminAa();
-    }
-    return this._adminAa;
-  }
-  private static _admin: Readonly<ReturnType<typeof admin>>;
-  public static get admin() {
-    if (!this._admin) {
-      this._admin = admin();
-    }
-    return this._admin;
   }
   //config code
 }

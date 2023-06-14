@@ -1,9 +1,8 @@
 import { Command, Option } from '../../decorators';
-import { resovePath } from '../../utils/formatting';
-import { Log } from '../../utils/log';
 import { AbstractCommand } from '../abstract.command';
 import { CreateDtoService } from './service/create-dto.service';
 import { EntityService } from './service/entity.service';
+import { ServiceService } from './service/service.service';
 import { UpdateDtoService } from './service/update-dto.service';
 @Command('crud <path>', '创建crud')
 export class Crud extends AbstractCommand {
@@ -28,6 +27,7 @@ export class Crud extends AbstractCommand {
     this.setEntity();
     this.setCreateDto();
     this.setUpdateDto();
+    this.setService();
   }
 
   public setEntity() {
@@ -60,5 +60,18 @@ export class Crud extends AbstractCommand {
     updateDto.writeFile();
     this.updateDtoPath = updateDto.toPath;
     this.updateDtoName = updateDto.className;
+  }
+
+  public setService() {
+    const service = new ServiceService(
+      this.file + '/' + this.name,
+      this.createDtoPath,
+      this.createDtoName,
+      this.updateDtoPath,
+      this.updateDtoName,
+      this.entityPath,
+      this.entityName,
+    );
+    service.writeFile();
   }
 }

@@ -106,12 +106,16 @@ importers:
   packages/cli:
     specifiers:
       cac: ^6.7.14
+      dotenv: ^16.1.4
+      dotenv-expand: ^10.0.0
       enquirer: ^2.3.6
       tslib: ^2.5.0
       typescript: ^4.9.5
       webpack-plugin-autogeneration-import-file: workspace:^1.0.0
     dependencies:
       cac: 6.7.14
+      dotenv: 16.1.4
+      dotenv-expand: 10.0.0
       enquirer: 2.3.6
       typescript: 4.9.5
       webpack-plugin-autogeneration-import-file: link:../webpack-plugin-autogeneration-import-file
@@ -3578,6 +3582,11 @@ packages:
 
   /dotenv/16.0.3:
     resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /dotenv/16.1.4:
+    resolution: {integrity: sha512-m55RtE8AsPeJBpOIFKihEmqUcoVncQIwo7x9U8ZwLEZw9ZpXboz2c+rvog+jUaJvVrZ5kBOeYQBX5+8Aa/OZQw==}
     engines: {node: '>=12'}
     dev: false
 

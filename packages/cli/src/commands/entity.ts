@@ -6,8 +6,8 @@ import { prompt } from 'enquirer';
 
 @Command('entity <path>', '创建数据库实例文件')
 export class Entity extends AbstractCommand {
-  @Option('--basePath, -b', '基础文件夹', { default: './src/entities' })
-  basePath: string;
+  @Option('--base, -b', '基础文件夹', { default: './src/entities' })
+  base: string;
 
   private getTableName() {
     const names = (this.files as string).split('/');
@@ -17,7 +17,7 @@ export class Entity extends AbstractCommand {
   }
 
   private getPath() {
-    return resolve(process.cwd(), this.basePath, this.files + '.ts');
+    return resolve(process.cwd(), this.base, this.files + '.ts');
   }
 
   public async runCommand() {

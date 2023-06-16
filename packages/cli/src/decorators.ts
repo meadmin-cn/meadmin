@@ -42,9 +42,10 @@ export function Option(
   config?: { default?: any; type?: any[] },
 ) {
   return function (target: any, propertyKey: string) {
-    const options = Reflect.getMetadata(OPTION, target) ?? [];
+    const options = Reflect.getOwnMetadata(OPTION, target.constructor) ?? [];
     if (!options.length) {
-      Reflect.defineMetadata(OPTION, options, target);
+      options.push(...(Reflect.getMetadata(OPTION, target.constructor) ?? []));
+      Reflect.defineMetadata(OPTION, options, target.constructor);
     }
     options.push({
       name,

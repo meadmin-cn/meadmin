@@ -14,7 +14,7 @@ Commands.forEach((item) => {
       commandConfig.description,
       commandConfig.config,
     );
-    const options = Reflect.getMetadata(OPTION, new item());
+    const options = Reflect.getMetadata(OPTION, item);
     if (options) {
       options.forEach((item) => {
         command = command.option(item.name, item.description, item.config);

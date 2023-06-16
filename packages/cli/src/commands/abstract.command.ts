@@ -1,6 +1,8 @@
+import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'path';
 import { Option } from '../decorators';
+import { loadEnvFile } from '../utils/loadEnv';
 export abstract class AbstractCommand {
   public files: string[] | string;
 
@@ -19,6 +21,7 @@ export abstract class AbstractCommand {
         ).href
       )
     ).default;
+    loadEnvFile(this.config.envPath ?? [join(process.cwd(), '.env')]);
     this.runCommand();
   }
 }

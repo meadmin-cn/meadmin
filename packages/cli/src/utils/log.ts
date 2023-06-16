@@ -30,6 +30,9 @@ export class Log {
       this.context = `[${context}] `;
     }
   }
+  public log(message: string, data?: any) {
+    console.info(`${this.context}${message}`, data ?? '');
+  }
   public success(message: string, data?: any) {
     console.info(
       `${this.context}${colorConfig.green}${message}\x1B[0m`,
@@ -47,6 +50,9 @@ export class Log {
       `${this.context}${colorConfig.red}${message}\x1B[0m`,
       data ?? '',
     );
+  }
+  public static log(message: string, data?: any) {
+    return new this('meadmin').log(message, data);
   }
   public static success(message: string, data?: any) {
     return new this('meadmin').success(message, data);

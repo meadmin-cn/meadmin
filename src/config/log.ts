@@ -8,14 +8,18 @@ const formats = [
   }),
   winston.format.align(),
   winston.format.printf((info) => {
-    let message = `[${info.level}][${[info.timestamp]}]: ${info.message}`;
+    let message = `${info.message}`;
     if (info.context !== undefined) {
-      message += '   [context]:' + formatToString(info.context);
+      if (['string', 'number'].includes(typeof info.context)) {
+        message = `[${info.context}]${message}`;
+      } else {
+        message += '  [context]:' + formatToString(info.context);
+      }
     }
     if (info.stack !== undefined) {
-      message += '   [stack]:' + formatToString(info.stack);
+      message += '  [stack]:' + formatToString(info.stack);
     }
-    return message;
+    return `[${info.level}][${[info.timestamp]}]` + message;
   }),
 ];
 export default (): LogConfig => {

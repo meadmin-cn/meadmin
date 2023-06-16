@@ -6,11 +6,7 @@ export function loadEnvFile(envFilePaths: string[]) {
   for (const envFilePath of envFilePaths) {
     if (fs.existsSync(envFilePath)) {
       const c = dotenv.parse(fs.readFileSync(envFilePath));
-      Object.assign(
-        config,
-        expand({ parsed: c  }).parsed,
-      );
-      console.log(envFilePath,c,config);
+      Object.assign(config, expand({ parsed: c }).parsed);
     }
   }
   return config;

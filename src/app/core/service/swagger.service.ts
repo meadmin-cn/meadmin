@@ -56,7 +56,7 @@ export class SwaggerService {
         config.documentConfig,
         config,
       );
-      this.logger.log('Swagger init url:' + finalPath);
+      this.logger.log(`Swagger init {${finalPath}, GET}`);
     }
   }
 }

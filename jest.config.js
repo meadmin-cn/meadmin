@@ -12,13 +12,10 @@ module.exports = {
     'testEnvironment': 'node',
     'testRegex': '.*\\.spec\\.ts$',
     'transform': {
-        '^.+\\.(t|j)s$': 'ts-jest',
+        '^.+\\.(t|j)s$': ['ts-jest',{
+            "tsconfig": "./tsconfig.json"
+        }],
     },
     "coverageDirectory": "../coverage",
     moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths , { prefix: '<rootDir>/' } ),
-    globals: {
-        "ts-jest": {
-            "tsConfig": "./tsconfig.json"
-        }
-    }
 };

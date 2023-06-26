@@ -14,6 +14,8 @@ import { UpdateAdminDto } from './dto/update-admin.dto';
 import { AdminApiController } from '../api.controller';
 import { ForbiddenException } from '@/app/core/exception/forbidden-exception';
 import { ApiOperation, ApiTags } from '@meadmin/nest-swagger';
+import { ApiOperationResponse } from '@/decorators/api-operation-response';
+import { Admin } from './entities/admin.entity';
 
 @ApiTags('管理员')
 @Controller('admin')
@@ -28,7 +30,7 @@ export class AdminController extends AdminApiController {
     return createAdminDto; // this.adminService.create(createAdminDto);
   }
 
-  @ApiOperation({ summary: '获取所有管理员' })
+  @ApiOperationResponse({ summary: '获取所有管理员', successType: Admin })
   @Get()
   findAll() {
     console.log('----aa---', this.response);

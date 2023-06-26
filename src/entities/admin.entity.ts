@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { Length, ValidationArguments } from 'class-validator';
 import { ApiHideProperty, ApiProperty } from '@meadmin/nest-swagger';
-import { ColumnApi } from '@/decorators/columnApi';
+import { ColumnApi } from '@/decorators/column-api';
 
 @Entity()
 export class Admin extends BaseEntity {

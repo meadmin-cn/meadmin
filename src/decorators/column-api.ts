@@ -5,7 +5,7 @@ import { Column, ColumnOptions } from 'typeorm';
 export function ColumnApi(
   columnOptions: ColumnOptions | PropertyDecorator,
   apiPropertyOptions?: ApiPropertyOptions,
-) {
+): PropertyDecorator {
   let apiOptions: ApiPropertyOptions = {};
   if (typeof columnOptions === 'function') {
     return applyDecorators(

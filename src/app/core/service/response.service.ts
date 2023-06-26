@@ -1,3 +1,7 @@
+import { CodeEnum } from '@/dict/code.enum';
+import { ApiErrorRes } from '@/response/api-error.res';
+import { ApiPagerRes } from '@/response/api-page.res';
+import { ApiSuccessRes } from '@/response/api-success.res';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -9,10 +13,10 @@ export class ResponseService {
    * @param data
    * @returns
    */
-  private response(
-    code: 200 | 401 | 400 | 500,
+  private response<C extends CodeEnum, T = any>(
+    code: C,
     message: string,
-    data: Record<string, any> | null,
+    data: T,
   ) {
     return {
       code,
@@ -27,17 +31,50 @@ export class ResponseService {
    * @param message
    * @returns
    */
-  public success(data: Record<string, any> = {}, message = '操作成功') {
-    return this.response(200, message, data);
+  public success<T = Record<string, never>>(
+    data: T = {} as T,
+    message = '操作成功',
+  ): ApiSuccessRes<T> {
+    return this.response(CodeEnum.Success, message, data);
   }
 
   /**
    * 失败返回
    * @param message
-   * @param code 401登录异常需要退出重登，400业务错误，500代码出错
+   * @param code
    * @returns
    */
-  public error(message: string, code: 401 | 400 | 500 = 500) {
-    return this.response(code, message, null);
+  public error(
+    message: string,
+    code: ApiErrorRes['code'] = CodeEnum.Fail,
+  ): ApiErrorRes {
+    return this.response(code, message, undefined);
+  }
+
+  /**
+   * 分页返回
+   * @param list
+   * @param total
+   * @param page
+   * @param size
+   * @param message
+   * @returns
+   */
+  public pageRes<T = any>(
+    list: T[],
+    total = 0,
+    page = 1,
+    size = 10,
+    message = '获取列表成功',
+  ): ApiPagerRes<T> {
+    return this.success(
+      {
+        page,
+        size,
+        total,
+        list,
+      },
+      message,
+    );
   }
 }

@@ -8,6 +8,8 @@ import {
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { ResponseService } from '../../service/response.service';
+import { ApiErrorRes } from '@/response/api-error.res';
+import { CodeEnum } from '@/dict/code.enum';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -34,10 +36,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
     //   timestamp: new Date().toISOString(),
     //   path: httpAdapter.getRequestUrl(ctx.getRequest()),
     // };
-    let code: 400 | 401 | 500 = 500;
+    let code: ApiErrorRes['code'] = CodeEnum.Error;
     let message = '出错了，请稍后再试';
     if (exception instanceof HttpException) {
-      code = exception.getStatus() === 401 ? 401 : 400;
+      code =
+        exception.getStatus() === 401 ? CodeEnum.Unauthorized : CodeEnum.Fail;
       message = formatToString(
         (exception.getResponse() as any).message ?? exception.getResponse(),
       );

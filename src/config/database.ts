@@ -17,6 +17,8 @@ export default (): DatabaseConfig[] => [
     autoLoadEntities: true, // 自动加载实体
     logger: new DatabaseLogger(),
     logging: 'all',
-    entities: [join(__dirname, '../**/*.entity{.js,.ts}').replace(/\\/g, '/')],
+    entities: [
+      join(__dirname, '../app/**/*.entity{.js,.ts}').replace(/\\/g, '/'),
+    ],
   },
 ];

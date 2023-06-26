@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Length, ValidationArguments } from 'class-validator';
 import { ApiHideProperty, ApiProperty } from '@meadmin/nest-swagger';
+import { ColumnApi } from '@/decorators/columnApi';
 
 @Entity()
 export class Admin extends BaseEntity {
@@ -25,8 +26,8 @@ export class Admin extends BaseEntity {
 
   @ApiProperty({ description: '昵称' })
   @Length(1, 20)
-  @Column({ length: 20, comment: '昵称' })
-  nickname: string;
+  @Column({ comment: '昵称' })
+  nickname: number;
 
   @ApiProperty({ description: '密码' })
   @Length(6, 20)
@@ -70,14 +71,12 @@ export class Admin extends BaseEntity {
   @Column({ length: 50, comment: '登录ip' })
   loginIp: string;
 
-  @ApiProperty({ description: '状态:1=启用,2=禁用' })
-  @Column({
-    type: 'enum',
-    enum: ['1', '2'],
-    comment: '状态:1=启用,2=禁用',
+  // @ApiProperty({ description: '状态:1=启用,2=禁用' })
+  @ColumnApi({
+    comment: '状态:1=启用;2=禁用',
     default: '1',
   })
-  status: string;
+  status: number;
 
   @ApiHideProperty()
   @CreateDateColumn({ type: 'timestamp', comment: '创建时间' })

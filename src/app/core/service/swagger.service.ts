@@ -7,7 +7,11 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { DiscoveryService } from './discovery.service';
-import { NestSwaggerModule } from '@meadmin/nest-swagger';
+import {
+  DocumentBuilder,
+  NestSwaggerModule,
+  SwaggerModule,
+} from '@meadmin/nest-swagger';
 import { Config } from '@/config';
 
 @Injectable()
@@ -56,6 +60,12 @@ export class SwaggerService {
         config.documentConfig,
         config,
       );
+      const document = SwaggerModule.createDocument(
+        app,
+        new DocumentBuilder().build(),
+      );
+      SwaggerModule.setup('api', app, document);
+
       this.logger.log(`Swagger init {${finalPath}, GET}`);
     }
   }

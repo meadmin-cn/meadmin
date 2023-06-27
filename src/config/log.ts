@@ -39,7 +39,7 @@ export default (): LogConfig => {
     exitOnError: false,
     format: winston.format.combine(...formats),
     transports:
-      process.env.NODE_ENV === 'devdevelopment'
+      process.env.NODE_ENV === 'development'
         ? [
             ...transports,
             new winston.transports.Console({

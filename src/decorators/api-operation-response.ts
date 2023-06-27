@@ -23,27 +23,19 @@ export function ApiOperationResponse<TModel extends Type<any>>(
   },
 ): MethodDecorator {
   const decorators = [
-    ApiExtraModels(
-      ApiSuccessRes,
-      ApiPagerRes,
-      options.successType!
-    ),
+    ApiExtraModels(ApiSuccessRes, ApiPagerRes, options.successType!),
   ];
   if (options.successType) {
     decorators.push(
       ApiOkResponse({
         description: '请求成功',
         schema: {
-          allOf: [
-            { $ref: getSchemaPath(ApiSuccessRes) },
-            {
-              properties: {
-                data: {
-                  $ref: getSchemaPath(options.successType),
-                },
-              },
+          $ref: getSchemaPath(ApiSuccessRes),
+          properties: {
+            data: {
+              $ref: getSchemaPath(options.successType),
             },
-          ],
+          },
         },
       }),
     );
@@ -52,17 +44,13 @@ export function ApiOperationResponse<TModel extends Type<any>>(
     decorators.push(
       ApiOkResponse({
         schema: {
-          allOf: [
-            { $ref: getSchemaPath(ApiPagerRes) },
-            {
-              properties: {
-                list: {
-                  type: 'array',
-                  items: { $ref: getSchemaPath(options.pageType) },
-                },
-              },
+          $ref: getSchemaPath(ApiPagerRes),
+          properties: {
+            list: {
+              type: 'array',
+              items: { $ref: getSchemaPath(options.pageType) },
             },
-          ],
+          },
         },
       }),
     );

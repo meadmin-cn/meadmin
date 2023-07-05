@@ -25,47 +25,18 @@ export class SwaggerService {
   });
 
   /**
-   * 设置swagger documentConfig include module
-   *
-   * @param   {SwaggerConfig}  config  [config description]
-   *
-   * @return  {[SwaggerConfig]}                 [return description]
-   */
-  private async swaggerConfigModule(config: SwaggerConfig) {
-    for (const item of config.documentConfig) {
-      if (item.deepIncludes === true && item.options?.include?.length) {
-        item.options.include = await this.discoveryService.reduceModules(
-          item.options.include as (new (...args: any[]) => any)[],
-          (module, array) => {
-            return [...array, module.metatype];
-          },
-          [] as (new (...args: any[]) => any)[],
-        );
-      }
-    }
-    return config;
-  }
-
-  /**
    *初始化swagger
    * @param app
    */
   async init(app: INestApplication) {
-    let config = Config.swagger;
+    const config = Config.swagger;
     if (config.open) {
-      config = await this.swaggerConfigModule(config);
       const finalPath = NestSwaggerModule.setup(
         config.path,
         app,
-        config.documentConfig,
-        config,
+        config.swaggers,
+        config.useGlobalPrefix,
       );
-      const document = SwaggerModule.createDocument(
-        app,
-        new DocumentBuilder().build(),
-      );
-      SwaggerModule.setup('api', app, document);
-
       this.logger.log(`Swagger init {${finalPath}, GET}`);
     }
   }

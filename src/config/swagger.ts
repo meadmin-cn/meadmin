@@ -5,17 +5,17 @@ import { DocumentBuilder } from '@meadmin/nest-swagger';
 export default (): SwaggerConfig => ({
   open: true,
   path: 'doc',
-  documentConfig: [
+  swaggers: [
     {
       module: 'admin',
-      deepIncludes: true,
-      config: new DocumentBuilder()
+      documentConfig: new DocumentBuilder()
         .setTitle('接口文档')
         .setDescription('接口文档')
         .setVersion('1.0')
         .build(),
-      options: {
+      documentOptions: {
         include: [AdminApiModule],
+        deepScanRoutes: true,
       },
     },
   ],

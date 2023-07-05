@@ -1,9 +1,7 @@
-import {
-  SwaggerCustomOptions,
-  SwaggerDocumentConfig,
-} from '@meadmin/nest-swagger';
-export interface SwaggerConfig extends SwaggerCustomOptions {
+import { SwaggerConfigOptions } from '@meadmin/nest-swagger';
+export interface SwaggerConfig {
   open: boolean; // 是否启用swagger
   path: string; // 前缀
-  documentConfig: (SwaggerDocumentConfig & { deepIncludes?: boolean })[];
+  useGlobalPrefix?: boolean;
+  swaggers: SwaggerConfigOptions[];
 }

@@ -21,6 +21,7 @@ importers:
       '@release-it/conventional-changelog': ^5.1.1
       '@types/express': ^4.17.17
       '@types/jest': 29.5.2
+      '@types/lodash': ^4.14.195
       '@types/node': ^20.3.1
       '@types/supertest': ^2.0.12
       '@typescript-eslint/eslint-plugin': ^5.60.0
@@ -34,6 +35,7 @@ importers:
       iterare: ^1.2.1
       jest: 29.5.0
       lint-staged: ^13.2.2
+      lodash: ^4.17.21
       mysql2: ^3.4.1
       nest-commander: ^3.10.0
       nest-winston: ^1.9.3
@@ -64,6 +66,7 @@ importers:
       class-transformer: 0.5.1
       class-validator: 0.14.0
       iterare: 1.2.1
+      lodash: 4.17.21
       mysql2: 3.4.1
       nest-winston: 1.9.3_a7vlziq4fta7es3kxgxnmq6nxm
       reflect-metadata: 0.1.13
@@ -82,6 +85,7 @@ importers:
       '@release-it/conventional-changelog': 5.1.1_release-it@15.11.0
       '@types/express': 4.17.17
       '@types/jest': 29.5.2
+      '@types/lodash': 4.14.195
       '@types/node': 20.3.1
       '@types/supertest': 2.0.12
       '@typescript-eslint/eslint-plugin': 5.60.0_6yzi2ymi2jevhjfd3hf6w262e4
@@ -1894,6 +1898,10 @@ packages:
 
   /@types/json-schema/7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
+    dev: true
+
+  /@types/lodash/4.14.195:
+    resolution: {integrity: sha512-Hwx9EUgdwf2GLarOjQp5ZH8ZmblzcbTBC2wtQWNKARBSxM9ezRIAUpeDTgoQRAFB0+8CNWXVA9+MaSOzOF3nPg==}
     dev: true
 
   /@types/micromatch/4.0.2:

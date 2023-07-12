@@ -2,10 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 import { CoreModule } from '@/app/core/core.module';
-
 describe('AdminController', () => {
   let controller: AdminController;
-
+  let service: AdminService;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [CoreModule.forRoot()],
@@ -13,10 +12,16 @@ describe('AdminController', () => {
       providers: [AdminService],
     }).compile();
 
-    controller = module.get<AdminController>(AdminController);
+    controller = module.get(AdminController);
+    service = module.get(AdminService);
   });
-
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  afterEach(() => {
+    // restore the spy created with spyOn
+    jest.restoreAllMocks();
+  });
+  it('create', async () => {
+    const result = { id: 'test' };
+    jest.spyOn(service, 'create').mockImplementation(() => result as any);
+    expect(await controller.create({} as any)).toBe(result);
   });
 });

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   HttpException,
+  Query,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -15,6 +16,7 @@ import { AdminApiController } from '../api.controller';
 import { ApiTags } from '@meadmin/nest-swagger';
 import { ApiOperationResponse } from '@/decorators/api-operation-response';
 import { Admin } from './entities/admin.entity';
+import { QueryAdminDto } from './dto/query-admin.dto';
 
 @ApiTags('管理员')
 @Controller('admin')
@@ -25,8 +27,10 @@ export class AdminController extends AdminApiController {
 
   @ApiOperationResponse({ summary: '添加管理员' })
   @Post()
-  create(@Body() createAdminDto: CreateAdminDto) {
-    return createAdminDto; // this.adminService.create(createAdminDto);
+  async create(@Body() createAdminDto: CreateAdminDto) {
+    return this.response.success(
+      await this.adminService.create(createAdminDto),
+    );
   }
 
   @ApiOperationResponse({
@@ -34,8 +38,11 @@ export class AdminController extends AdminApiController {
     pageType: Admin,
   })
   @Get()
-  findAll() {
-    return this.response.success({ list: this.adminService.findAll() });
+  async findAll(@Query() queryAdminDto: QueryAdminDto) {
+    return this.response.success({
+      list: await this.adminService.findAll(),
+      total: await this.adminService.count(),
+    });
   }
 
   @ApiOperationResponse({
@@ -43,8 +50,8 @@ export class AdminController extends AdminApiController {
     successType: Admin,
   })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.adminService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return this.response.success(await this.adminService.findOne(+id));
   }
 
   @ApiOperationResponse({ summary: '跟据id更新管理员信息' })

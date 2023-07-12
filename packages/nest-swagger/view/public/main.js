@@ -10,7 +10,6 @@ $.ajax({
     });
     $('.placeholder').html(res[0].module);
     $('#swagger-iframe').attr('src', res[0].path);
-
   },
 });
 $('.select').on('click', '.placeholder', function (e) {

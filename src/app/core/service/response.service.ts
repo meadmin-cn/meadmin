@@ -1,6 +1,6 @@
 import { CodeEnum } from '@/dict/code.enum';
 import { ApiErrorRes } from '@/response/api-error.res';
-import { ApiPagerRes } from '@/response/api-page.res';
+import { ApiPageRes } from '@/response/api-page.res';
 import { ApiSuccessRes } from '@/response/api-success.res';
 import { Injectable } from '@nestjs/common';
 
@@ -66,7 +66,7 @@ export class ResponseService {
     page = 1,
     size = 10,
     message = '获取列表成功',
-  ): ApiPagerRes<T> {
+  ): ApiPageRes<T> {
     return this.success(
       {
         page,

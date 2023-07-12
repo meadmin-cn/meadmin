@@ -15,7 +15,7 @@ importers:
       '@nestjs/mapped-types': '*'
       '@nestjs/platform-express': ^10.0.3
       '@nestjs/schematics': ^10.0.1
-      '@nestjs/swagger': ^7.0.4
+      '@nestjs/swagger': ^7.1.1
       '@nestjs/testing': ^10.0.3
       '@nestjs/typeorm': ^10.0.0
       '@release-it/conventional-changelog': ^5.1.1
@@ -59,7 +59,7 @@ importers:
       '@nestjs/core': 10.0.3_qt7li3nwwshj34ys7443ufbxta
       '@nestjs/mapped-types': 1.2.2_7ng7as5pjtzlqmgsd2pvnfmsju
       '@nestjs/platform-express': 10.0.3_uw5udq5dia6g3eu27qypsmjr7q
-      '@nestjs/swagger': 7.0.4_4zkvzubyf7id3hke7wouurgv4m
+      '@nestjs/swagger': 7.1.1_4zkvzubyf7id3hke7wouurgv4m
       '@nestjs/typeorm': 10.0.0_davvi73azlbbvn2qlqvryv6twy
       class-transformer: 0.5.1
       class-validator: 0.14.0
@@ -128,13 +128,13 @@ importers:
     specifiers:
       '@nestjs/platform-express': ^10.0.3
       '@nestjs/platform-fastify': ^10.0.3
-      '@nestjs/swagger': ^7.0.4
+      '@nestjs/swagger': ^7.1.1
       '@types/js-yaml': ^4.0.5
       js-yaml: ^4.1.0
       tslib: ^2.5.3
       typescript: ^5.1.3
     dependencies:
-      '@nestjs/swagger': 7.0.4
+      '@nestjs/swagger': 7.1.1
       js-yaml: 4.1.0
     devDependencies:
       '@nestjs/platform-express': 10.0.3
@@ -1430,8 +1430,8 @@ packages:
       - chokidar
     dev: true
 
-  /@nestjs/swagger/7.0.4:
-    resolution: {integrity: sha512-jZydFwRWqTi75kdd6LrgSjVadiSTBIEMtQ844xDjqr18mxD7MLOG/uJTaynyA4c0FZPGkhYGXEX/0Ugr/JlUYA==}
+  /@nestjs/swagger/7.1.1:
+    resolution: {integrity: sha512-gIG1aVCegZlIppXZizKHqWkqZvQkvptTBR1C5CzZoDwGoVVKJBmJ2i9FAcsnzzb0j7hncFKhcBuWYOBJOsCvug==}
     peerDependencies:
       '@fastify/static': ^6.0.0
       '@nestjs/common': ^9.0.0 || ^10.0.0
@@ -1454,8 +1454,8 @@ packages:
       swagger-ui-dist: 5.1.0
     dev: false
 
-  /@nestjs/swagger/7.0.4_4zkvzubyf7id3hke7wouurgv4m:
-    resolution: {integrity: sha512-jZydFwRWqTi75kdd6LrgSjVadiSTBIEMtQ844xDjqr18mxD7MLOG/uJTaynyA4c0FZPGkhYGXEX/0Ugr/JlUYA==}
+  /@nestjs/swagger/7.1.1_4zkvzubyf7id3hke7wouurgv4m:
+    resolution: {integrity: sha512-gIG1aVCegZlIppXZizKHqWkqZvQkvptTBR1C5CzZoDwGoVVKJBmJ2i9FAcsnzzb0j7hncFKhcBuWYOBJOsCvug==}
     peerDependencies:
       '@fastify/static': ^6.0.0
       '@nestjs/common': ^9.0.0 || ^10.0.0

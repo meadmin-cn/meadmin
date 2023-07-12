@@ -15,4 +15,4 @@ export class PageRes<T = any> {
 /**
  * 分页响应类
  */
-export class ApiPagerRes<T = any> extends ApiSuccessRes<PageRes<T>> {}
+export class ApiPageRes<T = any> extends ApiSuccessRes<PageRes<T>> {}

@@ -24,13 +24,16 @@ export class AdminController extends AdminApiController {
     super();
   }
 
-  @ApiOperation({ summary: '添加管理员' })
+  @ApiOperationResponse({ summary: '添加管理员' })
   @Post()
   create(@Body() createAdminDto: CreateAdminDto) {
     return createAdminDto; // this.adminService.create(createAdminDto);
   }
 
-  @ApiOperationResponse({ summary: '获取所有管理员', successType: Admin })
+  @ApiOperationResponse({
+    summary: '获取所有管理员',
+    pageType: Admin,
+  })
   @Get()
   findAll() {
     console.log('----aa---', this.response);
@@ -38,19 +41,22 @@ export class AdminController extends AdminApiController {
     return this.response.success({ list: this.adminService.findAll() });
   }
 
-  @ApiOperation({ summary: '跟据id获取管理员' })
+  @ApiOperationResponse({
+    summary: '根据id获取对应管理员信息',
+    successType: Admin,
+  })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.adminService.findOne(+id);
   }
 
-  @ApiOperation({ summary: '跟据id更新管理员信息' })
+  @ApiOperationResponse({ summary: '跟据id更新管理员信息' })
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto) {
     return updateAdminDto; // this.adminService.update(+id, updateAdminDto);
   }
 
-  @ApiOperation({ summary: '跟据id删除管理员信息' })
+  @ApiOperationResponse({ summary: '跟据id删除管理员信息' })
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.adminService.remove(+id);

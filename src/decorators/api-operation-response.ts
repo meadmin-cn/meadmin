@@ -1,12 +1,10 @@
-import { ApiErrorRes } from '@/response/api-error.res';
-import { ApiPagerRes } from '@/response/api-page.res';
+import { ApiPageRes, PageRes } from '@/response/api-page.res';
 import { ApiSuccessRes } from '@/response/api-success.res';
 import {
   ApiExtraModels,
   ApiOkResponse,
   ApiOperation,
   ApiOperationOptions,
-  ApiResponse,
   getSchemaPath,
 } from '@meadmin/nest-swagger';
 import { Type, applyDecorators } from '@nestjs/common';
@@ -18,14 +16,35 @@ import { Type, applyDecorators } from '@nestjs/common';
  */
 export function ApiOperationResponse<TModel extends Type<any>>(
   options: ApiOperationOptions & {
-    successType?: TModel;
+    successType?: TModel | false;
     pageType?: TModel;
   },
 ): MethodDecorator {
-  const decorators = [
-    ApiExtraModels(ApiSuccessRes, ApiPagerRes, options.successType!),
-  ];
-  if (options.successType) {
+  const decorators = [ApiExtraModels(ApiSuccessRes, ApiPageRes, PageRes)];
+  if (options.pageType) {
+    decorators.push(ApiExtraModels(options.pageType));
+    decorators.push(
+      ApiOkResponse({
+        schema: {
+          $ref: getSchemaPath(ApiPageRes),
+          description: '数据code非200时值为undefined',
+          properties: {
+            data: {
+              $ref: getSchemaPath(PageRes),
+              properties: {
+                list: {
+                  type: 'array',
+                  items: { $ref: getSchemaPath(options.pageType) },
+                  description: '分页数据',
+                },
+              },
+            },
+          },
+        },
+      }),
+    );
+  } else if (options.successType) {
+    decorators.push(ApiExtraModels(options.successType));
     decorators.push(
       ApiOkResponse({
         description: '请求成功',
@@ -34,29 +53,26 @@ export function ApiOperationResponse<TModel extends Type<any>>(
           properties: {
             data: {
               $ref: getSchemaPath(options.successType),
+              description: '数据code非200时值为undefined',
             },
           },
         },
       }),
     );
-  }
-  if (options.pageType) {
+  } else if (options.successType !== false) {
     decorators.push(
       ApiOkResponse({
+        description: '请求成功',
         schema: {
-          $ref: getSchemaPath(ApiPagerRes),
-          properties: {
-            list: {
-              type: 'array',
-              items: { $ref: getSchemaPath(options.pageType) },
-            },
-          },
+          $ref: getSchemaPath(ApiSuccessRes),
         },
       }),
     );
   }
-  // decorators.push(
-  //   ApiResponse({ status: 200, description: '请求失败', type: ApiErrorRes }),
-  // );
-  return applyDecorators(...decorators);
+  return applyDecorators(
+    ...decorators,
+    ApiOperation(
+      Object.assign(options, { successType: undefined, pageType: undefined }),
+    ),
+  );
 }

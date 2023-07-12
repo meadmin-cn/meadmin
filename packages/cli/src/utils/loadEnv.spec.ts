@@ -3,7 +3,7 @@ import { join } from 'node:path';
 
 describe('加载单个env文件', () => {
   it(`解析env`, async () => {
-    const env = loadEnvFile([join(__dirname, '../../test/.env')]);
+    const env = loadEnvFile([join(__dirname, '../../test/.env.test')]);
     expect(env.PORT).toEqual('4000');
     expect(process.env.PORT).toEqual('4000');
   });

@@ -1,25 +1,14 @@
-import { SwaggerConfig } from '@/interfaces/config/swagger';
 import {
   INestApplication,
   Injectable,
   Logger,
   LoggerService,
 } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { DiscoveryService } from './discovery.service';
-import {
-  DocumentBuilder,
-  NestSwaggerModule,
-  SwaggerModule,
-} from '@meadmin/nest-swagger';
+import { NestSwaggerModule } from '@meadmin/nest-swagger';
 import { Config } from '@/config';
 
 @Injectable()
 export class SwaggerService {
-  constructor(
-    protected readonly discoveryService: DiscoveryService,
-    protected readonly reflector: Reflector,
-  ) {}
   private readonly logger: LoggerService = new Logger('MeAdmin', {
     timestamp: true,
   });

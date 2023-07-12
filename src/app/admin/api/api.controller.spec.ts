@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AdminApiController } from './api.controller';
+import { CoreModule } from '@/app/core/core.module';
 
 describe('AdminApiController', () => {
   let controller: AdminApiController;
@@ -7,6 +8,7 @@ describe('AdminApiController', () => {
   beforeEach(async () => {
     class AdminApiActualController extends AdminApiController {}
     const module: TestingModule = await Test.createTestingModule({
+      imports: [CoreModule.forRoot()],
       controllers: [AdminApiActualController],
     }).compile();
 

@@ -6,7 +6,6 @@ import { Admin } from './entities/admin.entity';
 @Injectable()
 export class AdminService {
   create(createAdminDto: CreateAdminDto) {
-    console.log(createAdminDto);
     return Admin.save(createAdminDto);
   }
 

@@ -12,8 +12,7 @@ import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { AdminApiController } from '../api.controller';
-import { ForbiddenException } from '@/app/core/exception/forbidden-exception';
-import { ApiOperation, ApiTags } from '@meadmin/nest-swagger';
+import { ApiTags } from '@meadmin/nest-swagger';
 import { ApiOperationResponse } from '@/decorators/api-operation-response';
 import { Admin } from './entities/admin.entity';
 
@@ -36,8 +35,6 @@ export class AdminController extends AdminApiController {
   })
   @Get()
   findAll() {
-    console.log('----aa---', this.response);
-    throw new ForbiddenException('11');
     return this.response.success({ list: this.adminService.findAll() });
   }
 
@@ -53,7 +50,7 @@ export class AdminController extends AdminApiController {
   @ApiOperationResponse({ summary: '跟据id更新管理员信息' })
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto) {
-    return updateAdminDto; // this.adminService.update(+id, updateAdminDto);
+    return this.adminService.update(+id, updateAdminDto);
   }
 
   @ApiOperationResponse({ summary: '跟据id删除管理员信息' })

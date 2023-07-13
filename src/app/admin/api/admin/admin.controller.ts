@@ -40,8 +40,8 @@ export class AdminController extends AdminApiController {
   @Get()
   async findAll(@Query() queryAdminDto: QueryAdminDto) {
     return this.response.success({
-      list: await this.adminService.findAll(),
-      total: await this.adminService.count(),
+      list: await this.adminService.findAll(queryAdminDto),
+      total: await this.adminService.count(queryAdminDto),
     });
   }
 

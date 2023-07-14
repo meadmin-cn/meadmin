@@ -16,7 +16,7 @@ import { Type, applyDecorators } from '@nestjs/common';
  */
 export function ApiOperationResponse<TModel extends Type<any>>(
   options: ApiOperationOptions & {
-    successType?: TModel | false;
+    successType?: TModel | false | string;
     pageType?: TModel;
   },
 ): MethodDecorator {
@@ -27,10 +27,10 @@ export function ApiOperationResponse<TModel extends Type<any>>(
       ApiOkResponse({
         schema: {
           $ref: getSchemaPath(ApiPageRes),
-          description: '数据code非200时值为undefined',
           properties: {
             data: {
               $ref: getSchemaPath(PageRes),
+              description: '数据,code非200时值为undefined',
               properties: {
                 list: {
                   type: 'array',
@@ -43,7 +43,10 @@ export function ApiOperationResponse<TModel extends Type<any>>(
         },
       }),
     );
-  } else if (options.successType) {
+  } else if (
+    typeof options.successType === 'function' ||
+    typeof options.successType === 'object'
+  ) {
     decorators.push(ApiExtraModels(options.successType));
     decorators.push(
       ApiOkResponse({
@@ -52,8 +55,9 @@ export function ApiOperationResponse<TModel extends Type<any>>(
           $ref: getSchemaPath(ApiSuccessRes),
           properties: {
             data: {
+              type: 'object',
               $ref: getSchemaPath(options.successType),
-              description: '数据code非200时值为undefined',
+              description: '数据,code非200时值为undefined',
             },
           },
         },
@@ -65,6 +69,15 @@ export function ApiOperationResponse<TModel extends Type<any>>(
         description: '请求成功',
         schema: {
           $ref: getSchemaPath(ApiSuccessRes),
+          properties:
+            typeof options.successType === 'string'
+              ? {
+                  data: {
+                    type: options.successType,
+                    description: '数据,code非200时值为undefined',
+                  },
+                }
+              : undefined,
         },
       }),
     );

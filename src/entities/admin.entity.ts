@@ -1,6 +1,5 @@
 import {
   BaseEntity,
-  Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
@@ -11,7 +10,7 @@ import { ColumnApi } from '@/decorators/column-api';
 
 @Entity()
 export class Admin extends BaseEntity {
-  @Column({ primary: true, generated: true, unsigned: true, comment: 'ID' })
+  @ColumnApi({ primary: true, generated: true, unsigned: true, comment: 'ID' })
   id: number;
 
   @Length(1, 20, {
@@ -19,31 +18,31 @@ export class Admin extends BaseEntity {
       return args.property + ' 长度必须在1-20之间';
     },
   })
-  @Column({ length: 20, comment: '用户名' })
+  @ColumnApi({ length: 20, comment: '用户名' })
   username: string;
 
   @Length(1, 20)
-  @Column({ comment: '昵称' })
+  @ColumnApi({ comment: '昵称' })
   nickname: number;
 
   @Length(6, 20)
-  @Column({ length: 32, comment: '密码' })
+  @ColumnApi({ length: 32, comment: '密码' })
   password: string;
 
-  @Column({ length: 30, comment: '密码盐' })
+  @ColumnApi({ length: 30, comment: '密码盐' })
   salt: string;
 
   @Length(0, 100)
-  @Column({ length: 100, comment: '头像' })
+  @ColumnApi({ length: 100, comment: '头像' })
   avatar?: string;
 
-  @Column({ length: 100, comment: '邮箱' })
+  @ColumnApi({ length: 100, comment: '邮箱' })
   email: string;
 
-  @Column({ length: 11, comment: '手机号' })
+  @ColumnApi({ length: 11, comment: '手机号' })
   mobile: string;
 
-  @Column({
+  @ColumnApi({
     type: 'tinyint',
     unsigned: true,
     comment: '登录失败次数',
@@ -51,13 +50,13 @@ export class Admin extends BaseEntity {
   })
   loginFailure: number;
 
-  @Column({
+  @ColumnApi({
     type: 'timestamp',
     comment: '登录时间',
   })
   loginAt: Date | null;
 
-  @Column({ length: 50, comment: '登录ip' })
+  @ColumnApi({ length: 50, comment: '登录ip' })
   loginIp: string;
 
   @ColumnApi({

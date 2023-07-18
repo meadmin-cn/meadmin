@@ -28,6 +28,7 @@ importers:
       '@typescript-eslint/parser': ^5.60.0
       class-transformer: ^0.5.1
       class-validator: ^0.14.0
+      cross-env: ^7.0.3
       eslint: ^8.43.0
       eslint-config-prettier: ^8.8.0
       eslint-plugin-prettier: ^4.2.1
@@ -65,6 +66,7 @@ importers:
       '@nestjs/typeorm': 10.0.0_davvi73azlbbvn2qlqvryv6twy
       class-transformer: 0.5.1
       class-validator: 0.14.0
+      cross-env: 7.0.3
       iterare: 1.2.1
       lodash: 4.17.21
       mysql2: 3.4.1
@@ -3399,6 +3401,14 @@ packages:
 
   /create-require/1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
+
+  /cross-env/7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
+    dev: false
 
   /cross-spawn/7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}

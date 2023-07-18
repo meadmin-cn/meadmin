@@ -11,6 +11,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: WinstonModule.createLogger(log()),
   });
+
   // 调用 AppCreated Hook
   await Promise.all(
     app

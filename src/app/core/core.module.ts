@@ -16,13 +16,14 @@ import { ControllerService } from './service/controller.service';
 import { SwaggerService } from './service/swagger.service';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './exception/filter/all-exception.filter';
-
 @Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       load: config,
+      expandVariables: true,
+      envFilePath: ['.env.' + process.env.NODE_ENV, '.env'],
     }),
   ],
   providers: [

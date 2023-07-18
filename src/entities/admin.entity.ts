@@ -23,13 +23,13 @@ export class Admin extends BaseEntity {
 
   @Length(1, 20)
   @ColumnApi({ comment: '昵称' })
-  nickname: number;
+  nickname: string;
 
   @Length(6, 20)
-  @ColumnApi({ length: 32, comment: '密码' })
+  @ColumnApi({ length: 64, comment: '密码' })
   password: string;
 
-  @ColumnApi({ length: 30, comment: '密码盐' })
+  @ColumnApi({ length: 64, comment: '密码盐' })
   salt: string;
 
   @Length(0, 100)

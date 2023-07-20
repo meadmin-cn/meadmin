@@ -5,7 +5,14 @@ import {
   Entity,
   UpdateDateColumn,
 } from 'typeorm';
-import { Length, ValidationArguments } from 'class-validator';
+import {
+  IsIn,
+  IsOptional,
+  IsPositive,
+  Length,
+  ValidateIf,
+  ValidationArguments,
+} from 'class-validator';
 import { ColumnApi } from '@/decorators/column-api';
 
 @Entity()
@@ -34,14 +41,20 @@ export class Admin extends BaseEntity {
 
   @Length(0, 100)
   @ColumnApi({ length: 100, comment: '头像' })
-  avatar?: string;
+  avatar: string;
 
+  @ValidateIf((o) => o.email)
+  @Length(0, 100)
   @ColumnApi({ length: 100, comment: '邮箱' })
   email: string;
 
+  @ValidateIf((o) => o.mobile)
+  @Length(11, 100)
   @ColumnApi({ length: 11, comment: '手机号' })
   mobile: string;
 
+  @IsOptional()
+  @IsPositive()
   @ColumnApi({
     type: 'tinyint',
     unsigned: true,
@@ -53,15 +66,18 @@ export class Admin extends BaseEntity {
   @ColumnApi({
     type: 'timestamp',
     comment: '登录时间',
+    default: null,
   })
   loginAt: Date | null;
 
-  @ColumnApi({ length: 50, comment: '登录ip' })
+  @ColumnApi({ length: 50, comment: '登录ip', default: '' })
   loginIp: string;
 
+  @IsIn([1, 2])
   @ColumnApi({
     comment: '状态:1=启用;2=禁用',
-    default: '1',
+    default: 1,
+    type: 'tinyint',
   })
   status: number;
 

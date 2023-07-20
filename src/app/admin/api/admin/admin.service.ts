@@ -9,35 +9,35 @@ import { pbkdf2Sync, randomBytes } from 'node:crypto';
 @Injectable()
 export class AdminService {
   /**
+   * 执行密码加密操作
+   * @param password 密码
+   * @param salt 对应的密码盐
+   * @returns
+   */
+  private entityExec(password: string, salt: Buffer) {
+    return pbkdf2Sync(password, salt, 1000, 32, 'sha3-256').toString('hex');
+  }
+
+  /**
    * 密码加密
    * @param password 密码
    * @returns {salt:密码盐,password:密码密文}
    */
   private entityPassword(password: string) {
     const salt = randomBytes(32);
-    const str = pbkdf2Sync(password, salt, 1000, 32, 'sha3-256').toString(
-      'hex',
-    );
+    const str = this.entityExec(password, salt);
     return { salt: salt.toString('hex'), password: str };
   }
 
   /**
-   * 校验mime
+   * 校验密码
    * @param password 密码
    * @param salt 密码盐
    * @param encode 加密字符串
    * @returns 是否通过
    */
-  private checkPassword(password: string, salt: string, encode: string) {
-    return (
-      pbkdf2Sync(
-        password,
-        Buffer.from(salt, 'hex'),
-        1000,
-        16,
-        'sha3-256',
-      ).toString('hex') === encode
-    );
+  public checkPassword(password: string, salt: string, encode: string) {
+    return this.entityExec(password, Buffer.from(salt, 'hex')) === encode;
   }
 
   /**
@@ -48,6 +48,7 @@ export class AdminService {
   create(createAdminDto: CreateAdminDto) {
     return Admin.save<Admin>(
       Object.assign(
+        {},
         createAdminDto,
         this.entityPassword(createAdminDto.password),
       ),

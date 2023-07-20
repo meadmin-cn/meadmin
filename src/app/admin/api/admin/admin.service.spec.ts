@@ -20,16 +20,25 @@ describe('AdminService', () => {
     expect(service).toBeDefined();
   });
 
-  it('admin create', () => {
+  it('admin create', async () => {
     const createInfo = {
       username: '123456',
+      avatar: '',
       nickname: 'test',
       password: '123456',
       email: '479820787@qq.com',
       mobile: '15563556250',
-      status: '1',
+      status: 1,
     };
-    console.log('createInfo', JSON.stringify(createInfo));
-    expect(service.create(createInfo)).toBeDefined();
+    const info = await service.create(createInfo);
+    const row = await Admin.findOneBy({ id: info.id });
+    expect(
+      service.checkPassword(createInfo.password, row!.salt, row!.password),
+    ).toBe(true);
+    expect(row).toEqual(
+      expect.objectContaining(
+        Object.assign({}, createInfo, { password: row?.password }),
+      ),
+    );
   });
 });

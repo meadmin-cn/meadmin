@@ -6,4 +6,13 @@ export class CreateAdminDto extends OmitType(Admin, [
   'id',
   ...entityAutoProperty,
   ...entityFunctionProperty,
-] as const) {}
+  'loginAt',
+  'loginFailure',
+  'loginIp',
+  'salt',
+] as const) {
+  @ApiProperty({ required: false })
+  email = '';
+  @ApiProperty({ required: false })
+  mobile = '';
+}

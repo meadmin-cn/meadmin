@@ -9,24 +9,25 @@ import { pbkdf2Sync, randomBytes } from 'node:crypto';
 @Injectable()
 export class AdminService {
   /**
-   * 执行密码加密操作
-   * @param password 密码
-   * @param salt 对应的密码盐
-   * @returns
-   */
-  private entityExec(password: string, salt: Buffer) {
-    return pbkdf2Sync(password, salt, 1000, 32, 'sha3-256').toString('hex');
-  }
-
-  /**
    * 密码加密
    * @param password 密码
    * @returns {salt:密码盐,password:密码密文}
    */
-  private entityPassword(password: string) {
-    const salt = randomBytes(32);
-    const str = this.entityExec(password, salt);
-    return { salt: salt.toString('hex'), password: str };
+  private entityPassword(password: string, salt?: string) {
+    let newSalt: Buffer;
+    if (salt) {
+      newSalt = Buffer.from(salt, 'hex');
+    } else {
+      newSalt = randomBytes(32);
+    }
+    const ciphertext = pbkdf2Sync(
+      password,
+      newSalt,
+      1000,
+      32,
+      'sha3-256',
+    ).toString('hex');
+    return { salt: salt ?? newSalt.toString('hex'), password: ciphertext };
   }
 
   /**
@@ -37,7 +38,7 @@ export class AdminService {
    * @returns 是否通过
    */
   public checkPassword(password: string, salt: string, encode: string) {
-    return this.entityExec(password, Buffer.from(salt, 'hex')) === encode;
+    return this.entityPassword(password, salt).password === encode;
   }
 
   /**
@@ -99,8 +100,15 @@ export class AdminService {
    * @returns
    */
   async update(id: number, updateAdminDto: UpdateAdminDto) {
-    await Admin.findOneByOrFail({ id });
-    return Admin.save({ id, ...updateAdminDto });
+    const admin = await Admin.findOneByOrFail({ id });
+    Object.assign(admin, updateAdminDto);
+    if (updateAdminDto.password) {
+      admin.password = this.entityPassword(
+        updateAdminDto.password,
+        admin.salt,
+      ).password;
+    }
+    return await admin.save();
   }
 
   /**

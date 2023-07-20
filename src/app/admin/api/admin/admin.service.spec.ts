@@ -6,8 +6,8 @@ import { CoreModule } from '@/app/core/core.module';
 
 describe('AdminService', () => {
   let service: AdminService;
-
-  beforeEach(async () => {
+  let id: number;
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [CoreModule.forRoot()],
       providers: [AdminService],
@@ -31,6 +31,7 @@ describe('AdminService', () => {
       status: 1,
     };
     const info = await service.create(createInfo);
+    id = info.id;
     const row = await Admin.findOneBy({ id: info.id });
     expect(
       service.checkPassword(createInfo.password, row!.salt, row!.password),
@@ -40,5 +41,21 @@ describe('AdminService', () => {
         Object.assign({}, createInfo, { password: row?.password }),
       ),
     );
+  });
+  it('admin update', async () => {
+    const updateInfo = {
+      username: '7890',
+    };
+    const info = await service.update(id, updateInfo);
+    const row = await Admin.findOneBy({ id: id });
+    expect(row?.username).toBe(updateInfo.username);
+    const updateInfo2 = {
+      password: '123456',
+    };
+    await service.update(id, updateInfo2);
+    const row2 = await Admin.findOneBy({ id: info.id });
+    expect(
+      service.checkPassword(updateInfo2.password, row!.salt, row2!.password),
+    ).toBe(true);
   });
 });

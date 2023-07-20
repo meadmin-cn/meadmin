@@ -5,7 +5,7 @@ import { CoreModule } from '@/app/core/core.module';
 describe('AdminController', () => {
   let controller: AdminController;
   let service: AdminService;
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [CoreModule.forRoot()],
       controllers: [AdminController],

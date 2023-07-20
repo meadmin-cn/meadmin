@@ -6,8 +6,7 @@ import {
   ModuleMetadata,
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import database from '@/config/database';
-import config from '@/config';
+import config, { Config } from '@/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ResponseService } from './service/response.service';
 import { AppService } from './service/app.service';
@@ -43,7 +42,7 @@ import { AllExceptionsFilter } from './exception/filter/all-exception.filter';
 export class CoreModule {
   static forRoot(): DynamicModule {
     const imports = [] as Exclude<ModuleMetadata['imports'], undefined>;
-    const databaseConfigs = database();
+    const databaseConfigs = Config.database;
     databaseConfigs.forEach((item) => {
       imports.push(TypeOrmModule.forRoot(item));
     });

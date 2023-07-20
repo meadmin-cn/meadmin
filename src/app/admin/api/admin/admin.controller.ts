@@ -25,7 +25,7 @@ export class AdminController extends AdminApiController {
     super();
   }
 
-  @ApiOperationResponse({ summary: '添加管理员' })
+  @ApiOperationResponse({ summary: '添加管理员', successType: Admin })
   @Post()
   async create(@Body() createAdminDto: CreateAdminDto) {
     return this.response.success(

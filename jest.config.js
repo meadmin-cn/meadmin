@@ -5,17 +5,19 @@ const { compilerOptions } = require('./tsconfig');
 
 const { defaults } = require('jest-config');
 module.exports = {
-    'moduleFileExtensions': [
+    maxWorkers: '50%',
+    globalSetup:'./jest.setup',
+    moduleFileExtensions: [
         ...defaults.moduleFileExtensions,
     ],
-    'rootDir': '.',
-    'testEnvironment': 'node',
-    'testRegex': '.*\\.spec\\.ts$',
-    'transform': {
+    rootDir: '.',
+    testEnvironment: 'node',
+    testRegex: '.*\\.spec\\.ts$',
+    transform: {
         '^.+\\.(t|j)s$': ['ts-jest',{
             "tsconfig": "./tsconfig.json"
         }],
     },
-    "coverageDirectory": "../coverage",
+    coverageDirectory: "../coverage",
     moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths , { prefix: '<rootDir>/' } ),
 };

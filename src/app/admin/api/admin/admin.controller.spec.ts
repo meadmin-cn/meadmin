@@ -22,6 +22,8 @@ describe('AdminController', () => {
   it('create', async () => {
     const result = { id: 'test' };
     jest.spyOn(service, 'create').mockImplementation(() => result as any);
-    expect(await controller.create({} as any)).toBe(result);
+    const r = await controller.create({} as any);
+    expect(r.code).toBe(200);
+    expect(r.data).toBe(result);
   });
 });

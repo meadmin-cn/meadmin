@@ -41,7 +41,7 @@ export class Sync extends AbstractCommand {
             item.endsWith('.mts') ||
             item.endsWith('.cts')
             ? item
-            : item + '.js',
+            : item + '.entity.js',
         ),
       ),
     });

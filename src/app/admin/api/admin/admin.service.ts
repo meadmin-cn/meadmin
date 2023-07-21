@@ -46,14 +46,14 @@ export class AdminService {
    * @param createAdminDto
    * @returns
    */
-  create(createAdminDto: CreateAdminDto) {
-    return Admin.save<Admin>(
-      Object.assign(
-        {},
-        createAdminDto,
-        this.entityPassword(createAdminDto.password),
-      ),
+  async create(createAdminDto: CreateAdminDto) {
+    const entity = new Admin();
+    Object.assign(
+      entity,
+      createAdminDto,
+      this.entityPassword(createAdminDto.password),
     );
+    return await entity.save();
   }
 
   private formatWhere(query: Partial<QueryAdminDto>) {

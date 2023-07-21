@@ -54,7 +54,7 @@ export class AdminController extends AdminApiController {
     return this.response.success(await this.adminService.findOne(+id));
   }
 
-  @ApiOperationResponse({ summary: '跟据id更新管理员信息' })
+  @ApiOperationResponse({ summary: '跟据id更新管理员信息', successType: Admin })
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto) {
     return this.adminService.update(+id, updateAdminDto);
@@ -63,6 +63,7 @@ export class AdminController extends AdminApiController {
   @ApiOperationResponse({ summary: '跟据id删除管理员信息' })
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.adminService.remove(+id);
+    this.adminService.remove(+id);
+    return this.response.success();
   }
 }

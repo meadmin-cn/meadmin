@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AdminService } from './admin.service';
-import { CreateAdminDto } from './dto/create-admin.dto';
 import { Admin } from './entities/admin.entity';
 import { CoreModule } from '@/app/core/core.module';
+import dayjs from 'dayjs';
 
 describe('AdminService', () => {
   let service: AdminService;
@@ -42,6 +42,48 @@ describe('AdminService', () => {
       ),
     );
   });
+  it('admin findAll', async () => {
+    expect(
+      (await service.findAll({ page: 1, size: 10 })).length,
+    ).toBeGreaterThan(0);
+    expect(
+      (await service.findAll({ page: 1, size: 10, nickname: 'tes' })).length,
+    ).toBeGreaterThan(0);
+    expect(
+      (
+        await service.findAll({
+          page: 1,
+          size: 10,
+          nickname: '11ASD_-Etest119521ASDA',
+        })
+      ).length,
+    ).toBe(0);
+    expect(
+      (
+        await service.findAll({
+          page: 1,
+          size: 10,
+          createdAt: [
+            dayjs().format('YYYY-MM-DD 00:00:00'),
+            dayjs().format('YYYY-MM-DD 23:59:59'),
+          ],
+        })
+      ).length,
+    ).toBeGreaterThan(0);
+  });
+  it('admin count', async () => {
+    expect(await service.count({})).toBeGreaterThan(0);
+    expect(await service.count({ nickname: 'tes' })).toBeGreaterThan(0);
+    expect(await service.count({ nickname: '11ASD_-Etest119521ASDA' })).toBe(0);
+    expect(
+      await service.count({
+        createdAt: [
+          dayjs().format('YYYY-MM-DD 00:00:00'),
+          dayjs().format('YYYY-MM-DD 23:59:59'),
+        ],
+      }),
+    ).toBeGreaterThan(0);
+  });
   it('admin update', async () => {
     const updateInfo = {
       username: '7890',
@@ -57,5 +99,11 @@ describe('AdminService', () => {
     expect(
       service.checkPassword(updateInfo2.password, row!.salt, row2!.password),
     ).toBe(true);
+  });
+  it('admin remove', async () => {
+    const info = await service.remove(id);
+    const row = await Admin.findOne({ where: { id: id }, withDeleted: true });
+    expect(info).toBe(true);
+    expect(row?.deletedAt).toBeTruthy();
   });
 });

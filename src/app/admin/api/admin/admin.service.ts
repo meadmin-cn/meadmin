@@ -56,6 +56,13 @@ export class AdminService {
     );
   }
 
+  private formatWhere(query: Partial<QueryAdminDto>) {
+    return formatWhere(
+      Object.assign({}, query, { page: undefined, size: undefined }),
+      { likeField: ['nickname'] },
+    );
+  }
+
   /**
    * 分页查询数据
    * @param queryAdminDto 查询条件
@@ -65,9 +72,7 @@ export class AdminService {
     return Admin.find({
       skip: (queryAdminDto.page - 1) * queryAdminDto.size,
       take: queryAdminDto.size,
-      where: formatWhere(
-        Object.assign({}, queryAdminDto, { page: undefined, size: undefined }),
-      ),
+      where: this.formatWhere(queryAdminDto),
     });
   }
 
@@ -76,12 +81,8 @@ export class AdminService {
    * @param queryAdminDto 查询条件
    * @returns
    */
-  count(queryAdminDto: QueryAdminDto) {
-    return Admin.count({
-      where: formatWhere(
-        Object.assign({}, queryAdminDto, { page: undefined, size: undefined }),
-      ),
-    });
+  count(queryAdminDto: Partial<QueryAdminDto>) {
+    return Admin.countBy(this.formatWhere(queryAdminDto));
   }
 
   /**
@@ -118,6 +119,7 @@ export class AdminService {
    */
   async remove(id: number) {
     const entity = await Admin.findOneByOrFail({ id });
-    return await entity.softRemove();
+    await entity.softRemove();
+    return Boolean(entity.deletedAt);
   }
 }

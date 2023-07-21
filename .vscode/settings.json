@@ -1,7 +1,8 @@
 {
     "typescript.tsdk": "node_modules\\typescript\\lib",
     "conventionalCommits.scopes": [
-        "cli"
+        "cli",
+        "api/admin"
     ],
     "files.eol": "\n",
     // 头部注释

@@ -87,7 +87,7 @@ export class Admin extends BaseEntity {
   createdAt: Date;
 
   @ColumnApi(UpdateDateColumn({ type: 'timestamp', comment: '更新时间' }), {
-    description: '创建时间',
+    description: '更新时间',
   })
   updatedAt: Date;
 

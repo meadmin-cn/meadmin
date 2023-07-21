@@ -5,6 +5,7 @@ import { Admin } from './entities/admin.entity';
 import { QueryAdminDto } from './dto/query-admin.dto';
 import { formatWhere } from '@/utils/formatWhere';
 import { pbkdf2Sync, randomBytes } from 'node:crypto';
+import { ForbiddenException } from '@/app/core/exception/forbidden-exception';
 
 @Injectable()
 export class AdminService {
@@ -91,7 +92,7 @@ export class AdminService {
    * @returns
    */
   findOne(id: number) {
-    return Admin.findOneByOrFail({ id });
+    return Admin.findOneBy({ id });
   }
 
   /**
@@ -101,7 +102,10 @@ export class AdminService {
    * @returns
    */
   async update(id: number, updateAdminDto: UpdateAdminDto) {
-    const entity = await Admin.findOneByOrFail({ id });
+    const entity = await Admin.findOneBy({ id });
+    if (!entity) {
+      throw new ForbiddenException('没用对应的信息');
+    }
     Object.assign(entity, updateAdminDto);
     if (updateAdminDto.password) {
       entity.password = this.entityPassword(
@@ -118,7 +122,10 @@ export class AdminService {
    * @returns
    */
   async remove(id: number) {
-    const entity = await Admin.findOneByOrFail({ id });
+    const entity = await Admin.findOneBy({ id });
+    if (!entity) {
+      throw new ForbiddenException('没用对应的信息');
+    }
     await entity.softRemove();
     return Boolean(entity.deletedAt);
   }

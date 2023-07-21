@@ -71,6 +71,9 @@ describe('AdminService', () => {
       ).length,
     ).toBeGreaterThan(0);
   });
+  it('admin findOne', async () => {
+    expect(await service.findOne(id)).toEqual(expect.anything());
+  });
   it('admin count', async () => {
     expect(await service.count({})).toBeGreaterThan(0);
     expect(await service.count({ nickname: 'tes' })).toBeGreaterThan(0);

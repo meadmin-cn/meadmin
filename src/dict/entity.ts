@@ -8,6 +8,7 @@ export const entityFunctionProperty = [
   'softRemove',
   'recover',
   'reload',
+  'toJSON',
 ] as const;
 /**
  * 自动生成属性

@@ -14,7 +14,7 @@ module.exports = {
     testEnvironment: 'node',
     testRegex: '.*\\.spec\\.ts$',
     transform: {
-        '^.+\\.(t|j)s$': ['ts-jest',{
+        '^.+\\.ts$': ['ts-jest',{
             "tsconfig": "./tsconfig.json"
         }],
     },

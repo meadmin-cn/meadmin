@@ -1,5 +1,4 @@
 import {
-  BaseEntity,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
@@ -14,6 +13,8 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import { ColumnApi } from '@/decorators/column-api';
+import { BaseEntity } from '@/extend/typeorm/BaseEntity';
+import { ApiHideProperty } from '@meadmin/nest-swagger';
 
 @Entity()
 export class Admin extends BaseEntity {
@@ -91,6 +92,7 @@ export class Admin extends BaseEntity {
   })
   updatedAt: Date;
 
+  @ApiHideProperty()
   @DeleteDateColumn({ type: 'timestamp', comment: '软删除时间' })
   deletedAt: Date;
 }

@@ -1,10 +1,10 @@
 import { cloneDeep } from 'lodash';
-import { Between, In } from 'typeorm';
+import { Between, In, Like } from 'typeorm';
 export const formatWhereOptions = {
   likeField: ['name'],
   likeFieldSuffix: ['Name'],
-  betweenField: ['name'],
-  betweenFieldSuffix: ['name'],
+  betweenField: [''],
+  betweenFieldSuffix: ['At'],
   inField: ['ids'],
   inFieldSuffix: ['s'],
 };
@@ -41,15 +41,19 @@ export function formatWhere(
   options?: FormatWhereOptions,
 ) {
   const result = cloneDeep(data);
-  const option = Object.assign({}, formatWhere, options);
+  const option = Object.assign({}, formatWhereOptions, options);
   for (const key in result) {
     if (checkField(key, option.likeField, option.likeFieldSuffix)) {
-      result[key] = `%${result[key]}%`;
+      result[key] = Like(`%${result[key]}%`);
     } else if (
+      Array.isArray(result[key]) &&
       checkField(key, option.betweenField, option.betweenFieldSuffix)
     ) {
       result[key] = Between(...(result[key] as [string, string]));
-    } else if (checkField(key, option.inField, option.inFieldSuffix)) {
+    } else if (
+      Array.isArray(result[key]) &&
+      checkField(key, option.inField, option.inFieldSuffix)
+    ) {
       result[key] = In(result[key]);
     }
   }

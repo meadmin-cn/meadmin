@@ -28,7 +28,10 @@ export class EntityService {
     this.className = upFirstCase(
       toHump(relativePath('', toPath, ['.entity', '.ts']).split('/').pop()!),
     );
-    this.basePath = resovePath(normalizeToKebabOrSnakeCase(basePath));
+    this.basePath = resovePath(
+      normalizeToKebabOrSnakeCase(basePath),
+      basePath.endsWith('.ts') ? [] : ['.entity', '.ts'],
+    );
     this.baseName = upFirstCase(
       toHump(relativePath('', basePath, ['.entity', '.ts']).split('/').pop()!),
     );

@@ -14,13 +14,13 @@ describe('crud entity service', () => {
       );
       expect(service.baseName).toBe('AaBbBase');
       expect(service.basePath).toBe(
-        resolve('aa-bb-base.ts').replace(/\\/g, '/'),
+        resolve('aa-bb-base.entity.ts').replace(/\\/g, '/'),
       );
     });
     it('检测内容', () => {
       expect(service.getContent()).toBe(
         `import { Entity } from 'typeorm';
-import { AaBbBase as Base } from './aa-bb-base';
+import { AaBbBase as Base } from './aa-bb-base.entity';
 
 @Entity()
 export class AaBbCc extends Base {}
@@ -31,7 +31,7 @@ export class AaBbCc extends Base {}
   describe('path为路径', () => {
     let service: EntityService;
     beforeAll(() => {
-      service = new EntityService('dd/aaBbCc.entity', 'dd/aaBbBase');
+      service = new EntityService('dd/aaBbCc.entity', 'dd/aaBbBase.ts');
     });
     it('检测 name和path', () => {
       expect(service.className).toBe('AaBbCc');

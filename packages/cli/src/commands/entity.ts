@@ -17,7 +17,7 @@ export class Entity extends AbstractCommand {
   }
 
   private getPath() {
-    return resolve(process.cwd(), this.base, this.files + '.ts');
+    return resolve(process.cwd(), this.base, this.files + '.entity.ts');
   }
 
   public async runCommand() {

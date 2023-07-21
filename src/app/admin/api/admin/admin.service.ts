@@ -5,7 +5,7 @@ import { Admin } from './entities/admin.entity';
 import { QueryAdminDto } from './dto/query-admin.dto';
 import { formatWhere } from '@/utils/formatWhere';
 import { pbkdf2Sync, randomBytes } from 'node:crypto';
-import { ForbiddenException } from '@/app/core/exception/forbidden-exception';
+import { ForbiddenException } from '@/exception/forbidden-exception';
 
 @Injectable()
 export class AdminService {

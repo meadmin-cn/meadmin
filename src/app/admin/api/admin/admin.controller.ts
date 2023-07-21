@@ -17,7 +17,7 @@ import { ApiTags } from '@meadmin/nest-swagger';
 import { ApiOperationResponse } from '@/decorators/api-operation-response';
 import { Admin } from './entities/admin.entity';
 import { QueryAdminDto } from './dto/query-admin.dto';
-import { ForbiddenException } from '@/app/core/exception/forbidden-exception';
+import { ForbiddenException } from '@/exception/forbidden-exception';
 
 @ApiTags('管理员')
 @Controller('admin')

@@ -100,15 +100,15 @@ export class AdminService {
    * @returns
    */
   async update(id: number, updateAdminDto: UpdateAdminDto) {
-    const admin = await Admin.findOneByOrFail({ id });
-    Object.assign(admin, updateAdminDto);
+    const entity = await Admin.findOneByOrFail({ id });
+    Object.assign(entity, updateAdminDto);
     if (updateAdminDto.password) {
-      admin.password = this.entityPassword(
+      entity.password = this.entityPassword(
         updateAdminDto.password,
-        admin.salt,
+        entity.salt,
       ).password;
     }
-    return await admin.save();
+    return await entity.save();
   }
 
   /**

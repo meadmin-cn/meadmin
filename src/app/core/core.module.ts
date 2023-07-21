@@ -15,6 +15,8 @@ import { ControllerService } from './service/controller.service';
 import { SwaggerService } from './service/swagger.service';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './exception/filter/all-exception.filter';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-ioredis-yet';
 @Global()
 @Module({
   imports: [
@@ -23,6 +25,12 @@ import { AllExceptionsFilter } from './exception/filter/all-exception.filter';
       load: config,
       expandVariables: true,
       envFilePath: ['.env.' + process.env.NODE_ENV, '.env'],
+    }),
+    CacheModule.register<Exclude<Parameters<typeof redisStore>[0], undefined>>({
+      store: redisStore,
+      // Store-specific configuration:
+      host: '127.0.0.1',
+      port: 6379,
     }),
   ],
   providers: [

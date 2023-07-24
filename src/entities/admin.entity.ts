@@ -1,10 +1,4 @@
 import {
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  UpdateDateColumn,
-} from 'typeorm';
-import {
   IsIn,
   IsOptional,
   IsPositive,
@@ -15,8 +9,9 @@ import {
 import { ColumnApi } from '@/decorators/column-api';
 import { BaseEntity } from '@/extend/typeorm/BaseEntity';
 import { ApiHideProperty } from '@meadmin/nest-swagger';
+import { Table } from '@sequelize/core/decorators-legacy';
 
-@Entity()
+@Table({ comment: '管理员表' })
 export class Admin extends BaseEntity {
   @ColumnApi({ primary: true, generated: true, unsigned: true, comment: 'ID' })
   id: number;

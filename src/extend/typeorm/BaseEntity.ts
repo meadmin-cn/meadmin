@@ -1,7 +1,10 @@
-import { BaseEntity as Base } from 'typeorm';
+import { Model } from '@sequelize/core';
 import dayjs from 'dayjs';
 import { DECORATORS } from '@nestjs/swagger/dist/constants';
-export class BaseEntity extends Base {
+export class BaseEntity<
+  TModelAttributes extends object = any,
+  TCreationAttributes extends object = TModelAttributes,
+> extends Model<TModelAttributes, TCreationAttributes> {
   static useToJSON = true;
   /**
    * 格式化日期属性
@@ -9,7 +12,7 @@ export class BaseEntity extends Base {
    * @param propertyName 属性名称
    * @returns 对应的日期值
    */
-  protected formateDate(value: Date, propertyName: string) {
+  protected formateDate(value: Date, propertyName: string | number | symbol) {
     return dayjs(value).format('YYYY-MM-DD HH:mm:ss');
   }
 
@@ -20,32 +23,27 @@ export class BaseEntity extends Base {
    * @param this
    * @returns
    */
-  public toJSON(this: BaseEntity & Record<string, any>) {
+  public toJSON() {
+    const info = super.toJSON();
     if (!BaseEntity.useToJSON) {
-      return this;
+      return info;
     }
     const properties: string[] =
       Reflect.getMetadata(
         DECORATORS.API_MODEL_PROPERTIES_ARRAY,
         Object.getPrototypeOf(this),
       ) || [];
-    const res = {} as Record<string, any>;
+    const res = {} as Record<keyof typeof info, any>;
     properties.forEach((item) => {
-      const propertyName = item.slice(1);
-      if (this[propertyName] === undefined) {
+      const propertyName = item.slice(1) as unknown as keyof typeof info;
+      if (info[propertyName] === undefined) {
         return;
       }
-      const getPropertyFunctionName =
-        'get' + propertyName.slice(0, 1).toUpperCase() + propertyName.slice(1);
-      if (typeof this[getPropertyFunctionName] === 'function') {
-        res[propertyName] = this[getPropertyFunctionName]();
+      if ((info[propertyName] as any) instanceof Date) {
+        res[propertyName] = this.formateDate(info[propertyName], propertyName);
         return;
       }
-      if (this[propertyName] instanceof Date) {
-        res[propertyName] = this.formateDate(res[propertyName], propertyName);
-        return;
-      }
-      res[propertyName] = this[propertyName];
+      res[propertyName] = info[propertyName];
     });
     return res;
   }

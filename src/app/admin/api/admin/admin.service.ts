@@ -14,21 +14,16 @@ export class AdminService {
    * @param password 密码
    * @returns {salt:密码盐,password:密码密文}
    */
-  private entityPassword(password: string, salt?: string) {
+  private entityPassword(password: string, salt?: Buffer) {
     let newSalt: Buffer;
     if (salt) {
-      newSalt = Buffer.from(salt, 'hex');
+      newSalt = salt;
     } else {
       newSalt = randomBytes(32);
     }
-    const ciphertext = pbkdf2Sync(
-      password,
-      newSalt,
-      1000,
-      32,
-      'sha3-256',
-    ).toString('hex');
-    return { salt: salt ?? newSalt.toString('hex'), password: ciphertext };
+    console.log(newSalt.toString('hex'));
+    const ciphertext = pbkdf2Sync(password, newSalt, 1000, 32, 'sha3-256');
+    return { salt: newSalt, password: ciphertext };
   }
 
   /**
@@ -38,7 +33,7 @@ export class AdminService {
    * @param encode 加密字符串
    * @returns 是否通过
    */
-  public checkPassword(password: string, salt: string, encode: string) {
+  public checkPassword(password: string, salt: Buffer, encode: Buffer) {
     return this.entityPassword(password, salt).password === encode;
   }
 
@@ -48,11 +43,11 @@ export class AdminService {
    * @returns
    */
   async create(createAdminDto: CreateAdminDto) {
-    const entity = new Admin();
-    Object.assign(
-      entity,
-      createAdminDto,
-      this.entityPassword(createAdminDto.password),
+    const entity = Admin.build(
+      Object.assign(
+        createAdminDto,
+        this.entityPassword(createAdminDto.password),
+      ),
     );
     return await entity.save();
   }
@@ -70,9 +65,10 @@ export class AdminService {
    * @returns
    */
   findAll(queryAdminDto: QueryAdminDto) {
-    return Admin.find({
-      skip: (queryAdminDto.page - 1) * queryAdminDto.size,
-      take: queryAdminDto.size,
+    console.log(this.formatWhere(queryAdminDto));
+    return Admin.findAll({
+      offset: (queryAdminDto.page - 1) * queryAdminDto.size,
+      limit: queryAdminDto.size,
       where: this.formatWhere(queryAdminDto),
     });
   }
@@ -83,7 +79,7 @@ export class AdminService {
    * @returns
    */
   count(queryAdminDto: Partial<QueryAdminDto>) {
-    return Admin.countBy(this.formatWhere(queryAdminDto));
+    return Admin.count({ where: this.formatWhere(queryAdminDto) });
   }
 
   /**
@@ -92,7 +88,7 @@ export class AdminService {
    * @returns
    */
   findOne(id: number) {
-    return Admin.findOneBy({ id });
+    return Admin.findByPk(id);
   }
 
   /**
@@ -102,7 +98,7 @@ export class AdminService {
    * @returns
    */
   async update(id: number, updateAdminDto: UpdateAdminDto) {
-    const entity = await Admin.findOneBy({ id });
+    const entity = await Admin.findByPk(id);
     if (!entity) {
       throw new ForbiddenException('没用对应的信息');
     }
@@ -122,11 +118,11 @@ export class AdminService {
    * @returns
    */
   async remove(id: number) {
-    const entity = await Admin.findOneBy({ id });
+    const entity = await Admin.findByPk(id);
     if (!entity) {
       throw new ForbiddenException('没用对应的信息');
     }
-    await entity.softRemove();
-    return Boolean(entity.deletedAt);
+    await entity.destroy();
+    return Boolean(entity.deletionDate);
   }
 }

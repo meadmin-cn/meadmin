@@ -1,6 +1,9 @@
 import { Model } from '@sequelize/core';
 import dayjs from 'dayjs';
 import { DECORATORS } from '@nestjs/swagger/dist/constants';
+import { Table } from '@sequelize/core/decorators-legacy';
+
+@Table.Abstract
 export class BaseEntity<
   TModelAttributes extends object = any,
   TCreationAttributes extends object = TModelAttributes,

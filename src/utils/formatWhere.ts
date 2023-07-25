@@ -1,5 +1,5 @@
+import { Op } from '@sequelize/core';
 import { cloneDeep } from 'lodash';
-import { Between, In, Like } from 'typeorm';
 export const formatWhereOptions = {
   likeField: ['name'],
   likeFieldSuffix: ['Name'],
@@ -40,21 +40,23 @@ export function formatWhere(
   data: Record<string, any>,
   options?: FormatWhereOptions,
 ) {
-  const result = cloneDeep(data);
+  const result = {} as Record<string, any>;
   const option = Object.assign({}, formatWhereOptions, options);
-  for (const key in result) {
+  for (const key in data) {
     if (checkField(key, option.likeField, option.likeFieldSuffix)) {
-      result[key] = Like(`%${result[key]}%`);
+      result[key] = { [Op.like]: `%${data[key]}%` };
     } else if (
-      Array.isArray(result[key]) &&
+      Array.isArray(data[key]) &&
       checkField(key, option.betweenField, option.betweenFieldSuffix)
     ) {
-      result[key] = Between(...(result[key] as [string, string]));
+      result[key] = { [Op.between]: data[key] };
     } else if (
-      Array.isArray(result[key]) &&
+      Array.isArray(data[key]) &&
       checkField(key, option.inField, option.inFieldSuffix)
     ) {
-      result[key] = In(result[key]);
+      result[key] = { [Op.in]: data[key] };
+    } else if (![undefined, ''].includes(data[key])) {
+      result[key] = data[key];
     }
   }
   return result;

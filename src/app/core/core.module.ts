@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import config, { Config } from '@/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ResponseService } from './service/response.service';
 import { AppService } from './service/app.service';
 import { DiscoveryService } from './service/discovery.service';
@@ -17,6 +16,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './exception/filter/all-exception.filter';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-ioredis-yet';
+import Sequelize from '@sequelize/core';
 @Global()
 @Module({
   imports: [
@@ -26,12 +26,12 @@ import { redisStore } from 'cache-manager-ioredis-yet';
       expandVariables: true,
       envFilePath: ['.env.' + process.env.NODE_ENV, '.env'],
     }),
-    CacheModule.register<Exclude<Parameters<typeof redisStore>[0], undefined>>({
-      store: redisStore,
-      // Store-specific configuration:
-      host: '127.0.0.1',
-      port: 6379,
-    }),
+    // CacheModule.register<Exclude<Parameters<typeof redisStore>[0], undefined>>({
+    //   store: redisStore,
+    //   // Store-specific configuration:
+    //   host: '127.0.0.1',
+    //   port: 6379,
+    // }),
   ],
   providers: [
     ResponseService,
@@ -48,11 +48,12 @@ import { redisStore } from 'cache-manager-ioredis-yet';
   exports: [ResponseService, Logger],
 })
 export class CoreModule {
-  static forRoot(): DynamicModule {
+  static async forRoot(): Promise<DynamicModule> {
     const imports = [] as Exclude<ModuleMetadata['imports'], undefined>;
-    const databaseConfigs = Config.database;
+    const databaseConfigs = await Config.database;
     databaseConfigs.forEach((item) => {
-      imports.push(TypeOrmModule.forRoot(item));
+      console.log(item.models);
+      new Sequelize(item);
     });
     return {
       module: CoreModule,

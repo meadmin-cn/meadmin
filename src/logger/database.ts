@@ -1,57 +1,18 @@
-import { Logger } from 'typeorm';
 import { Logger as NestLogger } from '@nestjs/common';
+const logger = new NestLogger('sequelize');
 
-export class DatabaseLogger implements Logger {
+export class DatabaseLogger {
   // 实现logger类的所有方法
-  private readonly logger = new NestLogger('TypeOrm');
 
-  logQuery(query: string, parameters?: unknown[]) {
-    this.logger.log(
-      `${query} -- Parameters: ${this.stringifyParameters(parameters)}`,
-    );
-  }
-
-  logQueryError(error: string, query: string, parameters?: unknown[]) {
-    this.logger.error(
-      `${query} -- Parameters: ${this.stringifyParameters(
-        parameters,
-      )} -- ${error}`,
-    );
-  }
-
-  logQuerySlow(time: number, query: string, parameters?: unknown[]) {
-    this.logger.warn(
-      `Time: ${time} -- Parameters: ${this.stringifyParameters(
-        parameters,
-      )} -- ${query}`,
-    );
-  }
-
-  logMigration(message: string) {
-    this.logger.log(message);
-  }
-
-  logSchemaBuild(message: string) {
-    this.logger.log(message);
-  }
-
-  log(level: 'log' | 'info' | 'warn', message: string) {
-    if (level === 'log') {
-      return this.logger.log(message);
-    }
-    if (level === 'info') {
-      return this.logger.debug(message);
-    }
-    if (level === 'warn') {
-      return this.logger.warn(message);
+  logQuery(query: string, time: number) {
+    if (time > 5000) {
+      this.logQuerySlow(query, time);
+    } else {
+      logger.log(`${query} -- time: ${time} ms`);
     }
   }
 
-  private stringifyParameters(parameters?: unknown[]) {
-    try {
-      return JSON.stringify(parameters);
-    } catch {
-      return '';
-    }
+  logQuerySlow(query: string, time: number) {
+    logger.warn(`${query} -- time: ${time} ms`);
   }
 }

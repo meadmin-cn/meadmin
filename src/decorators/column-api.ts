@@ -1,9 +1,10 @@
 import { ApiProperty, ApiPropertyOptions } from '@meadmin/nest-swagger';
 import { applyDecorators } from '@nestjs/common';
-import { Column, ColumnOptions } from 'typeorm';
+import { AttributeOptions } from '@sequelize/core';
+import { Attribute } from '@sequelize/core/decorators-legacy';
 
 export function ColumnApi(
-  columnOptions: ColumnOptions | PropertyDecorator,
+  columnOptions: Partial<AttributeOptions> | PropertyDecorator,
   apiPropertyOptions?: ApiPropertyOptions,
 ): PropertyDecorator {
   let apiOptions: ApiPropertyOptions = {};
@@ -15,11 +16,9 @@ export function ColumnApi(
   }
   apiOptions = {
     description: columnOptions.comment,
-    enum: columnOptions.enum,
-    enumName: columnOptions.enumName,
   };
   return applyDecorators(
-    Column(columnOptions),
+    Attribute(columnOptions),
     ApiProperty(Object.assign(apiOptions, apiPropertyOptions)),
   );
 }

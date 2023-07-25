@@ -7,16 +7,17 @@ import {
 import { PageReq } from '@/request/api-page.req';
 import { IsDateString, ValidateIf } from 'class-validator';
 import { Admin } from '../entities/admin.entity';
+import { entityAutoProperty, entityFunctionProperty } from '@/dict/entity';
 
 export class QueryAdminDto extends IntersectionType(
   PageReq,
   PartialType(
     OmitType(Admin, [
+      ...entityFunctionProperty,
+      ...entityAutoProperty,
+      'loginIp',
+      'salt',
       'password',
-      'loginAt',
-      'createdAt',
-      'updatedAt',
-      'deletedAt',
     ] as const),
   ),
 ) {

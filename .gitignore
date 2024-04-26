@@ -11,3 +11,4 @@ run/
 *.un~
 .tsbuildinfo
 .tsbuildinfo.*
+.nx/

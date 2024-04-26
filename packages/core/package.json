@@ -1,14 +1,16 @@
 {
-  "name": "my-midway-esm-project",
+  "name": "@meadmin/core",
   "version": "1.0.0",
   "description": "",
-  "private": true,
   "type": "module",
-  "bin":{
-    "wPack":"./bin/watchBootstrap.js"
-  },
+  "main": "dist/index.js",
+  "typings": "index.d.ts",
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "index.d.ts"
+  ],
   "dependencies": {
-    "@meadmin/core": "workspace:^",
     "@midwayjs/bootstrap": "^3.12.0",
     "@midwayjs/core": "^3.12.0",
     "@midwayjs/info": "^3.12.0",
@@ -34,14 +36,13 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./bootstrap.js",
-    "dev": "cross-env NODE_ENV=local  mwtsc --watch --run @midwayjs/mock/app",
+    "dev": "cross-env NODE_ENV=local mwtsc --watch --run @midwayjs/mock/app",
     "test": "cross-env NODE_ENV=unittest mocha",
     "cov": "cross-env c8 --all --reporter=text --reporter=lcovonly npm run test",
     "lint": "mwts check",
     "lint:fix": "mwts fix",
     "ci": "npm run cov",
-    "build": "mwtsc --cleanOutDir",
-    "watch:pack":"cross-env NODE_ENV=local npx wPack --watch --run @midwayjs/mock/app"
+    "build": "mwtsc --cleanOutDir"
   },
   "repository": {
     "type": "git",

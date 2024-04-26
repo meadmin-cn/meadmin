@@ -17,17 +17,13 @@
     "forceConsistentCasingInFileNames": true,
     "typeRoots": [ "./typings", "./node_modules/@types"],
     "outDir": "dist",
-    "rootDir": "src",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "rootDir": "src"
   },
   "exclude": [
     "*.js",
     "*.ts",
     "dist",
     "node_modules",
-    "test",
-    "packages"
+    "test"
   ]
 }

@@ -55,8 +55,8 @@ importers:
         specifier: ^1.3.0
         version: 1.3.0(typescript@5.1.6)
       mwtsc:
-        specifier: ^1.4.0
-        version: 1.7.2
+        specifier: ^1.10.1
+        version: 1.10.1
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@16.18.96)(typescript@5.1.6)
@@ -110,8 +110,8 @@ importers:
         specifier: ^1.3.0
         version: 1.3.0(typescript@5.1.6)
       mwtsc:
-        specifier: ^1.4.0
-        version: 1.7.2
+        specifier: ^1.10.1
+        version: 1.10.1
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@16.18.96)(typescript@5.1.6)
@@ -2406,8 +2406,8 @@ packages:
     peerDependencies:
       typescript: '>=3'
 
-  mwtsc@1.7.2:
-    resolution: {integrity: sha512-dm25Zlelj6U3hHP5o7fQw0+1en2t6nSb519c0vUeb1NJZo5+1TWEwsO+YEDUJ8PXu5jUcYb5O4oojWyMcHRbiw==}
+  mwtsc@1.10.1:
+    resolution: {integrity: sha512-QiFbjcGnlUmgHPkVl9JzjxpxUD30+7REdDNqlFeVkjh3QMl6zPEvj8r89ti5fhKaKF9TwID+5KFOJHLBjPgrvg==}
     engines: {node: '>=12.0.0'}
     hasBin: true
 
@@ -6250,7 +6250,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  mwtsc@1.7.2:
+  mwtsc@1.10.1:
     dependencies:
       '@midwayjs/glob': 1.1.1
       chokidar: 3.6.0

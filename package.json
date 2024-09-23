@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "bin": {
-    "wPack": "./bin/watchBootstrap.js"
+    "watchBootstrap": "./bin/watchBootstrap.js"
   },
   "dependencies": {
     "@meadmin/core": "workspace:^",
@@ -41,7 +41,7 @@
     "lint:fix": "mwts fix",
     "ci": "npm run cov",
     "build": "mwtsc --cleanOutDir",
-    "watch:pack": "cross-env NODE_ENV=local npx wPack --watch --run @midwayjs/mock/app"
+    "watch:pack": "cross-env NODE_ENV=local npx watchBootstrap --watch --run @midwayjs/mock/app"
   },
   "repository": {
     "type": "git",

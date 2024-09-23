@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { spawn } from 'child_process';
+// eslint-disable-next-line node/no-unpublished-import
 import { run } from 'mwtsc';
 const isWin = process.platform === 'win32';
 const cwd = process.cwd();
@@ -18,9 +19,10 @@ const watchPackageChild = spawn(
     shell: isWin,
   }
 );
-watchPackageChild.stdout.pipe(process.stdout);
+// watchPackageChild.stdout.pipe(process.stdout);
 watchPackageChild.stdout.on('data', data => {
   data = data.toString('utf8');
+  console.log(data);
   if (data.trim() === 'package build success') {
     runMidway.restart();
   }

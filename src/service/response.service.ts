@@ -1,4 +1,7 @@
 import { CodeEunm } from '@/dict/code.enum.js';
+import { ApiErrorRes } from '@/response/apiError.res.js';
+import { ApiPageRes } from '@/response/apiPage.res.js';
+import { ApiSuccessRes } from '@/response/apiSuccess.res.js';
 import { Provide } from '@midwayjs/core';
 
 @Provide()
@@ -32,7 +35,7 @@ export class ResponseService {
   public success<T extends Record<string, any>>(
     data: T = {} as T,
     message = '操作成功'
-  ) {
+  ): ApiSuccessRes<T> {
     return this.response(CodeEunm.Success, message, data);
   }
 
@@ -45,7 +48,7 @@ export class ResponseService {
   public error(
     message: string,
     code: Exclude<CodeEunm, CodeEunm.Success> = CodeEunm.Fail
-  ) {
+  ):ApiErrorRes {
     return this.response(code, message, undefined);
   }
 
@@ -64,7 +67,7 @@ export class ResponseService {
     page = 1,
     size = 10,
     message = '列表数据获取成功'
-  ) {
+  ):ApiPageRes<T> {
     return this.success(
       {
         page,

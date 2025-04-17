@@ -14,7 +14,9 @@
     "@midwayjs/info": "^3.20.4",
     "@midwayjs/koa": "^3.20.4",
     "@midwayjs/logger": "^3.4.2",
+    "@midwayjs/swagger": "3",
     "@midwayjs/validate": "^3.20.4",
+    "swagger-ui-dist": "^5.21.0",
     "tsx": "^4.19.3"
   },
   "devDependencies": {

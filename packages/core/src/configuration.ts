@@ -1,19 +1,19 @@
-import { Configuration, App } from '@midwayjs/core';
-import * as DefaultConfig from './config/config.default.js';
-import * as koa from '@midwayjs/koa';
+import { Configuration,  Inject } from '@midwayjs/core';
+import { RouterService } from './service/router.service.js';
 
 @Configuration({
-  namespace: 'book',
-  importConfigs: [
-    {
-      default: DefaultConfig,
-    },
-  ],
+  namespace: 'meadmin', 
 })
-export class BookConfiguration {
-  @App('koa')
-  app: koa.Application;
+export class MeadminConfiguration {
+  @Inject()
+  routerService:RouterService;
+  
+  // onConfigLoad(){
+  //   this.routerService.initControllerOption();
+  // }
   async onReady() {
     // TODO something1
+    this.routerService.initControllerOption();
+
   }
 }

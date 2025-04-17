@@ -1,3 +1,2 @@
-export { BookConfiguration as Configuration } from './configuration.js';
-export * from './service/book.service.js';
-export * from './controller/book.controller.js';
+export { MeadminConfiguration as Configuration } from './configuration.js';
+export * from './service/router.service.js';

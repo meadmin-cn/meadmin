@@ -1,0 +1,20 @@
+{
+  "extends":"../tsconfig.json",
+  "compileOnSave": true,
+  "noEmit": true,
+  "compilerOptions": {
+    "rootDir": "../../",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "preserveSymlinks": true
+  },
+  "include": [
+    "*.ts",
+    "*/*.ts",
+    "./fixtures/base-app/src/**/*.ts",
+    "../src/**/*.ts",
+    "../types/**/*.d.ts",
+    "../index.d.ts",
+  ],
+  "exclude":[],
+}

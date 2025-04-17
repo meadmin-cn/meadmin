@@ -1,3 +1,7 @@
+/**
+ * 根据 controller 继承关系 递归合成Controller装饰器的path
+ * 从第一个prefix以/开头的祖级开始合并controller的prefix和routerOptions，如果prefix 以/开头，则不合并prefix和routerOptions。
+ */
 import { merge } from '../util/index.js';
 import {
   CONTROLLER_KEY,
@@ -14,7 +18,7 @@ import {
 export class RouterService {
   protected routerOptionsMerged = new Map<ControllerOption, boolean>();
 
-  //递归合并@controller装饰器的父类参数到子类
+  //递归合并@Controller装饰器的父类参数到子类
   protected mergeControllerOption(
     controllerOption: ControllerOption,
     controllerClz: Record<string, unknown>
@@ -23,17 +27,16 @@ export class RouterService {
       const prototype = Object.getPrototypeOf(controllerClz);
       const parentOption = getClassMetadata(CONTROLLER_KEY, prototype);
       if (parentOption) {
-        controllerOption.prefix = controllerOption.prefix.startsWith('/')
-          ? controllerOption.prefix
-          : (parentOption.prefix + controllerOption.prefix).replace(
-              /\/\//g,
-              '/'
+        if (!controllerOption.prefix.startsWith('/')) {
+          controllerOption.prefix = (
+            parentOption.prefix + '/'+controllerOption.prefix
+          ).replace(/\/\//g, '/');
+          if (controllerOption.routerOptions && parentOption.routerOptions) {
+            controllerOption.routerOptions = merge(
+              parentOption.routerOptions,
+              controllerOption.routerOptions
             );
-        if (controllerOption.routerOptions && parentOption.routerOptions) {
-          controllerOption.routerOptions = merge(
-            parentOption.routerOptions,
-            controllerOption.routerOptions
-          );
+          }
         }
         return this.mergeControllerOption(controllerOption, prototype);
       }

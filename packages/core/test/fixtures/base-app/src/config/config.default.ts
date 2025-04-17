@@ -6,5 +6,4 @@ export default {
   koa: {
     port: 7001,
   },
-  debug: true,
 } as MidwayConfig;

@@ -1,10 +1,9 @@
 import { Controller, Get } from '@midwayjs/core';
 
-@Controller('/')
+@Controller('/admin')
 export class HomeController {
   @Get('/')
-  async home(): Promise<string> {
-    throw new Error('111');
+  async home() {
     return 'Hello Midwayj12s!';
   }
 }

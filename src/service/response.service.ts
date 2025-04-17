@@ -1,0 +1,78 @@
+import { CodeEunm } from '@/dict/code.enum.js';
+import { Provide } from '@midwayjs/core';
+
+@Provide()
+// @Scope(ScopeEnum.Singleton)
+export class ResponseService {
+  /**
+   * 格式化返回函数
+   * @param code
+   * @param message
+   * @param data
+   * @returns
+   */
+  private response<C extends CodeEunm, T = any>(
+    code: C,
+    message: string,
+    data: T
+  ) {
+    return {
+      code,
+      message,
+      data,
+    };
+  }
+
+  /**
+   * 成功返回
+   * @param data
+   * @param message
+   * @returns
+   */
+  public success<T extends Record<string, any>>(
+    data: T = {} as T,
+    message = '操作成功'
+  ) {
+    return this.response(CodeEunm.Success, message, data);
+  }
+
+  /**
+   * 失败返回
+   * @param message
+   * @param code
+   * @returns
+   */
+  public error(
+    message: string,
+    code: Exclude<CodeEunm, CodeEunm.Success> = CodeEunm.Fail
+  ) {
+    return this.response(code, message, undefined);
+  }
+
+  /**
+   * 分页返回
+   * @param list
+   * @param total
+   * @param page
+   * @param size
+   * @param message
+   * @returns
+   */
+  public pageRes<T = any>(
+    list: T[],
+    total = 0,
+    page = 1,
+    size = 10,
+    message = '列表数据获取成功'
+  ) {
+    return this.success(
+      {
+        page,
+        size,
+        total,
+        list,
+      },
+      message
+    );
+  }
+}

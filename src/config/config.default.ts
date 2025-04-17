@@ -6,5 +6,12 @@ export default {
   koa: {
     port: 7001,
   },
-  debug: true,
+  // debug: true,
+  // validate: {
+  //   validationOptions: {
+  //     allowUnknown: true, // 全局生效 允许未定义的字段
+  //     convert:true,// 当为true时，尝试将值转换为所需的类型（例如，将字符串转换为数字.
+  //     stripUnknown: true, // 全局生效,移除多余的字段
+  //   },
+  // },
 } as MidwayConfig;

@@ -27,7 +27,7 @@ importers:
         specifier: ^3.4.2
         version: 3.4.2
       '@midwayjs/validate':
-        specifier: ^3.20.4
+        specifier: 3.20.4
         version: 3.20.4
       tsx:
         specifier: ^4.19.3

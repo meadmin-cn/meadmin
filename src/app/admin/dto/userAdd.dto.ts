@@ -1,11 +1,7 @@
-import { ApiProperty } from "@midwayjs/swagger";
 import { User } from "../../entity/user.entity.js";
-import { OmitDto, Rule, RuleType } from "@midwayjs/validate";
+import { OmitDtoType } from "@/helper/swaggerHelper.js";
 
 
-export class UserAddDto extends OmitDto(User, ['id']) {
+export class UserAddDto extends OmitDtoType(User, ['id']) {
 
-  @Rule(RuleType.number().max(60).required())
-  @ApiProperty({ description: 'The name of the Catage'})
-  age: number;
 }

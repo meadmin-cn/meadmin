@@ -13,6 +13,7 @@ import * as swagger from '@midwayjs/swagger'
 @Configuration({
   imports: [
     koa,
+    meadmin,//必须放在swagger之前引入
     validate,
     {
       component: info,
@@ -22,7 +23,7 @@ import * as swagger from '@midwayjs/swagger'
       component:swagger,
       enabledEnvironment:['local','dev']
     },
-    meadmin,
+    
   ],
   importConfigs: [
     {

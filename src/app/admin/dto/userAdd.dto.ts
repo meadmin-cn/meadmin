@@ -1,5 +1,5 @@
-import { User } from "../../entity/user.entity.js";
-import { OmitDtoType } from "@/helper/swaggerHelper.js";
+import { User } from "../../entity/user.js";
+import { OmitDtoType } from "@/helper/swagger.helper.js";
 
 
 export class UserAddDto extends OmitDtoType(User, ['id']) {

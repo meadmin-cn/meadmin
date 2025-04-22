@@ -10,6 +10,7 @@ import UnittestConfig from '@/config/config.unittest.js';
 import * as meadmin from '@meadmin/core';
 import { ValidateErrorFilter } from './filter/validate.filter.js';
 import * as swagger from '@midwayjs/swagger'
+
 @Configuration({
   imports: [
     koa,

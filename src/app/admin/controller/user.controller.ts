@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post } from '@midwayjs/core';
 import { UserAddDto } from '../dto/userAdd.dto.js';
 import { BaseController } from './base.controller.js';
 import { ApiOperation, ApiResponse } from '@midwayjs/swagger';
-import { User } from '@/app/entity/user.entity.js';
+import { User } from '@/app/entity/user.js';
 import { ApiPageWapper } from '@/response/apiPage.res.js';
 import { ApiSuccessWapper } from '@/response/apiSuccess.res.js';
 

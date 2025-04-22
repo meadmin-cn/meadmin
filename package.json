@@ -16,6 +16,8 @@
     "@midwayjs/logger": "^3.4.2",
     "@midwayjs/swagger": "3",
     "@midwayjs/validate": "^3.20.4",
+    "@sequelize/core": "7.0.0-alpha.46",
+    "@sequelize/postgres": "7.0.0-alpha.46",
     "swagger-ui-dist": "^5.21.0",
     "tsx": "^4.19.3"
   },

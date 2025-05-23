@@ -1,6 +1,7 @@
 import { uuid } from '@/helper/snowflake.js';
 import { ApiProperty } from '@midwayjs/swagger';
-import { Rule, RuleType } from '@midwayjs/validate';
+import { Rule } from '@midwayjs/validate';
+import {RuleType} from '@/ruleType/index.js';
 import {
   DataTypes,
   Model,
@@ -48,7 +49,7 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
   @ApiProperty({ description: '邮箱'})
   email: string;
 
-  @Rule(RuleType.string().length(11))
+  @Rule(RuleType.string().mobile())
   @Attribute({ type: DataTypes.STRING(11), comment: '手机号' })
   @ApiProperty({ description: '手机号'})
   mobile: string;

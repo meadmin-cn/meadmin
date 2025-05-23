@@ -19,6 +19,16 @@ export default {
       stripUnknown: true, // 全局生效,移除多余的字段
     },
   },
+  i18n: {
+    // 把你的翻译文本放到这里
+    localeTable: {
+      zh_CN: {
+        validate: {
+          'string.mobile': '{{#label}} 必须是一个正确的手机号',
+        },
+      },
+    },
+  },
   database: {
     name: 'default', //数据库配置别名
     dialect: PostgresDialect,
@@ -28,7 +38,6 @@ export default {
       process.env.DATABASE_PORT ?? '5342'
     }/meadmin?currentSchema=meadmin&TimeZone=Asia/Shanghai`, //数据库连接信息
     client_encoding: 'utf8',
-    timezone: '+08:00', //时区
     models: await importModels(
       (__dirname + '/../app/**/*.entity.{ts,js}').replace(/\\/g, '/')
     ),

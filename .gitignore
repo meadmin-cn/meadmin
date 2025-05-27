@@ -12,3 +12,4 @@ run/
 .tsbuildinfo
 .tsbuildinfo.*
 .nx/
+.env.local

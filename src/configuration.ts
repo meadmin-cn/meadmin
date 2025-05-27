@@ -24,6 +24,7 @@ if (process.env.NODE_ENV) {
     override: true,
   });
 }
+
 @Configuration({
   imports: [
     koa,

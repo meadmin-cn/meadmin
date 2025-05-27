@@ -9,22 +9,28 @@ import DefaultConfig from '@/config/config.default.js';
 import UnittestConfig from '@/config/config.unittest.js';
 import * as meadmin from '@meadmin/core';
 import { ValidateErrorFilter } from './filter/validate.filter.js';
-import * as swagger from '@midwayjs/swagger'
+import * as swagger from '@midwayjs/swagger';
+import dotenv from 'dotenv';
 
+// 根据当前环境加载不同的 .env 文件
+if (process.env.NODE_ENV) {
+  dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+} else {
+  dotenv.config({ path: '.env' });
+}
 @Configuration({
   imports: [
     koa,
-    meadmin,//必须放在swagger之前引入
+    meadmin, //必须放在swagger之前引入
     validate,
     {
       component: info,
       enabledEnvironment: ['local'],
     },
     {
-      component:swagger,
-      enabledEnvironment:['local','dev']
+      component: swagger,
+      enabledEnvironment: ['local', 'dev'],
     },
-    
   ],
   importConfigs: [
     {
@@ -41,6 +47,10 @@ export class MainConfiguration {
     // add middleware
     // this.app.useMiddleware([ReportMiddleware]);
     // add filter
-    this.app.useFilter([ValidateErrorFilter,NotFoundFilter, DefaultErrorFilter]);
+    this.app.useFilter([
+      ValidateErrorFilter,
+      NotFoundFilter,
+      DefaultErrorFilter,
+    ]);
   }
 }

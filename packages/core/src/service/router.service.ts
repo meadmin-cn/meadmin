@@ -29,7 +29,9 @@ export class RouterService {
       if (parentOption) {
         if (!controllerOption.prefix.startsWith('/')) {
           controllerOption.prefix = (
-            parentOption.prefix + '/'+controllerOption.prefix
+            parentOption.prefix +
+            '/' +
+            controllerOption.prefix
           ).replace(/\/\//g, '/');
           if (controllerOption.routerOptions && parentOption.routerOptions) {
             controllerOption.routerOptions = merge(

@@ -4,5 +4,5 @@ import { ResponseService } from '@/service/response.service.js';
 @Controller('/api')
 export abstract class ApiController {
   @Inject()
-  protected readonly resposes:ResponseService
+  protected readonly resposes: ResponseService;
 }

@@ -7,9 +7,9 @@ import { Dto, OmitDto, PickDto } from '@midwayjs/validate';
 
 /**
  * 兼容swagger和validate
- * @param dto 
- * @param keys 
- * @returns 
+ * @param dto
+ * @param keys
+ * @returns
  */
 export function PickDtoType<T, K extends keyof T>(
   dto: Dto<T>,

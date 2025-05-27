@@ -41,7 +41,7 @@ export class CustomSnowflake {
   }
 
   // 等待下一毫秒的方法
-  waitNextMillis(timestamp:number) {
+  waitNextMillis(timestamp: number) {
     while (timestamp <= this.lastTimestamp) {
       timestamp = Date.now();
     }
@@ -49,6 +49,6 @@ export class CustomSnowflake {
   }
 }
 const customSnowflake = new CustomSnowflake(0); // 设置机器ID为0
-export const uuid=()=>{
-    return customSnowflake.nextId();
-}
+export const uuid = () => {
+  return customSnowflake.nextId();
+};

@@ -1,10 +1,11 @@
 import { RuleType } from '@midwayjs/validate';
 
-export interface CustomStringSchema<TSchema = string> extends RuleType.StringSchema<TSchema>{
-    /**
-     * 校验是否是正确的手机号
-     */
-    mobile(): this;
+export interface CustomStringSchema<TSchema = string>
+  extends RuleType.StringSchema<TSchema> {
+  /**
+   * 校验是否是正确的手机号
+   */
+  mobile(): this;
 }
 export const initRuleType = <T extends RuleType.Root>(customRuleType: T) => {
   return customRuleType.extend(root => ({
@@ -24,5 +25,5 @@ export const initRuleType = <T extends RuleType.Root>(customRuleType: T) => {
     },
   })) as {
     string<TSchema = string>(): CustomStringSchema<TSchema>;
-  } & T ;
+  } & T;
 };

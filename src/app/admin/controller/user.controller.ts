@@ -10,7 +10,7 @@ import { ApiSuccessWapper } from '@/response/apiSuccess.res.js';
 export class UserController extends BaseController {
   //接口方法必须加async 方法的接口装饰器值必须/开头
   @Post('/add')
-  @ApiOperation({summary:'添加用户信息'})
+  @ApiOperation({ summary: '添加用户信息' })
   @ApiResponse({
     type: ApiSuccessWapper(User),
   })
@@ -20,8 +20,8 @@ export class UserController extends BaseController {
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
   @Get('/')
-  @ApiOperation({summary:'获取用户列表'})
-  @ApiResponse({type:ApiPageWapper(User)})
+  @ApiOperation({ summary: '获取用户列表' })
+  @ApiResponse({ type: ApiPageWapper(User) })
   async list(@Body() user: UserAddDto) {
     return this.resposes.success(user);
   }

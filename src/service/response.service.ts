@@ -48,7 +48,7 @@ export class ResponseService {
   public error(
     message: string,
     code: Exclude<CodeEunm, CodeEunm.Success> = CodeEunm.Fail
-  ):ApiErrorRes {
+  ): ApiErrorRes {
     return this.response(code, message, undefined);
   }
 
@@ -67,7 +67,7 @@ export class ResponseService {
     page = 1,
     size = 10,
     message = '列表数据获取成功'
-  ):ApiPageRes<T> {
+  ): ApiPageRes<T> {
     return this.success(
       {
         page,

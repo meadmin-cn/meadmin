@@ -23,7 +23,9 @@ const watchPackageChild = spawn(
 watchPackageChild.stdout.on('data', data => {
   const dataStr = data.toString('utf8');
   const now = new Date();
-  console.log(`[${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}] ${dataStr}`);
+  console.log(
+    `[${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}] ${dataStr}`
+  );
   if (dataStr.trim() === 'package build success') {
     runMidway.restart();
   }

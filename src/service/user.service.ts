@@ -3,7 +3,6 @@ import { Provide } from '@midwayjs/core';
 
 @Provide()
 export class UserService {
-
   // async getUser(options: IUserOptions) {
   //   return {
   //     uid: options.uid,

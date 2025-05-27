@@ -43,7 +43,7 @@ export default {
     ),
     define: {
       underscored: true, //强制表名和列名为snake_case
-      freezeTableName: true,//取消表名的单词复数转换
+      freezeTableName: true, //取消表名的单词复数转换
       timestamps: false, // 禁用createAt和updateAt的自动声明
       noPrimaryKey: true, //禁止自动创建主键id
       charset: 'utf8',

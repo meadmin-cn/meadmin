@@ -8,6 +8,7 @@
     "watchBootstrap": "./bin/watchBootstrap.js"
   },
   "dependencies": {
+    "@meadmin/cli": "workspace:^",
     "@meadmin/core": "workspace:^",
     "@midwayjs/bootstrap": "^3.20.4",
     "@midwayjs/core": "^3.20.4",
@@ -25,7 +26,7 @@
   "devDependencies": {
     "@midwayjs/mock": "^3.20.4",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^16.18.126",
+    "@types/node": "^20.17.52",
     "c8": "^8.0.1",
     "cross-env": "^7.0.3",
     "lerna": "^8.2.2",
@@ -35,7 +36,7 @@
     "typescript": "^5.8.3"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.13.1"
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./bootstrap.js",

@@ -39,13 +39,13 @@ export class User extends Model<
   nickname: string;
 
   @Rule(RuleType.string().max(10).min(1).required())
-  @Attribute({ type: DataTypes.CHAR(32).BINARY, comment: '密码' })
+  @Attribute({ type: DataTypes.CHAR(32), comment: '密码' })
   @ApiProperty({ description: '密码' })
-  password: Buffer;
+  password: string;
 
-  @Attribute({ type: DataTypes.CHAR(32).BINARY, comment: '密码盐' })
+  @Attribute({ type: DataTypes.CHAR(32), comment: '密码盐' })
   @ApiProperty({ description: '密码盐' })
-  salt: Buffer;
+  salt: string;
 
   @Rule(RuleType.string().max(100).min(1))
   @Attribute({ type: DataTypes.STRING(100), comment: '头像' })
@@ -98,14 +98,14 @@ export class User extends Model<
   @CreatedAt
   @Attribute({ comment: '创建时间' })
   @ApiProperty({ description: '创建时间' })
-  declare creationDate: CreationOptional<Date>;
+  declare createdAt: CreationOptional<Date>;
 
   @UpdatedAt
   @Attribute({ comment: '最后更新时间' })
   @ApiProperty({ description: '最后更新时间' })
-  declare lastUpdateDate: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 
   @DeletedAt
   @Attribute({ comment: '删除时间' })
-  declare deletionDate: Date | null;
+  declare deletedAt: Date | null;
 }

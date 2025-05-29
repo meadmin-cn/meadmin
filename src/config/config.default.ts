@@ -24,5 +24,5 @@ export default {
       },
     },
   },
-  database,
+  sequelize: await database(),
 } as MidwayConfig;

@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Post } from '@midwayjs/core';
-import { UserAddDto } from '../dto/userAdd.dto.js';
+import { Body, Controller, Get, Post, Query } from '@midwayjs/core';
+import { UserCreateDto } from '../dto/userCreate.dto.js';
 import { BaseController } from './base.controller.js';
 import { ApiOperation, ApiResponse } from '@midwayjs/swagger';
 import { User } from '@/entities/user.entity.js';
 import { ApiPageWapper } from '@/response/apiPage.res.js';
 import { ApiSuccessWapper } from '@/response/apiSuccess.res.js';
+import { UserQueryDto } from '../dto/userQuery.dto.js';
 
 @Controller('user')
 export class UserController extends BaseController {
@@ -14,7 +15,7 @@ export class UserController extends BaseController {
   @ApiResponse({
     type: ApiSuccessWapper(User),
   })
-  async add(@Body() user: UserAddDto) {
+  async add(@Body() user: UserCreateDto) {
     return this.resposes.success(user);
   }
 
@@ -22,7 +23,7 @@ export class UserController extends BaseController {
   @Get('/')
   @ApiOperation({ summary: '获取用户列表' })
   @ApiResponse({ type: ApiPageWapper(User) })
-  async list(@Body() user: UserAddDto) {
+  async list(@Query() user: UserQueryDto) {
     return this.resposes.success(user);
   }
 }

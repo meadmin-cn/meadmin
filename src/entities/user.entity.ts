@@ -16,8 +16,10 @@ import {
   CreatedAt,
   UpdatedAt,
   DeletedAt,
+  Table,
 } from '@sequelize/core/decorators-legacy';
 
+@Table({ tableName: 'user', comment: '用户表' })
 export class User extends Model<
   InferAttributes<User>,
   InferCreationAttributes<User>
@@ -28,14 +30,14 @@ export class User extends Model<
   @Rule(RuleType.string())
   id: string;
 
-  @Rule(RuleType.string().max(10).min(1).required())
+  @Rule(RuleType.string().max(10).min(1).required().optional().empty(''))
   @Attribute({ type: DataTypes.STRING(20), comment: '用户名' })
-  @ApiProperty({ description: '用户名' })
+  @ApiProperty({ description: '用户名', required: true })
   username: string;
 
   @Rule(RuleType.string().max(10).min(1).required())
   @Attribute({ type: DataTypes.STRING(20), comment: '昵称' })
-  @ApiProperty({ description: '昵称' })
+  @ApiProperty({ description: '昵称', required: true })
   nickname: string;
 
   @Rule(RuleType.string().max(10).min(1).required())
@@ -49,17 +51,17 @@ export class User extends Model<
 
   @Rule(RuleType.string().max(100).min(1))
   @Attribute({ type: DataTypes.STRING(100), comment: '头像' })
-  @ApiProperty({ description: '头像' })
+  @ApiProperty({ description: '头像', required: true })
   avatar: string;
 
   @Rule(RuleType.string().max(100))
   @Attribute({ type: DataTypes.STRING(100), comment: '邮箱' })
-  @ApiProperty({ description: '邮箱' })
+  @ApiProperty({ description: '邮箱', required: true })
   email: string;
 
   @Rule(RuleType.string().mobile().description('手机号'))
   @Attribute({ type: DataTypes.STRING(11), comment: '手机号' })
-  @ApiProperty({ description: '手机号' })
+  @ApiProperty({ description: '手机号', required: true })
   mobile: string;
 
   @Attribute({
@@ -67,7 +69,7 @@ export class User extends Model<
     comment: '登录失败次数',
     defaultValue: 0,
   })
-  @ApiProperty({ description: '登录失败次数' })
+  @ApiProperty({ description: '登录失败次数', required: true })
   loginFailure: number;
 
   @Attribute({
@@ -75,7 +77,7 @@ export class User extends Model<
     comment: '登录时间',
     defaultValue: null,
   })
-  @ApiProperty({ description: '登录时间' })
+  @ApiProperty({ description: '登录时间', required: true })
   loginDate: Date | null;
 
   @Attribute({
@@ -83,7 +85,7 @@ export class User extends Model<
     comment: '登录ip',
     defaultValue: '',
   })
-  @ApiProperty({ description: '登录ip' })
+  @ApiProperty({ description: '登录ip', required: true })
   loginIp: CreationOptional<string>;
 
   @Rule(RuleType.number().equal(1, 2))
@@ -92,17 +94,17 @@ export class User extends Model<
     defaultValue: 1,
     type: DataTypes.TINYINT.UNSIGNED,
   })
-  @ApiProperty({ description: '状态:1=启用;2=禁用' })
+  @ApiProperty({ description: '状态:1=启用;2=禁用', required: true })
   status: number;
 
   @CreatedAt
   @Attribute({ comment: '创建时间' })
-  @ApiProperty({ description: '创建时间' })
+  @ApiProperty({ description: '创建时间', required: true })
   declare createdAt: CreationOptional<Date>;
 
   @UpdatedAt
   @Attribute({ comment: '最后更新时间' })
-  @ApiProperty({ description: '最后更新时间' })
+  @ApiProperty({ description: '最后更新时间', required: true })
   declare updatedAt: CreationOptional<Date>;
 
   @DeletedAt

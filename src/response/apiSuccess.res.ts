@@ -4,9 +4,9 @@ import { ApiProperty, Type } from '@midwayjs/swagger';
 
 export class EmptyClass {}
 
-export class ApiSuccessRes<T> extends ApiBaseRes {
+export class ApiSuccessRes<T extends NonNullable<any>> extends ApiBaseRes {
   declare code: CodeEunm.Success;
-  @ApiProperty({ description: '数据,code非200时值为undefined' })
+  @ApiProperty({ description: '数据,code非200时值为undefined',type:'object' })
   data: T;
 }
 

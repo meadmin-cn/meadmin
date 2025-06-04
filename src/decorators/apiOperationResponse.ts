@@ -1,11 +1,20 @@
+import { ApiPageRes, PageRes } from '@/response/apiPage.res.js';
+import { ApiSuccessRes } from '@/response/apiSuccess.res.js';
+import { createCustomMethodDecorator } from '@midwayjs/core';
 import {
-  ApiOkResponse,
+  ApiExtraModel,
+  ApiOperation,
   ApiOperationOptions,
+  ApiResponse,
   getSchemaPath,
+  Type,
 } from '@midwayjs/swagger';
 
+
+// 装饰器内部的唯一 id
+export const API_OPERATIN_RESONSE_KEY = 'decorator:swagger_api_operation_respose'; 
 /**
- *
+ * swagger返回装饰器
  * @param options
  * @returns
  */
@@ -15,11 +24,12 @@ export function ApiOperationResponse<TModel extends Type<any>>(
     pageType?: TModel;
   }
 ): MethodDecorator {
-  const decorators = [ApiExtraModels(ApiSuccessRes, ApiPageRes, PageRes)];
+  const classDecorators = [ApiExtraModel(ApiSuccessRes), ApiExtraModel(ApiPageRes), ApiExtraModel(PageRes)];
+  const methodDecorators = [];
   if (options.pageType) {
-    decorators.push(ApiExtraModels(options.pageType));
-    decorators.push(
-      ApiOkResponse({
+    classDecorators.push(ApiExtraModel(options.pageType));
+    methodDecorators.push(
+      ApiResponse({
         schema: {
           $ref: getSchemaPath(ApiPageRes),
           properties: {
@@ -29,7 +39,7 @@ export function ApiOperationResponse<TModel extends Type<any>>(
               properties: {
                 list: {
                   type: 'array',
-                  items: { $ref: getSchemaPath(options.pageType) },
+                  items: { type:'object', $ref: getSchemaPath(options.pageType) },
                   description: '分页数据',
                 },
               },
@@ -42,9 +52,9 @@ export function ApiOperationResponse<TModel extends Type<any>>(
     typeof options.successType === 'function' ||
     typeof options.successType === 'object'
   ) {
-    decorators.push(ApiExtraModels(options.successType));
-    decorators.push(
-      ApiOkResponse({
+    classDecorators.push(ApiExtraModel(options.successType));
+    methodDecorators.push(
+      ApiResponse({
         description: '请求成功',
         schema: {
           $ref: getSchemaPath(ApiSuccessRes),
@@ -59,8 +69,8 @@ export function ApiOperationResponse<TModel extends Type<any>>(
       })
     );
   } else if (options.successType !== false) {
-    decorators.push(
-      ApiOkResponse({
+    methodDecorators.push(
+      ApiResponse({
         description: '请求成功',
         schema: {
           $ref: getSchemaPath(ApiSuccessRes),
@@ -77,10 +87,13 @@ export function ApiOperationResponse<TModel extends Type<any>>(
       })
     );
   }
-  return applyDecorators(
-    ...decorators,
-    ApiOperation(
-      Object.assign(options, { successType: undefined, pageType: undefined })
-    )
+  ApiOperation(
+    Object.assign(options, { successType: undefined, pageType: undefined })
   );
+  return <T>(target: Function, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<T>)=>{
+    classDecorators.forEach(fn=>fn(target));
+    methodDecorators.forEach(fn=>fn(target,propertyKey,descriptor));
+    return createCustomMethodDecorator(API_OPERATIN_RESONSE_KEY,{},false)(target,propertyKey,descriptor);
+  }
+  
 }

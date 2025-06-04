@@ -1,14 +1,13 @@
 import { Body, Controller, Post, Inject, Get, Param } from '@midwayjs/core';
 import { UserCreateDto } from '../dto/userCreate.dto.js';
 import { BaseController } from './base.controller.js';
-import { ApiOperation, ApiResponse } from '@midwayjs/swagger';
 import { User } from '@/entities/user.entity.js';
-import { ApiPageWapper } from '@/response/apiPage.res.js';
 import { ApiSuccessWapper, EmptyClass } from '@/response/apiSuccess.res.js';
 import { UserQueryDto } from '../dto/userQuery.dto.js';
 import { UserService } from '../service/user.service.js';
 import { ForbiddenError } from '@/error/forbiddenError.js';
 import { UserUpdateDto } from '../dto/userUpdate.dto.js';
+import { ApiOperationResponse } from '@/decorators/index.js';
 
 @Controller('user')
 export class UserController extends BaseController {
@@ -17,9 +16,9 @@ export class UserController extends BaseController {
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
   @Post('/add')
-  @ApiOperation({ summary: '添加用户信息' })
-  @ApiResponse({
-    type: ApiSuccessWapper(User),
+  @ApiOperationResponse({
+    successType: User,
+    summary:'添加用户信息'
   })
   async add(@Body() user: UserCreateDto) {
     return this.responseService.success(await this.userService.create(user));
@@ -27,8 +26,10 @@ export class UserController extends BaseController {
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
   @Post('/')
-  @ApiOperation({ summary: '获取用户列表' })
-  @ApiResponse({ type: ApiPageWapper(User) })
+  @ApiOperationResponse({
+    pageType: User,
+    summary: '获取用户列表'
+  })
   async list(@Body() user: UserQueryDto) {
     return this.responseService.success({
       list: await this.userService.findAll(user),
@@ -37,9 +38,9 @@ export class UserController extends BaseController {
   }
 
   @Get('/:id')
-  @ApiOperation({ summary: '根据id获取用户详情' })
-  @ApiResponse({
-    type: ApiSuccessWapper(User),
+  @ApiOperationResponse({
+    successType: ApiSuccessWapper(User),
+    summary: '根据id获取用户详情'
   })
   async findOne(@Param('id') id: string) {
     const entity = await this.userService.findOne(id);
@@ -50,9 +51,9 @@ export class UserController extends BaseController {
   }
 
   @Post('/:id')
-  @ApiOperation({ summary: '根据id更新用户详情' })
-  @ApiResponse({
-    type: ApiSuccessWapper(User),
+  @ApiOperationResponse({
+    successType: User,
+    summary: '根据id更新用户详情'
   })
   async update(@Param('id') id: string, @Body() updateDto: UserUpdateDto) {
     return this.responseService.success(
@@ -61,8 +62,10 @@ export class UserController extends BaseController {
   }
 
   @Get('/del/:id')
-  @ApiOperation({ summary: '根据id删除用户信息' })
-  @ApiResponse({ type: ApiSuccessWapper(EmptyClass) })
+  @ApiOperationResponse({
+    successType: EmptyClass,
+    summary: '根据id删除用户信息'
+  })
   async del(@Param('id') id: string) {
     await this.userService.remove(id);
     return this.responseService.success();

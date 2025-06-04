@@ -1,3 +1,3 @@
-module.exports = {
+tmodule.exports = {
   ...require('mwts/.prettierrc.json')
 }

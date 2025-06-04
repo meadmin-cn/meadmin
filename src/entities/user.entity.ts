@@ -28,6 +28,8 @@ export class User extends Model<
   @PrimaryKey
   @Default(uuid)
   @Rule(RuleType.string())
+
+
   id: string;
 
   @Rule(RuleType.string().max(10).min(1).required().optional().empty(''))
@@ -103,11 +105,11 @@ export class User extends Model<
   declare createdAt: CreationOptional<Date>;
 
   @UpdatedAt
-  @Attribute({ comment: '最后更新时间' })
+  @Attribute({ comment: '最后更新时间', type:'date' })
   @ApiProperty({ description: '最后更新时间', required: true })
   declare updatedAt: CreationOptional<Date>;
 
   @DeletedAt
-  @Attribute({ comment: '删除时间' })
+  @Attribute({ comment: '删除时间', type:'date' })
   declare deletedAt: Date | null;
 }

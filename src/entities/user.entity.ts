@@ -7,7 +7,6 @@ import {
   Model,
   InferAttributes,
   InferCreationAttributes,
-  CreationOptional,
 } from '@sequelize/core';
 import {
   Attribute,
@@ -28,8 +27,7 @@ export class User extends Model<
   @PrimaryKey
   @Default(uuid)
   @Rule(RuleType.string())
-
-
+  @ApiProperty({ description: 'ID' })
   id: string;
 
   @Rule(RuleType.string().max(10).min(1).required().optional().empty(''))
@@ -88,7 +86,7 @@ export class User extends Model<
     defaultValue: '',
   })
   @ApiProperty({ description: '登录ip', required: true })
-  loginIp: CreationOptional<string>;
+  loginIp?: string;
 
   @Rule(RuleType.number().equal(1, 2))
   @Attribute({
@@ -102,14 +100,14 @@ export class User extends Model<
   @CreatedAt
   @Attribute({ comment: '创建时间' })
   @ApiProperty({ description: '创建时间', required: true })
-  declare createdAt: CreationOptional<Date>;
+  declare createdAt: Date;
 
   @UpdatedAt
-  @Attribute({ comment: '最后更新时间', type:'date' })
+  @Attribute({ comment: '最后更新时间' })
   @ApiProperty({ description: '最后更新时间', required: true })
-  declare updatedAt: CreationOptional<Date>;
+  declare updatedAt: Date;
 
   @DeletedAt
-  @Attribute({ comment: '删除时间', type:'date' })
+  @Attribute({ comment: '删除时间' })
   declare deletedAt: Date | null;
 }

@@ -2,7 +2,6 @@ import { Body, Controller, Post, Inject, Get, Param } from '@midwayjs/core';
 import { UserCreateDto } from '../dto/userCreate.dto.js';
 import { BaseController } from './base.controller.js';
 import { User } from '@/entities/user.entity.js';
-import { ApiSuccessWapper, EmptyClass } from '@/response/apiSuccess.res.js';
 import { UserQueryDto } from '../dto/userQuery.dto.js';
 import { UserService } from '../service/user.service.js';
 import { ForbiddenError } from '@/error/forbiddenError.js';
@@ -17,8 +16,8 @@ export class UserController extends BaseController {
   //接口方法必须加async 方法的接口装饰器值必须/开头
   @Post('/add')
   @ApiOperationResponse({
-    successType: User,
-    summary:'添加用户信息'
+    responseType: User,
+    summary: '添加用户信息',
   })
   async add(@Body() user: UserCreateDto) {
     return this.responseService.success(await this.userService.create(user));
@@ -27,8 +26,8 @@ export class UserController extends BaseController {
   //接口方法必须加async 方法的接口装饰器值必须/开头
   @Post('/')
   @ApiOperationResponse({
-    pageType: User,
-    summary: '获取用户列表'
+    responsePage: User,
+    summary: '获取用户列表',
   })
   async list(@Body() user: UserQueryDto) {
     return this.responseService.success({
@@ -39,8 +38,8 @@ export class UserController extends BaseController {
 
   @Get('/:id')
   @ApiOperationResponse({
-    successType: ApiSuccessWapper(User),
-    summary: '根据id获取用户详情'
+    responseType: User,
+    summary: '根据id获取用户详情',
   })
   async findOne(@Param('id') id: string) {
     const entity = await this.userService.findOne(id);
@@ -52,8 +51,8 @@ export class UserController extends BaseController {
 
   @Post('/:id')
   @ApiOperationResponse({
-    successType: User,
-    summary: '根据id更新用户详情'
+    responseType: User,
+    summary: '根据id更新用户详情',
   })
   async update(@Param('id') id: string, @Body() updateDto: UserUpdateDto) {
     return this.responseService.success(
@@ -63,8 +62,7 @@ export class UserController extends BaseController {
 
   @Get('/del/:id')
   @ApiOperationResponse({
-    successType: EmptyClass,
-    summary: '根据id删除用户信息'
+    summary: '根据id删除用户信息',
   })
   async del(@Param('id') id: string) {
     await this.userService.remove(id);

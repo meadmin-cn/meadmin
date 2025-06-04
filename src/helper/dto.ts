@@ -1,5 +1,6 @@
 import {
   getClassExtendedMetadata,
+  getPropertyType,
   INJECT_CUSTOM_PROPERTY,
   saveClassMetadata,
 } from '@midwayjs/core';
@@ -120,6 +121,58 @@ export function PartialType<T, K extends Array<keyof T>>(
 }
 
 /**
+ * 将属性设置为必填
+ * 兼容swagger和validate
+ * @param dto
+ * @param keys 传入属性数组则只将对应的属性设置为必填。否则将所有属性设置为必填
+ * @returns
+ */
+export function RequiredType<T, K extends Array<keyof T>>(
+  dto: Dto<T>,
+  keys?: K
+): K extends unknown
+  ? Dto<Required<T>>
+  : Dto<
+      Omit<T, K[number]> & {
+        [P in K[number]]-?: T[P];
+      }
+    > {
+  //重新声明校验规则并设置为可选
+  const requiredDto: any = function () {};
+  requiredDto.prototype = dto.prototype;
+  const fatherRule = getClassExtendedMetadata(RULES_KEY, dto);
+  const requiredRule: any = {};
+  for (const key of Object.keys(fatherRule)) {
+    if (fatherRule[key]) {
+      requiredRule[key] = cloneDeep(fatherRule[key]);
+      if (!keys || keys.includes(key as any)) {
+        requiredRule[key] = requiredRule[key].required();
+        if (requiredRule[key].type === 'string') {
+          requiredRule[key] = requiredRule[key].empty('');
+        }
+      }
+    }
+  }
+  saveClassMetadata(RULES_KEY, requiredRule, requiredDto);
+  //设置swagger properties定义
+  const fatherProperties = getClassExtendedMetadata(
+    INJECT_CUSTOM_PROPERTY,
+    dto
+  );
+  const partitalProperties: any = {};
+  for (const key of Object.keys(fatherProperties)) {
+    if (fatherProperties[key].key === DECORATORS.API_MODEL_PROPERTIES) {
+      partitalProperties[key] = cloneDeep(fatherProperties[key]);
+      if (!keys || keys.includes(key as any)) {
+        partitalProperties[key].metadata.required = false;
+      }
+    }
+  }
+  saveClassMetadata(INJECT_CUSTOM_PROPERTY, partitalProperties, requiredDto);
+  return requiredDto;
+}
+
+/**
  * 两种类型合并为一种新类型,结合了两种类型的所有属性
  * 兼容swagger和validate
  * @param dto1
@@ -149,11 +202,17 @@ export function IntersectionType<T1, T2>(
   for (const key of Object.keys(fatherProperties1)) {
     if (fatherProperties1[key].key === DECORATORS.API_MODEL_PROPERTIES) {
       properties[key] = fatherProperties1[key];
+      properties[key].metadata.type =
+        properties[key].metadata.type ??
+        getPropertyType(dto1.prototype, key).name;
     }
   }
   for (const key of Object.keys(fatherProperties2)) {
     if (fatherProperties2[key].key === DECORATORS.API_MODEL_PROPERTIES) {
       properties[key] = fatherProperties2[key];
+      properties[key].metadata.type =
+        properties[key].metadata.type ??
+        getPropertyType(dto2.prototype, key).name;
     }
   }
   saveClassMetadata(INJECT_CUSTOM_PROPERTY, properties, dto);

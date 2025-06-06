@@ -11,8 +11,7 @@ import {
 } from '@midwayjs/swagger';
 
 // 装饰器内部的唯一 id
-export const API_OPERATIN_RESONSE_KEY =
-  'decorator:swagger_api_operation_respose';
+export const API_OPERATIN_RESONSE_KEY = 'meadmin:swagger:api_operation_respose';
 /**
  * swagger返回装饰器
  * @param options
@@ -94,9 +93,9 @@ export function ApiOperationResponse<TModel extends Type<any>>(
       })
     );
   }
-  ApiOperation(
+  methodDecorators.push(ApiOperation(
     Object.assign(options, { successType: undefined, responsePage: undefined })
-  );
+  ));
   return <T>(
     target: (...args: any[]) => any,
     propertyKey: string | symbol,

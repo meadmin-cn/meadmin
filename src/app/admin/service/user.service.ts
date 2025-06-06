@@ -6,9 +6,13 @@ import { UserQueryDto } from '../dto/userQuery.dto.js';
 import { formatWhere } from '@/helper/formWhere.js';
 import { UserUpdateDto } from '../dto/userUpdate.dto.js';
 import { ForbiddenError } from '@/error/forbiddenError.js';
+import { InjectRepository } from '@/decorators/index.js';
 
 @Provide()
 export class UserService {
+  @InjectRepository(User)
+  UserRepository: typeof User
+
   /**
    * 密码加密
    * @param password 密码
@@ -48,7 +52,7 @@ export class UserService {
    * @returns
    */
   async create(createDto: UserCreateDto) {
-    const entity = User.build(
+    const entity = this.UserRepository.build(
       Object.assign(createDto, this.entityPassword(createDto.password))
     );
     return await entity.save();
@@ -67,7 +71,7 @@ export class UserService {
    * @returns
    */
   findAll(queryDto: UserQueryDto) {
-    return User.findAll({
+    return this.UserRepository.findAll({
       offset: (queryDto.page - 1) * queryDto.size,
       limit: queryDto.size,
       where: this.formatWhere(queryDto),
@@ -80,7 +84,7 @@ export class UserService {
    * @returns
    */
   count(queryDto: Partial<UserQueryDto>) {
-    return User.count({ where: this.formatWhere(queryDto) });
+    return this.UserRepository.count({ where: this.formatWhere(queryDto) });
   }
 
   /**
@@ -89,7 +93,7 @@ export class UserService {
    * @returns
    */
   findOne(id: string) {
-    return User.findByPk(id);
+    return this.UserRepository.findByPk(id);
   }
 
   /**
@@ -99,7 +103,7 @@ export class UserService {
    * @returns
    */
   async update(id: string, updateDto: UserUpdateDto) {
-    const entity = await User.findByPk(id);
+    const entity = await this.UserRepository.findByPk(id);
     if (!entity) {
       throw new ForbiddenError('没用对应的信息');
     }
@@ -119,7 +123,7 @@ export class UserService {
    * @returns
    */
   async remove(id: string) {
-    const entity = await User.findByPk(id);
+    const entity = await this.UserRepository.findByPk(id);
     if (!entity) {
       throw new ForbiddenError('没用对应的信息');
     }

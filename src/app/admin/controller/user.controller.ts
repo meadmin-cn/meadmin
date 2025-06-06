@@ -16,7 +16,7 @@ export class UserController extends BaseController {
   //接口方法必须加async 方法的接口装饰器值必须/开头
   @Post('/add')
   @ApiOperationResponse({
-    responseType: User,
+    // responseType: User,
     summary: '添加用户信息',
   })
   async add(@Body() user: UserCreateDto) {

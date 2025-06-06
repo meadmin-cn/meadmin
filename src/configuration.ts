@@ -1,4 +1,5 @@
-import { Configuration, App } from '@midwayjs/core';
+import './helper/dotenv.js';
+import { Configuration, App, IMidwayContainer, Init, IMidwayApplication, Inject, MidwayDecoratorService } from '@midwayjs/core';
 import * as koa from '@midwayjs/koa';
 import * as validate from '@midwayjs/validate';
 import * as info from '@midwayjs/info';
@@ -10,20 +11,9 @@ import UnittestConfig from '@/config/config.unittest.js';
 import * as meadmin from '@meadmin/core';
 import { ValidateErrorFilter } from './filter/validate.filter.js';
 import * as swagger from '@midwayjs/swagger';
-import dotenv from 'dotenv';
+import {RegistreDecorators} from './decorators/index.js';
+const registreDecorators = new RegistreDecorators();
 
-// 根据当前环境加载不同的 .env 文件
-if (process.env.NODE_ENV) {
-  dotenv.config({
-    path: ['.env', `.env.${process.env.NODE_ENV}`],
-    override: true,
-  });
-} else {
-  dotenv.config({
-    path: ['.env'],
-    override: true,
-  });
-}
 
 @Configuration({
   imports: [
@@ -50,14 +40,57 @@ export class MainConfiguration {
   @App('koa')
   app: koa.Application;
 
-  async onReady() {
-    // add middleware
-    // this.app.useMiddleware([ReportMiddleware]);
-    // add filter
-    this.app.useFilter([
+  @Inject()
+  decoratorService: MidwayDecoratorService;
+
+  @Init()
+  async init(){
+    registreDecorators.decoratorService = this.decoratorService;
+    registreDecorators.init();
+  } 
+
+  /**
+    * 在应用配置加载后执行
+    */
+  async onConfigLoad?(container: IMidwayContainer, app: IMidwayApplication){
+    registreDecorators.onConfigLoad(container,app);
+  };
+  
+  /**
+   * 在依赖注入容器 ready 的时候执行
+   */
+  async onReady?(container: IMidwayContainer, app: IMidwayApplication){
+      this.app.useFilter([
       ValidateErrorFilter,
       NotFoundFilter,
       DefaultErrorFilter,
     ]);
-  }
+    registreDecorators.onReady(container,app);
+  };
+
+  /**
+   * 在应用服务启动后执行
+   */
+  async onServerReady?(container: IMidwayContainer, app: IMidwayApplication){
+      registreDecorators.onServerReady(container,app);
+
+  };
+
+  /**
+   * 在应用停止的时候执行
+   */
+  async onStop?(container: IMidwayContainer, app: IMidwayApplication){
+            registreDecorators.onStop(container,app);
+
+  };
+
+  /**
+   * 在健康检查时执行
+   */
+  async onHealthCheck?(container: IMidwayContainer){
+              registreDecorators.onHealthCheck(container);
+
+  };
+
+
 }

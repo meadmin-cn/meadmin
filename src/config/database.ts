@@ -1,6 +1,5 @@
 import { importModels, Options } from '@sequelize/core';
 import { PostgresDialect } from '@sequelize/postgres';
-
 export default async () => ({
   dataSource: {
     default: {
@@ -12,7 +11,7 @@ export default async () => ({
       password: process.env.DATABASE_PASSWORD ?? 'root',
       client_encoding: 'utf8',
       models: await importModels(
-        (import.meta.dirname + '/../app/**/*.entity.{ts,js}').replace(
+        (import.meta.dirname + '/../**/*.entity.{ts,js}').replace(
           /\\/g,
           '/'
         )

@@ -21,8 +21,10 @@
     "@sequelize/postgres": "7.0.0-alpha.46",
     "dotenv": "^16.5.0",
     "lodash-es": "^4.17.21",
+    "midway-vite-view": "^2.1.0",
     "swagger-ui-dist": "^5.21.0",
-    "tsx": "^4.19.3"
+    "tsx": "^4.19.3",
+    "vite": "^6.3.5"
   },
   "devDependencies": {
     "@midwayjs/mock": "^3.20.4",

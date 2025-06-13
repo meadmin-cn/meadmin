@@ -1,5 +1,6 @@
 import { MidwayConfig } from '@midwayjs/core';
 import database from './database.js';
+import { join } from 'path';
 export default {
   // use for cookie sign key, should change to your own and keep security
   keys: '1714030878233_897',
@@ -25,4 +26,23 @@ export default {
     },
   },
   sequelize: await database(),
+  view: { //midwayjs 视图配置 说明参考 https://midwayjs.org/docs/extensions/render
+    defaultViewEngine: 'viteView',
+  },
+  viteView: {
+    //midway-vite-view 配置配置详细说明见下方
+    views: {
+      // 'index/index.html': {
+      //   entryServer: 'index/src/entry-server.ts',
+      //   root: 'index',
+      //   viteConfigFile: join(import.meta.dirname, '../../view/index/vite.config.ts')
+      // },
+      'admin/index.html': {
+        // entryServer: 'admin/src/entry-server.ts',
+        root: 'admin',
+        viteConfigFile: join(import.meta.dirname, '../../view/admin/vite.config.ts')
+      },
+    },
+    root:'',
+  },
 } as MidwayConfig;

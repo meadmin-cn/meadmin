@@ -12,6 +12,8 @@ import * as meadmin from '@meadmin/core';
 import { ValidateErrorFilter } from './filter/validate.filter.js';
 import * as swagger from '@midwayjs/swagger';
 import {RegistreDecorators} from './decorators/index.js';
+import * as viteView from 'midway-vite-view';//引入view组件
+
 const registreDecorators = new RegistreDecorators();
 
 
@@ -28,6 +30,7 @@ const registreDecorators = new RegistreDecorators();
       component: swagger,
       enabledEnvironment: ['local', 'dev'],
     },
+    viteView,
   ],
   importConfigs: [
     {

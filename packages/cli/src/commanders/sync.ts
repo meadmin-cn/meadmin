@@ -1,15 +1,9 @@
 import { Command } from 'commander';
 import { join, resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { importModels, Sequelize } from '@sequelize/core';
 import { Log } from '../utils/log.js';
+import { getConfig } from '../utils/db.js';
 
-async function getConfig(dbConfig, name) {
-  const infos = await import(pathToFileURL(dbConfig).href);
-  const config = await (infos.__esModule ? infos.default : infos).default();
-  const configName = name ?? config.defaultDataSourceName ?? 'default';
-  return config.dataSource[configName];
-}
 
 export const syncInit =  (program: Command) => {
   program

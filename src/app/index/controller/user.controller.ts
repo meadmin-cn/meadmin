@@ -1,13 +1,17 @@
-import { Body, Controller, Post, Inject, Get, Param } from '@midwayjs/core';
-import { UserCreateDto } from '../dto/userCreate.dto.js';
+import { Body, Controller, Post, Inject, Param } from '@midwayjs/core';
 import { BaseController } from './base.controller.js';
-import { User } from '@/entities/user.entity.js';
+import { User } from '../../../entities/user.entity.js';
+import { UserCreateDto } from '../dto/userCreate.dto.js';
 import { UserQueryDto } from '../dto/userQuery.dto.js';
-import { UserService } from '../service/user.service.js';
 import { UserUpdateDto } from '../dto/userUpdate.dto.js';
+import { UserService } from '../service/user.service.js';
 import { ApiOperationResponse } from '@/decorators/index.js';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 
+/**
+ * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
+ * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址
+ */
 @Controller('user')
 export class UserController extends BaseController {
   @Inject()
@@ -16,11 +20,11 @@ export class UserController extends BaseController {
   //接口方法必须加async 方法的接口装饰器值必须/开头
   @Post('/add')
   @ApiOperationResponse({
-    // responseType: User,
+    responseType: User,
     summary: '添加用户信息',
   })
-  async add(@Body() user: UserCreateDto) {
-    return this.responseService.success(await this.userService.create(user));
+  async add(@Body() createDto: UserCreateDto) {
+    return this.responseService.success(await this.userService.create(createDto));
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
@@ -29,14 +33,15 @@ export class UserController extends BaseController {
     responsePage: User,
     summary: '获取用户列表',
   })
-  async list(@Body() user: UserQueryDto) {
+  async list(@Body() queryDto: UserQueryDto) {
     return this.responseService.success({
-      list: await this.userService.findAll(user),
-      total: await this.userService.count(user),
+      list: await this.userService.findAll(queryDto),
+      total: await this.userService.count(queryDto),
     });
   }
 
-  @Get('/:id')
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post('/update/:id')
   @ApiOperationResponse({
     responseType: User,
     summary: '根据id获取用户详情',
@@ -49,7 +54,8 @@ export class UserController extends BaseController {
     throw new BadRequestError('没有对应的信息');
   }
 
-  @Post('/:id')
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post('/info/:id')
   @ApiOperationResponse({
     responseType: User,
     summary: '根据id更新用户详情',
@@ -60,7 +66,8 @@ export class UserController extends BaseController {
     );
   }
 
-  @Get('/del/:id')
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post('/del/:id')
   @ApiOperationResponse({
     summary: '根据id删除用户信息',
   })

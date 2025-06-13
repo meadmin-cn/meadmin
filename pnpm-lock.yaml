@@ -90,6 +90,12 @@ importers:
 
   packages/cli:
     dependencies:
+      '@sequelize/core':
+        specifier: 7.0.0-alpha.46
+        version: 7.0.0-alpha.46
+      '@sequelize/postgres':
+        specifier: 7.0.0-alpha.46
+        version: 7.0.0-alpha.46
       commander:
         specifier: ^14.0.0
         version: 14.0.0

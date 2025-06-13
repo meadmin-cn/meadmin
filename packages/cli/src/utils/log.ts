@@ -35,19 +35,19 @@ export class Log {
   }
   public success(message: string, data?: any) {
     console.info(
-      `${this.context}${colorConfig.green}[${new Date().toLocaleString()}] ${message}\x1B[0m`,
+      `${this.context}${colorConfig.green} [${new Date().toLocaleString()}] ${message}\x1B[0m`,
       data ?? '',
     );
   }
   public warn(message: string, data?: any) {
     console.warn(
-      `${this.context}${colorConfig.yellow}[${new Date().toLocaleString()}] ${message}\x1B[0m`,
+      `${this.context}${colorConfig.yellow} [${new Date().toLocaleString()}] ${message}\x1B[0m`,
       data ?? '',
     );
   }
   public error(message: string, data?: any) {
     console.error(
-      `[${new Date().toLocaleString()}] ${this.context}${colorConfig.red}${message}\x1B[0m`,
+      `${this.context}${colorConfig.red} [${new Date().toLocaleString()}] ${message}\x1B[0m`,
       data ?? '',
     );
   }

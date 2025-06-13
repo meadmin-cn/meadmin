@@ -5,10 +5,8 @@
     "rootDir": "src",
     "outDir": "dist",
     "baseUrl": ".",
-    "preserveSymlinks": true
-  },
-  "paths": {
-    "@/*": ["./src/*"]
+    "preserveSymlinks": true,
+    "paths": {}
   },
   "exclude": [
     "*.js",
@@ -16,6 +14,7 @@
     "dist",
     "node_modules",
     "test",
-    "packages"
+    "packages",
+    "template"
   ]
 }

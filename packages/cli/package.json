@@ -11,6 +11,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist && tsc --build"
   },
+   "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "template"
+  ],
   "keywords": [],
   "author": "",
   "license": "MIT",
@@ -23,6 +28,10 @@
   "dependencies": {
     "commander": "^14.0.0",
     "dotenv": "^16.5.0"
+  },
+  "peerDependencies": {
+    "@sequelize/core": "7.0.0-alpha.46",
+    "@sequelize/postgres": "7.0.0-alpha.46"
   },
   "engines": {
     "node": ">=20.13.1"

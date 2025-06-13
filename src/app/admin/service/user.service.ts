@@ -5,8 +5,8 @@ import { UserCreateDto } from '../dto/userCreate.dto.js';
 import { UserQueryDto } from '../dto/userQuery.dto.js';
 import { formatWhere } from '@/helper/formWhere.js';
 import { UserUpdateDto } from '../dto/userUpdate.dto.js';
-import { ForbiddenError } from '@/error/forbiddenError.js';
 import { InjectRepository } from '@/decorators/index.js';
+import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 
 @Provide()
 export class UserService {
@@ -105,7 +105,7 @@ export class UserService {
   async update(id: string, updateDto: UserUpdateDto) {
     const entity = await this.UserRepository.findByPk(id);
     if (!entity) {
-      throw new ForbiddenError('没用对应的信息');
+      throw new BadRequestError('没用对应的信息');
     }
     Object.assign(entity, updateDto, { id });
     if (updateDto.password) {
@@ -125,7 +125,7 @@ export class UserService {
   async remove(id: string) {
     const entity = await this.UserRepository.findByPk(id);
     if (!entity) {
-      throw new ForbiddenError('没用对应的信息');
+      throw new BadRequestError('没用对应的信息');
     }
     await entity.destroy();
     return Boolean(entity.deletedAt);

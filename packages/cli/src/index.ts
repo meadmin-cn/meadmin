@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { readFileSync } from 'node:fs';
-import {syncInit} from './commanders/index.js';
+import {init} from './commanders/index.js';
 import dotenv from 'dotenv';
 // 根据当前环境加载不同的 .env 文件
 if (process.env.NODE_ENV) {
@@ -22,5 +22,5 @@ program
   .name('meadmin')
   .description('CLI of MEADMIN')
   .version(version);
-syncInit(program);
+init(program);
 program.parse();

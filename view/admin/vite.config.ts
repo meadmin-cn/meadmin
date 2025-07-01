@@ -63,6 +63,15 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
         ]
       }
     },
+    experimental: {//ssr需求代码
+      renderBuiltUrl(filename, { hostType, type, ssr }) {
+        if (ssr && type === 'asset' && hostType === 'js') {
+          return {
+            runtime: `__ssr_vue_processAssetPath(${JSON.stringify(filename)})`,
+          };
+        }
+      },
+    },
     /* eslint-disable */
     build: {
       rollupOptions: {
@@ -83,6 +92,7 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
           },
         },
       },
+      emptyOutDir: true,
     },
     optimizeDeps: {
       //因为项目中很多用到了自动引入和动态加载，所以vite首次扫描依赖项会扫描不全，这里强制扫描src下全局,并加载element-plus。

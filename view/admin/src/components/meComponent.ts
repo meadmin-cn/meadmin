@@ -1,9 +1,10 @@
-import { PropType, Ref, Transition, TransitionProps, VNode } from 'vue';
+import { PropType, Ref, SuspenseProps, Transition, TransitionProps, VNode } from 'vue';
 import { MeKeepAliveProps, default as MeKeepAlive } from './meKeepAlive';
 import { useLoadMessages } from '@/locales/i18n';
 import { done } from '@/utils/nProgress';
 import { localeConfig } from '@/config';
 import { closeLoading, loadingObject } from '@/utils/loading';
+import {Suspense} from 'vue';
 export default defineComponent({
   name: 'MeComponent',
   props: {
@@ -15,8 +16,9 @@ export default defineComponent({
     doneProgress: Boolean,
     closeLoading: String as PropType<keyof typeof loadingObject>,
     transition: Object as PropType<TransitionProps>,
+    suspense: Object as  PropType<SuspenseProps>
   },
-  setup(props, { attrs }) {
+  setup(props, { attrs, slots }) {
     const loadMessages = useLoadMessages();
     const componentIs: Ref<any> = ref(undefined);
     const key = ref(props.componentKey);
@@ -37,22 +39,24 @@ export default defineComponent({
     );
 
     return () => {
-      const components = [] as VNode[];
-      components.push(
-        h(componentIs.value || 'div', {
+      let componentFn:()=>VNode;
+      componentFn = ()=>h(componentIs.value || 'div', {
           key: key.value,
           ..._attrs.value,
-        }),
-      );
+        });
+      if(props.suspense){
+        componentFn = ()=>h(Suspense, props.suspense, {
+          default: componentFn,
+          fallback:slots.fallback
+        });
+      }
       if (props.keepAlive) {
-        const index = components.length - 1;
-        components.push(h(MeKeepAlive, props.keepAlive, [components[index]]));
+        componentFn = ()=>h(MeKeepAlive, props.keepAlive, [componentFn()]);
       }
       if (props.transition) {
-        const index = components.length - 1;
-        components.push(h(Transition, props.transition, { default: () => components[index] }));
+        componentFn = ()=>h(Transition, props.transition, { default: componentFn });
       }
-      return components[components.length - 1];
+      return componentFn();
     };
   },
 });

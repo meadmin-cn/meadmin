@@ -129,7 +129,6 @@ export default defineComponent({
   props: props as unknown as typeof props & ComponentObjectPropsOptionsFromData<TableProps<any>>,
   emits,
   setup(props, { slots, expose,emit }) {
-    console.log('------',this,props,emit,useAttrs(),);
     const showSearch = ref(props.defaultShowSearch);
     const customColumnProps = ref<ReturnType<typeof customColumn>>();
     const checkedLabels = shallowRef([] as string[]);

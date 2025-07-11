@@ -44,7 +44,7 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./bootstrap.js",
-    "dev": "cross-env NODE_ENV=local  mwtsc --watch --run @midwayjs/mock/app",
+    "dev": "cross-env NODE_ENV=local  mwtsc  --cleanOutDir --watch --run @midwayjs/mock/app",
     "test": "cross-env NODE_ENV=unittest TSX_TSCONFIG_PATH=./test/tsconfig.json mocha",
     "cov": "cross-env c8 --all --reporter=text --reporter=lcovonly npm run test",
     "lint": "mwts check",

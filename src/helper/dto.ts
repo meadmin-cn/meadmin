@@ -22,10 +22,11 @@ export function PickDtoType<T, K extends Array<keyof T>>(
   keys: K
 ): Dto<Pick<T, K[number]>> {
   const pickedDto = PickDto(dto, keys);
+  pickedDto.prototype = Object.prototype;
   const fatherProperties = getClassExtendedMetadata(
     INJECT_CUSTOM_PROPERTY,
     dto
-  );
+  ) ?? {};
   const pickedProperties: any = {};
   for (const key of keys) {
     if (
@@ -33,6 +34,9 @@ export function PickDtoType<T, K extends Array<keyof T>>(
       fatherProperties[key].key === DECORATORS.API_MODEL_PROPERTIES
     ) {
       pickedProperties[key] = fatherProperties[key];
+      pickedProperties[key].metadata.type =
+        pickedProperties[key].metadata.type ??
+        getPropertyType(dto.prototype, key as string).name;
     }
   }
   saveClassMetadata(INJECT_CUSTOM_PROPERTY, pickedProperties, pickedDto);
@@ -51,10 +55,11 @@ export function OmitDtoType<T, K extends Array<keyof T>>(
   keys: K
 ): Dto<Omit<T, K[number]>> {
   const pickedDto = OmitDto(dto, keys);
+  pickedDto.prototype = Object.prototype;
   const fatherProperties = getClassExtendedMetadata(
     INJECT_CUSTOM_PROPERTY,
     dto
-  );
+  ) ?? {};
   const pickedProperties: any = {};
   for (const key of Object.keys(fatherProperties)) {
     if (
@@ -62,6 +67,9 @@ export function OmitDtoType<T, K extends Array<keyof T>>(
       !keys.includes(key as any)
     ) {
       pickedProperties[key] = fatherProperties[key];
+      pickedProperties[key].metadata.type =
+      pickedProperties[key].metadata.type ??
+      getPropertyType(dto.prototype, key as string).name;
     }
   }
   saveClassMetadata(INJECT_CUSTOM_PROPERTY, pickedProperties, pickedDto);
@@ -86,8 +94,7 @@ export function PartialType<T, K extends Array<keyof T>>(
       }
     > {
   //重新声明校验规则并设置为可选
-  const partitalDto: any = function () {};
-  partitalDto.prototype = dto.prototype;
+  const partitalDto = function () {} as any;
   const fatherRule = getClassExtendedMetadata(RULES_KEY, dto);
   const partitalRule: any = {};
   for (const key of Object.keys(fatherRule)) {
@@ -106,7 +113,7 @@ export function PartialType<T, K extends Array<keyof T>>(
   const fatherProperties = getClassExtendedMetadata(
     INJECT_CUSTOM_PROPERTY,
     dto
-  );
+  ) ?? {};
   const partitalProperties: any = {};
   for (const key of Object.keys(fatherProperties)) {
     if (fatherProperties[key].key === DECORATORS.API_MODEL_PROPERTIES) {
@@ -114,6 +121,9 @@ export function PartialType<T, K extends Array<keyof T>>(
       if (!keys || keys.includes(key as any)) {
         partitalProperties[key].metadata.required = false;
       }
+      partitalProperties[key].metadata.type =
+      partitalProperties[key].metadata.type ??
+      getPropertyType(dto.prototype, key as string).name;
     }
   }
   saveClassMetadata(INJECT_CUSTOM_PROPERTY, partitalProperties, partitalDto);
@@ -139,7 +149,6 @@ export function RequiredType<T, K extends Array<keyof T>>(
     > {
   //重新声明校验规则并设置为可选
   const requiredDto: any = function () {};
-  requiredDto.prototype = dto.prototype;
   const fatherRule = getClassExtendedMetadata(RULES_KEY, dto);
   const requiredRule: any = {};
   for (const key of Object.keys(fatherRule)) {
@@ -158,7 +167,7 @@ export function RequiredType<T, K extends Array<keyof T>>(
   const fatherProperties = getClassExtendedMetadata(
     INJECT_CUSTOM_PROPERTY,
     dto
-  );
+  ) ??{};
   const partitalProperties: any = {};
   for (const key of Object.keys(fatherProperties)) {
     if (fatherProperties[key].key === DECORATORS.API_MODEL_PROPERTIES) {
@@ -166,6 +175,9 @@ export function RequiredType<T, K extends Array<keyof T>>(
       if (!keys || keys.includes(key as any)) {
         partitalProperties[key].metadata.required = false;
       }
+      partitalProperties[key].metadata.type =
+      partitalProperties[key].metadata.type ??
+      getPropertyType(dto.prototype, key as string).name;
     }
   }
   saveClassMetadata(INJECT_CUSTOM_PROPERTY, partitalProperties, requiredDto);
@@ -193,11 +205,11 @@ export function IntersectionType<T1, T2>(
   const fatherProperties1 = getClassExtendedMetadata(
     INJECT_CUSTOM_PROPERTY,
     dto1
-  );
+  )??{};
   const fatherProperties2 = getClassExtendedMetadata(
     INJECT_CUSTOM_PROPERTY,
     dto2
-  );
+  )??{};
   const properties: any = {};
   for (const key of Object.keys(fatherProperties1)) {
     if (fatherProperties1[key].key === DECORATORS.API_MODEL_PROPERTIES) {

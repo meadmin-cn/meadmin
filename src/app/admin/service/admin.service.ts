@@ -1,17 +1,17 @@
-import { User } from '@/entities/user.entity.js';
+import { Admin } from '@/entities/admin.entity.js';
 import { Provide } from '@midwayjs/core';
 import { pbkdf2Sync, randomBytes } from 'node:crypto';
-import { UserCreateDto } from '../dto/userCreate.dto.js';
-import { UserQueryDto } from '../dto/userQuery.dto.js';
+import { AdminCreateDto } from '../dto/adminCreate.dto.js';
+import { AdminQueryDto } from '../dto/adminQuery.dto.js';
 import { formatWhere } from '@/helper/formWhere.js';
-import { UserUpdateDto } from '../dto/userUpdate.dto.js';
+import { AdminUpdateDto } from '../dto/adminUpdate.dto.js';
 import { InjectRepository } from '@/decorators/index.js';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 
 @Provide()
-export class UserService {
-  @InjectRepository(User)
-  UserRepository: typeof User
+export class AdminService {
+  @InjectRepository(Admin)
+  AdminRepository: typeof Admin
 
   /**
    * 密码加密
@@ -51,14 +51,14 @@ export class UserService {
    * @param createAdminDto
    * @returns
    */
-  async create(createDto: UserCreateDto) {
-    const entity = this.UserRepository.build(
+  async create(createDto: AdminCreateDto) {
+    const entity = this.AdminRepository.build(
       Object.assign(createDto, this.entityPassword(createDto.password))
     );
     return await entity.save();
   }
 
-  private formatWhere(query: Partial<UserQueryDto>) {
+  private formatWhere(query: Partial<AdminQueryDto>) {
     return formatWhere(
       Object.assign({}, query, { page: undefined, size: undefined }),
       { likeField: ['nickname', 'username'] }
@@ -70,8 +70,8 @@ export class UserService {
    * @param queryDto 查询条件
    * @returns
    */
-  findAll(queryDto: UserQueryDto) {
-    return this.UserRepository.findAll({
+  findAll(queryDto: AdminQueryDto) {
+    return this.AdminRepository.findAll({
       offset: (queryDto.page - 1) * queryDto.size,
       limit: queryDto.size,
       where: this.formatWhere(queryDto),
@@ -83,8 +83,8 @@ export class UserService {
    * @param queryDto 查询条件
    * @returns
    */
-  count(queryDto: Partial<UserQueryDto>) {
-    return this.UserRepository.count({ where: this.formatWhere(queryDto) });
+  count(queryDto: Partial<AdminUpdateDto>) {
+    return this.AdminRepository.count({ where: this.formatWhere(queryDto) });
   }
 
   /**
@@ -93,7 +93,7 @@ export class UserService {
    * @returns
    */
   findOne(id: string) {
-    return this.UserRepository.findByPk(id);
+    return this.AdminRepository.findByPk(id);
   }
 
   /**
@@ -102,8 +102,8 @@ export class UserService {
    * @param updateDto 数据对象
    * @returns
    */
-  async update(id: string, updateDto: UserUpdateDto) {
-    const entity = await this.UserRepository.findByPk(id);
+  async update(id: string, updateDto: AdminUpdateDto) {
+    const entity = await this.AdminRepository.findByPk(id);
     if (!entity) {
       throw new BadRequestError('没用对应的信息');
     }
@@ -123,7 +123,7 @@ export class UserService {
    * @returns
    */
   async remove(id: string) {
-    const entity = await this.UserRepository.findByPk(id);
+    const entity = await this.AdminRepository.findByPk(id);
     if (!entity) {
       throw new BadRequestError('没用对应的信息');
     }

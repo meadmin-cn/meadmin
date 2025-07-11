@@ -5,15 +5,18 @@ import {
   ApiExtraModel,
   ApiOperation,
   ApiOperationOptions,
+  ApiProperty,
+  ApiPropertyOptions,
   ApiResponse,
   getSchemaPath,
   Type,
 } from '@midwayjs/swagger';
+import {  Rule, RuleType } from '@midwayjs/validate';
 
 // 装饰器内部的唯一 id
 export const API_OPERATIN_RESONSE_KEY = 'meadmin:swagger:api_operation_respose';
 /**
- * swagger返回装饰器
+ * swagger返回参数装饰器
  * @param options
  * @returns
  */
@@ -109,4 +112,50 @@ export function ApiOperationResponse<TModel extends Type<any>>(
       descriptor
     );
   };
+}
+
+/**
+ * swagger和rule校验结合，会自动根据rule规则生成对应配置
+ * @param options 
+ * @returns 
+ */
+export function ApiPropertyRule(options?: ApiPropertyOptions & {rule?:RuleType.AnySchema<any>}): PropertyDecorator{
+  const propertyDecorators = [] as PropertyDecorator[];
+  if(options && options.rule){
+    if(options.required === undefined){
+      options.required = options.rule.$_getFlag('presence') === 'required'?true:undefined;
+    }
+    if(options.rule.type === 'number'){
+      if(options.maximum !== undefined){
+        options.maximum = options.rule.$_getRule('max')?.args?.limit
+      }
+      if(options.minimum !== undefined){
+        options.minimum = options.rule.$_getRule('min')?.args?.limit
+      }
+    }
+    if(options.rule.type === 'string'){
+      if(options.maxLength !== undefined){
+        options.maxLength = options.rule.$_getRule('max')?.args?.limit
+      }
+      if(options.minLength !== undefined){
+        options.minLength = options.rule.$_getRule('min')?.args?.limit
+      }
+    }
+    if((options.rule as any)._valids){
+      options.enum = Array.from((options.rule as any)._valids._values);
+    }
+    if(options.default !== undefined){
+      options.default = options.rule.$_getFlag('default')
+    }
+    propertyDecorators.push(Rule(options.rule))
+  }
+  propertyDecorators.push(ApiProperty(options));
+
+  return (
+    target: (...args: any[]) => any,
+    propertyKey: string | symbol
+  ) => {
+    propertyDecorators.forEach(fn => fn(target, propertyKey));
+  }
+  
 }

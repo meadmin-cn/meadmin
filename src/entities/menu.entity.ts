@@ -162,7 +162,7 @@ export class Menu extends Model<
       }else{
         const parentMenu = await this.findOne({order:[['right', 'DESC']]})
         if(parentMenu){
-          left = parentMenu?.right+1;
+          left = parentMenu.right+1;
         }
       }
       menu.left = left;

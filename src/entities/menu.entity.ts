@@ -1,7 +1,7 @@
 import { uuid } from "@/helper/snowflake.js";
 import { RuleType } from "@midwayjs/validate";
-import { DataTypes, InferAttributes, InferCreationAttributes, Model } from "@sequelize/core";
-import { Attribute, CreatedAt, Default, PrimaryKey, Table, UpdatedAt } from "@sequelize/core/decorators-legacy";
+import { DataTypes, InferAttributes, InferCreationAttributes, Model, SaveOptions } from "@sequelize/core";
+import { Attribute, CreatedAt, Default, PrimaryKey, Table, UpdatedAt,BeforeSave, BeforeUpdate, BeforeCreate } from "@sequelize/core/decorators-legacy";
 import { ApiPropertyRule } from "@/decorators/index.js";
 
 //rule规则使用添加时传入规则
@@ -22,6 +22,18 @@ export class Menu extends Model<
     })
     @ApiPropertyRule({ description: '父级id', rule: RuleType.string().max(100) })
     parentId: string;
+
+    @Attribute({
+    comment: '左树边界',
+    type: DataTypes.STRING(100),
+    })
+    left: number;
+
+    @Attribute({
+    comment: '右树边界',
+    type: DataTypes.STRING(100),
+    })
+    right: number;
 
     @Attribute({
     comment: '菜单名称',
@@ -140,4 +152,27 @@ export class Menu extends Model<
     @Attribute({ comment: '最后更新时间' })
     @ApiPropertyRule({ description: '最后更新时间' })
     declare updatedAt: Date;    
+
+    @BeforeCreate()
+    static async setleftRight(menu:Menu) {
+      let left = 1;
+      if(menu.parentId){
+        const parentMenu = await this.findByPk(menu.parentId);
+        left = parentMenu.right;
+      }else{
+        const parentMenu = await this.findOne({order:[['right', 'DESC']]})
+        if(parentMenu){
+          left = parentMenu?.right+1;
+        }
+      }
+      menu.left = left;
+      menu.right = left+1;
+      await this.sequelize.query('update menu set  `right` = `right` + 2 where `right` >= :right', {
+        replacements: { right: menu.right },
+      })
+      await this.sequelize.query('update menu set  `left` = `left` + 2 where `left` >= :right', {
+        replacements: { right: menu.right  },
+      })
+      return menu;
+    }
 }

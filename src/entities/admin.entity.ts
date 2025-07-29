@@ -2,29 +2,18 @@ import { uuid } from '@/helper/snowflake.js';
 import { ApiProperty } from '@midwayjs/swagger';
 import { Rule } from '@midwayjs/validate';
 import { RuleType } from '@/ruleType/index.js';
-import {
-  DataTypes,
-  Model,
-  InferAttributes,
-  InferCreationAttributes,
-} from '@sequelize/core';
-import {
-  Attribute,
-  PrimaryKey,
-  Default,
-  CreatedAt,
-  UpdatedAt,
-  DeletedAt,
-  Table,
-} from '@sequelize/core/decorators-legacy';
+import { DataTypes, NonAttribute } from '@sequelize/core';
+import { Attribute, PrimaryKey, Default, DeletedAt, Table, BelongsToMany } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
+import { BaseModel } from './abstract/base.entity.js';
+import { Role } from './role.entity.js';
+import { BelongsManyModel } from '../../types/entity.js';
+import { Menu } from './menu.entity.js';
 
-//rule规则使用添加时传入规则
+//rule规则使用添加接口的校验规则
 @Table({ tableName: 'admin', comment: '管理员表' })
-export class Admin extends Model<
-  InferAttributes<Admin>,
-  InferCreationAttributes<Admin>
-> {
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export class Admin extends BaseModel<Admin> {
   @Attribute(DataTypes.STRING)
   @PrimaryKey
   @Default(uuid)
@@ -32,32 +21,31 @@ export class Admin extends Model<
   @ApiProperty({ description: 'ID' })
   id: string;
 
-  @Attribute({ type: DataTypes.STRING(20), comment: '用户名' })
-  @ApiPropertyRule({ description: '用户名', rule:RuleType.string().max(10).min(1).required().empty('') })
+  @Attribute({ type: DataTypes.STRING(50), comment: '用户名' })
+  @ApiPropertyRule({ description: '用户名', rule: RuleType.string().max(50).min(1).required().empty('') })
   username: string;
 
   @Attribute({ type: DataTypes.STRING(20), comment: '昵称' })
-  @ApiPropertyRule({ description: '昵称', rule:RuleType.string().max(10).min(1).required() })
+  @ApiPropertyRule({ description: '昵称', rule: RuleType.string().max(20).min(1).required() })
   nickname: string;
 
-  @Attribute({ type: DataTypes.CHAR(32), comment: '密码' })
-  @ApiPropertyRule({ description: '密码', rule:RuleType.string().max(10).min(1).required() })
+  @Attribute({ type: DataTypes.STRING(64), comment: '密码' })
+  @ApiPropertyRule({ description: '密码', rule: RuleType.string().required() })
   password: string;
 
-  @Attribute({ type: DataTypes.CHAR(32), comment: '密码盐' })
-  @ApiPropertyRule({ description: '密码盐' })
+  @Attribute({ type: DataTypes.STRING(32), comment: '密码盐' })
   salt: string;
 
   @Attribute({ type: DataTypes.STRING(100), comment: '头像' })
-  @ApiPropertyRule({ description: '头像', rule:RuleType.string().max(100).min(1) })
+  @ApiPropertyRule({ description: '头像', rule: RuleType.string().max(100).min(1) })
   avatar: string;
 
   @Attribute({ type: DataTypes.STRING(100), comment: '邮箱' })
-  @ApiPropertyRule({ description: '邮箱', rule:RuleType.string().email().max(100) })
+  @ApiPropertyRule({ description: '邮箱', rule: RuleType.string().email().max(100) })
   email: string;
 
   @Attribute({ type: DataTypes.STRING(11), comment: '手机号' })
-  @ApiPropertyRule({ description: '手机号', rule:RuleType.string().mobile().description('手机号').required() })
+  @ApiPropertyRule({ description: '手机号', rule: RuleType.string().mobile().description('手机号').required() })
   mobile: string;
 
   @Attribute({
@@ -69,39 +57,63 @@ export class Admin extends Model<
   loginFailure: number;
 
   @Attribute({
-    type: DataTypes.TIME,
+    type: DataTypes.DATE,
     comment: '登录时间',
   })
-  @ApiPropertyRule({ description: '登录时间', rule:RuleType.date()})
-  loginDate: Date | null;
+  @ApiPropertyRule({ description: '最后登录时间', rule: RuleType.date() })
+  lastLoginDate: Date | null;
 
   @Attribute({
     type: DataTypes.STRING(50),
     comment: '登录ip',
     defaultValue: '',
   })
-  @ApiPropertyRule({ description: '登录ip', rule:RuleType.string().required() })
-  loginIp?: string;
+  @ApiPropertyRule({ description: '最后登录ip', rule: RuleType.string() })
+  lastLoginIp?: string;
 
   @Attribute({
-    comment: '状态:1=启用;2=禁用',
+    comment: '状态:1=启用;0=禁用',
     defaultValue: 1,
     type: DataTypes.TINYINT.UNSIGNED,
   })
-  @ApiPropertyRule({ description: '状态:1=启用;2=禁用',rule:RuleType.number().equal(1, 2).default(1) })
+  @ApiPropertyRule({ description: '状态:1=启用;0=禁用', rule: RuleType.number().equal(1, 0).default(1) })
   status: number;
 
-  @CreatedAt
-  @Attribute({ comment: '创建时间' })
-  @ApiPropertyRule({ description: '创建时间' })
-  declare createdAt: Date;
-
-  @UpdatedAt
-  @Attribute({ comment: '最后更新时间' })
-  @ApiPropertyRule({ description: '最后更新时间' })
-  declare updatedAt: Date;
+  @Attribute({
+    comment: '超级管理员:1=是;0=不是',
+    defaultValue: 2,
+    type: DataTypes.TINYINT.UNSIGNED,
+  })
+  @ApiPropertyRule({ description: '超级管理员:1=是;0=不是', rule: RuleType.number().equal(1, 0).default(2) })
+  isSuper: number;
 
   @DeletedAt
   @Attribute({ comment: '删除时间' })
   declare deletedAt: Date | null;
+
+  @BelongsToMany(() => Role, {
+    through: 'admin_role', //中间表名称 或者 对应的Model
+    inverse: {
+      as: 'admins',
+    },
+  })
+  @ApiPropertyRule({ description: '具有的角色' })
+  declare roles?: NonAttribute<Role[]>;
+
+  _roleMenus?: NonAttribute<Menu[]>;
+  @ApiPropertyRule({ description: '具有权限的菜单' })
+  get roleMenus(): NonAttribute<Menu[]> {
+    return (
+      this._roleMenus ??
+      this.roles!.reduce((a, b) => {
+        return a.concat(b.menus);
+      }, [])
+    );
+  }
+
+  set roleMenus(roleMenus: Menu[]) {
+    this._roleMenus = roleMenus;
+  }
 }
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export declare interface Admin extends BelongsManyModel<'roles', 'role', 'roles', Role> {}

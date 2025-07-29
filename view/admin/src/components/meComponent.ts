@@ -4,7 +4,7 @@ import { useLoadMessages } from '@/locales/i18n';
 import { done } from '@/utils/nProgress';
 import { localeConfig } from '@/config';
 import { closeLoading, loadingObject } from '@/utils/loading';
-import {Suspense} from 'vue';
+import { Suspense } from 'vue';
 export default defineComponent({
   name: 'MeComponent',
   props: {
@@ -16,9 +16,9 @@ export default defineComponent({
     doneProgress: Boolean,
     closeLoading: String as PropType<keyof typeof loadingObject>,
     transition: Object as PropType<TransitionProps>,
-    suspense: Object as  PropType<SuspenseProps>
+    suspense: Object as PropType<SuspenseProps>,
   },
-  setup(props, { attrs, slots }) {
+  setup(props, { attrs }) {
     const loadMessages = useLoadMessages();
     const componentIs: Ref<any> = ref(undefined);
     const key = ref(props.componentKey);
@@ -37,26 +37,27 @@ export default defineComponent({
       },
       { immediate: true },
     );
-
     return () => {
-      let componentFn:()=>VNode;
-      componentFn = ()=>h(componentIs.value || 'div', {
+      const components = [] as VNode[];
+      components.push(
+        h(componentIs.value || 'div', {
           key: key.value,
           ..._attrs.value,
-        });
-      if(props.suspense){
-        componentFn = ()=>h(Suspense, props.suspense, {
-          default: componentFn,
-          fallback:slots.fallback
-        });
+        }),
+      );
+      if (props.suspense) {
+        const index = components.length - 1;
+        components.push(h(Suspense, props.suspense, [components[index]]));
       }
       if (props.keepAlive) {
-        componentFn = ()=>h(MeKeepAlive, props.keepAlive, [componentFn()]);
+        const index = components.length - 1;
+        components.push(h(MeKeepAlive, props.keepAlive, [components[index]]));
       }
       if (props.transition) {
-        componentFn = ()=>h(Transition, props.transition, { default: componentFn });
+        const index = components.length - 1;
+        components.push(h(Transition, props.transition, { default: () => components[index] }));
       }
-      return componentFn();
+      return components[components.length - 1];
     };
   },
 });

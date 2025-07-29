@@ -1,6 +1,8 @@
 import { MidwayConfig } from '@midwayjs/core';
 import database from './database.js';
 import { join } from 'path';
+import { createRedisStore } from '@midwayjs/cache-manager';
+
 export default {
   // use for cookie sign key, should change to your own and keep security
   keys: '1714030878233_897',
@@ -26,7 +28,8 @@ export default {
     },
   },
   sequelize: await database(),
-  view: { //midwayjs 视图配置 说明参考 https://midwayjs.org/docs/extensions/render
+  view: {
+    //midwayjs 视图配置 说明参考 https://midwayjs.org/docs/extensions/render
     defaultViewEngine: 'viteView',
   },
   viteView: {
@@ -40,9 +43,38 @@ export default {
       'admin/index.html': {
         // entryServer: 'admin/src/entry-server.ts',
         root: 'admin',
-        viteConfigFile: join(import.meta.dirname, '../../view/admin/vite.config.ts')
+        viteConfigFile: join(import.meta.dirname, '../../view/admin/vite.config.ts'),
       },
     },
-    root:'',
+    root: '',
+  },
+  redis: {
+    clients: {
+      cache: {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
+        password: process.env.REDIS_PASS,
+        db: 0,
+      },
+    },
+  },
+  cacheManager: {
+    //缓存配置
+    clients: {
+      admin: {
+        store: createRedisStore('cache'),
+      },
+    },
+  },
+  admin: {
+    login: {
+      secret: 'desec2ec3=ase$&e1#edad#$%%', //token加密平台标识
+      expiresIn: 3600000 * 6, //token过期时间ms
+      renewal: 60000 * 10, //续期时间ms
+      cacheKey: 'admin', //token使用的缓存key对应cacheManager.clients
+    },
+    auth: {
+      noLoginUrl: ['/api/admin/login/login', '/api/admin/admin/add'] as Array<string | RegExp>, //无需登录地址
+    },
   },
 } as MidwayConfig;

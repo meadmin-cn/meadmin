@@ -1,12 +1,10 @@
-import { createRouter, createMemoryHistory,createWebHistory, RouteRecordRaw } from 'vue-router';
+import { createRouter, createMemoryHistory, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { PageEnum } from '@/dict/pageEnum';
 import { App } from 'vue';
 import { setupRouterGuard } from './guard';
 import { concatObjectValue } from '@/utils/helper';
 import { Layout } from '@/router/constant';
-export const asyncRoutes = concatObjectValue<RouteRecordRaw>(
-  import.meta.glob('./routes/*.ts', { eager: true, import: 'routes' }),
-);
+export const asyncRoutes = concatObjectValue<RouteRecordRaw>(import.meta.glob('./routes/*.ts', { eager: true, import: 'routes' }));
 import { isExternal } from '@/utils/validate';
 import { resolve } from 'path-browserify';
 
@@ -40,6 +38,18 @@ export const constantRoutes: RouteRecordRaw[] = [
     component: async () => await import('@/views/404.vue'),
     meta: { hideMenu: true, title: '404' },
   },
+  {
+    path: PageEnum.HOME,
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/dashboard/dashboard.vue'),
+        meta: { title: '控制台', affix: true, icon: 'me-icon-dashboard' },
+      },
+    ],
+    meta: { title: '首页' },
+  },
 ];
 
 //路由地址转为绝对地址
@@ -51,13 +61,7 @@ export const resolvePath = (routePath: string, basePath = '') => {
 };
 
 //扁平化路由
-export const flatteningRoutes = (
-  routes: RouteRecordRaw[],
-  basePath = '',
-  menuIndex: number[] = [],
-  newRoutes: RouteRecordRaw[] = [],
-  baseIndex = 0,
-) => {
+export const flatteningRoutes = (routes: RouteRecordRaw[], basePath = '', menuIndex: number[] = [], newRoutes: RouteRecordRaw[] = [], baseIndex = 0) => {
   routes.forEach((route, index) => {
     route.path = resolvePath(route.path, basePath);
     if (!route.meta) {
@@ -83,15 +87,7 @@ export const flatteningRoutes2 = (routes: RouteRecordRaw[], startIndex = 0, igno
       Object.assign(
         { ...route },
         {
-          children: route.children
-            ? flatteningRoutes(
-                route.children,
-                route.path,
-                ignoreFirst ? [] : [index + startIndex],
-                [],
-                ignoreFirst ? index + startIndex : 0,
-              )
-            : [],
+          children: route.children ? flatteningRoutes(route.children, route.path, ignoreFirst ? [] : [index + startIndex], [], ignoreFirst ? index + startIndex : 0) : [],
         },
       ),
     );
@@ -100,12 +96,9 @@ export const flatteningRoutes2 = (routes: RouteRecordRaw[], startIndex = 0, igno
 };
 
 export const router = createRouter({
-  history: import.meta.env.SSR
-      ? createMemoryHistory('/admin')
-      : createWebHistory('/admin'),
+  history: import.meta.env.SSR ? createMemoryHistory('/admin') : createWebHistory('/admin'),
   routes: flatteningRoutes2(constantRoutes),
 });
-
 export const jump = (route: Pick<RouteRecordRaw, 'path' | 'meta'>) => {
   if (route.meta?.isLink) {
     window.open(route.path, '_blank');

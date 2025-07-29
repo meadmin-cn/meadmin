@@ -54,7 +54,7 @@ export function transitionComponent(component: string) {
  * @param activeMenu
  * @returns
  */
-export function filterAsyncRoutes(routes: RouteRecordRaw[], activeMenu?: string, dynamicImport?: boolean) {
+export function filterAsyncRoutes(routes: RouteRecordRaw[], activeMenu?: string) {
   const res: RouteRecordRaw[] = [];
   routes.forEach((route) => {
     const tmp = { ...route };
@@ -66,11 +66,8 @@ export function filterAsyncRoutes(routes: RouteRecordRaw[], activeMenu?: string,
       } else {
         activeMenu = route.meta?.activeMenu ?? route.path;
       }
-      if (dynamicImport) {
-        tmp.component = transitionComponent(route.component as unknown as string);
-      }
       if (tmp.children) {
-        tmp.children = filterAsyncRoutes(tmp.children, activeMenu, dynamicImport);
+        tmp.children = filterAsyncRoutes(tmp.children, activeMenu);
       }
       res.push(tmp);
     }

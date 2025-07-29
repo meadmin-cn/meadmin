@@ -7,7 +7,7 @@ import { useRequest, Options, setGlobalOptions } from 'vue-request';
 import qs from 'qs';
 const t = (...args: [string | number]) => useGlobalStore().i18n.t(...args);
 const service = axios.create({
-  baseURL: '/api/', // url = base url + request url
+  baseURL: '/api/admin/', // url = base url + request url
   timeout: 10000, // request timeout
   paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat', skipNulls: true }), // 数组query参数转换为repeat a=1&a=2,null值会被删除
 });
@@ -20,7 +20,7 @@ service.interceptors.request.use(
     }
     const userStore = useUserStore();
     if (userStore.token) {
-      config.headers['Auth-Token'] = userStore.token;
+      config.headers['Authorization'] = 'Bearer ' + userStore.token;
     }
     return config;
   },

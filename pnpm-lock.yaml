@@ -17,6 +17,9 @@ importers:
       '@midwayjs/bootstrap':
         specifier: ^3.20.4
         version: 3.20.4
+      '@midwayjs/cache-manager':
+        specifier: '3'
+        version: 3.20.4
       '@midwayjs/core':
         specifier: ^3.20.4
         version: 3.20.4
@@ -29,6 +32,9 @@ importers:
       '@midwayjs/logger':
         specifier: ^3.4.2
         version: 3.4.2
+      '@midwayjs/redis':
+        specifier: '3'
+        version: 3.20.4
       '@midwayjs/swagger':
         specifier: '3'
         version: 3.20.4
@@ -39,8 +45,11 @@ importers:
         specifier: 7.0.0-alpha.46
         version: 7.0.0-alpha.46
       '@sequelize/postgres':
-        specifier: 7.0.0-alpha.46
+        specifier: ^7.0.0-alpha.46
         version: 7.0.0-alpha.46
+      dayjs:
+        specifier: ^1.11.3
+        version: 1.11.13
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
@@ -1306,6 +1315,9 @@ packages:
     resolution: {integrity: sha512-P9zv6i1WvMc9qDBWvIgKkymjY2ptIiQ065PjDv7z7fDqH3J/HBRBN5IoiR46r/ujRcU7hCuSIZWvCAFCyuOYZA==}
     engines: {node: '>= 16'}
 
+  '@ioredis/commands@1.2.0':
+    resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
+
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
     engines: {node: '>=12'}
@@ -1375,6 +1387,10 @@ packages:
     resolution: {integrity: sha512-3puwSUrIhzBB0Lig5oNcc8rZVSLY+JpoikBHgyv3jpergdLKD1BCU1IREOT6f53mgMQk6Uo9rem9KSNZeb8vVg==}
     engines: {node: '>=12.11.0'}
 
+  '@midwayjs/cache-manager@3.20.4':
+    resolution: {integrity: sha512-PHiu2f/Pw5eDYoY93klZjKoWJ8ppa0JtQ3vhbCigd6acdsRrIaMUFUWV6G9g4IDGLDKCF/vYNJAP61Qyrym7rw==}
+    engines: {node: '>=12'}
+
   '@midwayjs/cookies@1.2.0':
     resolution: {integrity: sha512-gdfAXk3+uL+9qcNo9lNnUFJCUGXXxCitBjyz9QJR08dcZ11mqTbxVNXhea525e3ZwKREy6f4PHAWofFwlPOZzQ==}
     engines: {node: '>=10'}
@@ -1408,6 +1424,10 @@ packages:
 
   '@midwayjs/mock@3.20.4':
     resolution: {integrity: sha512-rjPROfRvbsw+fTOmmKzmkMU6uLSZyFXM5Za2uZ9ud4AS81z+cvf5Q5RmF4ANdu60xkxZ22qUv1LUW2ELhoVKZA==}
+    engines: {node: '>=12'}
+
+  '@midwayjs/redis@3.20.4':
+    resolution: {integrity: sha512-rAKCgih/soN8ZAZckNtzQfdOFeXRHmMWh9esLbpsj9I9q+He5A1ruscfdrSYRCCEhDLAz0XtVY9xNlgIqDwmOg==}
     engines: {node: '>=12'}
 
   '@midwayjs/session@3.20.4':
@@ -2920,6 +2940,10 @@ packages:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
     engines: {node: '>=0.8'}
 
+  cluster-key-slot@1.1.2:
+    resolution: {integrity: sha512-RMr0FhtfXemyinomL4hrWcYJxmX6deFdCxpJzhDttxgO1+bcCnkk+9drydLVDmAMG7NE6aN/fl4F7ucU/90gAA==}
+    engines: {node: '>=0.10.0'}
+
   cmd-shim@6.0.3:
     resolution: {integrity: sha512-FMabTRlc5t5zjdenF6mS0MBeFZm0XqHqeOkcskKFb/LYCcRQ5fVgLOHVc4Lq9CqABd9zhjwPjMBCJvMCziSVtA==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
@@ -3380,6 +3404,10 @@ packages:
 
   delegates@1.0.0:
     resolution: {integrity: sha512-bd2L678uiWATM6m5Z1VzNCErI3jiGzt6HGY8OVICs40JQq/HALfbyNJmp0UDakEY4pMMaN0Ly5om/B1VI/+xfQ==}
+
+  denque@2.1.0:
+    resolution: {integrity: sha512-HVQE3AAb/pxF8fQAoiqpvg9i3evqug3hoiwakOyZAwJm+6vZehbkYXZ0l4JxS+I3QxM97v5aaRNhj8v5oBhekw==}
+    engines: {node: '>=0.10'}
 
   depd@1.1.2:
     resolution: {integrity: sha512-7emPTl6Dpo6JRXOXjLRxck+FlLRX5847cLKEn00PLAgc3g2hTZZgr+e4c2v6QpSmLeFP3n5yUo7ft6avBK/5jQ==}
@@ -4332,6 +4360,10 @@ packages:
     resolution: {integrity: sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==}
     engines: {node: '>= 0.10'}
 
+  ioredis@5.4.2:
+    resolution: {integrity: sha512-0SZXGNGZ+WzISQ67QDyZ2x0+wVxjjUndtD8oSeik/4ajifeiRufed8fCb8QW8VMyi4MXcS+UO1k/0NGhvq1PAg==}
+    engines: {node: '>=12.22.0'}
+
   ip-address@9.0.5:
     resolution: {integrity: sha512-zHtQzGojZXTwZTHQqra+ETKd4Sn3vgi7uBmlPoXVWZqYvuKmtI0l/VZTjqGmJY9x88GGOaZ9+G9ES8hC4T4X8g==}
     engines: {node: '>= 12'}
@@ -4807,11 +4839,17 @@ packages:
   lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
 
+  lodash.defaults@4.2.0:
+    resolution: {integrity: sha512-qjxPLHd3r5DnsdGacqOMU6pb/avJzdh9tFX2ymgoZE27BmjXrNy/y4LoaiTeAb+O3gL8AfpJGtqfX/ae2leYYQ==}
+
   lodash.escaperegexp@4.1.2:
     resolution: {integrity: sha512-TM9YBvyC84ZxE3rgfefxUWiQKLilstD6k7PTGt6wfbtXF8ixIJLOL3VYyV/z+ZiPLsVxAsKAFVwWlWeb2Y8Yyw==}
 
   lodash.foreach@4.5.0:
     resolution: {integrity: sha512-aEXTF4d+m05rVOAUG3z4vZZ4xVexLKZGF0lIxuHZ1Hplpk/3B6Z1+/ICICYRLm7c41Z2xiejbkCkJoTlypoXhQ==}
+
+  lodash.isarguments@3.1.0:
+    resolution: {integrity: sha512-chi4NHZlZqZD18a0imDHnZPrDeBbTtVN7GXMwuGdRH9qotxAjYs3aVLKc7zNOG9eddR5Ksd8rvFEBc9SsggPpg==}
 
   lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
@@ -4888,10 +4926,6 @@ packages:
   lowercase-keys@2.0.0:
     resolution: {integrity: sha512-tqNXrS78oMOE73NMxK4EMLQsQowWf8jKooH9g7xPavRT706R6bkQJ6DY2Te7QukaZsulxa30wQ7bk0pm4XiHmA==}
     engines: {node: '>=8'}
-
-  lru-cache@10.2.0:
-    resolution: {integrity: sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==}
-    engines: {node: 14 || >=16.14}
 
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
@@ -5943,6 +5977,14 @@ packages:
     resolution: {integrity: sha512-6tDA8g98We0zd0GvVeMT9arEOnTw9qM03L9cJXaCjrip1OO764RDBLBfrB4cwzNGDj5OA5ioymC9GkizgWJDUg==}
     engines: {node: '>=8'}
 
+  redis-errors@1.2.0:
+    resolution: {integrity: sha512-1qny3OExCf0UvUV/5wpYKf2YwPcOqXzkwKKSmKHiE6ZMQs5heeE/c8eXK+PNllPvmjgAbfnsbpkGZWy8cBpn9w==}
+    engines: {node: '>=4'}
+
+  redis-parser@3.0.0:
+    resolution: {integrity: sha512-DJnGAeenTdpMEH6uAJRK/uiyEIH9WVsUmoLwzudwGJUwZPp80PDBWPHXSAGNPwNvIXAbe7MSUB1zQFugFml66A==}
+    engines: {node: '>=4'}
+
   reflect-metadata@0.2.2:
     resolution: {integrity: sha512-urBwgfrvVP/eAyXx4hluJivBKzuEbSQs9rKWCrCkbSxNv8mxPcUZKeuoF3Uy4mJl3Lwprp6yy5/39VWigZ4K6Q==}
 
@@ -6353,6 +6395,9 @@ packages:
   ssri@10.0.6:
     resolution: {integrity: sha512-MGrFH9Z4NP9Iyhqn16sDtBpRRNJ0Y2hNa6D65h736fVSaPCHr4DM4sWUNvVaSuC+0OBGhwsrydQwmgfg5LncqQ==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
+
+  standard-as-callback@2.1.0:
+    resolution: {integrity: sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==}
 
   statuses@1.5.0:
     resolution: {integrity: sha512-OpZ3zP+jT1PI7I8nemJX4AKmAX070ZkYPVWV/AaKTJl+tXCTGyVdC1a4SL8RUQYEwk/f34ZX8UTykN68FwrqAA==}
@@ -8223,6 +8268,8 @@ snapshots:
 
   '@intlify/shared@9.14.4': {}
 
+  '@ioredis/commands@1.2.0': {}
+
   '@isaacs/cliui@8.0.2':
     dependencies:
       string-width: 5.1.2
@@ -8389,6 +8436,11 @@ snapshots:
       '@midwayjs/async-hooks-context-manager': 3.20.4
       '@midwayjs/event-bus': 1.11.1
 
+  '@midwayjs/cache-manager@3.20.4':
+    dependencies:
+      lodash.clonedeep: 4.5.0
+      lru-cache: 7.18.3
+
   '@midwayjs/cookies@1.2.0':
     dependencies:
       scmp: 2.1.0
@@ -8445,6 +8497,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@midwayjs/redis@3.20.4':
+    dependencies:
+      ioredis: 5.4.2
+    transitivePeerDependencies:
+      - supports-color
+
   '@midwayjs/session@3.20.4':
     dependencies:
       '@midwayjs/cookies': 1.2.0
@@ -8493,7 +8551,7 @@ snapshots:
       agent-base: 7.1.1
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.4
-      lru-cache: 10.2.0
+      lru-cache: 10.4.3
       socks-proxy-agent: 8.0.3
     transitivePeerDependencies:
       - supports-color
@@ -10167,6 +10225,8 @@ snapshots:
 
   clone@1.0.4: {}
 
+  cluster-key-slot@1.1.2: {}
+
   cmd-shim@6.0.3: {}
 
   co-body@6.2.0:
@@ -10605,6 +10665,8 @@ snapshots:
   delayed-stream@1.0.0: {}
 
   delegates@1.0.0: {}
+
+  denque@2.1.0: {}
 
   depd@1.1.2: {}
 
@@ -11737,6 +11799,20 @@ snapshots:
 
   interpret@1.4.0: {}
 
+  ioredis@5.4.2:
+    dependencies:
+      '@ioredis/commands': 1.2.0
+      cluster-key-slot: 1.1.2
+      debug: 4.4.0(supports-color@8.1.1)
+      denque: 2.1.0
+      lodash.defaults: 4.2.0
+      lodash.isarguments: 3.1.0
+      redis-errors: 1.2.0
+      redis-parser: 3.0.0
+      standard-as-callback: 2.1.0
+    transitivePeerDependencies:
+      - supports-color
+
   ip-address@9.0.5:
     dependencies:
       jsbn: 1.1.0
@@ -12281,9 +12357,13 @@ snapshots:
 
   lodash.debounce@4.0.8: {}
 
+  lodash.defaults@4.2.0: {}
+
   lodash.escaperegexp@4.1.2: {}
 
   lodash.foreach@4.5.0: {}
+
+  lodash.isarguments@3.1.0: {}
 
   lodash.isequal@4.5.0: {}
 
@@ -12344,8 +12424,6 @@ snapshots:
   lowercase-keys@1.0.1: {}
 
   lowercase-keys@2.0.0: {}
-
-  lru-cache@10.2.0: {}
 
   lru-cache@10.4.3: {}
 
@@ -13499,6 +13577,12 @@ snapshots:
       indent-string: 4.0.0
       strip-indent: 3.0.0
 
+  redis-errors@1.2.0: {}
+
+  redis-parser@3.0.0:
+    dependencies:
+      redis-errors: 1.2.0
+
   reflect-metadata@0.2.2: {}
 
   regenerate-unicode-properties@10.2.0:
@@ -13925,6 +14009,8 @@ snapshots:
   ssri@10.0.6:
     dependencies:
       minipass: 7.1.2
+
+  standard-as-callback@2.1.0: {}
 
   statuses@1.5.0: {}
 

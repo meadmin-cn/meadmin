@@ -4,10 +4,9 @@ import { BaseController } from './base.controller.js';
 import { Admin } from '@/entities/admin.entity.js';
 import { AdminQueryDto } from '../dto/adminQuery.dto.js';
 import { AdminService } from '../service/admin.service.js';
-import { AdminUpdateDto } from '../dto/adminUpdate.dto.js'
+import { AdminUpdateDto } from '../dto/adminUpdate.dto.js';
 import { ApiOperationResponse } from '@/decorators/index.js';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
-import {  Validate } from '@midwayjs/validate';
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
@@ -24,12 +23,8 @@ export class AdminController extends BaseController {
     responseType: Admin,
     summary: '添加管理员信息',
   })
-  @Validate({
-    errorStatus: 422,
-  })
-  async add( @Body() admin: AdminCreateDto) {
-    
-    return this.responseService.success(await this.adminService.create(admin));
+  async add(@Body() admin: AdminCreateDto) {
+    return this.success(await this.adminService.create(admin));
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
@@ -39,7 +34,7 @@ export class AdminController extends BaseController {
     summary: '获取管理员列表',
   })
   async list(@Body() admin: AdminQueryDto) {
-    return this.responseService.success({
+    return this.success({
       list: await this.adminService.findAll(admin),
       total: await this.adminService.count(admin),
     });
@@ -53,7 +48,7 @@ export class AdminController extends BaseController {
   async findOne(@Param('id') id: string) {
     const entity = await this.adminService.findOne(id);
     if (entity) {
-      return this.responseService.success(entity);
+      return this.success(entity);
     }
     throw new BadRequestError('没有对应的信息');
   }
@@ -64,9 +59,7 @@ export class AdminController extends BaseController {
     summary: '根据id更新管理员详情',
   })
   async update(@Param('id') id: string, @Body() updateDto: AdminUpdateDto) {
-    return this.responseService.success(
-      await this.adminService.update(id, updateDto)
-    );
+    return this.success(await this.adminService.update(id, updateDto));
   }
 
   @Get('/del/:id')
@@ -75,6 +68,6 @@ export class AdminController extends BaseController {
   })
   async del(@Param('id') id: string) {
     await this.adminService.remove(id);
-    return this.responseService.success();
+    return this.success();
   }
 }

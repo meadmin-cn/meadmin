@@ -4,7 +4,6 @@ import useUserStore from './user';
 import { router, constantRoutes, asyncRoutes, flatteningRoutes2 } from '@/router';
 import { RouteRecordRaw } from 'vue-router';
 import { settingConfig } from '@/config';
-import { menuApi } from '@/api/routeMenu';
 import { PageEnum } from '@/dict/pageEnum';
 import { Layout } from '@/router/constant';
 export default defineStore('route', {
@@ -26,7 +25,7 @@ export default defineStore('route', {
             break;
           case MenuModeEnum.API:
             initDynamicViewsModules();
-            this.addRoutes = markRaw(filterAsyncRoutes(await menuApi()(), undefined, true));
+            this.addRoutes = markRaw(filterAsyncRoutes(useUserStore().menus, undefined));
             break;
         }
       }

@@ -14,11 +14,7 @@ import { cloneDeep } from 'lodash-es';
  * @param initialValue  作为第一次调用 callback 函数时参数 previousValue 的值
  * @returns
  */
-export function objectRreduce<T, P extends Record<string, any> = Record<string, any>>(
-  object: P,
-  callbackfn: (previousValue: T, currentValue: P[keyof P], currentKey: string, object: P) => T,
-  initialValue: T,
-): T {
+export function objectRreduce<T, P extends Record<string, any> = Record<string, any>>(object: P, callbackfn: (previousValue: T, currentValue: P[keyof P], currentKey: string, object: P) => T, initialValue: T): T {
   for (const i in object) {
     if (Object.hasOwn(object, i)) {
       initialValue = callbackfn(initialValue, object[i], i, object);
@@ -104,29 +100,16 @@ export const getColorLuma = function (color: string) {
 type TreeData<Key extends string[]> = {
   [k in Key[number]]: string | number;
 } & { [k: string]: any };
-export const searchTreeTable = function <Key extends string[], T extends TreeData<Key>>(
-  searchText: number | string,
-  searchProps: Key,
-  data: T[],
-  options: SearchTreeOptions = { children: 'children' },
-) {
+export const searchTreeTable = function <Key extends string[], T extends TreeData<Key>>(searchText: number | string, searchProps: Key, data: T[], options: SearchTreeOptions = { children: 'children' }) {
   const search = XEUtils.toValueString(searchText).trim().toLowerCase();
   if (search) {
     const filterRE = new RegExp(search, 'gi');
-    const rest = XEUtils.searchTree(
-      data,
-      (item) => searchProps.some((key) => XEUtils.toValueString(item[key]).toLowerCase().indexOf(search) > -1),
-      options,
-    );
+    const rest = XEUtils.searchTree(data, (item) => searchProps.some((key) => XEUtils.toValueString(item[key]).toLowerCase().indexOf(search) > -1), options);
     XEUtils.eachTree(
       rest,
       (item) => {
         searchProps.forEach((key: Key[number]) => {
-          //@ts-ignore 这里我感觉是对的但是类型检查过不去 😂
-          item[key] = XEUtils.toValueString(item[key]).replace(
-            filterRE,
-            (match) => `<span class="keyword-lighten">${match}</span>`,
-          );
+          item[key] = XEUtils.toValueString(item[key]).replace(filterRE, (match) => `<span class="keyword-lighten">${match}</span>`) as T[Key[number]];
         });
       },
       options,
@@ -158,4 +141,44 @@ export const proxyValue = <T extends Record<string | number, any> | any[]>(value
       return true;
     },
   });
+};
+
+export type TreeArrayItem<T, C extends string | number> = { [K in C]: T[] } & T;
+/**
+ * 数组转为树结构
+ * @param arr
+ * @param key
+ * @param parentKey
+ * @param childrenKey
+ * @returns
+ */
+export const listToTree = <T extends Record<string, any>>(arr: T[], key: keyof T = 'id' as const, parentKey: keyof T = 'parentId' as const, childrenKey = 'children ' as const) => {
+  const treeNode = new Map();
+  arr.forEach((item) => {
+    treeNode.set(item[key], Object.assign({}, item, { [childrenKey]: [] }));
+  });
+  const rootArr = [] as Array<TreeArrayItem<T, typeof childrenKey>>;
+  arr.forEach((item) => {
+    const parentNode = treeNode.get(item[parentKey]);
+    if (parentNode) {
+      parentNode[childrenKey].push(item);
+      treeNode.delete(item[key]);
+    } else {
+      rootArr.push(treeNode.get(item[key]));
+    }
+  });
+  return rootArr;
+};
+
+/**
+ * 状态转boolean
+ * @param status
+ * @returns
+ */
+export const statusToBoolean = (status?: 0 | 1 | '0' | '1') => {
+  if (status === undefined) {
+    return undefined;
+  }
+  // eslint-disable-next-line eqeqeq
+  return status == '1';
 };

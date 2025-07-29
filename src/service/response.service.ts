@@ -14,14 +14,10 @@ export class ResponseService {
    * @param data
    * @returns
    */
-  private response<C extends CodeEunm, T = any>(
-    code: C,
-    message: string,
-    data: T
-  ) {
+  private response<C extends CodeEunm, T = any>(code: C, message: string, data: T) {
     return {
       code,
-      message,
+      msg: message,
       data,
     };
   }
@@ -32,10 +28,7 @@ export class ResponseService {
    * @param message
    * @returns
    */
-  public success<T extends Record<string, any>>(
-    data: T = {} as T,
-    message = '操作成功'
-  ): ApiSuccessRes<T> {
+  public success<T extends Record<string, any>>(data: T = {} as T, message: string): ApiSuccessRes<T> {
     return this.response(CodeEunm.Success, message, data);
   }
 
@@ -45,10 +38,7 @@ export class ResponseService {
    * @param code
    * @returns
    */
-  public error(
-    message: string,
-    code: Exclude<CodeEunm, CodeEunm.Success> = CodeEunm.Fail
-  ): ApiErrorRes {
+  public error(message: string, code: Exclude<CodeEunm, CodeEunm.Success>): ApiErrorRes {
     return this.response(code, message, undefined);
   }
 
@@ -61,13 +51,7 @@ export class ResponseService {
    * @param message
    * @returns
    */
-  public pageRes<T = any>(
-    list: T[],
-    total = 0,
-    page = 1,
-    size = 10,
-    message = '列表数据获取成功'
-  ): ApiPageRes<T> {
+  public successPage<T = any>(list: T[], total: number, page: number, size: number, message: string): ApiPageRes<T> {
     return this.success(
       {
         page,
@@ -75,7 +59,7 @@ export class ResponseService {
         total,
         list,
       },
-      message
+      message,
     );
   }
 }

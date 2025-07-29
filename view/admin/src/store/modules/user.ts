@@ -4,21 +4,25 @@ import cookies from 'js-cookie';
 import { loginConfig as config } from '@/config';
 import { loading } from '@/utils/loading';
 import { PageEnum } from '@/dict/pageEnum';
-import { loginApi, LoginParams, userInfoApi, UserInfoResult } from '@/api/user';
+import { loginApi, LoginParams, userInfoApi, UserInfoResult } from '@/api/login';
 import useRouteStore from './route';
 import { router } from '@/router';
+import { RouteRecordRaw } from 'vue-router';
+import { listToTree, statusToBoolean } from '../../utils/helper';
+import { transitionComponent } from '@/utils/permission.js';
 interface UserState {
   user: UserInfoResult; // 用户信息
   rules: string[] | undefined; // 用户权限信息
+  menus: RouteRecordRaw[]; //用户权限数值
   token: Ref<string>; // 用户token
 }
-export default defineStore({
-  id: 'user',
+export default defineStore('user', {
   state: (): UserState => {
     let _token = '';
     return {
       user: {} as UserInfoResult,
       rules: undefined,
+      menus: [],
       token: customRef<string>((track, trigger) => {
         return {
           get() {
@@ -52,6 +56,35 @@ export default defineStore({
         this.token = token;
         this.user = await userInfoApi(true, !tokenValue)();
         this.rules = this.user.rules;
+        this.menus = listToTree(
+          this.user.menus.map((item) => ({
+            path: item.path,
+            component: transitionComponent(item.component),
+            meta: {
+              // 标题设置该路由在侧边栏和面包屑中展示的名字
+              title: item.title,
+              // 对应权限 多个之间为或的关系
+              rule: [item.rule],
+              // 是否是固定的tag
+              affix: statusToBoolean(item.affix),
+              // 图标
+              icon: item.icon,
+              // 外链
+              isLink: statusToBoolean(item.isLink),
+              // 如果设置为true，则不会被 <keep-alive> 缓存
+              noCache: !statusToBoolean(item.cache),
+              // 在菜单中隐藏
+              hideMenu: statusToBoolean(item.hideMenu),
+              // 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式
+              // 只有一个时，会将那个子路由当做根路由显示在侧边栏
+              // 若你想不管路由下面的 children 声明的个数都显示你的根路由
+              // 你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由
+              alwaysShow: statusToBoolean(item.alwaysShow),
+              // 是否需要面包屑 false不展示在面包屑,ture一直展示在面包屑,undefined当只有一个子元素面包屑时跳过展示
+              breadcrumb: statusToBoolean(item.breadcrumb),
+            },
+          })),
+        );
         await useRouteStore().initRoutes(); //初始化路由
       } else {
         this.token = '';

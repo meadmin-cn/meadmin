@@ -36,7 +36,7 @@
 </template>
 <script setup lang="ts" name="Login">
 import LoginHeader from './components/header.vue';
-import { LoginParams } from '@/api/user';
+import { LoginParams } from '@/api/login';
 import { useLocalesI18n } from '@/locales/i18n';
 import type { FormInstance, FormRules } from 'element-plus';
 import { useUserStore } from '@/store';
@@ -68,8 +68,8 @@ const rules = computed<FormRules>(() => ({
     },
     {
       min: 6,
-      max: 12,
-      message: t('长度必须在 {0} 到 {1}个字符之间', [6, 12]),
+      max: 20,
+      message: t('长度必须在 {0} 到 {1}个字符之间', [6, 20]),
       trigger: 'blur',
     },
   ],

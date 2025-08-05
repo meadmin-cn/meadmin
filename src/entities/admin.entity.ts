@@ -21,36 +21,37 @@ export class Admin extends BaseModel<Admin> {
   @ApiProperty({ description: 'ID' })
   id: string;
 
-  @Attribute({ type: DataTypes.STRING(50), comment: '用户名' })
+  @Attribute({ type: DataTypes.STRING(50), comment: '用户名', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '用户名', rule: RuleType.string().max(50).min(1).required().empty('') })
   username: string;
 
-  @Attribute({ type: DataTypes.STRING(20), comment: '昵称' })
+  @Attribute({ type: DataTypes.STRING(20), comment: '昵称', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '昵称', rule: RuleType.string().max(20).min(1).required() })
   nickname: string;
 
-  @Attribute({ type: DataTypes.STRING(64), comment: '密码' })
+  @Attribute({ type: DataTypes.STRING(64), comment: '密码', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '密码', rule: RuleType.string().required() })
   password: string;
 
-  @Attribute({ type: DataTypes.STRING(32), comment: '密码盐' })
+  @Attribute({ type: DataTypes.STRING(32), comment: '密码盐', allowNull: false, defaultValue: '' })
   salt: string;
 
-  @Attribute({ type: DataTypes.STRING(100), comment: '头像' })
+  @Attribute({ type: DataTypes.STRING(100), comment: '头像', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '头像', rule: RuleType.string().max(100).min(1) })
   avatar: string;
 
-  @Attribute({ type: DataTypes.STRING(100), comment: '邮箱' })
+  @Attribute({ type: DataTypes.STRING(100), comment: '邮箱', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '邮箱', rule: RuleType.string().email().max(100) })
   email: string;
 
-  @Attribute({ type: DataTypes.STRING(11), comment: '手机号' })
+  @Attribute({ type: DataTypes.STRING(11), comment: '手机号', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '手机号', rule: RuleType.string().mobile().description('手机号').required() })
   mobile: string;
 
   @Attribute({
     type: DataTypes.TINYINT.UNSIGNED,
     comment: '登录失败次数',
+    allowNull: false,
     defaultValue: 0,
   })
   @ApiPropertyRule({ description: '登录失败次数' })
@@ -61,30 +62,33 @@ export class Admin extends BaseModel<Admin> {
     comment: '登录时间',
   })
   @ApiPropertyRule({ description: '最后登录时间', rule: RuleType.date() })
-  lastLoginDate: Date | null;
+  lastLoginAt: Date | null;
 
   @Attribute({
     type: DataTypes.STRING(50),
     comment: '登录ip',
     defaultValue: '',
+    allowNull: false,
   })
   @ApiPropertyRule({ description: '最后登录ip', rule: RuleType.string() })
-  lastLoginIp?: string;
+  lastLoginIp: string;
 
   @Attribute({
     comment: '状态:1=启用;0=禁用',
     defaultValue: 1,
+    allowNull: false,
     type: DataTypes.TINYINT.UNSIGNED,
   })
-  @ApiPropertyRule({ description: '状态:1=启用;0=禁用', rule: RuleType.number().equal(1, 0).default(1) })
+  @ApiPropertyRule({ description: '状态:1=启用;0=禁用', rule: RuleType.number().equal(1, 0) })
   status: number;
 
   @Attribute({
     comment: '超级管理员:1=是;0=不是',
     defaultValue: 2,
+    allowNull: false,
     type: DataTypes.TINYINT.UNSIGNED,
   })
-  @ApiPropertyRule({ description: '超级管理员:1=是;0=不是', rule: RuleType.number().equal(1, 0).default(2) })
+  @ApiPropertyRule({ description: '超级管理员:1=是;0=不是', rule: RuleType.number().equal(1, 0) })
   isSuper: number;
 
   @DeletedAt

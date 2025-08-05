@@ -17,6 +17,7 @@ mitter.once(event.START, async (app) => {
   await installStore(app);
   await installI18n(app);
   installRoute(app);
+
   window.addEventListener('resize', () => mitter.emit(event.RESIZE));
   app.config.globalProperties.$permission = permission;
   // 进度条配置

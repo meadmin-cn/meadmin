@@ -9,9 +9,9 @@ import useRouteStore from './route';
 import { router } from '@/router';
 import { RouteRecordRaw } from 'vue-router';
 import { listToTree, statusToBoolean } from '../../utils/helper';
-import { transitionComponent } from '@/utils/permission.js';
+import { initDynamicViewsModules, transitionComponent } from '@/utils/permission.js';
 interface UserState {
-  user: UserInfoResult; // 用户信息
+  user: UserInfoResult['info']; // 用户信息
   rules: string[] | undefined; // 用户权限信息
   menus: RouteRecordRaw[]; //用户权限数值
   token: Ref<string>; // 用户token
@@ -20,7 +20,7 @@ export default defineStore('user', {
   state: (): UserState => {
     let _token = '';
     return {
-      user: {} as UserInfoResult,
+      user: {} as UserInfoResult['info'],
       rules: undefined,
       menus: [],
       token: customRef<string>((track, trigger) => {
@@ -54,11 +54,14 @@ export default defineStore('user', {
       const token = tokenValue ?? cookies.get(config.tokenName);
       if (token) {
         this.token = token;
-        this.user = await userInfoApi(true, !tokenValue)();
-        this.rules = this.user.rules;
+        const res = await userInfoApi(true, !tokenValue)();
+        this.user = res.info;
+        initDynamicViewsModules();
+        this.rules = res.btnRules;
         this.menus = listToTree(
-          this.user.menus.map((item) => ({
+          res.menus.map((item) => ({
             path: item.path,
+            parentId: item.parentId,
             component: transitionComponent(item.component),
             meta: {
               // 标题设置该路由在侧边栏和面包屑中展示的名字

@@ -29,7 +29,7 @@
   </el-dialog>
 </template>
 <script setup lang="ts" name="Add">
-import { GroupInfo, addGroupApi, editGroupApi, groupListApi } from '@/api/admin';
+import { GroupInfo, addGroupApi, editGroupApi, groupListApi } from '@/api/adminGroup';
 import { FormInstance, FormRules } from 'element-plus';
 const props = defineProps<{
   show: boolean;

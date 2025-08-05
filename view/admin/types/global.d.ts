@@ -1,4 +1,4 @@
-import { DefineComponent,Prop } from 'vue';
+import { DefineComponent, Prop } from 'vue';
 import { ElTable } from 'element-plus';
 declare global {
   //unplugin-auto-import的Element是在页面加载到的时候才生成类型，这里全局声明一下
@@ -24,7 +24,7 @@ declare global {
 
   type ComponentProps<Component> = {
     -readonly [K in keyof Omit<InstanceType<Component>['$props'], keyof InstanceType<DefineComponent>['$props']>]: InstanceType<Component>['$props'][K];
-  } & { [key: `on${Capitalize<string>}`]: (...args: any[]) => any };
+  };
 
   //将 对象类型 转化为合法的组件props声明类型
   type ComponentObjectPropsOptionsFromData<P=Record<string, unknown>> = {

@@ -1,12 +1,12 @@
 import { Admin } from '@/entities/admin.entity.js';
 import { Inject, Provide } from '@midwayjs/core';
 import { AdminCreateDto } from '../dto/adminCreate.dto.js';
-import { AdminQueryDto } from '../dto/adminQuery.dto.js';
-import { formatWhere } from '@/helper/formWhere.js';
 import { AdminUpdateDto } from '../dto/adminUpdate.dto.js';
 import { InjectRepository } from '@/decorators/index.js';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { LoginService } from './login.server.js';
+import { Op, WhereOptions } from '@sequelize/core';
+import { AdminQueryDto } from '../dto/adminQuery.dto.js';
 
 @Provide()
 export class AdminService {
@@ -26,8 +26,43 @@ export class AdminService {
     return await entity.save();
   }
 
-  private formatWhere(query: Partial<AdminQueryDto>) {
-    return formatWhere(Object.assign({}, query, { page: undefined, size: undefined }), { likeField: ['nickname', 'username'] });
+  /**
+   * 列表分页查询
+   * @param queryDto
+   * @returns
+   */
+  async list(queryDto: AdminQueryDto) {
+    const where = {};
+    Object.keys(queryDto).forEach((key) => {
+      if (key === 'page') {
+        return;
+      }
+      if (key === 'size') {
+        return;
+      }
+      if (key === 'startCreateAt') {
+        where['createAt'] = where['createAt'] ?? {};
+        where['createAt'][Op.gte] = queryDto[key];
+      }
+      if (key === 'endCreateAt') {
+        where['createAt'] = where['createAt'] ?? {};
+        where['createAt'][Op.lte] = queryDto[key];
+      }
+      if (key === 'startUpdateAt') {
+        where['updateAt'] = where['updateAt'] ?? {};
+        where['updateAt'][Op.gte] = queryDto[key];
+      }
+      if (key === 'endUpdateAt') {
+        where['updateAt'] = where['updateAt'] ?? {};
+        where['updateAt'][Op.lte] = queryDto[key];
+      }
+    });
+    return {
+      list: await this.findAll(where, queryDto.page, queryDto.size),
+      total: await this.count(where),
+      page: queryDto.page,
+      size: queryDto.size,
+    };
   }
 
   /**
@@ -35,21 +70,21 @@ export class AdminService {
    * @param queryDto 查询条件
    * @returns
    */
-  findAll(queryDto: AdminQueryDto) {
+  findAll(queryWhere: WhereOptions<Admin>, page: number, size: number) {
     return this.adminRepository.findAll({
-      offset: (queryDto.page - 1) * queryDto.size,
-      limit: queryDto.size,
-      where: this.formatWhere(queryDto),
+      offset: (page - 1) * size,
+      limit: size,
+      where: queryWhere,
     });
   }
 
   /**
    * 获取数量
-   * @param queryDto 查询条件
+   * @param queryWhere 查询条件
    * @returns
    */
-  count(queryDto: Partial<AdminUpdateDto>) {
-    return this.adminRepository.count({ where: this.formatWhere(queryDto) });
+  count(queryWhere: WhereOptions<Admin>) {
+    return this.adminRepository.count({ where: queryWhere });
   }
 
   /**

@@ -152,7 +152,7 @@ export type TreeArrayItem<T, C extends string | number> = { [K in C]: T[] } & T;
  * @param childrenKey
  * @returns
  */
-export const listToTree = <T extends Record<string, any>>(arr: T[], key: keyof T = 'id' as const, parentKey: keyof T = 'parentId' as const, childrenKey = 'children ' as const) => {
+export const listToTree = <T extends Record<string, any>>(arr: T[], key: keyof T = 'id' as const, parentKey: keyof T = 'parentId' as const, childrenKey = 'children' as const) => {
   const treeNode = new Map();
   arr.forEach((item) => {
     treeNode.set(item[key], Object.assign({}, item, { [childrenKey]: [] }));
@@ -182,3 +182,52 @@ export const statusToBoolean = (status?: 0 | 1 | '0' | '1') => {
   // eslint-disable-next-line eqeqeq
   return status == '1';
 };
+
+/**
+ * 重置对象值，会改变原对象
+ * @param obj
+ * @param toObj
+ * @returns
+ */
+export const resetObj = <T extends Record<any, any>>(obj: Record<any, any>, toObj: T) => {
+  Object.keys(obj).forEach((key) => (obj[key] = undefined));
+  Object.assign(obj, toObj);
+  return obj as T;
+};
+
+/**
+ * 递归去除数组/对象的空值值
+ * @param obj
+ * @returns
+ */
+export function clearEmptyParam<T extends Record<any, any> | any[]>(obj: T, emptyArr = ['', null, undefined]) {
+  if (Array.isArray(obj)) {
+    const newObj = [] as any[];
+    obj.forEach((item) => {
+      if (emptyArr.includes(item)) {
+        return;
+      } else if (Array.isArray(item)) {
+        newObj.push(clearEmptyParam(item));
+      } else if (typeof item === 'object') {
+        newObj.push(clearEmptyParam(item));
+      } else {
+        newObj.push(item);
+      }
+    });
+    return newObj;
+  } else {
+    const newObj = {} as Record<any, any>;
+    Object.keys(obj).forEach((key) => {
+      if (emptyArr.includes(obj[key])) {
+        return;
+      } else if (Array.isArray(obj[key])) {
+        newObj[key] = clearEmptyParam(obj[key]);
+      } else if (typeof obj[key] === 'object') {
+        newObj[key] = clearEmptyParam(obj[key]);
+      } else {
+        newObj[key] = obj[key];
+      }
+    });
+    return newObj;
+  }
+}

@@ -38,8 +38,8 @@ export function transitionComponent(component: string) {
   if (component === 'LayoutPage') {
     return LayoutPage;
   }
-  const res =
-    dynamicViewsModules['../views/' + component + '.vue'] || dynamicViewsModules['../views/' + component + '.tsx'];
+  console.log(dynamicViewsModules);
+  const res = dynamicViewsModules['../views/' + component + '.vue'] || dynamicViewsModules['../views/' + component + '.tsx'];
   if (res) {
     return res;
   } else {
@@ -52,13 +52,14 @@ export function transitionComponent(component: string) {
  * 过滤动态路由
  * @param routes
  * @param activeMenu
+ * @param noAuth 是否需要校验
  * @returns
  */
-export function filterAsyncRoutes(routes: RouteRecordRaw[], activeMenu?: string) {
+export function filterAsyncRoutes(routes: RouteRecordRaw[], activeMenu?: string, noAuth = false) {
   const res: RouteRecordRaw[] = [];
   routes.forEach((route) => {
     const tmp = { ...route };
-    if (!route.meta || permission(route.meta.rule)) {
+    if (!route.meta || noAuth || permission(route.meta.rule)) {
       if (route.meta?.hideMenu) {
         if (typeof route.meta.activeMenu === 'undefined' && activeMenu) {
           route.meta.activeMenu = activeMenu;

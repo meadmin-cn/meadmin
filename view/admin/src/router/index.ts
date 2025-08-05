@@ -38,18 +38,6 @@ export const constantRoutes: RouteRecordRaw[] = [
     component: async () => await import('@/views/404.vue'),
     meta: { hideMenu: true, title: '404' },
   },
-  {
-    path: PageEnum.HOME,
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/dashboard/dashboard.vue'),
-        meta: { title: '控制台', affix: true, icon: 'me-icon-dashboard' },
-      },
-    ],
-    meta: { title: '首页' },
-  },
 ];
 
 //路由地址转为绝对地址

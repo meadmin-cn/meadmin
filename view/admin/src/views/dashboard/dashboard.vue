@@ -11,5 +11,6 @@ import Charts from './components/charts.vue';
 </script>
 <style lang="scss" scoped>
 .dashboard {
+  
 }
 </style>

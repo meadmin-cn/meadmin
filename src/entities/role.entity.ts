@@ -17,11 +17,11 @@ export class Role extends TreeModel<Role> {
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
   id: string;
 
-  @Attribute({ type: DataTypes.STRING(50), comment: '角色名称' })
+  @Attribute({ type: DataTypes.STRING(50), comment: '角色名称', defaultValue: '', allowNull: false })
   @ApiPropertyRule({ description: '角色名称', rule: RuleType.string().max(50).min(1).required().empty('') })
   roleName: string;
 
-  @Attribute({ type: DataTypes.STRING(50), comment: '角色标识' })
+  @Attribute({ type: DataTypes.STRING(50), comment: '角色标识', defaultValue: '', allowNull: false })
   @ApiPropertyRule({ description: '角色标识', rule: RuleType.string().max(50).min(1).required().empty('') })
   roleKey: string;
 
@@ -29,6 +29,7 @@ export class Role extends TreeModel<Role> {
     comment: '排序(降序)',
     type: DataTypes.SMALLINT,
     defaultValue: 0,
+    allowNull: false,
   })
   @ApiPropertyRule({ description: '排序(降序)', rule: RuleType.number().integer().max(9999).default(0) })
   orderNum: number;
@@ -36,12 +37,13 @@ export class Role extends TreeModel<Role> {
   @Attribute({
     comment: '状态:1=启用;0=禁用',
     defaultValue: 1,
+    allowNull: false,
     type: DataTypes.TINYINT.UNSIGNED,
   })
   @ApiPropertyRule({ description: '状态:1=启用;0=禁用', rule: RuleType.number().valid(1, 0).default(1) })
   status: number;
 
-  @Attribute({ type: DataTypes.STRING(100), comment: '备注' })
+  @Attribute({ type: DataTypes.STRING(100), comment: '备注', defaultValue: '', allowNull: false })
   @ApiPropertyRule({ description: '备注', rule: RuleType.string().max(100).min(1) })
   remark: string;
 

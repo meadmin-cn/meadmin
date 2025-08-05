@@ -18,16 +18,13 @@ export default defineStore('route', {
   actions: {
     //生成权限过滤后的动态路由
     async generateRoutes() {
-      if (useUserStore().rules) {
-        switch (settingConfig.menuMode) {
-          case MenuModeEnum.STATIC:
-            this.addRoutes = markRaw(filterAsyncRoutes(asyncRoutes));
-            break;
-          case MenuModeEnum.API:
-            initDynamicViewsModules();
-            this.addRoutes = markRaw(filterAsyncRoutes(useUserStore().menus, undefined));
-            break;
-        }
+      switch (settingConfig.menuMode) {
+        case MenuModeEnum.STATIC:
+          this.addRoutes = markRaw(filterAsyncRoutes(asyncRoutes));
+          break;
+        case MenuModeEnum.API:
+          this.addRoutes = markRaw(filterAsyncRoutes(useUserStore().menus, undefined, true));
+          break;
       }
       return this.addRoutes;
     },
@@ -48,6 +45,8 @@ export default defineStore('route', {
         constantRoutes.length,
         true,
       ).forEach((route) => router.addRoute(route));
+      console.log('---router----', router);
+
     },
   },
 });

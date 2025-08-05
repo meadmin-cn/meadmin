@@ -33,11 +33,8 @@ export class AdminController extends BaseController {
     responsePage: Admin,
     summary: '获取管理员列表',
   })
-  async list(@Body() admin: AdminQueryDto) {
-    return this.success({
-      list: await this.adminService.findAll(admin),
-      total: await this.adminService.count(admin),
-    });
+  async list(@Body() queryDto: AdminQueryDto) {
+    return this.success(await this.adminService.list(queryDto));
   }
 
   @Get('/:id')

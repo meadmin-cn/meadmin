@@ -11,7 +11,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist && tsc --build"
   },
-   "files": [
+  "files": [
     "dist/**/*.js",
     "dist/**/*.d.ts",
     "template"
@@ -27,7 +27,8 @@
   },
   "dependencies": {
     "commander": "^14.0.0",
-    "dotenv": "^16.5.0"
+    "dotenv": "^16.5.0",
+    "swagger-client": "^3.35.6"
   },
   "peerDependencies": {
     "@sequelize/core": "7.0.0-alpha.46",

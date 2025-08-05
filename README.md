@@ -11,8 +11,10 @@ see [midway docs][midway] for more detail.
 ```bash
 $ npm i
 $ npm run dev
-$ open http://localhost:7001/
+$ open http://localhost:7001/admin
 ```
+默认账户 admin
+默认密码 meAdmin#202507!P
 
 ### Deploy
 

@@ -5,6 +5,7 @@ import { ElMessage } from 'element-plus';
 import log from './log';
 import { useRequest, Options, setGlobalOptions } from 'vue-request';
 import qs from 'qs';
+import { clearEmptyParam } from './helper.js';
 const t = (...args: [string | number]) => useGlobalStore().i18n.t(...args);
 const service = axios.create({
   baseURL: '/api/admin/', // url = base url + request url
@@ -49,6 +50,7 @@ export type RequestOptions<R, P extends unknown[]> = {
   noLoading?: boolean; // 不需要加载特效
   noError?: boolean; // 不需要错误提示
   success?: boolean; //成功后提示
+  noClearEmpty?: boolean; //去除请求参数的空值默认去除['', null, undefined]
 } & Options<R, P>;
 
 setGlobalOptions({
@@ -57,15 +59,8 @@ setGlobalOptions({
 });
 
 // 请求函数，当请求失败时直接抛出异常;
-export function request<R, P extends unknown[] = []>(
-  axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>,
-  options?: RequestOptions<R, P>,
-): ReturnType<typeof useRequest<R, P>>;
-export function request<R, P extends unknown[] = [], T extends boolean = boolean>(
-  axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>,
-  options: RequestOptions<R, P>,
-  returnAxios: T,
-): T extends true ? (...args: P) => Promise<R> : ReturnType<typeof useRequest<R, P>>;
+export function request<R, P extends unknown[] = []>(axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>, options?: RequestOptions<R, P>): ReturnType<typeof useRequest<R, P>>;
+export function request<R, P extends unknown[] = [], T extends boolean = boolean>(axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>, options: RequestOptions<R, P>, returnAxios: T): T extends true ? (...args: P) => Promise<R> : ReturnType<typeof useRequest<R, P>>;
 
 /**
  * 请求函数
@@ -74,16 +69,17 @@ export function request<R, P extends unknown[] = [], T extends boolean = boolean
  * @param returnAxios
  * @returns
  */
-export function request<R, P extends unknown[] = [], T = boolean>(
-  axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>,
-  options?: RequestOptions<R, P>,
-  returnAxios?: T,
-) {
+export function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>, options?: RequestOptions<R, P>, returnAxios?: T) {
   const axiosService = async (...args: P): Promise<R> => {
     try {
       //loading放到微任务中去执行以确保在自动调用请求时等待所有的宏任务中的生命周期函数执行完再创建loading实例 以规避currentInstance的相关警告
       !options?.noLoading && Promise.resolve(undefined).then(loading);
-      const { data: res } = await service(await axiosConfig(...args));
+      const config = await axiosConfig(...args);
+      if (!options?.noClearEmpty) {
+        if (config.params) config.params = clearEmptyParam(config.params);
+        if (config.data) config.data = clearEmptyParam(config.data);
+      }
+      const { data: res } = await service(config);
       if (!res || res.code === undefined) {
         throw Error(t('返回值解析失败'));
       }

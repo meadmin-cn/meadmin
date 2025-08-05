@@ -48,11 +48,13 @@ export type Menu = {
 
 // 获取用户详细信息
 export interface UserInfoResult {
-  rules: string[]; // 权限
-  introduction: string; // 备注
-  avatar: string; // 头像
-  name: string; // 名称
-  username: string; // 用户名
+  btnRules: string[]; // 按钮权限
+  info: {
+    introduction: string; // 备注
+    avatar: string; // 头像
+    name: string; // 名称
+    username: string; // 用户名
+  };
   menus: Menu[];
 }
 export function userInfoApi<T extends boolean = false>(returnAxios: T = false as T, noLoading = true) {

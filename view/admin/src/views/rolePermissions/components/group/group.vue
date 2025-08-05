@@ -40,7 +40,7 @@
   </div>
 </template>
 <script setup lang="ts" name="Group">
-import { groupListApi, GroupListResult, delGroupApi, editGroupApi } from '@/api/admin';
+import { groupListApi, GroupListResult, delGroupApi, editGroupApi } from '@/api/adminGroup';
 import { cloneDeep } from 'lodash-es';
 import { VxeTableEvents } from 'vxe-table';
 import { searchTreeTable } from '@/utils/helper';

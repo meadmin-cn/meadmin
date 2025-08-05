@@ -18,7 +18,7 @@ export default defineComponent({
     transition: Object as PropType<TransitionProps>,
     suspense: Object as PropType<SuspenseProps>,
   },
-  setup(props, { attrs }) {
+  setup(props, { attrs, slots }) {
     const loadMessages = useLoadMessages();
     const componentIs: Ref<any> = ref(undefined);
     const key = ref(props.componentKey);
@@ -45,9 +45,9 @@ export default defineComponent({
           ..._attrs.value,
         }),
       );
-      if (props.suspense) {
+      if (props.suspense || slots.fallback) {
         const index = components.length - 1;
-        components.push(h(Suspense, props.suspense, [components[index]]));
+        components.push(h(Suspense, props.suspense, { default: () => components[index], fallback: slots.fallback }));
       }
       if (props.keepAlive) {
         const index = components.length - 1;

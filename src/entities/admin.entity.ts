@@ -30,7 +30,7 @@ export class Admin extends BaseModel<Admin> {
   nickname: string;
 
   @Attribute({ type: DataTypes.STRING(64), comment: '密码', allowNull: false, defaultValue: '' })
-  @ApiPropertyRule({ description: '密码', rule: RuleType.string().required() })
+  @ApiPropertyRule({ description: '密码', rule: RuleType.string() })
   password: string;
 
   @Attribute({ type: DataTypes.STRING(32), comment: '密码盐', allowNull: false, defaultValue: '' })

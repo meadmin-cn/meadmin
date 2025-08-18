@@ -13,7 +13,7 @@ import { initDynamicViewsModules, transitionComponent } from '@/utils/permission
 interface UserState {
   user: UserInfoResult['info']; // 用户信息
   rules: string[] | undefined; // 用户权限信息
-  menus: RouteRecordRaw[]; //用户权限数值
+  menus: RouteRecordRaw[]; //用户菜单数组
   token: Ref<string>; // 用户token
 }
 export default defineStore('user', {

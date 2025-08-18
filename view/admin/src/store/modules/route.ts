@@ -45,8 +45,25 @@ export default defineStore('route', {
         constantRoutes.length,
         true,
       ).forEach((route) => router.addRoute(route));
-      console.log('---router----', router);
-
     },
+    firstMenu: function(menus?:RouteRecordRaw[]){
+      let path = '';
+      if(!menus){
+        menus = this.addRoutes;
+      }
+      for (let i=0; i<menus.length; i++){
+        if(menus[i].children?.length){
+          path = this.firstMenu(menus[i].children!);
+        }else{
+          if(!menus[i].meta?.isLink){
+            path = menus[i].path
+          }
+        }
+        if(path){
+          return path;
+        }
+      }
+      return path;
+    }
   },
 });

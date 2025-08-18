@@ -7,6 +7,7 @@ import { Layout } from '@/router/constant';
 export const asyncRoutes = concatObjectValue<RouteRecordRaw>(import.meta.glob('./routes/*.ts', { eager: true, import: 'routes' }));
 import { isExternal } from '@/utils/validate';
 import { resolve } from 'path-browserify';
+import { useRouteStore } from '@/store/index.js';
 
 export const constantRoutes: RouteRecordRaw[] = [
   {
@@ -16,6 +17,14 @@ export const constantRoutes: RouteRecordRaw[] = [
       hideMenu: true,
       title: '登录',
     },
+  },
+  {
+    path: PageEnum.HOME,
+    meta: {
+      hideMenu: true,
+      title: '首页',
+    },
+    redirect:()=>useRouteStore().firstMenu()
   },
   {
     path: '/redirect',

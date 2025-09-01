@@ -11,7 +11,7 @@ export default async () => ({
       user: process.env.DATABASE_USER ?? 'root',
       password: process.env.DATABASE_PASSWORD ?? 'root',
       client_encoding: 'utf8',
-      models: await importModels((import.meta.dirname + '/../**/*.entity.{ts,js}').replace(/\\/g, '/')),
+      models: await importModels((import.meta.dirname + '/../**/*.entity.js').replace(/\\/g, '/')),
       define: {
         underscored: true, //强制表名和列名转换为snake_case
         freezeTableName: true, //强制模型名称不变换（取消表名的单词复数转换和snake_case转换)

@@ -23,12 +23,12 @@
     "@types/mocha": "^10.0.10",
     "mocha": "^10.8.2",
     "rimraf": "^6.0.1",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "art-template": "^4.13.4",
     "commander": "^14.0.0",
-    "dotenv": "^16.5.0",
+    "dotenv": "^16.6.1",
     "swagger-client": "^3.35.6"
   },
   "peerDependencies": {

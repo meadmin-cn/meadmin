@@ -47,7 +47,7 @@ export default defineStore('route', {
       ).forEach((route) => router.addRoute(route));
     },
     firstMenu: function(menus?:RouteRecordRaw[]){
-      let path = '';
+      let path = PageEnum.LOGIN as string;
       if(!menus){
         menus = this.addRoutes;
       }

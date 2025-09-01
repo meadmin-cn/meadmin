@@ -1,25 +1,25 @@
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { InjectRepository } from '@/decorators/index.js';
 import { Provide } from '@midwayjs/core';
-import { __CreateDto__ } from '__createDtoPath__';
-import { __QueryDto__ } from '__queryDtoPath__';
-import { __UpdateDto__ } from '__updateDtoPath__';
-import { __Name__ } from '__entityPath__';
+import { MenuCreateDto } from '../dto/menuCreate.dto.js';
+import { MenuQueryDto } from '../dto/menuQuery.dto.js';
+import { MenuUpdateDto } from '../dto/menuUpdate.dto.js';
+import { Menu } from '../../../entities/menu.entity.js';
 import { Op, WhereOptions } from '@sequelize/core';
 
 
 @Provide()
-export class __Service__ {
-  @InjectRepository(__Name__)
-  __Name__Repository: typeof __Name__
+export class MenuService {
+  @InjectRepository(Menu)
+  MenuRepository: typeof Menu
 
   /**
    * 创建数据
    * @param createDto
    * @returns
    */
-  async create(createDto: __CreateDto__) {
-    const entity = this.__Name__Repository.build(createDto);
+  async create(createDto: MenuCreateDto) {
+    const entity = this.MenuRepository.build(createDto);
     return await entity.save();
   }
 
@@ -28,7 +28,7 @@ export class __Service__ {
    * @param queryDto 查询条件
    * @returns
    */
-  async list(queryDto: __QueryDto__) {
+  async list(queryDto: MenuQueryDto) {
     const where = {};
     Object.keys(queryDto).forEach((key) => {
       if (key === 'page') {
@@ -71,8 +71,8 @@ export class __Service__ {
    * @param queryWhere 查询条件
    * @returns
    */
-  findAll(queryWhere: WhereOptions<__Name__>, page: number, size: number) {
-    return this.__Name__Repository.findAll({
+  findAll(queryWhere: WhereOptions<Menu>, page: number, size: number) {
+    return this.MenuRepository.findAll({
       offset: (page - 1) * size,
       limit: size,
       where: queryWhere,
@@ -84,41 +84,41 @@ export class __Service__ {
    * @param queryWhere 查询条件
    * @returns
    */
-  count(queryWhere: WhereOptions<__Name__>) {
-    return this.__Name__Repository.count({ where: queryWhere });
+  count(queryWhere: WhereOptions<Menu>) {
+    return this.MenuRepository.count({ where: queryWhere });
   }
 
   /**
    * 根据主键获取一条信息
-   * @param __pk__ 主键
+   * @param id 主键
    * @returns
    */
-  findOne(__pk__: string) {
-    return this.__Name__Repository.findByPk(__pk__);
+  findOne(id: string) {
+    return this.MenuRepository.findByPk(id);
   }
 
   /**
    * 更新数据
-   * @param __pk__ 主键
+   * @param id 主键
    * @param updateDto 数据对象
    * @returns
    */
-  async update(__pk__: string, updateDto: __UpdateDto__) {
-    const entity = await this.__Name__Repository.findByPk(__pk__);
+  async update(id: string, updateDto: MenuUpdateDto) {
+    const entity = await this.MenuRepository.findByPk(id);
     if (!entity) {
       throw new BadRequestError('没有对应的信息');
     }
-    Object.assign(entity, updateDto, { __pk__ });
+    Object.assign(entity, updateDto, { id });
     return await entity.save();
   }
 
   /**
    * 删除数据
-   * @param __pk__ 主键
+   * @param id 主键
    * @returns
    */
-  async remove(__pk__: string) {
-    const entity = await this.__Name__Repository.findByPk(__pk__);
+  async remove(id: string) {
+    const entity = await this.MenuRepository.findByPk(id);
     if (!entity) {
       throw new BadRequestError('没有对应的信息');
     }

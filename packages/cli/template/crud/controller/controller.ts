@@ -24,7 +24,7 @@ export class __Controller__ extends BaseController {
     summary: '添加__tableComment__信息',
   })
   async add(@Body() createDto: __CreateDto__) {
-    return this.responseService.success(await this.__service__.create(createDto));
+    return this.success(await this.__service__.create(createDto));
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
@@ -34,10 +34,7 @@ export class __Controller__ extends BaseController {
     summary: '获取__tableComment__列表',
   })
   async list(@Body() queryDto: __QueryDto__) {
-    return this.responseService.success({
-      list: await this.__service__.findAll(queryDto),
-      total: await this.__service__.count(queryDto),
-    });
+    return this.success(await this.__service__.list(queryDto));
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
@@ -49,7 +46,7 @@ export class __Controller__ extends BaseController {
   async findOne(@Param('__pk__') __pk__: string) {
     const entity = await this.__service__.findOne(__pk__);
     if (entity) {
-      return this.responseService.success(entity);
+      return this.success(entity);
     }
     throw new BadRequestError('没有对应的信息');
   }
@@ -61,7 +58,7 @@ export class __Controller__ extends BaseController {
     summary: '根据__pk__更新__tableComment__详情',
   })
   async update(@Param('__pk__') __pk__: string, @Body() updateDto: __UpdateDto__) {
-    return this.responseService.success(
+    return this.success(
       await this.__service__.update(__pk__, updateDto)
     );
   }
@@ -73,6 +70,6 @@ export class __Controller__ extends BaseController {
   })
   async del(@Param('__pk__') __pk__: string) {
     await this.__service__.remove(__pk__);
-    return this.responseService.success();
+    return this.success();
   }
 }

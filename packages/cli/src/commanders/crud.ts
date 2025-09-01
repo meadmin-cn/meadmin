@@ -12,6 +12,7 @@ import { join, resolve } from 'node:path';
 import { getConfig } from '../utils/db.js';
 import { recursionWriteFileSync } from '../utils/file.js';
 import { Log } from '../utils/log.js';
+import template from 'art-template';
 
 /**
  * 获取数据库信息
@@ -36,6 +37,7 @@ async function tableInfo(entityName, dbConfigPath, name) {
       pk = Array.from(modelDefinition.primaryKeysAttributeNames).join('__');
     }
   }
+  console.log(modelDefinition.attributes.get('createdAt').type);
   return { tableComment, pk, deleteAt: modelDefinition.options.deletedAt };
 }
 
@@ -48,6 +50,7 @@ const writeFiles = {
   servicePath: '',
   controllerPath: '',
 };
+const noWriteKey = ['entityPath'];
 
 const replaceNames = {
   name: '',
@@ -67,7 +70,7 @@ const replaceNames = {
 function checkPaths() {
   const existsFiles = [];
   Object.keys(writeFiles).forEach(key => {
-    if (existsSync(writeFiles[key].replace('.js', '.ts'))) {
+    if (!noWriteKey.includes(key) && existsSync(writeFiles[key].replace('.js', '.ts'))) {
       existsFiles.push(writeFiles[key].replace('.js', '.ts'));
     }
   });
@@ -96,13 +99,15 @@ function writeContent(templatePath, toPath) {
       relativePath(toPath, writeFiles[key], [])
     );
   });
-  return recursionWriteFileSync(toPath.replace('.js', '.ts'), content);
+  return recursionWriteFileSync(toPath.replace('.js', '.ts'), template(content,{
+
+  }));
 }
 
 export const crudInit = (program: Command) => {
   program
     .command('crud')
-    .description('同步数据库结构')
+    .description('创建crud')
     .argument(
       '<file>',
       '基于的entity文件地址,如果是相对路径会基于src/entities查找'

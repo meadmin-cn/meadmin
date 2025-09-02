@@ -13,6 +13,8 @@ import { getConfig } from '../utils/db.js';
 import { recursionWriteFileSync } from '../utils/file.js';
 import { Log } from '../utils/log.js';
 import template from 'art-template';
+import {getApp} from '../utils/app.js';
+import { getClassExtendedMetadata } from '@midwayjs/core';
 
 /**
  * 获取数据库信息
@@ -104,7 +106,7 @@ function writeContent(templatePath, toPath) {
   }));
 }
 
-export const crudInit = (program: Command) => {
+export const crudInit = async (program: Command) => {
   program
     .command('crud')
     .description('创建crud')
@@ -124,7 +126,7 @@ export const crudInit = (program: Command) => {
       '数据库配置文件地址默认为当前目录下dist/config/database.js',
       join(process.cwd(), 'dist/config/database.js')
     )
-    .action(async (file: string, options) => {
+    .action((file: string, options) => {
       const noSuffixEntityPath = relativePath('', file, ['.entity', '.ts']);
       const entityFileName = lowerFirstCase(
         toHump(relativePath('', noSuffixEntityPath, []).split('/').pop()!)
@@ -135,6 +137,12 @@ export const crudInit = (program: Command) => {
         [],
         process.cwd() + '/src/entities'
       );
+      const app = getApp();
+  //       const fatherProperties = getClassExtendedMetadata(
+  //   INJECT_CUSTOM_PROPERTY,
+  //   dto
+  // ) ?? {};
+
       writeFiles.createDtoPath = resovePath(
         `src/app/${options.model}/dto/${entityFileName}Create`,
         ['.dto', '.js']

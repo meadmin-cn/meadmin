@@ -27,10 +27,10 @@
     "typescript": "^5.9.2"
   },
   "peerDependencies": {
-    "@midwayjs/bootstrap": "^3.20.4",
-    "@midwayjs/core": "^3.20.4",
-    "@midwayjs/info": "^3.20.4",
-    "@midwayjs/koa": "^3.20.4",
+    "@midwayjs/bootstrap": "^3.20.11",
+    "@midwayjs/core": "^3.20.11",
+    "@midwayjs/info": "^3.20.11",
+    "@midwayjs/koa": "^3.20.11",
     "@midwayjs/logger": "^3.4.2",
     "@midwayjs/validate": "^3.20.4"
   },

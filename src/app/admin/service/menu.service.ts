@@ -123,6 +123,6 @@ export class MenuService {
       throw new BadRequestError('没有对应的信息');
     }
     await entity.destroy();
-    return Boolean(entity.deletedAt);
+    return true;
   }
 }

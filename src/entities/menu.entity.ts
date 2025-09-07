@@ -148,7 +148,7 @@ export class Menu extends TreeModel<Menu> {
   breadcrumb: number;
 
   /** Declared by {@link Role.menus} */
-  @ApiPropertyRule({ description: '角色' })
+  //具有当前菜单的角色
   declare roles?: NonAttribute<Role[]>;
 }
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging

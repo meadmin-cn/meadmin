@@ -6,8 +6,10 @@ import { ApiPropertyRule } from '@/decorators/index.js';
 import { Menu } from './menu.entity.js';
 import { TreeModel } from './abstract/tree.entity.js';
 import { BelongsManyModel } from '../../types/entity.js';
+import { ApiExtraModel, getSchemaPath } from '@midwayjs/swagger';
 
 //rule规则使用添加接口的校验规则
+@ApiExtraModel(Menu)
 @Table({ tableName: 'role', comment: '角色表' })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class Role extends TreeModel<Role> {
@@ -57,7 +59,13 @@ export class Role extends TreeModel<Role> {
       as: 'roles',
     },
   })
-  @ApiPropertyRule({ description: '具有权限菜单' })
+  @ApiPropertyRule({
+    description: '具有权限菜单',
+    type: 'array',
+    items: {
+      $ref: () => getSchemaPath(Menu),
+    },
+  })
   declare menus?: NonAttribute<Menu[]>;
 }
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging

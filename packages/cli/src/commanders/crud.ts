@@ -14,7 +14,42 @@ import { recursionWriteFileSync } from '../utils/file.js';
 import { Log } from '../utils/log.js';
 import template from 'art-template';
 import {getApp} from '../utils/app.js';
-import { getClassExtendedMetadata } from '@midwayjs/core';
+import { getClassExtendedMetadata, INJECT_CUSTOM_PROPERTY,getPropertyType, getClassMetadata } from '@midwayjs/core';
+import {DECORATORS, DECORATORS_CLASS_METADATA, MixDecoratorMetadata, SwaggerExplorer} from '@midwayjs/swagger';
+import { pathToFileURL } from 'node:url';
+
+class MeSwaggerExplorer extends SwaggerExplorer{
+   /**
+   * 解析 ApiExtraModel
+   * @param clzz
+   */
+  public parseApiExtraModel(clzz: any) {
+    const metaForClass =
+      getClassMetadata<MixDecoratorMetadata[]>(
+        DECORATORS_CLASS_METADATA,
+        clzz
+      ) || [];
+    const extraModels = metaForClass.filter(
+      item => item.key === DECORATORS.API_EXTRA_MODEL
+    );
+    for (const m of extraModels) {
+      if (Array.isArray(m.metadata)) {
+        for (const sclz of m.metadata) {
+          this.parseClzz(sclz);
+        }
+      } else {
+        this.parseClzz(m.metadata);
+      }
+    }
+  }
+  /**
+   * 解析 ApiExtraModel
+   * @param clzz
+   */
+  public parseClzz(clzz: any) {
+    return super.parseClzz(clzz);
+  }
+}
 
 /**
  * 获取数据库信息
@@ -126,7 +161,7 @@ export const crudInit = async (program: Command) => {
       '数据库配置文件地址默认为当前目录下dist/config/database.js',
       join(process.cwd(), 'dist/config/database.js')
     )
-    .action((file: string, options) => {
+    .action(async (file: string, options) => {
       const noSuffixEntityPath = relativePath('', file, ['.entity', '.ts']);
       const entityFileName = lowerFirstCase(
         toHump(relativePath('', noSuffixEntityPath, []).split('/').pop()!)
@@ -137,11 +172,18 @@ export const crudInit = async (program: Command) => {
         [],
         process.cwd() + '/src/entities'
       );
-      const app = getApp();
+      // const app = getApp();
+        const entity = await import(pathToFileURL(writeFiles.entityPath.replace('/src/','/dist/')).href);
   //       const fatherProperties = getClassExtendedMetadata(
   //   INJECT_CUSTOM_PROPERTY,
-  //   dto
+  //   entity.Menu
   // ) ?? {};
+  const swaggerExplorer = new MeSwaggerExplorer();
+  swaggerExplorer.parseApiExtraModel(entity[upFirstCase(entityFileName)]);
+  swaggerExplorer.parseClzz(entity[upFirstCase(entityFileName)]);
+  console.log('---getDocumentBuilder--',swaggerExplorer.getDocumentBuilder().getSchema(entity[upFirstCase(entityFileName)].name).properties,swaggerExplorer.getDocumentBuilder().document.components.schemas);
+
+  return ;
 
       writeFiles.createDtoPath = resovePath(
         `src/app/${options.model}/dto/${entityFileName}Create`,

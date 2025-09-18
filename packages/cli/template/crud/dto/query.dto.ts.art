@@ -1,0 +1,9 @@
+import { IntersectionType, PartialType } from '@/helper/dto.js';
+import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
+import { InferAttributes } from '@sequelize/core';
+import { PageDto } from '@/dto/page.dto.js';
+
+export class {{replaceNames.QueryDto}} extends IntersectionType(
+  PageDto,
+  PartialType({{replaceNames.Name}} as new () => InferAttributes<{{replaceNames.Name}}>)
+) {}

@@ -1,0 +1,81 @@
+import { Body, Controller, Post, Inject, Param } from '@midwayjs/core';
+import { BaseController } from './base.controller.js';
+import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
+import { {{replaceNames.CreateDto}} } from '{{paths.createDtoPath}}';
+import { {{replaceNames.QueryDto}} } from '{{paths.queryDtoPath}}';
+import { {{replaceNames.UpdateDto}} } from '{{paths.updateDtoPath}}';
+import { {{replaceNames.Service}} } from '{{paths.servicePath}}';
+import { ApiOperationResponse } from '@/decorators/index.js';
+
+/**
+ * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
+ * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址
+ */
+@Controller('{{replaceNames.name}}')
+export class {{replaceNames.Controller}} extends BaseController {
+  @Inject()
+  {{replaceNames.service}}: {{replaceNames.Service}};
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post('/add')
+  @ApiOperationResponse({
+    responseType: {{replaceNames.Name}},
+    summary: '添加{{replaceNames.tableComment}}信息',
+  })
+  async add(@Body() createDto: {{replaceNames.CreateDto}}) {
+    return this.success(await this.{{replaceNames.service}}.create(createDto));
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post('/')
+  @ApiOperationResponse({
+    responsePage: {{replaceNames.Name}},
+    summary: '获取{{replaceNames.tableComment}}列表',
+  })
+  async list(@Body() queryDto: {{replaceNames.QueryDto}}) {
+    return this.success(await this.{{replaceNames.service}}.list(queryDto));
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post('/update/:{{replaceNames.pk.join('/:')}}')
+  @ApiOperationResponse({
+    responseType: {{replaceNames.Name}},
+    summary: '根据{{replaceNames.pk.join('/:')}}获取{{replaceNames.tableComment}}详情',
+  })
+  async findOne({{each replaceNames.pk}}{{if index>0}}, {{/if}}@Param('{{$value}}') {{$value}}: {{entity.properties[$value].type}}{{/each}}) {
+    {{if replaceNames.pk.length>1}}const entity = await this.{{replaceNames.service}}.findOne({
+      {{each replaceNames.pk}}{{$value}},{{/each}}
+    });
+    {{else}}const entity = await this.{{replaceNames.service}}.findOne({{replaceNames.pk[0]}});{{/if}}
+    return this.success(entity);
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post('/info/:{{replaceNames.pk.join('/:')}}')
+  @ApiOperationResponse({
+    responseType: {{replaceNames.Name}},
+    summary: '根据{{replaceNames.pk.join('/:')}}更新{{replaceNames.tableComment}}详情',
+  })
+  async update({{each replaceNames.pk}}@Param('{{$value}}') {{$value}}: {{entity.properties[$value].type}}, {{/each}}@Body() updateDto: {{replaceNames.UpdateDto}}) {
+    return this.success(
+      {{if replaceNames.pk.length>1}}await this.{{replaceNames.service}}.update({
+        {{each replaceNames.pk}}{{$value}},{{/each}}
+      }, updateDto)
+      {{else}}await this.{{replaceNames.service}}.update({{replaceNames.pk[0]}}, updateDto){{/if}}  
+    );
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post('/del/:{{replaceNames.pk.join('/:')}}')
+  @ApiOperationResponse({
+    summary: '根据{{replaceNames.pk.join('/:')}}删除{{replaceNames.tableComment}}信息',
+  })
+  async del({{each replaceNames.pk}}{{if index>0}}, {{/if}}@Param('{{$value}}') {{$value}}: {{entity.properties[$value].type}}{{/each}}) {
+    {{if replaceNames.pk.length>1}}await this.{{replaceNames.service}}.remove({
+      {{each replaceNames.pk}}
+      {{$value}},
+      {{/each}}
+    });{{else}}await this.{{replaceNames.service}}.remove({{replaceNames.pk[0]}});{{/if}}
+    return this.success();
+  }
+}

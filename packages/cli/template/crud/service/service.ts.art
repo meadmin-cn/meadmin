@@ -1,24 +1,28 @@
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { InjectRepository } from '@/decorators/index.js';
 import { Provide } from '@midwayjs/core';
-import { MenuCreateDto } from '../dto/menuCreate.dto.js';
-import { MenuQueryDto } from '../dto/menuQuery.dto.js';
-import { MenuUpdateDto } from '../dto/menuUpdate.dto.js';
-import { Menu } from '../../../entities/menu.entity.js';
+import { {{replaceNames.CreateDto}} } from '{{paths.createDtoPath}}';
+import { {{replaceNames.QueryDto}} } from '{{paths.queryDtoPath}}';
+import { {{replaceNames.UpdateDto}} } from '{{paths.updateDtoPath}}';
+import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
 import { Op, WhereOptions } from '@sequelize/core';
-
+{{if replaceNames.pk.length > 1}}type PK = {
+  {{each replaceNames.pk}}
+  {{$value}}: {{entity.properties[$value].type}},
+  {{/each}}
+}{{/if}}
 @Provide()
-export class MenuService {
-  @InjectRepository(Menu)
-  MenuRepository: typeof Menu
+export class {{replaceNames.Service}} {
+  @InjectRepository({{replaceNames.Name}})
+  {{replaceNames.Name}}Repository: typeof {{replaceNames.Name}}
 
   /**
    * 创建数据
    * @param createDto
    * @returns
    */
-  async create(createDto: MenuCreateDto) {
-    const entity = this.MenuRepository.build(createDto);
+  async create(createDto: {{replaceNames.CreateDto}}) {
+    const entity = this.{{replaceNames.Name}}Repository.build(createDto);
     return await entity.save();
   }
 
@@ -27,7 +31,7 @@ export class MenuService {
    * @param queryDto 查询条件
    * @returns
    */
-  async list(queryDto: MenuQueryDto) {
+  async list(queryDto: {{replaceNames.QueryDto}}) {
     const where = {};
     Object.keys(queryDto).forEach((key) => {
       if (key === 'page') {
@@ -70,8 +74,8 @@ export class MenuService {
    * @param queryWhere 查询条件
    * @returns
    */
-  findAll(queryWhere: WhereOptions<Menu>, page: number, size: number) {
-    return this.MenuRepository.findAll({
+  findAll(queryWhere: WhereOptions<{{replaceNames.Name}}>, page: number, size: number) {
+    return this.{{replaceNames.Name}}Repository.findAll({
       offset: (page - 1) * size,
       limit: size,
       where: queryWhere,
@@ -83,17 +87,17 @@ export class MenuService {
    * @param queryWhere 查询条件
    * @returns
    */
-  count(queryWhere: WhereOptions<Menu>) {
-    return this.MenuRepository.count({ where: queryWhere });
+  count(queryWhere: WhereOptions<{{replaceNames.Name}}>) {
+    return this.{{replaceNames.Name}}Repository.count({ where: queryWhere });
   }
 
   /**
    * 根据主键获取一条信息
-   * @param id 主键
+   * @param {{if replaceNames.pk.length > 1}}pk{{else}}{{replaceNames.pk[0]}}{{/if}} 主键
    * @returns
    */
-  findOne(id: string) {
-    const entity = this.MenuRepository.findByPk(id);
+  findOne({{if replaceNames.pk.length > 1}}pk:PK{{else}}{{replaceNames.pk[0]}}: {{entity.properties[replaceNames.pk[0]].type}}{{/if}}) {
+    const entity = this.{{replaceNames.Name}}Repository.findByPk({{if replaceNames.pk.length > 1}}pk{{else}}{{replaceNames.pk[0]}}{{/if}});
     if (!entity) {
       throw new BadRequestError('没有对应的信息');
     }
@@ -102,12 +106,12 @@ export class MenuService {
 
   /**
    * 更新数据
-   * @param id 主键
+   * @param {{if replaceNames.pk.length > 1}}pk{{else}}{{replaceNames.pk[0]}}{{/if}} 主键
    * @param updateDto 数据对象
    * @returns
    */
-  async update(id: string, updateDto: MenuUpdateDto) {
-    const entity = await this.MenuRepository.findByPk(id);
+  async update({{if replaceNames.pk.length > 1}}pk:PK{{else}}{{replaceNames.pk[0]}}: {{entity.properties[replaceNames.pk[0]].type}}{{/if}}, updateDto: {{replaceNames.UpdateDto}}) {
+    const entity = await this.{{replaceNames.Name}}Repository.findByPk({{if replaceNames.pk.length > 1}}pk{{else}}{{replaceNames.pk[0]}}{{/if}});
     if (!entity) {
       throw new BadRequestError('没有对应的信息');
     }
@@ -117,11 +121,11 @@ export class MenuService {
 
   /**
    * 删除数据
-   * @param id 主键
+   * @param {{if replaceNames.pk.length > 1}}pk{{else}}{{replaceNames.pk[0]}}{{/if}} 主键
    * @returns
    */
-  async remove(id: string) {
-    const entity = await this.MenuRepository.findByPk(id);
+  async remove({{if replaceNames.pk.length > 1}}pk:PK{{else}}{{replaceNames.pk[0]}}: {{entity.properties[replaceNames.pk[0]].type}}{{/if}}) {
+    const entity = await this.{{replaceNames.Name}}Repository.findByPk({{if replaceNames.pk.length > 1}}pk{{else}}{{replaceNames.pk[0]}}{{/if}});
     if (!entity) {
       throw new BadRequestError('没有对应的信息');
     }

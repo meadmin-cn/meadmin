@@ -7,16 +7,16 @@ import {
   upFirstCase,
 } from '../utils/formatting.js';
 import { Command } from 'commander';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { getConfig } from '../utils/db.js';
 import { recursionWriteFileSync } from '../utils/file.js';
 import { Log } from '../utils/log.js';
 import template from 'art-template';
-import {getApp} from '../utils/app.js';
-import { getClassExtendedMetadata, INJECT_CUSTOM_PROPERTY,getPropertyType, getClassMetadata } from '@midwayjs/core';
-import {DECORATORS, DECORATORS_CLASS_METADATA, MixDecoratorMetadata, SwaggerExplorer} from '@midwayjs/swagger';
+import {  getClassMetadata } from '@midwayjs/core';
+import {DECORATORS, DECORATORS_CLASS_METADATA,  MixDecoratorMetadata, ReferenceObject, SchemaObject, SwaggerExplorer} from '@midwayjs/swagger';
 import { pathToFileURL } from 'node:url';
+import { DocumentBuilder } from '@midwayjs/swagger/dist/documentBuilder.js';
 
 class MeSwaggerExplorer extends SwaggerExplorer{
    /**
@@ -50,6 +50,48 @@ class MeSwaggerExplorer extends SwaggerExplorer{
     return super.parseClzz(clzz);
   }
 }
+let swaggerSchemas = {} as Record<string, SchemaObject>;
+/**
+ * 获取schemas对象
+ * @param documentBuilder 
+ * @param entitySchemaName 
+ * @returns 
+ */
+const getSchemas = (documentBuilder:DocumentBuilder,entitySchemaName:string)=>{
+  const swaggerSchemas = {} as Record<string, SchemaObject>;
+  const setSchemas = (schemaName:string | (()=>string))=>{
+    const name = (typeof schemaName === 'function'?schemaName():schemaName).replace('#/components/schemas/','');
+    if(swaggerSchemas[name]){
+      return;
+    }
+    swaggerSchemas[name] = documentBuilder.getSchema(name);
+    const setItem = (item:SchemaObject | ReferenceObject)=>{
+        if(item['$ref']){
+          setSchemas(item['$ref']);
+        }
+        if((item as SchemaObject ).items){
+          setItem((item as SchemaObject ).items);
+        }
+        if((item as SchemaObject ).properties){
+          setProperties((item as SchemaObject ).properties);
+        }
+    }
+    const setProperties = (properties:Record<string, SchemaObject | ReferenceObject>)=>{
+      Object.keys(properties).forEach(key=>{
+        if(properties.require)
+        setItem(properties[key]);
+      });
+    }
+    if(swaggerSchemas[name].properties){
+      setProperties(swaggerSchemas[name].properties);
+    }
+    if(swaggerSchemas[name].items){
+      setItem(swaggerSchemas[name].items);
+    }
+  }
+  setSchemas(entitySchemaName);
+  return swaggerSchemas;
+}
 
 /**
  * 获取数据库信息
@@ -66,16 +108,7 @@ async function tableInfo(entityName, dbConfigPath, name) {
   if (tableComment.endsWith('表')) {
     tableComment = tableComment.slice(0, -1);
   }
-  let pk = '';
-  if (modelDefinition.primaryKeysAttributeNames.size > 0) {
-    if (modelDefinition.primaryKeysAttributeNames.size === 1) {
-      pk = modelDefinition.primaryKeysAttributeNames.firstValue();
-    } else {
-      pk = Array.from(modelDefinition.primaryKeysAttributeNames).join('__');
-    }
-  }
-  console.log(modelDefinition.attributes.get('createdAt').type);
-  return { tableComment, pk, deleteAt: modelDefinition.options.deletedAt };
+  return { tableComment, pk:Array.from(modelDefinition.primaryKeysAttributeNames) as string[], deletedAt: modelDefinition.options.deletedAt };
 }
 
 //需要写入的文件地址集(以.js结尾)
@@ -91,14 +124,21 @@ const noWriteKey = ['entityPath'];
 
 const replaceNames = {
   name: '',
+  Name: '',
   createDto: '',
+  CreateDto: '',
   updateDto: '',
+  UpdateDto: '',
   queryDto: '',
+  QueryDto: '',
   service: '',
+  Service: '',
   controller: '',
-  pk: '',
+  Controller: '',
+  pk: []as string[],
   tableComment: '',
-  likeField: '',
+  deletedAt:'' as string | undefined,
+  likeField: [] as string[],
 };
 /**
  * 监测路径，如果待写入文件已存在则返回对应数组，否则返回true
@@ -121,23 +161,15 @@ function checkPaths() {
  * @returns 
  */
 function writeContent(templatePath, toPath) {
-  let content = readFileSync(
-    resolve(import.meta.dirname, templatePath),
-    'utf-8'
-  );
-  Object.keys(replaceNames).forEach(key => {
-    content = content
-      .replaceAll(`__${key}__`, replaceNames[key])
-      .replaceAll(`__${upFirstCase(key)}__`, upFirstCase(replaceNames[key]));
+  const paths = {...writeFiles};
+  Object.keys(paths).forEach(key => {
+    paths[key] = relativePath(toPath, paths[key], []);
   });
-  Object.keys(writeFiles).forEach(key => {
-    content = content.replaceAll(
-      `__${key}__`,
-      relativePath(toPath, writeFiles[key], [])
-    );
-  });
-  return recursionWriteFileSync(toPath.replace('.js', '.ts'), template(content,{
-
+  return recursionWriteFileSync(toPath.replace('.js', '.ts'), template(resolve(import.meta.dirname, templatePath), {
+      replaceNames,
+      paths,
+      swaggerSchemas,
+      entity:swaggerSchemas[replaceNames.Name],
   }));
 }
 
@@ -172,19 +204,7 @@ export const crudInit = async (program: Command) => {
         [],
         process.cwd() + '/src/entities'
       );
-      // const app = getApp();
         const entity = await import(pathToFileURL(writeFiles.entityPath.replace('/src/','/dist/')).href);
-  //       const fatherProperties = getClassExtendedMetadata(
-  //   INJECT_CUSTOM_PROPERTY,
-  //   entity.Menu
-  // ) ?? {};
-  const swaggerExplorer = new MeSwaggerExplorer();
-  swaggerExplorer.parseApiExtraModel(entity[upFirstCase(entityFileName)]);
-  swaggerExplorer.parseClzz(entity[upFirstCase(entityFileName)]);
-  console.log('---getDocumentBuilder--',swaggerExplorer.getDocumentBuilder().getSchema(entity[upFirstCase(entityFileName)].name).properties,swaggerExplorer.getDocumentBuilder().document.components.schemas);
-
-  return ;
-
       writeFiles.createDtoPath = resovePath(
         `src/app/${options.model}/dto/${entityFileName}Create`,
         ['.dto', '.js']
@@ -216,38 +236,49 @@ export const crudInit = async (program: Command) => {
       }
       //初始化变量名称
       replaceNames.name = entityFileName;
+      replaceNames.Name = upFirstCase(replaceNames.name);
       replaceNames.createDto = `${entityFileName}CreateDto`;
+      replaceNames.CreateDto = upFirstCase(replaceNames.createDto);
       replaceNames.updateDto = `${entityFileName}UpdateDto`;
+      replaceNames.UpdateDto = upFirstCase(replaceNames.updateDto);
       replaceNames.queryDto = `${entityFileName}QueryDto`;
+      replaceNames.QueryDto = upFirstCase(replaceNames.queryDto);
       replaceNames.service = `${entityFileName}Service`;
+      replaceNames.Service = upFirstCase(replaceNames.service);
       replaceNames.controller = `${entityFileName}Controller`;
-      const { pk, tableComment } = await tableInfo(
-        upFirstCase(entityFileName),
+      replaceNames.Controller = upFirstCase(replaceNames.controller);
+      const { pk, tableComment, deletedAt } = await tableInfo(
+        replaceNames.Name ,
         options.dbConfig,
         options.name
       );
       replaceNames.pk = pk;
       replaceNames.tableComment = tableComment;
-      replaceNames.likeField = JSON.stringify([]);
+      replaceNames.likeField = [];
+      replaceNames.deletedAt = deletedAt;
+      const swaggerExplorer = new MeSwaggerExplorer();
+      swaggerExplorer.parseApiExtraModel(entity[upFirstCase(entityFileName)]);
+      swaggerExplorer.parseClzz(entity[upFirstCase(entityFileName)]);
+      swaggerSchemas = getSchemas(swaggerExplorer.getDocumentBuilder(),  replaceNames.Name)
       //写入文件
       writeContent(
-        '../../template/crud/dto/create.dto.ts',
+        '../../template/crud/dto/create.dto.ts.art',
         writeFiles.createDtoPath
       );
       writeContent(
-        '../../template/crud/dto/update.dto.ts',
+        '../../template/crud/dto/update.dto.ts.art',
         writeFiles.updateDtoPath
       );
       writeContent(
-        '../../template/crud/dto/query.dto.ts',
+        '../../template/crud/dto/query.dto.ts.art',
         writeFiles.queryDtoPath
       );
       writeContent(
-        '../../template/crud/service/service.ts',
+        '../../template/crud/service/service.ts.art',
         writeFiles.servicePath
       );
       writeContent(
-        '../../template/crud/controller/controller.ts',
+        '../../template/crud/controller/controller.ts.art',
         writeFiles.controllerPath
       );
       Log.success(entityFileName+' crud创建完成')

@@ -1,0 +1,8 @@
+import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
+import { OmitDtoType } from '@/helper/dto.js';
+import { InferAttributes } from '@sequelize/core';
+
+export class {{replaceNames.CreateDto}} extends OmitDtoType(
+  {{replaceNames.Name}} as new () => InferAttributes<{{replaceNames.Name}}>, //只保留声明属性
+  ['{{replaceNames.pk.join("','")}}'] //排除自动创建的主键
+) {}

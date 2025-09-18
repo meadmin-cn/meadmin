@@ -6,7 +6,6 @@ import { MenuQueryDto } from '../dto/menuQuery.dto.js';
 import { MenuUpdateDto } from '../dto/menuUpdate.dto.js';
 import { MenuService } from '../service/menu.service.js';
 import { ApiOperationResponse } from '@/decorators/index.js';
-import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
@@ -45,10 +44,7 @@ export class MenuController extends BaseController {
   })
   async findOne(@Param('id') id: string) {
     const entity = await this.menuService.findOne(id);
-    if (entity) {
-      return this.success(entity);
-    }
-    throw new BadRequestError('没有对应的信息');
+    return this.success(entity);
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
@@ -59,7 +55,7 @@ export class MenuController extends BaseController {
   })
   async update(@Param('id') id: string, @Body() updateDto: MenuUpdateDto) {
     return this.success(
-      await this.menuService.update(id, updateDto)
+      await this.menuService.update(id, updateDto)  
     );
   }
 

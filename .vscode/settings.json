@@ -1,5 +1,7 @@
 {
     "typescript.tsdk": "node_modules\\typescript\\lib",
     "editor.tabSize": 2,
-    "typescript.preferences.importModuleSpecifierEnding": "js"
+    "typescript.preferences.importModuleSpecifierEnding": "js",
+    "commentTranslate.targetLanguage": "zh-CN",
+    "commentTranslate.source": "DarkCWK.youdao-youdao"
 }

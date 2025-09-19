@@ -1,0 +1,2 @@
+{{each Object.keys(properties)}}{{if !entity?.pk?.includes($value)}}{{$value}} = <% include('./valueDefault.ts.art', {...properties[$value], entity:entity, needAs:true}) %>{{/if}},//{{properties[$value].description}}
+{{each}}

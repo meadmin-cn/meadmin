@@ -108,7 +108,7 @@ async function tableInfo(entityName, dbConfigPath, name) {
   if (tableComment.endsWith('表')) {
     tableComment = tableComment.slice(0, -1);
   }
-  return { tableComment, pk:Array.from(modelDefinition.primaryKeysAttributeNames) as string[], deletedAt: modelDefinition.options.deletedAt };
+  return { tableComment, pk:Array.from(modelDefinition.primaryKeysAttributeNames) as string[], deletedAt: modelDefinition.options.deletedAt, attributes: modelDefinition.attributes };
 }
 
 //需要写入的文件地址集(以.js结尾)
@@ -262,23 +262,23 @@ export const crudInit = async (program: Command) => {
       swaggerSchemas = getSchemas(swaggerExplorer.getDocumentBuilder(),  replaceNames.Name)
       //写入文件
       writeContent(
-        '../../template/crud/dto/create.dto.ts.art',
+        '../../template/crud/api/dto/create.dto.ts.art',
         writeFiles.createDtoPath
       );
       writeContent(
-        '../../template/crud/dto/update.dto.ts.art',
+        '../../template/crud/api/dto/update.dto.ts.art',
         writeFiles.updateDtoPath
       );
       writeContent(
-        '../../template/crud/dto/query.dto.ts.art',
+        '../../template/crud/api/dto/query.dto.ts.art',
         writeFiles.queryDtoPath
       );
       writeContent(
-        '../../template/crud/service/service.ts.art',
+        '../../template/crud/api/service/service.ts.art',
         writeFiles.servicePath
       );
       writeContent(
-        '../../template/crud/controller/controller.ts.art',
+        '../../template/crud/api/controller/controller.ts.art',
         writeFiles.controllerPath
       );
       Log.success(entityFileName+' crud创建完成')

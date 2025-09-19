@@ -1,0 +1,11 @@
+{{if default}}
+{{if typeof default === 'string'}}'{{default}}'{{else}}{{default}}{{/if}}{{if needAs}} as <% include('./valueType.ts.art', data) %>{{/if}}
+{{else if type==='string'}}
+''{{if needAs && !enum}} as <% include('./valueType.ts.art', data) %>{{/if}}
+{{else if type==='object'}}
+{}{{if needAs}} as <% include('./valueType.ts.art', data) %>{{/if}}
+{{else if type ==='array'}}
+[]{{if needAs}} as <% include('./valueType.ts.art', data) %>{{/if}}
+{{else}}
+undefined{{if needAs}} as <% include('./valueType.ts.art', data) %>| undefined{{/if}}
+{{/if}}

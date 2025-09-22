@@ -20,7 +20,7 @@ export class {{replaceNames.Controller}} extends BaseController {
   @Post('/add')
   @ApiOperationResponse({
     responseType: {{replaceNames.Name}},
-    summary: '添加{{replaceNames.tableComment}}信息',
+    summary: '添加{{entity.tableComment}}信息',
   })
   async add(@Body() createDto: {{replaceNames.CreateDto}}) {
     return this.success(await this.{{replaceNames.service}}.create(createDto));
@@ -30,52 +30,52 @@ export class {{replaceNames.Controller}} extends BaseController {
   @Post('/')
   @ApiOperationResponse({
     responsePage: {{replaceNames.Name}},
-    summary: '获取{{replaceNames.tableComment}}列表',
+    summary: '获取{{entity.tableComment}}列表',
   })
   async list(@Body() queryDto: {{replaceNames.QueryDto}}) {
     return this.success(await this.{{replaceNames.service}}.list(queryDto));
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/update/:{{replaceNames.pk.join('/:')}}')
+  @Post('/update/:{{entity.pk.join('/:')}}')
   @ApiOperationResponse({
     responseType: {{replaceNames.Name}},
-    summary: '根据{{replaceNames.pk.join('/:')}}获取{{replaceNames.tableComment}}详情',
+    summary: '根据{{entity.pk.join('/:')}}获取{{entity.tableComment}}详情',
   })
-  async findOne({{each replaceNames.pk}}{{if index>0}}, {{/if}}@Param('{{$value}}') {{$value}}: {{entity.properties[$value].type}}{{/each}}) {
-    {{if replaceNames.pk.length>1}}const entity = await this.{{replaceNames.service}}.findOne({
-      {{each replaceNames.pk}}{{$value}},{{/each}}
+  async findOne({{each entity.pk}}{{if index>0}}, {{/if}}@Param('{{$value}}') {{$value}}: {{entitySchema.properties[$value].type}}{{/each}}) {
+    {{if entity.pk.length>1}}const entity = await this.{{replaceNames.service}}.findOne({
+      {{each entity.pk}}{{$value}},{{/each}}
     });
-    {{else}}const entity = await this.{{replaceNames.service}}.findOne({{replaceNames.pk[0]}});{{/if}}
+    {{else}}const entity = await this.{{replaceNames.service}}.findOne({{entity.pk[0]}});{{/if}}
     return this.success(entity);
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/info/:{{replaceNames.pk.join('/:')}}')
+  @Post('/info/:{{entity.pk.join('/:')}}')
   @ApiOperationResponse({
     responseType: {{replaceNames.Name}},
-    summary: '根据{{replaceNames.pk.join('/:')}}更新{{replaceNames.tableComment}}详情',
+    summary: '根据{{entity.pk.join('/:')}}更新{{entity.tableComment}}详情',
   })
-  async update({{each replaceNames.pk}}@Param('{{$value}}') {{$value}}: {{entity.properties[$value].type}}, {{/each}}@Body() updateDto: {{replaceNames.UpdateDto}}) {
+  async update({{each entity.pk}}@Param('{{$value}}') {{$value}}: {{entitySchema.properties[$value].type}}, {{/each}}@Body() updateDto: {{replaceNames.UpdateDto}}) {
     return this.success(
-      {{if replaceNames.pk.length>1}}await this.{{replaceNames.service}}.update({
-        {{each replaceNames.pk}}{{$value}},{{/each}}
+      {{if entity.pk.length>1}}await this.{{replaceNames.service}}.update({
+        {{each entity.pk}}{{$value}},{{/each}}
       }, updateDto)
-      {{else}}await this.{{replaceNames.service}}.update({{replaceNames.pk[0]}}, updateDto){{/if}}  
+      {{else}}await this.{{replaceNames.service}}.update({{entity.pk[0]}}, updateDto){{/if}}  
     );
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/del/:{{replaceNames.pk.join('/:')}}')
+  @Post('/del/:{{entity.pk.join('/:')}}')
   @ApiOperationResponse({
-    summary: '根据{{replaceNames.pk.join('/:')}}删除{{replaceNames.tableComment}}信息',
+    summary: '根据{{entity.pk.join('/:')}}删除{{entity.tableComment}}信息',
   })
-  async del({{each replaceNames.pk}}{{if index>0}}, {{/if}}@Param('{{$value}}') {{$value}}: {{entity.properties[$value].type}}{{/each}}) {
-    {{if replaceNames.pk.length>1}}await this.{{replaceNames.service}}.remove({
-      {{each replaceNames.pk}}
+  async del({{each entity.pk}}{{if index>0}}, {{/if}}@Param('{{$value}}') {{$value}}: {{entitySchema.properties[$value].type}}{{/each}}) {
+    {{if entity.pk.length>1}}await this.{{replaceNames.service}}.remove({
+      {{each entity.pk}}
       {{$value}},
       {{/each}}
-    });{{else}}await this.{{replaceNames.service}}.remove({{replaceNames.pk[0]}});{{/if}}
+    });{{else}}await this.{{replaceNames.service}}.remove({{entity.pk[0]}});{{/if}}
     return this.success();
   }
 }

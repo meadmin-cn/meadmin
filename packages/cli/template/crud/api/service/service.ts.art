@@ -6,11 +6,12 @@ import { {{replaceNames.QueryDto}} } from '{{paths.queryDtoPath}}';
 import { {{replaceNames.UpdateDto}} } from '{{paths.updateDtoPath}}';
 import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
 import { Op, WhereOptions } from '@sequelize/core';
-{{if replaceNames.pk.length > 1}}type PK = {
-  {{each replaceNames.pk}}
-  {{$value}}: {{entity.properties[$value].type}},
+{{if entity.pk.length > 1}}type PK = {
+  {{each entity.pk}}
+  {{$value}}: {{entitySchema.properties[$value].type}},
   {{/each}}
 }{{/if}}
+//{{entity.tableComment}}
 @Provide()
 export class {{replaceNames.Service}} {
   @InjectRepository({{replaceNames.Name}})
@@ -93,11 +94,11 @@ export class {{replaceNames.Service}} {
 
   /**
    * 根据主键获取一条信息
-   * @param {{if replaceNames.pk.length > 1}}pk{{else}}{{replaceNames.pk[0]}}{{/if}} 主键
+   * @param {{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}} 主键
    * @returns
    */
-  findOne({{if replaceNames.pk.length > 1}}pk:PK{{else}}{{replaceNames.pk[0]}}: {{entity.properties[replaceNames.pk[0]].type}}{{/if}}) {
-    const entity = this.{{replaceNames.Name}}Repository.findByPk({{if replaceNames.pk.length > 1}}pk{{else}}{{replaceNames.pk[0]}}{{/if}});
+  findOne({{if entity.pk.length > 1}}pk:PK{{else}}{{entity.pk[0]}}: {{entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
+    const entity = this.{{replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}});
     if (!entity) {
       throw new BadRequestError('没有对应的信息');
     }
@@ -106,12 +107,12 @@ export class {{replaceNames.Service}} {
 
   /**
    * 更新数据
-   * @param {{if replaceNames.pk.length > 1}}pk{{else}}{{replaceNames.pk[0]}}{{/if}} 主键
+   * @param {{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}} 主键
    * @param updateDto 数据对象
    * @returns
    */
-  async update({{if replaceNames.pk.length > 1}}pk:PK{{else}}{{replaceNames.pk[0]}}: {{entity.properties[replaceNames.pk[0]].type}}{{/if}}, updateDto: {{replaceNames.UpdateDto}}) {
-    const entity = await this.{{replaceNames.Name}}Repository.findByPk({{if replaceNames.pk.length > 1}}pk{{else}}{{replaceNames.pk[0]}}{{/if}});
+  async update({{if entity.pk.length > 1}}pk:PK{{else}}{{entity.pk[0]}}: {{entitySchema.properties[entity.pk[0]].type}}{{/if}}, updateDto: {{replaceNames.UpdateDto}}) {
+    const entity = await this.{{replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}});
     if (!entity) {
       throw new BadRequestError('没有对应的信息');
     }
@@ -121,11 +122,11 @@ export class {{replaceNames.Service}} {
 
   /**
    * 删除数据
-   * @param {{if replaceNames.pk.length > 1}}pk{{else}}{{replaceNames.pk[0]}}{{/if}} 主键
+   * @param {{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}} 主键
    * @returns
    */
-  async remove({{if replaceNames.pk.length > 1}}pk:PK{{else}}{{replaceNames.pk[0]}}: {{entity.properties[replaceNames.pk[0]].type}}{{/if}}) {
-    const entity = await this.{{replaceNames.Name}}Repository.findByPk({{if replaceNames.pk.length > 1}}pk{{else}}{{replaceNames.pk[0]}}{{/if}});
+  async remove({{if entity.pk.length > 1}}pk:PK{{else}}{{entity.pk[0]}}: {{entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
+    const entity = await this.{{replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}});
     if (!entity) {
       throw new BadRequestError('没有对应的信息');
     }

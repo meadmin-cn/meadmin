@@ -47,6 +47,9 @@ importers:
       '@sequelize/postgres':
         specifier: 7.0.0-alpha.46
         version: 7.0.0-alpha.46
+      '@sequelize/utils':
+        specifier: 7.0.0-alpha.46
+        version: 7.0.0-alpha.46
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -108,6 +111,9 @@ importers:
       mwtsc:
         specifier: ^1.15.2
         version: 1.15.2
+      prettier:
+        specifier: 2.8.8
+        version: 2.8.8
       release-it:
         specifier: ^17.0.1
         version: 17.11.0(typescript@5.9.2)
@@ -117,6 +123,9 @@ importers:
 
   packages/cli:
     dependencies:
+      '@sequelize/cli':
+        specifier: 7.0.0-alpha.46
+        version: 7.0.0-alpha.46(@types/node@20.19.11)(typescript@5.9.2)
       '@sequelize/core':
         specifier: 7.0.0-alpha.46
         version: 7.0.0-alpha.46
@@ -142,6 +151,9 @@ importers:
       mocha:
         specifier: ^10.8.2
         version: 10.8.2
+      prettier:
+        specifier: 2.8.8
+        version: 2.8.8
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -152,23 +164,23 @@ importers:
   packages/core:
     dependencies:
       '@midwayjs/bootstrap':
-        specifier: ^3.20.4
-        version: 3.20.4
+        specifier: ^3.20.11
+        version: 3.20.11
       '@midwayjs/core':
-        specifier: ^3.20.4
-        version: 3.20.4
+        specifier: ^3.20.11
+        version: 3.20.11
       '@midwayjs/info':
-        specifier: ^3.20.4
-        version: 3.20.4
+        specifier: ^3.20.12
+        version: 3.20.13
       '@midwayjs/koa':
-        specifier: ^3.20.4
-        version: 3.20.4
+        specifier: ^3.20.12
+        version: 3.20.13
       '@midwayjs/logger':
         specifier: ^3.4.2
         version: 3.4.2
       '@midwayjs/validate':
-        specifier: ^3.20.4
-        version: 3.20.4
+        specifier: ^3.20.12
+        version: 3.20.13
       tsx:
         specifier: ^4.20.5
         version: 4.20.5
@@ -203,6 +215,9 @@ importers:
       mwtsc:
         specifier: ^1.15.2
         version: 1.15.2
+      prettier:
+        specifier: 2.8.8
+        version: 2.8.8
       typescript:
         specifier: ^5.9.2
         version: 5.9.2
@@ -554,10 +569,6 @@ packages:
 
   '@babel/helper-string-parser@7.27.1':
     resolution: {integrity: sha512-qMlSxKbpRlAridDExk92nSobyDdpPijUq2DW6oDnUqd0iOGxmQjyqhMIihI9+zv4LPyZdRje2cavWPbCbWm3eA==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/helper-validator-identifier@7.22.20':
-    resolution: {integrity: sha512-Y4OZ+ytlatR8AI+8KZfKuL5urKp7qey08ha31L8b3BwewJAoJamTzyvxPR/5D+KkdJCGPq/+8TukHBlY10FX9A==}
     engines: {node: '>=6.9.0'}
 
   '@babel/helper-validator-identifier@7.27.1':
@@ -1309,9 +1320,71 @@ packages:
   '@iarna/toml@2.2.5':
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
 
+  '@inquirer/ansi@1.0.0':
+    resolution: {integrity: sha512-JWaTfCxI1eTmJ1BIv86vUfjVatOdxwD0DAVKYevY8SazeUUZtW+tNbsdejVO1GYE0GXJW1N1ahmiC3TFd+7wZA==}
+    engines: {node: '>=18'}
+
+  '@inquirer/checkbox@4.2.4':
+    resolution: {integrity: sha512-2n9Vgf4HSciFq8ttKXk+qy+GsyTXPV1An6QAwe/8bkbbqvG4VW1I/ZY1pNu2rf+h9bdzMLPbRSfcNxkHBy/Ydw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@types/node': '>=18'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+
+  '@inquirer/confirm@5.1.18':
+    resolution: {integrity: sha512-MilmWOzHa3Ks11tzvuAmFoAd/wRuaP3SwlT1IZhyMke31FKLxPiuDWcGXhU+PKveNOpAc4axzAgrgxuIJJRmLw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@types/node': '>=18'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+
+  '@inquirer/core@10.2.2':
+    resolution: {integrity: sha512-yXq/4QUnk4sHMtmbd7irwiepjB8jXU0kkFRL4nr/aDBA2mDz13cMakEWdDwX3eSCTkk03kwcndD1zfRAIlELxA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@types/node': '>=18'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+
   '@inquirer/figures@1.0.12':
     resolution: {integrity: sha512-MJttijd8rMFcKJC8NYmprWr6hD3r9Gd9qUC0XwPNwoEPWSMVJwA2MlXxF+nhZZNMY+HXsWa+o7KY2emWYIn0jQ==}
     engines: {node: '>=18'}
+
+  '@inquirer/figures@1.0.13':
+    resolution: {integrity: sha512-lGPVU3yO9ZNqA7vTYz26jny41lE7yoQansmqdMLBEfqaGsmdg7V3W9mK9Pvb5IL4EVZ9GnSDGMO/cJXud5dMaw==}
+    engines: {node: '>=18'}
+
+  '@inquirer/input@4.2.4':
+    resolution: {integrity: sha512-cwSGpLBMwpwcZZsc6s1gThm0J+it/KIJ+1qFL2euLmSKUMGumJ5TcbMgxEjMjNHRGadouIYbiIgruKoDZk7klw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@types/node': '>=18'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+
+  '@inquirer/select@4.3.4':
+    resolution: {integrity: sha512-Qp20nySRmfbuJBBsgPU7E/cL62Hf250vMZRzYDcBHty2zdD1kKCnoDFWRr0WO2ZzaXp3R7a4esaVGJUx0E6zvA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@types/node': '>=18'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+
+  '@inquirer/type@3.0.8':
+    resolution: {integrity: sha512-lg9Whz8onIHRthWaN1Q9EGLa/0LFJjyM8mEUbL1eTi6yMGvBf8gvyDLtxSXztQsxMvhxxNpJYrwa1YHdq+w4Jw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@types/node': '>=18'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
 
   '@intlify/core-base@9.14.4':
     resolution: {integrity: sha512-vtZCt7NqWhKEtHa3SD/322DlgP5uR9MqWxnE0y8Q0tjDs9H5Lxhss+b5wv8rmuXRoHKLESNgw9d+EN9ybBbj9g==}
@@ -1393,25 +1466,13 @@ packages:
     resolution: {integrity: sha512-pRsHit3tzhl1jSLuvTmjRteqt+bJ6Vj7QQaGrF4mi1hrO7FrNJ/lAIZ8DHa7ndpXEwOt9BQR1xtLYdWGSpbQYw==}
     engines: {node: '>=12.17.0'}
 
-  '@midwayjs/async-hooks-context-manager@3.20.4':
-    resolution: {integrity: sha512-t1Jq+Ykjgk6kDHckMAS5XhQ0wp70hN9tkeXLMqIDQxu1cuNTZnZ8j16cFTXuQRcIB0cprCf3fHrsVlHEAYJVEg==}
-    engines: {node: '>=12.17.0'}
-
   '@midwayjs/bootstrap@3.20.11':
     resolution: {integrity: sha512-XU4ltfo6b59lowkuO45j/IQ/ySze9Wvf4DIhd85yjZ02TMsHKkYYO7wEWERpXYvUPcTkfchQ23T7V1IIBWlpRA==}
-    engines: {node: '>=12.11.0'}
-
-  '@midwayjs/bootstrap@3.20.4':
-    resolution: {integrity: sha512-3puwSUrIhzBB0Lig5oNcc8rZVSLY+JpoikBHgyv3jpergdLKD1BCU1IREOT6f53mgMQk6Uo9rem9KSNZeb8vVg==}
     engines: {node: '>=12.11.0'}
 
   '@midwayjs/cache-manager@3.20.11':
     resolution: {integrity: sha512-m+LWYQFz4U28EF9qYLvi8sihDj8hv/TL/gUux9ZGicPzLK5D7euEIEk2VZlhg22LnL1WQRM6++89CPpNjeIu+g==}
     engines: {node: '>=12'}
-
-  '@midwayjs/cookies@1.2.0':
-    resolution: {integrity: sha512-gdfAXk3+uL+9qcNo9lNnUFJCUGXXxCitBjyz9QJR08dcZ11mqTbxVNXhea525e3ZwKREy6f4PHAWofFwlPOZzQ==}
-    engines: {node: '>=10'}
 
   '@midwayjs/cookies@1.3.0':
     resolution: {integrity: sha512-jcgGZq2+Ty6qkZ5rQF+ViIn6ntV6n/JuvZ/OmgDsAkS+/SyNc3UuNPlUHzzGrrVWgtJq2w8MzjXbl7a3paIVdw==}
@@ -1419,10 +1480,6 @@ packages:
 
   '@midwayjs/core@3.20.11':
     resolution: {integrity: sha512-BF0g2FWDG9ENzWvsWldUq6ABBAupQdpEAkgCRlwceCMUMlyKVCGA+vl9zRYUGcxb0v0fWhyfiACernx7ozeL4Q==}
-    engines: {node: '>=12'}
-
-  '@midwayjs/core@3.20.4':
-    resolution: {integrity: sha512-ePwj5XFAzhJXErKh2TnkGi1B+QsIJdoQpef3i/c4NEeW5bjXfDTaQO02lxq/Ln6h6hVHi9lPN3Qh4sS1ufqJPA==}
     engines: {node: '>=12'}
 
   '@midwayjs/event-bus@1.11.1':
@@ -1436,24 +1493,12 @@ packages:
     resolution: {integrity: sha512-zyQTmoMNL56wMfe7nbgnoAsojkDxXn5EXCEnYZ6ePOzOI0h2qinkLMsjCokjju6X9v6udnFOOX17TM/vtQPynw==}
     engines: {node: '>=12'}
 
-  '@midwayjs/i18n@3.20.4':
-    resolution: {integrity: sha512-7t0TGdwjz7jkZmFDSod0WdYvc3q1amkllbMWOIQntnpSEbJlj0rlm/SUP9OyFULsbpWzRHN7rsOtD2LAEIk7dw==}
-    engines: {node: '>=12'}
-
   '@midwayjs/info@3.20.13':
     resolution: {integrity: sha512-d9QFtx1u3He9cjLSYygR2DhP035mzqoFvJDwmLspB5lKlNhtAKG5M+c7wlsKFPnRBXpvrbPhsxMS5roz53HJKA==}
     engines: {node: '>=12'}
 
-  '@midwayjs/info@3.20.4':
-    resolution: {integrity: sha512-FUhDdJKkXio3G/1N6Ib41jbBhXt9aE6NgmH4GHA5G0er8LSLYZs2uoNotYLWZh3ErFp7q+72D65RlxRmyJAzJQ==}
-    engines: {node: '>=12'}
-
   '@midwayjs/koa@3.20.13':
     resolution: {integrity: sha512-Y5T6M+XhBm5k9ZeZ8b93TgqWnRuaxHRgHQhDWEgXBdKbr7SFoGWaOIAzZ328/yIXBYQjLIxZ0zOSGoXVGCUDNA==}
-    engines: {node: '>=12'}
-
-  '@midwayjs/koa@3.20.4':
-    resolution: {integrity: sha512-qDFQtx2x+2nkPIZj9lPjl44Qng5FEqe0XU7unliUeZpg0Io2KKVwWro/oH9BjjWUHxcS1BCt65YHbShg9MemtQ==}
     engines: {node: '>=12'}
 
   '@midwayjs/logger@3.4.2':
@@ -1472,10 +1517,6 @@ packages:
     resolution: {integrity: sha512-zGuzyGgWVtNEn7TMMUzevQJynFy0WXiZBjLJirbJ6gJcD2c7kog38Ud0FzZUWGckVdT6mpJgg20+SaK+ciVmbQ==}
     engines: {node: '>=12'}
 
-  '@midwayjs/session@3.20.4':
-    resolution: {integrity: sha512-6WwxI/X4RIPcxTJtijv5tZ9YEgQfvqhm4A+cjqgdrZCA4hm8hQW1zYhoo/FcnOzMVJOVteDRrvmFlis1gNop2A==}
-    engines: {node: '>=12'}
-
   '@midwayjs/static-file@3.20.5':
     resolution: {integrity: sha512-EjEmqi1Qw3ob0J+UkMdd8T2zrnHTI3bgGTr+ZmXpRcRSGbJMgYU2T50PSCMFS6C8W07iz6cHO2jt4/Hiq9p2OQ==}
     engines: {node: '>=12'}
@@ -1485,10 +1526,6 @@ packages:
 
   '@midwayjs/validate@3.20.13':
     resolution: {integrity: sha512-iaumyVf1vdrxhPU1hqVX0Cx4sXYJWP61TzK/DHSAdq5yej9jRGStVyPjXodD3g2iOhY3EW3TInOT2s5RMKxWYw==}
-    engines: {node: '>=12'}
-
-  '@midwayjs/validate@3.20.4':
-    resolution: {integrity: sha512-HPi3WRVvVR7H4xm8JP2ewoPYRNuJgIYq69r/SyXcS4Son+HuNCnJcASSmuAihc3Y/3QJsp++Bmg1msAGJE3zzA==}
     engines: {node: '>=12'}
 
   '@midwayjs/view@3.20.5':
@@ -1635,6 +1672,14 @@ packages:
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
+
+  '@oclif/core@4.5.4':
+    resolution: {integrity: sha512-78YYJls8+KG96tReyUsesKKIKqC0qbFSY1peUSrt0P2uGsrgAuU9axQ0iBQdhAlIwZDcTyaj+XXVQkz2kl/O0w==}
+    engines: {node: '>=18.0.0'}
+
+  '@oclif/plugin-help@6.2.33':
+    resolution: {integrity: sha512-9L07S61R0tuXrURdLcVtjF79Nbyv3qGplJ88DVskJBxShbROZl3hBG7W/CNltAK3cnMPlXV8K3kKh+C0N0p4xw==}
+    engines: {node: '>=18.0.0'}
 
   '@octokit/auth-token@4.0.0':
     resolution: {integrity: sha512-tY/msAuJo6ARbK6SPIxZrPBms3xPbfwBrulZe0Wtr/DIY9lje2HeV1uoebShn6mx7SjCHif6EjMvoREj+gZ+SA==}
@@ -1945,6 +1990,11 @@ packages:
 
   '@scarf/scarf@1.4.0':
     resolution: {integrity: sha512-xxeapPiUXdZAE3che6f3xogoJPeZgig6omHEy1rIY5WVsB3H2BHNnZH+gHG6x91SCWyQCzWGsuL2Hh3ClO5/qQ==}
+
+  '@sequelize/cli@7.0.0-alpha.46':
+    resolution: {integrity: sha512-Gu+vYJ6WhXUrX5IpxdZTgkuOpNAiDBQ4Ku+gzLgtWAZXn3pXkLDhQBxyXzwQ9MUiyZZ+bA9wcqWALXazgSIF1Q==}
+    engines: {node: '>=18.20.7'}
+    hasBin: true
 
   '@sequelize/core@7.0.0-alpha.46':
     resolution: {integrity: sha512-Gak63yRD7tm2legeV4WY0TXHUQOHiIhsSW/YpgwZUFD7jdyzLVPyZUK4zWMoaaOystOG/BiWzb0I9Q9o3EeUeg==}
@@ -3058,6 +3108,10 @@ packages:
     resolution: {integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==}
     engines: {node: '>=6'}
 
+  clean-stack@3.0.1:
+    resolution: {integrity: sha512-lR9wNiMRcVQjSB3a7xXGLuz4cr4wJuuXlaAEbRutGowQTmlp7R72/DOgN21e8jdwblMWl9UOJMJXarX94pzKdg==}
+    engines: {node: '>=10'}
+
   cli-boxes@2.2.1:
     resolution: {integrity: sha512-y4coMcylgSCdVinjiDBuR8PCC2bLjyGTwEmPb9NHR/QaNU6EUOXcTY/s6VjGMD6ENSEaeQYHCY0GNGS5jfMwPw==}
     engines: {node: '>=6'}
@@ -3510,6 +3564,15 @@ packages:
 
   debug@4.4.0:
     resolution: {integrity: sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+
+  debug@4.4.3:
+    resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
     engines: {node: '>=6.0'}
     peerDependencies:
       supports-color: '*'
@@ -4171,6 +4234,10 @@ packages:
     resolution: {integrity: sha512-9fSjSaos/fRIVIp+xSJlE6lfwhES7LNtKaCBIamHsjr2na1BiABJPo0mOjjz8GJDURarmCPGqaiVg5mfjb98CQ==}
     engines: {node: '>= 0.4'}
 
+  get-package-type@0.1.0:
+    resolution: {integrity: sha512-pjzuKtY64GYfWizNAJ0fr9VqttZkNiK2iS430LtIHzjBEr6bX8Am2zm4sW4Ro5wjWW5cAlRL1qAMTcXbjNAO2Q==}
+    engines: {node: '>=8.0.0'}
+
   get-pkg-repo@4.2.1:
     resolution: {integrity: sha512-2+QbHjFRfGB74v/pYWjd5OhU3TDIC2Gv/YKUTk/tCvAz0pkn/Mz6P3uByuBimLOcPvN2jYdScl3xGFSrx0jEcA==}
     engines: {node: '>=6.9.0'}
@@ -4478,10 +4545,6 @@ packages:
 
   immutable@5.1.3:
     resolution: {integrity: sha512-+chQdDfvscSF1SJqv2gn4SRO2ZyS3xL3r7IW/wWEEzrzLisnOlKiQu5ytC/BVNcS15C39WT2Hg/bjKjDMcu+zg==}
-
-  import-fresh@3.3.0:
-    resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
-    engines: {node: '>=6'}
 
   import-fresh@3.3.1:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
@@ -4932,10 +4995,6 @@ packages:
     resolution: {integrity: sha512-Subc/t9vJaMtorZ/Z/yqjRaZZ4RQ8ew+aacQhYXzL6oVuaYaUGqhh3UMRB5gcpu7t9hu1QBwbJezHohLNohr3g==}
     engines: {node: '>=4'}
 
-  koa@2.16.1:
-    resolution: {integrity: sha512-umfX9d3iuSxTQP4pnzLOz0HKnPg0FaUUIKcye2lOiz3KPu1Y3M3xlz76dISdFPQs37P9eJz1wUpcTS6KDPn9fA==}
-    engines: {node: ^4.8.4 || ^6.10.1 || ^7.10.1 || >= 8.1.4}
-
   koa@2.16.2:
     resolution: {integrity: sha512-+CCssgnrWKx9aI3OeZwroa/ckG4JICxvIFnSiOUyl2Uv+UTI+xIw0FfFrWS7cQFpoePpr9o8csss7KzsTzNL8Q==}
     engines: {node: ^4.8.4 || ^6.10.1 || ^7.10.1 || >= 8.1.4}
@@ -4976,6 +5035,10 @@ packages:
   lilconfig@2.1.0:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
     engines: {node: '>=10'}
+
+  lilconfig@3.1.3:
+    resolution: {integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==}
+    engines: {node: '>=14'}
 
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
@@ -5434,6 +5497,10 @@ packages:
   mute-stream@1.0.0:
     resolution: {integrity: sha512-avsJQhyd+680gKXyG/sQc0nXaC6rBkPOfyHYcFb9+hdkqQkR9bdnkJ0AMZhke0oesPqIO+mFFJ+IdBc7mst4IA==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
+
+  mute-stream@2.0.0:
+    resolution: {integrity: sha512-WWdIxpyjEn+FhQJQQv9aQAYlHoNVdzIzUySNV1gHUPDSdZJ3yZn7pAAbQcV7B56Mvu881q9FZV+0Vx2xC44VWA==}
+    engines: {node: ^18.17.0 || >=20.5.0}
 
   mwts@1.3.0:
     resolution: {integrity: sha512-kgOUgIZZP05H0mSlTBRrXi2Pu+J/WlyGwGaLrN8IRU4SS00YJsedJpOTR4KyvQ0MNJ7Az2Hmqmj1FEHUiU64Cg==}
@@ -7583,6 +7650,9 @@ packages:
     resolution: {integrity: sha512-cYVsTjKl8b+FrnidjibDWskAv7UKOfcwaVZdp/it9n1s9fU3IkgDbhdIRKCW4JDsAlECJY0ytoVPT3sK6kideA==}
     engines: {node: '>=18'}
 
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
   zrender@5.6.1:
     resolution: {integrity: sha512-OFXkDJKcrlx5su2XbzJvj/34Q3m6PvyCZkVPHGYpcCJ52ek4U/ymZyfuV1nKE23AyBJ51E/6Yr0mhZ7xGTO4ag==}
 
@@ -7756,8 +7826,6 @@ snapshots:
 
   '@babel/helper-string-parser@7.27.1': {}
 
-  '@babel/helper-validator-identifier@7.22.20': {}
-
   '@babel/helper-validator-identifier@7.27.1': {}
 
   '@babel/helper-validator-option@7.27.1': {}
@@ -7777,7 +7845,7 @@ snapshots:
 
   '@babel/highlight@7.24.2':
     dependencies:
-      '@babel/helper-validator-identifier': 7.22.20
+      '@babel/helper-validator-identifier': 7.27.1
       chalk: 2.4.2
       js-tokens: 4.0.0
       picocolors: 1.1.1
@@ -8526,7 +8594,7 @@ snapshots:
       espree: 7.3.1
       globals: 13.24.0
       ignore: 4.0.6
-      import-fresh: 3.3.0
+      import-fresh: 3.3.1
       js-yaml: 3.14.1
       minimatch: 3.1.2
       strip-json-comments: 3.1.1
@@ -8596,7 +8664,62 @@ snapshots:
 
   '@iarna/toml@2.2.5': {}
 
+  '@inquirer/ansi@1.0.0': {}
+
+  '@inquirer/checkbox@4.2.4(@types/node@20.19.11)':
+    dependencies:
+      '@inquirer/ansi': 1.0.0
+      '@inquirer/core': 10.2.2(@types/node@20.19.11)
+      '@inquirer/figures': 1.0.13
+      '@inquirer/type': 3.0.8(@types/node@20.19.11)
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 20.19.11
+
+  '@inquirer/confirm@5.1.18(@types/node@20.19.11)':
+    dependencies:
+      '@inquirer/core': 10.2.2(@types/node@20.19.11)
+      '@inquirer/type': 3.0.8(@types/node@20.19.11)
+    optionalDependencies:
+      '@types/node': 20.19.11
+
+  '@inquirer/core@10.2.2(@types/node@20.19.11)':
+    dependencies:
+      '@inquirer/ansi': 1.0.0
+      '@inquirer/figures': 1.0.13
+      '@inquirer/type': 3.0.8(@types/node@20.19.11)
+      cli-width: 4.1.0
+      mute-stream: 2.0.0
+      signal-exit: 4.1.0
+      wrap-ansi: 6.2.0
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 20.19.11
+
   '@inquirer/figures@1.0.12': {}
+
+  '@inquirer/figures@1.0.13': {}
+
+  '@inquirer/input@4.2.4(@types/node@20.19.11)':
+    dependencies:
+      '@inquirer/core': 10.2.2(@types/node@20.19.11)
+      '@inquirer/type': 3.0.8(@types/node@20.19.11)
+    optionalDependencies:
+      '@types/node': 20.19.11
+
+  '@inquirer/select@4.3.4(@types/node@20.19.11)':
+    dependencies:
+      '@inquirer/ansi': 1.0.0
+      '@inquirer/core': 10.2.2(@types/node@20.19.11)
+      '@inquirer/figures': 1.0.13
+      '@inquirer/type': 3.0.8(@types/node@20.19.11)
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 20.19.11
+
+  '@inquirer/type@3.0.8(@types/node@20.19.11)':
+    optionalDependencies:
+      '@types/node': 20.19.11
 
   '@intlify/core-base@9.14.4':
     dependencies:
@@ -8773,16 +8896,9 @@ snapshots:
 
   '@midwayjs/async-hooks-context-manager@3.20.11': {}
 
-  '@midwayjs/async-hooks-context-manager@3.20.4': {}
-
   '@midwayjs/bootstrap@3.20.11':
     dependencies:
       '@midwayjs/async-hooks-context-manager': 3.20.11
-      '@midwayjs/event-bus': 1.11.1
-
-  '@midwayjs/bootstrap@3.20.4':
-    dependencies:
-      '@midwayjs/async-hooks-context-manager': 3.20.4
       '@midwayjs/event-bus': 1.11.1
 
   '@midwayjs/cache-manager@3.20.11':
@@ -8790,24 +8906,12 @@ snapshots:
       lodash.clonedeep: 4.5.0
       lru-cache: 7.18.3
 
-  '@midwayjs/cookies@1.2.0':
-    dependencies:
-      scmp: 2.1.0
-      should-send-same-site-none: 2.0.5
-
   '@midwayjs/cookies@1.3.0':
     dependencies:
       scmp: 2.1.0
       should-send-same-site-none: 2.0.5
 
   '@midwayjs/core@3.20.11':
-    dependencies:
-      '@midwayjs/glob': 1.1.1
-      class-transformer: 0.5.1
-      picomatch: 2.3.1
-      reflect-metadata: 0.2.2
-
-  '@midwayjs/core@3.20.4':
     dependencies:
       '@midwayjs/glob': 1.1.1
       class-transformer: 0.5.1
@@ -8824,15 +8928,7 @@ snapshots:
     dependencies:
       picomatch: 2.3.1
 
-  '@midwayjs/i18n@3.20.4':
-    dependencies:
-      picomatch: 2.3.1
-
   '@midwayjs/info@3.20.13':
-    dependencies:
-      picomatch: 2.3.1
-
-  '@midwayjs/info@3.20.4':
     dependencies:
       picomatch: 2.3.1
 
@@ -8845,20 +8941,6 @@ snapshots:
       '@types/koa': 2.15.0
       '@types/qs': 6.9.18
       koa: 2.16.2
-      koa-bodyparser: 4.4.1
-      qs: 6.14.0
-    transitivePeerDependencies:
-      - supports-color
-
-  '@midwayjs/koa@3.20.4':
-    dependencies:
-      '@koa/router': 12.0.2
-      '@midwayjs/cookies': 1.2.0
-      '@midwayjs/core': 3.20.11
-      '@midwayjs/session': 3.20.4
-      '@types/koa': 2.15.0
-      '@types/qs': 6.9.18
-      koa: 2.16.1
       koa-bodyparser: 4.4.1
       qs: 6.14.0
     transitivePeerDependencies:
@@ -8890,10 +8972,6 @@ snapshots:
     dependencies:
       '@midwayjs/cookies': 1.3.0
 
-  '@midwayjs/session@3.20.4':
-    dependencies:
-      '@midwayjs/cookies': 1.2.0
-
   '@midwayjs/static-file@3.20.5':
     dependencies:
       koa-range: 0.3.0
@@ -8907,11 +8985,6 @@ snapshots:
   '@midwayjs/validate@3.20.13':
     dependencies:
       '@midwayjs/i18n': 3.20.13
-      joi: 17.13.3
-
-  '@midwayjs/validate@3.20.4':
-    dependencies:
-      '@midwayjs/i18n': 3.20.4
       joi: 17.13.3
 
   '@midwayjs/view@3.20.5': {}
@@ -9109,6 +9182,31 @@ snapshots:
 
   '@nx/nx-win32-x64-msvc@20.8.0':
     optional: true
+
+  '@oclif/core@4.5.4':
+    dependencies:
+      ansi-escapes: 4.3.2
+      ansis: 3.17.0
+      clean-stack: 3.0.1
+      cli-spinners: 2.9.2
+      debug: 4.4.3(supports-color@8.1.1)
+      ejs: 3.1.10
+      get-package-type: 0.1.0
+      indent-string: 4.0.0
+      is-wsl: 2.2.0
+      lilconfig: 3.1.3
+      minimatch: 9.0.5
+      semver: 7.7.1
+      string-width: 4.2.3
+      supports-color: 8.1.1
+      tinyglobby: 0.2.14
+      widest-line: 3.1.0
+      wordwrap: 1.0.0
+      wrap-ansi: 7.0.0
+
+  '@oclif/plugin-help@6.2.33':
+    dependencies:
+      '@oclif/core': 4.5.4
 
   '@octokit/auth-token@4.0.0': {}
 
@@ -9387,6 +9485,22 @@ snapshots:
     optional: true
 
   '@scarf/scarf@1.4.0': {}
+
+  '@sequelize/cli@7.0.0-alpha.46(@types/node@20.19.11)(typescript@5.9.2)':
+    dependencies:
+      '@inquirer/checkbox': 4.2.4(@types/node@20.19.11)
+      '@inquirer/confirm': 5.1.18(@types/node@20.19.11)
+      '@inquirer/input': 4.2.4(@types/node@20.19.11)
+      '@inquirer/select': 4.3.4(@types/node@20.19.11)
+      '@oclif/core': 4.5.4
+      '@oclif/plugin-help': 6.2.33
+      '@sequelize/utils': 7.0.0-alpha.46
+      ansis: 3.17.0
+      cosmiconfig: 9.0.0(typescript@5.9.2)
+      zod: 3.25.76
+    transitivePeerDependencies:
+      - '@types/node'
+      - typescript
 
   '@sequelize/core@7.0.0-alpha.46':
     dependencies:
@@ -10977,6 +11091,10 @@ snapshots:
 
   clean-stack@2.2.0: {}
 
+  clean-stack@3.0.1:
+    dependencies:
+      escape-string-regexp: 4.0.0
+
   cli-boxes@2.2.1: {}
 
   cli-boxes@3.0.0: {}
@@ -11438,6 +11556,12 @@ snapshots:
     optionalDependencies:
       supports-color: 8.1.1
 
+  debug@4.4.3(supports-color@8.1.1):
+    dependencies:
+      ms: 2.1.3
+    optionalDependencies:
+      supports-color: 8.1.1
+
   decamelize-keys@1.1.1:
     dependencies:
       decamelize: 1.2.0
@@ -11834,7 +11958,7 @@ snapshots:
       glob-parent: 5.1.2
       globals: 13.24.0
       ignore: 4.0.6
-      import-fresh: 3.3.0
+      import-fresh: 3.3.1
       imurmurhash: 0.1.4
       is-glob: 4.0.3
       js-yaml: 3.14.1
@@ -12195,6 +12319,8 @@ snapshots:
       hasown: 2.0.2
       math-intrinsics: 1.1.0
 
+  get-package-type@0.1.0: {}
+
   get-pkg-repo@4.2.1:
     dependencies:
       '@hutson/parse-repository-url': 3.0.2
@@ -12537,11 +12663,6 @@ snapshots:
   immer@9.0.21: {}
 
   immutable@5.1.3: {}
-
-  import-fresh@3.3.0:
-    dependencies:
-      parent-module: 1.0.1
-      resolve-from: 4.0.0
 
   import-fresh@3.3.1:
     dependencies:
@@ -12967,34 +13088,6 @@ snapshots:
 
   koa2-connect@1.0.2: {}
 
-  koa@2.16.1:
-    dependencies:
-      accepts: 1.3.8
-      cache-content-type: 1.0.1
-      content-disposition: 0.5.4
-      content-type: 1.0.5
-      cookies: 0.9.1
-      debug: 4.4.0(supports-color@8.1.1)
-      delegates: 1.0.0
-      depd: 2.0.0
-      destroy: 1.2.0
-      encodeurl: 1.0.2
-      escape-html: 1.0.3
-      fresh: 0.5.2
-      http-assert: 1.5.0
-      http-errors: 1.8.1
-      is-generator-function: 1.1.0
-      koa-compose: 4.1.0
-      koa-convert: 2.0.0
-      on-finished: 2.4.1
-      only: 0.0.2
-      parseurl: 1.3.3
-      statuses: 1.5.0
-      type-is: 1.6.18
-      vary: 1.1.2
-    transitivePeerDependencies:
-      - supports-color
-
   koa@2.16.2:
     dependencies:
       accepts: 1.3.8
@@ -13155,6 +13248,8 @@ snapshots:
       - supports-color
 
   lilconfig@2.1.0: {}
+
+  lilconfig@3.1.3: {}
 
   lines-and-columns@1.2.4: {}
 
@@ -13617,6 +13712,8 @@ snapshots:
   mute-stream@0.0.8: {}
 
   mute-stream@1.0.0: {}
+
+  mute-stream@2.0.0: {}
 
   mwts@1.3.0(typescript@5.9.2):
     dependencies:
@@ -15919,6 +16016,8 @@ snapshots:
   yocto-queue@1.2.1: {}
 
   yoctocolors-cjs@2.1.2: {}
+
+  zod@3.25.76: {}
 
   zrender@5.6.1:
     dependencies:

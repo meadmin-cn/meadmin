@@ -1,2 +1,2 @@
-{{each Object.keys(properties)}}{{if !entity?.pk?.includes($value)}}{{$value}} = <% include('./valueDefault.ts.art', {...properties[$value], entity:entity, needAs:true}) %>{{/if}},//{{properties[$value].description}}
-{{each}}
+{{each properties}}{{if !entity?.pk?.includes($index)}}{{$index}} = <% include('./valueDefault.ts.art', {...$value, key:$index ,entity:entity, needAs:true}) %>;  //{{$value.description}}
+{{/if}}{{/each}}

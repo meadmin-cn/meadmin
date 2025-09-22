@@ -1,12 +1,14 @@
 import request, { RequestOptions } from '@/utils/request.js';
 import { PageParams, PageResult } from './api.model.js';
 
-{{each Object.keys(swaggerSchemas)}}
-{{if $value === replaceNames.Name}}
-export class $value {
-<% include('./class.ts.art', {...swaggerSchemas[$value], entity:entity}) %>
-{{else}}export type $value {
-<% include('./type.ts.art', {...swaggerSchemas[$value], entity:entity}) %>
+{{each swaggerSchemas}}
+{{if $index === replaceNames.Name}}
+//{{entity.tableComment}}
+export class {{$index}} {
+<% include('./class.ts.art', {...$value, entity:entity}) %>
+{{else}}<% const scgemaEntity = $imports.tableInfo($index); %>//{{scgemaEntity.tableComment}}
+export type {{$index}} = {
+<% include('./type.ts.art', {...$value, entity:scgemaEntity}) %>
 {{/if}}
 }
 {{/each}}
@@ -30,7 +32,7 @@ export function add{{replaceNames.Name}}api() {
 //修改{{entity.tableComment}}信息
 export type Edit{{replaceNames.Name}}InfoParam = Partial<{{replaceNames.Name}}Info>;
 export function up{{replaceNames.Name}}InfoApi(options?: RequestOptions<{{replaceNames.Name}}Info, [string, Edit{{replaceNames.Name}}InfoParam]>) {
-  return request<{{replaceNames.Name}}InfoInfo, [string, Edit{{replaceNames.Name}}InfoParam]>(
+  return request<{{replaceNames.Name}}Info, [string, Edit{{replaceNames.Name}}InfoParam]>(
     (id, data) => ({
       url: `{{replaceNames.name}}/${id}`,
       method: 'POST',
@@ -72,8 +74,8 @@ export function {{replaceNames.name}}ListApi(options?: RequestOptions<{{replaceN
 }
 
 //获取{{entity.tableComment}}详情
-export function {{replaceNames.name}}InfoApi(options?: RequestOptions<AdminInfo, [string]>) {
-  return request<AdminInfo, [string]>(
+export function {{replaceNames.name}}InfoApi(options?: RequestOptions<{{replaceNames.Name}}Info, [string]>) {
+  return request<{{replaceNames.Name}}Info, [string]>(
     (id) => ({
       url: `{{replaceNames.name}}/${id}`,
       method: 'get',

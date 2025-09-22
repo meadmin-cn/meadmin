@@ -1,2 +1,2 @@
-{{each Object.keys(properties)}}{{$value}}: <% include('./valueType.ts.art', {...properties[$value],key:$value,entity:entity}) %>, //{{properties[$value].description}}
+{{each properties}}{{$index}}: <% include('./valueType.ts.art', {...$value,key:$index,entity:entity}) %>; //{{$value.description}}
 {{/each}}

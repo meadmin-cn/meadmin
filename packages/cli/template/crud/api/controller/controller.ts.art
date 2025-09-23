@@ -37,7 +37,7 @@ export class {{replaceNames.Controller}} extends BaseController {
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/update/:{{entity.pk.join('/:')}}')
+  @Post('/info/:{{entity.pk.join('/:')}}')
   @ApiOperationResponse({
     responseType: {{replaceNames.Name}},
     summary: '根据{{entity.pk.join('/:')}}获取{{entity.tableComment}}详情',
@@ -51,7 +51,7 @@ export class {{replaceNames.Controller}} extends BaseController {
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/info/:{{entity.pk.join('/:')}}')
+  @Post('/up/:{{entity.pk.join('/:')}}')
   @ApiOperationResponse({
     responseType: {{replaceNames.Name}},
     summary: '根据{{entity.pk.join('/:')}}更新{{entity.tableComment}}详情',
@@ -70,7 +70,7 @@ export class {{replaceNames.Controller}} extends BaseController {
   @ApiOperationResponse({
     summary: '根据{{entity.pk.join('/:')}}删除{{entity.tableComment}}信息',
   })
-  async del({{each entity.pk}}{{if index>0}}, {{/if}}@Param('{{$value}}') {{$value}}: {{entitySchema.properties[$value].type}}{{/each}}) {
+  async delete({{each entity.pk}}{{if index>0}}, {{/if}}@Param('{{$value}}') {{$value}}: {{entitySchema.properties[$value].type}}{{/each}}) {
     {{if entity.pk.length>1}}await this.{{replaceNames.service}}.remove({
       {{each entity.pk}}
       {{$value}},

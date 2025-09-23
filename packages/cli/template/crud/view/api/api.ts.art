@@ -12,83 +12,68 @@ export type {{$index}} = {
 {{/if}}
 }
 {{/each}}
-//添加{{entity.tableComment}}信息
 export type {{replaceNames.Name}}Info = {{replaceNames.Name}} & {
   {{each entity.pk}}
   {{$value}}: <% include('./valueType.ts.art', {...swaggerSchemas[replaceNames.Name].properties[$value],key:$value,entity:entity}) %>, //{{swaggerSchemas[replaceNames.Name].properties[$value].description}}
   {{/each}}
 };
+//添加{{entity.tableComment}}信息
 export function add{{replaceNames.Name}}api() {
   return request<{{replaceNames.Name}}Info, [{{replaceNames.Name}}]>(
     (data) => ({
       url: '{{replaceNames.name}}/add',
-      method: 'POST',
+      method: 'post',
       data: data,
     }),
     { success: true },
   );
 }
 
-//修改{{entity.tableComment}}信息
-export type Edit{{replaceNames.Name}}InfoParam = Partial<{{replaceNames.Name}}Info>;
-export function up{{replaceNames.Name}}InfoApi(options?: RequestOptions<{{replaceNames.Name}}Info, [string, Edit{{replaceNames.Name}}InfoParam]>) {
-  return request<{{replaceNames.Name}}Info, [string, Edit{{replaceNames.Name}}InfoParam]>(
-    (id, data) => ({
-      url: `{{replaceNames.name}}/${id}`,
-      method: 'POST',
-      data: data,
-    }),
-    Object.assign({ success: true, noLoading: true }, options),
-  );
-}
-
-//获取{{entity.tableComment}}列表
 export type {{replaceNames.Name}}ListResult = PageResult<{{replaceNames.Name}}Info>;
+//获取{{entity.tableComment}}列表
 export class {{replaceNames.Name}}ListParam extends PageParams {
-  id?: string; //ID
-  username?: string; //用户名
-  nickname?: string; //昵称
-  password?: string; //密码
-  avatar?: string; //头像
-  email?: string; //邮箱
-  mobile?: string; //手机号
-  loginFailure?: number; //登录失败次数
-  lastLoginAt?: string; //最后登录时间 YYYY-MM-DD HH:mm:ss
-  lastLoginIp?: string; //最后登录ip
-  status?: number; //状态:1=启用;0=禁用
-  isSuper?: number; //超级管理员:1=是;0=不是
-  startCreatedAt?: string; //创建时间(起)YYYY-MM-DD HH:mm:ss
-  endCreatedAt?: string; //创建时间(止)YYYY-MM-DD HH:mm:ss
-  startUpdatedAt?: string; //修改时间(起)YYYY-MM-DD HH:mm:ss
-  endUpdatedAt?: string; //修改时间(止)YYYY-MM-DD HH:mm:ss
+  <% include('./searchTypes.ts.art', {...entitySchema, entity:entity}) %>
 }
 export function {{replaceNames.name}}ListApi(options?: RequestOptions<{{replaceNames.Name}}ListResult, [{{replaceNames.Name}}ListParam]>) {
   return request<{{replaceNames.Name}}ListResult, [{{replaceNames.Name}}ListParam]>(
     (data) => ({
       url: '{{replaceNames.name}}/',
-      method: 'POST',
+      method: 'post',
       data: data,
     }),
     Object.assign({ noLoading: true }, options),
   );
 }
 
-//获取{{entity.tableComment}}详情
-export function {{replaceNames.name}}InfoApi(options?: RequestOptions<{{replaceNames.Name}}Info, [string]>) {
-  return request<{{replaceNames.Name}}Info, [string]>(
-    (id) => ({
-      url: `{{replaceNames.name}}/${id}`,
+//根据{{entity.pk.join('/:')}}获取{{entity.tableComment}}详情
+export function {{replaceNames.name}}InfoApi(options?: RequestOptions<{{replaceNames.Name}}Info, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>) {
+  return request<{{replaceNames.Name}}Info, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>(
+    ({{entity.pk.join(', ')}}) => ({
+      url: `{{replaceNames.name}}/info/${<%= entity.pk.join('/${') %>}`,
       method: 'get',
     }),
     options,
   );
 }
 
-//删除
-export function delAdminApi(options?: RequestOptions<null, [string]>) {
-  return request<null, [string]>(
-    (id) => ({
-      url: `{{replaceNames.name}}/del/${id}`,
+export type Update{{replaceNames.Name}}InfoParam = Partial<{{replaceNames.Name}}Info>;
+//修改{{entity.tableComment}}信息
+export function update{{replaceNames.Name}}InfoApi(options?: RequestOptions<{{replaceNames.Name}}Info, [{{each entity.pk}}{{entitySchema.properties[$value].type}}, {{/each}}Update{{replaceNames.Name}}InfoParam]>) {
+  return request<{{replaceNames.Name}}Info, [{{each entity.pk}}{{entitySchema.properties[$value].type}}, {{/each}}Update{{replaceNames.Name}}InfoParam]>(
+    ({{entity.pk.join(', ')}}, data) => ({
+      url: `{{replaceNames.name}}/up/${<%= entity.pk.join('/${') %>}`,
+      method: 'post',
+      data: data,
+    }),
+    Object.assign({ success: true, noLoading: true }, options),
+  );
+}
+
+//删除{{entity.tableComment}}
+export function delAdminApi(options?: RequestOptions<null, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>) {
+  return request<null, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>(
+    ({{entity.pk.join(', ')}}) => ({
+      url: `{{replaceNames.name}}/del/${<%= entity.pk.join('/${') %>}`,
       method: 'get',
     }),
     Object.assign({ noLoading: true }, options),

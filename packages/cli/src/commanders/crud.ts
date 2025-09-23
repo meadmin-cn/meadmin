@@ -134,6 +134,7 @@ function tableInfo(entityName) {
 }
 
 template.defaults.imports.tableInfo = tableInfo;
+template.defaults.imports.upFirstCase = upFirstCase;
 // template.defaults.imports.log = console.log;//调试打印时放开
 //需要写入的文件地址集(以.js结尾)
 const writeApiFiles = {

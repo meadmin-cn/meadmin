@@ -1,5 +1,5 @@
 import request, { RequestOptions } from '@/utils/request.js';
-import { PageParams, PageResult } from './api.model.js';
+import { PageParam, PageResult } from './api.model.js';
 
 {{each swaggerSchemas}}
 {{if $index === replaceNames.Name}}
@@ -30,10 +30,10 @@ export function add{{replaceNames.Name}}api() {
 }
 
 export type {{replaceNames.Name}}ListResult = PageResult<{{replaceNames.Name}}Info>;
-//获取{{entity.tableComment}}列表
-export class {{replaceNames.Name}}ListParam extends PageParams {
+export class {{replaceNames.Name}}ListParam extends PageParam {
   <% include('./searchTypes.ts.art', {...entitySchema, entity:entity}) %>
 }
+//获取{{entity.tableComment}}列表
 export function {{replaceNames.name}}ListApi(options?: RequestOptions<{{replaceNames.Name}}ListResult, [{{replaceNames.Name}}ListParam]>) {
   return request<{{replaceNames.Name}}ListResult, [{{replaceNames.Name}}ListParam]>(
     (data) => ({
@@ -70,7 +70,7 @@ export function update{{replaceNames.Name}}InfoApi(options?: RequestOptions<{{re
 }
 
 //删除{{entity.tableComment}}
-export function delAdminApi(options?: RequestOptions<null, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>) {
+export function del{{replaceNames.Name}}Api(options?: RequestOptions<null, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>) {
   return request<null, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>(
     ({{entity.pk.join(', ')}}) => ({
       url: `{{replaceNames.name}}/del/${<%= entity.pk.join('/${') %>}`,

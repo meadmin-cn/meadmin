@@ -13,7 +13,7 @@ import { ApiExtraModel, getSchemaPath } from '@midwayjs/swagger';
 @Table({ tableName: 'role', comment: '角色表' })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class Role extends TreeModel<Role> {
-  @Attribute(DataTypes.STRING)
+  @Attribute({type:DataTypes.STRING, allowNull: false})
   @PrimaryKey
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })

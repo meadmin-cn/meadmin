@@ -25,6 +25,8 @@ const tableInfos = {} as {
 };
 //关闭自动编码
 template.defaults.excape = false;
+const include = template.defaults.include;
+template.defaults.include = (...args:any[])=>include(...args).trim();
 class MeSwaggerExplorer extends SwaggerExplorer {
   /**
    * 解析 ApiExtraModel
@@ -135,6 +137,21 @@ function tableInfo(entityName) {
 
 template.defaults.imports.tableInfo = tableInfo;
 template.defaults.imports.upFirstCase = upFirstCase;
+template.defaults.imports.getKeyInfo = function (description: string) {
+  //示例  恒定展示(只有一个子元素时不隐藏):1=是;0=否
+  const nameArr = description.split(':');
+  const typeEnum = {} as Record<string, string>;
+  if (nameArr[1]) {
+    nameArr[1].split(';').forEach((value) => {
+      const valueArr = value.split('=');
+      typeEnum[valueArr[0]] = valueArr[1];
+    });
+    return { name: nameArr[0], enmu: typeEnum };
+  } else {
+    return { name: nameArr[0] };
+  }
+};
+
 // template.defaults.imports.log = console.log;//调试打印时放开
 //需要写入的文件地址集(以.js结尾)
 const writeApiFiles = {

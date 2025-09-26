@@ -1,0 +1,2 @@
+{{each properties}}<% const keyInfo = $imports.getKeyInfo($value.description); %>
+<vxe-column field="{{$index}}" :title="t('keyInfo.name')" :formatter="<% if ($imports.objectKeys(properties).some(k=>properties[k].enum || properties[k].description.includes(':'))){%>formatterDict{{else}}formatterStr<%}%>"></vxe-column>{{/each}}

@@ -40,56 +40,30 @@ export class {{replaceNames.Service}} {
       }
       if (key === 'size') {
         return;
-      }
-      if (key === 'startCreateAt') {
-        where['createAt'] = where['createAt'] ?? {};
-        where['createAt'][Op.gte] = queryDto[key];
+      }{{each entitySchema.properties}}{{if $index.endsWith('At')}}
+      if (key === 'start{{$imports.upFirstCase($index)}}') {
+        where['{{$index}}'] = where['{{$index}}'] ?? {};
+        where['{{$index}}'][Op.gte] = queryDto[key];
         return;
       }
-      if (key === 'endCreateAt') {
-        where['createAt'] = where['createAt'] ?? {};
-        where['createAt'][Op.lte] = queryDto[key];
+      if (key === 'end{{$imports.upFirstCase($index)}}') {
+        where['{{$index}}'] = where['{{$index}}'] ?? {};
+        where['{{$index}}'][Op.lte] = queryDto[key];
         return;
-      }
-      if (key === 'startUpdateAt') {
-        where['updateAt'] = where['updateAt'] ?? {};
-        where['updateAt'][Op.gte] = queryDto[key];
-        return;
-      }
-      if (key === 'endUpdateAt') {
-        where['updateAt'] = where['updateAt'] ?? {};
-        where['updateAt'][Op.lte] = queryDto[key];
-        return;
-      }
-    });
+      }{{/if}}{{/each}}
+    });    
+    const { count, rows } = await this.{{replaceNames.Name}}Repository.findAndCountAll({
+      where,
+      offset: (queryDto.page - 1) *  queryDto.size,
+      limit: queryDto.size,
+      {{if $imports.objectKeys(entitySchema.properties).includes('createdAt')}}order: [['createdAt', 'DESC']],
+    {{/if}}})
     return {
-      list: await this.findAll(where, queryDto.page, queryDto.size),
-      total: await this.count(where),
+      list: rows,
+      total: count,
       page: queryDto.page,
       size: queryDto.size,
     };
-  }
-
-  /**
-   * 分页查询数据
-   * @param queryWhere 查询条件
-   * @returns
-   */
-  findAll(queryWhere: WhereOptions<{{replaceNames.Name}}>, page: number, size: number) {
-    return this.{{replaceNames.Name}}Repository.findAll({
-      offset: (page - 1) * size,
-      limit: size,
-      where: queryWhere,
-    });
-  }
-
-  /**
-   * 获取数量
-   * @param queryWhere 查询条件
-   * @returns
-   */
-  count(queryWhere: WhereOptions<{{replaceNames.Name}}>) {
-    return this.{{replaceNames.Name}}Repository.count({ where: queryWhere });
   }
 
   /**

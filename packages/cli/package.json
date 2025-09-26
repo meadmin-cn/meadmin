@@ -27,7 +27,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "art-template": "^4.13.4",
+    "art-template": "4.13.2",
     "commander": "^14.0.0",
     "dotenv": "^16.6.1",
     "swagger-client": "^3.35.6"

@@ -26,7 +26,7 @@ const tableInfos = {} as {
 //关闭自动编码
 template.defaults.excape = false;
 const include = template.defaults.include;
-template.defaults.include = (...args:any[])=>include(...args).trim();
+template.defaults.include = (...args: any[]) => include(...args).trim();
 class MeSwaggerExplorer extends SwaggerExplorer {
   /**
    * 解析 ApiExtraModel
@@ -137,16 +137,21 @@ function tableInfo(entityName) {
 
 template.defaults.imports.tableInfo = tableInfo;
 template.defaults.imports.upFirstCase = upFirstCase;
+template.defaults.imports.objectKeys = Object.keys;
+template.defaults.imports.leftTag = ()=>'{{';
+template.defaults.imports.rightTag = ()=>'}}';
+
+
 template.defaults.imports.getKeyInfo = function (description: string) {
   //示例  恒定展示(只有一个子元素时不隐藏):1=是;0=否
   const nameArr = description.split(':');
-  const typeEnum = {} as Record<string, string>;
+  const dict = {} as Record<string, string>;
   if (nameArr[1]) {
     nameArr[1].split(';').forEach((value) => {
       const valueArr = value.split('=');
-      typeEnum[valueArr[0]] = valueArr[1];
+      dict[valueArr[0]] = valueArr[1];
     });
-    return { name: nameArr[0], enmu: typeEnum };
+    return { name: nameArr[0], dict: dict };
   } else {
     return { name: nameArr[0] };
   }
@@ -166,6 +171,7 @@ const noWriteKey = ['entityPath'];
 //需要写入的前端文件地址集
 const writeViewFiles = {
   apiPath: '',
+  listPath: '',
 };
 const replaceNames = {
   name: '',
@@ -222,8 +228,8 @@ async function writeContent(templatePath, toPath, writeType: 'api' | 'view') {
         entity: tableInfo(replaceNames.Name),
       }),
       {
-        filepath: toPath.replace('.js', '.ts'),
         ...prettierrc,
+        filepath: toPath.replace('.js', '.ts'),
       },
     ),
   );
@@ -238,7 +244,7 @@ function writeApi() {
 //写入前端文件
 function writeViews() {
   //写入前端文件
-  return Promise.all([writeContent('../../template/crud/view/api/api.ts.art', writeViewFiles.apiPath, 'view')]);
+  return Promise.all([writeContent('../../template/crud/view/api/api.ts.art', writeViewFiles.apiPath, 'view'), writeContent('../../template/crud/view/views/index.vue.art', writeViewFiles.listPath, 'view')]);
 }
 
 export const crudInit = async (program: Command) => {
@@ -263,6 +269,7 @@ export const crudInit = async (program: Command) => {
       writeApiFiles.servicePath = resovePath(`src/app/${options.model}/service/${entityFileName}`, ['.service', '.js']);
       writeApiFiles.controllerPath = resovePath(`src/app/${options.model}/controller/${entityFileName}`, ['.controller', '.js']);
       writeViewFiles.apiPath = resovePath(`view/${options.model}/src/api/${entityFileName}`, ['.js']);
+      writeViewFiles.listPath = resovePath(`view/${options.model}/src/views/${entityFileName}/index`,['.vue']);
       if (!options.force) {
         let res = checkPaths();
         if (res !== true) {

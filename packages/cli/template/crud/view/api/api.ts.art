@@ -58,7 +58,7 @@ export function {{replaceNames.name}}InfoApi(options?: RequestOptions<{{replaceN
 
 export type Update{{replaceNames.Name}}InfoParam = Partial<{{replaceNames.Name}}Info>;
 //修改{{entity.tableComment}}信息
-export function update{{replaceNames.Name}}InfoApi(options?: RequestOptions<{{replaceNames.Name}}Info, [{{each entity.pk}}{{entitySchema.properties[$value].type}}, {{/each}}Update{{replaceNames.Name}}InfoParam]>) {
+export function update{{replaceNames.Name}}Api(options?: RequestOptions<{{replaceNames.Name}}Info, [{{each entity.pk}}{{entitySchema.properties[$value].type}}, {{/each}}Update{{replaceNames.Name}}InfoParam]>) {
   return request<{{replaceNames.Name}}Info, [{{each entity.pk}}{{entitySchema.properties[$value].type}}, {{/each}}Update{{replaceNames.Name}}InfoParam]>(
     ({{entity.pk.join(', ')}}, data) => ({
       url: `{{replaceNames.name}}/up/${<%= entity.pk.join('/${') %>}`,

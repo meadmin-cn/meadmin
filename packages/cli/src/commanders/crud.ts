@@ -138,6 +138,7 @@ function tableInfo(entityName) {
 template.defaults.imports.tableInfo = tableInfo;
 template.defaults.imports.upFirstCase = upFirstCase;
 template.defaults.imports.objectKeys = Object.keys;
+template.defaults.imports.objectValues = Object.values;
 template.defaults.imports.leftTag = ()=>'{{';
 template.defaults.imports.rightTag = ()=>'}}';
 

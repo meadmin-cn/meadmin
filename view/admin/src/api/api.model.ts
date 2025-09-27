@@ -1,4 +1,4 @@
-export class PageParams {
+export class PageParam {
   page = 1;
   size = 10;
 }

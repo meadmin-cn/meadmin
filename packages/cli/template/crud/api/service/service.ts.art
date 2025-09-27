@@ -5,7 +5,7 @@ import { {{replaceNames.CreateDto}} } from '{{paths.createDtoPath}}';
 import { {{replaceNames.QueryDto}} } from '{{paths.queryDtoPath}}';
 import { {{replaceNames.UpdateDto}} } from '{{paths.updateDtoPath}}';
 import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
-import { Op, WhereOptions } from '@sequelize/core';
+{{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At'))}}import { Op } from '@sequelize/core';{{/if}}
 {{if entity.pk.length > 1}}type PK = {
   {{each entity.pk}}
   {{$value}}: {{entitySchema.properties[$value].type}},

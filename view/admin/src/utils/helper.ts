@@ -231,3 +231,8 @@ export function clearEmptyParam<T extends Record<any, any> | any[]>(obj: T, empt
     return newObj;
   }
 }
+
+//格式化表格数据
+export function formatterStr<T>({ cellValue }: { cellValue: T }) {
+  return [undefined, null, ''].includes(cellValue as any) ? '--' : (cellValue as T extends undefined | null ? string : T);
+}

@@ -21,12 +21,12 @@
     <% include('./tableColum.vue.art', {...entitySchema, entity:entity}) %>
     <vxe-column :title="t('操作')" fixed="right" min-width="150px">
       <template #default="{ row }: { row: {{replaceNames.Name}}Info }">
-        <el-button @click="showAddOrUp(row.id!)">
+        <el-button @click="showAddOrUp({{entity.pk.map(v=>`row.${v}`).join(', ')}})">
           <mel-icon-edit />
         </el-button>
-        <el-popconfirm :title="t('确认删除？')" placement="left" @confirm="del(row.id!)">
+        <el-popconfirm :title="t('确认删除？')" placement="left" @confirm="del({{entity.pk.map(v=>`row.${v}`).join(', ')}})">
           <template #reference>
-            <el-button :key="row.id!" :loading="delLoading && delId === row.id" type="danger">
+            <el-button :key="{{if entity.pk.length===1}}row.{{entity.pk[0]}}{{else}}`${<%=entity.pk.join('}__${')%>}`{{/if}}" :loading="delLoading && {{if entity.pk.length===1}}delId === row.{{entity.pk[0]}}{{else}}delKey=`${<%=entity.pk.join('}__${')%>}`{{/if}}" type="danger">
               <mel-icon-delete />
             </el-button>
           </template>
@@ -50,14 +50,14 @@ const params = reactive(new {{replaceNames.Name}}ListParam());
 const { loading, data, runAsync } = {{replaceNames.name}}ListApi();
 const search = (page = params.page, size = params.size) => runAsync(Object.assign(params, { page, size }));
 const { runAsync: delRun, loading: delLoading } = del{{replaceNames.Name}}Api();
-const delId = ref<string>();
-const del = async (id: string) => {
-  delId.value = id;
-  await delRun(id);
+{{if entity.pk.length==1}}const delId = ref<string>();{{else}}const delKey = ref<string>();{{/if}}
+const del = async ({{entity.pk.map(v=>`${v}:${entitySchema.properties[v].type}`).join(', ')}}) => {
+  {{if entity.pk.length==1}}delId.value = {{entity.pk[0]}};{{else}}delKey.value = `${<%=entity.pk.join('}__${')%>}`;{{/if}}
+  await delRun({{entity.pk.map(v=>`${v}`).join(', ')}});
   await search(1);
 };
-const showAddOrUp = (id?: string) => {
-  open({id,onSuccess:async ()=>{
+const showAddOrUp = ({{entity.pk.map(v=>`${v}?:${entitySchema.properties[v].type}`).join(', ')}}) => {
+  open({<%=entity.pk.join(', ')%>, onSuccess:async ()=>{
     await search(1);
   }});
 };

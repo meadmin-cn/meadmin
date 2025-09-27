@@ -2,10 +2,10 @@
 const dict = {
 {{each properties}}<% const keyInfo = $imports.getKeyInfo($value.description);%>{{if keyInfo.dict}}
  {{$index}}:{
-  {{each keyInfo.dict val key}}'{{key}}':{value:{{if $value.type==='string'}}'{{/if}}{{key}}{{if $value.type==='string'}}'{{/if}}, label:'{{val}}'},{{/each}}
+  {{each keyInfo.dict $val $key}}'{{$key}}':{value:{{if $value.type==='string'}}'{{/if}}{{$key}}{{if $value.type==='string'}}'{{/if}}, label:'{{$val}}'},{{/each}}
   },{{else if $value.enum}}
   {{$index}}:{
-  {{each $value.enum val key}}'{{val}}':{value:{{if $value.type==='string'}}'{{/if}}{{val}}{{if $value.type==='string'}}'{{/if}}, label:'{{val}}'},{{/each}}
+  {{each $value.enum $val $key}}'{{$val}}':{value:{{if $value.type==='string'}}'{{/if}}{{$val}}{{if $value.type==='string'}}'{{/if}}, label:'{{$val}}'},{{/each}}
   },
 {{/if}}{{/each}}
 };

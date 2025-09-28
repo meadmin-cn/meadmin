@@ -1,5 +1,5 @@
 import { Model, NormalizedAttributeOptions, Sequelize } from '@sequelize/core';
-import { lowerFirstCase, relativePath, resovePath, toHump, upFirstCase } from '../utils/formatting.js';
+import { getKeyInfo, lowerFirstCase, relativePath, resovePath, toHump, upFirstCase } from '../utils/formatting.js';
 import { Command } from 'commander';
 import { existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -141,22 +141,7 @@ template.defaults.imports.objectKeys = Object.keys;
 template.defaults.imports.objectValues = Object.values;
 template.defaults.imports.leftTag = ()=>'{{';
 template.defaults.imports.rightTag = ()=>'}}';
-
-
-template.defaults.imports.getKeyInfo = function (description: string) {
-  //示例  恒定展示(只有一个子元素时不隐藏):1=是;0=否
-  const nameArr = description.split(':');
-  const dict = {} as Record<string, string>;
-  if (nameArr[1]) {
-    nameArr[1].split(';').forEach((value) => {
-      const valueArr = value.split('=');
-      dict[valueArr[0]] = valueArr[1];
-    });
-    return { name: nameArr[0], dict: dict };
-  } else {
-    return { name: nameArr[0] };
-  }
-};
+template.defaults.imports.getKeyInfo = getKeyInfo;
 
 // template.defaults.imports.log = console.log;//调试打印时放开
 //需要写入的文件地址集(以.js结尾)

@@ -12,6 +12,7 @@ import {
   Type,
 } from '@midwayjs/swagger';
 import {  Rule, RuleType } from '@midwayjs/validate';
+import { getKeyInfo } from '@meadmin/cli/utils/formatting';
 
 // 装饰器内部的唯一 id
 export const API_OPERATIN_RESONSE_KEY = 'meadmin:swagger:api_operation_respose';
@@ -122,6 +123,11 @@ export function ApiOperationResponse<TModel extends Type<any>>(
 export function ApiPropertyRule(options?: ApiPropertyOptions & {rule?:RuleType.AnySchema<any>}): PropertyDecorator{
   const propertyDecorators = [] as PropertyDecorator[];
   if(options && options.rule){
+    if(options.rule.$_getFlag('label')){
+      options.rule.label(`{${options.rule.$_getFlag('label')}}`)
+    }else if(options.description){
+      options.rule.label(`{${getKeyInfo(options.description).name}}`)
+    }
     if(options.required === undefined){
       options.required = options.rule.$_getFlag('presence') === 'required'?true:undefined;
     }

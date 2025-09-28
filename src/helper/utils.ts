@@ -24,3 +24,22 @@ export function listToTree<T extends Record<string, any>>(arr: T[], key: keyof T
   });
   return rootArr;
 }
+
+/**
+ * 提取大括号内容
+ * @param text 监测的值
+ * @returns 
+ */
+export function extractBracesContent(text: string) {
+  const result = [];
+  const stack = [];
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === '{') {
+      stack.push(i);
+    } else if (text[i] === '}' && stack.length > 0) {
+      const start = stack.pop();
+      result.push(text.substring(start + 1, i));
+    }
+  }
+  return result;
+}

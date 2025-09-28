@@ -90,3 +90,23 @@ export function relativePath(from: string, to: string, suffix = ['.ts']) {
   path = path.replace(/\\/g, '/');
   return path.startsWith('.') ? path : './' + path;
 }
+
+/**
+ * 将备注转换为格式化数据
+ * @param description 
+ * @returns 
+ */
+export function getKeyInfo(description: string) {
+  //示例  恒定展示(只有一个子元素时不隐藏):1=是;0=否
+  const nameArr = description.split(':');
+  const dict = {} as Record<string, string>;
+  if (nameArr[1]) {
+    nameArr[1].split(';').forEach((value) => {
+      const valueArr = value.split('=');
+      dict[valueArr[0]] = valueArr[1];
+    });
+    return { name: nameArr[0], dict: dict };
+  } else {
+    return { name: nameArr[0] };
+  }
+};

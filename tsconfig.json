@@ -15,6 +15,7 @@
     "pretty": true,
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
     "typeRoots": [ "./typings", "./types", "./node_modules/@types"],
     "outDir": "dist",
     "rootDir": "src",

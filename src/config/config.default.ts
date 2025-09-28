@@ -18,12 +18,18 @@ export default {
     },
   },
   i18n: {
+    // 默认语言  "zh-cn"
+    defaultLocale: 'zh-cn',
     // 把你的翻译文本放到这里
     localeTable: {
-      zh_CN: {
+      'zh-cn': {
         validate: {
           'string.mobile': '{{#label}} 必须是一个正确的手机号',
         },
+      },
+      'en': {
+        default: await import('../locales/en.json', { with: { type: 'json' } }),
+        validate: await import('@midwayjs/validate/locales/en_US.json', { with: { type: 'json' } }),
       },
     },
   },

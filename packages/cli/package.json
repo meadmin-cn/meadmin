@@ -16,6 +16,10 @@
     "dist/**/*.d.ts",
     "template"
   ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./utils/formatting": "./dist/utils/formatting.js"
+  },
   "keywords": [],
   "author": "",
   "license": "MIT",

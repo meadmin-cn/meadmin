@@ -16,12 +16,13 @@ import * as cacheManager from '@midwayjs/cache-manager';
 import * as redis from '@midwayjs/redis';
 import { filters } from './filter/index.js';
 import { initLogger } from './logger.js';
-
+import * as i18n from '@midwayjs/i18n';
 const registreDecorators = new RegistreDecorators();
 
 @Configuration({
   imports: [
     koa,
+    i18n,
     meadmin, //必须放在swagger之前引入
     validate,
     {

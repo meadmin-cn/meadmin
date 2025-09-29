@@ -22,7 +22,7 @@ export class LoginController extends BaseController {
     summary: '登录',
   })
   async login(@Body() param: LoginParamDto) {
-    return this.success(await this.loginService.login(param.username, param.password));
+    return this.success(await this.loginService.login(param.username, param.password, this.ctx));
   }
 
   @Post('/info')

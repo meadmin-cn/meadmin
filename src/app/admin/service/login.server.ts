@@ -1,6 +1,6 @@
 import { InjectRepository } from '@/decorators/sequelize.js';
 import { SystemAdmin } from '@/entities/systemAdmin.entity.js';
-import { Config, Init, Inject, Singleton } from '@midwayjs/core';
+import { Config, Context, Init, Inject, Singleton } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { pbkdf2Sync, randomBytes } from 'node:crypto';
 import { CachingFactory, MidwayCache } from '@midwayjs/cache-manager';
@@ -11,7 +11,6 @@ import { MidwayI18nService } from '@midwayjs/i18n';
 
 export const tokenPrefix = 'Admin:Token:';
 export const adminPrefix = 'Admin:Admin:';
-
 @Singleton()
 export class LoginService {
   @InjectRepository(SystemAdmin)
@@ -38,9 +37,6 @@ export class LoginService {
   async init() {
     this.cache = await this.cachingFactory.get(this.cacheKey);
   }
-
-  @Inject()
-  i18nService: MidwayI18nService;
 
   getAdminIdCacheKey(adminId: string) {
     return adminPrefix + adminId;
@@ -156,14 +152,19 @@ export class LoginService {
    * 登录
    * @param username 用户名
    * @param password 密码
+   * @param ctx      请求上下文
    * @returns
    */
-  async login(username, password) {
+  async login(username, password, ctx?: Context) {
     const entity = await this.adminRepository.findOne({ where: { username } });
     if (entity && this.checkPassword(password, entity.salt, entity.password)) {
       return await this.getToken(entity.id);
     }
-    throw new BadRequestError(this.i18nService.translate('错误的{key}', { args: { '用户名/密码': this.i18nService.translate('用户名') + '/' + this.i18nService.translate('密码') } }));
+    if (ctx) {
+      const i18n = await ctx.requestContext.getAsync(MidwayI18nService);
+      throw new BadRequestError(i18n.translate('错误的{key}', { args: { '用户名/密码': i18n.translate('用户名') + '/' + i18n.translate('密码') } }));
+    }
+    throw new BadRequestError('错误的用户名/密码');
   }
 
   /**

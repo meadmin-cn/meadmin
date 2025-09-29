@@ -1,5 +1,4 @@
-{{each properties}}<% const keyInfo = $imports.getKeyInfo($value.description); %>
-{{if ['number','string','integer'].includes($value.type)}}
+{{each properties}}<% const keyInfo = $imports.getKeyInfo($value.description); %>{{if ['number','string','integer'].includes($value.type)}}
 <el-form-item :label="t('{{keyInfo.name}}')" prop="{{$index}}">
   {{if $value.enum || keyInfo.dict}}<el-select v-model="info.{{$index}}">
     <el-option v-for="val in dict.{{$index}}" :key="val.value" :value="val.value">{{$imports.leftTag()}}val.label{{$imports.rightTag()}}</el-option>
@@ -9,9 +8,7 @@
   {{else if $value.type === 'string'}}
     <el-input v-model="info.{{$index}}" ></el-input>  
   {{/if}}
-</el-form-item>
-{{else if $value.type==='boolean'}}
+</el-form-item>{{else if $value.type==='boolean'}}
 <el-form-item :label="t('{{keyInfo.name}}')" prop="{{$index}}">
   <el-switch v-model="info.{{$index}}" />
-</el-form-item>
-{{/if}}{{/each}}
+</el-form-item>{{/if}}{{/each}}

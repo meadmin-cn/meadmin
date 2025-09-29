@@ -139,8 +139,8 @@ template.defaults.imports.tableInfo = tableInfo;
 template.defaults.imports.upFirstCase = upFirstCase;
 template.defaults.imports.objectKeys = Object.keys;
 template.defaults.imports.objectValues = Object.values;
-template.defaults.imports.leftTag = ()=>'{{';
-template.defaults.imports.rightTag = ()=>'}}';
+template.defaults.imports.leftTag = () => '{{';
+template.defaults.imports.rightTag = () => '}}';
 template.defaults.imports.getKeyInfo = getKeyInfo;
 
 // template.defaults.imports.log = console.log;//调试打印时放开
@@ -158,6 +158,8 @@ const noWriteKey = ['entityPath'];
 const writeViewFiles = {
   apiPath: '',
   listPath: '',
+  langEnPath: '',
+  addOrUp: '',
 };
 const replaceNames = {
   name: '',
@@ -204,7 +206,7 @@ async function writeContent(templatePath, toPath, writeType: 'api' | 'view') {
     paths[key] = relativePath(toPath, paths[key], []);
   });
   return recursionWriteFileSync(
-    toPath.replace('.js', '.ts'),
+    toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath,
     await prettier.format(
       template(resolve(import.meta.dirname, templatePath), {
         replaceNames,
@@ -215,7 +217,7 @@ async function writeContent(templatePath, toPath, writeType: 'api' | 'view') {
       }),
       {
         ...prettierrc,
-        filepath: toPath.replace('.js', '.ts'),
+        filepath: toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath,
       },
     ),
   );
@@ -224,15 +226,42 @@ async function writeContent(templatePath, toPath, writeType: 'api' | 'view') {
 //写入后端文件
 function writeApi() {
   //写入后端文件
-  return Promise.all([writeContent('../../template/crud/api/dto/create.dto.ts.art', writeApiFiles.createDtoPath, 'api'), writeContent('../../template/crud/api/dto/update.dto.ts.art', writeApiFiles.updateDtoPath, 'api'), writeContent('../../template/crud/api/dto/query.dto.ts.art', writeApiFiles.queryDtoPath, 'api'), writeContent('../../template/crud/api/service/service.ts.art', writeApiFiles.servicePath, 'api'), writeContent('../../template/crud/api/controller/controller.ts.art', writeApiFiles.controllerPath, 'api')]);
+  return Promise.all([
+    writeContent('../../template/crud/api/dto/create.dto.ts.art', writeApiFiles.createDtoPath, 'api'),
+    writeContent('../../template/crud/api/dto/update.dto.ts.art', writeApiFiles.updateDtoPath, 'api'),
+    writeContent('../../template/crud/api/dto/query.dto.ts.art', writeApiFiles.queryDtoPath, 'api'),
+    writeContent('../../template/crud/api/service/service.ts.art', writeApiFiles.servicePath, 'api'),
+    writeContent('../../template/crud/api/controller/controller.ts.art', writeApiFiles.controllerPath, 'api'),
+  ]);
 }
 
 //写入前端文件
 function writeViews() {
   //写入前端文件
-  return Promise.all([writeContent('../../template/crud/view/api/api.ts.art', writeViewFiles.apiPath, 'view'), writeContent('../../template/crud/view/views/index.vue.art', writeViewFiles.listPath, 'view')]);
+  return Promise.all([
+    writeContent('../../template/crud/view/api/api.ts.art', writeViewFiles.apiPath, 'view'),
+    writeContent('../../template/crud/view/views/index.vue.art', writeViewFiles.listPath, 'view'),
+    writeContent('../../template/crud/view/views/lang/en.json.art', writeViewFiles.langEnPath, 'view'),
+    writeContent('../../template/crud/view/views/components/addOrUp.vue.art', writeViewFiles.addOrUp, 'view'),
+  ]);
 }
-
+/**
+ * 设置菜单及对应语言包内容
+ * @param model
+ * @returns
+ */
+async function setMenu(model: string) {
+  const filePath = resovePath(`view/${model}/src/locales/lang/en/menu`, ['.json']);
+  const menuJson = await import(pathToFileURL(filePath).href, { with: { type: 'json' } });
+  menuJson.default[tableInfo(replaceNames.Name).tableComment] = replaceNames.Name;
+  return recursionWriteFileSync(
+    filePath,
+    await prettier.format(JSON.stringify(menuJson.default), {
+      ...prettierrc,
+      filepath: filePath,
+    }),
+  );
+}
 export const crudInit = async (program: Command) => {
   program
     .command('crud')
@@ -255,7 +284,9 @@ export const crudInit = async (program: Command) => {
       writeApiFiles.servicePath = resovePath(`src/app/${options.model}/service/${entityFileName}`, ['.service', '.js']);
       writeApiFiles.controllerPath = resovePath(`src/app/${options.model}/controller/${entityFileName}`, ['.controller', '.js']);
       writeViewFiles.apiPath = resovePath(`view/${options.model}/src/api/${entityFileName}`, ['.js']);
-      writeViewFiles.listPath = resovePath(`view/${options.model}/src/views/${entityFileName}/index`,['.vue']);
+      writeViewFiles.listPath = resovePath(`view/${options.model}/src/views/${entityFileName}/index`, ['.vue']);
+      writeViewFiles.langEnPath = resovePath(`view/${options.model}/src/views/${entityFileName}/lang/en`, ['.json']);
+      writeViewFiles.addOrUp = resovePath(`view/${options.model}/src/views/${entityFileName}/components/addOrUp`, ['.vue']);
       if (!options.force) {
         let res = checkPaths();
         if (res !== true) {
@@ -283,6 +314,7 @@ export const crudInit = async (program: Command) => {
       //写入文件
       await writeApi();
       await writeViews();
+      await setMenu(options.model);
       Log.success(entityFileName + ' crud创建完成');
     });
 };

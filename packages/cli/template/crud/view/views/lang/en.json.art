@@ -1,4 +1,4 @@
-{
-  {{each properties}}<% let isOne = true;%>{{if isOne}}<% isOne = false;%>{{else}},
+{<% let isOne = true;%>
+  {{each entitySchema.properties}}{{if isOne}}<% isOne = false;%>{{else}},
   {{/if}}<% const keyInfo = $imports.getKeyInfo($value.description); %>"{{keyInfo.name}}": "{{$index.replaceAll('_',' ')}}"{{/each}}
 }

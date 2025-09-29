@@ -5,24 +5,23 @@
       <% include('./addOrUpItem.vue.art', {...entitySchema, entity:entity}) %>
     </el-form>
     <template #footer>
-      <me-button type="primary" @click="submit">{{ t('提交') }}</me-button>
-      <me-button @click="() => show = false">{{ t('取消') }}</me-button>
+      <me-button type="primary" @click="submit">{{$imports.leftTag()}} t('提交') {{$imports.rightTag()}}</me-button>
+      <me-button @click="() => show = false">{{$imports.leftTag()}} t('取消') {{$imports.rightTag()}}</me-button>
     </template>
   </me-dialog>
 </template>
 
 <script setup lang="ts" name="AddOrUp{{replaceNames.Name}}">
-import { {{replaceNames.Name}}, add{{replaceNames.Name}}Api, update{{replaceNames.Name}}Api, {{replaceNames.Name}}Info } from '@/api/{{replaceNames.name}}';
+import { {{replaceNames.Name}}, {{replaceNames.Name}}Info, add{{replaceNames.Name}}Api, update{{replaceNames.Name}}Api, {{replaceNames.name}}InfoApi } from '@/api/{{replaceNames.name}}';
 import { useLocalesI18n } from '@/locales/i18n';
-import { resetObj } from '@/utils/helper';
+import { resetObj<% if($imports.objectValues(entitySchema.properties).some(v=>v.enum || v.description.includes(':'))){%>, formatterStr<%}%> } from '@/utils/helper';
 import { FormInstance, FormRules } from 'element-plus';
-{{if $imports.objectValues(entitySchema.properties).some(value=>value.rule._rules.some(v=>v.name==='mobile'))}}import { isMobile } from '@/utils/validate.js'{{/if}}
-<% include('../dict.ts.art', {...entitySchema, entity:entity, replaceNames:replaceNames}) %>
+{{if $imports.objectValues(entitySchema.properties).some(value=>value.rule?._rules.some(v=>v.name==='mobile'))}}import { isMobile } from '@/utils/validate.js'{{/if}}<% include('../dict.ts.art', {...entitySchema, entity:entity, replaceNames:replaceNames}) %>
 let { t } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), '{{replaceNames.name}}']);
 const show = defineModel<boolean>();
 const props = defineProps<{
-  {{each entity.pk[0]}}
-  $value?: entitySchema.properties[$value].type;
+  {{each entity.pk}}
+  {{$value}}?: {{entitySchema.properties[$value].type}};
   {{/each}}
 }>();
 const emit = defineEmits<{
@@ -43,13 +42,7 @@ watch(
   { immediate: true },
 );
 const rules: FormRules = {
-  {{each entitySchema.properties}}
-  {{if entitySchema.required.includes($index)||$value.rule._rules.length}}<% const keyInfo = $imports.getKeyInfo($value.description); %>
-    {{$index}}: [
-      <% include('./rules.ts.art', {...entitySchema}) %>
-    ],
-  {{/if}}
-  {{/each}}
+  <% include('./rules.ts.art', {...entitySchema}) %>
 };
 const formEl = ref<FormInstance>();
 const submit = async () => {

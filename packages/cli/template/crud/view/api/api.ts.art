@@ -5,6 +5,7 @@ import { PageParam, PageResult } from './api.model.js';
 {{if $index === replaceNames.Name}}
 //{{entity.tableComment}}
 export class {{$index}} {
+  {{each entity.pk}}{{$value}}?: <% include('./valueType.ts.art', {...swaggerSchemas[replaceNames.Name].properties[$value],key:$value,entity:entity}) %>; //{{swaggerSchemas[replaceNames.Name].properties[$value].description}}{{/each}}
 <% include('./class.ts.art', {...$value, entity:entity}) %>
 {{else}}<% const scgemaEntity = $imports.tableInfo($index); %>//{{scgemaEntity.tableComment}}
 export type {{$index}} = {
@@ -18,7 +19,7 @@ export type {{replaceNames.Name}}Info = {{replaceNames.Name}} & {
   {{/each}}
 };
 //添加{{entity.tableComment}}信息
-export function add{{replaceNames.Name}}api() {
+export function add{{replaceNames.Name}}Api() {
   return request<{{replaceNames.Name}}Info, [{{replaceNames.Name}}]>(
     (data) => ({
       url: '{{replaceNames.name}}/add',

@@ -4,7 +4,8 @@
   <el-form-item prop="priceEnd">
   <el-date-picker v-model="params.end{{$imports.upFirstCase($index)}}" type="{{if $value.format === 'date-time'}}datetime{{else}}date{{/if}}" value-format="{{if $value.format === 'date-time'}}YYYY-MM-DD HH:mm:ss{{else}}YYYY-MM-DD{{/if}}" />
   </el-form-item>
-</el-form-item>{{else if ['number','string','integer'].includes($value.type)}}<el-form-item :label="t('{{keyInfo.name}}')" prop="{{$index}}">
+</el-form-item>{{else if ['number','string','integer'].includes($value.type)}}
+<el-form-item :label="t('{{keyInfo.name}}')" prop="{{$index}}">
   {{if $value.enum || keyInfo.dict}}<el-select v-model="params.{{$index}}">
     <el-option v-for="val in dict.{{$index}}" :key="val.value" :value="val.value">{{$imports.leftTag()}}val.label{{$imports.rightTag()}}</el-option>
   </el-select>

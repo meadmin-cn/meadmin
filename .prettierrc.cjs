@@ -1,7 +1,7 @@
 module.exports = {
   // ...require('mwts/.prettierrc.json'),
-  // 一行最多 1000 字符 建议不强制换行使用编辑器的查看/自动换行进行展示换行
-  printWidth: 1000,
+  // 一行最多 200 字符 建议配合 vscode 的自动换行使用
+  printWidth: 200,
   // 超出不换行
   proseWrap: 'never',
   // 使用 2 个空格缩进
@@ -12,11 +12,11 @@ module.exports = {
   semi: true,
   // 使用单引号
   singleQuote: true,
-  // 对象的 key 仅在必要时用引号
-  quoteProps: 'as-needed',
+  // 如果一个对象中至少有一个属性需要引号，请引用所有属性
+  quoteProps: 'consistent',
   // jsx 不使用单引号，而使用双引号
   jsxSingleQuote: false,
-  // 末尾需要有逗号
+  // 在多行逗号分隔的语法结构中尽可能打印尾随逗号
   trailingComma: 'all',
   // 大括号内的首尾需要空格
   bracketSpacing: true,

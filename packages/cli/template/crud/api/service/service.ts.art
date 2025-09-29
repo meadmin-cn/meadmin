@@ -1,10 +1,12 @@
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { InjectRepository } from '@/decorators/index.js';
-import { Provide } from '@midwayjs/core';
+import { Provide, Inject } from '@midwayjs/core';
 import { {{replaceNames.CreateDto}} } from '{{paths.createDtoPath}}';
 import { {{replaceNames.QueryDto}} } from '{{paths.queryDtoPath}}';
 import { {{replaceNames.UpdateDto}} } from '{{paths.updateDtoPath}}';
 import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
+import { MidwayI18nService } from '@midwayjs/i18n';
+
 {{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At'))}}import { Op } from '@sequelize/core';{{/if}}
 {{if entity.pk.length > 1}}type PK = {
   {{each entity.pk}}
@@ -16,6 +18,9 @@ import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
 export class {{replaceNames.Service}} {
   @InjectRepository({{replaceNames.Name}})
   {{replaceNames.Name}}Repository: typeof {{replaceNames.Name}}
+  
+  @Inject()
+  i18nService: MidwayI18nService;
 
   /**
    * 创建数据
@@ -74,7 +79,7 @@ export class {{replaceNames.Service}} {
   findOne({{if entity.pk.length > 1}}pk:PK{{else}}{{entity.pk[0]}}: {{entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
     const entity = this.{{replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}});
     if (!entity) {
-      throw new BadRequestError('没有对应的信息');
+      throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
     return entity;
   }
@@ -88,7 +93,7 @@ export class {{replaceNames.Service}} {
   async update({{if entity.pk.length > 1}}pk:PK{{else}}{{entity.pk[0]}}: {{entitySchema.properties[entity.pk[0]].type}}{{/if}}, updateDto: {{replaceNames.UpdateDto}}) {
     const entity = await this.{{replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}});
     if (!entity) {
-      throw new BadRequestError('没有对应的信息');
+      throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
     Object.assign(entity, updateDto);
     return await entity.save();
@@ -102,7 +107,7 @@ export class {{replaceNames.Service}} {
   async remove({{if entity.pk.length > 1}}pk:PK{{else}}{{entity.pk[0]}}: {{entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
     const entity = await this.{{replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}});
     if (!entity) {
-      throw new BadRequestError('没有对应的信息');
+      throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
     await entity.destroy();
   }

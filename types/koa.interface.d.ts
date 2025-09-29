@@ -1,4 +1,4 @@
-import { Admin } from '@/entities/admin.entity.js';
+import { SystemAdmin } from '@/entities/systemAdmin.entity.ts';
 // 下面这段只 @midwayjs/koa 的 Context 做扩展
 
 declare module '@midwayjs/koa' {

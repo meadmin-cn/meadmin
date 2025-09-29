@@ -3,16 +3,17 @@ import { RuleType } from '@midwayjs/validate';
 import { DataTypes, NonAttribute } from '@sequelize/core';
 import { Attribute, Default, PrimaryKey, Table, BelongsToMany } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
-import { Menu } from './menu.entity.js';
+import { SystemMenu } from './systemMenu.entity.js';
 import { TreeModel } from './abstract/tree.entity.js';
 import { BelongsManyModel } from '../../types/entity.js';
 import { ApiExtraModel, getSchemaPath } from '@midwayjs/swagger';
+import { SystemAdmin } from './systemAdmin.entity.js';
 
 //rule规则使用添加接口的校验规则
-@ApiExtraModel(Menu)
-@Table({ tableName: 'role', comment: '角色表' })
+@ApiExtraModel(SystemMenu)
+@Table({ tableName: 'system_role', comment: '角色表' })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class Role extends TreeModel<Role> {
+export class SystemRole extends TreeModel<SystemRole> {
   @Attribute({type:DataTypes.STRING, allowNull: false})
   @PrimaryKey
   @Default(uuid)
@@ -51,9 +52,9 @@ export class Role extends TreeModel<Role> {
 
   /** Declared by {@link Admin.roles} */
   @ApiPropertyRule({ description: '关联用户' })
-  declare admins?: NonAttribute<Role[]>;
+  declare admins?: NonAttribute<SystemAdmin[]>;
 
-  @BelongsToMany(() => Menu, {
+  @BelongsToMany(() => SystemMenu, {
     through: 'role_menu', //中间表名称 或者 对应的Model
     inverse: {
       as: 'roles',
@@ -63,10 +64,10 @@ export class Role extends TreeModel<Role> {
     description: '具有权限菜单',
     type: 'array',
     items: {
-      $ref: () => getSchemaPath(Menu),
+      $ref: () => getSchemaPath(SystemMenu),
     },
   })
-  declare menus?: NonAttribute<Menu[]>;
+  declare menus?: NonAttribute<SystemMenu[]>;
 }
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export declare interface Role extends BelongsManyModel<'menus', 'menu', 'menus', Menu> {}
+export declare interface SystemRole extends BelongsManyModel<'menus', 'menu', 'menus', SystemMenu> {}

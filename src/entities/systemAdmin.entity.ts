@@ -6,14 +6,14 @@ import { DataTypes, NonAttribute } from '@sequelize/core';
 import { Attribute, PrimaryKey, Default, DeletedAt, Table, BelongsToMany } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { BaseModel } from './abstract/base.entity.js';
-import { Role } from './role.entity.js';
+import { SystemRole } from './systemRole.entity.js';
 import { BelongsManyModel } from '../../types/entity.js';
-import { Menu } from './menu.entity.js';
+import { SystemMenu } from './systemMenu.entity.js';
 
 //rule规则使用添加接口的校验规则
-@Table({ tableName: 'admin', comment: '管理员表' })
+@Table({ tableName: 'system_admin', comment: '管理员表' })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class Admin extends BaseModel<Admin> {
+export class SystemAdmin extends BaseModel<SystemAdmin> {
   @Attribute(DataTypes.STRING)
   @PrimaryKey
   @Default(uuid)
@@ -95,18 +95,18 @@ export class Admin extends BaseModel<Admin> {
   @Attribute({ comment: '删除时间' })
   declare deletedAt: Date | null;
 
-  @BelongsToMany(() => Role, {
+  @BelongsToMany(() => SystemRole, {
     through: 'admin_role', //中间表名称 或者 对应的Model
     inverse: {
       as: 'admins',
     },
   })
   @ApiPropertyRule({ description: '具有的角色' })
-  declare roles?: NonAttribute<Role[]>;
+  declare roles?: NonAttribute<SystemRole[]>;
 
-  _roleMenus?: NonAttribute<Menu[]>;
+  _roleMenus?: NonAttribute<SystemMenu[]>;
   @ApiPropertyRule({ description: '具有权限的菜单' })
-  get roleMenus(): NonAttribute<Menu[]> {
+  get roleMenus(): NonAttribute<SystemMenu[]> {
     return (
       this._roleMenus ??
       this.roles!.reduce((a, b) => {
@@ -115,9 +115,9 @@ export class Admin extends BaseModel<Admin> {
     );
   }
 
-  set roleMenus(roleMenus: Menu[]) {
+  set roleMenus(roleMenus: SystemMenu[]) {
     this._roleMenus = roleMenus;
   }
 }
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export declare interface Admin extends BelongsManyModel<'roles', 'role', 'roles', Role> {}
+export declare interface SystemAdmin extends BelongsManyModel<'roles', 'role', 'roles', SystemRole> {}

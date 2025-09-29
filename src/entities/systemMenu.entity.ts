@@ -3,14 +3,14 @@ import { RuleType } from '@midwayjs/validate';
 import { DataTypes, NonAttribute } from '@sequelize/core';
 import { Attribute, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
-import { Role } from './role.entity.js';
+import { SystemRole } from './systemRole.entity.js';
 import { TreeModel } from './abstract/tree.entity.js';
 import { BelongsManyModel } from '../../types/entity.js';
 
 //rule规则使用添加接口的校验规则
-@Table({ tableName: 'menu', comment: '菜单表' })
+@Table({ tableName: 'system_menu', comment: '菜单表' })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class Menu extends TreeModel<Menu> {
+export class SystemMenu extends TreeModel<SystemMenu> {
   @Attribute(DataTypes.STRING)
   @PrimaryKey
   @Default(uuid)
@@ -126,7 +126,7 @@ export class Menu extends TreeModel<Menu> {
     defaultValue: 0,
     allowNull: false,
   })
-  @ApiPropertyRule({ description: '缓存:1=是;0=否', rule: RuleType.number().valid(0, 1) })
+  @ApiPropertyRule({ description: '固定tag:1=是;0=否', rule: RuleType.number().valid(0, 1) })
   affix: number;
 
   @Attribute({
@@ -147,9 +147,9 @@ export class Menu extends TreeModel<Menu> {
   @ApiPropertyRule({ description: '面包屑:1=展示;0=不展示', rule: RuleType.number().valid(0, 1) })
   breadcrumb: number;
 
-  /** Declared by {@link Role.menus} */
+  /** Declared by {@link SystemRole.menus} */
   //具有当前菜单的角色
-  declare roles?: NonAttribute<Role[]>;
+  declare roles?: NonAttribute<SystemRole[]>;
 }
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export declare interface Menu extends BelongsManyModel<'roles', 'role', 'roles', Role> {}
+export declare interface SystemMenu extends BelongsManyModel<'roles', 'role', 'roles', SystemRole> {}

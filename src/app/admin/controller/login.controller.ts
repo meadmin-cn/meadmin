@@ -5,7 +5,7 @@ import { LoginParamDto } from '../dto/loginParam.dto.js';
 import { LoginService } from '../service/login.server.js';
 import { LoginResultDto } from '../dto/loginResult.dto.js';
 import { Context } from '@midwayjs/koa';
-import { Menu } from '@/entities/menu.entity.js';
+import { SystemMenu } from '@/entities/systemMenu.entity.js';
 import { LoginInfoResultDto } from '../dto/loginInfoResult.dto.js';
 
 @Controller('login')
@@ -32,7 +32,7 @@ export class LoginController extends BaseController {
   })
   async info() {
     const admin = await this.loginService.getAdminById(this.ctx.adminInfo.id);
-    const menus = [] as Menu[];
+    const menus = [] as SystemMenu[];
     const btnRules = [] as string[];
     admin?.roleMenus?.forEach((menu) => {
       if (menu.menuType === 3) {

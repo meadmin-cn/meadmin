@@ -1,23 +1,24 @@
 import { InjectRepository } from '@/decorators/sequelize.js';
-import { Admin } from '@/entities/admin.entity.js';
+import { SystemAdmin } from '@/entities/systemAdmin.entity.js';
 import { Config, Init, Inject, Singleton } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { pbkdf2Sync, randomBytes } from 'node:crypto';
 import { CachingFactory, MidwayCache } from '@midwayjs/cache-manager';
 import dayjs from 'dayjs';
-import { Role } from '@/entities/role.entity.js';
-import { Menu } from '@/entities/menu.entity.js';
+import { SystemRole } from '@/entities/systemRole.entity.js';
+import { SystemMenu } from '@/entities/systemMenu.entity.js';
+import { MidwayI18nService } from '@midwayjs/i18n';
 
 export const tokenPrefix = 'Admin:Token:';
 export const adminPrefix = 'Admin:Admin:';
 
 @Singleton()
 export class LoginService {
-  @InjectRepository(Admin)
-  adminRepository: typeof Admin;
+  @InjectRepository(SystemAdmin)
+  adminRepository: typeof SystemAdmin;
 
-  @InjectRepository(Menu)
-  menuRepository: typeof Menu;
+  @InjectRepository(SystemMenu)
+  menuRepository: typeof SystemMenu;
 
   @Inject()
   cachingFactory: CachingFactory;
@@ -37,6 +38,9 @@ export class LoginService {
   async init() {
     this.cache = await this.cachingFactory.get(this.cacheKey);
   }
+
+  @Inject()
+  i18nService: MidwayI18nService;
 
   getAdminIdCacheKey(adminId: string) {
     return adminPrefix + adminId;
@@ -117,13 +121,12 @@ export class LoginService {
         id: adminId,
       },
       include: {
-        model: Role,
+        model: SystemRole,
         where: { status: 1 },
         required: false,
-
         include: [
           {
-            model: Menu,
+            model: SystemMenu,
             where: { status: 1 },
             required: false,
           },
@@ -157,13 +160,10 @@ export class LoginService {
    */
   async login(username, password) {
     const entity = await this.adminRepository.findOne({ where: { username } });
-    if (!entity) {
-      throw new BadRequestError('错误的用户名/密码');
-    }
-    if (this.checkPassword(password, entity.salt, entity.password)) {
+    if (entity && this.checkPassword(password, entity.salt, entity.password)) {
       return await this.getToken(entity.id);
     }
-    throw new BadRequestError('错误的用户名/密码');
+    throw new BadRequestError(this.i18nService.translate('错误的{key}', { args: { '用户名/密码': this.i18nService.translate('用户名') + '/' + this.i18nService.translate('密码') } }));
   }
 
   /**
@@ -190,7 +190,6 @@ export class LoginService {
    * @returns 是否通过
    */
   public checkPassword(password: string, salt: string, encode: string) {
-    console.log(this.entityPassword(password, salt).password);
     return this.entityPassword(password, salt).password === encode;
   }
 }

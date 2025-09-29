@@ -1,4 +1,4 @@
-import { Menu } from '@/entities/menu.entity.js';
+import { Menu } from '@/entities/systemMenu.entity.js';
 import { ApiProperty } from '@midwayjs/swagger';
 
 export class TreeMenu extends Menu {

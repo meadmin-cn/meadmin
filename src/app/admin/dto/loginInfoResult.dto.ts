@@ -1,6 +1,6 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
-import { Admin } from '@/entities/admin.entity.js';
-import { Menu } from '@/entities/menu.entity.js';
+import { Admin } from '@/entities/systemAdmin.entity.js';
+import { Menu } from '@/entities/systemMenu.entity.js';
 
 export class LoginInfoResultDto {
   @ApiPropertyRule({ description: '管理员信息', type: Admin })

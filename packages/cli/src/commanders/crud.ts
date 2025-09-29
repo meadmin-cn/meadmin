@@ -4,7 +4,7 @@ import { Command } from 'commander';
 import { existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { getConfig } from '../utils/db.js';
-import { recursionWriteFileSync } from '../utils/file.js';
+import { delFileSync, recursionWriteFileSync } from '../utils/file.js';
 import { Log } from '../utils/log.js';
 import template from 'art-template';
 import { getClassMetadata } from '@midwayjs/core';
@@ -271,6 +271,7 @@ export const crudInit = async (program: Command) => {
     .option('-f, --force', '强制覆盖')
     .option('-n, --name <char>', '使用的数据库配置defaultDataSourceName')
     .option('-d, --dbConfig <char>', '数据库配置文件地址默认为当前目录下dist/config/database.js', join(process.cwd(), 'dist/config/database.js'))
+    .option('--del', '删除crud创建的文件')
     .action(async (file: string, options) => {
       sequelize = new Sequelize(await getConfig(options.dbConfig, options.name));
       const noSuffixEntityPath = relativePath('', file, ['.entity', '.ts']);
@@ -287,6 +288,13 @@ export const crudInit = async (program: Command) => {
       writeViewFiles.listPath = resovePath(`view/${options.model}/src/views/${entityFileName}/index`, ['.vue']);
       writeViewFiles.langEnPath = resovePath(`view/${options.model}/src/views/${entityFileName}/lang/en`, ['.json']);
       writeViewFiles.addOrUp = resovePath(`view/${options.model}/src/views/${entityFileName}/components/addOrUp`, ['.vue']);
+      if(options.del){
+        [...Object.values(writeApiFiles),...Object.values(writeViewFiles)].forEach(toPath=>delFileSync(toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath,));
+        delFileSync(`view/${options.model}/src/views/${entityFileName}`);
+        Log.success(entityFileName + ' 清除成功');
+        return;
+      }
+
       if (!options.force) {
         let res = checkPaths();
         if (res !== true) {

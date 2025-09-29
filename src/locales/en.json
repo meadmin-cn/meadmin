@@ -1,5 +1,9 @@
 {
   "校验参数错误:":"Check parameter error:",
-  "操作成功":"success",
-  "列表数据获取成功":"The list data was successfully obtained"
+  "操作成功":"successfully",
+  "列表数据获取成功":"The list data was successfully obtained",
+  "没有对应的信息":"There is no corresponding information.",
+  "错误的{key}":"Incorrect {key}",
+  "用户名":"username",
+  "密码":"password"
 }

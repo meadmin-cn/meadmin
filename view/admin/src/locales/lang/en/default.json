@@ -1,12 +1,10 @@
 {
   " ": " ",
   "登录": "Login",
-  "请填写": "Please input",
+  "{label}必须填写": "{label} must be filled in",
   "用户名": "Username",
   "密码": "Password",
   "验证码": "Captcha",
-  "长度必须在 {0} 到 {1}个字符之间": "Length should be {0} to {1}",
-  "长度必须为 {0} 个字符": "Length should be {0}",
   "项目配置": "Theme Config",
   "主题色": "Theme Color",
   "侧边栏背景色": "Sidebar Background",

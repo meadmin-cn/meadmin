@@ -3,16 +3,16 @@ import { resolve, relative, extname, dirname } from 'node:path';
  * 将camelCase字符串更改为kebab-case，用破折号替换空格并保留下划线。
  *
  * @param   {string}  str  [str description]
- *
+ * @param   {string}  replaceStr  替换的字符串
  * @return  {[type]}       [return description]
  */
-export function normalizeToKebabOrSnakeCase(str: string) {
+export function normalizeToKebabOrSnakeCase(str: string, replaceStr='-') {
   const STRING_DASHERIZE_REGEXP = /\s/g;
   const STRING_DECAMELIZE_REGEXP = /([a-z\d])([A-Z])/g;
   return str
-    .replace(STRING_DECAMELIZE_REGEXP, '$1-$2')
+    .replace(STRING_DECAMELIZE_REGEXP, `$1${replaceStr}$2`)
     .toLowerCase()
-    .replace(STRING_DASHERIZE_REGEXP, '-');
+    .replace(STRING_DASHERIZE_REGEXP, replaceStr);
 }
 
 /**

@@ -1,4 +1,4 @@
-import { Catch, Inject } from '@midwayjs/core';
+import { Catch, Context } from '@midwayjs/core';
 import { MidwayValidationError } from '@midwayjs/validate';
 import { ResponseService } from '@/service/response.service.js';
 import { CodeEunm } from '@/dict/code.enum.js';
@@ -11,15 +11,13 @@ export class ValidateErrorFilter {
   constructor() {
     this.resposes = new ResponseService();
   }
-  
-  @Inject()
-  i18nService: MidwayI18nService;
 
-  async catch(err: MidwayValidationError) {
+  async catch(err: MidwayValidationError, ctx: Context) {
     const args = {} as Record<string,string>;
+    const i18n = await ctx.requestContext.getAsync(MidwayI18nService);
     extractBracesContent(err.message).forEach(v=>{
-      args[v] = this.i18nService.translate(v)
+      args[v] = i18n.translate(v)
     })
-    return this.resposes.error(this.i18nService.translate('校验参数错误:') + this.i18nService.translate(err.message,{args}), CodeEunm.ValidateFail);
+    return this.resposes.error(i18n.translate('校验参数错误:') + i18n.translate(err.message,{args}), CodeEunm.ValidateFail);
   }
 }

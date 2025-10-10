@@ -101,11 +101,15 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
       as: 'admins',
     },
   })
-  @ApiPropertyRule({ description: '具有的角色' })
+  @ApiPropertyRule({ description: '具有的角色', type:"array",items: {
+    type: SystemRole,
+  },})
   declare roles?: NonAttribute<SystemRole[]>;
 
   _roleMenus?: NonAttribute<SystemMenu[]>;
-  @ApiPropertyRule({ description: '具有权限的菜单' })
+  @ApiPropertyRule({ description: '具有权限的菜单', type:"array",items: {
+    type: SystemMenu,
+  },})
   get roleMenus(): NonAttribute<SystemMenu[]> {
     return (
       this._roleMenus ??

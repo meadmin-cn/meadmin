@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts" name="{{replaceNames.Name}}">
-import { {{replaceNames.name}}ListApi, {{replaceNames.Name}}ListParam, del{{replaceNames.Name}}Api, {{replaceNames.Name}}Info } from '@/api/{{replaceNames.name}}';
+import { {{replaceNames.name}}ListApi, {{replaceNames.Name}}ListParam, del{{replaceNames.Name}}Api, {{replaceNames.Name}}Info } from '@/api/{{replaceNames.namePath}}';
 import { useLocalesI18n } from '@/locales/i18n';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';

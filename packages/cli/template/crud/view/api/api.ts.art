@@ -1,5 +1,5 @@
 import request, { RequestOptions } from '@/utils/request.js';
-import { PageParam, PageResult } from './api.model.js';
+import { PageParam, PageResult } from '@/api/api.model.js';
 
 {{each swaggerSchemas}}
 {{if $index === replaceNames.Name}}
@@ -22,7 +22,7 @@ export type {{replaceNames.Name}}Info = {{replaceNames.Name}} & {
 export function add{{replaceNames.Name}}Api() {
   return request<{{replaceNames.Name}}Info, [{{replaceNames.Name}}]>(
     (data) => ({
-      url: '{{replaceNames.name}}/add',
+      url: '{{replaceNames.controllerPath}}/add',
       method: 'post',
       data: data,
     }),
@@ -38,7 +38,7 @@ export class {{replaceNames.Name}}ListParam extends PageParam {
 export function {{replaceNames.name}}ListApi(options?: RequestOptions<{{replaceNames.Name}}ListResult, [{{replaceNames.Name}}ListParam]>) {
   return request<{{replaceNames.Name}}ListResult, [{{replaceNames.Name}}ListParam]>(
     (data) => ({
-      url: '{{replaceNames.name}}/',
+      url: '{{replaceNames.controllerPath}}/',
       method: 'post',
       data: data,
     }),
@@ -50,7 +50,7 @@ export function {{replaceNames.name}}ListApi(options?: RequestOptions<{{replaceN
 export function {{replaceNames.name}}InfoApi(options?: RequestOptions<{{replaceNames.Name}}Info, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>) {
   return request<{{replaceNames.Name}}Info, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>(
     ({{entity.pk.join(', ')}}) => ({
-      url: `{{replaceNames.name}}/info/${<%= entity.pk.join('/${') %>}`,
+      url: `{{replaceNames.controllerPath}}/info/${<%= entity.pk.join('/${') %>}`,
       method: 'get',
     }),
     options,
@@ -62,7 +62,7 @@ export type Update{{replaceNames.Name}}InfoParam = Partial<{{replaceNames.Name}}
 export function update{{replaceNames.Name}}Api(options?: RequestOptions<{{replaceNames.Name}}Info, [{{each entity.pk}}{{entitySchema.properties[$value].type}}, {{/each}}Update{{replaceNames.Name}}InfoParam]>) {
   return request<{{replaceNames.Name}}Info, [{{each entity.pk}}{{entitySchema.properties[$value].type}}, {{/each}}Update{{replaceNames.Name}}InfoParam]>(
     ({{entity.pk.join(', ')}}, data) => ({
-      url: `{{replaceNames.name}}/up/${<%= entity.pk.join('/${') %>}`,
+      url: `{{replaceNames.controllerPath}}/up/${<%= entity.pk.join('/${') %>}`,
       method: 'post',
       data: data,
     }),
@@ -74,7 +74,7 @@ export function update{{replaceNames.Name}}Api(options?: RequestOptions<{{replac
 export function del{{replaceNames.Name}}Api(options?: RequestOptions<null, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>) {
   return request<null, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>(
     ({{entity.pk.join(', ')}}) => ({
-      url: `{{replaceNames.name}}/del/${<%= entity.pk.join('/${') %>}`,
+      url: `{{replaceNames.controllerPath}}/del/${<%= entity.pk.join('/${') %>}`,
       method: 'get',
     }),
     Object.assign({ noLoading: true }, options),

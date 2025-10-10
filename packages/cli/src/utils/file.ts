@@ -17,7 +17,7 @@ export function recursionWriteFileSync(filePath:string, content:string) {
  * 删除文件
  * @param filePath 
  */
-export function delFileSync(filePath:string,){
+export function delFileSync(filePath:string){
   if(existsSync(filePath)){
     rmSync(filePath, { recursive: true, force: true });
   }

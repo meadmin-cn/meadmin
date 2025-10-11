@@ -5,7 +5,7 @@ import { {{replaceNames.CreateDto}} } from '{{paths.createDtoPath}}';
 import { {{replaceNames.QueryDto}} } from '{{paths.queryDtoPath}}';
 import { {{replaceNames.UpdateDto}} } from '{{paths.updateDtoPath}}';
 import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
-import { MidwayI18nService } from '@midwayjs/i18n';
+import { I18nService } from '@/service/I18n.service.js';
 
 {{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At'))}}import { Op } from '@sequelize/core';{{/if}}
 {{if entity.pk.length > 1}}type PK = {
@@ -20,7 +20,7 @@ export class {{replaceNames.Service}} {
   {{replaceNames.Name}}Repository: typeof {{replaceNames.Name}}
   
   @Inject()
-  i18nService: MidwayI18nService;
+  i18nService: I18nService;
 
   /**
    * 创建数据

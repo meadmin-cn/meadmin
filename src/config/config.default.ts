@@ -20,6 +20,11 @@ export default {
   i18n: {
     // 默认语言  "zh-cn"
     defaultLocale: 'zh-cn',
+    // used to alter the behaviour of missing keys
+    missingKeyFn: function (locale, value) {
+      return value
+    },
+
     // 把你的翻译文本放到这里
     localeTable: {
       'zh-cn': {
@@ -80,7 +85,7 @@ export default {
       cacheKey: 'admin', //token使用的缓存key对应cacheManager.clients
     },
     auth: {
-      noLoginUrl: ['/api/admin/login/login', '/api/admin/admin/add', /\/api\/admin\/admin\/*/] as Array<string | RegExp>, //无需登录地址
+      noLoginUrl: ['/api/admin/login/login', '/api/admin/login/captcha'] as Array<string | RegExp>, //无需登录地址
     },
   },
 } as MidwayConfig;

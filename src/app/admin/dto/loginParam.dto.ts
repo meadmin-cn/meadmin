@@ -6,4 +6,8 @@ export class LoginParamDto {
   username: string;
   @ApiPropertyRule({ description: '密码', rule: RuleType.string().required().empty('') })
   password: string;
+  @ApiPropertyRule({ description: '验证码标识', rule: RuleType.string().required().empty('') })
+  captchaId: string;
+  @ApiPropertyRule({ description: '验证码', rule: RuleType.string().required().empty('') })
+  captcha: string;
 }

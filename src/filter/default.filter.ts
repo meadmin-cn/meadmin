@@ -1,6 +1,7 @@
 import { CodeEunm } from '@/dict/code.enum.js';
+import { I18nService } from '@/service/i18n.service.js';
 import { ResponseService } from '@/service/response.service.js';
-import { Catch, Config, ILogger, Logger } from '@midwayjs/core';
+import { Catch, Config, Context, ILogger, Logger } from '@midwayjs/core';
 
 @Catch()
 export class DefaultErrorFilter {
@@ -14,9 +15,9 @@ export class DefaultErrorFilter {
     this.resposes = new ResponseService();
   }
 
-  async catch(err: Error) {
-    this.logger.error(err);
+  async catch(err: Error, ctx: Context) {
     // 所有的未分类错误会到这里
-    return this.resposes.error(this.debug ? err.message : '未知异常请联系管理员', CodeEunm.Error);
+    const i18n = await ctx.requestContext.getAsync(I18nService);
+    return this.resposes.error(this.debug ? err.message : i18n.translate('未知异常请联系管理员'), CodeEunm.Error);
   }
 }

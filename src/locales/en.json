@@ -1,9 +1,13 @@
 {
   "校验参数错误:":"Check parameter error:",
-  "操作成功":"successfully",
+  "操作成功":"Successfully",
   "列表数据获取成功":"The list data was successfully obtained",
   "没有对应的信息":"There is no corresponding information.",
   "错误的{key}":"Incorrect {key}",
-  "用户名":"username",
-  "密码":"password"
+  "用户名":"Username",
+  "密码":"Password",
+  "验证码":"Captcha",
+  "验证码标识":"Captcha identifier",
+  "验证码错误或已过期":"The verification code is incorrect or has expired",
+  "未知异常请联系管理员":"Unknown error, please contact the administrator"
 }

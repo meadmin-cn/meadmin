@@ -1,5 +1,5 @@
 import { Config, IMiddleware, Inject, Middleware, NextFunction } from '@midwayjs/core';
-import { LoginService } from '../service/login.server.js';
+import { LoginService } from '../service/login.serveice.js';
 import { Context } from '@midwayjs/koa';
 import { UnauthorizedError } from '@midwayjs/core/dist/error/http.js';
 

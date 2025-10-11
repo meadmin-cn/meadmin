@@ -17,6 +17,8 @@ import * as redis from '@midwayjs/redis';
 import { filters } from './filter/index.js';
 import { initLogger } from './logger.js';
 import * as i18n from '@midwayjs/i18n';
+import * as captcha from '@midwayjs/captcha';
+
 const registreDecorators = new RegistreDecorators();
 
 @Configuration({
@@ -36,6 +38,7 @@ const registreDecorators = new RegistreDecorators();
     viteView,
     redis,
     cacheManager,
+    captcha,
   ],
   importConfigs: [
     {

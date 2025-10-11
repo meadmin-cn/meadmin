@@ -20,6 +20,9 @@ importers:
       '@midwayjs/cache-manager':
         specifier: ^3.20.11
         version: 3.20.11
+      '@midwayjs/captcha':
+        specifier: '3'
+        version: 3.20.16
       '@midwayjs/core':
         specifier: ^3.20.11
         version: 3.20.11
@@ -1475,6 +1478,10 @@ packages:
 
   '@midwayjs/cache-manager@3.20.11':
     resolution: {integrity: sha512-m+LWYQFz4U28EF9qYLvi8sihDj8hv/TL/gUux9ZGicPzLK5D7euEIEk2VZlhg22LnL1WQRM6++89CPpNjeIu+g==}
+    engines: {node: '>=12'}
+
+  '@midwayjs/captcha@3.20.16':
+    resolution: {integrity: sha512-EaOmg0SQPaQMDTsQwZCoBKwA8KZIYQVc7MIBka6VpmwLHu+9QFKCS0fa8TQiWQ58+wt+Ck1z/xtS8G+0/rQfvw==}
     engines: {node: '>=12'}
 
   '@midwayjs/cookies@1.3.0':
@@ -5367,6 +5374,10 @@ packages:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
     engines: {node: '>=4'}
 
+  mini-svg-data-uri@1.4.4:
+    resolution: {integrity: sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg==}
+    hasBin: true
+
   minim@0.23.8:
     resolution: {integrity: sha512-bjdr2xW1dBCMsMGGsUeqM4eFI60m94+szhxWys+B1ztIt6gWSfeGBdSVCIawezeHYLYn0j6zrsXdQS/JllBzww==}
     engines: {node: '>=6'}
@@ -5754,6 +5765,10 @@ packages:
   openapi-server-url-templating@1.3.0:
     resolution: {integrity: sha512-DPlCms3KKEbjVQb0spV6Awfn6UWNheuG/+folQPzh/wUaKwuqvj8zt5gagD7qoyxtE03cIiKPgLFS3Q8Bz00uQ==}
     engines: {node: '>=12.20.0'}
+
+  opentype.js@0.7.3:
+    resolution: {integrity: sha512-Veui5vl2bLonFJ/SjX/WRWJT3SncgiZNnKUyahmXCc2sa1xXW15u3R/3TN5+JFiP7RsjK5ER4HA5eWaEmV9deA==}
+    hasBin: true
 
   optionator@0.8.3:
     resolution: {integrity: sha512-+IW9pACdk3XWmmTXG8m3upGUJst5XRGzxMRjXzAuJ1XnIFNvfhjjIuYkDvysnPQ7qzqVzLt78BCruntqRhWQbA==}
@@ -6871,6 +6886,10 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  svg-captcha-fixed@1.5.2:
+    resolution: {integrity: sha512-BRnoEq7u3ZRxFvYmPbCer7k6OhZ3gXd9LELmPOFBVCMHnqsS3meTjrWpn6vu986uxzU/Yx8L8I6ZpAppdmfjTQ==}
+    engines: {node: '>=4.x'}
+
   svgo@3.3.2:
     resolution: {integrity: sha512-OoohrmuUlBs8B8o6MB2Aevn+pRIH9zDALSR+6hhqVfa6fRwG/Qw9VUMSMW9VNg2CFc/MTIfabtdOVl9ODIJjpw==}
     engines: {node: '>=14.0.0'}
@@ -6943,6 +6962,9 @@ packages:
 
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
+
+  tiny-inflate@1.0.3:
+    resolution: {integrity: sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==}
 
   tiny-warning@1.0.3:
     resolution: {integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==}
@@ -8908,6 +8930,13 @@ snapshots:
     dependencies:
       lodash.clonedeep: 4.5.0
       lru-cache: 7.18.3
+
+  '@midwayjs/captcha@3.20.16':
+    dependencies:
+      '@midwayjs/cache-manager': 3.20.11
+      mini-svg-data-uri: 1.4.4
+      nanoid: 3.3.11
+      svg-captcha-fixed: 1.5.2
 
   '@midwayjs/cookies@1.3.0':
     dependencies:
@@ -13568,6 +13597,8 @@ snapshots:
 
   min-indent@1.0.1: {}
 
+  mini-svg-data-uri@1.4.4: {}
+
   minim@0.23.8:
     dependencies:
       lodash: 4.17.21
@@ -14022,6 +14053,10 @@ snapshots:
   openapi-server-url-templating@1.3.0:
     dependencies:
       apg-lite: 1.0.5
+
+  opentype.js@0.7.3:
+    dependencies:
+      tiny-inflate: 1.0.3
 
   optionator@0.8.3:
     dependencies:
@@ -15195,6 +15230,10 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
+  svg-captcha-fixed@1.5.2:
+    dependencies:
+      opentype.js: 0.7.3
+
   svgo@3.3.2:
     dependencies:
       '@trysound/sax': 0.2.0
@@ -15313,6 +15352,8 @@ snapshots:
       readable-stream: 3.6.2
 
   through@2.3.8: {}
+
+  tiny-inflate@1.0.3: {}
 
   tiny-warning@1.0.3: {}
 

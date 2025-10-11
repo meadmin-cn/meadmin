@@ -12,6 +12,7 @@
     "@meadmin/core": "workspace:^",
     "@midwayjs/bootstrap": "^3.20.11",
     "@midwayjs/cache-manager": "^3.20.11",
+    "@midwayjs/captcha": "3",
     "@midwayjs/core": "^3.20.11",
     "@midwayjs/i18n": "3",
     "@midwayjs/info": "^3.20.12",

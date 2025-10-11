@@ -7,7 +7,7 @@ import { CachingFactory, MidwayCache } from '@midwayjs/cache-manager';
 import dayjs from 'dayjs';
 import { SystemRole } from '@/entities/systemRole.entity.js';
 import { SystemMenu } from '@/entities/systemMenu.entity.js';
-import { MidwayI18nService } from '@midwayjs/i18n';
+import { I18nService } from '@/service/i18n.service.js';
 
 export const tokenPrefix = 'Admin:Token:';
 export const adminPrefix = 'Admin:Admin:';
@@ -161,7 +161,7 @@ export class LoginService {
       return await this.getToken(entity.id);
     }
     if (ctx) {
-      const i18n = await ctx.requestContext.getAsync(MidwayI18nService);
+      const i18n = await ctx.requestContext.getAsync(I18nService);
       throw new BadRequestError(i18n.translate('错误的{key}', { args: { '用户名/密码': i18n.translate('用户名') + '/' + i18n.translate('密码') } }));
     }
     throw new BadRequestError('错误的用户名/密码');

@@ -14,7 +14,7 @@ import { SystemMenu } from './systemMenu.entity.js';
 @Table({ tableName: 'system_admin', comment: '管理员表' })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class SystemAdmin extends BaseModel<SystemAdmin> {
-  @Attribute(DataTypes.STRING)
+  @Attribute({type:DataTypes.STRING(20), allowNull: false})
   @PrimaryKey
   @Default(uuid)
   @Rule(RuleType.string())
@@ -90,6 +90,18 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
   })
   @ApiPropertyRule({ description: '超级管理员:1=是;0=不是', rule: RuleType.number().equal(1, 0) })
   isSuper: number;
+
+  @Attribute({
+    comment: '创建者Id(管理员)',
+    type: DataTypes.STRING(20),
+  })
+  createdAdminId: string;
+
+  @Attribute({
+    comment: '更新者Id(管理员)',
+    type: DataTypes.STRING(20),
+  })
+  updatedAdminId: string;
 
   @DeletedAt
   @Attribute({ comment: '删除时间' })

@@ -9,7 +9,7 @@
           <el-input
             v-model="loginParams.username"
             autofocus
-            :placeholder="t('用户名') + '(示例：admin、editor、viewer)'"
+            :placeholder="t('用户名')"
             clearable
           />
         </el-form-item>
@@ -17,15 +17,15 @@
           <el-input
             v-model="loginParams.password"
             type="password"
-            :placeholder="t('密码') + '(任意填写即可)'"
+            :placeholder="t('密码')"
             clearable
             show-password
           />
         </el-form-item>
         <el-form-item prop="captcha">
-          <el-input v-model="loginParams.captcha" :placeholder="t('验证码') + '(任意填写即可)'" clearable>
+          <el-input v-model="loginParams.captcha" :placeholder="t('验证码')" clearable>
             <template #append>
-              <img src="@/assets/images/captcha.png" class="captcha" />
+              <img :src="captchaObj?.imageBase64" class="captcha" @click="getCaptch()" />
             </template>
           </el-input>
         </el-form-item>
@@ -36,7 +36,7 @@
 </template>
 <script setup lang="ts" name="Login">
 import LoginHeader from './components/header.vue';
-import { LoginParams } from '@/api/login';
+import { LoginParams,loginCaptchaApi } from '@/api/login';
 import { useLocalesI18n } from '@/locales/i18n';
 import type { FormInstance, FormRules } from 'element-plus';
 import { useUserStore } from '@/store';
@@ -45,6 +45,13 @@ const formRef = ref<FormInstance>();
 const route = useRoute();
 const router = useRouter();
 let loginParams = reactive(new LoginParams());
+//验证码
+const {data:captchaObj,runAsync:getCaptchRun} = loginCaptchaApi();
+const getCaptch = async ()=>{
+  await getCaptchRun();
+  loginParams.captchaId = captchaObj.value!.id;
+}
+getCaptch();
 let { t } = useLocalesI18n();
 const rules = computed<FormRules>(() => ({
   username: [
@@ -79,14 +86,8 @@ const rules = computed<FormRules>(() => ({
       message: t('请填写') + ' ' + t('验证码'),
       trigger: 'blur',
     },
-    {
-      len: 4,
-      message: t('验证码') + ' ' + t('长度必须为 {0} 个字符', [4]),
-      trigger: 'blur',
-    },
   ],
 }));
-
 const login = async () => {
   formRef.value?.validate(async (valid, fields) => {
     if (valid) {
@@ -149,6 +150,7 @@ const login = async () => {
       .captcha {
         margin: 0 -19px;
         height: calc(var(--el-component-size) - 2px);
+        cursor: pointer;
       }
     }
     :deep(.el-input--large) {

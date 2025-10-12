@@ -14,7 +14,7 @@ import { SystemAdmin } from './systemAdmin.entity.js';
 @Table({ tableName: 'system_role', comment: '角色表' })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class SystemRole extends TreeModel<SystemRole> {
-  @Attribute({type:DataTypes.STRING, allowNull: false})
+  @Attribute({type:DataTypes.STRING(20), allowNull: false})
   @PrimaryKey
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })

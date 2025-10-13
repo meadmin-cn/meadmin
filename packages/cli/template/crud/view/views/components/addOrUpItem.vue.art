@@ -1,10 +1,10 @@
-{{each properties}}<% const keyInfo = $imports.getKeyInfo($value.description); %>{{if ['number','string','integer'].includes($value.type)}}
+{{each properties}}<% const keyInfo = $imports.getKeyInfo($value.description); %>{{if ['number','string','integer'].includes($value.type) && ![...entity.pk,'createdAt','updatedAt'].includes($index)}}
 <el-form-item :label="t('{{keyInfo.name}}')" prop="{{$index}}">
-  {{if $value.enum || keyInfo.dict}}<el-select v-model="info.{{$index}}">
-    <el-option v-for="val in dict.{{$index}}" :key="val.value" :value="val.value">{{$imports.leftTag()}}val.label{{$imports.rightTag()}}</el-option>
+  {{if $value.enum || keyInfo.dict}}<el-select v-model="info.{{$index}}" {{if !required.includes($index)}}:value-on-clear="null" clearable {{/if}}>
+    <el-option v-for="val in dict.{{$index}}" :key="val.value" :value="val.value" :label="val.label" />
   </el-select>
   {{else if ['number','integer'].includes($value.type)}}
-    <el-input-number v-model="info.{{$index}}" ></el-input-number>
+    <el-input-number v-model="info.{{$index}}" {{if !required.includes($index)}}:value-on-clear="null"{{/if}}></el-input-number>
   {{else if $value.type === 'string'}}
     <el-input v-model="info.{{$index}}" ></el-input>  
   {{/if}}

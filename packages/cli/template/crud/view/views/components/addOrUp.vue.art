@@ -1,12 +1,12 @@
 <template>
-  <me-dialog v-loading="loading" v-model="show" :title="t(info.{{entity.pk[0]}} ? '编辑' : '新增')" :close-on-click-modal="false"
+  <me-dialog v-model="show" :title="t({{entity.pk[0]}} ? '编辑' : '新增')" :close-on-click-modal="false"
     @closed="$emit('closed')">
-    <el-form ref="formEl" :model="info" :rules="rules" class="add" label-width="auto">
+    <el-form v-loading="loading" ref="formEl" :model="info" :rules="rules" class="add" label-width="auto">
       <% include('./addOrUpItem.vue.art', {...entitySchema, entity:entity}) %>
     </el-form>
     <template #footer>
-      <me-button type="primary" @click="submit">{{$imports.leftTag()}} t('提交') {{$imports.rightTag()}}</me-button>
       <me-button @click="() => show = false">{{$imports.leftTag()}} t('取消') {{$imports.rightTag()}}</me-button>
+      <me-button type="primary" @click="submit">{{$imports.leftTag()}} t('提交') {{$imports.rightTag()}}</me-button>
     </template>
   </me-dialog>
 </template>
@@ -35,7 +35,7 @@ watch(
   async ({{entity.pk.map(v=>`${v}?:${entitySchema.properties[v].type}`).join(', ')}}) => {
     if ({{entity.pk[0]}}) {
       loading.value = true;
-      resetObj(info, await {{replaceNames.name}}InfoApi().runAsync({{entity.pk.join(', ')}}));
+      resetObj(info, await {{replaceNames.name}}InfoApi({ noLoading: true }).runAsync({{entity.pk.join(', ')}}));
       loading.value = false;
     }
   },

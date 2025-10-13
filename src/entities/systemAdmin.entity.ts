@@ -37,11 +37,11 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
   salt: string;
 
   @Attribute({ type: DataTypes.STRING(100), comment: '头像', allowNull: false, defaultValue: '' })
-  @ApiPropertyRule({ description: '头像', rule: RuleType.string().allow('').max(100).min(1) })
+  @ApiPropertyRule({ description: '头像', rule: RuleType.string().max(100).min(1) })
   avatar: string;
 
   @Attribute({ type: DataTypes.STRING(100), comment: '邮箱', allowNull: false, defaultValue: '' })
-  @ApiPropertyRule({ description: '邮箱', rule: RuleType.string().email().allow('').max(100) })
+  @ApiPropertyRule({ description: '邮箱', rule: RuleType.string().email().max(100) })
   email: string;
 
   @Attribute({ type: DataTypes.STRING(11), comment: '手机号', allowNull: false, defaultValue: '' })

@@ -123,10 +123,8 @@ export function ApiOperationResponse<TModel extends Type<any>>(
 export function ApiPropertyRule(options?: ApiPropertyOptions & {rule?:RuleType.AnySchema<any>}): PropertyDecorator{
   const propertyDecorators = [] as PropertyDecorator[];
   if(options && options.rule){
-    if(options.rule.$_getFlag('label')){
-      options.rule.label(`{${options.rule.$_getFlag('label')}}`)
-    }else if(options.description){
-      options.rule.label(`{${getKeyInfo(options.description).name}}`)
+    if(!options.rule.$_getFlag('label') && options.description){
+      options.rule = options.rule.label(`{${getKeyInfo(options.description).name}}`)
     }
     if(options.required === undefined){
       options.required = options.rule.$_getFlag('presence') === 'required'?true:undefined;
@@ -138,6 +136,9 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & {rule?:RuleType.A
       if(options.minimum !== undefined){
         options.minimum = options.rule.$_getRule('min')?.args?.limit
       }
+      if(!options.required && !(options.rule as any )._invalids?._values.has(null)){//如果不是必填值，允许null
+        options.rule = options.rule.allow(null);
+      }
     }
     if(options.rule.type === 'string'){
       if(options.maxLength !== undefined){
@@ -146,8 +147,8 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & {rule?:RuleType.A
       if(options.minLength !== undefined){
         options.minLength = options.rule.$_getRule('min')?.args?.limit
       }
-      if(!options.required){//如果不是必填值，允许空串
-        options.rule.allow('');
+      if(!options.required && !(options.rule as any )._invalids?._values.has('')){//如果不是必填值，允许空串
+        options.rule = options.rule.allow('');
       }
     }
     if((options.rule as any)._valids){

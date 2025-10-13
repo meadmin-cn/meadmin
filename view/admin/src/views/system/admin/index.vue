@@ -1,62 +1,58 @@
 <template>
   <page>
-    <me-search-form :model="params" :default-all="true" class="search-form" @search="search(1)" #searchForm>
-      <el-form-item :label="t('ID')" prop="id">
-        <el-input v-model="params.id"></el-input>
-      </el-form-item>
-      <el-form-item :label="t('用户名')" prop="username">
-        <el-input v-model="params.username"></el-input>
-      </el-form-item>
-      <el-form-item :label="t('昵称')" prop="nickname">
-        <el-input v-model="params.nickname"></el-input>
-      </el-form-item>
-      <el-form-item :label="t('密码')" prop="password">
-        <el-input v-model="params.password"></el-input>
-      </el-form-item>
-      <el-form-item :label="t('头像')" prop="avatar">
-        <el-input v-model="params.avatar"></el-input>
-      </el-form-item>
-      <el-form-item :label="t('邮箱')" prop="email">
-        <el-input v-model="params.email"></el-input>
-      </el-form-item>
-      <el-form-item :label="t('手机号')" prop="mobile">
-        <el-input v-model="params.mobile"></el-input>
-      </el-form-item>
-      <el-form-item :label="t('登录失败次数')" prop="loginFailure">
-        <el-input-number v-model="params.loginFailure"></el-input-number>
-      </el-form-item>
-      <el-form-item :label="t('最后登录时间')" prop="lastLoginAt">
-        <el-date-picker v-model="params.startLastLoginAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" />&nbsp; - &nbsp;
-        <el-form-item prop="priceEnd">
-          <el-date-picker v-model="params.endLastLoginAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" />
+    <template #searchForm>
+      <me-search-form :model="params" :default-all="true" class="search-form" @search="search(1)">
+        <el-form-item :label="t('ID')" prop="id">
+          <el-input v-model="params.id" clearable></el-input>
         </el-form-item>
-      </el-form-item>
-      <el-form-item :label="t('最后登录ip')" prop="lastLoginIp">
-        <el-input v-model="params.lastLoginIp"></el-input>
-      </el-form-item>
-      <el-form-item :label="t('状态')" prop="status">
-        <el-select v-model="params.status">
-          <el-option v-for="val in dict.status" :key="val.value" :value="val.value">{{ val.label }}</el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item :label="t('超级管理员')" prop="isSuper">
-        <el-select v-model="params.isSuper">
-          <el-option v-for="val in dict.isSuper" :key="val.value" :value="val.value">{{ val.label }}</el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item :label="t('创建时间')" prop="createdAt">
-        <el-date-picker v-model="params.startCreatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" />&nbsp; - &nbsp;
-        <el-form-item prop="priceEnd">
-          <el-date-picker v-model="params.endCreatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" />
+        <el-form-item :label="t('用户名')" prop="username">
+          <el-input v-model="params.username"></el-input>
         </el-form-item>
-      </el-form-item>
-      <el-form-item :label="t('最后更新时间')" prop="updatedAt">
-        <el-date-picker v-model="params.startUpdatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" />&nbsp; - &nbsp;
-        <el-form-item prop="priceEnd">
-          <el-date-picker v-model="params.endUpdatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" />
+        <el-form-item :label="t('昵称')" prop="nickname">
+          <el-input v-model="params.nickname"></el-input>
         </el-form-item>
-      </el-form-item>
-    </me-search-form>
+        <el-form-item :label="t('邮箱')" prop="email">
+          <el-input v-model="params.email" clearable></el-input>
+        </el-form-item>
+        <el-form-item :label="t('手机号')" prop="mobile">
+          <el-input v-model="params.mobile" clearable></el-input>
+        </el-form-item>
+        <el-form-item :label="t('登录失败次数')" prop="loginFailure">
+          <el-input-number v-model="params.loginFailure" clearable></el-input-number>
+        </el-form-item>
+        <el-form-item :label="t('最后登录时间')" prop="lastLoginAt">
+          <el-date-picker v-model="params.startLastLoginAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" clearable />&nbsp; - &nbsp;
+          <el-form-item prop="priceEnd">
+            <el-date-picker v-model="params.endLastLoginAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" clearable />
+          </el-form-item>
+        </el-form-item>
+        <el-form-item :label="t('最后登录ip')" prop="lastLoginIp">
+          <el-input v-model="params.lastLoginIp" clearable ></el-input>
+        </el-form-item>
+        <el-form-item :label="t('状态')" prop="status">
+          <el-select v-model="params.status" clearable>
+            <el-option v-for="val in dict.status" :key="val.value" :value="val.value" :label="val.label" />
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="t('超级管理员')" prop="isSuper">
+          <el-select v-model="params.isSuper" clearable >
+            <el-option v-for="val in dict.isSuper" :key="val.value" :value="val.value" :label="val.label" />
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="t('创建时间')" prop="createdAt">
+          <el-date-picker v-model="params.startCreatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" clearable />&nbsp; - &nbsp;
+          <el-form-item prop="priceEnd">
+            <el-date-picker v-model="params.endCreatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" clearable />
+          </el-form-item>
+        </el-form-item>
+        <el-form-item :label="t('最后更新时间')" prop="updatedAt">
+          <el-date-picker v-model="params.startUpdatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" clearable />&nbsp; - &nbsp;
+          <el-form-item prop="priceEnd">
+            <el-date-picker v-model="params.endUpdatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" clearable />
+          </el-form-item>
+        </el-form-item>
+      </me-search-form>
+    </template>
     <me-vxe-table
       :loading="loading"
       :data="data?.list"
@@ -72,22 +68,22 @@
       @refresh="search(1)"
       @add="showAddOrUp()"
     >
-      <vxe-column field="id" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="username" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="nickname" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="password" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="avatar" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="email" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="mobile" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="loginFailure" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="lastLoginAt" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="lastLoginIp" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="status" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="isSuper" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="roles" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="roleMenus" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="createdAt" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="updatedAt" :title="t('keyInfo.name')" :formatter="formatterDict"></vxe-column>
+      <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="username" :title="t('用户名')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="nickname" :title="t('昵称')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="password" :title="t('密码')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="avatar" :title="t('头像')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="email" :title="t('邮箱')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="mobile" :title="t('手机号')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="loginFailure" :title="t('登录失败次数')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="lastLoginAt" :title="t('最后登录时间')" :formatter="formatterAt"></vxe-column>
+      <vxe-column field="lastLoginIp" :title="t('最后登录ip')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="status" :title="t('状态')" :formatter="formatterDict"></vxe-column>
+      <vxe-column field="isSuper" :title="t('超级管理员')" :formatter="formatterDict"></vxe-column>
+      <vxe-column field="roles" :title="t('具有的角色')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="roleMenus" :title="t('具有权限的菜单')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
+      <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column :title="t('操作')" fixed="right" min-width="150px">
         <template #default="{ row }: { row: SystemAdminInfo }">
           <el-button @click="showAddOrUp(row.id)">
@@ -111,21 +107,21 @@ import { systemAdminListApi, SystemAdminListParam, delSystemAdminApi, SystemAdmi
 import { useLocalesI18n } from '@/locales/i18n';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
-import { formatterStr } from '@/utils/helper.js';
+import { formatterStr, formatterAt } from '@/utils/helper.js';
 import { VxeColumnPropTypes } from 'vxe-table';
 const dict = {
-  status: {
-    '0': { value: 0, label: '禁用' },
-    '1': { value: 1, label: '启用' },
-  },
-  isSuper: {
-    '0': { value: 0, label: '不是' },
-    '1': { value: 1, label: '是' },
-  },
+  status: [
+    { value: 1, label: '启用' },
+    { value: 0, label: '禁用' },
+  ],
+  isSuper: [
+    { value: 1, label: '是' },
+    { value: 0, label: '不是' },
+  ],
 };
 const formatterDict: VxeColumnPropTypes.Formatter<SystemAdminInfo> = ({ cellValue, column }) => {
   //因为ts类型判定不得不断言dict
-  return formatterStr({ cellValue: (dict as Record<string, any>)[column.field]?.[cellValue as string]?.label });
+  return formatterStr({ cellValue: (dict as Record<string, { value: string | number; label: string }[]>)[column.field]?.find((item) => item.value == cellValue)?.label });
 };
 const { open } = useActionModel(AddOrUp);
 let { t } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemAdmin']);

@@ -1,7 +1,7 @@
 <template>
 <el-button  v-bind="omit(attrs,'onClick', 'loading')" :ref="changeRef"  :loading="loading" @click="handleClick">
-   <template v-for="(_, name) in $slots" v-slot:[name]="data">
-      <slot :name="name" v-bind="data"></slot>
+   <template v-for="(_, name) in $slots" #[name]="data">
+      <slot :name="name" v-bind="data || {}"></slot>
     </template>
 </el-button>
 </template>

@@ -5,8 +5,9 @@ import { SystemAdminCreateDto } from '../../dto/system/adminCreate.dto.js';
 import { SystemAdminQueryDto } from '../../dto/system/adminQuery.dto.js';
 import { SystemAdminUpdateDto } from '../../dto/system/adminUpdate.dto.js';
 import { SystemAdmin } from '../../../../entities/systemAdmin.entity.js';
-import { Op } from '@sequelize/core';
 import { I18nService } from '@/service/i18n.service.js';
+
+import { Op } from '@sequelize/core';
 
 //管理员
 @Provide()
@@ -35,10 +36,10 @@ export class SystemAdminService {
   async list(queryDto: SystemAdminQueryDto) {
     const where = {};
     Object.keys(queryDto).forEach((key) => {
-      if (key === 'page') {
+      if (['page', 'size'].includes(key)) {
         return;
       }
-      if (key === 'size') {
+      if ([null, undefined, ''].includes(queryDto[key])) {
         return;
       }
       if (key === 'startLastLoginAt') {

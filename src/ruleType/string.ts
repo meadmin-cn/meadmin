@@ -20,6 +20,7 @@ export const initRuleType = <T extends RuleType.Root>(customRuleType: T) => {
           if (!/^1\d{10}$/.test(value)) {
             return helpers.error('string.mobile');
           }
+          return value;
         },
       },
     },

@@ -146,6 +146,9 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & {rule?:RuleType.A
       if(options.minLength !== undefined){
         options.minLength = options.rule.$_getRule('min')?.args?.limit
       }
+      if(!options.required){//如果不是必填值，允许空串
+        options.rule.allow('');
+      }
     }
     if((options.rule as any)._valids){
       options.enum = Array.from((options.rule as any)._valids._values);

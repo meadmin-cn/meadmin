@@ -50,7 +50,7 @@ export type RequestOptions<R, P extends unknown[]> = {
   noLoading?: boolean; // 不需要加载特效
   noError?: boolean; // 不需要错误提示
   success?: boolean; //成功后提示
-  noClearEmpty?: boolean; //去除请求参数的空值默认去除['', null, undefined]
+  clearEmpty?: any[]; //去除请求参数的空值数组
 } & Options<R, P>;
 
 setGlobalOptions({
@@ -75,9 +75,9 @@ export function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (
       //loading放到微任务中去执行以确保在自动调用请求时等待所有的宏任务中的生命周期函数执行完再创建loading实例 以规避currentInstance的相关警告
       !options?.noLoading && Promise.resolve(undefined).then(loading);
       const config = await axiosConfig(...args);
-      if (!options?.noClearEmpty) {
-        if (config.params) config.params = clearEmptyParam(config.params);
-        if (config.data) config.data = clearEmptyParam(config.data);
+      if(options?.clearEmpty){
+        if (config.params) config.params = clearEmptyParam(config.params, options?.clearEmpty);
+        if (config.data) config.data = clearEmptyParam(config.data , options?.clearEmpty);
       }
       const { data: res } = await service(config);
       if (!res || res.code === undefined) {

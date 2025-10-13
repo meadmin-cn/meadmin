@@ -21,3 +21,20 @@
 .el-breadcrumb {
   font-size: var(--el-font-size-base);
 }
+//设置form-item__label换行时样式
+.el-form-item--default .el-form-item__label {
+    line-height: 1.2em;
+    align-items: center;
+}
+//el-form-item 嵌套 el-form-item 时 el-input 宽度自适应
+.el-form-item__content{
+  >.el-form-item{
+    .el-form-item__content{
+      >.el-input{
+        width: auto;
+      }
+
+    }
+  }
+
+}

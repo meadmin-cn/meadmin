@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Inject, Param } from '@midwayjs/core';
+import { Body, Controller, Post, Inject, Param, Get } from '@midwayjs/core';
 import { BaseController } from '../base.controller.js';
 import { SystemAdmin } from '../../../../entities/systemAdmin.entity.js';
 import { SystemAdminCreateDto } from '../../dto/system/adminCreate.dto.js';
@@ -37,7 +37,7 @@ export class SystemAdminController extends BaseController {
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/info/:id')
+  @Get('/info/:id')
   @ApiOperationResponse({
     responseType: SystemAdmin,
     summary: '根据id获取管理员详情',

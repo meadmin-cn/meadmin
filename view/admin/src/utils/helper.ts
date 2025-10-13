@@ -1,5 +1,6 @@
 import { default as XEUtils, SearchTreeOptions } from 'xe-utils';
 import { cloneDeep } from 'lodash-es';
+import dayjs from 'dayjs';
 
 /**
  * 对象中的每个可便利元素按序执行一个由您提供的 reducer 函数，
@@ -14,7 +15,11 @@ import { cloneDeep } from 'lodash-es';
  * @param initialValue  作为第一次调用 callback 函数时参数 previousValue 的值
  * @returns
  */
-export function objectRreduce<T, P extends Record<string, any> = Record<string, any>>(object: P, callbackfn: (previousValue: T, currentValue: P[keyof P], currentKey: string, object: P) => T, initialValue: T): T {
+export function objectRreduce<T, P extends Record<string, any> = Record<string, any>>(
+  object: P,
+  callbackfn: (previousValue: T, currentValue: P[keyof P], currentKey: string, object: P) => T,
+  initialValue: T,
+): T {
   for (const i in object) {
     if (Object.hasOwn(object, i)) {
       initialValue = callbackfn(initialValue, object[i], i, object);
@@ -100,7 +105,12 @@ export const getColorLuma = function (color: string) {
 type TreeData<Key extends string[]> = {
   [k in Key[number]]: string | number;
 } & { [k: string]: any };
-export const searchTreeTable = function <Key extends string[], T extends TreeData<Key>>(searchText: number | string, searchProps: Key, data: T[], options: SearchTreeOptions = { children: 'children' }) {
+export const searchTreeTable = function <Key extends string[], T extends TreeData<Key>>(
+  searchText: number | string,
+  searchProps: Key,
+  data: T[],
+  options: SearchTreeOptions = { children: 'children' },
+) {
   const search = XEUtils.toValueString(searchText).trim().toLowerCase();
   if (search) {
     const filterRE = new RegExp(search, 'gi');
@@ -186,12 +196,12 @@ export const statusToBoolean = (status?: 0 | 1 | '0' | '1') => {
 /**
  * 重置对象值，会改变原对象
  * @param obj
- * @param toObj
+ * @param fromObj
  * @returns
  */
-export const resetObj = <T extends Record<any, any>>(obj: Record<any, any>, toObj: T) => {
+export const resetObj = <T extends Record<any, any>>(obj: Record<any, any>, fromObj: T) => {
   Object.keys(obj).forEach((key) => (obj[key] = undefined));
-  Object.assign(obj, toObj);
+  Object.assign(obj, fromObj);
   return obj as T;
 };
 
@@ -200,7 +210,7 @@ export const resetObj = <T extends Record<any, any>>(obj: Record<any, any>, toOb
  * @param obj
  * @returns
  */
-export function clearEmptyParam<T extends Record<any, any> | any[]>(obj: T, emptyArr = ['', null, undefined]) {
+export function clearEmptyParam<T extends Record<any, any> | any[]>(obj: T, emptyArr = [null, undefined]) {
   if (Array.isArray(obj)) {
     const newObj = [] as any[];
     obj.forEach((item) => {
@@ -235,4 +245,8 @@ export function clearEmptyParam<T extends Record<any, any> | any[]>(obj: T, empt
 //格式化表格数据
 export function formatterStr<T>({ cellValue }: { cellValue: T }) {
   return [undefined, null, ''].includes(cellValue as any) ? '--' : (cellValue as T extends undefined | null ? string : T);
+}
+//格式化表格时间数据
+export function formatterAt<T>({ cellValue }: { cellValue: string | null | undefined | Date }, formatStr = 'YYYY-MM-DD HH:mm:ss') {
+  return cellValue ? dayjs(cellValue).format(formatStr) : formatterStr({ cellValue });
 }

@@ -136,7 +136,7 @@ export function delSystemAdminApi(options?: RequestOptions<null, [string]>) {
   return request<null, [string]>(
     (id) => ({
       url: `system/admin/del/${id}`,
-      method: 'get',
+      method: 'post',
     }),
     Object.assign({ noLoading: true }, options),
   );

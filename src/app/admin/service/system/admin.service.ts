@@ -8,6 +8,7 @@ import { SystemAdmin } from '../../../../entities/systemAdmin.entity.js';
 import { I18nService } from '@/service/i18n.service.js';
 
 import { Op } from '@sequelize/core';
+import { LoginService } from '../login.serveice.js';
 
 //管理员
 @Provide()
@@ -17,6 +18,9 @@ export class SystemAdminService {
 
   @Inject()
   i18nService: I18nService;
+
+  @Inject()
+  loginService: LoginService;
 
   /**
    * 创建数据
@@ -111,7 +115,15 @@ export class SystemAdminService {
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
+    let password = entity.password;
+    let salf = entity.salt;
     Object.assign(entity, updateDto);
+    if(updateDto.password){
+      Object.assign(entity,this.loginService.entityPassword(updateDto.password));
+    }else{
+      entity.password = password;
+      entity.salt = salf;
+    }
     return await entity.save();
   }
 

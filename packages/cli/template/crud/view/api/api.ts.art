@@ -75,7 +75,7 @@ export function del{{replaceNames.Name}}Api(options?: RequestOptions<null, [{{en
   return request<null, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>(
     ({{entity.pk.join(', ')}}) => ({
       url: `{{replaceNames.controllerPath}}/del/${<%= entity.pk.join('/${') %>}`,
-      method: 'get',
+      method: 'post',
     }),
     Object.assign({ noLoading: true }, options),
   );

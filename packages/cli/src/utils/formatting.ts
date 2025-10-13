@@ -6,13 +6,10 @@ import { resolve, relative, extname, dirname } from 'node:path';
  * @param   {string}  replaceStr  替换的字符串
  * @return  {[type]}       [return description]
  */
-export function normalizeToKebabOrSnakeCase(str: string, replaceStr='-') {
+export function normalizeToKebabOrSnakeCase(str: string, replaceStr = '-') {
   const STRING_DASHERIZE_REGEXP = /\s/g;
   const STRING_DECAMELIZE_REGEXP = /([a-z\d])([A-Z])/g;
-  return str
-    .replace(STRING_DECAMELIZE_REGEXP, `$1${replaceStr}$2`)
-    .toLowerCase()
-    .replace(STRING_DASHERIZE_REGEXP, replaceStr);
+  return str.replace(STRING_DECAMELIZE_REGEXP, `$1${replaceStr}$2`).toLowerCase().replace(STRING_DASHERIZE_REGEXP, replaceStr);
 }
 
 /**
@@ -58,11 +55,7 @@ export function upFirstCase(str: string) {
  *
  * @return  {string}
  */
-export function resovePath(
-  str: string,
-  suffix = ['.ts'],
-  base = process.cwd(),
-) {
+export function resovePath(str: string, suffix = ['.ts'], base = process.cwd()) {
   suffix.forEach((item) => {
     if (!str.endsWith(item)) {
       str += item;
@@ -93,20 +86,22 @@ export function relativePath(from: string, to: string, suffix = ['.ts']) {
 
 /**
  * 将备注转换为格式化数据
- * @param description 
- * @returns 
+ * @param description
+ * @returns
  */
 export function getKeyInfo(description: string) {
   //示例  恒定展示(只有一个子元素时不隐藏):1=是;0=否
   const nameArr = description.split(':');
   const dict = {} as Record<string, string>;
+  const dictArr = [] as Array<{ label: string; value: string }>;
   if (nameArr[1]) {
     nameArr[1].split(';').forEach((value) => {
       const valueArr = value.split('=');
       dict[valueArr[0]] = valueArr[1];
+      dictArr.push({ label: valueArr[1], value: valueArr[0] });
     });
-    return { name: nameArr[0], dict: dict };
+    return { name: nameArr[0], dict: dict, dictArr: dictArr };
   } else {
     return { name: nameArr[0] };
   }
-};
+}

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Inject, Param } from '@midwayjs/core';
+import { Body, Controller, Get, Post, Inject, Param } from '@midwayjs/core';
 import { BaseController } from '{{paths.baseControllerPath}}';
 import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
 import { {{replaceNames.CreateDto}} } from '{{paths.createDtoPath}}';
@@ -37,7 +37,7 @@ export class {{replaceNames.Controller}} extends BaseController {
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/info/:{{entity.pk.join('/:')}}')
+  @Get('/info/:{{entity.pk.join('/:')}}')
   @ApiOperationResponse({
     responseType: {{replaceNames.Name}},
     summary: '根据{{entity.pk.join('/:')}}获取{{entity.tableComment}}详情',

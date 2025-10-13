@@ -5,7 +5,7 @@ import { {{replaceNames.CreateDto}} } from '{{paths.createDtoPath}}';
 import { {{replaceNames.QueryDto}} } from '{{paths.queryDtoPath}}';
 import { {{replaceNames.UpdateDto}} } from '{{paths.updateDtoPath}}';
 import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
-import { I18nService } from '@/service/I18n.service.js';
+import { I18nService } from '@/service/i18n.service.js';
 
 {{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At'))}}import { Op } from '@sequelize/core';{{/if}}
 {{if entity.pk.length > 1}}type PK = {
@@ -40,10 +40,10 @@ export class {{replaceNames.Service}} {
   async list(queryDto: {{replaceNames.QueryDto}}) {
     const where = {};
     Object.keys(queryDto).forEach((key) => {
-      if (key === 'page') {
+      if(['page', 'size'].includes(key)){
         return;
       }
-      if (key === 'size') {
+      if([null, undefined, ''].includes(queryDto[key])){
         return;
       }{{each entitySchema.properties}}{{if $index.endsWith('At')}}
       if (key === 'start{{$imports.upFirstCase($index)}}') {

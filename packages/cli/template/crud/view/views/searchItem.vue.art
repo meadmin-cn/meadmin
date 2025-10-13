@@ -1,17 +1,17 @@
 {{each properties}}<% const keyInfo = $imports.getKeyInfo($value.description); %>{{if $index.endsWith('At')}}
 <el-form-item :label="t('{{keyInfo.name}}')" prop="{{$index}}">
-  <el-date-picker v-model="params.start{{$imports.upFirstCase($index)}}" type="{{if $value.format === 'date-time'}}datetime{{else}}date{{/if}}" value-format="{{if $value.format === 'date-time'}}YYYY-MM-DD HH:mm:ss{{else}}YYYY-MM-DD{{/if}}" />&nbsp; - &nbsp;
+  <el-date-picker v-model="params.start{{$imports.upFirstCase($index)}}" type="{{if $value.format === 'date-time'}}datetime{{else}}date{{/if}}" value-format="{{if $value.format === 'date-time'}}YYYY-MM-DD HH:mm:ss{{else}}YYYY-MM-DD{{/if}}" clearable />&nbsp; - &nbsp;
   <el-form-item prop="priceEnd">
-  <el-date-picker v-model="params.end{{$imports.upFirstCase($index)}}" type="{{if $value.format === 'date-time'}}datetime{{else}}date{{/if}}" value-format="{{if $value.format === 'date-time'}}YYYY-MM-DD HH:mm:ss{{else}}YYYY-MM-DD{{/if}}" />
+  <el-date-picker v-model="params.end{{$imports.upFirstCase($index)}}" type="{{if $value.format === 'date-time'}}datetime{{else}}date{{/if}}" value-format="{{if $value.format === 'date-time'}}YYYY-MM-DD HH:mm:ss{{else}}YYYY-MM-DD{{/if}}" clearable />
   </el-form-item>
 </el-form-item>{{else if ['number','string','integer'].includes($value.type)}}
 <el-form-item :label="t('{{keyInfo.name}}')" prop="{{$index}}">
-  {{if $value.enum || keyInfo.dict}}<el-select v-model="params.{{$index}}">
-    <el-option v-for="val in dict.{{$index}}" :key="val.value" :value="val.value">{{$imports.leftTag()}}val.label{{$imports.rightTag()}}</el-option>
+  {{if $value.enum || keyInfo.dict}}<el-select v-model="params.{{$index}}" clearable >
+    <el-option v-for="val in dict.{{$index}}" :key="val.value" :value="val.value" :label="val.label" />
   </el-select>
   {{else if ['number','integer'].includes($value.type)}}
-    <el-input-number v-model="params.{{$index}}" ></el-input-number>
+    <el-input-number v-model="params.{{$index}}" clearable ></el-input-number>
   {{else if $value.type === 'string'}}
-    <el-input v-model="params.{{$index}}" ></el-input>  
+    <el-input v-model="params.{{$index}}" clearable ></el-input>  
   {{/if}}
 </el-form-item>{{/if}}{{/each}}

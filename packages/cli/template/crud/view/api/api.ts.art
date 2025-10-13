@@ -42,7 +42,7 @@ export function {{replaceNames.name}}ListApi(options?: RequestOptions<{{replaceN
       method: 'post',
       data: data,
     }),
-    Object.assign({ noLoading: true }, options),
+    Object.assign({ noLoading: true, clearEmpty: ['', undefined, null] }, options),
   );
 }
 

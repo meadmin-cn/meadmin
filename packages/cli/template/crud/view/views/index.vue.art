@@ -1,8 +1,10 @@
 <template>
   <page>
-    <me-search-form :model="params" :default-all="true" class="search-form" @search="search(1)" #searchForm>
+    <template #searchForm>
+    <me-search-form :model="params" :default-all="true" class="search-form" @search="search(1)">
       <% include('./searchItem.vue.art', {...entitySchema, entity:entity}) %>
     </me-search-form>
+    </template>
     <me-vxe-table
     :loading="loading"
     :data="data?.list"
@@ -42,7 +44,7 @@ import { {{replaceNames.name}}ListApi, {{replaceNames.Name}}ListParam, del{{repl
 import { useLocalesI18n } from '@/locales/i18n';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
-import {formatterStr} from '@/utils/helper.js';
+import {formatterStr{{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At'))}}, formatterAt{{/if}} } from '@/utils/helper.js';
 <% include('./dict.ts.art', {...entitySchema, entity:entity, replaceNames:replaceNames}) %>
 const {open} = useActionModel(AddOrUp);
 let { t } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), '{{replaceNames.name}}']);

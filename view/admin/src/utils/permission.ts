@@ -38,7 +38,6 @@ export function transitionComponent(component: string) {
   if (component === 'LayoutPage') {
     return LayoutPage;
   }
-  console.log(dynamicViewsModules);
   const res = dynamicViewsModules['../views/' + component + '.vue'] || dynamicViewsModules['../views/' + component + '.tsx'];
   if (res) {
     return res;
@@ -52,7 +51,7 @@ export function transitionComponent(component: string) {
  * 过滤动态路由
  * @param routes
  * @param activeMenu
- * @param noAuth 是否需要校验
+ * @param noAuth 不需要校验
  * @returns
  */
 export function filterAsyncRoutes(routes: RouteRecordRaw[], activeMenu?: string, noAuth = false) {
@@ -68,7 +67,7 @@ export function filterAsyncRoutes(routes: RouteRecordRaw[], activeMenu?: string,
         activeMenu = route.meta?.activeMenu ?? route.path;
       }
       if (tmp.children) {
-        tmp.children = filterAsyncRoutes(tmp.children, activeMenu);
+        tmp.children = filterAsyncRoutes(tmp.children, activeMenu, noAuth);
       }
       res.push(tmp);
     }

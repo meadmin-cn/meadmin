@@ -74,7 +74,7 @@ export class LoginController extends BaseController {
     });
     return this.success({
       info: admin,
-      menus,
+      menus:menus.sort((a, b) => b.orderNum - a.orderNum),
       btnRules,
     });
   }

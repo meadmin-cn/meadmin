@@ -60,6 +60,7 @@ export default defineStore('user', {
         this.rules = res.btnRules;
         this.menus = listToTree(
           res.menus.map((item) => ({
+            id: item.id,
             path: item.path,
             parentId: item.parentId,
             component: transitionComponent(item.component),

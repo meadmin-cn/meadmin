@@ -80,7 +80,7 @@ export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
     allowNull: false,
     type: DataTypes.TINYINT.UNSIGNED,
   })
-  @ApiPropertyRule({ description: '状态:1=启用;0=禁用', rule: RuleType.number().equal(1, 0).required().default(1) })
+  @ApiPropertyRule({ description: '状态:1=启用;0=禁用', rule: RuleType.number().equal(1, 0).required() })
   status: number;
 
   @Attribute({
@@ -89,7 +89,7 @@ export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
     allowNull: false,
     type: DataTypes.TINYINT.UNSIGNED,
   })
-  @ApiPropertyRule({ description: '超级管理员:1=是;0=不是', rule: RuleType.number().equal(1, 0).required().default(0) })
+  @ApiPropertyRule({ description: '超级管理员:1=是;0=不是', rule: RuleType.number().equal(1, 0).required() })
   isSuper: number;
 
   @Attribute({

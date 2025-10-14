@@ -46,6 +46,10 @@ export class SystemAdminService {
       if ([null, undefined, ''].includes(queryDto[key])) {
         return;
       }
+      if (['username','nickname','mobile'].includes(key)) {
+        where[key]={[Op.like]:`%${queryDto[key]}%`};
+        return;
+      }
       if (key === 'startLastLoginAt') {
         where['lastLoginAt'] = where['lastLoginAt'] ?? {};
         where['lastLoginAt'][Op.gte] = queryDto[key];
@@ -76,6 +80,7 @@ export class SystemAdminService {
         where['updatedAt'][Op.lte] = queryDto[key];
         return;
       }
+      where[key] = queryDto[key];
     });
     const { count, rows } = await this.SystemAdminRepository.findAndCountAll({
       where,

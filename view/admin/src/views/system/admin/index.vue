@@ -17,9 +17,6 @@
         <el-form-item :label="t('手机号')" prop="mobile">
           <el-input v-model="params.mobile" clearable></el-input>
         </el-form-item>
-        <el-form-item :label="t('登录失败次数')" prop="loginFailure">
-          <el-input-number v-model="params.loginFailure" clearable></el-input-number>
-        </el-form-item>
         <el-form-item :label="t('最后登录时间')" prop="lastLoginAt">
           <el-date-picker v-model="params.startLastLoginAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" clearable />&nbsp; - &nbsp;
           <el-form-item prop="priceEnd">

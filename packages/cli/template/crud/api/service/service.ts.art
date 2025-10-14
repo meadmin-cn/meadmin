@@ -56,6 +56,7 @@ export class {{replaceNames.Service}} {
         where['{{$index}}'][Op.lte] = queryDto[key];
         return;
       }{{/if}}{{/each}}
+      where[key] = queryDto[key];
     });    
     const { count, rows } = await this.{{replaceNames.Name}}Repository.findAndCountAll({
       where,

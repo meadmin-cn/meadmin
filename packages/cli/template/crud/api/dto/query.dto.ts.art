@@ -11,6 +11,7 @@ export class {{replaceNames.QueryDto}} extends IntersectionType(
 ) {
   {{each entitySchema.properties}}{{if $index.endsWith('At')}}@ApiPropertyRule({ description: '{{$value.description}}(起)', rule: RuleType.date() })
   start{{$imports.upFirstCase($index)}}?:Date;
+  
   @ApiPropertyRule({ description: '{{$value.description}}(止)', rule: RuleType.date() })
   end{{$imports.upFirstCase($index)}}?:Date;{{/if}}
   {{/each}}

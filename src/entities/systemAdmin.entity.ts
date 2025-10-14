@@ -2,18 +2,18 @@ import { uuid } from '@/helper/snowflake.js';
 import { ApiProperty } from '@midwayjs/swagger';
 import { Rule } from '@midwayjs/validate';
 import { RuleType } from '@/ruleType/index.js';
-import { DataTypes, DestroyOptions, NonAttribute, sql } from '@sequelize/core';
-import { Attribute, PrimaryKey, Default, DeletedAt, Table, BelongsToMany, AfterDestroy, BeforeRestore, AfterBulkDestroy, BeforeBulkRestore, Unique } from '@sequelize/core/decorators-legacy';
+import { DataTypes, NonAttribute } from '@sequelize/core';
+import { Attribute, PrimaryKey, Default, Table, BelongsToMany, Unique } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
-import { BaseModel } from './abstract/base.entity.js';
 import { SystemRole } from './systemRole.entity.js';
 import { BelongsManyModel } from '../../types/entity.js';
 import { SystemMenu } from './systemMenu.entity.js';
+import { DelParanoidModel } from './abstract/delParanoid.entity.js';
 
 //rule规则使用添加接口的校验规则
 @Table({ tableName: 'system_admin', comment: '管理员表' })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class SystemAdmin extends BaseModel<SystemAdmin> {
+export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
   @Attribute({ type: DataTypes.STRING(20), allowNull: false })
   @PrimaryKey
   @Default(uuid)
@@ -104,57 +104,8 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
   })
   updatedAdminId: string;
 
-  @DeletedAt
-  @Attribute({ comment: '删除时间' })
-  declare deletedAt: Date | null;
-
-  @Attribute({ type: DataTypes.STRING(20), defaultValue: '', comment: '删除版本(未删除固定为空串,已删除为当前记录id,方便用作联合唯一索引)' })
   @Unique('mobile')
-  deletedVersion: string;
-
-  @AfterDestroy()
-  static async setDeletedVersion(info: SystemAdmin, options: DestroyOptions<SystemAdmin>) {
-    await info.update(
-      {deletedVersion:sql`id`,},
-      {
-        transaction: options.transaction,
-        silent: true,
-      }
-    );
-  }
-
-  @AfterBulkDestroy()
-  static async setDeletedVersionBulk(options: DestroyOptions<SystemAdmin>){
-    SystemAdmin.update({ deletedVersion: sql`id` },
-    {
-      where:options.where,        
-      transaction: options.transaction,
-      silent: true,
-    })
-  }
-
-  @BeforeRestore()
-  static async restoreDeletedVersion(info: SystemAdmin, options: DestroyOptions<SystemAdmin>) {
-    await info.update(
-      {deletedVersion:'',},
-      {
-        transaction: options.transaction,
-        silent: true,
-      }
-    );
-  }
-
-  @BeforeBulkRestore()
-  static async restoreDeletedVersionBulk(info: SystemAdmin, options: DestroyOptions<SystemAdmin>) {
-    await SystemAdmin.update(
-      {deletedVersion:'',},
-      {
-        where:options.where,        
-        transaction: options.transaction,
-        silent: true,
-      }
-    );
-  }
+  declare deletedVersion: string;
 
   @BelongsToMany(() => SystemRole, {
     through: 'admin_role', //中间表名称 或者 对应的Model

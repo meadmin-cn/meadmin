@@ -4,7 +4,7 @@ import { Context } from '@midwayjs/koa';
 import { UnauthorizedError } from '@midwayjs/core/dist/error/http.js';
 
 @Middleware()
-export class AdminMiddle implements IMiddleware<Context, NextFunction> {
+export class AdminMiddleware implements IMiddleware<Context, NextFunction> {
   @Inject()
   loginService: LoginService; // 这里注入的实例和上下文不绑定，无法获取到 ctx
 

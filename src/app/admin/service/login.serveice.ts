@@ -162,7 +162,7 @@ export class LoginService {
     }
     if (ctx) {
       const i18n = await ctx.requestContext.getAsync(I18nService);
-      throw new BadRequestError(i18n.translate('错误的{key}', { args: { '用户名/密码': i18n.translate('用户名') + '/' + i18n.translate('密码') } }));
+      throw new BadRequestError(i18n.translate('错误的{key}', { args: { key: i18n.translate('用户名') + '/' + i18n.translate('密码') } }));
     }
     throw new BadRequestError('错误的用户名/密码');
   }

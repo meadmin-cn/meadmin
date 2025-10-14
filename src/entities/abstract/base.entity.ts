@@ -1,6 +1,7 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
-import { InferAttributes, InferCreationAttributes, InstanceUpdateOptions, Model } from '@sequelize/core';
-import { Attribute, BeforeCreate, BeforeUpdate, CreatedAt, Table, UpdatedAt } from '@sequelize/core/decorators-legacy';
+import { ctx } from '@meadmin/core';
+import { BulkCreateOptions, InferAttributes, InferCreationAttributes, InstanceUpdateOptions, Model, ModelStatic, sql, UpdateOptions } from '@sequelize/core';
+import { AfterBulkUpdate, Attribute, BeforeBulkCreate, BeforeCreate, BeforeUpdate, CreatedAt, Table, UpdatedAt } from '@sequelize/core/decorators-legacy';
 
 //基础model
 @Table.Abstract
@@ -16,15 +17,53 @@ export class BaseModel<M extends Model<any, any>> extends Model<InferAttributes<
   declare updatedAt: Date;
   
   @BeforeCreate()
-  static async setCreatedId(info: BaseModel<any>, options: InstanceUpdateOptions<any>) {
-    if(info.modelDefinition.attributes.has('createdAdminId')){
-      //TODO::设置创建管理员
+  static async setCreatedId(info: BaseModel<any>, options: InstanceUpdateOptions<BaseModel<any>>) {
+    if(ctx?.adminInfo && info.modelDefinition.attributes.has('createdAdminId')){
+      //设置创建管理员Id
+      (info as any).createdAdminId = ctx.adminInfo.id;
+      if(ctx?.adminInfo && info.modelDefinition.attributes.has('updatedAdminId')){
+        //设置更新管理员Id
+        (info as any).updatedAdminId = ctx.adminInfo.id;
+      }
+    }
+  }
+
+  @BeforeBulkCreate()
+  static async setCreatedIdBulk(instances: BaseModel<any>[], options: BulkCreateOptions<BaseModel<any>> & {model:ModelStatic<BaseModel<any>>}) {
+    if(ctx?.adminInfo && options.model.modelDefinition.attributes.has('createdAdminId')){
+      //设置创建管理员Id
+      instances.forEach(instance=>{
+        (instance as any).createdAdminId = ctx.adminInfo.id;
+      });
+      if(options.model.modelDefinition.attributes.has('updatedAdminId')){
+        //设置更新管理员Id
+        instances.forEach(instance=>{
+          (instance as any).updatedAdminId = ctx.adminInfo.id;
+        });
+      }
     }
   }
 
 
   @BeforeUpdate()
-  static async setUpdatedId(info: BaseModel<any>, options: InstanceUpdateOptions<any>) {
+  static async setUpdatedId(info: BaseModel<any>, options: InstanceUpdateOptions<BaseModel<any>>) {
+    if(ctx?.adminInfo && info.modelDefinition.attributes.has('updatedAdminId')){
+      //设置更新管理员Id
+      (info as any).updatedAdminId = ctx.adminInfo.id;
+    }
+  }
 
+  @AfterBulkUpdate()
+  static async setUpdatedIdBulk(options: UpdateOptions<BaseModel<any>> & {model:ModelStatic<BaseModel<any>>}){
+    if(ctx?.adminInfo && options.model.modelDefinition.attributes.has('updatedAdminId')){
+      //设置更新管理员Id
+      let where = options.where ;
+      if(!options.where || JSON.stringify(options.where) === '{}'){
+        where=sql`1 = 1`;
+      }
+      await options.model.sequelize.query(sql`UPDATE ${sql.identifier(options.model)}  SET  ${sql.attribute(options.model.getAttributes()['updatedAdminId'].columnName)} = ${ctx.adminInfo.id}  WHERE ${sql.where(where) }`,{
+        transaction: options.transaction,
+      });
+    }
   }
 }

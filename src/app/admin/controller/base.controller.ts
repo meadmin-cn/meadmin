@@ -1,6 +1,6 @@
 import { Controller } from '@midwayjs/core';
 import { ApiController } from '@/controller/api.controller.js';
-import { AdminMiddle } from '../middleware/adminMiddleware.js';
+import { AdminMiddleware } from '../middleware/admin.middleware.js';
 
-@Controller('admin', { middleware: [AdminMiddle] })
+@Controller('admin', { middleware: [AdminMiddleware] })
 export abstract class BaseController extends ApiController {}

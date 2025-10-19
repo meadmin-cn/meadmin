@@ -1,5 +1,5 @@
 import { ApiPageRes, PageRes } from '@/response/apiPage.res.js';
-import { ApiSuccessRes } from '@/response/apiSuccess.res.js';
+import { ApiSuccessRes, ApiSuccessResArr } from '@/response/apiSuccess.res.js';
 import { createCustomMethodDecorator } from '@midwayjs/core';
 import {
   ApiExtraModel,
@@ -23,8 +23,9 @@ export const API_OPERATIN_RESONSE_KEY = 'meadmin:swagger:api_operation_respose';
  */
 export function ApiOperationResponse<TModel extends Type<any>>(
   options: ApiOperationOptions & {
-    responseType?: TModel | false | string;
-    responsePage?: TModel;
+    responseType?: TModel | false | string; //返回格式
+    responsePage?: TModel; //分页返回list格式
+    responseList?: TModel; //data数组返回,元素格式
   }
 ): MethodDecorator {
   const classDecorators = [
@@ -58,7 +59,29 @@ export function ApiOperationResponse<TModel extends Type<any>>(
         },
       })
     );
-  } else if (
+  } else if (options.responseList){
+    if(typeof options.responseList === 'object'){
+      classDecorators.push(ApiExtraModel(options.responseList));
+    }
+    methodDecorators.push(
+      ApiResponse({
+        description: '请求成功',
+        schema: {
+          $ref: getSchemaPath(ApiSuccessResArr),
+          properties: {
+            data: {
+              type: 'array',
+              description: '数据,code非200时值为undefined',
+              items:{
+                $ref: typeof options.responseList === 'object'?getSchemaPath(options.responseList):undefined,
+                type: typeof options.responseList === 'object'? undefined: options.responseList,
+              }
+            },
+          },
+        },
+      })
+    );
+  }else if (
     typeof options.responseType === 'function' ||
     typeof options.responseType === 'object'
   ) {
@@ -129,6 +152,11 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & {rule?:RuleType.A
     if(options.required === undefined){
       options.required = options.rule.$_getFlag('presence') === 'required'?true:undefined;
     }
+    if(!options.enum && options.rule.describe().allow && options.rule.$_getFlag('only')){
+      options.enum = options.rule.describe().allow;
+    }else if(options.enum && !options.enum.length){
+      options.enum = undefined;
+    }
     if(options.rule.type === 'number'){
       if(options.maximum !== undefined){
         options.maximum = options.rule.$_getRule('max')?.args?.limit
@@ -151,9 +179,7 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & {rule?:RuleType.A
         options.rule = options.rule.allow('');
       }
     }
-    if((options.rule as any)._valids){
-      options.enum = Array.from((options.rule as any)._valids._values);
-    }
+
     if(options.default !== undefined){
       options.default = options.rule.$_getFlag('default')
     }

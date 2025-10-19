@@ -1,5 +1,7 @@
-import { Model, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToManyCreateAssociationMixin } from '@sequelize/core';
-
+import { Model, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToManyCreateAssociationMixin, InferAttributesOptions } from '@sequelize/core';
+import type {
+  AnyFunction,
+} from '@sequelize/utils';
 export type BelongsManyModel<
   AssociationName extends string, //关联字段
   SingularAssociationName extends string, //关联单数形式
@@ -36,4 +38,84 @@ export type BelongsManyModel<
 } & {
   //统计关联模型数量
   [Key in `counts${Capitalize<AssociationName>}`]: BelongsToManyGetAssociationsMixin<T>;
+};
+
+/**
+ * @private
+ * {@link InferAttributesLoose} 使用的内部类型，用于排除* 以下属性：
+ * - functions
+ * - 继承自 {@link Model}
+ * - 使用 {@link InferAttributesOptions} 的 omit 选项手动排除
+ */
+type InternalInferAttributeKeysFromFieldsLoose<
+  M extends Model,
+  Key extends keyof M,
+  Options extends InferAttributesOptions<keyof M | never | ''>,
+> =
+  // fields inherited from Model are all excluded
+  Key extends keyof Model
+    ? never
+    : // functions are always excluded
+      M[Key] extends AnyFunction
+      ? never
+      // : // fields branded with NonAttribute are excluded
+      //   IsBranded<M[Key], typeof NonAttributeBrand> extends true
+      //   ? never
+        : // check 'omit' option is provided & exclude those listed in it
+          Options['omit'] extends string
+          ? Key extends Options['omit']
+            ? never
+            : Key
+          : Key;
+/**
+ * 用于提取给定模型类属性的实用类型(宽松的不会排除{@link NonAttribute}标记的属性)。
+ *
+ * 它返回模型中定义的所有实例属性，但不包括：
+ * - 从模型继承的属性（中间继承有效），
+ * - 类型为函数的属性，
+ * - 使用第二个参数手动排除的属性。
+ *  
+*  使用 {@link NonAttribute} 会正常再里边没有排除
+ * 它无法检测某个属性是否是 getter，你应该使用 `Excluded` 参数将 getter 和 setter 从属性列表中排除。
+ *
+ * @example
+ * ```javascript
+ * // listed attributes will be 'id' & 'firstName'.
+ * class User extends Model<InferAttributes<User>> {
+ *   id: number;
+ *   firstName: string;
+ * }
+ * ```
+ *
+ * @example
+ * ```javascript
+ * // listed attributes will be 'id' & 'firstName'.
+ * // we're excluding the `name` getter & `projects` attribute using the `omit` option.
+ * class User extends Model<InferAttributes<User, { omit: 'name' | 'projects' }>> {
+ *   id: number;
+ *   firstName: string;
+ *
+ *   // this is an association, it should not be listed in attributes
+ *   projects?: Project[];
+ * }
+ * ```
+ *
+ * @example
+ * ```javascript
+ * // listed attributes will be 'id' & 'firstName'.
+ * // we're excluding the `name` getter & `test` attribute using the `NonAttribute` branded type.
+ * class User extends Model<InferAttributes<User>> {
+ *   id: number;
+ *   firstName: string;
+ *
+ *   // this is a getter function, not an attribute. It should not be listed in attributes.
+ *   get name(): string { return this.firstName; }
+ * }
+ * ```
+ */
+export type InferAttributesLoose<
+  M extends Model,
+  Options extends InferAttributesOptions<keyof M | never | ''> = { omit: never },
+> = {
+  [Key in keyof M as InternalInferAttributeKeysFromFieldsLoose<M, Key, Options>]: M[Key];
 };

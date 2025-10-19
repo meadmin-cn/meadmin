@@ -5,7 +5,7 @@ const dict = {
   {{each keyInfo.dictArr $val $key}}{value:{{if $value.type==='string'}}'{{/if}}{{$val.value}}{{if $value.type==='string'}}'{{/if}}, label:'{{$val.label}}'},{{/each}}
  ],{{else if $value.enum}}
   {{$index}}:[
-  {{each $value.enum $val $key}}{value:{{if $value.type==='string'}}'{{/if}}{{$val}}{{if $value.type==='string'}}'{{/if}}, label:'{{$val}}'},{{/each}}
+  {{each $value.enum $val $key}}{value:{{if $value.type==='string'}}'{{/if}}{{$val+''}}{{if $value.type==='string'}}'{{/if}}, label:'{{$val+''}}'},{{/each}}
   ],
 {{/if}}{{/each}}
 };

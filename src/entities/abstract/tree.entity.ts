@@ -1,13 +1,14 @@
-import { CreateOptions, DataTypes, InstanceDestroyOptions, InstanceUpdateOptions, Op } from '@sequelize/core';
+import { CreateOptions, DataTypes, InstanceDestroyOptions, InstanceUpdateOptions, Op, Model, ModelStatic, InferAttributes, InferCreationAttributes, FindOptions, Attributes } from '@sequelize/core';
 import { AfterDestroy, Attribute, BeforeCreate, BeforeUpdate, Table } from '@sequelize/core/decorators-legacy';
 import { BaseModel } from './base.entity.js';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { RuleType } from '@midwayjs/validate';
 import { uuid } from '@/helper/snowflake.js';
+import { listToTree } from '@/helper/utils.js';
 
 //无限级树形
 @Table.Abstract
-export class TreeModel<M extends TreeModel<any>> extends BaseModel<M> {
+export class TreeModel<M extends TreeModel<any> = any> extends BaseModel<M> {
   @Attribute({
     comment: '父级id',
     type: DataTypes.STRING(100),
@@ -31,101 +32,208 @@ export class TreeModel<M extends TreeModel<any>> extends BaseModel<M> {
     comment: '锁版本号',
     type: DataTypes.STRING(100),
   })
-  declare lockVersion: string;
+  lockVersion: string;
 
   @BeforeCreate()
-  static async setLeftRightByCreate(info: TreeModel<any>, options: CreateOptions<any>) {
+  static async setLeftRightByCreate<M extends TreeModel>(this: ModelStatic<M>, info: M, options: CreateOptions<any>) {
+    const model = info.modelDefinition.model;
+    type MInfo = Model<InferAttributes<TreeModel>, InferCreationAttributes<TreeModel>>;
     let left = 1;
     if (info.parentId) {
-      const parentinfo = await this.findByPk(info.parentId);
+      const parentinfo = (await model.findByPk<MInfo>(info.parentId, { transaction: options.transaction })) as M;
       left = parentinfo.right;
     } else {
-      const parentinfo = await this.findOne({ order: [['right', 'DESC']] });
+      const parentinfo = (await model.findOne<MInfo>({ order: [['right', 'DESC']], transaction: options.transaction })) as M;
       if (parentinfo) {
         left = parentinfo.right + 1;
       }
     }
     info.left = left;
     info.right = left + 1;
-    await this.sequelize.query(`update ${this.table.tableName} set  right = right + 2 where right >= :right`, {
-      replacements: { right: info.right },
-      transaction: options.transaction,
-    });
-    await this.sequelize.query(`update ${this.table.tableName} set  left = left + 2 where left >= :right`, {
-      replacements: { right: info.right },
-      transaction: options.transaction,
-    });
+    await model.increment<MInfo>(
+      {
+        right: 2,
+      },
+      {
+        where: { right: { [Op.gte]: info.right } },
+        transaction: options.transaction,
+      },
+    );
+    await model.increment<MInfo>(
+      {
+        left: 2,
+      },
+      {
+        where: { left: { [Op.gte]: info.right } },
+        transaction: options.transaction,
+      },
+    );
   }
 
   @AfterDestroy()
-  static async setLeftRightByDestory(info: TreeModel<any>, options: InstanceDestroyOptions) {
+  static async setLeftRightByDestory<M extends TreeModel>(this: ModelStatic<M>, info: M, options: InstanceDestroyOptions) {
     //删除子孙级
-    await this.sequelize.query(`delete ${this.table.tableName} where left > :left and right < :right`, {
-      replacements: { left: info.left, right: info.right },
+    const model = info.modelDefinition.model;
+    type MInfo = Model<InferAttributes<TreeModel>, InferCreationAttributes<TreeModel>>;
+    await model.destroy<MInfo>({
+      where: {
+        left: { [Op.gt]: info.left },
+        right: { [Op.lt]: info.right },
+      },
       transaction: options.transaction,
     });
     const step = info.right - info.left + 1;
     //右侧的左移
-    await this.sequelize.query(`update ${this.table.tableName} set right - :step where left > :right`, {
-      replacements: { step: step, right: info.right },
-      transaction: options.transaction,
-    });
-    await this.sequelize.query(`update ${this.table.tableName} set left - :step where left > :right`, {
-      replacements: { step: step, right: info.right },
-      transaction: options.transaction,
-    });
+    await model.decrement<MInfo>(
+      {
+        right: step,
+      },
+      {
+        where: {
+          right: {
+            [Op.gt]: info.right,
+          },
+        },
+        transaction: options.transaction,
+      },
+    );
+    await model.decrement<MInfo>(
+      { left: step },
+      {
+        where: {
+          left: {
+            [Op.gt]: info.right,
+          },
+        },
+        transaction: options.transaction,
+      },
+    );
   }
 
   @BeforeUpdate()
-  static async setLeftRightByUpdate(info: TreeModel<any>, options: InstanceUpdateOptions<any>) {
+  static async setLeftRightByUpdate<M extends TreeModel>(this: ModelStatic<M>, info: M, options: InstanceUpdateOptions<any>) {
     const version = uuid();
     const oldLeft = info.left;
-    //锁定数据及当前子孙
-    await this.sequelize.query(`update ${this.table.tableName} set lock_version = :version where left >= :left and right <= :right`, {
-      replacements: { version: version, left: info.left, right: info.right },
-      transaction: options.transaction,
-    });
+    const model = info.modelDefinition.model;
+    type MInfo = Model<InferAttributes<TreeModel>, InferCreationAttributes<TreeModel>>;
+    //锁定当前及当前子孙数据
+    await model.update<MInfo>(
+      {
+        lockVersion: version,
+      },
+      {
+        where: {
+          left: {
+            [Op.gte]: info.left,
+          },
+          right: {
+            [Op.lte]: info.right,
+          },
+        },
+        transaction: options.transaction,
+      },
+    );
     const step = info.right - info.left + 1;
     //右侧的左移
-    await this.sequelize.query(`update ${this.table.tableName} set right - :step where left > :right and lock_version != :version`, {
-      replacements: { step: step, right: info.right, version: version },
-      transaction: options.transaction,
-    });
-    await this.sequelize.query(`update ${this.table.tableName} set left - :step where left > :right and lock_version != :version`, {
-      replacements: { step: step, right: info.right, version: version },
-      transaction: options.transaction,
-    });
+    await model.decrement<MInfo>(
+      {
+        right: step,
+      },
+      {
+        where: {
+          right: {
+            [Op.gt]: info.right,
+          },
+        },
+        transaction: options.transaction,
+      },
+    );
+    await model.decrement<MInfo>(
+      { left: step },
+      {
+        where: {
+          left: {
+            [Op.gt]: info.right,
+          },
+        },
+        transaction: options.transaction,
+      },
+    );
     //添加
     let left = 1;
     if (info.parentId) {
-      const parentinfo = await this.findByPk(info.parentId);
+      const parentinfo = (await model.findByPk<MInfo>(info.parentId, { transaction: options.transaction })) as M;
       left = parentinfo.right;
     } else {
-      const parentinfo = await this.findOne({ where: { lockVersion: { [Op.ne]: version } }, order: [['right', 'DESC']] });
+      const parentinfo = (await model.findOne<MInfo>({ where: { lockVersion: { [Op.ne]: version } }, order: [['right', 'DESC']], transaction: options.transaction })) as M;
       if (parentinfo) {
         left = parentinfo.right + 1;
       }
     }
     info.left = left;
     info.right = left + step - 1;
-    await this.sequelize.query(`update ${this.table.tableName} set  right = right + :step where right >= :right and lock_version != :version`, {
-      replacements: { right: info.right, step: step, version: version },
-      transaction: options.transaction,
-    });
-    await this.sequelize.query(`update ${this.table.tableName} set  left = left + :step where left >= :right and lock_version != :version`, {
-      replacements: { right: info.right, step: step, version: version },
-      transaction: options.transaction,
-    });
+    await model.increment<MInfo>(
+      {
+        right: step,
+      },
+      {
+        where: {
+          lockVersion: {
+            [Op.ne]: version,
+          },
+          right: {
+            [Op.gte]: info.right,
+          },
+        },
+        transaction: options.transaction,
+      },
+    );
+    await model.increment<MInfo>(
+      {
+        left: step,
+      },
+      {
+        where: {
+          lockVersion: {
+            [Op.ne]: version,
+          },
+          left: {
+            [Op.gte]: info.right,
+          },
+        },
+        transaction: options.transaction,
+      },
+    );
     if (oldLeft > info.left) {
-      await this.sequelize.query(`update ${this.table.tableName} set  left = left - :step,right = right - :step where lock_version = :version`, {
-        replacements: { step: oldLeft - info.left, right: info.right, version: version },
-        transaction: options.transaction,
-      });
+      await model.decrement<MInfo>({ left: oldLeft - info.left, right: oldLeft - info.left }, { where: { lockVersion: version }, transaction: options.transaction });
     } else {
-      await this.sequelize.query(`update ${this.table.tableName} set  left = left + :step,right = right + :step where lock_version = :version`, {
-        replacements: { step: info.left - oldLeft, right: info.right, version: version },
-        transaction: options.transaction,
-      });
+      await model.increment<MInfo>({ left: info.left - oldLeft, right: info.left - oldLeft }, { where: { lockVersion: version }, transaction: options.transaction });
     }
+  }
+
+  //获取树形数据
+  static async getTree<M extends Model>(this: ModelStatic<M>, options?: FindOptions<Attributes<M>> | (Omit<FindOptions<Attributes<M>>, 'raw'> & { raw: true })) {
+    const list = await this.findAll(options);
+    return listToTree(list);
+  }
+
+  //获取所有后代,并以树形返回
+  async getDescendants() {
+    const list = await this.modelDefinition.model.findAll({
+      where: {
+        left: {
+          [Op.gt]: this.left,
+        },
+        right: {
+          [Op.lt]: this.right,
+        },
+      },
+    });
+    return listToTree(list);
+  }
+
+  //TODO::根据parentId重置树形参数，尚未实现
+  static async perfectTree(){
+
   }
 }

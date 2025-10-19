@@ -43,3 +43,4 @@ export function extractBracesContent(text: string) {
   }
   return result;
 }
+

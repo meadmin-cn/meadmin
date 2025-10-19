@@ -66,8 +66,21 @@ export class SystemRole extends TreeModel<SystemRole> {
     items: {
       $ref: () => getSchemaPath(SystemMenu),
     },
+    rule:RuleType.array()
   })
-  declare menus?: NonAttribute<SystemMenu[]>;
+  menus?: NonAttribute<SystemMenu[]>;
+
+  @Attribute({
+    comment: '创建者Id(管理员)',
+    type: DataTypes.STRING(20),
+  })
+  createdAdminId: string;
+
+  @Attribute({
+    comment: '更新者Id(管理员)',
+    type: DataTypes.STRING(20),
+  })
+  updatedAdminId: string;
 }
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export declare interface SystemRole extends BelongsManyModel<'menus', 'menu', 'menus', SystemMenu> {}

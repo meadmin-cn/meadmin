@@ -1,6 +1,6 @@
 import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
-import { InferAttributes } from '@sequelize/core';
+import { InferAttributesLoose } from '@/../types/entity.js';
 
-export class {{replaceNames.UpdateDto}} extends ({{replaceNames.Name}} as new () => InferAttributes<{{replaceNames.Name}}>) {
+export class {{replaceNames.UpdateDto}} extends ({{replaceNames.Name}} as new () => InferAttributesLoose<{{replaceNames.Name}}>) {
   
 }

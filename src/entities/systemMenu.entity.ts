@@ -150,6 +150,18 @@ export class SystemMenu extends TreeModel<SystemMenu> {
   /** Declared by {@link SystemRole.menus} */
   //具有当前菜单的角色
   declare roles?: NonAttribute<SystemRole[]>;
+  
+  @Attribute({
+    comment: '创建者Id(管理员)',
+    type: DataTypes.STRING(20),
+  })
+  createdAdminId: string;
+
+  @Attribute({
+    comment: '更新者Id(管理员)',
+    type: DataTypes.STRING(20),
+  })
+  updatedAdminId: string;
 }
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export declare interface SystemMenu extends BelongsManyModel<'roles', 'role', 'roles', SystemRole> {}

@@ -1,13 +1,13 @@
 import { IntersectionType, PartialType } from '@/helper/dto.js';
 import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
-import { InferAttributes } from '@sequelize/core';
+import { InferAttributesLoose } from '@/../types/entity.js';
 import { PageDto } from '@/dto/page.dto.js';
 {{if $imports.objectKeys(entitySchema.properties).some(v=>v.endsWith('At'))}}import { ApiPropertyRule } from '@/decorators/index.js';
 import { RuleType } from '@/ruleType/index.js';{{/if}}
 
 export class {{replaceNames.QueryDto}} extends IntersectionType(
   PageDto,
-  PartialType({{replaceNames.Name}} as new () => InferAttributes<{{replaceNames.Name}}>)
+  PartialType({{replaceNames.Name}} as new () => InferAttributesLoose<{{replaceNames.Name}}>)
 ) {
   {{each entitySchema.properties}}{{if $index.endsWith('At')}}@ApiPropertyRule({ description: '{{$value.description}}(起)', rule: RuleType.date() })
   start{{$imports.upFirstCase($index)}}?:Date;

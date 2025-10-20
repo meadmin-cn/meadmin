@@ -1,5 +1,6 @@
 import request, { RequestOptions } from '@/utils/request.js';
 import { PageParam, PageResult } from '@/api/api.model.js';
+import { TreeArrayItem } from '@/utils/helper.js';
 
 //菜单
 export class SystemMenu {
@@ -70,6 +71,18 @@ export function systemMenuListApi(options?: RequestOptions<SystemMenuListResult,
       data: data,
     }),
     Object.assign({ noLoading: true, clearEmpty: ['', undefined, null] }, options),
+  );
+}
+
+export type SystemMenuTreeAll = TreeArrayItem<SystemMenuInfo,'children'>[];
+//获取树形结构
+export function systemRoleTreeAllApi(options?: RequestOptions<SystemMenuTreeAll, []>) {
+  return request<SystemMenuTreeAll, []>(
+    () => ({
+      url: 'system/menu/treeAll',
+      method: 'get',
+    }),
+    Object.assign({ noLoading: true }, options),
   );
 }
 

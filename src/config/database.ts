@@ -20,8 +20,8 @@ export default async () => ({
         schema: process.env.DATABASE_SCHEMA ?? 'public',
         timezone: 'Asia/Shanghai',
       },
-      logging(sql, timing) {
-        appLogger.info('[sql]耗时 %d ms，%s', timing, sql);
+      logging(sql, timing, seqlize?) {
+        appLogger.info('[sql]耗时 %d ms，%s', timing, sql,seqlize?.bind);
       },
       benchmark: true, //开启日志打印sql耗时参数传递
     } as Options<PostgresDialect>,

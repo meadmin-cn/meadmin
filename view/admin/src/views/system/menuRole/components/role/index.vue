@@ -14,9 +14,9 @@
       show-overflow
       height="auto"
       me-class="table-role"
-      @current-change="groupChange"
-      @add="showAddOrEditor()"
-      @refresh="getGroup"
+      @current-row-change="roleChange"
+      @add="showAddOrUp()"
+      @refresh="getRole"
       @quick-search="search"
     >
       <vxe-column field="name" :title="t('角色')" tree-node>
@@ -29,8 +29,7 @@
             <div class="role-item-btn">
               <el-link type="primary" :underline="false" @click="showAddOrUp(row.id)"><mel-icon-edit /></el-link>
               <el-link type="danger" :underline="false" style="margin-left: 5px" @click="del(row.id)"
-                ><mel-icon-delete
-              /></el-link>
+                ><mel-icon-delete/></el-link>
             </div>
           </div>
         </template>
@@ -39,18 +38,20 @@
   </div>
 </template>
 <script setup lang="ts" name="Group">
-import { systemRoleTreeAllApi, SystemRoleListParam, delSystemRoleApi, SystemRoleInfo, SystemRoleTreeAll } from '@/api/system/role';
+import { systemRoleTreeAllApi, SystemRoleListParam, delSystemRoleApi, SystemRoleInfo, SystemRoleTreeAll, updateSystemRoleApi } from '@/api/system/role';
 import { useLocalesI18n } from '@/locales/i18n';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
 import { formatterStr, formatterAt, searchTreeTable } from '@/utils/helper.js';
-import { VxeColumnPropTypes } from 'vxe-table';
+import { VxeColumnPropTypes, VxeTableEvents } from 'vxe-table';
 import { cloneDeep } from 'lodash-es';
+let { t } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemRole']);
+
 const roleRef = ref<MeVxeTableInstance>();
 const dict = {
   status: [
-    { value: 1, label: '启用' },
-    { value: 0, label: '禁用' },
+    { value: 1, label: t('启用') },
+    { value: 0, label: t('禁用') },
   ],
 };
 const formatterDict: VxeColumnPropTypes.Formatter<SystemRoleInfo> = ({ cellValue, column }) => {
@@ -58,10 +59,11 @@ const formatterDict: VxeColumnPropTypes.Formatter<SystemRoleInfo> = ({ cellValue
   return formatterStr({ cellValue: (dict as Record<string, { value: string | number; label: string }[]>)[column.field]?.find((item) => item.value == cellValue)?.label });
 };
 const emit = defineEmits<{
-  (e: 'currentChange', row: string[]): void;
-}>();
+  currentChange: [menuIds: string[]]
+}>()
+const roleChange: VxeTableEvents.CurrentChange = ({ row }: { row: SystemRoleInfo }) =>
+  emit('currentChange', row.menus.map(menus=>menus.id));
 const { open } = useActionModel(AddOrUp);
-let { t } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemRole']);
 const params = reactive(new SystemRoleListParam());
 const { loading, runAsync } = systemRoleTreeAllApi();
 const { runAsync: delRun, loading: delLoading } = delSystemRoleApi();
@@ -70,7 +72,7 @@ const data = ref<SystemRoleTreeAll>([]);
 const searchText = ref('');
 const search = (searchText ='') => {
   data.value = searchTreeTable(searchText, ['roleName'] as const, dataCopy);
-  nextTick(() => roleRef.value!.vxeTableRef!.setAllTreeExpand(true));
+  nextTick(() => roleRef.value?.vxeTableRef?.setAllTreeExpand(true));
 };
 const getRole = async () => {
   dataCopy = cloneDeep(await runAsync());
@@ -88,23 +90,22 @@ const showAddOrUp = (id?: string) => {
   open({
     id,
     onSuccess: async () => {
-      await search();
+      await getRole();
     },
   });
 };
 await search();
-
 const setRoleMenu = async (menuIds?: string[]) => {
   if (!menuIds) {
     return false;
   }
   const row = roleRef.value!.vxeTableRef!.getCurrentRecord();
   if (row) {
-    await editGroupApi().runAsync(row.id, { menus });
+    await updateSystemRoleApi().runAsync(row.id, { menus:menuIds.map(id=>({id}))});
     row.menus = menuIds.map(id=>({id}));
     return true;
   }
-  ElMessage.error('请先选择分组');
+  ElMessage.error(t('请先选择角色'));
 };
 defineExpose({ setRoleMenu });
 </script>

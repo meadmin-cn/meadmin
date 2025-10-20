@@ -1,6 +1,6 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { ctx } from '@meadmin/core';
-import { BulkCreateOptions, InferAttributes, InferCreationAttributes, InstanceUpdateOptions, Model, ModelStatic, sql, UpdateOptions } from '@sequelize/core';
+import { BulkCreateOptions, InferAttributes, InferCreationAttributes, InstanceUpdateOptions, Model, ModelStatic, UpdateOptions } from '@sequelize/core';
 import { AfterBulkUpdate, Attribute, BeforeBulkCreate, BeforeCreate, BeforeUpdate, CreatedAt, Table, UpdatedAt } from '@sequelize/core/decorators-legacy';
 
 //基础model
@@ -57,12 +57,11 @@ export class BaseModel<M extends Model<any, any>> extends Model<InferAttributes<
   static async setUpdatedIdBulk(options: UpdateOptions<BaseModel<any>> & {model:ModelStatic<BaseModel<any>>}){
     if(ctx?.adminInfo && options.model.modelDefinition.attributes.has('updatedAdminId')){
       //设置更新管理员Id
-      let where = options.where ;
-      if(!options.where || JSON.stringify(options.where) === '{}'){
-        where=sql`1 = 1`;
-      }
-      await options.model.sequelize.query(sql`UPDATE ${sql.identifier(options.model)}  SET  ${sql.attribute(options.model.getAttributes()['updatedAdminId'].columnName)} = ${ctx.adminInfo.id}  WHERE ${sql.where(where) }`,{
+      await options.model.update({updatedAdminId:ctx.adminInfo.id},
+      {
+        where:options.where,
         transaction: options.transaction,
+        hooks:false
       });
     }
   }

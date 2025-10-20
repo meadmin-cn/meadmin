@@ -6,9 +6,7 @@ import { SystemRoleQueryDto } from '../../dto/system/roleQuery.dto.js';
 import { SystemRoleUpdateDto } from '../../dto/system/roleUpdate.dto.js';
 import { SystemRole } from '../../../../entities/systemRole.entity.js';
 import { I18nService } from '@/service/i18n.service.js';
-
 import { Op } from '@sequelize/core';
-import { listToTree } from '@/helper/utils.js';
 
 //角色
 @Provide()
@@ -85,10 +83,10 @@ export class SystemRoleService {
    */
   async treeAll(){
     return await this.SystemRoleRepository.getTree({
-      order: [['orderNumS', 'DESC']],
+      order: [['orderNum', 'DESC']],
       include:{//关联查询菜单
         association:'menus',
-        include:['id'],
+        attributes:['id'],
       }
     })
   }
@@ -119,6 +117,7 @@ export class SystemRoleService {
     }
     if(updateDto.menus){
       await entity.setMenus(updateDto.menus);
+      entity.menus = await entity.getMenus();
       if(Object.keys(updateDto).length === 1){
         return entity;
       }

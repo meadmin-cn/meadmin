@@ -37,8 +37,8 @@ export class SystemRoleController extends BaseController {
     return this.success(await this.systemRoleService.list(queryDto));
   }
 
-  //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Get('/all')
+  //接口方法必须加async 方法的接口装饰器值必须/开头 
+  @Get('/treeAll')
   @ApiOperationResponse({
     responseList: SystemRoleTreeAllResultDto,
     summary: '获取所有角色(按父子级返回)',

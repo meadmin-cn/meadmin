@@ -1,16 +1,16 @@
 <template>
   <div class="role-permissions">
     <el-scrollbar always view-class="body">
-      <group ref="group" class="group" @current-change="checkedRules = $event"></group>
-      <Menu class="menu" :checked-rules="checkedRules" @sub-rules="group!.setGroupRules($event)"></Menu>
+      <Role ref="group" class="group" @current-change="checkedMenuIds = $event"></Role>
+      <Menu class="menu" :checked-menu-ids="checkedMenuIds" @sub-menus="role!.setRoleMenu($event)"></Menu>
     </el-scrollbar>
   </div>
 </template>
 <script lang="ts" setup name="RulePermissions">
-import Group from './components/group/group.vue';
-import Menu from './components/menu/menu.vue';
-const group = ref<InstanceType<typeof Group>>();
-const checkedRules = shallowRef([] as string[]);
+import Role from './components/role/index.vue';
+import Menu from './components/menu/index.vue';
+const role = ref<InstanceType<typeof Role>>();
+const checkedMenuIds = shallowRef([] as string[]);
 </script>
 <style lang="scss" scoped>
 .role-permissions {

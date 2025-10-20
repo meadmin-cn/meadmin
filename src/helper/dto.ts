@@ -54,8 +54,21 @@ export function OmitDtoType<T, K extends Array<keyof T>>(
   dto: Dto<T>,
   keys: K
 ): Dto<Omit<T, K[number]>> {
-  const pickedDto = OmitDto(dto, keys);
-  pickedDto.prototype = Object.prototype;
+  let pickedDto = function () {} as any;
+  if(keys.length){
+    pickedDto = OmitDto(dto, keys);
+    pickedDto.prototype = Object.prototype;
+  }else{
+    const fatherRule = getClassExtendedMetadata(RULES_KEY, dto);
+    const partitalRule: any = {};
+    for (const key of Object.keys(fatherRule)) {
+      if (fatherRule[key]) {
+        partitalRule[key] = cloneDeep(fatherRule[key]);
+      }
+    }
+    saveClassMetadata(RULES_KEY, partitalRule, pickedDto);
+  }
+  //设置swagger properties定义
   const fatherProperties = getClassExtendedMetadata(
     INJECT_CUSTOM_PROPERTY,
     dto

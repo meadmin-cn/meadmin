@@ -1,5 +1,5 @@
-import { CreateOptions, DataTypes, InstanceDestroyOptions, InstanceUpdateOptions, Op, Model, ModelStatic, InferAttributes, InferCreationAttributes, FindOptions, Attributes } from '@sequelize/core';
-import { AfterDestroy, Attribute, BeforeCreate, BeforeUpdate, Table } from '@sequelize/core/decorators-legacy';
+import { CreateOptions, DataTypes, InstanceDestroyOptions, InstanceUpdateOptions, Op, Model, ModelStatic, InferAttributes, InferCreationAttributes, FindOptions, Attributes, sql } from '@sequelize/core';
+import { AfterDestroy, AfterUpdate, Attribute, BeforeCreate, Table } from '@sequelize/core/decorators-legacy';
 import { BaseModel } from './base.entity.js';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { RuleType } from '@midwayjs/validate';
@@ -18,19 +18,21 @@ export class TreeModel<M extends TreeModel<any> = any> extends BaseModel<M> {
 
   @Attribute({
     comment: '左树边界',
-    type: DataTypes.STRING(100),
+    type: DataTypes.INTEGER.UNSIGNED,
   })
   left: number;
 
   @Attribute({
     comment: '右树边界',
-    type: DataTypes.STRING(100),
+    type: DataTypes.INTEGER.UNSIGNED	,
   })
   right: number;
 
   @Attribute({
     comment: '锁版本号',
     type: DataTypes.STRING(100),
+    allowNull: false,
+    defaultValue:'',
   })
   lockVersion: string;
 
@@ -55,7 +57,7 @@ export class TreeModel<M extends TreeModel<any> = any> extends BaseModel<M> {
         right: 2,
       },
       {
-        where: { right: { [Op.gte]: info.right } },
+        where: { right: { [Op.gte]: info.left } },
         transaction: options.transaction,
       },
     );
@@ -64,7 +66,7 @@ export class TreeModel<M extends TreeModel<any> = any> extends BaseModel<M> {
         left: 2,
       },
       {
-        where: { left: { [Op.gte]: info.right } },
+        where: { left: { [Op.gte]: info.left } },
         transaction: options.transaction,
       },
     );
@@ -110,7 +112,7 @@ export class TreeModel<M extends TreeModel<any> = any> extends BaseModel<M> {
     );
   }
 
-  @BeforeUpdate()
+  @AfterUpdate()
   static async setLeftRightByUpdate<M extends TreeModel>(this: ModelStatic<M>, info: M, options: InstanceUpdateOptions<any>) {
     const version = uuid();
     const oldLeft = info.left;
@@ -182,7 +184,7 @@ export class TreeModel<M extends TreeModel<any> = any> extends BaseModel<M> {
             [Op.ne]: version,
           },
           right: {
-            [Op.gte]: info.right,
+            [Op.gte]: info.left,
           },
         },
         transaction: options.transaction,
@@ -198,26 +200,26 @@ export class TreeModel<M extends TreeModel<any> = any> extends BaseModel<M> {
             [Op.ne]: version,
           },
           left: {
-            [Op.gte]: info.right,
+            [Op.gte]: info.left,
           },
         },
         transaction: options.transaction,
       },
     );
     if (oldLeft > info.left) {
-      await model.decrement<MInfo>({ left: oldLeft - info.left, right: oldLeft - info.left }, { where: { lockVersion: version }, transaction: options.transaction });
+      await model.update<MInfo>({ left: sql`${sql.attribute('left')} - ${oldLeft - info.left}`, right: sql`${sql.attribute('right')} - ${oldLeft - info.left}`, lockVersion:'' }, { where: { lockVersion: version }, transaction: options.transaction });
     } else {
-      await model.increment<MInfo>({ left: info.left - oldLeft, right: info.left - oldLeft }, { where: { lockVersion: version }, transaction: options.transaction });
+      await model.update<MInfo>({ left: sql`${sql.attribute('left')} + ${info.left - oldLeft}`, right: sql`${sql.attribute('right')} + ${info.left - oldLeft}`, lockVersion:'' }, { where: { lockVersion: version }, transaction: options.transaction });
     }
   }
 
-  //获取树形数据
+  //获取树形数据,返回值为普通object不是model
   static async getTree<M extends Model>(this: ModelStatic<M>, options?: FindOptions<Attributes<M>> | (Omit<FindOptions<Attributes<M>>, 'raw'> & { raw: true })) {
     const list = await this.findAll(options);
-    return listToTree(list);
+    return listToTree(list.map(item=>item.dataValues));
   }
 
-  //获取所有后代,并以树形返回
+  //获取所有后代,并以树形返回,返回值为普通object不是model
   async getDescendants() {
     const list = await this.modelDefinition.model.findAll({
       where: {
@@ -229,7 +231,7 @@ export class TreeModel<M extends TreeModel<any> = any> extends BaseModel<M> {
         },
       },
     });
-    return listToTree(list);
+    return listToTree(list.map(item=>item.dataValues));
   }
 
   //TODO::根据parentId重置树形参数，尚未实现

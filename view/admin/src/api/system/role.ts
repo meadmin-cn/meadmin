@@ -8,11 +8,11 @@ export class SystemRole {
   parentId = '' as string | null; //父级id
   roleName = '' as string; //角色名称
   roleKey = '' as string; //角色标识
-  orderNum = undefined as number | undefined; //排序(降序)
-  status = undefined as 1 | 0 | undefined; //状态:1=启用;0=禁用
+  orderNum = 999 as number | undefined; //排序(降序)
+  status = 1 as 1 | 0 | undefined; //状态:1=启用;0=禁用
   remark = '' as string; //备注
   admins = {} as {} | null; //关联用户
-  menus = [] as Array<SystemMenu> | null; //具有权限菜单
+  menus = [] as Array<SystemMenu>; //具有权限菜单
   createdAt = '' as string; //创建时间
   updatedAt = '' as string; //最后更新时间
 }
@@ -105,7 +105,7 @@ export function systemRoleInfoApi(options?: RequestOptions<SystemRoleInfo, [stri
   );
 }
 
-export type UpdateSystemRoleInfoParam = Partial<SystemRoleInfo>;
+export type UpdateSystemRoleInfoParam = Partial<Omit<SystemRoleInfo,'menus'> & {menus:{id: string}[]}>;
 //修改角色信息
 export function updateSystemRoleApi(options?: RequestOptions<SystemRoleInfo, [string, UpdateSystemRoleInfoParam]>) {
   return request<SystemRoleInfo, [string, UpdateSystemRoleInfoParam]>(

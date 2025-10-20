@@ -6,7 +6,6 @@ import { SystemMenuQueryDto } from '../../dto/system/menuQuery.dto.js';
 import { SystemMenuUpdateDto } from '../../dto/system/menuUpdate.dto.js';
 import { SystemMenu } from '../../../../entities/systemMenu.entity.js';
 import { I18nService } from '@/service/i18n.service.js';
-
 import { Op } from '@sequelize/core';
 
 //菜单
@@ -76,6 +75,16 @@ export class SystemMenuService {
       page: queryDto.page,
       size: queryDto.size,
     };
+  }
+
+   /**
+   * 获取角色树形结构
+   * @returns 
+   */
+  async treeAll(){
+    return await this.SystemMenuRepository.getTree({
+      order: [['orderNum', 'DESC']]
+    })
   }
 
   /**

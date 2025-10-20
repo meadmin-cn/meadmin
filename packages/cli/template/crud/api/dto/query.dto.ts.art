@@ -5,6 +5,7 @@ import { PageDto } from '@/dto/page.dto.js';
 {{if $imports.objectKeys(entitySchema.properties).some(v=>v.endsWith('At'))}}import { ApiPropertyRule } from '@/decorators/index.js';
 import { RuleType } from '@/ruleType/index.js';{{/if}}
 
+//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效
 export class {{replaceNames.QueryDto}} extends IntersectionType(
   PageDto,
   PartialType({{replaceNames.Name}} as new () => InferAttributesLoose<{{replaceNames.Name}}>)

@@ -5,6 +5,7 @@ import { PageDto } from '@/dto/page.dto.js';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { RuleType } from '@/ruleType/index.js';
 
+//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效
 export class SystemAdminQueryDto extends IntersectionType(PageDto, PartialType(SystemAdmin as new () => InferAttributesLoose<SystemAdmin>)) {
   @ApiPropertyRule({ description: '最后登录时间(起)', rule: RuleType.date() })
   startLastLoginAt?: Date;

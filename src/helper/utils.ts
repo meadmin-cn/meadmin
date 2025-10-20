@@ -1,3 +1,5 @@
+import { clone } from "lodash-es";
+
 export type TreeArrayItem<T, C extends string | number> = { [K in C]: T[] } & T;
 /**
  * 数组转为树结构
@@ -7,17 +9,18 @@ export type TreeArrayItem<T, C extends string | number> = { [K in C]: T[] } & T;
  * @param childrenKey
  * @returns
  */
-export function listToTree<T extends Record<string, any>>(arr: T[], key: keyof T = 'id' as const, parentKey: keyof T = 'parentId' as const, childrenKey = 'children ' as const) {
+export function listToTree<T extends Record<string, any>>(arr: T[], key: keyof T = 'id' as const, parentKey: keyof T = 'parentId' as const, childrenKey = 'children' as const) {
   const treeNode = new Map();
-  arr.forEach((item) => {
-    treeNode.set(item[key], Object.assign({}, item, { [childrenKey]: [] }));
+  const newArr = clone(arr);
+  newArr.forEach((item) => {
+    (item as any)[childrenKey] = [];
+    treeNode.set(item[key],item);
   });
   const rootArr = [] as Array<TreeArrayItem<T, typeof childrenKey>>;
   arr.forEach((item) => {
     const parentNode = treeNode.get(item[parentKey]);
     if (parentNode) {
       parentNode[childrenKey].push(item);
-      treeNode.delete(item[key]);
     } else {
       rootArr.push(treeNode.get(item[key]));
     }

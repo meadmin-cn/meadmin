@@ -1,8 +1,8 @@
 <template>
   <me-dialog v-model="show" :title="t(id ? '编辑' : '新增')" :close-on-click-modal="false" @closed="$emit('closed')">
     <el-form v-loading="loading" ref="formEl" :model="info" :rules="rules" class="add" label-width="auto">
-      <el-form-item :label="t('父级id')" prop="parentId">
-        <el-input v-model="info.parentId"></el-input>
+      <el-form-item :label="t('父级')" prop="parentId">
+        <el-tree-select v-model="info.parentId" :data="treeAllList || []" check-strictly node-key="id" :props="{label:'title'}" :render-after-expand="false" clearable filterable/>
       </el-form-item>
       <el-form-item :label="t('菜单名称')" prop="title">
         <el-input v-model="info.title"></el-input>
@@ -27,7 +27,7 @@
         <el-input v-model="info.path"></el-input>
       </el-form-item>
       <el-form-item :label="t('外链')" prop="isLink">
-        <el-select v-model="info.isLink" :value-on-clear="null" clearable>
+        <el-select v-model="info.isLink" :value-on-clear="null">
           <el-option v-for="val in dict.isLink" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
       </el-form-item>
@@ -35,12 +35,12 @@
         <el-input v-model="info.component"></el-input>
       </el-form-item>
       <el-form-item :label="t('隐藏')" prop="hideMenu">
-        <el-select v-model="info.hideMenu" :value-on-clear="null" clearable>
+        <el-select v-model="info.hideMenu" :value-on-clear="null">
           <el-option v-for="val in dict.hideMenu" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
       </el-form-item>
       <el-form-item :label="t('缓存')" prop="cache">
-        <el-select v-model="info.cache" :value-on-clear="null" clearable>
+        <el-select v-model="info.cache" :value-on-clear="null">
           <el-option v-for="val in dict.cache" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
       </el-form-item>
@@ -48,17 +48,17 @@
         <el-input v-model="info.icon"></el-input>
       </el-form-item>
       <el-form-item :label="t('固定tag')" prop="affix">
-        <el-select v-model="info.affix" :value-on-clear="null" clearable>
+        <el-select v-model="info.affix" :value-on-clear="null" >
           <el-option v-for="val in dict.affix" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
       </el-form-item>
       <el-form-item :label="t('恒定展示(只有一个子元素时不隐藏)')" prop="alwaysShow">
-        <el-select v-model="info.alwaysShow" :value-on-clear="null" clearable>
+        <el-select v-model="info.alwaysShow" :value-on-clear="null" >
           <el-option v-for="val in dict.alwaysShow" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
       </el-form-item>
       <el-form-item :label="t('面包屑')" prop="breadcrumb">
-        <el-select v-model="info.breadcrumb" :value-on-clear="null" clearable>
+        <el-select v-model="info.breadcrumb" :value-on-clear="null">
           <el-option v-for="val in dict.breadcrumb" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
       </el-form-item>
@@ -71,51 +71,53 @@
 </template>
 
 <script setup lang="ts" name="AddOrUpSystemMenu">
-import { SystemMenu, SystemMenuInfo, addSystemMenuApi, updateSystemMenuApi, systemMenuInfoApi } from '@/api/system/menu';
+import { SystemMenu, SystemMenuInfo, addSystemMenuApi, updateSystemMenuApi, systemMenuInfoApi, systemMenuTreeAllApi } from '@/api/system/menu';
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj, formatterStr } from '@/utils/helper';
 import { FormInstance, FormRules } from 'element-plus';
 import { VxeColumnPropTypes } from 'vxe-table';
+let { t } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemMenu']);
 const dict = {
   menuType: [
-    { value: 1, label: '目录' },
-    { value: 2, label: '菜单' },
-    { value: 3, label: '按钮' },
+    { value: 1, label: t('目录') },
+    { value: 2, label: t('菜单') },
+    { value: 3, label: t('按钮') },
   ],
   status: [
-    { value: 1, label: '启用' },
-    { value: 0, label: '禁用' },
+    { value: 1, label: t('启用') },
+    { value: 0, label: t('禁用') },
   ],
   isLink: [
-    { value: 1, label: '是' },
-    { value: 0, label: '否' },
+    { value: 1, label: t('是') },
+    { value: 0, label: t('否') },
   ],
   hideMenu: [
-    { value: 1, label: '是' },
-    { value: 0, label: '否' },
+    { value: 1, label: t('是') },
+    { value: 0, label: t('否') },
   ],
   cache: [
-    { value: 1, label: '是' },
-    { value: 0, label: '否' },
+    { value: 1, label: t('是') },
+    { value: 0, label: t('否') },
   ],
   affix: [
-    { value: 1, label: '是' },
-    { value: 0, label: '否' },
+    { value: 1, label: t('是') },
+    { value: 0, label: t('否') },
   ],
   alwaysShow: [
-    { value: 1, label: '是' },
-    { value: 0, label: '否' },
+    { value: 1, label: t('是') },
+    { value: 0, label: t('否') },
   ],
   breadcrumb: [
-    { value: 1, label: '展示' },
-    { value: 0, label: '不展示' },
+    { value: 1, label: t('展示') },
+    { value: 0, label: t('不展示') },
   ],
 };
+const { data:treeAllList,runAsync:getTreeAllAsync } = systemMenuTreeAllApi();
+getTreeAllAsync();
 const formatterDict: VxeColumnPropTypes.Formatter<SystemMenuInfo> = ({ cellValue, column }) => {
   //因为ts类型判定不得不断言dict
   return formatterStr({ cellValue: (dict as Record<string, { value: string | number; label: string }[]>)[column.field]?.find((item) => item.value == cellValue)?.label });
 };
-let { t } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemMenu']);
 const show = defineModel<boolean>();
 const props = defineProps<{
   id?: string;
@@ -169,3 +171,10 @@ const submit = async () => {
   emit('success');
 };
 </script>
+<style lang="scss" scoped>
+.add{
+  :deep(.el-form-item__label){
+    max-width: 130px;
+  }
+}
+</style>

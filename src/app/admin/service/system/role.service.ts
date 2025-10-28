@@ -115,8 +115,8 @@ export class SystemRoleService {
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
-    if(updateDto.menus){
-      await entity.setMenus(updateDto.menus);
+    if(updateDto.menuIds){
+      await entity.setMenus(updateDto.menuIds);
       entity.menus = await entity.getMenus();
       if(Object.keys(updateDto).length === 1){
         return entity;

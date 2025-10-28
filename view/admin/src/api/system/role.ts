@@ -105,7 +105,7 @@ export function systemRoleInfoApi(options?: RequestOptions<SystemRoleInfo, [stri
   );
 }
 
-export type UpdateSystemRoleInfoParam = Partial<Omit<SystemRoleInfo,'menus'> & {menus:{id: string}[]}>;
+export type UpdateSystemRoleInfoParam = Partial<Omit<SystemRoleInfo,'menus'> & {menuIds:string[]}>;
 //修改角色信息
 export function updateSystemRoleApi(options?: RequestOptions<SystemRoleInfo, [string, UpdateSystemRoleInfoParam]>) {
   return request<SystemRoleInfo, [string, UpdateSystemRoleInfoParam]>(

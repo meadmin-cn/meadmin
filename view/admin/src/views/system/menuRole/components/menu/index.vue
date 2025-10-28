@@ -1,5 +1,5 @@
 <template>
-  <div clss="menu">
+  <div class="menu">
     <me-vxe-table
       ref="menuRef"
       v-model:quick-search="searchText"
@@ -26,11 +26,11 @@
       <vxe-column field="rule" :title="t('权限')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="path" :title="t('路径')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="isLink" :title="t('外链')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="component" :title="t('组件路径(相对于views文件夹)')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="component" :title="t('组件路径')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="orderNum" :title="t('排序(降序)')" :formatter="formatterStr"></vxe-column>
       <vxe-column title="操作">
         <template #default="{ row }">
-          <el-button type="primary" link @click="showAddOrUp(row.id)"><mel-icon-edit /></el-button>
+          <el-button  @click="showAddOrUp(row.id)"><mel-icon-edit /></el-button>
           <el-popconfirm :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
             <template #reference>
               <el-button :key="row.id" :loading="delLoading && delId === row.id" type="danger">
@@ -55,7 +55,7 @@
   </div>
 </template>
 <script setup lang="ts" name="Menu">
-import { SystemMenuListParam, delSystemMenuApi, SystemMenuInfo, systemRoleTreeAllApi, SystemMenuTreeAll } from '@/api/system/menu';
+import { SystemMenuListParam, delSystemMenuApi, SystemMenuInfo, systemMenuTreeAllApi, SystemMenuTreeAll } from '@/api/system/menu';
 import { useLocalesI18n } from '@/locales/i18n';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
@@ -105,24 +105,24 @@ const formatterDict: VxeColumnPropTypes.Formatter<SystemMenuInfo> = ({ cellValue
 };
 const { open } = useActionModel(AddOrUp);
 
-const { checkedMneuIds =  [] } = defineProps<{checkedMneuIds:string[]}>()
+const { checkedMenuIds =  [] } = defineProps<{checkedMenuIds:string[]}>()
 const emit = defineEmits<{
   subMenus: [menuIds: string[]]//提交菜单选中
 }>()
 const params = reactive(new SystemMenuListParam());
-const { loading, data, runAsync } = systemRoleTreeAllApi();
+const { loading, data, runAsync } = systemMenuTreeAllApi();
 onMounted(()=>{
 watch(//设置选中值
-  () => [checkedMneuIds, data.value],
+  () => [checkedMenuIds, data.value],
   async () => {
     if (!data.value?.length) {
       return;
     }
     await menuRef.value!.vxeTableRef!.clearCheckboxRow();
     menuRef.value!.vxeTableRef!.setCheckboxRow(
-      checkedMneuIds.reduce((previousValue, currentValue) => {
+      checkedMenuIds.reduce((previousValue, currentValue) => {
         const row = menuRef.value!.vxeTableRef!.getRowById(currentValue);
-        if (!row.children) {
+        if (!row.children?.length) {
           previousValue.push(row);
         }
         return previousValue;
@@ -130,8 +130,9 @@ watch(//设置选中值
       true,
     );
   },
+  {immediate:true}
 );
-})
+});
 
 const searchText = ref('');
 const search = (searchText: string) => {
@@ -165,6 +166,11 @@ await getMenu();
 </script>
 <style lang="scss" scoped>
 .menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
   .table-menu {
     height: 100%;
     display: flex;

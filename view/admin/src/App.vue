@@ -1,5 +1,5 @@
 <template>
-  <el-config-provider :value-on-clear="()=>undefined">
+  <el-config-provider :value-on-clear="()=>null">
     <router-view v-slot="{ Component }">
       <me-component :is="Component" done-progress close-loading="layout"></me-component>
     </router-view>

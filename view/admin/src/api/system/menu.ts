@@ -12,14 +12,14 @@ export class SystemMenu {
   rule = '' as string; //权限
   orderNum = undefined as number | undefined; //排序(降序)
   path = '' as string; //路径
-  isLink = undefined as 0 | 1 | undefined; //外链:1=是;0=否
+  isLink = 0 as 0 | 1 | undefined; //外链:1=是;0=否
   component = '' as string; //组件路径(相对于views文件夹)
-  hideMenu = undefined as 0 | 1 | undefined; //隐藏:1=是;0=否
-  cache = undefined as 0 | 1 | undefined; //缓存:1=是;0=否
+  hideMenu = 0 as 0 | 1 | undefined; //隐藏:1=是;0=否
+  cache = 1 as 0 | 1 | undefined; //缓存:1=是;0=否
   icon = '' as string; //图标
-  affix = undefined as 0 | 1 | 2 | 3 | 4 | undefined; //固定tag:1=是;0=否
-  alwaysShow = undefined as 0 | 1 | undefined; //恒定展示(只有一个子元素时不隐藏):1=是;0=否
-  breadcrumb = undefined as 0 | 1 | undefined; //面包屑:1=展示;0=不展示
+  affix = 0 as 0 | 1 | 2 | 3 | 4 | undefined; //固定tag:1=是;0=否
+  alwaysShow = 0 as 0 | 1 | undefined; //恒定展示(只有一个子元素时不隐藏):1=是;0=否
+  breadcrumb = 1 as 0 | 1 | undefined; //面包屑:1=展示;0=不展示
   createdAt = '' as string; //创建时间
   updatedAt = '' as string; //最后更新时间
 }
@@ -74,9 +74,9 @@ export function systemMenuListApi(options?: RequestOptions<SystemMenuListResult,
   );
 }
 
-export type SystemMenuTreeAll = TreeArrayItem<SystemMenuInfo,'children'>[];
+export type SystemMenuTreeAll = TreeArrayItem<SystemMenuInfo, 'children'>[];
 //获取树形结构
-export function systemRoleTreeAllApi(options?: RequestOptions<SystemMenuTreeAll, []>) {
+export function systemMenuTreeAllApi(options?: RequestOptions<SystemMenuTreeAll, []>) {
   return request<SystemMenuTreeAll, []>(
     () => ({
       url: 'system/menu/treeAll',

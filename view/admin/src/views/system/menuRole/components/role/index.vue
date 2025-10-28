@@ -61,8 +61,10 @@ const formatterDict: VxeColumnPropTypes.Formatter<SystemRoleInfo> = ({ cellValue
 const emit = defineEmits<{
   currentChange: [menuIds: string[]]
 }>()
-const roleChange: VxeTableEvents.CurrentChange = ({ row }: { row: SystemRoleInfo }) =>
-  emit('currentChange', row.menus.map(menus=>menus.id));
+
+const roleChange: VxeTableEvents.CurrentRowChange<SystemRoleInfo> = ({ row }) =>{
+  emit('currentChange', row.menus.map(menu=>menu.id));
+}
 const { open } = useActionModel(AddOrUp);
 const params = reactive(new SystemRoleListParam());
 const { loading, runAsync } = systemRoleTreeAllApi();
@@ -101,7 +103,7 @@ const setRoleMenu = async (menuIds?: string[]) => {
   }
   const row = roleRef.value!.vxeTableRef!.getCurrentRecord();
   if (row) {
-    await updateSystemRoleApi().runAsync(row.id, { menus:menuIds.map(id=>({id}))});
+    await updateSystemRoleApi().runAsync(row.id, { menuIds });
     row.menus = menuIds.map(id=>({id}));
     return true;
   }
@@ -111,6 +113,11 @@ defineExpose({ setRoleMenu });
 </script>
 <style lang="scss" scoped>
 .role {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
   .table-role {
     height: 100%;
     display: flex;

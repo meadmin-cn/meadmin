@@ -11,7 +11,7 @@ import { BelongsManyModel } from '../../types/entity.js';
 @Table({ tableName: 'system_menu', comment: '菜单表' })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class SystemMenu extends TreeModel<SystemMenu> {
-  @Attribute({type:DataTypes.STRING(20), allowNull: false})
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
   @PrimaryKey
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
@@ -150,7 +150,6 @@ export class SystemMenu extends TreeModel<SystemMenu> {
   /** Declared by {@link SystemRole.menus} */
   //具有当前菜单的角色
   declare roles?: NonAttribute<SystemRole[]>;
-  
   @Attribute({
     comment: '创建者Id(管理员)',
     type: DataTypes.STRING(20),

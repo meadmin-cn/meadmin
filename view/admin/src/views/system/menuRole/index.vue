@@ -1,8 +1,12 @@
 <template>
   <div class="role-permissions">
     <el-scrollbar always view-class="body">
-      <Role ref="group" class="group" @current-change="checkedMenuIds = $event"></Role>
-      <Menu class="menu" :checked-menu-ids="checkedMenuIds" @sub-menus="role!.setRoleMenu($event)"></Menu>
+      <div class="index-role">
+        <Role ref="role" @current-change="setChecked"></Role>
+      </div>
+      <div class="index-menu">
+        <Menu :checked-menu-ids="checkedMenuIds" @sub-menus="role!.setRoleMenu($event)"></Menu>
+      </div>
     </el-scrollbar>
   </div>
 </template>
@@ -11,6 +15,7 @@ import Role from './components/role/index.vue';
 import Menu from './components/menu/index.vue';
 const role = ref<InstanceType<typeof Role>>();
 const checkedMenuIds = shallowRef([] as string[]);
+const setChecked=(menuIds:string[])=>checkedMenuIds.value = menuIds;
 </script>
 <style lang="scss" scoped>
 .role-permissions {
@@ -20,22 +25,26 @@ const checkedMenuIds = shallowRef([] as string[]);
   right: 0;
   bottom: 0;
   top: 0;
+
   :deep(.body) {
     display: flex;
     flex-wrap: wrap;
     min-height: 100%;
     padding: calc($page-padding - 10px);
-    .group {
+
+    .index-role {
       flex: 1;
       margin: 10px;
       min-width: 300px;
       min-height: 600px;
+      position: relative;
     }
 
-    .menu {
+    .index-menu {
       flex: 3;
       margin: 10px;
       min-height: 600px;
+      position: relative;
     }
 
     .keyword-lighten {

@@ -9,6 +9,8 @@ import { I18nService } from '@/service/i18n.service.js';
 
 import { Op } from '@sequelize/core';
 import { LoginService } from '../login.serveice.js';
+import { SystemRole } from '@/entities/systemRole.entity.js';
+import { SystemMenu } from '@/entities/systemMenu.entity.js';
 
 //管理员
 @Provide()
@@ -46,8 +48,8 @@ export class SystemAdminService {
       if ([null, undefined, ''].includes(queryDto[key])) {
         return;
       }
-      if (['username','nickname','mobile'].includes(key)) {
-        where[key]={[Op.like]:`%${queryDto[key]}%`};
+      if (['username', 'nickname', 'mobile'].includes(key)) {
+        where[key] = { [Op.like]: `%${queryDto[key]}%` };
         return;
       }
       if (key === 'startLastLoginAt') {
@@ -87,6 +89,18 @@ export class SystemAdminService {
       offset: (queryDto.page - 1) * queryDto.size,
       limit: queryDto.size,
       order: [['createdAt', 'DESC']],
+      include: {
+        model: SystemRole,
+        where: { status: 1 },
+        required: false,
+        include: [
+          {
+            model: SystemMenu,
+            where: { status: 1 },
+            required: false,
+          },
+        ],
+      },
     });
     return {
       list: rows,
@@ -102,7 +116,20 @@ export class SystemAdminService {
    * @returns
    */
   findOne(id: string) {
-    const entity = this.SystemAdminRepository.findByPk(id);
+    const entity = this.SystemAdminRepository.findByPk(id, {
+      include: {
+        model: SystemRole,
+        where: { status: 1 },
+        required: false,
+        include: [
+          {
+            model: SystemMenu,
+            where: { status: 1 },
+            required: false,
+          },
+        ],
+      },
+    });
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
@@ -120,12 +147,12 @@ export class SystemAdminService {
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
-    let password = entity.password;
-    let salf = entity.salt;
+    const password = entity.password;
+    const salf = entity.salt;
     Object.assign(entity, updateDto);
-    if(updateDto.password){
-      Object.assign(entity,this.loginService.entityPassword(updateDto.password));
-    }else{
+    if (updateDto.password) {
+      Object.assign(entity, this.loginService.entityPassword(updateDto.password));
+    } else {
       entity.password = password;
       entity.salt = salf;
     }

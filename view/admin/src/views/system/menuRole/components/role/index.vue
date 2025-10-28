@@ -11,6 +11,7 @@
       :custom-column="false"
       :print="false"
       :export-menu="[]"
+      :quick-search-placeholder="t('输入角色名称快捷查询')"
       show-overflow
       height="auto"
       me-class="table-role"
@@ -24,7 +25,8 @@
           <div class="role-item">
             <div>
               <span v-html="row.roleName"></span>
-              &nbsp;<el-tag v-if="row.status === 0" size="small" type="info">禁用</el-tag>
+              &nbsp;<el-tag v-if="row.status === 0" size="small" type="info">{{t('禁用')}}</el-tag>
+              <el-tag v-else size="small" type="primary">{{t('启用')}}</el-tag>
             </div>
             <div class="role-item-btn">
               <el-link type="primary" :underline="false" @click="showAddOrUp(row.id)"><mel-icon-edit /></el-link>

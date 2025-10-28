@@ -15,12 +15,13 @@
       me-class="table-menu"
       height="auto"
       show-overflow
+      :quick-search-placeholder="t('输入菜单名称快捷查询')"
       @refresh="getMenu"
       @quick-search="search"
       @add="showAddOrUp()"
     >
       <vxe-column type="checkbox" tree-node width="240px" align="left" header-align="center" field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="title" :title="t('菜单名称')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="title" :title="t('菜单名称')" type="html"></vxe-column>
       <vxe-column field="menuType" :title="t('类型')" :formatter="formatterDict"></vxe-column>
       <vxe-column field="status" :title="t('状态')" :formatter="formatterDict"></vxe-column>
       <vxe-column field="rule" :title="t('权限')" :formatter="formatterStr"></vxe-column>

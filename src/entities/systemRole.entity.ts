@@ -14,7 +14,7 @@ import { SystemAdmin } from './systemAdmin.entity.js';
 @Table({ tableName: 'system_role', comment: '角色表' })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class SystemRole extends TreeModel<SystemRole> {
-  @Attribute({type:DataTypes.STRING(20), allowNull: false})
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
   @PrimaryKey
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
@@ -51,7 +51,13 @@ export class SystemRole extends TreeModel<SystemRole> {
   remark: string;
 
   /** Declared by {@link Admin.roles} */
-  @ApiPropertyRule({ description: '关联用户' })
+  @ApiPropertyRule({
+    description: '关联用户',
+    type: 'array',
+    items: {
+      $ref: () => getSchemaPath(SystemAdmin),
+    },
+  })
   declare admins?: NonAttribute<SystemAdmin[]>;
 
   @BelongsToMany(() => SystemMenu, {
@@ -66,7 +72,7 @@ export class SystemRole extends TreeModel<SystemRole> {
     items: {
       $ref: () => getSchemaPath(SystemMenu),
     },
-    rule:RuleType.array()
+    rule: RuleType.array(),
   })
   menus?: NonAttribute<SystemMenu[]>;
 

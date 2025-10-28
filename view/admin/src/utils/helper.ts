@@ -110,6 +110,7 @@ export const searchTreeTable = function <Key extends string[], T extends TreeDat
   searchProps: Key,
   data: T[],
   options: SearchTreeOptions = { children: 'children' },
+  formatStr = (str: string, filterRE: RegExp) => str.replace(filterRE, (match) => `<span class="keyword-lighten">${match}</span>`),
 ) {
   const search = XEUtils.toValueString(searchText).trim().toLowerCase();
   if (search) {
@@ -119,7 +120,7 @@ export const searchTreeTable = function <Key extends string[], T extends TreeDat
       rest,
       (item) => {
         searchProps.forEach((key: Key[number]) => {
-          item[key] = XEUtils.toValueString(item[key]).replace(filterRE, (match) => `<span class="keyword-lighten">${match}</span>`) as T[Key[number]];
+          item[key] = formatStr(XEUtils.toValueString(item[key]), filterRE) as T[Key[number]];
         });
       },
       options,
@@ -167,7 +168,7 @@ export const listToTree = <T extends Record<string, any>>(arr: T[], key: keyof T
   const newArr = clone(arr);
   newArr.forEach((item) => {
     (item as any)[childrenKey] = [];
-    treeNode.set(item[key],item);
+    treeNode.set(item[key], item);
   });
   const rootArr = [] as Array<TreeArrayItem<T, typeof childrenKey>>;
   arr.forEach((item) => {

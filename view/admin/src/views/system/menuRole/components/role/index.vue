@@ -20,7 +20,7 @@
       @refresh="getRole"
       @quick-search="search"
     >
-      <vxe-column field="name" :title="t('角色')" tree-node>
+      <vxe-column field="name" :title="t('角色组')" tree-node>
         <template #default="{ row }">
           <div class="role-item">
             <div>
@@ -28,7 +28,7 @@
               &nbsp;<el-tag v-if="row.status === 0" size="small" type="info">{{t('禁用')}}</el-tag>
               <el-tag v-else size="small" type="primary">{{t('启用')}}</el-tag>
             </div>
-            <div class="role-item-btn">
+            <div class="role-item-btn" v-if="row.isSuper === 0">
               <el-link type="primary" :underline="false" @click="showAddOrUp(row.id)"><mel-icon-edit /></el-link>
               <el-link type="danger" :underline="false" style="margin-left: 5px" @click="del(row.id)"
                 ><mel-icon-delete/></el-link>

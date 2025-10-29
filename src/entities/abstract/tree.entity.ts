@@ -235,7 +235,7 @@ export class TreeModel<M extends TreeModel<any> = any> extends BaseModel<M> {
   //获取树形数据,返回值为普通object不是model
   static async getTree<M extends Model>(this: ModelStatic<M>, options?: FindOptions<Attributes<M>> | (Omit<FindOptions<Attributes<M>>, 'raw'> & { raw: true })) {
     const list = await this.findAll(options);
-    return listToTree(list.map((item) => item.dataValues));
+    return listToTree<M>(list.map((item) => item.dataValues));
   }
 
   //获取所有后代,并以树形返回,返回值为普通object不是model

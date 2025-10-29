@@ -1,6 +1,6 @@
 import { clone } from "lodash-es";
 
-export type TreeArrayItem<T, C extends string | number> = { [K in C]: T[] } & T;
+export type TreeArrayItem<T, C extends string | number> = { [K in C]: TreeArrayItem<T, C>[] } & T;
 /**
  * 数组转为树结构
  * @param arr

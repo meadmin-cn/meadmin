@@ -16,8 +16,9 @@ import { {{replaceNames.Name}}, {{replaceNames.Name}}Info, add{{replaceNames.Nam
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj<% if($imports.objectValues(entitySchema.properties).some(v=>v.enum || v.description.includes(':'))){%>, formatterStr<%}%> } from '@/utils/helper';
 import { FormInstance, FormRules } from 'element-plus';
-{{if $imports.objectValues(entitySchema.properties).some(value=>value.rule?._rules.some(v=>v.name==='mobile'))}}import { isMobile } from '@/utils/validate.js';{{/if}}<% include('../dict.ts.art', {...entitySchema, entity:entity, replaceNames:replaceNames}) %>
+{{if $imports.objectValues(entitySchema.properties).some(value=>value.rule?._rules.some(v=>v.name==='mobile'))}}import { isMobile } from '@/utils/validate.js';{{/if}}
 let { t } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), '{{replaceNames.name}}']);
+<% include('../dict.ts.art', {...entitySchema, entity:entity, replaceNames:replaceNames}) %>
 const show = defineModel<boolean>();
 const props = defineProps<{
   {{each entity.pk}}

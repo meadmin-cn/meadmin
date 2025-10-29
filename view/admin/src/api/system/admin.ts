@@ -13,19 +13,18 @@ export class SystemAdmin {
   email = '' as string; //邮箱
   mobile = '' as string; //手机号
   status = 1 as 1 | 0 | undefined; //状态:1=启用;0=禁用
-  isSuper = 0 as 1 | 0 | undefined; //超级管理员:1=是;0=不是
-  roles = undefined as Array<Omit<SystemRoleInfo, 'menus'>> | undefined; //具有的角色
+  roleIds = [] as string[]; //具有的角色
   createdAt = '' as string; //创建时间
   updatedAt = '' as string; //最后更新时间
 }
 
-export type SystemAdminInfo = SystemAdmin & {
+export type SystemAdminInfo = Omit<SystemAdmin,'roleIds'> & {
   id: string; //ID
   loginFailure: number | undefined; //登录失败次数
   lastLoginAt: string | null; //最后登录时间
   lastLoginIp: string; //最后登录ip
-  roles: NonNullable<SystemAdmin['roles']>;
-  roleMenus: NonNullable<SystemAdmin['roles']>;
+  roles: Array<Omit<SystemRoleInfo, 'menus'>>;
+  roleMenus: NonNullable<SystemMenuInfo>;
 };
 //添加管理员信息
 export function addSystemAdminApi() {
@@ -83,7 +82,7 @@ export function systemAdminInfoApi(options?: RequestOptions<SystemAdminInfo, [st
   );
 }
 
-export type UpdateSystemAdminInfoParam = Omit<Partial<SystemAdminInfo>, 'loginFailure' | 'lastLoginAt' | 'lastLoginIp'>;
+export type UpdateSystemAdminInfoParam = Omit<Partial<SystemAdminInfo>, 'loginFailure' | 'lastLoginAt' | 'lastLoginIp'> & {roleIds:string[]};
 //修改管理员信息
 export function updateSystemAdminApi(options?: RequestOptions<SystemAdminInfo, [string, UpdateSystemAdminInfoParam]>) {
   return request<SystemAdminInfo, [string, UpdateSystemAdminInfoParam]>(

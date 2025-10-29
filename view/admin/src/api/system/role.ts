@@ -19,6 +19,7 @@ export class SystemRole {
 
 export type SystemRoleInfo = SystemRole & {
   id: string; //ID
+  isSuper: 1 | 0 ; //超级管理员:1=是;0=不是
 };
 //添加角色信息
 export function addSystemRoleApi() {

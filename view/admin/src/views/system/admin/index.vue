@@ -31,11 +31,6 @@
             <el-option v-for="val in dict.status" :key="val.value" :value="val.value" :label="val.label" />
           </el-select>
         </el-form-item>
-        <el-form-item :label="t('超级管理员')" prop="isSuper">
-          <el-select v-model="params.isSuper" clearable >
-            <el-option v-for="val in dict.isSuper" :key="val.value" :value="val.value" :label="val.label" />
-          </el-select>
-        </el-form-item>
         <el-form-item :label="t('创建时间')" prop="createdAt">
           <el-date-picker v-model="params.startCreatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" clearable />&nbsp; - &nbsp;
           <el-form-item prop="priceEnd">
@@ -68,7 +63,6 @@
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="username" :title="t('用户名')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="nickname" :title="t('昵称')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="password" :title="t('密码')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="avatar" :title="t('头像')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="email" :title="t('邮箱')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="mobile" :title="t('手机号')" :formatter="formatterStr"></vxe-column>
@@ -76,8 +70,7 @@
       <vxe-column field="lastLoginAt" :title="t('最后登录时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="lastLoginIp" :title="t('最后登录ip')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="status" :title="t('状态')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="isSuper" :title="t('超级管理员')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="roles" :title="t('具有的角色')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="roles" :title="t('具有的角色')" :formatter="({cellValue}:{cellValue:SystemRoleInfo[]})=>cellValue.map(item=>item.roleName).join(',')"></vxe-column>
       <vxe-column field="roleMenus" :title="t('具有权限的菜单')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column>
@@ -106,14 +99,12 @@ import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
 import { formatterStr, formatterAt } from '@/utils/helper.js';
 import { VxeColumnPropTypes } from 'vxe-table';
+import { SystemRoleInfo } from '@/api/system/role';
+let { t } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemAdmin']);
 const dict = {
   status: [
-    { value: 1, label: '启用' },
-    { value: 0, label: '禁用' },
-  ],
-  isSuper: [
-    { value: 1, label: '是' },
-    { value: 0, label: '不是' },
+    { value: 1, label: t('启用') },
+    { value: 0, label: t('禁用') },
   ],
 };
 const formatterDict: VxeColumnPropTypes.Formatter<SystemAdminInfo> = ({ cellValue, column }) => {
@@ -121,7 +112,6 @@ const formatterDict: VxeColumnPropTypes.Formatter<SystemAdminInfo> = ({ cellValu
   return formatterStr({ cellValue: (dict as Record<string, { value: string | number; label: string }[]>)[column.field]?.find((item) => item.value == cellValue)?.label });
 };
 const { open } = useActionModel(AddOrUp);
-let { t } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemAdmin']);
 const params = reactive(new SystemAdminListParam());
 const { loading, data, runAsync } = systemAdminListApi();
 const search = (page = params.page, size = params.size) => runAsync(Object.assign(params, { page, size }));

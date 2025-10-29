@@ -1,6 +1,9 @@
 <template>
   <me-dialog v-model="show" :title="t(id ? '编辑' : '新增')" :close-on-click-modal="false" @closed="$emit('closed')">
     <el-form v-loading="loading" ref="formEl" :model="info" :rules="rules" class="add" label-width="auto">
+      <el-form-item :label="t('角色组')" prop="roleIds">
+        <el-tree-select v-model="info.roleIds" :data="treeAllList || []" check-strictly node-key="id" multiple filterable :props="{ label: 'roleName' }" :render-after-expand="false" />
+      </el-form-item>
       <el-form-item :label="t('用户名')" prop="username">
         <el-input v-model="info.username" clearable></el-input>
       </el-form-item>
@@ -24,11 +27,6 @@
           <el-option v-for="val in dict.status" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="t('超级管理员')" prop="isSuper">
-        <el-select v-model="info.isSuper">
-          <el-option v-for="val in dict.isSuper" :key="val.value" :value="val.value" :label="val.label" />
-        </el-select>
-      </el-form-item>
     </el-form>
     <template #footer>
       <me-button @click="() => (show = false)">{{ t('取消') }}</me-button>
@@ -44,21 +42,20 @@ import { resetObj, formatterStr } from '@/utils/helper';
 import { FormInstance, FormRules } from 'element-plus';
 import { isMobile } from '@/utils/validate.js';
 import { VxeColumnPropTypes } from 'vxe-table';
+import { systemRoleTreeAllApi } from '@/api/system/role';
+const { data: treeAllList, runAsync: getTreeAllAsync } = systemRoleTreeAllApi();
+getTreeAllAsync();
+let { t } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemAdmin']);
 const dict = {
   status: [
-    { value: 1, label: '启用' },
-    { value: 0, label: '禁用' },
+    { value: 1, label: t('启用') },
+    { value: 0, label: t('禁用') },
   ],
   isSuper: [
-    { value: 1, label: '是' },
-    { value: 0, label: '不是' },
+    { value: 1, label: t('是') },
+    { value: 0, label: t('否') },
   ],
 };
-const formatterDict: VxeColumnPropTypes.Formatter<SystemAdminInfo> = ({ cellValue, column }) => {
-  //因为ts类型判定不得不断言dict
-  return formatterStr({ cellValue: (dict as Record<string, { value: string | number; label: string }[]>)[column.field]?.find((item) => item.value == cellValue)?.label });
-};
-let { t } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemAdmin']);
 const show = defineModel<boolean>();
 const props = defineProps<{
   id?: string;
@@ -74,7 +71,8 @@ watch(
   async (id?: string) => {
     if (id) {
       loading.value = true;
-      resetObj(info, await systemAdminInfoApi({ noLoading: true }).runAsync(id));
+      const enitity = await systemAdminInfoApi({ noLoading: true }).runAsync(id);
+      resetObj(info, Object.assign({ roleIds: enitity.roles.map((item) => item.id) }, enitity));
       loading.value = false;
     }
   },
@@ -100,12 +98,7 @@ const rules: FormRules = {
 
     { validator: (rule, value: string | number) => isMobile(value), message: t('{label} 必须是正确的手机号', { label: t('手机号') }), trigger: 'blur' },
   ],
-  status: [
-    { required: true, message: t('{label} 必须选择', { label: t('状态') }), trigger: 'blur' },
-  ],
-  isSuper: [
-    { required: true, message: t('{label} 必须选择', { label: t('超级管理员') }), trigger: 'blur' },
-  ],
+  status: [{ required: true, message: t('{label} 必须选择', { label: t('状态') }), trigger: 'blur' }],
 };
 const formEl = ref<FormInstance>();
 const submit = async () => {

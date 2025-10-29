@@ -7,12 +7,16 @@ import { SystemRoleUpdateDto } from '../../dto/system/roleUpdate.dto.js';
 import { SystemRole } from '../../../../entities/systemRole.entity.js';
 import { I18nService } from '@/service/i18n.service.js';
 import { Op } from '@sequelize/core';
+import { SystemMenu } from '@/entities/systemMenu.entity.js';
 
 //角色
 @Provide()
 export class SystemRoleService {
   @InjectRepository(SystemRole)
   SystemRoleRepository: typeof SystemRole;
+
+  @InjectRepository(SystemMenu)
+  SystemMenuRepository: typeof SystemMenu;
 
   @Inject()
   i18nService: I18nService;
@@ -82,13 +86,26 @@ export class SystemRoleService {
    * @returns 
    */
   async treeAll(){
-    return await this.SystemRoleRepository.getTree({
+    const list =  await this.SystemRoleRepository.getTree({
       order: [['orderNum', 'DESC']],
       include:{//关联查询菜单
         association:'menus',
         attributes:['id'],
       }
-    })
+    });
+    const menusAll = await this.SystemMenuRepository.findAll({attributes:['id']});
+    const deepSetSuper = (arr: typeof list)=>{
+      arr.forEach(item => {
+        if(item.children){
+          deepSetSuper(item.children);
+        }
+        if(item.isSuper){
+          item.menus = menusAll;
+        }
+      });
+    }
+    deepSetSuper(list);
+    return list;
   }
 
   /**
@@ -115,6 +132,7 @@ export class SystemRoleService {
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
+    updateDto.isSuper = entity.isSuper;
     if(updateDto.menuIds){
       await entity.setMenus(updateDto.menuIds);
       entity.menus = await entity.getMenus();

@@ -84,15 +84,6 @@ export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
   status: number;
 
   @Attribute({
-    comment: '超级管理员:1=是;0=不是',
-    defaultValue: 2,
-    allowNull: false,
-    type: DataTypes.TINYINT.UNSIGNED,
-  })
-  @ApiPropertyRule({ description: '超级管理员:1=是;0=不是', rule: RuleType.number().equal(1, 0).required() })
-  isSuper: number;
-
-  @Attribute({
     comment: '创建者Id(管理员)',
     type: DataTypes.STRING(20),
   })

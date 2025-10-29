@@ -154,7 +154,7 @@ export const proxyValue = <T extends Record<string | number, any> | any[]>(value
   });
 };
 
-export type TreeArrayItem<T, C extends string | number> = { [K in C]: T[] } & T;
+export type TreeArrayItem<T, C extends string | number> = { [K in C]: TreeArrayItem<T, C>[] } & T;
 /**
  * 数组转为树结构
  * @param arr

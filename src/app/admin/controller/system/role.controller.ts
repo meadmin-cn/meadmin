@@ -24,6 +24,7 @@ export class SystemRoleController extends BaseController {
     summary: '添加角色信息',
   })
   async add(@Body() createDto: SystemRoleCreateDto) {
+    createDto.isSuper = 0;
     return this.success(await this.systemRoleService.create(createDto));
   }
 

@@ -10,9 +10,9 @@
   "最后登录时间": "Last login time",
   "最后登录ip": "Last login ip",
   "状态": "Status",
-  "超级管理员": "Is super",
   "具有的角色": "Roles",
   "具有权限的菜单": "Role menus",
   "创建时间": "Created time",
-  "最后更新时间": "Updated time"
+  "最后更新时间": "Updated time",
+  "角色组": "Role Group"
 }

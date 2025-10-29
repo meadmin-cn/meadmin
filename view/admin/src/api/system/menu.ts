@@ -17,7 +17,7 @@ export class SystemMenu {
   hideMenu = 0 as 0 | 1 | undefined; //隐藏:1=是;0=否
   cache = 1 as 0 | 1 | undefined; //缓存:1=是;0=否
   icon = '' as string; //图标
-  affix = 0 as 0 | 1 | 2 | 3 | 4 | undefined; //固定tag:1=是;0=否
+  affix = 0 as 0 | 1 | undefined; //固定tag:1=是;0=否
   alwaysShow = 0 as 0 | 1 | undefined; //恒定展示(只有一个子元素时不隐藏):1=是;0=否
   breadcrumb = 1 as 0 | 1 | undefined; //面包屑:1=展示;0=不展示
   createdAt = '' as string; //创建时间

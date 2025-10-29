@@ -111,7 +111,7 @@ export class LoginService {
    * @param adminId
    * @returns
    */
-  async getAdminById(adminId: string) {
+  async getAdminById(adminId: string, ctx?: Context) {
     const admin = await this.adminRepository.findOne({
       where: {
         id: adminId,
@@ -129,7 +129,15 @@ export class LoginService {
         ],
       },
     });
-    if (admin?.isSuper === 1) {
+    if (admin.status !== 1) {
+      if (ctx) {
+        const i18n = await ctx.requestContext.getAsync(I18nService);
+        throw new BadRequestError(i18n.translate('用户已被禁用'));
+      }else{
+        throw new BadRequestError('用户已被禁用');
+      }
+    }
+    if (admin?.roles.some((item) => item.isSuper === 1)) {
       admin.roleMenus = await this.menuRepository.findAll({
         where: { status: 1 },
       });
@@ -157,14 +165,18 @@ export class LoginService {
    */
   async login(username, password, ctx?: Context) {
     const entity = await this.adminRepository.findOne({ where: { username } });
-    if (entity && this.checkPassword(password, entity.salt, entity.password)) {
-      return await this.getToken(entity.id);
-    }
+    let translate: I18nService['translate'];
     if (ctx) {
       const i18n = await ctx.requestContext.getAsync(I18nService);
-      throw new BadRequestError(i18n.translate('错误的{key}', { args: { key: i18n.translate('用户名') + '/' + i18n.translate('密码') } }));
+      translate = i18n.translate;
     }
-    throw new BadRequestError('错误的用户名/密码');
+    if (entity && this.checkPassword(password, entity.salt, entity.password)) {
+      if (entity.status !== 1) {
+        throw new BadRequestError(translate ? translate('用户已被禁用') : '用户已被禁用');
+      }
+      return await this.getToken(entity.id);
+    }
+    throw new BadRequestError(translate ? translate('错误的{key}', { args: { key: translate('用户名') + '/' + translate('密码') } }) : '错误的用户名/密码');
   }
 
   /**

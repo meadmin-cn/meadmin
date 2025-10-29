@@ -87,6 +87,15 @@ export class SystemRole extends TreeModel<SystemRole> {
     type: DataTypes.STRING(20),
   })
   updatedAdminId: string;
+
+  @Attribute({
+    comment: '超级管理员:1=是;0=不是',
+    defaultValue: 0,
+    allowNull: false,
+    type: DataTypes.TINYINT.UNSIGNED,
+  })
+  @ApiPropertyRule({ description: '超级管理员:1=是;0=不是', rule: RuleType.number().equal(1, 0).required() })
+  isSuper: number;
 }
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export declare interface SystemRole extends BelongsManyModel<'menus', 'menu', 'menus', SystemMenu> {}

@@ -31,7 +31,11 @@ export class SystemAdminService {
    */
   async create(createDto: SystemAdminCreateDto) {
     const entity = this.SystemAdminRepository.build(createDto);
-    return await entity.save();
+    await entity.save();
+    if(createDto.roleIds){
+      entity.setRoles(createDto.roleIds);
+    }
+    return entity;
   }
 
   /**
@@ -155,6 +159,9 @@ export class SystemAdminService {
     } else {
       entity.password = password;
       entity.salt = salf;
+    }
+    if(updateDto.roleIds){
+      entity.setRoles(updateDto.roleIds);
     }
     return await entity.save();
   }

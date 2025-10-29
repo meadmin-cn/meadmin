@@ -45,9 +45,9 @@ import { useLocalesI18n } from '@/locales/i18n';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
 import {formatterStr{{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At'))}}, formatterAt{{/if}} } from '@/utils/helper.js';
-<% include('./dict.ts.art', {...entitySchema, entity:entity, replaceNames:replaceNames}) %>
 const {open} = useActionModel(AddOrUp);
 let { t } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), '{{replaceNames.name}}']);
+<% include('./dict.ts.art', {...entitySchema, entity:entity, replaceNames:replaceNames}) %>
 const params = reactive(new {{replaceNames.Name}}ListParam());
 const { loading, data, runAsync } = {{replaceNames.name}}ListApi();
 const search = (page = params.page, size = params.size) => runAsync(Object.assign(params, { page, size }));

@@ -4,12 +4,10 @@
   "description": "",
   "private": true,
   "type": "module",
-  "bin": {
-    "watchBootstrap": "./bin/watchBootstrap.js"
-  },
   "dependencies": {
     "@meadmin/cli": "workspace:^",
     "@meadmin/core": "workspace:^",
+    "@meadmin/midway-vite-view": "workspace:^",
     "@midwayjs/bootstrap": "^3.20.11",
     "@midwayjs/cache-manager": "^3.20.11",
     "@midwayjs/captcha": "3",
@@ -19,15 +17,18 @@
     "@midwayjs/koa": "^3.20.12",
     "@midwayjs/logger": "^3.4.2",
     "@midwayjs/redis": "^3.20.11",
+    "@midwayjs/static-file": "^3.20.16",
     "@midwayjs/swagger": "^3.20.12",
     "@midwayjs/validate": "^3.20.12",
     "@sequelize/core": "7.0.0-alpha.46",
     "@sequelize/postgres": "7.0.0-alpha.46",
     "@sequelize/utils": "7.0.0-alpha.46",
+    "core": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/core",
     "dayjs": "^1.11.13",
     "dotenv": "^16.6.1",
     "lodash-es": "^4.17.21",
-    "midway-vite-view": "^2.1.2",
+    "midway-vite-view": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/midway-vite-view",
+    "my-midway-esm-project": "link:",
     "swagger-ui-dist": "^5.27.1",
     "tsx": "^4.20.5",
     "vite": "^6.3.5"
@@ -55,19 +56,25 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./bootstrap.js",
-    "dev": "cross-env NODE_ENV=local  mwtsc  --cleanOutDir --watch --run @midwayjs/mock/app",
+    "dev": "cross-env NODE_ENV=local  npx me-devBootstrap --cleanOutDir --watch --run @midwayjs/mock/app --keepalive ",
     "test": "cross-env NODE_ENV=unittest TSX_TSCONFIG_PATH=./test/tsconfig.json mocha",
     "cov": "cross-env c8 --all --reporter=text --reporter=lcovonly npm run test",
     "lint": "mwts check",
     "lint:fix": "mwts fix",
     "ci": "npm run cov",
     "build": "mwtsc --cleanOutDir",
-    "dev:pack": "cross-env NODE_ENV=local lerna run build &&  cross-env NODE_ENV=local npx watchBootstrap --watch --run @midwayjs/mock/app"
+    "dev:pack": "cross-env NODE_ENV=local lerna run build &&  cross-env NODE_ENV=local npx me-watchBootstrap --watch --run @midwayjs/mock/app"
   },
   "repository": {
     "type": "git",
     "url": ""
   },
   "author": "anonymous",
-  "license": "MIT"
+  "license": "MIT",
+  "pnpm": {
+    "overrides": {
+      "midway-vite-view": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/midway-vite-view",
+      "core": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/core"
+    }
+  }
 }

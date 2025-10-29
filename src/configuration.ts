@@ -10,7 +10,7 @@ import UnittestConfig from '@/config/config.unittest.js';
 import * as meadmin from '@meadmin/core';
 import * as swagger from '@midwayjs/swagger';
 import { RegistreDecorators } from './decorators/index.js';
-import * as viteView from 'midway-vite-view'; //引入view组件
+import * as viteView from '@meadmin/midway-vite-view'; //引入view组件
 import * as cacheManager from '@midwayjs/cache-manager';
 
 import * as redis from '@midwayjs/redis';

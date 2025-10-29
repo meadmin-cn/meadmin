@@ -1,0 +1,22 @@
+{
+  "extends":"../../tsconfig.json",
+  "compileOnSave": true,
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "preserveSymlinks": true
+  },
+  "paths": {
+    "@/*": ["./src/*"]
+  },
+  "exclude": [
+    "*.js",
+    "*.ts",
+    "dist",
+    "node_modules",
+    "test",
+    "packages",
+    "example"
+  ]
+}

@@ -1,3 +1,3 @@
 packages:
   - packages/*
-  - view/*
+  - view/* #pnpm 安装包时管理view前端包

@@ -1,4 +1,4 @@
-import { appLogger } from '@/logger.js';
+import { appLogger } from '../logger.js';
 import { importModels, Options } from '@sequelize/core';
 import { PostgresDialect } from '@sequelize/postgres';
 export default async () => ({

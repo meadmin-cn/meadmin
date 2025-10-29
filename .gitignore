@@ -13,3 +13,4 @@ run/
 .tsbuildinfo.*
 .nx/
 .env.local
+public/html/

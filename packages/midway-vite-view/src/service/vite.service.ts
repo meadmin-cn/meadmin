@@ -7,7 +7,7 @@ import {
   App,
   MidwayConfig,
 } from '@midwayjs/core';
-import { createServer, ViteDevServer, normalizePath } from 'vite';
+import { createServer, ViteDevServer, normalizePath, HmrOptions } from 'vite';
 import { getPort } from '../utils/index.js';
 import c2k from 'koa2-connect';
 import * as path from 'node:path';
@@ -62,7 +62,7 @@ export class ViteService {
   private vite = {} as { [key: string]: ViteDevServer };
   private middlewareArr = [] as MiddlewareArr;
   //生成vite server
-  async createVite(configFile: string) {
+  async createVite(configFile: string, hmr?: HmrOptions | boolean) {
     if (!this.vite[configFile]) {
       this.vite[configFile] = await createServer({
         configFile,
@@ -78,6 +78,7 @@ export class ViteService {
             usePolling: true,
             interval: 100,
           },
+          hmr:hmr
         },
       });
     }
@@ -153,6 +154,7 @@ export class ViteService {
     Object.keys(this.vite).forEach(key => {
       json[key] = {
         time: new Date(),
+        hmr: this.vite[key].config.server.hmr
       };
     });
     writeFileSync(catchPath, JSON.stringify(json), 'utf8');
@@ -164,7 +166,7 @@ export class ViteService {
     if (existsSync(catchPath)) {
       const json = JSON.parse(readFileSync(catchPath, 'utf8'));
       json && Object.keys(json).forEach(key => {
-        this.createVite(key);
+        this.createVite(key,json[key].hmr);
       });
     }
   }

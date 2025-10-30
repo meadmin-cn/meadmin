@@ -5,7 +5,7 @@
         <Role ref="role" @current-change="setChecked"></Role>
       </div>
       <div class="index-menu">
-        <Menu :checked-menu-ids="checkedMenuIds" @sub-menus="role!.setRoleMenu($event)"></Menu>
+        <Menu :checked-menu-ids="checkedMenuIds" :is-super="roleIsSuper" @sub-menus="role!.setRoleMenu($event)"></Menu>
       </div>
     </el-scrollbar>
   </div>
@@ -15,7 +15,11 @@ import Role from './components/role/index.vue';
 import Menu from './components/menu/index.vue';
 const role = ref<InstanceType<typeof Role>>();
 const checkedMenuIds = shallowRef([] as string[]);
-const setChecked=(menuIds:string[])=>checkedMenuIds.value = menuIds;
+const roleIsSuper = ref<0|1>(0);
+const setChecked = (menuIds: string[], isSuper: 0 | 1) => {
+  checkedMenuIds.value = menuIds;
+  roleIsSuper.value = isSuper;
+}
 </script>
 <style lang="scss" scoped>
 .role-permissions {

@@ -6,7 +6,7 @@
       :data="data ?? []"
       :loading="loading"
       :custom-column="false"
-      :tree-config="{ expandAll: true, line: true, reserve: true }"
+      :tree-config="{ expandAll: true, showLine: true, reserve: true }"
       :checkbox-config="{ labelField: 'id' }"
       :row-config="{ keyField: 'id', useKey: true }"
       :column-config="{ useKey: true }"
@@ -31,7 +31,7 @@
       <vxe-column field="orderNum" :title="t('排序(降序)')" :formatter="formatterStr"></vxe-column>
       <vxe-column title="操作">
         <template #default="{ row }">
-          <el-button  @click="showAddOrUp(row.id)"><mel-icon-edit /></el-button>
+          <el-button @click="showAddOrUp(row.id)"><mel-icon-edit /></el-button>
           <el-popconfirm :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
             <template #reference>
               <el-button :key="row.id" :loading="delLoading && delId === row.id" type="danger">
@@ -44,13 +44,16 @@
       <template #toolsButton>
         <el-button
           type="success"
+          :disabled="isSuper !== 0"
           @click="
-            emit(
-              'subMenus',
-              menuRef!.vxeTableRef!.getCheckboxRecords(true).map((item) => item.id),
-            )
+            isSuper === 0 &&
+              emit(
+                'subMenus',
+                menuRef!.vxeTableRef!.getCheckboxRecords(true).map((item) => item.id),
+              )
           "
-          >保存</el-button>
+          >保存</el-button
+        >
       </template>
     </me-vxe-table>
   </div>
@@ -106,33 +109,34 @@ const formatterDict: VxeColumnPropTypes.Formatter<SystemMenuInfo> = ({ cellValue
 };
 const { open } = useActionModel(AddOrUp);
 
-const { checkedMenuIds =  [] } = defineProps<{checkedMenuIds:string[]}>()
+const { checkedMenuIds = [], isSuper = 0 } = defineProps<{ checkedMenuIds: string[]; isSuper: 0 | 1 }>();
 const emit = defineEmits<{
-  subMenus: [menuIds: string[]]//提交菜单选中
-}>()
+  subMenus: [menuIds: string[]]; //提交菜单选中
+}>();
 const params = reactive(new SystemMenuListParam());
 const { loading, data, runAsync } = systemMenuTreeAllApi();
-onMounted(()=>{
-watch(//设置选中值
-  () => [checkedMenuIds, data.value],
-  async () => {
-    if (!data.value?.length) {
-      return;
-    }
-    await menuRef.value!.vxeTableRef!.clearCheckboxRow();
-    menuRef.value!.vxeTableRef!.setCheckboxRow(
-      checkedMenuIds.reduce((previousValue, currentValue) => {
-        const row = menuRef.value!.vxeTableRef!.getRowById(currentValue);
-        if (!row.children?.length) {
-          previousValue.push(row);
-        }
-        return previousValue;
-      }, [] as any[]),
-      true,
-    );
-  },
-  {immediate:true}
-);
+onMounted(() => {
+  watch(
+    //设置选中值
+    () => [checkedMenuIds, data.value],
+    async () => {
+      if (!data.value?.length) {
+        return;
+      }
+      await menuRef.value!.vxeTableRef!.clearCheckboxRow();
+      menuRef.value!.vxeTableRef!.setCheckboxRow(
+        checkedMenuIds.reduce((previousValue, currentValue) => {
+          const row = menuRef.value!.vxeTableRef!.getRowById(currentValue);
+          if (!row.children?.length) {
+            previousValue.push(row);
+          }
+          return previousValue;
+        }, [] as any[]),
+        true,
+      );
+    },
+    { immediate: true },
+  );
 });
 
 const searchText = ref('');

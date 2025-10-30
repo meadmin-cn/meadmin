@@ -6,7 +6,7 @@ import 'vxe-table-plugin-element/dist/style.css';
 import 'vxe-table/lib/style.css';
 import { useSettingStore } from '@/store';
 VxeUI.use(VXETablePluginElement);
-if (app.config.globalProperties.$start) {
+if (app?.config?.globalProperties?.$start) {
   //为了兼容热更新重新拉取
   VxeUI.setConfig({
     // 对组件内置的提示语进行国际化翻译

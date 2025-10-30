@@ -6,7 +6,7 @@
       :data="data||[]"
       :loading="loading"
       :row-config="{ isCurrent: true, useKey: true }"
-      :tree-config="{ expandAll: true, line: true }"
+      :tree-config="{ expandAll: true, showLine: true }"
       :column-config="{ useKey: true }"
       :custom-column="false"
       :print="false"
@@ -61,11 +61,11 @@ const formatterDict: VxeColumnPropTypes.Formatter<SystemRoleInfo> = ({ cellValue
   return formatterStr({ cellValue: (dict as Record<string, { value: string | number; label: string }[]>)[column.field]?.find((item) => item.value == cellValue)?.label });
 };
 const emit = defineEmits<{
-  currentChange: [menuIds: string[]]
+  currentChange: [menuIds: string[], isSuper: 0 | 1]
 }>()
 
 const roleChange: VxeTableEvents.CurrentRowChange<SystemRoleInfo> = ({ row }) =>{
-  emit('currentChange', row.menus.map(menu=>menu.id));
+  emit('currentChange', row.menus.map(menu=>menu.id), row.isSuper);
 }
 const { open } = useActionModel(AddOrUp);
 const params = reactive(new SystemRoleListParam());

@@ -59,14 +59,14 @@
   </div>
 </template>
 <script setup lang="ts" name="Menu">
-import { SystemMenuListParam, delSystemMenuApi, SystemMenuInfo, systemMenuTreeAllApi, SystemMenuTreeAll } from '@/api/system/menu';
+import { delSystemMenuApi, SystemMenuInfo, systemMenuTreeAllApi, SystemMenuTreeAll } from '@/api/system/menu';
 import { useLocalesI18n } from '@/locales/i18n';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
 import { formatterStr, searchTreeTable } from '@/utils/helper.js';
 import { VxeColumnPropTypes } from 'vxe-table';
 import { cloneDeep } from 'lodash-es';
-let { t } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemMenu']);
+let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemMenu']);
 const menuRef = ref<MeVxeTableInstance>();
 const dict = {
   menuType: [
@@ -113,7 +113,6 @@ const { checkedMenuIds = [], isSuper = 0 } = defineProps<{ checkedMenuIds: strin
 const emit = defineEmits<{
   subMenus: [menuIds: string[]]; //提交菜单选中
 }>();
-const params = reactive(new SystemMenuListParam());
 const { loading, data, runAsync } = systemMenuTreeAllApi();
 onMounted(() => {
   watch(
@@ -166,8 +165,7 @@ const showAddOrUp = (id?: string) => {
     },
   });
 };
-
-await getMenu();
+await Promise.all([loadRes,getMenu()]);
 </script>
 <style lang="scss" scoped>
 .menu {

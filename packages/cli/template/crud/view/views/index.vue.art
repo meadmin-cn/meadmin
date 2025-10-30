@@ -46,7 +46,7 @@ import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
 import {formatterStr{{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At'))}}, formatterAt{{/if}} } from '@/utils/helper.js';
 const {open} = useActionModel(AddOrUp);
-let { t } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), '{{replaceNames.name}}']);
+let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), '{{replaceNames.name}}']);
 <% include('./dict.ts.art', {...entitySchema, entity:entity, replaceNames:replaceNames}) %>
 const params = reactive(new {{replaceNames.Name}}ListParam());
 const { loading, data, runAsync } = {{replaceNames.name}}ListApi();
@@ -63,6 +63,6 @@ const showAddOrUp = ({{entity.pk.map(v=>`${v}?:${entitySchema.properties[v].type
     await search(1);
   }});
 };
-await search(1);
+await Promise.all([loadRes,search(1)]);
 </script>
 

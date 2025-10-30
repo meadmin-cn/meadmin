@@ -76,7 +76,8 @@ import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj, formatterStr } from '@/utils/helper';
 import { FormInstance, FormRules } from 'element-plus';
 import { VxeColumnPropTypes } from 'vxe-table';
-let { t } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemMenu']);
+let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemMenu']);
+await loadRes;
 const dict = {
   menuType: [
     { value: 1, label: t('目录') },

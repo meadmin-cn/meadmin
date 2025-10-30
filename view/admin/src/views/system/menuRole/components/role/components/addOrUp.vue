@@ -35,7 +35,8 @@ import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj, formatterStr } from '@/utils/helper';
 import { FormInstance, FormRules } from 'element-plus';
 import { VxeColumnPropTypes } from 'vxe-table';
-let { t } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemRole']);
+let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemRole']);
+await loadRes;
 const dict = {
   status: [
     { value: 1, label: t('启用') },

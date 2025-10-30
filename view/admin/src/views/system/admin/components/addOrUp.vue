@@ -45,7 +45,8 @@ import { VxeColumnPropTypes } from 'vxe-table';
 import { systemRoleTreeAllApi } from '@/api/system/role';
 const { data: treeAllList, runAsync: getTreeAllAsync } = systemRoleTreeAllApi();
 getTreeAllAsync();
-let { t } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemAdmin']);
+let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemAdmin']);
+await loadRes;
 const dict = {
   status: [
     { value: 1, label: t('启用') },

@@ -100,7 +100,7 @@ import { useActionModel } from '@/hooks/index.js';
 import { formatterStr, formatterAt } from '@/utils/helper.js';
 import { VxeColumnPropTypes } from 'vxe-table';
 import { SystemRoleInfo } from '@/api/system/role';
-let { t } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemAdmin']);
+let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemAdmin']);
 const dict = {
   status: [
     { value: 1, label: t('启用') },
@@ -130,5 +130,5 @@ const showAddOrUp = (id?: string) => {
     },
   });
 };
-await search(1);
+await Promise.all([loadRes, search(1)]);
 </script>

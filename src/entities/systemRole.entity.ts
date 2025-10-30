@@ -6,7 +6,7 @@ import { ApiPropertyRule } from '@/decorators/index.js';
 import { SystemMenu } from './systemMenu.entity.js';
 import { TreeModel } from './abstract/tree.entity.js';
 import { BelongsManyModel } from '../../types/entity.js';
-import { ApiExtraModel, getSchemaPath } from '@midwayjs/swagger';
+import { ApiExtraModel } from '@midwayjs/swagger';
 import { SystemAdmin } from './systemAdmin.entity.js';
 
 //rule规则使用添加接口的校验规则
@@ -55,7 +55,7 @@ export class SystemRole extends TreeModel<SystemRole> {
     description: '关联用户',
     type: 'array',
     items: {
-      $ref: () => getSchemaPath(SystemAdmin),
+      type: () => SystemAdmin,
     },
   })
   declare admins?: NonAttribute<SystemAdmin[]>;
@@ -70,7 +70,7 @@ export class SystemRole extends TreeModel<SystemRole> {
     description: '具有权限菜单',
     type: 'array',
     items: {
-      $ref: () => getSchemaPath(SystemMenu),
+      type: () => SystemMenu,
     },
     rule: RuleType.array(),
   })

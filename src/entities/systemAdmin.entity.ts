@@ -108,7 +108,7 @@ export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
     description: '具有的角色',
     type: 'array',
     items: {
-      type: SystemRole,
+      type: ()=>SystemRole,
     },
   })
   declare roles?: NonAttribute<SystemRole[]>;
@@ -118,7 +118,7 @@ export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
     description: '具有权限的菜单',
     type: 'array',
     items: {
-      type: SystemMenu,
+      type: ()=>SystemMenu,
     },
   })
   get roleMenus(): NonAttribute<SystemMenu[]> {

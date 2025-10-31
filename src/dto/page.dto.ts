@@ -12,5 +12,5 @@ export class PageDto {
 
     type: 'integer',
   })
-  size: number;
+  pageSize: number;
 }

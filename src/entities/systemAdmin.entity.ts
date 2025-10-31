@@ -1,6 +1,4 @@
 import { uuid } from '@/helper/snowflake.js';
-import { ApiProperty } from '@midwayjs/swagger';
-import { Rule } from '@midwayjs/validate';
 import { RuleType } from '@/ruleType/index.js';
 import { DataTypes, NonAttribute } from '@sequelize/core';
 import { Attribute, PrimaryKey, Default, Table, BelongsToMany, Unique } from '@sequelize/core/decorators-legacy';
@@ -17,8 +15,7 @@ export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
   @Attribute({ type: DataTypes.STRING(20), allowNull: false })
   @PrimaryKey
   @Default(uuid)
-  @Rule(RuleType.string())
-  @ApiProperty({ description: 'ID' })
+  @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
   id: string;
 
   @Attribute({ type: DataTypes.STRING(50), comment: '用户名', allowNull: false, defaultValue: '' })

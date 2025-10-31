@@ -1,7 +1,8 @@
 import { MidwayConfig } from '@midwayjs/core';
 import database from './database.js';
-import { join } from 'path';
+import { resolve } from 'path';
 import { createRedisStore } from '@midwayjs/cache-manager';
+import { uploadWhiteList } from '@midwayjs/busboy';
 
 export default {
   // use for cookie sign key, should change to your own and keep security
@@ -54,7 +55,7 @@ export default {
       'admin/index.html': {
         // entryServer: 'admin/src/entry-server.ts',
         root: 'admin',
-        viteConfigFile: join(import.meta.dirname, '../../view/admin/vite.config.ts'),
+        viteConfigFile: resolve(import.meta.dirname, '../../view/admin/vite.config.ts'),
       },
     },
     root: '',
@@ -85,7 +86,18 @@ export default {
       cacheKey: 'admin', //token使用的缓存key对应cacheManager.clients
     },
     auth: {
-      noLoginUrl: ['/api/admin/login/login', '/api/admin/login/captcha'] as Array<string | RegExp>, //无需登录地址
+      noLoginUrl: [`/api/admin/login/login`, `/api/admin/login/captcha`, new RegExp('/api/admin/file/get/.+')] as Array<string | RegExp>, //无需登录地址
     },
+  },
+  busboy: {
+    mode: 'asyncIterator',
+    // 扩展名白名单
+    whitelist: uploadWhiteList,
+    limits: {
+      fileSize: 500*1024*1024,//上传限制 单位为byte
+    },
+    tmpdir: resolve(import.meta.dirname, '../../uploadFile/tmp'),
+    upDir: resolve(import.meta.dirname, '../../uploadFile/'),
+    cleanTimeout: 5 * 60 * 1000,
   },
 } as MidwayConfig;

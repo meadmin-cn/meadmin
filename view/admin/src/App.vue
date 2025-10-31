@@ -5,7 +5,9 @@
     </router-view>
     <set-el-globel v-if="showSetElGlobel"></set-el-globel>
     <Teleport to="body">
-      <component :is="item.component" v-for="item in globalComponents" :key="item.key" :ref="(vnode:any)=>item.vnode = vnode" v-bind="item.props"></component>
+      <Suspense>
+        <component :is="item.component" v-for="item in globalComponents" :key="item.key" :ref="(vnode:any)=>item.vnode = vnode" v-bind="item.props"></component>
+      </Suspense>
     </Teleport>
   </el-config-provider>
 </template>

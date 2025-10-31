@@ -3,7 +3,6 @@ import { Configuration, App, IMidwayContainer, Init, IMidwayApplication, Inject,
 import * as koa from '@midwayjs/koa';
 import * as validate from '@midwayjs/validate';
 import * as info from '@midwayjs/info';
-
 // import { ReportMiddleware } from './middleware/report.middleware.js';
 import DefaultConfig from '@/config/config.default.js';
 import UnittestConfig from '@/config/config.unittest.js';
@@ -12,12 +11,12 @@ import * as swagger from '@midwayjs/swagger';
 import { RegistreDecorators } from './decorators/index.js';
 import * as viteView from '@meadmin/midway-vite-view'; //引入view组件
 import * as cacheManager from '@midwayjs/cache-manager';
-
 import * as redis from '@midwayjs/redis';
 import { filters } from './filter/index.js';
 import { initLogger } from './logger.js';
 import * as i18n from '@midwayjs/i18n';
 import * as captcha from '@midwayjs/captcha';
+import * as busboy from '@midwayjs/busboy';
 
 const registreDecorators = new RegistreDecorators();
 
@@ -39,6 +38,7 @@ const registreDecorators = new RegistreDecorators();
     redis,
     cacheManager,
     captcha,
+    busboy,
   ],
   importConfigs: [
     {

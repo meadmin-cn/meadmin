@@ -5,7 +5,7 @@ export class PageRes<T = any> {
   @ApiProperty({ description: '分页页码', type: 'integer' })
   page: number;
   @ApiProperty({ description: '每页记录数', type: 'integer' })
-  size: number;
+  pageSize: number;
   @ApiProperty({ description: '总数量', type: 'integer' })
   total: number;
   @ApiProperty({

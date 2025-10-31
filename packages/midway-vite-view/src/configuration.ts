@@ -10,7 +10,7 @@ import { ViteService } from './service/vite.service.js';
 
 @Configuration({
   namespace: 'viteView',
-  imports: [koa, view, staticFile],
+  imports: [view, staticFile],
   importConfigs: [
     {
       default: DefaultConfig,

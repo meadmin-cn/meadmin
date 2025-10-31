@@ -39,7 +39,7 @@ export class {{replaceNames.Service}} {
   async list(queryDto: {{replaceNames.QueryDto}}) {
     const where = {};
     Object.keys(queryDto).forEach((key) => {
-      if(['page', 'size'].includes(key)){
+      if(['page', 'pageSize'].includes(key)){
         return;
       }
       if([null, undefined, ''].includes(queryDto[key])){
@@ -59,15 +59,15 @@ export class {{replaceNames.Service}} {
     });    
     const { count, rows } = await this.{{replaceNames.Name}}Repository.findAndCountAll({
       where,
-      offset: (queryDto.page - 1) *  queryDto.size,
-      limit: queryDto.size,
+      offset: (queryDto.page - 1) *  queryDto.pageSize,
+      limit: queryDto.pageSize,
       {{if $imports.objectKeys(entitySchema.properties).includes('createdAt')}}order: [['createdAt', 'DESC']],
     {{/if}}})
     return {
       list: rows,
       total: count,
       page: queryDto.page,
-      size: queryDto.size,
+      pageSize: queryDto.pageSize,
     };
   }
 
@@ -76,8 +76,8 @@ export class {{replaceNames.Service}} {
    * @param {{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}} 主键
    * @returns
    */
-  findOne({{if entity.pk.length > 1}}pk:PK{{else}}{{entity.pk[0]}}: {{entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
-    const entity = this.{{replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}});
+  async findOne({{if entity.pk.length > 1}}pk:PK{{else}}{{entity.pk[0]}}: {{entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
+    const entity = await this.{{replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}});
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }

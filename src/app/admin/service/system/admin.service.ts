@@ -46,7 +46,7 @@ export class SystemAdminService {
   async list(queryDto: SystemAdminQueryDto) {
     const where = {};
     Object.keys(queryDto).forEach((key) => {
-      if (['page', 'size'].includes(key)) {
+      if (['page', 'pageSize'].includes(key)) {
         return;
       }
       if ([null, undefined, ''].includes(queryDto[key])) {
@@ -90,8 +90,8 @@ export class SystemAdminService {
     });
     const { count, rows } = await this.SystemAdminRepository.findAndCountAll({
       where,
-      offset: (queryDto.page - 1) * queryDto.size,
-      limit: queryDto.size,
+      offset: (queryDto.page - 1) * queryDto.pageSize,
+      limit: queryDto.pageSize,
       order: [['createdAt', 'DESC']],
       include: {
         model: SystemRole,
@@ -110,7 +110,7 @@ export class SystemAdminService {
       list: rows,
       total: count,
       page: queryDto.page,
-      size: queryDto.size,
+      pageSize: queryDto.pageSize,
     };
   }
 
@@ -119,8 +119,8 @@ export class SystemAdminService {
    * @param id 主键
    * @returns
    */
-  findOne(id: string) {
-    const entity = this.SystemAdminRepository.findByPk(id, {
+  async findOne(id: string) {
+    const entity = await this.SystemAdminRepository.findByPk(id, {
       include: {
         model: SystemRole,
         where: { status: 1 },

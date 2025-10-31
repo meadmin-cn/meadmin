@@ -47,15 +47,15 @@ export class ResponseService {
    * @param list
    * @param total
    * @param page
-   * @param size
+   * @param pageSize
    * @param message
    * @returns
    */
-  public successPage<T = any>(list: T[], total: number, page: number, size: number, message: string): ApiPageRes<T> {
+  public successPage<T = any>(list: T[], total: number, page: number, pageSize: number, message: string): ApiPageRes<T> {
     return this.success(
       {
         page,
-        size,
+        pageSize,
         total,
         list,
       },

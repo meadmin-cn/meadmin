@@ -50,7 +50,7 @@
       :data="data?.list"
       :pagination-options="{
         currentPage: params.page,
-        pageSize: params.size,
+        pageSize: params.pageSize,
         total: data?.total ?? 0,
         layout: 'sizes, prev, pager, next, jumper, ->, total',
         change: search,
@@ -114,7 +114,7 @@ const formatterDict: VxeColumnPropTypes.Formatter<SystemAdminInfo> = ({ cellValu
 const { open } = useActionModel(AddOrUp);
 const params = reactive(new SystemAdminListParam());
 const { loading, data, runAsync } = systemAdminListApi();
-const search = (page = params.page, size = params.size) => runAsync(Object.assign(params, { page, size }));
+const search = (page = params.page, pageSize = params.pageSize) => runAsync(Object.assign(params, { page, pageSize }));
 const { runAsync: delRun, loading: delLoading } = delSystemAdminApi();
 const delId = ref<string>();
 const del = async (id: string) => {

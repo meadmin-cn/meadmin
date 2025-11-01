@@ -1,6 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    "preserveSymlinks": false,
     "target": "ESNext",
     "module": "NodeNext",
     "moduleResolution": "nodenext",

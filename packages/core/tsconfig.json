@@ -5,7 +5,6 @@
     "rootDir": "src",
     "outDir": "dist",
     "baseUrl": ".",
-    "preserveSymlinks": true
   },
   "paths": {
     "@/*": ["./src/*"]

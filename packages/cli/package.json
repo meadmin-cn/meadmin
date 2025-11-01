@@ -37,9 +37,9 @@
     "swagger-client": "^3.35.6"
   },
   "peerDependencies": {
-    "@sequelize/cli": "7.0.0-alpha.46",
-    "@sequelize/core": "7.0.0-alpha.46",
-    "@sequelize/postgres": "7.0.0-alpha.46"
+    "@sequelize/cli": "7.x || >=7.0.0-alpha.46",
+    "@sequelize/core": "7.x || >=7.0.0-alpha.46",
+    "@sequelize/postgres": "7.x || >=7.0.0-alpha.46"
   },
   "engines": {
     "node": ">=20.13.1"

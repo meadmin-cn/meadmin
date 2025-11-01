@@ -30,14 +30,14 @@
     "typescript": "^5.9.2"
   },
   "peerDependencies": {
-    "@midwayjs/bootstrap": "^3.20.11",
-    "@midwayjs/core": "^3.20.11",
-    "@midwayjs/info": "^3.20.12",
-    "@midwayjs/koa": "^3.20.12",
-    "@midwayjs/logger": "^3.4.2",
-    "@midwayjs/validate": "^3.20.12",
-    "mwts": "^1.3.0",
-    "mwtsc": "^1.15.2"
+    "@midwayjs/bootstrap": ">=3.20.11 3.x",
+    "@midwayjs/core": ">=3.20.11 3.x",
+    "@midwayjs/info": ">=3.20.12 3.x",
+    "@midwayjs/koa": ">=3.20.12 3.x",
+    "@midwayjs/logger": ">=3.4.2 3.x",
+    "@midwayjs/validate": ">=3.20.12 3.x",
+    "mwts": ">=1.3.0 1.x",
+    "mwtsc": ">=1.15.2 1.x"
   },
   "engines": {
     "node": ">=20.0.0"

@@ -24,15 +24,12 @@
     "@sequelize/core": "7.0.0-alpha.46",
     "@sequelize/postgres": "7.0.0-alpha.46",
     "@sequelize/utils": "7.0.0-alpha.46",
-    "core": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/core",
     "dayjs": "^1.11.13",
     "dotenv": "^16.6.1",
     "lodash-es": "^4.17.21",
-    "midway-vite-view": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/midway-vite-view",
-    "my-midway-esm-project": "link:",
     "swagger-ui-dist": "^5.27.1",
     "tsx": "^4.20.5",
-    "vite": "^6.3.5"
+    "vite": "^6.3.6"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",

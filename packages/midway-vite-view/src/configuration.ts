@@ -36,9 +36,16 @@ export class MidwayViteViewConfiguration {
       !['prod', 'production'].includes(this.app.getEnv())
     ) {
       this.app.useMiddleware(ViteMiddleware);
-      this.viteService.restoreVite();
     }
     this.viewManager.use('viteView', ViteView);
+  }
+  async onServerReady() {
+    if (
+      this.viteViewConfig.prod === false ||
+      !['prod', 'production'].includes(this.app.getEnv())
+    ) {
+      this.viteService.restoreVite();
+    }
   }
 
   async onStop(){

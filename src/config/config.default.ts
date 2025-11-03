@@ -90,7 +90,7 @@ export default {
     },
   },
   busboy: {
-    mode: 'asyncIterator',
+    mode: 'stream',
     // 扩展名白名单
     whitelist: uploadWhiteList,
     limits: {

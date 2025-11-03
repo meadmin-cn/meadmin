@@ -6,7 +6,7 @@ import { FileQueryDto } from '../dto/fileQuery.dto.js';
 import { FileUpdateDto } from '../dto/fileUpdate.dto.js';
 import { FileService } from '../service/file.service.js';
 import { ApiOperationResponse } from '@/decorators/index.js';
-import { UploadMiddleware, UploadOptions, UploadStreamFieldInfo, UploadStreamFileInfo } from '@midwayjs/busboy';
+import { UploadMiddleware, UploadOptions, UploadStreamFileInfo } from '@midwayjs/busboy';
 import { relative, resolve } from 'node:path';
 import { ApiBody, BodyContentType } from '@midwayjs/swagger';
 import { FileUpDto } from '../dto/fileUp.dto.js';
@@ -46,13 +46,10 @@ export class FileController extends BaseController {
     summary: '上传附件',
     description: '如果data为{}代表分片上传成功，为Fule对象代表文件上传完成(可能已存在秒传成功)',
   })
-  async upload(@Files() fileIterator: AsyncGenerator<UploadStreamFileInfo>, @Fields() fieldIterator: AsyncGenerator<UploadStreamFieldInfo>) {
-    const file = (await fileIterator.next()).value; //只获取一个文件，不支持多文件数组
-    const params = {} as FileUpDto;
-    for await (const { name, value } of fieldIterator) {
-      params[name] = value;
-    }
-    const fileParams = { storage: 'local' } as FileCreateDto;
+  async upload(@Files() files: Array<UploadStreamFileInfo>, @Fields() params: FileUpDto) {
+
+    const file = files[0]; //只获取一个文件，不支持多文件数组
+      const fileParams = { storage: 'local' } as FileCreateDto;
     fileParams.md5 = params.md5;
     //只处理1个文件上传
     const { filename, mimeType } = file;
@@ -98,7 +95,7 @@ export class FileController extends BaseController {
         fileParams.path = relative(this.fileUpconfig.upDir, saveFilePath);
       }
     }
-    fileParams.name = params.filename || filename;
+    fileParams.name = params.name || filename;
     fileParams.mimeType = mimeType;
     return this.success(await this.fileService.create(fileParams));
   }

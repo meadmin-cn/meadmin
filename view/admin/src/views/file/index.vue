@@ -46,14 +46,17 @@
       change: search,
     }" align="center" border @refresh="search(1)" @add="showAdd()">
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="filename" :title="t('文件名')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="name" :title="t('文件名')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="path" :title="t('路径')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="mimeType" :title="t('mime类型')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="size" :title="t('文件大小')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="storage" :title="t('存储引擎')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="createdAdmin" :title="t('创建者')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="createdAdmin" :title="t('创建者')" :formatter="formatterStr">
+        <template #default="{ row }: { row: FileInfo }">
+          {{ row.createdAdmin.nickname }}({{ row.createdAdmin.username }})
+        </template>
+      </vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
-      <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column :title="t('操作')" fixed="right" min-width="150px">
         <template #default="{ row }: { row: FileInfo }">
           <el-button @click="showUp(row.id)">

@@ -3,7 +3,8 @@ import { VxeUI, VxeModal } from 'vxe-pc-ui';
 import { VxeTable, VxeColumn, VxeColgroup, VxeGrid, VxeToolbar } from 'vxe-table';
 import VXETablePluginElement from 'vxe-table-plugin-element';
 import 'vxe-table-plugin-element/dist/style.css';
-import 'vxe-table/lib/style.css';
+import 'vxe-pc-ui/es/style.css'
+import 'vxe-table/es/style.css'
 import { useSettingStore } from '@/store';
 VxeUI.use(VXETablePluginElement);
 if (app?.config?.globalProperties?.$start) {

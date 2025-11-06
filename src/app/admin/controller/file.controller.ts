@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Inject, Param, Files, Fields, Config, HttpServerResponse } from '@midwayjs/core';
+import { Body, Controller, Get, Post, Inject, Param, Files, Fields, Config } from '@midwayjs/core';
 import { BaseController } from './base.controller.js';
 import { File } from '../../../entities/file.entity.js';
 import { FileCreateDto } from '../dto/fileCreate.dto.js';
@@ -31,7 +31,8 @@ export class FileController extends BaseController {
   @Get('/get/:id/:name', { summary: '获取文件流' })
   async getFile(@Param('id') id: string) {
     const entity = await this.fileService.findOne(id);
-    return new HttpServerResponse(this.ctx).file(resolve(this.fileUpconfig.upDir, entity.path), entity.mimeType);
+    this.ctx.type= entity.mimeType;
+    return createReadStream(resolve(this.fileUpconfig.upDir, entity.path));
   }
 
   @Post('/upload', { middleware: [UploadMiddleware] })
@@ -47,7 +48,6 @@ export class FileController extends BaseController {
     description: '如果data为{}代表分片上传成功，为Fule对象代表文件上传完成(可能已存在秒传成功)',
   })
   async upload(@Files() files: Array<UploadStreamFileInfo>, @Fields() params: FileUpDto) {
-
     const file = files[0]; //只获取一个文件，不支持多文件数组
       const fileParams = { storage: 'local' } as FileCreateDto;
     fileParams.md5 = params.md5;
@@ -97,7 +97,7 @@ export class FileController extends BaseController {
     }
     fileParams.name = params.name || filename;
     fileParams.mimeType = mimeType;
-    return this.success(await this.fileService.create(fileParams));
+    return this.success((await this.fileService.create(fileParams)));
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头

@@ -252,3 +252,10 @@ export function formatterStr<T>({ cellValue }: { cellValue: T }) {
 export function formatterAt<T>({ cellValue }: { cellValue: string | null | undefined | Date }, formatStr = 'YYYY-MM-DD HH:mm:ss') {
   return cellValue ? dayjs(cellValue).format(formatStr) : formatterStr({ cellValue });
 }
+
+//根据文件名判断是否是图片
+export function isImage(filename:string){
+  const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+  const fileExtension = filename.split('.').pop()?.toLowerCase();
+  return fileExtension ? imageExtensions.includes(fileExtension) : false; 
+}

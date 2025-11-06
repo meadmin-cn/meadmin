@@ -1,5 +1,5 @@
 <template>
-  <el-upload :file-list="fileList" v-bind="omit(attrs, 'fileList', 'httpRequest', 'onPreview', 'onSuccess')"
+  <el-upload class="me-upload" :file-list="fileList" v-bind="omit(attrs, 'fileList', 'httpRequest', 'onPreview', 'onSuccess')"
     :ref="changeRef" :http-request="handleHttpRequest" @preview="handlePictureCardPreview" @success="handleSuccess">
     <template v-if="!$slots.default">
       <el-icon v-if="attrs.listType === 'picture-card'"><mel-icon-plus /></el-icon>
@@ -17,18 +17,25 @@ import { createImageViewer } from './service/meImageViewer';
 import { omit } from 'lodash-es';
 import { ComponentInstance } from 'vue';
 import { fileUpload } from '@/utils/fileUpload';
-import { resetObj } from '@/utils/helper';
+import { isImage } from '@/utils/helper';
 const attrs = useAttrs();
 const fileList = defineModel<(FileInfo&{uid?:number})[]>({ default: () => [] });
 //预览图片
 const handlePictureCardPreview = (uploadFile: UploadFile) => {
-  const urlList = fileList.value.map(item => item.url);
-  if (urlList.includes(uploadFile.url!)) {
-    urlList.unshift(uploadFile.url!)
+  const url = (uploadFile.url ?? fileList.value.find(item=>(item.uid && item.uid === uploadFile.uid))?.url) || '';
+  if(!isImage(url)){
+    return window.open(url,'_blank');
+  }
+  const urlList = fileList.value.map(item => item.url).filter(v=>isImage(v));
+  let index = urlList.findIndex(item=>item === url);
+  if (index === -1) {
+    urlList.unshift(url);
+    index = 0;
   }
   createImageViewer({
     urlList: urlList,
-    initialIndex: urlList.findIndex(url => url === uploadFile.url)
+    initialIndex: index,
+    showProgress:true,
   })
 }
 //上传请求
@@ -52,4 +59,8 @@ function changeRef(ref: Element | ComponentPublicInstance | null) {
 //声明类型
 defineExpose({} as ComponentInstance<typeof ElUpload>);
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.me-upload{
+  width: 100%;
+}
+</style>

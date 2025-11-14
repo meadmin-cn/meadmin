@@ -2,7 +2,7 @@
   <me-dialog v-model="show" :title="t('编辑')" :close-on-click-modal="false" @closed="emit('closed')">
     <div style="height: 300px;">
       <el-form-item :label="t('文件')">
-        <me-upload v-model="files"></me-upload>
+        <me-upload v-model="files" :show-select="true"></me-upload>
       </el-form-item>
     </div>
 

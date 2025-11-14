@@ -1,25 +1,30 @@
 <template>
   <el-upload class="me-upload" :file-list="fileList" v-bind="omit(attrs, 'fileList', 'httpRequest', 'onPreview', 'onSuccess')"
     :ref="changeRef" :http-request="handleHttpRequest" @preview="handlePictureCardPreview" @success="handleSuccess">
-    <template v-if="!$slots.default">
-      <el-icon v-if="attrs.listType === 'picture-card'"><mel-icon-plus /></el-icon>
-      <el-button v-else type="primary">{{ $t('上传') }}</el-button>
-    </template>
     <template v-for="(_, name) in $slots" #[name]="data">
       <slot :name="name" v-bind="data || {}"></slot>
     </template>
+    <template v-if="!$slots.default && !$slots.trigger">
+      <el-icon v-if="attrs.listType === 'picture-card'"><mel-icon-plus /></el-icon>
+      <el-button v-else type="primary">{{ $t('上传') }}</el-button>
+    </template>
+    <el-button v-if="showSelect" @click.stop="openSelectFile()">{{ $t('选择') }}</el-button>
   </el-upload>
 </template>
 <script lang="ts" name="MeUpload" setup>
 import { FileInfo } from '@/api/file';
-import { ElUpload, UploadFile, UploadFiles, UploadRequestHandler, UploadRequestOptions } from 'element-plus';
+import { UploadInstance, UploadFile, UploadFiles, UploadRequestHandler, UploadRequestOptions } from 'element-plus';
 import { createImageViewer } from './service/meImageViewer';
 import { omit } from 'lodash-es';
-import { ComponentInstance } from 'vue';
 import { fileUpload } from '@/utils/fileUpload';
 import { isImage } from '@/utils/helper';
+import {useMeSelectFile} from '@/components/meSelectFile/meSelectFile.js';
 const attrs = useAttrs();
-const fileList = defineModel<(FileInfo&{uid?:number})[]>({ default: () => [] });
+defineOptions({inheritAttrs:false});
+defineProps<{
+  showSelect?:boolean;
+}>()
+const fileList = defineModel<(Pick<FileInfo,'name'|'url'>&{uid?:number})[]>({ default: () => [] });
 //预览图片
 const handlePictureCardPreview = (uploadFile: UploadFile) => {
   const url = (uploadFile.url ?? fileList.value.find(item=>(item.uid && item.uid === uploadFile.uid))?.url) || '';
@@ -56,8 +61,16 @@ function changeRef(ref: Element | ComponentPublicInstance | null) {
     vm.exposed = ref;
   }
 }
+const {open} = useMeSelectFile();
+const openSelectFile=()=>{
+  open({
+    onSelected(file){
+      fileList.value.push(file);
+    }
+  })
+}
 //声明类型
-defineExpose({} as ComponentInstance<typeof ElUpload>);
+defineExpose({} as UploadInstance);
 </script>
 <style lang="scss" scoped>
 .me-upload{

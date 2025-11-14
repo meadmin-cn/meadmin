@@ -16,7 +16,7 @@ const props = {
   },
   maxHeight: {
     type: String,
-    default: '60vh',
+    default: '80vh',
   },
 };
 

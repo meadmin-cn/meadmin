@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts" name="MeButton">
-import { ElButton } from 'element-plus';
+import { ButtonInstance } from 'element-plus';
 import { omit } from 'lodash-es';
 import { ComponentInstance, ComponentPublicInstance } from 'vue';
 
@@ -30,5 +30,5 @@ function changeRef(ref: Element | ComponentPublicInstance | null){
   }
 }
 //声明类型
-defineExpose({} as ComponentInstance<typeof ElButton>);
+defineExpose({} as ButtonInstance);
 </script>

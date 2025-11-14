@@ -42,7 +42,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/view": "^3.20.16",
+    "@midwayjs/view": "^3.20.17",
     "commander": "^14.0.0",
     "extend2": "^1.0.1",
     "koa2-connect": "^1.0.2"

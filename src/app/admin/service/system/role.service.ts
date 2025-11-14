@@ -5,7 +5,7 @@ import { SystemRoleCreateDto } from '../../dto/system/roleCreate.dto.js';
 import { SystemRoleQueryDto } from '../../dto/system/roleQuery.dto.js';
 import { SystemRoleUpdateDto } from '../../dto/system/roleUpdate.dto.js';
 import { SystemRole } from '../../../../entities/systemRole.entity.js';
-import { I18nService } from '@/service/i18n.service.js';
+import { MidwayI18nService } from '@midwayjs/i18n';
 import { Op } from '@sequelize/core';
 import { SystemMenu } from '@/entities/systemMenu.entity.js';
 
@@ -19,7 +19,7 @@ export class SystemRoleService {
   SystemMenuRepository: typeof SystemMenu;
 
   @Inject()
-  i18nService: I18nService;
+  i18nService: MidwayI18nService;
 
   /**
    * 创建数据

@@ -5,7 +5,7 @@ import { FileCreateDto } from '../dto/fileCreate.dto.js';
 import { FileQueryDto } from '../dto/fileQuery.dto.js';
 import { FileUpdateDto } from '../dto/fileUpdate.dto.js';
 import { File } from '../../../entities/file.entity.js';
-import { I18nService } from '@/service/i18n.service.js';
+import { MidwayI18nService } from '@midwayjs/i18n';
 import { Op } from '@sequelize/core';
 import { UploadStreamFileInfo } from '@midwayjs/busboy';
 import { resolve } from 'path';
@@ -18,7 +18,7 @@ export class FileService {
   FileRepository: typeof File;
 
   @Inject()
-  i18nService: I18nService;
+  i18nService: MidwayI18nService;
 
   //保存文件
   async saveFie({filename, data }: UploadStreamFileInfo, md5:string, savePath:string, tmpPath:string){

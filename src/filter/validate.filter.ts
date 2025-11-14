@@ -3,7 +3,7 @@ import { MidwayValidationError } from '@midwayjs/validate';
 import { ResponseService } from '@/service/response.service.js';
 import { CodeEunm } from '@/dict/code.enum.js';
 import { extractBracesContent } from '@/helper/utils.js';
-import { I18nService } from '@/service/i18n.service.js';
+import { MidwayI18nService } from '@midwayjs/i18n';
 
 
 
@@ -16,7 +16,7 @@ export class ValidateErrorFilter {
 
   async catch(err: MidwayValidationError, ctx: Context) {
     const args = {} as Record<string,string>;
-    const i18n = await ctx.requestContext.getAsync(I18nService);
+    const i18n = await ctx.requestContext.getAsync(MidwayI18nService);
     extractBracesContent(err.message).forEach(v=>{
       args[v] = i18n.translate(v);
     })

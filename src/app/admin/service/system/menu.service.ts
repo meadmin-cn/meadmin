@@ -5,7 +5,7 @@ import { SystemMenuCreateDto } from '../../dto/system/menuCreate.dto.js';
 import { SystemMenuQueryDto } from '../../dto/system/menuQuery.dto.js';
 import { SystemMenuUpdateDto } from '../../dto/system/menuUpdate.dto.js';
 import { SystemMenu } from '../../../../entities/systemMenu.entity.js';
-import { I18nService } from '@/service/i18n.service.js';
+import { MidwayI18nService } from '@midwayjs/i18n';
 import { Op } from '@sequelize/core';
 
 //菜单
@@ -15,7 +15,7 @@ export class SystemMenuService {
   SystemMenuRepository: typeof SystemMenu;
 
   @Inject()
-  i18nService: I18nService;
+  i18nService: MidwayI18nService;
 
   /**
    * 创建数据

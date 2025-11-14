@@ -1,3 +1,4 @@
+import { formatWithArray, formatWithObject } from "@midwayjs/i18n/dist/utils.js";
 import { clone } from "lodash-es";
 
 export type TreeArrayItem<T, C extends string | number> = { [K in C]: TreeArrayItem<T, C>[] } & T;
@@ -47,3 +48,11 @@ export function extractBracesContent(text: string) {
   return result;
 }
 
+export function formatText(message:string, args:Array<string|number>|Record<string,string|number>) {
+    if (Array.isArray(args)) {
+      return formatWithArray(message, args);
+    }
+    else {
+      return formatWithObject(message, args);
+    }
+}

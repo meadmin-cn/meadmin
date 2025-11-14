@@ -4,5 +4,9 @@
     "typescript.preferences.importModuleSpecifierEnding": "js",
     "commentTranslate.targetLanguage": "zh-CN",
     "commentTranslate.source": "DarkCWK.youdao-youdao",
-    "files.eol": "\n"
+    "files.eol": "\n",
+    "conventionalCommits.scopes": [
+        "meadmin",
+        "midway-vite-view"
+    ]
 }

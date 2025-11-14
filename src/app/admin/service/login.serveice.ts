@@ -7,7 +7,7 @@ import { CachingFactory, MidwayCache } from '@midwayjs/cache-manager';
 import dayjs from 'dayjs';
 import { SystemRole } from '@/entities/systemRole.entity.js';
 import { SystemMenu } from '@/entities/systemMenu.entity.js';
-import { I18nService } from '@/service/i18n.service.js';
+import { MidwayI18nService } from '@midwayjs/i18n';
 
 export const tokenPrefix = 'Admin:Token:';
 export const adminPrefix = 'Admin:Admin:';
@@ -131,7 +131,7 @@ export class LoginService {
     });
     if (admin.status !== 1) {
       if (ctx) {
-        const i18n = await ctx.requestContext.getAsync(I18nService);
+        const i18n = await ctx.requestContext.getAsync(MidwayI18nService);
         throw new BadRequestError(i18n.translate('用户已被禁用'));
       }else{
         throw new BadRequestError('用户已被禁用');
@@ -165,9 +165,9 @@ export class LoginService {
    */
   async login(username, password, ctx?: Context) {
     const entity = await this.adminRepository.findOne({ where: { username } });
-    let translate: I18nService['translate'];
+    let translate: MidwayI18nService['translate'];
     if (ctx) {
-      const i18n = await ctx.requestContext.getAsync(I18nService);
+      const i18n = await ctx.requestContext.getAsync(MidwayI18nService);
       translate = i18n.translate;
     }
     if (entity && this.checkPassword(password, entity.salt, entity.password)) {

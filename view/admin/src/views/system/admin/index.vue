@@ -24,7 +24,7 @@
           </el-form-item>
         </el-form-item>
         <el-form-item :label="t('最后登录ip')" prop="lastLoginIp">
-          <el-input v-model="params.lastLoginIp" clearable ></el-input>
+          <el-input v-model="params.lastLoginIp" clearable></el-input>
         </el-form-item>
         <el-form-item :label="t('状态')" prop="status">
           <el-select v-model="params.status" clearable>
@@ -74,20 +74,22 @@
       <vxe-column field="roleMenus" :title="t('具有权限的菜单')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column>
-      <vxe-column :title="t('操作')" fixed="right" min-width="150px">
+      <!-- <vxe-column :title="t('操作')" fixed="right">
         <template #default="{ row }: { row: SystemAdminInfo }">
-          <el-button @click="showAddOrUp(row.id)">
-            <mel-icon-edit />
-          </el-button>
-          <el-popconfirm :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
-            <template #reference>
-              <el-button :key="row.id" :loading="delLoading && delId === row.id" type="danger">
-                <mel-icon-delete />
-              </el-button>
-            </template>
-          </el-popconfirm>
+          <span>
+            <el-button @click="showAddOrUp(row.id)" link>
+              <mel-icon-edit />
+            </el-button>
+            <el-popconfirm :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
+              <template #reference>
+                <el-button :key="row.id" :loading="delLoading && delId === row.id" type="danger" link>
+                  <mel-icon-delete />
+                </el-button>
+              </template>
+            </el-popconfirm>
+          </span>
         </template>
-      </vxe-column>
+      </vxe-column> -->
     </me-vxe-table>
   </page>
 </template>

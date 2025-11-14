@@ -1,5 +1,5 @@
 import { closeLoading, loading } from '@/utils/loading';
-import { useUserStore, useGlobalStore } from '@/store';
+import { useUserStore, useGlobalStore, useSettingStore } from '@/store';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 import { ElMessage } from 'element-plus';
 import log from './log';
@@ -78,6 +78,10 @@ export function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (
       if(options?.clearEmpty){
         if (config.params) config.params = clearEmptyParam(config.params, options?.clearEmpty);
         if (config.data) config.data = clearEmptyParam(config.data , options?.clearEmpty);
+      }
+      const locale = useSettingStore().locale;
+      if(locale){
+        config.params = Object.assign({locale}, config.params);
       }
       const { data: res } = await service(config);
       if (!res || res.code === undefined) {

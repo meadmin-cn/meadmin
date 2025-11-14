@@ -3,6 +3,8 @@ import database from './database.js';
 import { resolve } from 'path';
 import { createRedisStore } from '@midwayjs/cache-manager';
 import { uploadWhiteList } from '@midwayjs/busboy';
+import { TranslateOptions } from '@midwayjs/i18n';
+import { formatText } from '@/helper/utils.js';
 
 export default {
   // use for cookie sign key, should change to your own and keep security
@@ -38,6 +40,8 @@ export default {
         validate: await import('@midwayjs/validate/locales/en_US.json', { with: { type: 'json' } }),
       },
     },
+
+    missingKeyHandler:(message: string, options?: TranslateOptions)=>options?.args? formatText(message,options.args) : message
   },
   sequelize: await database(),
   view: {

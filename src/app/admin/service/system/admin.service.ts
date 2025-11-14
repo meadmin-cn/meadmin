@@ -5,7 +5,7 @@ import { SystemAdminCreateDto } from '../../dto/system/adminCreate.dto.js';
 import { SystemAdminQueryDto } from '../../dto/system/adminQuery.dto.js';
 import { SystemAdminUpdateDto } from '../../dto/system/adminUpdate.dto.js';
 import { SystemAdmin } from '../../../../entities/systemAdmin.entity.js';
-import { I18nService } from '@/service/i18n.service.js';
+import { MidwayI18nService } from '@midwayjs/i18n';
 
 import { Op } from '@sequelize/core';
 import { LoginService } from '../login.serveice.js';
@@ -19,7 +19,7 @@ export class SystemAdminService {
   SystemAdminRepository: typeof SystemAdmin;
 
   @Inject()
-  i18nService: I18nService;
+  i18nService: MidwayI18nService;
 
   @Inject()
   loginService: LoginService;

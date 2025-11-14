@@ -74,7 +74,7 @@
       <vxe-column field="roleMenus" :title="t('具有权限的菜单')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column>
-      <!-- <vxe-column :title="t('操作')" fixed="right">
+      <vxe-column :title="t('操作')" fixed="right">
         <template #default="{ row }: { row: SystemAdminInfo }">
           <span>
             <el-button @click="showAddOrUp(row.id)" link>
@@ -89,7 +89,7 @@
             </el-popconfirm>
           </span>
         </template>
-      </vxe-column> -->
+      </vxe-column>
     </me-vxe-table>
   </page>
 </template>

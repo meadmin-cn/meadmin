@@ -69,7 +69,7 @@ const uploadChunksExecute = (file: UploadRawFile, currentChunk: number, chunkSiz
           });
           formData.append('file', upFile);
           //执行文件上传
-          return resolve(await uploadFileApi().runAsync(formData));
+          return resolve( await uploadFileApi()(formData));
         }catch(e){
           reject(e);
         }

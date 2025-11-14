@@ -2,6 +2,7 @@ import request, { RequestOptions } from '@/utils/request.js';
 import { PageParam, PageResult } from '@/api/api.model.js';
 import { SystemRoleInfo } from './role.js';
 import { SystemMenuInfo } from './menu.js';
+import { FileInfo } from '../file.js';
 
 //管理员
 export class SystemAdmin {
@@ -9,7 +10,7 @@ export class SystemAdmin {
   username = '' as string; //用户名
   nickname = '' as string; //昵称
   password = '' as string; //密码
-  avatar = '' as string; //头像
+  avatar = null as FileInfo | null; //头像
   email = '' as string; //邮箱
   mobile = '' as string; //手机号
   status = 1 as 1 | 0 | undefined; //状态:1=启用;0=禁用
@@ -44,7 +45,7 @@ export class SystemAdminListParam extends PageParam {
   username?: string; //用户名
   nickname?: string; //昵称
   password?: string; //密码
-  avatar?: string; //头像
+  avatar?: FileInfo | null; //头像
   email?: string; //邮箱
   mobile?: string; //手机号
   loginFailure?: number; //登录失败次数

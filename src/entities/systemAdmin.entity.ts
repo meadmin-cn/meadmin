@@ -33,9 +33,9 @@ export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
   @Attribute({ type: DataTypes.STRING(32), comment: '密码盐', allowNull: false, defaultValue: '' })
   salt: string;
 
-  @Attribute({ type: DataTypes.STRING(100), comment: '头像', allowNull: false, defaultValue: '' })
-  @ApiPropertyRule({ description: '头像', rule: RuleType.string().max(100).min(1) })
-  avatar: string;
+  @Attribute({ type: DataTypes.JSON, comment: '头像'})
+  @ApiPropertyRule({ description: '头像', type: () => File, rule: RuleType.object() })
+  avatar: File
 
   @Attribute({ type: DataTypes.STRING(100), comment: '邮箱', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '邮箱', rule: RuleType.string().email().max(100) })
@@ -105,7 +105,7 @@ export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
     description: '具有的角色',
     type: 'array',
     items: {
-      type: ()=>SystemRole,
+      type: () => SystemRole,
     },
   })
   declare roles?: NonAttribute<SystemRole[]>;
@@ -115,7 +115,7 @@ export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
     description: '具有权限的菜单',
     type: 'array',
     items: {
-      type: ()=>SystemMenu,
+      type: () => SystemMenu,
     },
   })
   get roleMenus(): NonAttribute<SystemMenu[]> {

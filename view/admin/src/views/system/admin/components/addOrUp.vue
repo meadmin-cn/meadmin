@@ -14,7 +14,7 @@
         <el-input v-model="info.password" clearable></el-input>
       </el-form-item>
       <el-form-item :label="t('头像')" prop="avatar">
-        <el-input v-model="info.avatar" clearable></el-input>
+        <me-upload list-type="picture" :limit="1" :model-value="info.avatar?[info.avatar]:[]" @update:modelValue="(files)=>info.avatar =files.length? files[0]:null" ></me-upload>
       </el-form-item>
       <el-form-item :label="t('邮箱')" prop="email">
         <el-input v-model="info.email" clearable></el-input>
@@ -88,7 +88,6 @@ const rules: FormRules = {
     { required: true, message: t('{label} 必须填写', { label: t('昵称') }), trigger: 'blur' },
     { type: 'string', min: 1, max: 20, message: t('{label} 长度必须在 {min} 及 {max} 之间', { label: t('昵称'), min: 1, max: 20 }), trigger: 'blur' },
   ],
-  avatar: [{ type: 'string', min: 1, max: 100, message: t('{label} 长度必须在 {min} 及 {max} 之间', { label: t('头像'), min: 1, max: 100 }), trigger: 'blur' }],
   email: [
     { type: 'string', max: 100, message: t('{label} 长度必须小于等于 {max}', { label: t('邮箱'), max: 100 }), trigger: 'blur' },
 

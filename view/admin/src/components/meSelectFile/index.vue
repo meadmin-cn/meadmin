@@ -22,7 +22,27 @@
           <me-upload :show-file-list="false" @success="search(1)"></me-upload>
         </div>
       </template>
+      <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="name" :title="t('文件名')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="url" :title="t('预览')">
+        <template #default="{ row }: { row: FileInfo }">
+          <el-image
+            v-if="isImage(row.url)"
+            class="view-img"
+            :src="row.url"
+            :zoom-rate="1.2"
+            :max-scale="7"
+            :min-scale="0.2"
+            :preview-src-list="[row.url]"
+            show-progress
+            preview-teleported
+            fit="scale-down"
+          />
+          <a v-else :href="row.url" target="_blank" :title="t('点击下载')">
+            <mel-icon-download size="20px"></mel-icon-download>
+          </a>
+        </template>
+      </vxe-column>
       <vxe-column field="path" :title="t('路径')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="mimeType" :title="t('mime类型')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="size" :title="t('文件大小')" :formatter="formatterStr"></vxe-column>
@@ -31,7 +51,7 @@
         <template #default="{ row }: { row: FileInfo }"> {{ row.createdAdmin.nickname }}({{ row.createdAdmin.username }}) </template>
       </vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
-      <vxe-column :title="t('操作')" fixed="right" min-width="150px">
+      <vxe-column :title="t('操作')" fixed="right">
         <template #default="{ row }: { row: FileInfo }">
           <el-button @click="select(row)"> <mel-icon-select  />{{ t('选择') }} </el-button>
         </template>
@@ -41,9 +61,10 @@
 </template>
 
 <script setup lang="ts" name="MeSelectFile">
-import { fileListApi, FileListParam, FileInfo } from '@/api/file';
+import { fileMyListApi, FileListParam, FileInfo } from '@/api/file';
 import { useLocalesI18n } from '@/locales/i18n';
 import { formatterStr, formatterAt } from '@/utils/helper.js';
+import { isImage } from '@/utils/helper';
 const show = defineModel<boolean>('show');
 const emit = defineEmits<{
   closed: [];
@@ -51,7 +72,7 @@ const emit = defineEmits<{
 }>();
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`@/views/file/lang/${locale}.json`), 'file']);
 const params = reactive(new FileListParam());
-const { loading, data, runAsync } = fileListApi();
+const { loading, data, runAsync } = fileMyListApi();
 const search = (page = params.pageSize, pageSize = params.pageSize) => runAsync(Object.assign(params, { page, pageSize }));
 const select = (file: FileInfo) => {
   emit('selected', file);
@@ -63,5 +84,9 @@ await Promise.all([loadRes, search(1)]);
 .me-select-file-da0344ese {
   height: 60vh;
   width: 80vw;
+  .view-img{
+    width: 50px; 
+    height: 50px;
+  }
 }
 </style>

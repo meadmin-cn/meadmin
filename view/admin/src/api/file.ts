@@ -11,16 +11,15 @@ export class File {
   size = undefined as number | null | undefined; //文件大小(字节)
   storage = '' as string; //存储引擎
   url = ''; //访问地址
-  createdAdmin = undefined as Omit<SystemAdminInfo,'roles'|'roleMenus'> | undefined; //创建者
+  createdAdmin = undefined as Omit<SystemAdminInfo, 'roles' | 'roleMenus'> | undefined; //创建者
   createdAt = '' as string; //创建时间
   updatedAt = '' as string; //最后更新时间
 }
 
-
 export type FileInfo = Required<File> & {
   id: string; //ID
   createdAdmin: NonNullable<File['createdAdmin']>;
-   size:number;
+  size: number;
 };
 
 /**
@@ -33,20 +32,21 @@ export type FileInfo = Required<File> & {
  * chunkIndex string 当前片序号(从0开始)
  * start string 当前分片起止位置(从0开始)
  * over string 是否结束(需确保最后一个分片上传时其他分片请求已完成):0=否;1=是
- * 
- * @returns 
+ *
+ * @returns
  */
-export function uploadFileApi() {
-  return request<Partial<FileInfo>, [FormData]>(
+export function uploadFileApi<T extends boolean = true>(returnAxios = true as T) {
+  return request<Partial<FileInfo>, [FormData], T>(
     (data) => ({
       url: 'file/upload',
       method: 'post',
       data: data,
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data',
       },
     }),
-    { success: false, noLoading:true },
+    { success: false, noLoading: true },
+    returnAxios
   );
 }
 
@@ -62,12 +62,25 @@ export class FileListParam extends PageParam {
   endCreatedAt?: string; //创建时间(止)
   startUpdatedAt?: string; //最后更新时间(起)
   endUpdatedAt?: string; //最后更新时间(止)
+  createdAdminId?: string; //创建者id
 }
 //获取附件列表
 export function fileListApi(options?: RequestOptions<FileListResult, [FileListParam]>) {
   return request<FileListResult, [FileListParam]>(
     (data) => ({
       url: 'file/',
+      method: 'post',
+      data: data,
+    }),
+    Object.assign({ noLoading: true, clearEmpty: ['', undefined, null] }, options),
+  );
+}
+
+//获取我的附件列表
+export function fileMyListApi(options?: RequestOptions<FileListResult, [Omit<FileListParam, 'createdAdminId'>]>) {
+  return request<FileListResult, [Omit<FileListParam, 'createdAdminId'>]>(
+    (data) => ({
+      url: 'file/my',
       method: 'post',
       data: data,
     }),

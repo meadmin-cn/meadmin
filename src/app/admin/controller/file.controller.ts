@@ -121,6 +121,17 @@ export class FileController extends BaseController {
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post('/my')
+  @ApiOperationResponse({
+    responsePage: File,
+    summary: '获取我的附件列表',
+  })
+  async my(@Body() queryDto: FileQueryDto) {
+    queryDto.createdAdminId = this.ctx.adminInfo.id;
+    return this.success(await this.fileService.list(queryDto));
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
   @Get('/info/:id')
   @ApiOperationResponse({
     responseType: File,

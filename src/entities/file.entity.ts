@@ -49,6 +49,10 @@ export class File extends BaseModel<File> {
     return uploadStorage[this.storage].getUrl(this);
   }
 
+  @ApiPropertyRule({
+    description: '创建者Id',
+    type: 'string',
+  })
   @Attribute({
     comment: '创建者Id(管理员)',
     type: DataTypes.STRING(20),

@@ -61,14 +61,14 @@ importers:
         specifier: ^3.20.17
         version: 3.20.17
       '@sequelize/core':
-        specifier: 7.0.0-alpha.46
-        version: 7.0.0-alpha.46
+        specifier: 7.0.0-alpha.47
+        version: 7.0.0-alpha.47
       '@sequelize/postgres':
-        specifier: 7.0.0-alpha.46
-        version: 7.0.0-alpha.46
+        specifier: 7.0.0-alpha.47
+        version: 7.0.0-alpha.47
       '@sequelize/utils':
-        specifier: 7.0.0-alpha.46
-        version: 7.0.0-alpha.46
+        specifier: 7.0.0-alpha.47
+        version: 7.0.0-alpha.47
       dayjs:
         specifier: ^1.11.19
         version: 1.11.19
@@ -2732,12 +2732,23 @@ packages:
     resolution: {integrity: sha512-Gak63yRD7tm2legeV4WY0TXHUQOHiIhsSW/YpgwZUFD7jdyzLVPyZUK4zWMoaaOystOG/BiWzb0I9Q9o3EeUeg==}
     engines: {node: '>=18.20.7'}
 
+  '@sequelize/core@7.0.0-alpha.47':
+    resolution: {integrity: sha512-BH8E4VGSR2p+tS/fHVDQkDNklikBXdfEu4uxl4kb8n4bah7a67mCotuevVKhQ9/iCXreG3mn3mm6YfyKIEpPog==}
+    engines: {node: '>=18.20.8'}
+
   '@sequelize/postgres@7.0.0-alpha.46':
     resolution: {integrity: sha512-XunpCB5zl7Sl/s5p+bzZWG54Sj6IbhG1qfhneQJAd3/zoJc49YtBJAODajHOEMtQynhIDRCcHzPcX5lNfl5kCA==}
+
+  '@sequelize/postgres@7.0.0-alpha.47':
+    resolution: {integrity: sha512-tEKKEI3u1hTIu/B3trxn7zCY5tav/7xWnJdoX8gKJtZho7bt9zetbV6THnC2hKBj6pbOz7ynJqSFBVq6Pv2RgA==}
 
   '@sequelize/utils@7.0.0-alpha.46':
     resolution: {integrity: sha512-YOPCa189WimlT10mokbOObkgSJvv3IgEQG7OhszSkQJWDvVjI6WmBsjD+LB2p5IY2kUWyKaRVmaDxW1u/SSQIg==}
     engines: {node: '>=18.20.7'}
+
+  '@sequelize/utils@7.0.0-alpha.47':
+    resolution: {integrity: sha512-/VAM/M/4EH6DPaXKIMqvR1Dd8ChLV7jewZK/h1Preej+06XrbD3y+clz8zVEECpEeYGEmE10/O36t/Ha44Vw+Q==}
+    engines: {node: '>=18.20.8'}
 
   '@sideway/address@4.1.5':
     resolution: {integrity: sha512-IqO/DUQHUkPeixNQ8n0JA6102hT9CmaljNTPmQ1u8MEhBo/R4Q8eKLN/vGZxuebwOroDB4cbpjheD4+/sKFK4Q==}
@@ -9938,7 +9949,7 @@ snapshots:
       '@types/node': 20.5.1
       chalk: 4.1.2
       cosmiconfig: 8.3.6(typescript@5.9.3)
-      cosmiconfig-typescript-loader: 4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.9.3))(ts-node@10.9.2(@types/node@20.19.21)(typescript@5.9.3))(typescript@5.9.3)
+      cosmiconfig-typescript-loader: 4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.9.3))(ts-node@10.9.2(@types/node@20.5.1)(typescript@5.9.3))(typescript@5.9.3)
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
@@ -10446,7 +10457,7 @@ snapshots:
   '@jest/console@27.5.1':
     dependencies:
       '@jest/types': 27.5.1
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       chalk: 4.1.2
       jest-message-util: 27.5.1
       jest-util: 27.5.1
@@ -10459,7 +10470,7 @@ snapshots:
       '@jest/test-result': 27.5.1
       '@jest/transform': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.8.1
@@ -10493,14 +10504,14 @@ snapshots:
     dependencies:
       '@jest/fake-timers': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       jest-mock: 27.5.1
 
   '@jest/fake-timers@27.5.1':
     dependencies:
       '@jest/types': 27.5.1
       '@sinonjs/fake-timers': 8.1.0
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       jest-message-util: 27.5.1
       jest-mock: 27.5.1
       jest-util: 27.5.1
@@ -10518,7 +10529,7 @@ snapshots:
       '@jest/test-result': 27.5.1
       '@jest/transform': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       chalk: 4.1.2
       collect-v8-coverage: 1.0.3
       exit: 0.1.2
@@ -10591,7 +10602,7 @@ snapshots:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       '@types/yargs': 16.0.10
       chalk: 4.1.2
 
@@ -10692,7 +10703,7 @@ snapshots:
       read-cmd-shim: 4.0.0
       resolve-from: 5.0.0
       rimraf: 4.4.1
-      semver: 7.7.1
+      semver: 7.7.3
       set-blocking: 2.0.0
       signal-exit: 3.0.7
       slash: 3.0.0
@@ -11096,7 +11107,7 @@ snapshots:
       ignore: 5.3.2
       minimatch: 9.0.3
       nx: 20.8.0
-      semver: 7.7.1
+      semver: 7.7.3
       tmp: 0.2.3
       tslib: 2.8.1
       yargs-parser: 21.1.1
@@ -11569,6 +11580,29 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@sequelize/core@7.0.0-alpha.47':
+    dependencies:
+      '@sequelize/utils': 7.0.0-alpha.47
+      '@types/debug': 4.1.12
+      '@types/validator': 13.15.8
+      ansis: 3.17.0
+      bnf-parser: 3.1.6
+      dayjs: 1.11.19
+      debug: 4.4.3(supports-color@8.1.1)
+      dottie: 2.0.6
+      fast-glob: 3.3.3
+      inflection: 3.0.2
+      lodash: 4.17.21
+      retry-as-promised: 7.1.1
+      semver: 7.7.3
+      sequelize-pool: 8.0.1
+      toposort-class: 1.0.1
+      type-fest: 4.41.0
+      uuid: 11.1.0
+      validator: 13.15.23
+    transitivePeerDependencies:
+      - supports-color
+
   '@sequelize/postgres@7.0.0-alpha.46':
     dependencies:
       '@sequelize/core': 7.0.0-alpha.46
@@ -11585,7 +11619,28 @@ snapshots:
       - pg-native
       - supports-color
 
+  '@sequelize/postgres@7.0.0-alpha.47':
+    dependencies:
+      '@sequelize/core': 7.0.0-alpha.47
+      '@sequelize/utils': 7.0.0-alpha.47
+      '@types/pg': 8.15.6
+      lodash: 4.17.21
+      pg: 8.16.3
+      pg-hstore: 2.3.4
+      pg-types: 4.1.0
+      postgres-array: 3.0.4
+      semver: 7.7.3
+      wkx: 0.5.0
+    transitivePeerDependencies:
+      - pg-native
+      - supports-color
+
   '@sequelize/utils@7.0.0-alpha.46':
+    dependencies:
+      '@types/lodash': 4.17.20
+      lodash: 4.17.21
+
+  '@sequelize/utils@7.0.0-alpha.47':
     dependencies:
       '@types/lodash': 4.17.20
       lodash: 4.17.21
@@ -12053,7 +12108,7 @@ snapshots:
 
   '@types/accepts@1.3.7':
     dependencies:
-      '@types/node': 16.18.126
+      '@types/node': 20.19.25
 
   '@types/babel__core@7.20.5':
     dependencies:
@@ -12079,7 +12134,7 @@ snapshots:
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 16.18.126
+      '@types/node': 20.19.25
 
   '@types/busboy@1.5.4':
     dependencies:
@@ -12087,7 +12142,7 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 16.18.126
+      '@types/node': 20.19.25
 
   '@types/content-disposition@0.5.8': {}
 
@@ -12098,7 +12153,7 @@ snapshots:
       '@types/connect': 3.4.38
       '@types/express': 5.0.1
       '@types/keygrip': 1.0.6
-      '@types/node': 16.18.126
+      '@types/node': 20.19.25
 
   '@types/debug@4.1.12':
     dependencies:
@@ -12112,7 +12167,7 @@ snapshots:
 
   '@types/express-serve-static-core@5.0.6':
     dependencies:
-      '@types/node': 16.18.126
+      '@types/node': 20.19.25
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -12125,7 +12180,7 @@ snapshots:
 
   '@types/graceful-fs@4.1.9':
     dependencies:
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
 
   '@types/http-assert@1.5.6': {}
 
@@ -12158,7 +12213,7 @@ snapshots:
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 16.18.126
+      '@types/node': 20.19.25
 
   '@types/koa-compose@3.2.8':
     dependencies:
@@ -12173,7 +12228,7 @@ snapshots:
       '@types/http-errors': 2.0.4
       '@types/keygrip': 1.0.6
       '@types/koa-compose': 3.2.8
-      '@types/node': 16.18.126
+      '@types/node': 20.19.25
 
   '@types/lodash-es@4.17.12':
     dependencies:
@@ -12231,23 +12286,23 @@ snapshots:
 
   '@types/resolve@1.17.1':
     dependencies:
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 16.18.126
+      '@types/node': 20.19.25
 
   '@types/semver@7.7.1': {}
 
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 16.18.126
+      '@types/node': 20.19.25
 
   '@types/serve-static@1.15.7':
     dependencies:
       '@types/http-errors': 2.0.4
-      '@types/node': 16.18.126
+      '@types/node': 20.19.25
       '@types/send': 0.17.4
 
   '@types/sizzle@2.3.10': {}
@@ -12259,7 +12314,7 @@ snapshots:
   '@types/superagent@4.1.14':
     dependencies:
       '@types/cookiejar': 2.1.5
-      '@types/node': 16.18.126
+      '@types/node': 20.19.25
 
   '@types/supertest@2.0.16':
     dependencies:
@@ -12930,7 +12985,7 @@ snapshots:
       '@simonwep/pickr': 1.8.2
       array-tree-filter: 2.1.0
       async-validator: 4.2.5
-      dayjs: 1.11.18
+      dayjs: 1.11.19
       dom-align: 1.12.4
       dom-scroll-into-view: 2.0.1
       lodash: 4.17.21
@@ -13742,7 +13797,7 @@ snapshots:
 
   core-util-is@1.0.3: {}
 
-  cosmiconfig-typescript-loader@4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.9.3))(ts-node@10.9.2(@types/node@20.19.21)(typescript@5.9.3))(typescript@5.9.3):
+  cosmiconfig-typescript-loader@4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.9.3))(ts-node@10.9.2(@types/node@20.5.1)(typescript@5.9.3))(typescript@5.9.3):
     dependencies:
       '@types/node': 20.5.1
       cosmiconfig: 8.3.6(typescript@5.9.3)
@@ -15471,7 +15526,7 @@ snapshots:
       '@jest/environment': 27.5.1
       '@jest/test-result': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       chalk: 4.1.2
       co: 4.6.0
       dedent: 0.7.0
@@ -15576,7 +15631,7 @@ snapshots:
       '@jest/environment': 27.5.1
       '@jest/fake-timers': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       jest-mock: 27.5.1
       jest-util: 27.5.1
       jsdom: 16.7.0
@@ -15591,7 +15646,7 @@ snapshots:
       '@jest/environment': 27.5.1
       '@jest/fake-timers': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       jest-mock: 27.5.1
       jest-util: 27.5.1
 
@@ -15603,7 +15658,7 @@ snapshots:
     dependencies:
       '@jest/types': 27.5.1
       '@types/graceful-fs': 4.1.9
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       anymatch: 3.1.3
       fb-watchman: 2.0.2
       graceful-fs: 4.2.11
@@ -15622,7 +15677,7 @@ snapshots:
       '@jest/source-map': 27.5.1
       '@jest/test-result': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       chalk: 4.1.2
       co: 4.6.0
       expect: 27.5.1
@@ -15665,7 +15720,7 @@ snapshots:
   jest-mock@27.5.1:
     dependencies:
       '@jest/types': 27.5.1
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
 
   jest-pnp-resolver@1.2.3(jest-resolve@27.5.1):
     optionalDependencies:
@@ -15701,7 +15756,7 @@ snapshots:
       '@jest/test-result': 27.5.1
       '@jest/transform': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       chalk: 4.1.2
       emittery: 0.8.1
       graceful-fs: 4.2.11
@@ -15752,7 +15807,7 @@ snapshots:
 
   jest-serializer@27.5.1:
     dependencies:
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       graceful-fs: 4.2.11
 
   jest-snapshot@27.5.1:
@@ -15785,7 +15840,7 @@ snapshots:
   jest-util@27.5.1:
     dependencies:
       '@jest/types': 27.5.1
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -15804,7 +15859,7 @@ snapshots:
     dependencies:
       '@jest/test-result': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       jest-util: 27.5.1
@@ -15812,7 +15867,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 20.19.21
+      '@types/node': 20.19.25
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -16956,7 +17011,7 @@ snapshots:
       open: 8.4.2
       ora: 5.3.0
       resolve.exports: 2.0.3
-      semver: 7.7.1
+      semver: 7.7.3
       string-width: 4.2.3
       tar-stream: 2.2.0
       tmp: 0.2.3
@@ -17236,7 +17291,7 @@ snapshots:
       ky: 1.14.0
       registry-auth-token: 5.1.0
       registry-url: 6.0.1
-      semver: 7.6.3
+      semver: 7.7.3
 
   package-json@6.5.0:
     dependencies:
@@ -18845,7 +18900,7 @@ snapshots:
       is-npm: 6.1.0
       latest-version: 9.0.0
       pupa: 3.3.0
-      semver: 7.6.3
+      semver: 7.7.3
       xdg-basedir: 5.1.0
 
   upper-case@1.1.3: {}

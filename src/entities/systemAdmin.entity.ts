@@ -1,14 +1,15 @@
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
 import { DataTypes, NonAttribute } from '@sequelize/core';
-import { Attribute, PrimaryKey, Default, Table, BelongsToMany, Unique } from '@sequelize/core/decorators-legacy';
+import { Attribute, PrimaryKey, Default, Table, BelongsToMany, Unique, BelongsTo } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { SystemRole } from './systemRole.entity.js';
 import { BelongsManyModel } from '../../types/entity.js';
 import { SystemMenu } from './systemMenu.entity.js';
 import { DelParanoidModel } from './abstract/delParanoid.entity.js';
+import {File} from './file.entity.js';
 
-//rule规则使用添加接口的校验规则
+//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
 @Table({ tableName: 'system_admin', comment: '管理员表' })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
@@ -33,9 +34,13 @@ export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
   @Attribute({ type: DataTypes.STRING(32), comment: '密码盐', allowNull: false, defaultValue: '' })
   salt: string;
 
-  @Attribute({ type: DataTypes.JSON, comment: '头像'})
-  @ApiPropertyRule({ description: '头像', type: () => File, rule: RuleType.object() })
-  avatar: File
+  @ApiPropertyRule({ description: '头像附件id', type: () => File, rule: RuleType.string().allow(null) })
+  @Attribute({ type: DataTypes.STRING(20), comment: '头像附件id',})
+  avatarFileId: string;
+
+  @ApiPropertyRule({ description: '头像（优先级高于avatarFileId）', type: () => File, rule: RuleType.object() })
+  @BelongsTo(() => File, /* foreign key */ 'avatarFileId')
+  avatar?: NonAttribute<File>
 
   @Attribute({ type: DataTypes.STRING(100), comment: '邮箱', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '邮箱', rule: RuleType.string().email().max(100) })

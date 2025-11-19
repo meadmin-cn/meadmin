@@ -63,7 +63,21 @@
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="username" :title="t('用户名')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="nickname" :title="t('昵称')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="avatar" :title="t('头像')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="avatar" :title="t('头像')" :formatter="formatterStr">
+        <template #default="{ row }: { row: SystemAdminInfo }">
+          <el-image
+            class="view-img"
+            :src="row.avatar?.url"
+            :zoom-rate="1.2"
+            :max-scale="7"
+            :min-scale="0.2"
+            :preview-src-list="row.avatar?.url?[row.avatar.url]:undefined"
+            show-progress
+            preview-teleported
+            fit="scale-down"
+          />
+        </template>
+      </vxe-column>
       <vxe-column field="email" :title="t('邮箱')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="mobile" :title="t('手机号')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="loginFailure" :title="t('登录失败次数')" :formatter="formatterStr"></vxe-column>
@@ -134,3 +148,9 @@ const showAddOrUp = (id?: string) => {
 };
 await Promise.all([loadRes, search(1)]);
 </script>
+<style lang="scss" scoped>
+.view-img {
+  width: 40px; 
+  height: 40px;
+}
+</style>

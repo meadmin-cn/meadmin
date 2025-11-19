@@ -9,7 +9,6 @@ import { MidwayI18nService } from '@midwayjs/i18n';
 
 import { Op } from '@sequelize/core';
 import { LoginService } from '../login.serveice.js';
-import { SystemRole } from '@/entities/systemRole.entity.js';
 import { SystemMenu } from '@/entities/systemMenu.entity.js';
 
 //管理员
@@ -30,9 +29,12 @@ export class SystemAdminService {
    * @returns
    */
   async create(createDto: SystemAdminCreateDto) {
+    if (createDto.avatar?.id !== undefined) {
+      createDto.avatarFileId = createDto.avatar?.id ?? null;
+    }
     const entity = this.SystemAdminRepository.build(createDto);
     await entity.save();
-    if(createDto.roleIds){
+    if (createDto.roleIds) {
       entity.setRoles(createDto.roleIds);
     }
     return entity;
@@ -93,18 +95,24 @@ export class SystemAdminService {
       offset: (queryDto.page - 1) * queryDto.pageSize,
       limit: queryDto.pageSize,
       order: [['createdAt', 'DESC']],
-      include: {
-        model: SystemRole,
-        where: { status: 1 },
-        required: false,
-        include: [
-          {
-            model: SystemMenu,
-            where: { status: 1 },
-            required: false,
-          },
-        ],
-      },
+      include: [
+        {
+          association: 'roles',
+          where: { status: 1 },
+          required: false,
+          include: [
+            {
+              model: SystemMenu,
+              where: { status: 1 },
+              required: false,
+            },
+          ],
+        },
+        {
+          association: 'avatar',
+          attributes: { exclude: [] }, //必须设置attributes否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        }
+      ],
     });
     return {
       list: rows,
@@ -121,18 +129,24 @@ export class SystemAdminService {
    */
   async findOne(id: string) {
     const entity = await this.SystemAdminRepository.findByPk(id, {
-      include: {
-        model: SystemRole,
-        where: { status: 1 },
-        required: false,
-        include: [
-          {
-            model: SystemMenu,
-            where: { status: 1 },
-            required: false,
-          },
-        ],
-      },
+      include: [
+        {
+          association: 'roles',
+          where: { status: 1 },
+          required: false,
+          include: [
+            {
+              model: SystemMenu,
+              where: { status: 1 },
+              required: false,
+            },
+          ],
+        },
+        {
+          association: 'avatar',
+          attributes: { exclude: [] }, //必须设置attributes否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+      ],
     });
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
@@ -153,6 +167,9 @@ export class SystemAdminService {
     }
     const password = entity.password;
     const salf = entity.salt;
+    if (updateDto.avatar !== undefined) {
+      updateDto.avatarFileId = updateDto.avatar?.id ?? null;
+    }
     Object.assign(entity, updateDto);
     if (updateDto.password) {
       Object.assign(entity, this.loginService.entityPassword(updateDto.password));
@@ -160,7 +177,7 @@ export class SystemAdminService {
       entity.password = password;
       entity.salt = salf;
     }
-    if(updateDto.roleIds){
+    if (updateDto.roleIds) {
       entity.setRoles(updateDto.roleIds);
     }
     return await entity.save();

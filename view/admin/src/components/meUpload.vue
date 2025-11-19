@@ -2,11 +2,12 @@
   <el-upload
     class="me-upload"
     :file-list="fileList"
-    v-bind="omit(attrs, 'fileList', 'httpRequest', 'onPreview', 'onSuccess')"
+    v-bind="omit(attrs, 'fileList', 'httpRequest', 'onPreview', 'onSuccess','onRemove')"
     :ref="changeRef"
     :http-request="handleHttpRequest"
     @preview="handlePictureCardPreview"
     @success="handleSuccess"
+    @remove="handleRemove"
     @exceed="handleExceed"
   >
     <template v-for="(_, name) in $slots" #[name]="data">
@@ -57,12 +58,18 @@ const handlePictureCardPreview = (uploadFile: UploadFile) => {
 const handleHttpRequest = (options: UploadRequestOptions) => {
   return attrs.httpRequest ? (attrs.httpRequest as UploadRequestHandler)(options) : fileUpload(options);
 };
-const handleSuccess = (response: any, uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+const handleSuccess = (response: FileInfo  & { uid?: number }, uploadFile: UploadFile, uploadFiles: UploadFiles) => {
   response.uid = uploadFile.uid;
   fileList.value.push(response);
   fileList.value = [...fileList.value];
   if (attrs.onSuccess) {
     (attrs as any).onSuccess(response, uploadFile, uploadFiles);
+  }
+};
+const handleRemove = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+  fileList.value = [...uploadFiles as unknown as (FileInfo & { uid?: number })[]];
+  if (attrs.onRemove) {
+    (attrs as any).onRemove(uploadFile, uploadFiles);
   }
 };
 const vm = getCurrentInstance();

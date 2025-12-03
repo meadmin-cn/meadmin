@@ -7,6 +7,7 @@ import { ViteViewConfig } from '../../interface.js';
 import { resolve } from 'path';
 import { normalizePath } from 'vite';
 import extend from 'extend2';
+import { setEnv } from '@/utils/env.js';
 //递归遍历文件并执行callback
 const fileDisplay = async function (
   filePath: string,
@@ -409,7 +410,9 @@ export const buildInit =  (program: Command) => {
     .option('--outPrefix <char>', '编译输出前缀 默认为viteView.outPrefix或html')
     .option('--staticFileKey <char>', '使用的staticFile.dirs的key  默认为viteView.staticFileKey或default')
     .option('-r --root <char>', 'vite config 的rootdir 必须是相对于viewDir的相对路径')
+    .option('-m, --module <char>', 'env环境变量','production')
     .action(async (options) => {
+      setEnv(options.module);
       const build = new Build();
       build.options = options;
       await build.formatOptions();

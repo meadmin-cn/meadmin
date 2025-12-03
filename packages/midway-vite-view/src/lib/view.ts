@@ -33,7 +33,7 @@ export class ViteView implements IViewEngine {
     entryServerUrl: string,
     url: string,
     assign: object | undefined,
-    viteConfigFile?: string
+    viteConfigFile: string
   ) {
     const vite = await this.vite.createVite(viteConfigFile);
     try {

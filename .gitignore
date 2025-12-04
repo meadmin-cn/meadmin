@@ -17,3 +17,4 @@ public/html/
 uploadFile/*
 !uploadFile/tmp/.gitkeep
 !uploadFile/.gitkeep
+.env.production

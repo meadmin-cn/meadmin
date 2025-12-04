@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import { ConfigEnv, UserConfigExport } from 'vite';
 import autoprefixer from 'autoprefixer';
-import plugins from './plugins';
+import plugins from './plugins/index.js';
 // @ts-ignore
 import px2rem from 'postcss-plugin-px2rem';
 

@@ -4,8 +4,8 @@ import { resolve } from 'path';
 import { createRedisStore } from '@midwayjs/cache-manager';
 import { uploadWhiteList } from '@midwayjs/busboy';
 import { TranslateOptions } from '@midwayjs/i18n';
-import { formatText } from '@/helper/utils.js';
-
+import { formatText } from '../helper/utils.js';
+//配置文件避免出现@/等alisa，path引用
 export default {
   // use for cookie sign key, should change to your own and keep security
   keys: '1714030878233_897',
@@ -60,6 +60,7 @@ export default {
         // entryServer: 'admin/src/entry-server.ts',
         root: 'admin',
         viteConfigFile: resolve(import.meta.dirname, '../../view/admin/vite.config.ts'),
+        prefix:'/adminxe685',
       },
     },
     root: '',

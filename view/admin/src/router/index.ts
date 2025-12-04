@@ -93,7 +93,7 @@ export const flatteningRoutes2 = (routes: RouteRecordRaw[], startIndex = 0, igno
 };
 
 export const router = createRouter({
-  history: import.meta.env.SSR ? createMemoryHistory('/admin') : createWebHistory('/admin'),
+  history: import.meta.env.SSR ? createMemoryHistory(import.meta.env.VIEW_ADMIN_PATH_PRE) : createWebHistory(import.meta.env.VIEW_ADMIN_PATH_PRE),
   routes: flatteningRoutes2(constantRoutes),
 });
 export const jump = (route: Pick<RouteRecordRaw, 'path' | 'meta'>) => {

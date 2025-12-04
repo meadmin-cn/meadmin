@@ -11,7 +11,8 @@ function pathResolve(dir: string) {
 export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
   return {
     root: import.meta.dirname,
-    envPrefix: 'ME_',
+    base:process.env.VIEW_ADMIN_PATH_PRE,
+    envPrefix: 'VIEW_',
     plugins: await plugins(configEnv),
     css: {
       preprocessorOptions: {

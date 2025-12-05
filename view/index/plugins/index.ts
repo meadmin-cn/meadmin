@@ -1,15 +1,16 @@
-import { ConfigEnv } from 'vite';
-import autoComponents from './autoComponents';
-import autoImport from './autoImport';
-import autoImportApi from './autoImportApi';
-import babel from './babel';
-import svgLoader from './svgLoader';
-import vueSetUpExtend from './vueSetUpExtend';
+import { ConfigEnv, Plugin } from 'vite';
+import autoComponents from './autoComponents.js';
+import autoImport from './autoImport.js';
+import autoImportApi from './autoImportApi.js';
+import babel from './babel.js';
+import svgLoader from './svgLoader.js';
+import vueSetUpExtend from './vueSetUpExtend.js';
 import { visualizer } from 'rollup-plugin-visualizer'; //打包大小分析（stats.html）
 import vue from '@vitejs/plugin-vue';
 // import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 // import { splitVendorChunkPlugin } from 'vite';
-import viteCompression from 'vite-plugin-compression'; //打包压缩
+import { compression } from 'vite-plugin-compression2';//压缩gz和br
+
 const virtualFile = '@virtual-file';
 const virtualId = '\0' + virtualFile;
 const nestedVirtualFile = '@nested-virtual-file';
@@ -18,13 +19,8 @@ export default (configEnv: ConfigEnv) => {
   return [
     vue(),
     // splitVendorChunkPlugin(), //打包分析，会生成stats.html展示打包情况
-    // VueI18nPlugin({
-    //   /* options */
-    //   // locale messages resource pre-compile option
-    //   include: ['./src/**/lang/**/*.json', './src/**/lang/*.json'],
-    // }),
     visualizer(),
-    viteCompression(),
+    compression(),
     autoComponents(),
     autoImport(),
     autoImportApi(),
@@ -39,7 +35,7 @@ export default (configEnv: ConfigEnv) => {
           return id;
         }
       },
-      load(id: string, options: { ssr: boolean; }) {
+      load(id: string, options?: { ssr?:boolean; }) {
         const ssrFromOptions = options?.ssr ?? false;
         if (id === '@foo') {
           // Force a mismatch error if ssrBuild is different from ssrFromOptions 如果 ssrBuild 与 ssrFromOptions 不同，则强制出现不匹配错误
@@ -79,7 +75,7 @@ export default (configEnv: ConfigEnv) => {
       const virtualId = '\0virtual:ssr-vue-built-url';
       return {
         name: 'built-url',
-        enforce: 'post',
+        enforce: 'post' as const,
         configResolved(_config: { base: any; build: { ssr: any; }; }) {
           config = _config;
         },
@@ -92,7 +88,7 @@ export default (configEnv: ConfigEnv) => {
           if (id === virtualId) {
             return {
               code: `export const __ssr_vue_processAssetPath = (url) => '${config.base}' + url`,
-              moduleSideEffects: 'no-treeshake',
+              moduleSideEffects: 'no-treeshake' as const,
             };
           }
         },

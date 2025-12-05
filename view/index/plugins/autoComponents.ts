@@ -1,6 +1,6 @@
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import Components from 'unplugin-vue-components/vite';
-import { resolver } from './autoImport';
+import { resolver } from './autoImport.js';
 export default () =>
   Components({
     // 组件自动注册(包括components下的所有.vue组件和ElementPlus组件)

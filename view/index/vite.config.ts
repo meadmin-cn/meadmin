@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import { ConfigEnv, UserConfigExport } from 'vite';
 import autoprefixer from 'autoprefixer';
-import plugins from './plugins';
+import plugins from './plugins/index.js';
 // @ts-ignore
 import px2rem from 'postcss-plugin-px2rem';
 
@@ -11,8 +11,8 @@ function pathResolve(dir: string) {
 export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
   return {
     root: import.meta.dirname,
-    base:process.env.VIEW_ADMIN_PATH_PRE,
-    envPrefix: 'VIEW_',
+    base:process.env.VIEW_INDEX_PATH_PRE,
+    envPrefix: 'VIEW_INDEX_',
     plugins: await plugins(configEnv),
     css: {
       preprocessorOptions: {
@@ -106,5 +106,6 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
         'node_modules/element-plus/es/index.mjs',
       ],
     },
+   
   };
 };

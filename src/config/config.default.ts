@@ -51,16 +51,15 @@ export default {
   viteView: {
     //midway-vite-view 配置配置详细说明见下方
     views: {
-      // 'index/index.html': {
-      //   entryServer: 'index/src/entry-server.ts',
-      //   root: 'index',
-      //   viteConfigFile: join(import.meta.dirname, '../../view/index/vite.config.ts')
-      // },
+      'index/index.html': {
+        entryServer: 'index/src/entry-server.ts',
+        root: 'index',
+        viteConfigFile: resolve(import.meta.dirname, '../../view/index/vite.config.ts')
+      },
       'admin/index.html': {
-        // entryServer: 'admin/src/entry-server.ts',
+        // entryServer: 'admin/src/entry-server.ts',//admin暂未支持服务端渲染
         root: 'admin',
         viteConfigFile: resolve(import.meta.dirname, '../../view/admin/vite.config.ts'),
-        prefix:'/adminxe685',
       },
     },
     root: '',

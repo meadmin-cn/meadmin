@@ -4,8 +4,8 @@
     <div class="info">
       <div class="title">404</div>
       <div class="content">
-        {{ $t('页面不见了') }}!
-        <router-link to="/">{{ $t('去') }}{{ $t(' ') }}{{ $t('首页') }}</router-link>
+        页面不见了!
+        <router-link to="/">去首页</router-link>
       </div>
     </div>
   </div>

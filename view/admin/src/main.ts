@@ -1,4 +1,4 @@
-import { createSSRApp,createApp as createClientApp } from 'vue';
+import { createSSRApp,createApp as createClientApp, App as AppType } from 'vue';
 import App from './App.vue';
 import { router } from './router';
 import { store } from './store';
@@ -7,8 +7,12 @@ import {bootscrapt} from './app';
 // that creates a fresh app instance. If using Vuex, we'd also be creating a
 // fresh store here.
 export async function createApp() {
-  const app = (typeof window!=='undefined' && window.document.querySelector('html')!.dataset.ssr==='true')?createSSRApp(App):createClientApp(App);
-  await bootscrapt(app);
+  let app: AppType<Element>;
+  if(import.meta.env.SSR || window?.document.querySelector('html')!.dataset.ssr==='true'){
+    app = createSSRApp(App);
+  }else{
+    app = createClientApp(App);
+  }  await bootscrapt(app);
   if (!import.meta.env.SSR && window.__pinia) {
     store.state.value = window.__pinia;
   }

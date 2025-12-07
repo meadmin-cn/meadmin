@@ -5,12 +5,11 @@ import serialize from 'serialize-javascript';
 
 export async function render(url: string, manifest: Record<string, string[]>) {
   const { app, router, pinia } = await createApp();
-  console.log('--22---')
-  // set the router to the desired URL before rendering (需要把base,替换为/)
+  // set the router to the desired URL before rendering 
   await router.push(
     url === router.options.history.base
       ? '/'
-      : url.replace(router.options.history.base + '/', '/')
+      : url
   );
   await router.isReady();
   // passing SSR context object which will be available via useSSRContext()

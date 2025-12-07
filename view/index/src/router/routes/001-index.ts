@@ -1,6 +1,7 @@
 import { PageEnum } from '@/dict/pageEnum';
 import { RouteRecordRaw } from 'vue-router';
 import Layout from '@/layout/default/index.vue';
+import LayoutRoute from '@/layout/layoutRoute.vue';
 import { concatObjectValue } from '@/utils/helper';
 export const routes: RouteRecordRaw[] = [
   {
@@ -11,7 +12,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'index1',
         redirect: PageEnum.HOME + 'index1/index',
-        component: Layout,
+        component: LayoutRoute,
         children: concatObjectValue<RouteRecordRaw>(
           import.meta.glob('./index/*.ts', { eager: true, import: 'routes' }),
         ),

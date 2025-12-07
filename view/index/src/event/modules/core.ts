@@ -5,8 +5,9 @@ import { installIcon } from '@/icons';
 import nProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 mitter.once(event.START, async (app) => {
-  installIcon(app);
+  console.log('--mitt--start--11')
   await installStore(app);
+  installIcon(app);
   installRoute(app);
   if (!import.meta.env.SSR) {
     window.addEventListener('resize', () => mitter.emit(event.RESIZE));
@@ -15,4 +16,5 @@ mitter.once(event.START, async (app) => {
   nProgress.configure({
     showSpinner: false,
   });
+ 
 });

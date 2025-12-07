@@ -5,7 +5,7 @@ import { setupRouterGuard } from './guard';
 import { concatObjectValue } from '@/utils/helper';
 export const asyncRoutes = concatObjectValue<RouteRecordRaw>(import.meta.glob('./routes/*.ts', { eager: true, import: 'routes' }));
 import { isExternal } from '@/utils/validate';
-import * as path from 'path-browserify';
+import path from 'path-browserify';
 
 export const constantRoutes: RouteRecordRaw[] = [
   {

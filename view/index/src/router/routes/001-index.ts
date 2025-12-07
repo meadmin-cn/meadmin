@@ -5,12 +5,12 @@ import { concatObjectValue } from '@/utils/helper';
 export const routes: RouteRecordRaw[] = [
   {
     path: PageEnum.HOME,
-    redirect: PageEnum.HOME + '/index1',
+    redirect: PageEnum.HOME + 'index1/index',
     component: Layout,
     children: [
       {
         path: 'index1',
-        redirect: PageEnum.HOME + '/index1/index',
+        redirect: PageEnum.HOME + 'index1/index',
         component: Layout,
         children: concatObjectValue<RouteRecordRaw>(
           import.meta.glob('./index/*.ts', { eager: true, import: 'routes' }),

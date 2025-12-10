@@ -55,7 +55,7 @@ export class ViteView implements IViewEngine {
         render = require(entryServerUrl).render;
       }
       const context = {cookies:this.ctx.cookies,request:this.ctx.request};
-      const [appHtml, preloadLinks] = await render(url, manifest, context);
+      const [appHtml, preloadLinks, teleports] = await render(url, manifest, context);
       if (context['url']) {
         // Somewhere a `<Redirect>` was rendered
         return this.ctx.redirect(context['url']);
@@ -63,6 +63,7 @@ export class ViteView implements IViewEngine {
       let html = template
         .replace('<!--preload-links-->', preloadLinks)
         .replace('<!--app-html-->', appHtml)
+        .replace(/(\n|\r\n)\s*<!--app-teleports-->/, teleports)
         .replace('<html', '<html data-ssr="true"')
         .replace(
           /<!--ssr-no-content-start-->((?!((<!--ssr-no-content-start-->)|(<!--ssr-no-content-end-->))).)*<!--ssr-no-content-end-->/g,

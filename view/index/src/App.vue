@@ -7,10 +7,11 @@
         </Suspense>
       </template>
     </router-view>
-    <Suspense>
-      <component :is="item.component" v-for="item in globalComponents" :key="item.key"
-        :ref="(vnode: any) => item.vnode = vnode" v-bind="item.props"></component>
-    </Suspense>
+     <Teleport to="body">
+      <Suspense>
+        <component :is="item.component" v-for="item in globalComponents" :key="item.key" :ref="(vnode:any)=>item.vnode = vnode" v-bind="item.props"></component>
+      </Suspense>
+    </Teleport>
   </el-config-provider>
 </template>
 <script setup lang="ts">

@@ -41,34 +41,21 @@ export const resolvePath = (routePath: string, basePath = '') => {
   return path.resolve(basePath, routePath);
 };
 
-//扁平化路由
-export const flatteningRoutes = (routes: RouteRecordRaw[], basePath = '', menuIndex: number[] = [], newRoutes: RouteRecordRaw[] = [], baseIndex = 0) => {
-  routes.forEach((route, index) => {
-    route.path = resolvePath(route.path, basePath);
-    if (!route.meta) {
-      route.meta = { title: '' };
-    }
-    route.meta.menuIndex = [...menuIndex, index + baseIndex];
-    newRoutes.push(Object.assign({ ...route }, { children: [] }));
-    if (route.children) {
-      flatteningRoutes(route.children, route.path, route.meta.menuIndex, newRoutes);
-    }
-  });
-  return newRoutes;
-};
-//扁平化为2级路由
-export const flatteningRoutes2 = (routes: RouteRecordRaw[], startIndex = 0, ignoreFirst = false) => {
+
+//格式化路由
+export const formatRoutes = (routes: RouteRecordRaw[], basePath ='', startIndex = 0) => {
   const newRoutes = [] as RouteRecordRaw[];
   routes.forEach((route, index) => {
     if (!route.meta) {
       route.meta = { title: '' };
     }
     route.meta.menuIndex = [index + startIndex];
+    route.path = resolvePath(route.path, basePath);
     newRoutes.push(
       Object.assign(
         { ...route },
         {
-          children: route.children ? flatteningRoutes(route.children, route.path, ignoreFirst ? [] : [index + startIndex], [], ignoreFirst ? index + startIndex : 0) : [],
+          children: route.children ? formatRoutes(route.children, route.path, index + startIndex) : [],
         },
       ),
     );
@@ -78,7 +65,7 @@ export const flatteningRoutes2 = (routes: RouteRecordRaw[], startIndex = 0, igno
 
 export const router = createRouter({
   history: import.meta.env.SSR ? createMemoryHistory(import.meta.env.VIEW_ADMIN_PATH_PRE) : createWebHistory(import.meta.env.VIEW_ADMIN_PATH_PRE),
-  routes: flatteningRoutes2(constantRoutes),
+  routes: formatRoutes(constantRoutes),
 });
 export const jump = (route: Pick<RouteRecordRaw, 'path' | 'meta'>) => {
   if (route.meta?.isLink) {

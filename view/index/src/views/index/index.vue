@@ -1,6 +1,6 @@
 <template>
 <div class="index">
-Index
+Index首页
 </div>
 </template>
 

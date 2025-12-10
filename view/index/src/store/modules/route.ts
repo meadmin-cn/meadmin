@@ -1,4 +1,4 @@
-import { router, constantRoutes, asyncRoutes, flatteningRoutes2 } from '@/router';
+import { router, constantRoutes, asyncRoutes, formatRoutes } from '@/router';
 import { RouteRecordRaw } from 'vue-router';
 export default defineStore('route', {
   state: () => ({
@@ -16,7 +16,7 @@ export default defineStore('route', {
     },
     //初始化路由
     initRoutes() {
-      flatteningRoutes2(this.generateRoutes()).forEach((route) => router.addRoute(route));
+      formatRoutes(this.generateRoutes()).forEach((route) => router.addRoute(route));
     }
   },
 });

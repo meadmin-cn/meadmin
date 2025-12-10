@@ -54,7 +54,7 @@ export class ViteView implements IViewEngine {
         ));
         render = require(entryServerUrl).render;
       }
-      const context = {};
+      const context = {cookies:this.ctx.cookies,request:this.ctx.request};
       const [appHtml, preloadLinks] = await render(url, manifest, context);
       if (context['url']) {
         // Somewhere a `<Redirect>` was rendered

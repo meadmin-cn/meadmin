@@ -1,21 +1,23 @@
 import { PageEnum } from '@/dict/pageEnum';
 import { RouteRecordRaw } from 'vue-router';
 import Layout from '@/layout/default/index.vue';
-import LayoutRoute from '@/layout/layoutRoute.vue';
-import { concatObjectValue } from '@/utils/helper';
 export const routes: RouteRecordRaw[] = [
   {
     path: PageEnum.HOME,
-    redirect: PageEnum.HOME + 'index1/index',
+    redirect: PageEnum.HOME + 'index',
     component: Layout,
     children: [
       {
-        path: 'index1',
-        redirect: PageEnum.HOME + 'index1/index',
-        component: LayoutRoute,
-        children: concatObjectValue<RouteRecordRaw>(
-          import.meta.glob('./index/*.ts', { eager: true, import: 'routes' }),
-        ),
+        path: PageEnum.LOGIN,
+        component: async () => await import('@/views/login/index.vue'),
+        meta: {
+          hideMenu: true,
+          title: '登录',
+        },
+      },
+      {
+        path: 'index',
+        component: () => import('@/views/index/index.vue'),
         meta: { title: '首页' },
       },
     ],

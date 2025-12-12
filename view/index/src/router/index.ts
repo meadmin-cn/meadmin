@@ -9,14 +9,6 @@ import path from 'path-browserify';
 
 export const constantRoutes: RouteRecordRaw[] = [
   {
-    path: PageEnum.LOGIN,
-    component: async () => await import('@/views/login/index.vue'),
-    meta: {
-      hideMenu: true,
-      title: '登录',
-    },
-  },
-  {
     path: '/page404',
     component: () => import('@/views/404.vue'),
     meta: { hideMenu: true, title: '404页面'},

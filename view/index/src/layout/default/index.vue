@@ -13,9 +13,9 @@
 </template>
 
 <script setup lang="ts" name="Index">
-import Header from './header/index.vue';
+import Header from './components/header/index.vue';
 import Page from './page.vue';
-import Footer from './footer.vue';
+import Footer from './components/footer.vue';
 </script>
 <style lang="scss" scoped>
 @use "./layout.scss" as *;
@@ -32,6 +32,7 @@ import Footer from './footer.vue';
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     position: sticky;
     top: 0;
+    z-index: 2;
     >div{
       width: $content-width;
       margin: 0 auto;
@@ -49,6 +50,7 @@ import Footer from './footer.vue';
   .layout-footer{
     position: sticky;
     bottom: 0;
+    z-index: 2;
     background-color: #1a2027;
     color: #ede5e5;
     >div{

@@ -2,7 +2,7 @@
 <div class="user">
 <el-dropdown>
   <span class="el-dropdown-link">
-    会员中心<el-icon-arrow-down class="icon"></el-icon-arrow-down>
+    会员中心<mel-icon-arrow-down class="icon"></mel-icon-arrow-down>
   </span>
   <template #dropdown>
   <el-dropdown-menu slot="dropdown">
@@ -23,6 +23,9 @@
   height: 100%;
   display: flex;
   align-items: center;
+  .el-dropdown-link:hover{
+    cursor: pointer;
+  }
   .icon{
     height: 1.2em;
     margin-left: 5px;

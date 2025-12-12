@@ -241,11 +241,13 @@ function writeApi() {
   ]);
 }
 
-//写入前端文件
+//写入前端接口文件
+function writeViewApi(){
+  return writeContent('../../template/crud/view/api/api.ts.art', writeViewFiles.apiPath, 'view');
+}
+//写入前端view文件
 function writeViews() {
-  //写入前端文件
   return Promise.all([
-    writeContent('../../template/crud/view/api/api.ts.art', writeViewFiles.apiPath, 'view'),
     writeContent('../../template/crud/view/views/index.vue.art', writeViewFiles.listPath, 'view'),
     writeContent('../../template/crud/view/views/lang/en.json.art', writeViewFiles.langEnPath, 'view'),
     writeContent('../../template/crud/view/views/components/addOrUp.vue.art', writeViewFiles.addOrUp, 'view'),
@@ -278,8 +280,9 @@ export const crudInit = async (program: Command) => {
     .option('-n, --name <char>', '使用的数据库配置defaultDataSourceName')
     .option('-d, --dbConfig <char>', '数据库配置文件地址默认为当前目录下dist/config/database.js', join(process.cwd(), 'dist/config/database.js'))
     .option('--del', '删除crud创建的文件')
-    .option('-p, --path <char>', '生成的路径，默认根据驼峰转多级路径')
+    .option('--path <char>', '生成的路径，默认根据驼峰转多级路径')
     .option('-c, --controller <char>', '生成的controller路径，默认使用path')
+    .option('--cov, --coverage <char>', '生成代码发覆盖范围：b后端代码、a前端api接口代码、v前端view 代码，默认值bav','bav')
     .action(async (file: string, options) => {
       sequelize = new Sequelize(await getConfig(options.dbConfig, options.name));
       const noSuffixEntityPath = relativePath('', file, ['.entity', '.ts']);
@@ -335,8 +338,15 @@ export const crudInit = async (program: Command) => {
       swaggerExplorer.parseClzz(entity[upFirstCase(entityFileName)]);
       swaggerSchemas = getSchemas(swaggerExplorer.getDocumentBuilder(), replaceNames.Name);
       //写入文件
-      await writeApi();
-      await writeViews();
+      if(options.coverage.includes('b')){
+        await writeApi();
+      }
+      if(options.coverage.includes('a')){
+        await writeViewApi
+      }
+      if(options.coverage.includes('v')){
+        await writeViews();
+      }
       await setMenu(options.model);
       Log.success(entityFileName + ' crud创建完成');
     });

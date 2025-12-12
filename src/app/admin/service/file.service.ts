@@ -7,9 +7,6 @@ import { FileUpdateDto } from '../dto/fileUpdate.dto.js';
 import { File } from '../../../entities/file.entity.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { Op } from '@sequelize/core';
-import { UploadStreamFileInfo } from '@midwayjs/busboy';
-import { resolve } from 'path';
-import { createWriteStream, renameSync, statSync } from 'fs';
 
 //附件
 @Provide()
@@ -20,27 +17,6 @@ export class FileService {
   @Inject()
   i18nService: MidwayI18nService;
 
-  //保存文件
-  async saveFie({filename, data }: UploadStreamFileInfo, md5:string, savePath:string, tmpPath:string){
-    const suffix = filename.substring(filename.lastIndexOf('.')); //后缀带着.
-    const tmpFilePath = resolve(tmpPath, '__tmp__'+ process.pid + '__'+ md5 + suffix);//临时文件带上进程id防止重复
-    const saveFilePath = resolve(savePath, md5 + suffix);
-    const saveStat = statSync(saveFilePath,{throwIfNoEntry:false});
-    if(saveStat){
-      return {size:saveStat.size, path:saveFilePath };//已存在无需上传
-    }
-    return await new Promise<{size:number,path:string}>((reslove, reject) => {
-      const stream = createWriteStream(tmpFilePath);
-      stream.on('close', () => {
-        renameSync(tmpFilePath, saveFilePath);
-        reslove({size: statSync(saveFilePath,{throwIfNoEntry:true}).size, path:saveFilePath});
-      });
-      stream.on('error', (e) => {
-        reject(e);
-      });
-      data.pipe(stream);
-    });
-  }
 
   /**
    * 创建数据

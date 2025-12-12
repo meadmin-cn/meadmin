@@ -8,6 +8,7 @@
     "conventionalCommits.scopes": [
         "meadmin",
         "midway-vite-view",
-        "meadmin-view-admin"
+        "meadmin-view-admin",
+        "core"
     ]
 }

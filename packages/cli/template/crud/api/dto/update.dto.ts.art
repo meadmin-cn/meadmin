@@ -1,8 +1,11 @@
-import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
+import { {{@ replaceNames.Name}} } from '{{@ paths.entityPath}}';
 import { InferAttributesLoose } from '@/../types/entity.js';
-import { PartialType } from '@/helper/dto.js';
+import { PartialType, OmitDtoType } from '@/helper/dto.js';
 
 //dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效
-export class {{replaceNames.UpdateDto}} extends PartialType({{replaceNames.Name}} as new () => InferAttributesLoose<{{replaceNames.Name}}>) {
+export class {{@ replaceNames.UpdateDto}} extends PartialType(OmitDtoType(
+  {{replaceNames.Name}} as new () => InferAttributesLoose<{{@ replaceNames.Name}}>, //只保留声明属性
+  ['{{@ entity.autoAttributes.join("','")}}'] //排除自动创建的字段
+)) {
   
 }

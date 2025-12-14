@@ -1,22 +1,22 @@
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { InjectRepository } from '@/decorators/index.js';
 import { Provide, Inject } from '@midwayjs/core';
-import { {{replaceNames.CreateDto}} } from '{{paths.createDtoPath}}';
-import { {{replaceNames.QueryDto}} } from '{{paths.queryDtoPath}}';
-import { {{replaceNames.UpdateDto}} } from '{{paths.updateDtoPath}}';
-import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
+import { {{@ replaceNames.CreateDto}} } from '{{@ paths.createDtoPath}}';
+import { {{@ replaceNames.QueryDto}} } from '{{@ paths.queryDtoPath}}';
+import { {{@ replaceNames.UpdateDto}} } from '{{@ paths.updateDtoPath}}';
+import { {{@ replaceNames.Name}} } from '{{@ paths.entityPath}}';
 import { MidwayI18nService } from '@midwayjs/i18n';
 {{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At'))}}import { Op } from '@sequelize/core';{{/if}}
 {{if entity.pk.length > 1}}type PK = {
   {{each entity.pk}}
-  {{$value}}: {{entitySchema.properties[$value].type}},
+  {{@ $value}}: {{@ entitySchema.properties[$value].type}},
   {{/each}}
 }{{/if}}
-//{{entity.tableComment}}
+//{{@ entity.tableComment}}
 @Provide()
-export class {{replaceNames.Service}} {
-  @InjectRepository({{replaceNames.Name}})
-  {{replaceNames.Name}}Repository: typeof {{replaceNames.Name}}
+export class {{@ replaceNames.Service}} {
+  @InjectRepository({{@ replaceNames.Name}})
+  {{@ replaceNames.Name}}Repository: typeof {{@ replaceNames.Name}}
   
   @Inject()
   i18nService: MidwayI18nService;
@@ -26,8 +26,8 @@ export class {{replaceNames.Service}} {
    * @param createDto
    * @returns
    */
-  async create(createDto: {{replaceNames.CreateDto}}) {
-    const entity = this.{{replaceNames.Name}}Repository.build(createDto);
+  async create(createDto: {{@ replaceNames.CreateDto}}) {
+    const entity = this.{{@ replaceNames.Name}}Repository.build(createDto);
     return await entity.save();
   }
 
@@ -36,7 +36,7 @@ export class {{replaceNames.Service}} {
    * @param queryDto 查询条件
    * @returns
    */
-  async list(queryDto: {{replaceNames.QueryDto}}) {
+  async list(queryDto: {{@ replaceNames.QueryDto}}) {
     const where = {};
     Object.keys(queryDto).forEach((key) => {
       if(['page', 'pageSize'].includes(key)){
@@ -45,19 +45,19 @@ export class {{replaceNames.Service}} {
       if([null, undefined, ''].includes(queryDto[key])){
         return;
       }{{each entitySchema.properties}}{{if $index.endsWith('At')}}
-      if (key === 'start{{$imports.upFirstCase($index)}}') {
-        where['{{$index}}'] = where['{{$index}}'] ?? {};
-        where['{{$index}}'][Op.gte] = queryDto[key];
+      if (key === 'start{{@ $imports.upFirstCase($index)}}') {
+        where['{{@ $index}}'] = where['{{@ $index}}'] ?? {};
+        where['{{@ $index}}'][Op.gte] = queryDto[key];
         return;
       }
-      if (key === 'end{{$imports.upFirstCase($index)}}') {
-        where['{{$index}}'] = where['{{$index}}'] ?? {};
-        where['{{$index}}'][Op.lte] = queryDto[key];
+      if (key === 'end{{@ $imports.upFirstCase($index)}}') {
+        where['{{@ $index}}'] = where['{{@ $index}}'] ?? {};
+        where['{{@ $index}}'][Op.lte] = queryDto[key];
         return;
       }{{/if}}{{/each}}
       where[key] = queryDto[key];
     });    
-    const { count, rows } = await this.{{replaceNames.Name}}Repository.findAndCountAll({
+    const { count, rows } = await this.{{@ replaceNames.Name}}Repository.findAndCountAll({
       where,
       offset: (queryDto.page - 1) *  queryDto.pageSize,
       limit: queryDto.pageSize,
@@ -73,11 +73,11 @@ export class {{replaceNames.Service}} {
 
   /**
    * 根据主键获取一条信息
-   * @param {{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}} 主键
+   * @param {{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}} 主键
    * @returns
    */
-  async findOne({{if entity.pk.length > 1}}pk:PK{{else}}{{entity.pk[0]}}: {{entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
-    const entity = await this.{{replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}});
+  async findOne({{if entity.pk.length > 1}}pk:PK{{else}}{{@ entity.pk[0]}}: {{@ entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
+    const entity = await this.{{@ replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}});
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
@@ -86,12 +86,12 @@ export class {{replaceNames.Service}} {
 
   /**
    * 更新数据
-   * @param {{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}} 主键
+   * @param {{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}} 主键
    * @param updateDto 数据对象
    * @returns
    */
-  async update({{if entity.pk.length > 1}}pk:PK{{else}}{{entity.pk[0]}}: {{entitySchema.properties[entity.pk[0]].type}}{{/if}}, updateDto: {{replaceNames.UpdateDto}}) {
-    const entity = await this.{{replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}});
+  async update({{if entity.pk.length > 1}}pk:PK{{else}}{{@ entity.pk[0]}}: {{@ entitySchema.properties[entity.pk[0]].type}}{{/if}}, updateDto: {{@ replaceNames.UpdateDto}}) {
+    const entity = await this.{{@ replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}});
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
@@ -101,11 +101,11 @@ export class {{replaceNames.Service}} {
 
   /**
    * 删除数据
-   * @param {{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}} 主键
+   * @param {{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}} 主键
    * @returns
    */
-  async remove({{if entity.pk.length > 1}}pk:PK{{else}}{{entity.pk[0]}}: {{entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
-    const entity = await this.{{replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{entity.pk[0]}}{{/if}});
+  async remove({{if entity.pk.length > 1}}pk:PK{{else}}{{@ entity.pk[0]}}: {{@ entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
+    const entity = await this.{{@ replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}});
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }

@@ -1,2 +1,2 @@
-{{each properties}}{{$index}}: <% include('./valueType.ts.art', {...$value,key:$index,entity:entity}) %>; //{{$value.description}}
+{{each properties}}{{@ $index}}: <% include('./valueType.ts.art', {...$value,key:$index,entity:entity}) %>; {{if $value.description}}//{{@ $value.description}}{{/if}}
 {{/each}}

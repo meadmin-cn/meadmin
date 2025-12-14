@@ -1,81 +1,81 @@
 import { Body, Controller, Get, Post, Inject, Param } from '@midwayjs/core';
-import { BaseController } from '{{paths.baseControllerPath}}';
-import { {{replaceNames.Name}} } from '{{paths.entityPath}}';
-import { {{replaceNames.CreateDto}} } from '{{paths.createDtoPath}}';
-import { {{replaceNames.QueryDto}} } from '{{paths.queryDtoPath}}';
-import { {{replaceNames.UpdateDto}} } from '{{paths.updateDtoPath}}';
-import { {{replaceNames.Service}} } from '{{paths.servicePath}}';
+import { BaseController } from '{{@ paths.baseControllerPath}}';
+import { {{@ replaceNames.Name}} } from '{{@ paths.entityPath}}';
+import { {{@ replaceNames.CreateDto}} } from '{{@ paths.createDtoPath}}';
+import { {{@ replaceNames.QueryDto}} } from '{{@ paths.queryDtoPath}}';
+import { {{@ replaceNames.UpdateDto}} } from '{{@ paths.updateDtoPath}}';
+import { {{@ replaceNames.Service}} } from '{{@ paths.servicePath}}';
 import { ApiOperationResponse } from '@/decorators/index.js';
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
  * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址
  */
-@Controller('{{replaceNames.controllerPath}}')
-export class {{replaceNames.Controller}} extends BaseController {
+@Controller('{{@ replaceNames.controllerPath}}')
+export class {{@ replaceNames.Controller}} extends BaseController {
   @Inject()
-  {{replaceNames.service}}: {{replaceNames.Service}};
+  {{@ replaceNames.service}}: {{@ replaceNames.Service}};
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
   @Post('/add')
   @ApiOperationResponse({
-    responseType: {{replaceNames.Name}},
-    summary: '添加{{entity.tableComment}}信息',
+    responseType: {{@ replaceNames.Name}},
+    summary: '添加{{@ entity.tableComment}}信息',
   })
-  async add(@Body() createDto: {{replaceNames.CreateDto}}) {
-    return this.success(await this.{{replaceNames.service}}.create(createDto));
+  async add(@Body() createDto: {{@ replaceNames.CreateDto}}) {
+    return this.success(await this.{{@ replaceNames.service}}.create(createDto));
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
   @Post('/')
   @ApiOperationResponse({
-    responsePage: {{replaceNames.Name}},
-    summary: '获取{{entity.tableComment}}列表',
+    responsePage: {{@ replaceNames.Name}},
+    summary: '获取{{@ entity.tableComment}}列表',
   })
-  async list(@Body() queryDto: {{replaceNames.QueryDto}}) {
-    return this.success(await this.{{replaceNames.service}}.list(queryDto));
+  async list(@Body() queryDto: {{@ replaceNames.QueryDto}}) {
+    return this.success(await this.{{@ replaceNames.service}}.list(queryDto));
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Get('/info/:{{entity.pk.join('/:')}}')
+  @Get('/info/:{{@ entity.pk.join('/:')}}')
   @ApiOperationResponse({
-    responseType: {{replaceNames.Name}},
-    summary: '根据{{entity.pk.join('/:')}}获取{{entity.tableComment}}详情',
+    responseType: {{@ replaceNames.Name}},
+    summary: '根据{{@ entity.pk.join('/:')}}获取{{@ entity.tableComment}}详情',
   })
-  async findOne({{each entity.pk}}{{if index>0}}, {{/if}}@Param('{{$value}}') {{$value}}: {{entitySchema.properties[$value].type}}{{/each}}) {
-    {{if entity.pk.length>1}}const entity = await this.{{replaceNames.service}}.findOne({
-      {{each entity.pk}}{{$value}},{{/each}}
+  async findOne({{each entity.pk}}{{if index>0}}, {{/if}}@Param('{{@ $value}}') {{@ $value}}: {{@ entitySchema.properties[$value].type}}{{/each}}) {
+    {{if entity.pk.length>1}}const entity = await this.{{@ replaceNames.service}}.findOne({
+      {{each entity.pk}}{{@ $value}},{{/each}}
     });
-    {{else}}const entity = await this.{{replaceNames.service}}.findOne({{entity.pk[0]}});{{/if}}
+    {{else}}const entity = await this.{{@ replaceNames.service}}.findOne({{@ entity.pk[0]}});{{/if}}
     return this.success(entity);
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/up/:{{entity.pk.join('/:')}}')
+  @Post('/up/:{{@ entity.pk.join('/:')}}')
   @ApiOperationResponse({
-    responseType: {{replaceNames.Name}},
-    summary: '根据{{entity.pk.join('/:')}}更新{{entity.tableComment}}详情',
+    responseType: {{@ replaceNames.Name}},
+    summary: '根据{{@ entity.pk.join('/:')}}更新{{@ entity.tableComment}}详情',
   })
-  async update({{each entity.pk}}@Param('{{$value}}') {{$value}}: {{entitySchema.properties[$value].type}}, {{/each}}@Body() updateDto: {{replaceNames.UpdateDto}}) {
+  async update({{each entity.pk}}@Param('{{@ $value}}') {{@ $value}}: {{@ entitySchema.properties[$value].type}}, {{/each}}@Body() updateDto: {{@ replaceNames.UpdateDto}}) {
     return this.success(
-      {{if entity.pk.length>1}}await this.{{replaceNames.service}}.update({
-        {{each entity.pk}}{{$value}},{{/each}}
+      {{if entity.pk.length>1}}await this.{{@ replaceNames.service}}.update({
+        {{each entity.pk}}{{@ $value}},{{/each}}
       }, updateDto)
-      {{else}}await this.{{replaceNames.service}}.update({{entity.pk[0]}}, updateDto){{/if}}  
+      {{else}}await this.{{@ replaceNames.service}}.update({{@ entity.pk[0]}}, updateDto){{/if}}  
     );
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/del/:{{entity.pk.join('/:')}}')
+  @Post('/del/:{{@ entity.pk.join('/:')}}')
   @ApiOperationResponse({
-    summary: '根据{{entity.pk.join('/:')}}删除{{entity.tableComment}}信息',
+    summary: '根据{{@ entity.pk.join('/:')}}删除{{@ entity.tableComment}}信息',
   })
-  async delete({{each entity.pk}}{{if index>0}}, {{/if}}@Param('{{$value}}') {{$value}}: {{entitySchema.properties[$value].type}}{{/each}}) {
-    {{if entity.pk.length>1}}await this.{{replaceNames.service}}.remove({
+  async delete({{each entity.pk}}{{if index>0}}, {{/if}}@Param('{{@ $value}}') {{@ $value}}: {{@ entitySchema.properties[$value].type}}{{/each}}) {
+    {{if entity.pk.length>1}}await this.{{@ replaceNames.service}}.remove({
       {{each entity.pk}}
-      {{$value}},
+      {{@ $value}},
       {{/each}}
-    });{{else}}await this.{{replaceNames.service}}.remove({{entity.pk[0]}});{{/if}}
+    });{{else}}await this.{{@ replaceNames.service}}.remove({{@ entity.pk[0]}});{{/if}}
     return this.success();
   }
 }

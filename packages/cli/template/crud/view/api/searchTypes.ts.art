@@ -1,4 +1,4 @@
 {{each properties}}{{if $index.endsWith('At')}}
-start{{$imports.upFirstCase($index)}}?: <% include('./valueType.ts.art', {...$value,key:$index,entity:entity}) %>; //{{$value.description}}(起)
-end{{$imports.upFirstCase($index)}}?: <% include('./valueType.ts.art', {...$value,key:$index,entity:entity}) %>; //{{$value.description}}(止){{else}}
-{{$index}}?: <% include('./valueType.ts.art', {...$value,key:$index,entity:entity}) %>; //{{$value.description}}{{/if}}{{/each}}
+start{{@ $imports.upFirstCase($index)}}?: <% include('./valueType.ts.art', {...$value,key:$index,entity:entity}) %>; //{{@ $value.description}}(起)
+end{{@ $imports.upFirstCase($index)}}?: <% include('./valueType.ts.art', {...$value,key:$index,entity:entity}) %>; //{{@ $value.description}}(止){{else}}
+{{@ $index}}?: <% include('./valueType.ts.art', {...$value,key:$index,entity:entity}) %>; //{{@ $value.description}}{{/if}}{{/each}}

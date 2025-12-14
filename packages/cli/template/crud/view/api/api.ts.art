@@ -3,26 +3,24 @@ import { PageParam, PageResult } from '@/api/api.model.js';
 
 {{each swaggerSchemas}}
 {{if $index === replaceNames.Name}}
-//{{entity.tableComment}}
-export class {{$index}} {
-  {{each entity.pk}}{{$value}}?: <% include('./valueType.ts.art', {...swaggerSchemas[replaceNames.Name].properties[$value],key:$value,entity:entity}) %>; //{{swaggerSchemas[replaceNames.Name].properties[$value].description}}{{/each}}
+//{{@ entity.tableComment}}
+export class {{@ $index}} {
 <% include('./class.ts.art', {...$value, entity:entity}) %>
-{{else}}<% const scgemaEntity = $imports.tableInfo($index); %>//{{scgemaEntity.tableComment}}
-export type {{$index}} = {
+{{else}}<% const scgemaEntity = $imports.tableInfo($index); %>{{if scgemaEntity.tableComment}}//{{@ scgemaEntity.tableComment}}{{/if}}
+export type {{@ $index}} = {
 <% include('./type.ts.art', {...$value, entity:scgemaEntity}) %>
 {{/if}}
 }
 {{/each}}
-export type {{replaceNames.Name}}Info = {{replaceNames.Name}} & {
-  {{each entity.pk}}
-  {{$value}}: <% include('./valueType.ts.art', {...swaggerSchemas[replaceNames.Name].properties[$value],key:$value,entity:entity}) %>, //{{swaggerSchemas[replaceNames.Name].properties[$value].description}}
-  {{/each}}
+export type {{@ replaceNames.Name}}Info = {{@ replaceNames.Name}} & {
+  {{each entity.autoAttributes}}
+  {{@ $value}}: <% include('./valueType.ts.art', {...swaggerSchemas[replaceNames.Name].properties[$value],key:$value,entity:entity}) %>, {{if swaggerSchemas[replaceNames.Name].properties[$value]?.description}}//{{@ swaggerSchemas[replaceNames.Name].properties[$value]?.description}}{{/if}}{{/each}}
 };
-//添加{{entity.tableComment}}信息
-export function add{{replaceNames.Name}}Api() {
-  return request<{{replaceNames.Name}}Info, [{{replaceNames.Name}}]>(
+//添加{{@ entity.tableComment}}信息
+export function add{{@ replaceNames.Name}}Api() {
+  return request<{{@ replaceNames.Name}}Info, [{{@ replaceNames.Name}}]>(
     (data) => ({
-      url: '{{replaceNames.controllerPath}}/add',
+      url: '{{@ replaceNames.controllerPath}}/add',
       method: 'post',
       data: data,
     }),
@@ -30,15 +28,15 @@ export function add{{replaceNames.Name}}Api() {
   );
 }
 
-export type {{replaceNames.Name}}ListResult = PageResult<{{replaceNames.Name}}Info>;
-export class {{replaceNames.Name}}ListParam extends PageParam {
+export type {{@ replaceNames.Name}}ListResult = PageResult<{{@ replaceNames.Name}}Info>;
+export class {{@ replaceNames.Name}}ListParam extends PageParam {
   <% include('./searchTypes.ts.art', {...entitySchema, entity:entity}) %>
 }
-//获取{{entity.tableComment}}列表
-export function {{replaceNames.name}}ListApi(options?: RequestOptions<{{replaceNames.Name}}ListResult, [{{replaceNames.Name}}ListParam]>) {
-  return request<{{replaceNames.Name}}ListResult, [{{replaceNames.Name}}ListParam]>(
+//获取{{@ entity.tableComment}}列表
+export function {{@ replaceNames.name}}ListApi(options?: RequestOptions<{{@ replaceNames.Name}}ListResult, [{{replaceNames.Name}}ListParam]>) {
+  return request<{{@ replaceNames.Name}}ListResult, [{{@ replaceNames.Name}}ListParam]>(
     (data) => ({
-      url: '{{replaceNames.controllerPath}}/',
+      url: '{{@ replaceNames.controllerPath}}/',
       method: 'post',
       data: data,
     }),
@@ -46,23 +44,23 @@ export function {{replaceNames.name}}ListApi(options?: RequestOptions<{{replaceN
   );
 }
 
-//根据{{entity.pk.join('/:')}}获取{{entity.tableComment}}详情
-export function {{replaceNames.name}}InfoApi(options?: RequestOptions<{{replaceNames.Name}}Info, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>) {
-  return request<{{replaceNames.Name}}Info, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>(
-    ({{entity.pk.join(', ')}}) => ({
-      url: `{{replaceNames.controllerPath}}/info/${<%= entity.pk.join('/${') %>}`,
+//根据{{@ entity.pk.join('/:')}}获取{{@ entity.tableComment}}详情
+export function {{@ replaceNames.name}}InfoApi(options?: RequestOptions<{{@ replaceNames.Name}}Info, [{{@ entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>) {
+  return request<{{@ replaceNames.Name}}Info, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>(
+    ({{@ entity.pk.join(', ')}}) => ({
+      url: `{{@ replaceNames.controllerPath}}/info/${<%- entity.pk.join('/${') %>}`,
       method: 'get',
     }),
     options,
   );
 }
 
-export type Update{{replaceNames.Name}}InfoParam = Partial<{{replaceNames.Name}}Info>;
-//修改{{entity.tableComment}}信息
-export function update{{replaceNames.Name}}Api(options?: RequestOptions<{{replaceNames.Name}}Info, [{{each entity.pk}}{{entitySchema.properties[$value].type}}, {{/each}}Update{{replaceNames.Name}}InfoParam]>) {
-  return request<{{replaceNames.Name}}Info, [{{each entity.pk}}{{entitySchema.properties[$value].type}}, {{/each}}Update{{replaceNames.Name}}InfoParam]>(
-    ({{entity.pk.join(', ')}}, data) => ({
-      url: `{{replaceNames.controllerPath}}/up/${<%= entity.pk.join('/${') %>}`,
+export type Update{{replaceNames.Name}}InfoParam = Partial<Omit<{{@ replaceNames.Name}}Info,'{{@ entity.autoAttributes.join('|')}}'>>;
+//修改{{@ entity.tableComment}}信息
+export function update{{@ replaceNames.Name}}Api(options?: RequestOptions<{{@ replaceNames.Name}}Info, [{{each entity.pk}}{{entitySchema.properties[$value].type}}, {{/each}}Update{{replaceNames.Name}}InfoParam]>) {
+  return request<{{@ replaceNames.Name}}Info, [{{each entity.pk}}{{entitySchema.properties[$value].type}}, {{/each}}Update{{replaceNames.Name}}InfoParam]>(
+    ({{@ entity.pk.join(', ')}}, data) => ({
+      url: `{{@ replaceNames.controllerPath}}/up/${<%- entity.pk.join('/${') %>}`,
       method: 'post',
       data: data,
     }),
@@ -70,11 +68,11 @@ export function update{{replaceNames.Name}}Api(options?: RequestOptions<{{replac
   );
 }
 
-//删除{{entity.tableComment}}
-export function del{{replaceNames.Name}}Api(options?: RequestOptions<null, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>) {
+//删除{{@ entity.tableComment}}
+export function del{{@ replaceNames.Name}}Api(options?: RequestOptions<null, [{{@ entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>) {
   return request<null, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>(
-    ({{entity.pk.join(', ')}}) => ({
-      url: `{{replaceNames.controllerPath}}/del/${<%= entity.pk.join('/${') %>}`,
+    ({{@ entity.pk.join(', ')}}) => ({
+      url: `{{@ replaceNames.controllerPath}}/del/${<%- entity.pk.join('/${') %>}`,
       method: 'post',
     }),
     Object.assign({ noLoading: true }, options),

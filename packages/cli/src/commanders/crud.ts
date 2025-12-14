@@ -26,6 +26,7 @@ const tableInfos = {} as {
 };
 //关闭自动编码
 template.defaults.excape = false;
+template.defaults.minimize = false;
 const include = template.defaults.include;
 template.defaults.include = (...args: any[]) => include(...args).trim();
 class MeSwaggerExplorer extends SwaggerExplorer {
@@ -120,17 +121,25 @@ function tableInfo(entityName) {
       pk: [],
       deletedAt: null,
       attributes: {},
+      autoAttributes:[],
     };
   } else {
     let tableComment = modelDefinition.options.comment;
     if (tableComment.endsWith('表')) {
       tableComment = tableComment.slice(0, -1);
     }
+    const autoAttributes = [...modelDefinition.primaryKeysAttributeNames,...modelDefinition.readOnlyAttributeNames];
+    ['deletedVersion','createdAdminId','updatedAdminId'].forEach(attribute=>{
+      if(modelDefinition.attributes.has(attribute)){
+        autoAttributes.push(attribute);
+      }
+    })
     tableInfos[entityName] = {
       tableComment,
       pk: Array.from(modelDefinition.primaryKeysAttributeNames) as string[],
       deletedAt: modelDefinition.options.deletedAt,
       attributes: modelDefinition.attributes,
+      autoAttributes,
     };
   }
   return tableInfos[entityName];
@@ -211,7 +220,7 @@ async function writeContent(templatePath, toPath, writeType: 'api' | 'view') {
   Object.keys(paths).forEach((key) => {
     paths[key] = relativePath(toPath, paths[key], []);
   });
-  return recursionWriteFileSync(
+  recursionWriteFileSync(
     toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath,
     await prettier.format(
       template(resolve(import.meta.dirname, templatePath), {
@@ -227,6 +236,7 @@ async function writeContent(templatePath, toPath, writeType: 'api' | 'view') {
       },
     ),
   );
+  Log.success((toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath) + ' 写入完成');
 }
 
 //写入后端文件
@@ -303,12 +313,24 @@ export const crudInit = async (program: Command) => {
       writeViewFiles.langEnPath = resovePath(`view/${options.model}/src/views/${replaceNames.namePath}/lang/en`, ['.json']);
       writeViewFiles.addOrUp = resovePath(`view/${options.model}/src/views/${replaceNames.namePath}/components/addOrUp`, ['.vue']);
       if (options.del) {
-        [...Object.values(omit(writeApiFiles,noWriteKey)), ...Object.values(omit(writeViewFiles, noWriteKey))].forEach((toPath:string) => {
+        const delPath = [] as string[];
+        if(options.coverage.includes('b')){
+          delPath.push(...Object.values(omit(writeApiFiles,noWriteKey)));
+        }
+        if(options.coverage.includes('a') && !noWriteKey.includes('apiPath')){
+          delPath.push(writeViewFiles.apiPath);
+        }
+        if(options.coverage.includes('v')){
+          delPath.push(...Object.values(omit(writeViewFiles, ['apiPath',...noWriteKey])));
+        }
+        delPath.forEach((toPath:string) => {
           delFileSync(toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath);
           Log.warn((toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath) + ' 已删除');
         });
-        delFileSync(`view/${options.model}/src/views/${replaceNames.namePath}`);
-        Log.warn(`view/${options.model}/src/views/${replaceNames.namePath}` + ' 已删除');
+        if(options.coverage.includes('v')){
+          delFileSync(`view/${options.model}/src/views/${replaceNames.namePath}`);
+          Log.warn(`view/${options.model}/src/views/${replaceNames.namePath}` + ' 已删除');
+        }
         Log.success(entityFileName + ' 清除成功');
         return;
       }
@@ -342,7 +364,7 @@ export const crudInit = async (program: Command) => {
         await writeApi();
       }
       if(options.coverage.includes('a')){
-        await writeViewApi
+        await writeViewApi();
       }
       if(options.coverage.includes('v')){
         await writeViews();

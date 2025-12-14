@@ -1,2 +1,2 @@
-{{each properties}}{{if !entity?.pk?.includes($index)}}{{$index}} = <% include('./valueDefault.ts.art', {...$value, key:$index ,entity:entity, needAs:true}) %>;  //{{$value.description}}
+{{each properties}}{{if !entity?.autoAttributes?.includes($index)}}{{@ $index}} = <% include('./valueDefault.ts.art', {...$value, key:$index ,entity:entity, needAs:true}) %>;  {{if $value.description}}//{{@ $value.description}}{{/if}}
 {{/if}}{{/each}}

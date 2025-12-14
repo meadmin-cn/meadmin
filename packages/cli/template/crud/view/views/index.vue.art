@@ -22,13 +22,13 @@
   >
     <% include('./tableColum.vue.art', {...entitySchema, entity:entity}) %>
     <vxe-column :title="t('操作')" fixed="right" min-width="150px">
-      <template #default="{ row }: { row: {{replaceNames.Name}}Info }">
-        <el-button @click="showAddOrUp({{entity.pk.map(v=>`row.${v}`).join(', ')}})">
+      <template #default="{ row }: { row: {{@ replaceNames.Name}}Info }">
+        <el-button @click="showAddOrUp({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})">
           <mel-icon-edit />
         </el-button>
-        <el-popconfirm :title="t('确认删除？')" placement="left" @confirm="del({{entity.pk.map(v=>`row.${v}`).join(', ')}})">
+        <el-popconfirm :title="t('确认删除？')" placement="left" @confirm="del({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})">
           <template #reference>
-            <el-button :key="{{if entity.pk.length===1}}row.{{entity.pk[0]}}{{else}}`${<%=entity.pk.join('}__${')%>}`{{/if}}" :loading="delLoading && {{if entity.pk.length===1}}delId === row.{{entity.pk[0]}}{{else}}delKey=`${<%=entity.pk.join('}__${')%>}`{{/if}}" type="danger">
+            <el-button :key="{{if entity.pk.length===1}}row.{{@ entity.pk[0]}}{{else}}`${<%- entity.pk.join('}__${')%>}`{{/if}}" :loading="delLoading && {{if entity.pk.length===1}}delId === row.{{@ entity.pk[0]}}{{else}}delKey=`${<%- entity.pk.join('}__${')%>}`{{/if}}" type="danger">
               <mel-icon-delete />
             </el-button>
           </template>
@@ -39,27 +39,27 @@
   </page>
 </template>
 
-<script setup lang="ts" name="{{replaceNames.Name}}">
-import { {{replaceNames.name}}ListApi, {{replaceNames.Name}}ListParam, del{{replaceNames.Name}}Api, {{replaceNames.Name}}Info } from '@/api/{{replaceNames.namePath}}';
+<script setup lang="ts" name="{{@ replaceNames.Name}}">
+import { {{@ replaceNames.name}}ListApi, {{@ replaceNames.Name}}ListParam, del{{@ replaceNames.Name}}Api, {{@ replaceNames.Name}}Info } from '@/api/{{replaceNames.namePath}}';
 import { useLocalesI18n } from '@/locales/i18n';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
 import {formatterStr{{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At'))}}, formatterAt{{/if}} } from '@/utils/helper.js';
 const {open} = useActionModel(AddOrUp);
-let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), '{{replaceNames.name}}']);
+let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), '{{@ replaceNames.name}}']);
 <% include('./dict.ts.art', {...entitySchema, entity:entity, replaceNames:replaceNames}) %>
-const params = reactive(new {{replaceNames.Name}}ListParam());
-const { loading, data, runAsync } = {{replaceNames.name}}ListApi();
+const params = reactive(new {{@ replaceNames.Name}}ListParam());
+const { loading, data, runAsync } = {{@ replaceNames.name}}ListApi();
 const search = (page = params.page, size = params.size) => runAsync(Object.assign(params, { page, size }));
-const { runAsync: delRun, loading: delLoading } = del{{replaceNames.Name}}Api();
+const { runAsync: delRun, loading: delLoading } = del{{@ replaceNames.Name}}Api();
 {{if entity.pk.length==1}}const delId = ref<string>();{{else}}const delKey = ref<string>();{{/if}}
-const del = async ({{entity.pk.map(v=>`${v}:${entitySchema.properties[v].type}`).join(', ')}}) => {
-  {{if entity.pk.length==1}}delId.value = {{entity.pk[0]}};{{else}}delKey.value = `${<%=entity.pk.join('}__${')%>}`;{{/if}}
-  await delRun({{entity.pk.map(v=>`${v}`).join(', ')}});
+const del = async ({{@ entity.pk.map(v=>`${v}:${entitySchema.properties[v].type}`).join(', ')}}) => {
+  {{if entity.pk.length==1}}delId.value = {{@ entity.pk[0]}};{{else}}delKey.value = `${<%- entity.pk.join('}__${')%>}`;{{/if}}
+  await delRun({{@ entity.pk.map(v=>`${v}`).join(', ')}});
   await search(1);
 };
-const showAddOrUp = ({{entity.pk.map(v=>`${v}?:${entitySchema.properties[v].type}`).join(', ')}}) => {
-  open({<%=entity.pk.join(', ')%>, onSuccess:async ()=>{
+const showAddOrUp = ({{@ entity.pk.map(v=>`${v}?:${entitySchema.properties[v].type}`).join(', ')}}) => {
+  open({<%- entity.pk.join(', ')%>, onSuccess:async ()=>{
     await search(1);
   }});
 };

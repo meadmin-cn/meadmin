@@ -34,11 +34,10 @@ export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
   @Attribute({ type: DataTypes.STRING(32), comment: '密码盐', allowNull: false, defaultValue: '' })
   salt: string;
 
-  @ApiPropertyRule({ description: '头像附件id', type: () => File, rule: RuleType.string().allow(null) })
   @Attribute({ type: DataTypes.STRING(20), comment: '头像附件id',})
   avatarFileId: string;
 
-  @ApiPropertyRule({ description: '头像（优先级高于avatarFileId）', type: () => File, rule: RuleType.object() })
+  @ApiPropertyRule({ description: '头像', type: () => File, rule: RuleType.object() })
   @BelongsTo(() => File, /* foreign key */ 'avatarFileId')
   avatar?: NonAttribute<File>
 

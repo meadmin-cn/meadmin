@@ -13,8 +13,8 @@ export type {{@ $index}} = {
 }
 {{/each}}
 export type {{@ replaceNames.Name}}Info = {{@ replaceNames.Name}} & {
-  {{each entity.autoAttributes}}
-  {{@ $value}}: <% include('./valueType.ts.art', {...swaggerSchemas[replaceNames.Name].properties[$value],key:$value,entity:entity}) %>, {{if swaggerSchemas[replaceNames.Name].properties[$value]?.description}}//{{@ swaggerSchemas[replaceNames.Name].properties[$value]?.description}}{{/if}}{{/each}}
+  {{each entity.autoAttributes}}{{if swaggerSchemas[replaceNames.Name].properties[$value]}}
+  {{@ $value}}: <% include('./valueType.ts.art', {...swaggerSchemas[replaceNames.Name].properties[$value],key:$value,entity:entity}) %>, {{if swaggerSchemas[replaceNames.Name].properties[$value]?.description}}//{{@ swaggerSchemas[replaceNames.Name].properties[$value]?.description}}{{/if}}{{/if}}{{/each}}
 };
 //添加{{@ entity.tableComment}}信息
 export function add{{@ replaceNames.Name}}Api() {
@@ -55,7 +55,7 @@ export function {{@ replaceNames.name}}InfoApi(options?: RequestOptions<{{@ repl
   );
 }
 
-export type Update{{replaceNames.Name}}InfoParam = Partial<Omit<{{@ replaceNames.Name}}Info,'{{@ entity.autoAttributes.join('|')}}'>>;
+export type Update{{replaceNames.Name}}InfoParam = Omit<Partial<{{@ replaceNames.Name}}Info>,'{{@ entity.autoAttributes.filter(v=>swaggerSchemas[replaceNames.Name].properties[v]).join("'|'")}}'>;
 //修改{{@ entity.tableComment}}信息
 export function update{{@ replaceNames.Name}}Api(options?: RequestOptions<{{@ replaceNames.Name}}Info, [{{each entity.pk}}{{entitySchema.properties[$value].type}}, {{/each}}Update{{replaceNames.Name}}InfoParam]>) {
   return request<{{@ replaceNames.Name}}Info, [{{each entity.pk}}{{entitySchema.properties[$value].type}}, {{/each}}Update{{replaceNames.Name}}InfoParam]>(

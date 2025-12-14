@@ -6,7 +6,6 @@ import { FileInfo } from '../file.js';
 
 //管理员
 export class SystemAdmin {
-  id?: string; //ID
   username = '' as string; //用户名
   nickname = '' as string; //昵称
   password = '' as string; //密码
@@ -15,8 +14,6 @@ export class SystemAdmin {
   mobile = '' as string; //手机号
   status = 1 as 1 | 0 | undefined; //状态:1=启用;0=禁用
   roleIds = [] as string[]; //具有的角色
-  createdAt = '' as string; //创建时间
-  updatedAt = '' as string; //最后更新时间
 }
 
 export type SystemAdminInfo = Omit<SystemAdmin,'roleIds'> & {
@@ -26,6 +23,8 @@ export type SystemAdminInfo = Omit<SystemAdmin,'roleIds'> & {
   lastLoginIp: string; //最后登录ip
   roles: Array<Omit<SystemRoleInfo, 'menus'>>;
   roleMenus: NonNullable<SystemMenuInfo>;
+  createdAt: string;//创建时间
+  updatedAt: string;//最后更新时间
 };
 //添加管理员信息
 export function addSystemAdminApi() {
@@ -83,7 +82,7 @@ export function systemAdminInfoApi(options?: RequestOptions<SystemAdminInfo, [st
   );
 }
 
-export type UpdateSystemAdminInfoParam = Omit<Partial<SystemAdminInfo>, 'loginFailure' | 'lastLoginAt' | 'lastLoginIp'> & {roleIds:string[]};
+export type UpdateSystemAdminInfoParam = Omit<Partial<SystemAdminInfo>, 'id' | 'loginFailure' | 'lastLoginAt' | 'lastLoginIp' | 'createdAt' | 'updatedAt'> & {roleIds:string[]};
 //修改管理员信息
 export function updateSystemAdminApi(options?: RequestOptions<SystemAdminInfo, [string, UpdateSystemAdminInfoParam]>) {
   return request<SystemAdminInfo, [string, UpdateSystemAdminInfoParam]>(

@@ -5,7 +5,6 @@ import { RuleType } from '@/ruleType/index.js';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { DataTypes, NonAttribute } from '@sequelize/core';
 import { SystemAdmin } from './systemAdmin.entity.js';
-import { uploadStorage } from '@/helper/file.js';
 
 //rule规则使用添加接口的校验规则
 @Table({ tableName: 'file', comment: '附件表' })
@@ -46,7 +45,7 @@ export class File extends BaseModel<File> {
     type: 'string',
   })
   get url(): string {
-    return uploadStorage[this.storage].getUrl(this);
+    return ('/api/admin/file/get/'+this.id+'/'+this.name);
   }
 
   @ApiPropertyRule({

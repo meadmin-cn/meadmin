@@ -7,12 +7,10 @@ import { FileUpdateDto } from '../dto/fileUpdate.dto.js';
 import { FileService } from '../service/file.service.js';
 import { ApiOperationResponse } from '@/decorators/index.js';
 import { UploadMiddleware, UploadOptions, UploadStreamFileInfo } from '@midwayjs/busboy';
-import { resolve } from 'node:path';
 import { ApiBody, BodyContentType } from '@midwayjs/swagger';
 import { FileUpDto } from '../dto/fileUp.dto.js';
-import { createReadStream} from 'node:fs';
 import { Context } from '@midwayjs/koa';
-import { uploadStorage } from '@/helper/file.js';
+import { uploadStorage } from '@/fileManage/index.js';
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
@@ -33,7 +31,7 @@ export class FileController extends BaseController {
   async getFile(@Param('id') id: string) {
     const entity = await this.fileService.findOne(id);
     this.ctx.type= entity.mimeType;
-    return await uploadStorage.adminLocal.getFileReadSteam(entity.path);
+    return await uploadStorage.localStorage('admin').getFileReadSteam(entity.path);
   }
 
   @Post('/upload', { middleware: [UploadMiddleware] })
@@ -50,7 +48,7 @@ export class FileController extends BaseController {
   })
   async upload(@Files() files: Array<UploadStreamFileInfo>, @Fields() params: FileUpDto) {
     const file = files[0]; //只获取一个文件，不支持多文件数组
-    const res = await uploadStorage.adminLocal.upload(file,params);
+    const res = await uploadStorage.localStorage('admin').upload(file,params);
     return this.success(res?(await this.fileService.create(res)):{});
   }
 

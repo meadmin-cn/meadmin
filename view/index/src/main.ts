@@ -4,11 +4,15 @@ import { router } from './router';
 import { store } from './store';
 import { bootscrapt } from './app';
 import { ID_INJECTION_KEY, ZINDEX_INJECTION_KEY } from 'element-plus';
+export let app: AppType<Element>;
+
 // SSR requires a fresh app instance per request, therefore we export a function
 // that creates a fresh app instance. If using Vuex, we'd also be creating a
 // fresh store here.
 export async function createApp() {
-  let app: AppType<Element>;
+  if(app){
+    return { app, router, pinia: store };
+  }
   if (import.meta.env.SSR || window?.document.querySelector('html')!.dataset.ssr === 'true') {
     app = createSSRApp(App);
   } else {

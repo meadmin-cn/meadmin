@@ -6,8 +6,9 @@ import log from './log';
 import { useRequest, Options, setGlobalOptions } from 'vue-request';
 import qs from 'qs';
 import { clearEmptyParam } from './helper.js';
+import { getServerCache, setServerCache } from './server.js';
 const service = axios.create({
-  baseURL: '/api/admin/', // url = base url + request url
+  baseURL: import.meta.env.SSR? import.meta.env.VIEW_INDEX_API_SERVER_PREFIX:import.meta.env.VIEW_INDEX_API_CLIENT_PREFIX, // url = base url + request url
   timeout: 10000, // request timeout
   paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat', skipNulls: true }), // 数组query参数转换为repeat a=1&a=2,null值会被删除
 });
@@ -50,6 +51,7 @@ export type RequestOptions<R, P extends unknown[]> = {
   noError?: boolean; // 不需要错误提示
   success?: boolean; //成功后提示
   clearEmpty?: any[]; //去除请求参数的空值数组
+  serverCacheKey?:string; //服务端接口缓存key
 } & Options<R, P>;
 
 setGlobalOptions({
@@ -78,14 +80,28 @@ export function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (
         if (config.params) config.params = clearEmptyParam(config.params, options?.clearEmpty);
         if (config.data) config.data = clearEmptyParam(config.data , options?.clearEmpty);
       }
-      const { data: res } = await service(config);
+      let serverCacheKey = options?.serverCacheKey;
+      if(!serverCacheKey){
+        serverCacheKey = JSON.stringify(config)+'__';
+      }
+      serverCacheKey = '__req__'+serverCacheKey;
+      let res:any;
+      if(import.meta.env.SSR){
+        res = (await service(config)).data;
+        setServerCache(serverCacheKey,res);
+      }else{
+        res = getServerCache(serverCacheKey);
+        if(res === undefined){
+          res = (await service(config)).data;
+        }
+      }
       if (!res || res.code === undefined) {
         throw Error('返回值解析失败');
       }
       // 401：认证失败
       if (res.code === '401') {
         await useUserStore().logOut();
-        return res;
+       throw Error('认证失败');
       }
       if (res.code !== '200') {
         throw Error(res.msg);

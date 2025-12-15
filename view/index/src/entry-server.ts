@@ -2,8 +2,10 @@ import { basename } from 'node:path';
 import { renderToString } from 'vue/server-renderer';
 import { createApp } from './main';
 import serialize from 'serialize-javascript';
+import { getAllServerrCache } from './utils/server.js';
 
 export async function render(url: string, manifest: Record<string, string[]>, context:Record<string, string[]>) {
+  console.log('---',url);
   const { app, router, pinia } = await createApp();
   // set the router to the desired URL before rendering 
   await router.push(
@@ -21,8 +23,10 @@ export async function render(url: string, manifest: Record<string, string[]>, co
   // which we can then use to determine what files need to be preloaded for this
   // request.
   const __pinia = serialize(pinia.state.value);
+  const __serverCache = serialize(getAllServerrCache());
   const preloadLinks =
     `<script>window.__pinia=${__pinia};</script>\n` +
+    `<script>window.__serverCache=${__serverCache};</script>\n` +
     renderPreloadLinks(ctx.modules, manifest);
   const teleports = renderTeleports(ctx.teleports)
 

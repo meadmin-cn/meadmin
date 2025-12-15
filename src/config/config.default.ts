@@ -10,7 +10,7 @@ export default {
   // use for cookie sign key, should change to your own and keep security
   keys: '1714030878233_897',
   koa: {
-    port: 7001,
+    port: +process.env.SERVER_PORT,
   },
   debug: true,
   validate: {
@@ -47,6 +47,15 @@ export default {
   view: {
     //midwayjs 视图配置 说明参考 https://midwayjs.org/docs/extensions/render
     defaultViewEngine: 'viteView',
+  },
+  // ...
+  staticFile: {
+    dirs: {
+      default: {
+        prefix: '/',
+        dir: 'public',
+      },
+    }
   },
   viteView: {
     //midway-vite-view 配置配置详细说明见下方

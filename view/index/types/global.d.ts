@@ -45,4 +45,8 @@ declare global {
   type KeyOfMap<T extends Map> = Parameters<T['get']>[0];
 
   type ValueOfMap<T extends Map> = ReturnType<T['get']>;
+
+  declare interface Window {
+  __serverCache: Record<string,Array<any>>;
+}
 }

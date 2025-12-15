@@ -17,6 +17,7 @@ import { initLogger } from './logger.js';
 import * as i18n from '@midwayjs/i18n';
 import * as captcha from '@midwayjs/captcha';
 import * as busboy from '@midwayjs/busboy';
+import * as staticFile from '@midwayjs/static-file';
 
 const registreDecorators = new RegistreDecorators();
 
@@ -34,6 +35,7 @@ const registreDecorators = new RegistreDecorators();
       component: swagger,
       enabledEnvironment: ['local', 'dev'],
     },
+    staticFile,
     viteView,
     redis,
     cacheManager,

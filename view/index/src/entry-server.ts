@@ -5,7 +5,6 @@ import serialize from 'serialize-javascript';
 import { getAllServerrCache } from './utils/server.js';
 
 export async function render(url: string, manifest: Record<string, string[]>, context:Record<string, string[]>) {
-  console.log('---',url);
   const { app, router, pinia } = await createApp();
   // set the router to the desired URL before rendering 
   await router.push(

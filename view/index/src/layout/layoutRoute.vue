@@ -1,7 +1,7 @@
 <template>
   <router-view v-slot="{ Component }">
     <template v-if="Component">
-      <Suspense suspensible @resolve="done()">
+      <Suspense @resolve="done()">
         <component :is="Component"></component>
       </Suspense>
     </template>

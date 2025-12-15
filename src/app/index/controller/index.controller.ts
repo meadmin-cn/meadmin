@@ -9,7 +9,6 @@ import { BaseController } from './base.controller.js';
 export class IndexController extends BaseController {
   @Get('/', { summary: '网站介绍' })
   async index() {
-    console.log('--index--',new Date())
     return this.success({
       banner: [
         {

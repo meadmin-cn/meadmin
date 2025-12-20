@@ -18,14 +18,14 @@ export async function createApp() {
   } else {
     app = createClientApp(App);
   }
-  await bootscrapt(app);
-  if (!import.meta.env.SSR && window.__pinia) {
-    store.state.value = window.__pinia;
-  }
   app.provide(ID_INJECTION_KEY, {
     prefix: 1024,
     current: 0,
   });
   app.provide(ZINDEX_INJECTION_KEY, { current: 0 });
+  await bootscrapt(app);
+  if (!import.meta.env.SSR && window.__pinia) {
+    store.state.value = window.__pinia;
+  }
   return { app, router, pinia: store };
 }

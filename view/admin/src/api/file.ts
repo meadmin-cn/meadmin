@@ -11,15 +11,14 @@ export class File {
   size = undefined as number | null | undefined; //文件大小(字节)
   storage = '' as string; //存储引擎
   url = ''; //访问地址
-  createdAdmin = undefined as Omit<SystemAdminInfo, 'roles' | 'roleMenus'> | undefined; //创建者
-  createdAt = '' as string; //创建时间
-  updatedAt = '' as string; //最后更新时间
 }
 
 export type FileInfo = Required<File> & {
   id: string; //ID
-  createdAdmin: NonNullable<File['createdAdmin']>;
+  createdAdmin:  Omit<SystemAdminInfo, 'roles' | 'roleMenus'>;
   size: number;
+  createdAt: string; //创建时间
+  updatedAt: string; //最后更新时间
 };
 
 /**
@@ -99,7 +98,7 @@ export function fileInfoApi(options?: RequestOptions<FileInfo, [string]>) {
   );
 }
 
-export type UpdateFileInfoParam = Partial<FileInfo>;
+export type UpdateFileInfoParam = Omit<Partial<FileInfo>,'id' | 'createdAt' | 'updatedAt' | 'createdAdmin'>;
 //修改附件信息
 export function updateFileApi(options?: RequestOptions<FileInfo, [string, UpdateFileInfoParam]>) {
   return request<FileInfo, [string, UpdateFileInfoParam]>(

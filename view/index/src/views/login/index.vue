@@ -10,8 +10,11 @@
 <script setup lang="ts" name="Login">
 import Login from './components/login.vue';
 import Register from './components/register.vue';
+const {type = 'login'} = defineProps<{type:'login'|'register'}>()
 const show = ref('login' as 'login'|'register');
-
+watchEffect(()=>{
+  show.value = type;
+})
 </script>
 <style lang="scss" scoped>
 .index {

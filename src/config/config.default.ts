@@ -89,6 +89,9 @@ export default {
       admin: {
         store: createRedisStore('cache'),
       },
+      index: {
+        store: createRedisStore('cache'),
+      },
     },
   },
   admin: {
@@ -100,6 +103,14 @@ export default {
     },
     auth: {
       noLoginUrl: [`/api/admin/login/login`, `/api/admin/login/captcha`, new RegExp('/api/admin/file/get/.+')] as Array<string | RegExp>, //无需登录地址
+    },
+  },
+  index:{
+    login: {
+      secret: 'desndex=ase$&e1#edad#$%%', //token加密平台标识
+      expiresIn: 3600000 * 6, //token过期时间ms
+      renewal: 60000 * 10, //续期时间ms
+      cacheKey: 'index', //token使用的缓存key对应cacheManager.clients
     },
   },
   busboy: {

@@ -32,7 +32,11 @@ export class SystemAdminService {
     if (createDto.avatar?.id !== undefined) {
       createDto.avatarFileId = createDto.avatar?.id ?? null;
     }
+    if (createDto.password) {
+      Object.assign(createDto, this.loginService.entityPassword(createDto.password));
+    }
     const entity = this.SystemAdminRepository.build(createDto);
+    
     await entity.save();
     if (createDto.roleIds) {
       entity.setRoles(createDto.roleIds);

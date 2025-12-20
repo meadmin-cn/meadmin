@@ -18,6 +18,18 @@ export  function setServerCache(key:string, res:any){
 } 
 
 /**
+ * 移除cache（单次）
+ * @param key 
+ */
+export function rmServerCache(key:string){
+  if(import.meta.env.SSR ){
+    (cacheObj[key]?? []).shift();
+  }else{
+    (window.__serverCache?.[key] ?? []).shift();
+  }
+}
+
+/**
  * 获取单个缓存,客户端获取成功后会清除缓存
  * @param key 
  * @returns 

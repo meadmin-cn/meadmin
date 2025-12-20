@@ -6,7 +6,8 @@ import log from './log';
 import { useRequest, Options, setGlobalOptions } from 'vue-request';
 import qs from 'qs';
 import { clearEmptyParam } from './helper.js';
-import { getServerCache, setServerCache } from './server.js';
+import { getServerCache, rmServerCache, setServerCache } from './server.js';
+import { router } from '@/router/index.js';
 const service = axios.create({
   baseURL: import.meta.env.SSR? import.meta.env.VIEW_INDEX_API_SERVER_PREFIX:import.meta.env.VIEW_INDEX_API_CLIENT_PREFIX, // url = base url + request url
   timeout: 10000, // request timeout
@@ -100,8 +101,11 @@ export function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (
       }
       // 401：认证失败
       if (res.code === '401') {
-        await useUserStore().logOut();
-       throw Error('认证失败');
+        if(import.meta.env.SSR){
+          rmServerCache(serverCacheKey)
+        }
+        router.push('/redirect//promiseError/'+res.msg);
+        throw Error(res.msg);
       }
       if (res.code !== '200') {
         throw Error(res.msg);

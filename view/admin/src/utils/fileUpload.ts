@@ -129,30 +129,26 @@ const uploadChunks = (file: UploadRawFile, chunkSize: number, data: UploadReques
 
 //上传请求兼容 element-plus上传事件
 export const fileUpload = async (options: UploadRequestOptions) => {
-  try{
-    const chunkSize = 1024 * 1024;
-    const progressEvt = new ProgressEvent('uploadProgress', {
-      lengthComputable: true,
-      loaded: 0,
-      total: 100,
-    }) as UploadProgressEvent;
-    progressEvt.percent = 0;
-    // 将 MD5 值放到请求参数里
-    options.data.md5 = await getMd5(options.file, chunkSize, (process) => {
-      //md5进度占总进度5%
-      progressEvt.percent = (+process * 5) / 100;
-      options.onProgress(progressEvt);
-    });
-    options.data.chunk = '1';
-    options.data.name = options.file.name;
-    // 上传分片,第一个分片会查询文件是否存在
-    const res = await uploadChunks(options.file, chunkSize, options.data, (process) => {
-      //上传进度占总进度95%
-      progressEvt.percent = (+process * 95) / 100 + 5;
-      options.onProgress(progressEvt);
-    });
-    return res;//调用onSuccess和return后都会触发Success事件，这里只返回不调用，否则会触发两遍Success事件；
-  }catch(error: any){
-    options.onError(new UploadAjaxError(error.message, error?.status || 500, 'post','file/upload'));
-  }
+  const chunkSize = 1024 * 1024;
+  const progressEvt = new ProgressEvent('uploadProgress', {
+    lengthComputable: true,
+    loaded: 0,
+    total: 100,
+  }) as UploadProgressEvent;
+  progressEvt.percent = 0;
+  // 将 MD5 值放到请求参数里
+  options.data.md5 = await getMd5(options.file, chunkSize, (process) => {
+    //md5进度占总进度5%
+    progressEvt.percent = (+process * 5) / 100;
+    options.onProgress(progressEvt);
+  });
+  options.data.chunk = '1';
+  options.data.name = options.file.name;
+  // 上传分片,第一个分片会查询文件是否存在
+  const res = await uploadChunks(options.file, chunkSize, options.data, (process) => {
+    //上传进度占总进度95%
+    progressEvt.percent = (+process * 95) / 100 + 5;
+    options.onProgress(progressEvt);
+  });
+  return res;//调用onSuccess和return后都会触发Success事件，这里只返回不调用，否则会触发两遍Success事件；
 };

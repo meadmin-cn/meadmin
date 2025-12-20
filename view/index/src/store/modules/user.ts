@@ -1,21 +1,22 @@
 import { event, mitter } from '@/event';
 import { Ref } from 'vue';
-import cookies from 'js-cookie';
+import cookies from '@/utils/cookies.js';
 import { loginConfig as config } from '@/config';
 import { loading } from '@/utils/loading';
 import { PageEnum } from '@/dict/pageEnum';
-import { loginApi, LoginParams, userInfoApi, UserInfoResult } from '@/api/login';
+import { loginApi, LoginParams, userInfoApi } from '@/api/login';
 import useRouteStore from './route';
 import { router } from '@/router';
+import { UserInfo } from '@/api/user.js';
 interface UserState {
-  user: UserInfoResult['info']; // 用户信息
+  user: UserInfo; // 用户信息
   token: Ref<string>; // 用户token
 }
 export default defineStore('user', {
   state: (): UserState => {
     let _token = '';
     return {
-      user: {} as UserInfoResult['info'],
+      user: {} as UserInfo,
       token: customRef<string>((track, trigger) => {
         return {
           get() {
@@ -47,8 +48,7 @@ export default defineStore('user', {
       const token = tokenValue ?? cookies.get(config.tokenName);
       if (token) {
         this.token = token;
-        const res = await userInfoApi(true, !tokenValue)();
-        this.user = res.info;
+        this.user = await userInfoApi(true, !tokenValue)();
       } else {
         this.token = '';
       }
@@ -69,7 +69,9 @@ export default defineStore('user', {
       await router.replace({
         path: PageEnum.LOGIN,
       });
-      window.location.reload();
+      if(!import.meta.env.SSR){
+        window.location.reload();
+      }
     },
   },
 });

@@ -20,7 +20,7 @@ export const syncInit =  (program: Command) => {
     )
     .option('-n, --name <char>', '使用的数据库配置defaultDataSourceName')
     .action(async (file: string, options) => {
-      const files = file.split(',');
+      const files = file.split(' ');
       files.push('./abstract/*');
       const config = Object.assign(
         await getConfig(options.dbConfig, options.name),

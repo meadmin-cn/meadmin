@@ -14,7 +14,9 @@ run/
 .nx/
 .env.local
 public/html/
-uploadFile/*
-!uploadFile/tmp/.gitkeep
-!uploadFile/.gitkeep
+uploadFile/**
+!uploadFile/index
+!uploadFile/index/.gitkeep
+!uploadFile/admin/
+!uploadFile/admin/.gitkeep
 .env.production

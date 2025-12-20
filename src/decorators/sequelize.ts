@@ -5,6 +5,7 @@ import {
   MidwayDecoratorService,
 } from '@midwayjs/core';
 import { Model } from '@sequelize/core';
+import { RegistreDecorator } from '../../types/decorator.js';
 
 
 //sequize获取Repository
@@ -27,10 +28,11 @@ export function InjectDataSource(dataSourceName?: string) {
   });
 }
 
-export class SequelizeRegistreDecorators {
+export class SequelizeRegistreDecorators implements RegistreDecorator{
   decoratorService: MidwayDecoratorService;
   dataSourceManager: SequelizeDataSourceManagerService;
-  async init() {
+  async init( decoratorService: MidwayDecoratorService) {
+    this.decoratorService = decoratorService;
     this.decoratorService.registerPropertyHandler(
       ENTITY_MODEL_KEY,
       (

@@ -285,7 +285,7 @@ export const crudInit = async (program: Command) => {
     .command('crud')
     .description('创建crud')
     .argument('<file>', '基于的entity文件地址,如果是相对路径会基于src/entities查找')
-    .requiredOption('-m, --model <char>', 'model名称会放到app/{model}下对应的文件夹', 'admin')
+    .requiredOption('--model <char>', 'model名称会放到app/{model}下对应的文件夹', 'admin')
     .option('-f, --force', '强制覆盖')
     .option('-n, --name <char>', '使用的数据库配置defaultDataSourceName')
     .option('-d, --dbConfig <char>', '数据库配置文件地址默认为当前目录下dist/config/database.js', join(process.cwd(), 'dist/config/database.js'))

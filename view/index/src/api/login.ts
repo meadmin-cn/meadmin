@@ -1,5 +1,6 @@
-import request from '@/utils/request';
-
+import request, { RequestOptions } from '@/utils/request';
+import { UserInfo } from './user.js';
+import {FileInfo} from './file.js';
 //获取登录验证码
 export function loginCaptchaApi<T extends boolean = false>(returnAxios: T = false as T, noLoading = true) {
   return request<{id:string, imageBase64:string}, [number?,number?], T>(
@@ -36,10 +37,7 @@ export function loginApi<T extends boolean = true>(returnAxios: T = true as T) {
   );
 }
 
-// 获取用户详细信息
-export interface UserInfo {
-  info: Record<string,any>;
-}
+//获取用户详情
 export function userInfoApi<T extends boolean = false>(returnAxios: T = false as T, noLoading = true) {
   return request<UserInfo, [], T>(
     () => ({
@@ -48,5 +46,25 @@ export function userInfoApi<T extends boolean = false>(returnAxios: T = false as
     }),
     { noLoading },
     returnAxios,
+  );
+}
+
+export class RegisterParams{
+  username = '';
+  nickname = '';
+  password = '';
+  reqPassword = '';
+  avatar = undefined as FileInfo | undefined |null;
+}
+
+//注册
+export function registerApi(options: RequestOptions<UserInfo, [RegisterParams]>={success:true}){
+  return request<UserInfo, [RegisterParams]>(
+    (data) => ({
+      url: 'login/register',
+      method: 'post',
+      data
+    }),
+    options,
   );
 }

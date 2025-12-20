@@ -3,8 +3,9 @@ import { renderToString } from 'vue/server-renderer';
 import { createApp } from './main';
 import serialize from 'serialize-javascript';
 import { getAllServerrCache } from './utils/server.js';
-
+import {setSterCookies} from './utils/cookies.js';
 export async function render(url: string, manifest: Record<string, string[]>, context:Record<string, string[]>) {
+  setSterCookies(context.cookies);
   const { app, router, pinia } = await createApp();
   // set the router to the desired URL before rendering 
   await router.push(

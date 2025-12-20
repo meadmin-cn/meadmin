@@ -19,6 +19,7 @@ export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
   id: string;
 
+  @Unique('admin_username')
   @Attribute({ type: DataTypes.STRING(50), comment: '用户名', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '用户名', rule: RuleType.string().max(50).min(1).required().empty('') })
   username: string;
@@ -41,12 +42,13 @@ export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
   @BelongsTo(() => File, /* foreign key */ 'avatarFileId')
   avatar?: NonAttribute<File>
 
-  @Attribute({ type: DataTypes.STRING(100), comment: '邮箱', allowNull: false, defaultValue: '' })
+  @Unique('admin_email')
+  @Attribute({ type: DataTypes.STRING(100), comment: '邮箱'})
   @ApiPropertyRule({ description: '邮箱', rule: RuleType.string().email().max(100) })
   email: string;
 
-  @Attribute({ type: DataTypes.STRING(11), comment: '手机号', allowNull: false, defaultValue: '' })
-  @Unique('mobile')
+  @Unique('admin_mobile')
+  @Attribute({ type: DataTypes.STRING(11), comment: '手机号' })
   @ApiPropertyRule({ description: '手机号', rule: RuleType.string().mobile().description('手机号').required() })
   mobile: string;
 
@@ -96,7 +98,9 @@ export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
   })
   updatedAdminId: string;
 
-  @Unique('mobile')
+  @Unique('admin_username')
+  @Unique('admin_mobile')
+  @Unique('admin_email')
   declare deletedVersion: string;
 
   @BelongsToMany(() => SystemRole, {

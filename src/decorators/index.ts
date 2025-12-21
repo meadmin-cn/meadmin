@@ -3,17 +3,20 @@ import { IMidwayApplication, IMidwayContainer, MidwayDecoratorService } from '@m
 export * from './swagger.js';
 export * from './sequelize.js';
 export * from './index/promise.js';
+export * from './transactions.js';
 
 import { SequelizeRegistreDecorators } from './sequelize.js';
 import { IndexPromiseRegistreDecorators } from './index/promise.js';
 import { RegistreDecorator } from '../../types/decorator.js';
+import {TransactionRegistreDecorators} from './transactions.js';
 
 export class RegistreDecorators {
   decoratorService: MidwayDecoratorService;
 
   regitserDecorators: RegistreDecorator[] = [
     new SequelizeRegistreDecorators(),
-    new IndexPromiseRegistreDecorators()
+    new IndexPromiseRegistreDecorators(),
+    new TransactionRegistreDecorators()
   ];
   /**
    * 对象初始化时自动执行的方法

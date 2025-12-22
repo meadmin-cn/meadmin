@@ -1,7 +1,7 @@
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@midwayjs/validate';
 import { DataTypes, NonAttribute } from '@sequelize/core';
-import { Attribute, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
+import { Attribute, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { SystemRole } from './systemRole.entity.js';
 import { TreeModel } from './abstract/tree.entity.js';
@@ -50,6 +50,7 @@ export class SystemMenu extends TreeModel<SystemMenu> {
     allowNull: false,
   })
   @ApiPropertyRule({ description: '权限', rule: RuleType.string().max(100).required() })
+  @Unique('systemAdminRule')
   rule: string;
 
   @Attribute({

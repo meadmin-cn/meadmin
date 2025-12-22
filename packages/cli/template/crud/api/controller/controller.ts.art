@@ -6,6 +6,7 @@ import { {{@ replaceNames.QueryDto}} } from '{{@ paths.queryDtoPath}}';
 import { {{@ replaceNames.UpdateDto}} } from '{{@ paths.updateDtoPath}}';
 import { {{@ replaceNames.Service}} } from '{{@ paths.servicePath}}';
 import { ApiOperationResponse } from '@/decorators/index.js';
+{{if adminPermission}}import { AdminPermission } from '@/decorators/index.js';{{/if}}
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
@@ -21,7 +22,8 @@ export class {{@ replaceNames.Controller}} extends BaseController {
   @ApiOperationResponse({
     responseType: {{@ replaceNames.Name}},
     summary: '添加{{@ entity.tableComment}}信息',
-  })
+  }){{if adminPermission}}
+  @AdminPermission('{{@replaceNames.Name}}Add'){{/if}}
   async add(@Body() createDto: {{@ replaceNames.CreateDto}}) {
     return this.success(await this.{{@ replaceNames.service}}.create(createDto));
   }
@@ -31,7 +33,8 @@ export class {{@ replaceNames.Controller}} extends BaseController {
   @ApiOperationResponse({
     responsePage: {{@ replaceNames.Name}},
     summary: '获取{{@ entity.tableComment}}列表',
-  })
+  }){{if adminPermission}}
+  @AdminPermission('{{@replaceNames.Name}}List'){{/if}}
   async list(@Body() queryDto: {{@ replaceNames.QueryDto}}) {
     return this.success(await this.{{@ replaceNames.service}}.list(queryDto));
   }
@@ -41,7 +44,8 @@ export class {{@ replaceNames.Controller}} extends BaseController {
   @ApiOperationResponse({
     responseType: {{@ replaceNames.Name}},
     summary: '根据{{@ entity.pk.join('/:')}}获取{{@ entity.tableComment}}详情',
-  })
+  }){{if adminPermission}}
+  @AdminPermission('{{@replaceNames.Name}}Edit'){{/if}}
   async findOne({{each entity.pk}}{{if index>0}}, {{/if}}@Param('{{@ $value}}') {{@ $value}}: {{@ entitySchema.properties[$value].type}}{{/each}}) {
     {{if entity.pk.length>1}}const entity = await this.{{@ replaceNames.service}}.findOne({
       {{each entity.pk}}{{@ $value}},{{/each}}
@@ -55,7 +59,8 @@ export class {{@ replaceNames.Controller}} extends BaseController {
   @ApiOperationResponse({
     responseType: {{@ replaceNames.Name}},
     summary: '根据{{@ entity.pk.join('/:')}}更新{{@ entity.tableComment}}详情',
-  })
+  }){{if adminPermission}}
+  @AdminPermission('{{@replaceNames.Name}}Edit'){{/if}}
   async update({{each entity.pk}}@Param('{{@ $value}}') {{@ $value}}: {{@ entitySchema.properties[$value].type}}, {{/each}}@Body() updateDto: {{@ replaceNames.UpdateDto}}) {
     return this.success(
       {{if entity.pk.length>1}}await this.{{@ replaceNames.service}}.update({
@@ -69,7 +74,8 @@ export class {{@ replaceNames.Controller}} extends BaseController {
   @Post('/del/:{{@ entity.pk.join('/:')}}')
   @ApiOperationResponse({
     summary: '根据{{@ entity.pk.join('/:')}}删除{{@ entity.tableComment}}信息',
-  })
+  }){{if adminPermission}}
+  @AdminPermission('{{@replaceNames.Name}}Del'){{/if}}
   async delete({{each entity.pk}}{{if index>0}}, {{/if}}@Param('{{@ $value}}') {{@ $value}}: {{@ entitySchema.properties[$value].type}}{{/each}}) {
     {{if entity.pk.length>1}}await this.{{@ replaceNames.service}}.remove({
       {{each entity.pk}}

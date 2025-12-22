@@ -62,7 +62,7 @@ export class LoginController extends BaseController {
     summary: '获取管理员详细',
   })
   async info() {
-    const admin = await this.loginService.getAdminById(this.ctx.adminInfo.id, this.ctx);
+    const admin = this.ctx.adminInfo;
     const menus = [] as SystemMenu[];
     const btnRules = [] as string[];
     admin?.roleMenus?.forEach((menu) => {

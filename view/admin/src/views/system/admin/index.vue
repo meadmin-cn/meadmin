@@ -46,6 +46,8 @@
       </me-search-form>
     </template>
     <me-vxe-table
+      align="center"
+      border
       :loading="loading"
       :data="data?.list"
       :pagination-options="{
@@ -55,10 +57,8 @@
         layout: 'sizes, prev, pager, next, jumper, ->, total',
         change: search,
       }"
-      align="center"
-      border
+      :onAdd="permission('systemAdminAdd')?showAddOrUp:undefined"
       @refresh="search(1)"
-      @add="showAddOrUp()"
     >
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="username" :title="t('用户名')" :formatter="formatterStr"></vxe-column>
@@ -88,13 +88,13 @@
       <vxe-column field="roleMenus" :title="t('具有权限的菜单')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column>
-      <vxe-column :title="t('操作')" fixed="right">
+      <vxe-column  v-if="permission(['systemAdminEdit','systemAdminDel'])" :title="t('操作')" fixed="right">
         <template #default="{ row }: { row: SystemAdminInfo }">
           <span>
-            <el-button @click="showAddOrUp(row.id)" link>
+            <el-button v-if="permission('systemAdminEdit')" @click="showAddOrUp(row.id)" link>
               <mel-icon-edit />
             </el-button>
-            <el-popconfirm :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
+            <el-popconfirm v-if="permission('systemAdminDel')" :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
               <template #reference>
                 <el-button :key="row.id" :loading="delLoading && delId === row.id" type="danger" link>
                   <mel-icon-delete />
@@ -116,6 +116,7 @@ import { useActionModel } from '@/hooks/index.js';
 import { formatterStr, formatterAt } from '@/utils/helper.js';
 import { VxeColumnPropTypes } from 'vxe-table';
 import { SystemRoleInfo } from '@/api/system/role';
+import { permission } from '@/utils/permission.js';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemAdmin']);
 const dict = {
   status: [

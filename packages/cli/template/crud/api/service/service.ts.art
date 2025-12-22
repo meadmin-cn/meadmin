@@ -6,6 +6,8 @@ import { {{@ replaceNames.QueryDto}} } from '{{@ paths.queryDtoPath}}';
 import { {{@ replaceNames.UpdateDto}} } from '{{@ paths.updateDtoPath}}';
 import { {{@ replaceNames.Name}} } from '{{@ paths.entityPath}}';
 import { MidwayI18nService } from '@midwayjs/i18n';
+import { Transaction } from '@/decorators/index.js';
+
 {{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At'))}}import { Op } from '@sequelize/core';{{/if}}
 {{if entity.pk.length > 1}}type PK = {
   {{each entity.pk}}
@@ -26,6 +28,7 @@ export class {{@ replaceNames.Service}} {
    * @param createDto
    * @returns
    */
+  @Transaction()
   async create(createDto: {{@ replaceNames.CreateDto}}) {
     const entity = this.{{@ replaceNames.Name}}Repository.build(createDto);
     return await entity.save();
@@ -36,6 +39,7 @@ export class {{@ replaceNames.Service}} {
    * @param queryDto 查询条件
    * @returns
    */
+  @Transaction()
   async list(queryDto: {{@ replaceNames.QueryDto}}) {
     const where = {};
     Object.keys(queryDto).forEach((key) => {
@@ -76,6 +80,7 @@ export class {{@ replaceNames.Service}} {
    * @param {{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}} 主键
    * @returns
    */
+  @Transaction()
   async findOne({{if entity.pk.length > 1}}pk:PK{{else}}{{@ entity.pk[0]}}: {{@ entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
     const entity = await this.{{@ replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}});
     if (!entity) {
@@ -90,6 +95,7 @@ export class {{@ replaceNames.Service}} {
    * @param updateDto 数据对象
    * @returns
    */
+  @Transaction()
   async update({{if entity.pk.length > 1}}pk:PK{{else}}{{@ entity.pk[0]}}: {{@ entitySchema.properties[entity.pk[0]].type}}{{/if}}, updateDto: {{@ replaceNames.UpdateDto}}) {
     const entity = await this.{{@ replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}});
     if (!entity) {
@@ -104,6 +110,7 @@ export class {{@ replaceNames.Service}} {
    * @param {{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}} 主键
    * @returns
    */
+  @Transaction()
   async remove({{if entity.pk.length > 1}}pk:PK{{else}}{{@ entity.pk[0]}}: {{@ entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
     const entity = await this.{{@ replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}});
     if (!entity) {

@@ -31,7 +31,7 @@ export class AdminMiddleware implements IMiddleware<Context, NextFunction> {
         }
         if (adminInfo.status !== 1) {
           this.loginService.removeToken(token);
-          throw new UnauthorizedError('用户已被禁用');
+          throw new UnauthorizedError('用户已被禁用！');
         }
         ctx.adminInfo = adminInfo;
       }

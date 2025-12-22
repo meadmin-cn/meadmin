@@ -6,6 +6,8 @@
     </me-search-form>
     </template>
     <me-vxe-table
+    align="center"
+    border
     :loading="loading"
     :data="data?.list"
     :pagination-options="{
@@ -15,18 +17,16 @@
       layout: 'sizes, prev, pager, next, jumper, ->, total',
       change: search,
     }"
-    align="center"
-    border
+    {{if adminPermission}}:onAdd="permission('{{replaceNames.name}}Add')?showAddOrUp:undefined"{{else}:onAdd="showAddOrUp"{{/if}}}
     @refresh="search(1)"
-    @add="showAddOrUp()"
   >
     <% include('./tableColum.vue.art', {...entitySchema, entity:entity}) %>
-    <vxe-column :title="t('操作')" fixed="right" min-width="150px">
+    <vxe-column{{if adminPermission}} v-if="permission(['{{replaceNames.name}}Edit','{{replaceNames.name}}Del'])"{{/if}} :title="t('操作')" fixed="right" min-width="150px">
       <template #default="{ row }: { row: {{@ replaceNames.Name}}Info }">
-        <el-button @click="showAddOrUp({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})">
+        <el-button{{if adminPermission}} v-if="permission('{{replaceNames.name}}Edit')"{{/if}} @click="showAddOrUp({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})">
           <mel-icon-edit />
         </el-button>
-        <el-popconfirm :title="t('确认删除？')" placement="left" @confirm="del({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})">
+        <el-popconfirm{{if adminPermission}} v-if="permission('{{replaceNames.name}}Del')"{{/if}} :title="t('确认删除？')" placement="left" @confirm="del({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})">
           <template #reference>
             <el-button :key="{{if entity.pk.length===1}}row.{{@ entity.pk[0]}}{{else}}`${<%- entity.pk.join('}__${')%>}`{{/if}}" :loading="delLoading && {{if entity.pk.length===1}}delId === row.{{@ entity.pk[0]}}{{else}}delKey=`${<%- entity.pk.join('}__${')%>}`{{/if}}" type="danger">
               <mel-icon-delete />
@@ -45,6 +45,8 @@ import { useLocalesI18n } from '@/locales/i18n';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
 import {formatterStr{{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At'))}}, formatterAt{{/if}} } from '@/utils/helper.js';
+{{if adminPermission}}import { permission } from '@/utils/permission.js';{{/if}}
+
 const {open} = useActionModel(AddOrUp);
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), '{{@ replaceNames.name}}']);
 <% include('./dict.ts.art', {...entitySchema, entity:entity, replaceNames:replaceNames}) %>

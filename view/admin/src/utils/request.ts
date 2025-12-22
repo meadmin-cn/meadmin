@@ -89,8 +89,37 @@ export function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (
       }
       // 401：认证失败
       if (res.code === '401') {
-        await useUserStore().logOut();
-        return res;
+        ElMessageBox.confirm(res.msg, '请登录', {
+          confirmButtonText: '去 登 陆',
+          cancelButtonText: '取消',
+          type: 'warning',
+          showClose:false,
+          closeOnClickModal:false,
+          closeOnPressEscape:false,
+          closeOnHashChange:false,
+        }).then(async () => {
+          await useUserStore().logOut();
+        }).catch(() => {
+
+        });
+        throw Error(res.msg);
+      }
+      // 没有权限
+      if(res.code === '403'){
+        ElMessageBox.confirm(res.msg, '无权限访问', {
+          confirmButtonText: '切换账户',
+          cancelButtonText: '取消',
+          type: 'warning',
+          showClose:false,
+          closeOnClickModal:false,
+          closeOnPressEscape:false,
+          closeOnHashChange:false,
+        }).then(async () => {
+          await useUserStore().logOut();
+        }).catch(() => {
+          
+        });
+        throw Error(res.msg);
       }
       if (res.code !== '200') {
         throw Error(res.msg);

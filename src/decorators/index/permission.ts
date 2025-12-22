@@ -4,20 +4,20 @@ import { UnauthorizedError } from '@midwayjs/core/dist/error/http.js';
 import { RegistreDecorator } from '../../../types/decorator.js';
 
 // 装饰器内部的唯一 id
-export const INDEX_PROMISE_KEY = 'decorator:index_promise';
+export const INDEX_PERMISSION_KEY = 'decorator:index_promise';
 
-export function indexPromise(): MethodDecorator {
+export function IndexPermission(): MethodDecorator {
   // 我们传递了一个可以修改展示格式的参数
-  return createCustomMethodDecorator(INDEX_PROMISE_KEY, {});
+  return createCustomMethodDecorator(INDEX_PERMISSION_KEY, {});
 }
-export class IndexPromiseRegistreDecorators implements RegistreDecorator{
+export class IndexPermissionRegistreDecorators implements RegistreDecorator{
   decoratorService: MidwayDecoratorService;
   async init( decoratorService: MidwayDecoratorService) {
     this.decoratorService = decoratorService;
   }
   async onReady() {
     // 实现方法装饰器
-    this.decoratorService.registerMethodHandler(INDEX_PROMISE_KEY, () => {
+    this.decoratorService.registerMethodHandler(INDEX_PERMISSION_KEY, () => {
       return {
         around: async (joinPoint: JoinPoint) => {
           // 装饰器所在的实例

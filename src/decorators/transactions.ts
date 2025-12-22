@@ -8,7 +8,7 @@ import { ManagedTransactionOptions } from '@sequelize/core';
 export const TRANSACTION_KEY = 'decorator:transaction';
 export type TransactionOptions = {
   sourceName?: string; //使用的seqlize实例，不传使用默认值
-  options?: ManagedTransactionOptions;//事务参数
+  options?: ManagedTransactionOptions; //事务参数
 };
 export function Transaction(options?: TransactionOptions): MethodDecorator {
   // 我们传递了一个可以修改展示格式的参数
@@ -25,11 +25,16 @@ export class TransactionRegistreDecorators implements RegistreDecorator {
       return {
         around: async (joinPoint: JoinPoint) => {
           const dataSourceManager = await container.getAsync(SequelizeDataSourceManagerService);
-          const seqlize = dataSourceManager.getDataSource(options.metadata.sourceName ?? dataSourceManager.getDefaultDataSourceName());
-          return await seqlize.transaction(options.metadata.options, async () => {
-            // 执行原方法
-            return await joinPoint.proceed(...joinPoint.args);
-          });
+          const seqlize = dataSourceManager.getDataSource(options.metadata?.sourceName ?? dataSourceManager.getDefaultDataSourceName());
+          return options.metadata?.options
+            ? await seqlize.transaction(options.metadata.options, async () => {
+                // 执行原方法
+                return await joinPoint.proceed(...joinPoint.args);
+              })
+            : await seqlize.transaction(async () => {
+                // 执行原方法
+                return await joinPoint.proceed(...joinPoint.args);
+              });
         },
       };
     });

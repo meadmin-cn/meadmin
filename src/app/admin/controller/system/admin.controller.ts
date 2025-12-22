@@ -6,6 +6,7 @@ import { SystemAdminQueryDto } from '../../dto/system/adminQuery.dto.js';
 import { SystemAdminUpdateDto } from '../../dto/system/adminUpdate.dto.js';
 import { SystemAdminService } from '../../service/system/admin.service.js';
 import { ApiOperationResponse } from '@/decorators/index.js';
+import { AdminPermission } from '@/decorators/index.js';;
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
@@ -22,6 +23,7 @@ export class SystemAdminController extends BaseController {
     responseType: SystemAdmin,
     summary: '添加管理员信息',
   })
+  @AdminPermission('systemAdminAdd')
   async add(@Body() createDto: SystemAdminCreateDto) {
     return this.success(await this.systemAdminService.create(createDto));
   }
@@ -32,6 +34,7 @@ export class SystemAdminController extends BaseController {
     responsePage: SystemAdmin,
     summary: '获取管理员列表',
   })
+  @AdminPermission('systemAdminList')
   async list(@Body() queryDto: SystemAdminQueryDto) {
     return this.success(await this.systemAdminService.list(queryDto));
   }
@@ -42,6 +45,7 @@ export class SystemAdminController extends BaseController {
     responseType: SystemAdmin,
     summary: '根据id获取管理员详情',
   })
+  @AdminPermission('systemAdminEdit')
   async findOne(@Param('id') id: string) {
     const entity = await this.systemAdminService.findOne(id);
     return this.success(entity);
@@ -53,6 +57,7 @@ export class SystemAdminController extends BaseController {
     responseType: SystemAdmin,
     summary: '根据id更新管理员详情',
   })
+  @AdminPermission('systemAdminEdit')
   async update(@Param('id') id: string, @Body() updateDto: SystemAdminUpdateDto) {
     return this.success(await this.systemAdminService.update(id, updateDto));
   }
@@ -62,6 +67,7 @@ export class SystemAdminController extends BaseController {
   @ApiOperationResponse({
     summary: '根据id删除管理员信息',
   })
+  @AdminPermission('systemAdminDel')
   async delete(@Param('id') id: string) {
     await this.systemAdminService.remove(id);
     return this.success();

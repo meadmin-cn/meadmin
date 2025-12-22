@@ -103,7 +103,7 @@ export class LoginService {
   async getAdminByToken(token: string) {
     const adminId = await this.getIdByToken(token);
     if (adminId) {
-      return await this.adminRepository.findByPk(adminId);
+      return await this.getAdminById(adminId);
     }
     return null;
   }
@@ -113,7 +113,7 @@ export class LoginService {
    * @param adminId
    * @returns
    */
-  async getAdminById(adminId: string, ctx?: Context) {
+  async getAdminById(adminId: string) {
     const admin = await this.adminRepository.findOne({
       where: {
         id: adminId,
@@ -131,14 +131,6 @@ export class LoginService {
         ],
       },
     });
-    if (admin.status !== 1) {
-      if (ctx) {
-        const i18n = await ctx.requestContext.getAsync(MidwayI18nService);
-        throw new BadRequestError(i18n.translate('用户已被禁用'));
-      }else{
-        throw new BadRequestError('用户已被禁用');
-      }
-    }
     if (admin?.roles.some((item) => item.isSuper === 1)) {
       admin.roleMenus = await this.menuRepository.findAll({
         where: { status: 1 },

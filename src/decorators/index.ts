@@ -2,11 +2,13 @@ import { IMidwayApplication, IMidwayContainer, MidwayDecoratorService } from '@m
 
 export * from './swagger.js';
 export * from './sequelize.js';
-export * from './index/promise.js';
+export * from './index/permission.js';
 export * from './transactions.js';
+export * from './admin/permission.js';
 
 import { SequelizeRegistreDecorators } from './sequelize.js';
-import { IndexPromiseRegistreDecorators } from './index/promise.js';
+import { IndexPermissionRegistreDecorators } from './index/permission.js';
+import {AdminPermissionRegistreDecorators} from './admin/permission.js';
 import { RegistreDecorator } from '../../types/decorator.js';
 import {TransactionRegistreDecorators} from './transactions.js';
 
@@ -15,7 +17,8 @@ export class RegistreDecorators {
 
   regitserDecorators: RegistreDecorator[] = [
     new SequelizeRegistreDecorators(),
-    new IndexPromiseRegistreDecorators(),
+    new IndexPermissionRegistreDecorators(),
+    new AdminPermissionRegistreDecorators(),
     new TransactionRegistreDecorators()
   ];
   /**

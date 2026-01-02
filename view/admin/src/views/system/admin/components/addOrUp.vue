@@ -43,20 +43,12 @@ import { FormInstance, FormRules } from 'element-plus';
 import { isMobile } from '@/utils/validate.js';
 import { VxeColumnPropTypes } from 'vxe-table';
 import { systemRoleTreeAllApi } from '@/api/system/role';
+import { getDict } from '../dict.js';
 const { data: treeAllList, runAsync: getTreeAllAsync } = systemRoleTreeAllApi();
 getTreeAllAsync();
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemAdmin']);
 await loadRes;
-const dict = {
-  status: [
-    { value: 1, label: t('启用') },
-    { value: 0, label: t('禁用') },
-  ],
-  isSuper: [
-    { value: 1, label: t('是') },
-    { value: 0, label: t('否') },
-  ],
-};
+const dict = getDict(t);
 const show = defineModel<boolean>();
 const props = defineProps<{
   id?: string;

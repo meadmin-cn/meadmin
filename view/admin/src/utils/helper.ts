@@ -1,6 +1,7 @@
 import { default as XEUtils, SearchTreeOptions } from 'xe-utils';
 import { clone, cloneDeep } from 'lodash-es';
 import dayjs from 'dayjs';
+import { VxeTableDefines } from 'vxe-table';
 
 /**
  * 对象中的每个可便利元素按序执行一个由您提供的 reducer 函数，
@@ -244,18 +245,44 @@ export function clearEmptyParam<T extends Record<any, any> | any[]>(obj: T, empt
   }
 }
 
+//格式化字符串数据执行
+export function formatterStrExec<T = string | null | undefined>(str:T){
+  return [undefined, null, ''].includes(str as any) ? '--' : str!;
+}
+
+//格式化字典数据执行
+export function formatterDictExec<D extends Record<string, { value: string | number; label: string }[]>,T = string | null | undefined>(dict:D,column:any,value:T ){
+  return  formatterStrExec( dict[column]?.find((item) => item.value == value)?.label);
+}
+
+//格式化时间数据执行
+export function formatterAtExec(str:string | null | undefined | Date, formatStr = 'YYYY-MM-DD HH:mm:ss'){
+    return str ? dayjs(str).format(formatStr) : formatterStrExec(str);
+
+}
+
 //格式化表格数据
 export function formatterStr<T>({ cellValue }: { cellValue: T }) {
-  return [undefined, null, ''].includes(cellValue as any) ? '--' : (cellValue as T extends undefined | null ? string : T);
+  return formatterStrExec<T>(cellValue);
 }
+
 //格式化表格时间数据
-export function formatterAt<T>({ cellValue }: { cellValue: string | null | undefined | Date }, formatStr = 'YYYY-MM-DD HH:mm:ss') {
+export function formatterAt({ cellValue }: { cellValue: string | null | undefined | Date }, formatStr = 'YYYY-MM-DD HH:mm:ss') {
   return cellValue ? dayjs(cellValue).format(formatStr) : formatterStr({ cellValue });
 }
 
+//格式化表格字典数据函数
+export function createformatterDictFn<T>(dict: Record<string, { value: string | number; label: string }[]>) {
+  //因为ts类型判定不得不断言dict
+  return (data: { cellValue: any; column: VxeTableDefines.ColumnInfo<T> }) => 
+    formatterDictExec(dict,data.column,data.cellValue);
+}
+
+
+
 //根据文件名判断是否是图片
-export function isImage(filename:string){
+export function isImage(filename: string) {
   const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
   const fileExtension = filename.split('.').pop()?.toLowerCase();
-  return fileExtension ? imageExtensions.includes(fileExtension) : false; 
+  return fileExtension ? imageExtensions.includes(fileExtension) : false;
 }

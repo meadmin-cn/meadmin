@@ -100,6 +100,8 @@ export class SystemAdminService {
       limit: queryDto.pageSize,
       order: [['createdAt', 'DESC']],
       include: [
+        'createdAdmin',
+        'updatedAdmin',
         {
           association: 'roles',
           where: { status: 1 },
@@ -134,6 +136,8 @@ export class SystemAdminService {
   async findOne(id: string) {
     const entity = await this.SystemAdminRepository.findByPk(id, {
       include: [
+        'createdAdmin',
+        'updatedAdmin',
         {
           association: 'roles',
           where: { status: 1 },

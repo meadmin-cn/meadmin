@@ -85,18 +85,20 @@
       <vxe-column field="lastLoginIp" :title="t('最后登录ip')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="status" :title="t('状态')" :formatter="formatterDict"></vxe-column>
       <vxe-column field="roles" :title="t('具有的角色')" :formatter="({cellValue}:{cellValue:SystemRoleInfo[]})=>cellValue.map(item=>item.roleName).join(',')"></vxe-column>
-      <vxe-column field="roleMenus" :title="t('具有权限的菜单')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column>
-      <vxe-column  v-if="permission(['systemAdminEdit','systemAdminDel'])" :title="t('操作')" fixed="right">
+      <vxe-column  v-if="permission(['systemAdminInfo','systemAdminEdit','systemAdminDel'])" :title="t('操作')" fixed="right">
         <template #default="{ row }: { row: SystemAdminInfo }">
           <span>
-            <el-button v-if="permission('systemAdminEdit')" @click="showAddOrUp(row.id)" link>
+            <el-button  @click="showInfo(row.id)" link :title="t('详情')">
+              <mel-icon-memo />
+            </el-button>
+            <el-button v-if="permission('systemAdminEdit')" @click="showAddOrUp(row.id)" link :title="t('编辑')">
               <mel-icon-edit />
             </el-button>
             <el-popconfirm v-if="permission('systemAdminDel')" :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
               <template #reference>
-                <el-button :key="row.id" :loading="delLoading && delId === row.id" type="danger" link>
+                <el-button :key="row.id" :loading="delLoading && delId === row.id" type="danger" link :title="t('删除')">
                   <mel-icon-delete />
                 </el-button>
               </template>
@@ -113,22 +115,17 @@ import { systemAdminListApi, SystemAdminListParam, delSystemAdminApi, SystemAdmi
 import { useLocalesI18n } from '@/locales/i18n';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
-import { formatterStr, formatterAt } from '@/utils/helper.js';
+import { formatterStr, formatterAt, createformatterDictFn } from '@/utils/helper.js';
 import { VxeColumnPropTypes } from 'vxe-table';
 import { SystemRoleInfo } from '@/api/system/role';
 import { permission } from '@/utils/permission.js';
+import Info from './components/info.vue';
+import { getDict } from './dict.js';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemAdmin']);
-const dict = {
-  status: [
-    { value: 1, label: t('启用') },
-    { value: 0, label: t('禁用') },
-  ],
-};
-const formatterDict: VxeColumnPropTypes.Formatter<SystemAdminInfo> = ({ cellValue, column }) => {
-  //因为ts类型判定不得不断言dict
-  return formatterStr({ cellValue: (dict as Record<string, { value: string | number; label: string }[]>)[column.field]?.find((item) => item.value == cellValue)?.label });
-};
+const dict = getDict(t);
+const formatterDict = createformatterDictFn<SystemAdminInfo>(dict);
 const { open } = useActionModel(AddOrUp);
+const {open:openInfo} = useActionModel(Info);
 const params = reactive(new SystemAdminListParam());
 const { loading, data, runAsync } = systemAdminListApi();
 const search = (page = params.page, pageSize = params.pageSize) => runAsync(Object.assign(params, { page, pageSize }));
@@ -146,6 +143,9 @@ const showAddOrUp = (id?: string) => {
       await search(1);
     },
   });
+};
+const showInfo = (id?: string) => {
+  openInfo({id});
 };
 await Promise.all([loadRes, search(1)]);
 </script>

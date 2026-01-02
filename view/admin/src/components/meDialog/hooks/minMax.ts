@@ -7,8 +7,8 @@ export default (el: HTMLDivElement & { fullscreen: boolean }) => {
   const resizeEvent = new CustomEvent('drag-resize', { detail: '尺寸变化', bubbles: false });
   el.fullscreen = false;
   //当前宽高
-  let nowWidth = el.offsetWidth+0.5;
-  let nowHight = el.offsetHeight+0.5;
+  let nowWidth = el.offsetWidth;
+  let nowHight = el.offsetHeight;
   //弹框可拉伸最小宽高
   const minWidth = Math.min(nowWidth, 300);
   const minHeight = Math.min(nowHight, 300);
@@ -18,20 +18,17 @@ export default (el: HTMLDivElement & { fullscreen: boolean }) => {
   const dialogHeaderEl = el.querySelector('.el-dialog__header') as HTMLDivElement;
   //弹窗
   const dragDom = el;
-  let setedWidth = '';
-  let setedHeight = '';
+  let firstWidth= el.style.width;
+  let firstHeight= el.style.height;
   const setWidthHeight = (width: string, height: string) => {
     dragDom.style.maxHeight = 'unset';
     if (width) {
-      setedWidth = width;
       dragDom.style.width = width;
     }
     if (height) {
-      setedHeight = height;
       dragDom.style.height = height;
     }
   };
-  setWidthHeight(nowWidth + 'px', nowHight + 'px');
   //清除选择头部文字效果
   dialogHeaderEl.onselectstart = () => false;
   //头部加上可拖动cursor
@@ -162,5 +159,5 @@ export default (el: HTMLDivElement & { fullscreen: boolean }) => {
       el.dispatchEvent(resizeEvent);
     };
   };
-  return { resetWH: () => setWidthHeight(setedWidth, setedHeight) };
+  return { resetWH: () => setWidthHeight(firstWidth, firstHeight) };
 };

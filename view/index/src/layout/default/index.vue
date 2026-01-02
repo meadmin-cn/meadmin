@@ -36,11 +36,12 @@ import Footer from './components/footer.vue';
     >div{
       width: $content-width;
       margin: 0 auto;
-
+      max-width: 100%;
     }
   }
   .layout-page{
     flex: 1;
+    overflow: auto;
     >div{
       width: $content-width;
       margin: 0 auto;
@@ -55,6 +56,7 @@ import Footer from './components/footer.vue';
     color: #ede5e5;
     >div{
       width: $content-width;
+      max-width: 100%;
       margin: 0 auto;
 
     }

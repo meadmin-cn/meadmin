@@ -12,7 +12,11 @@ export default {
    */
   set(name: string, value: string, options?: CookieAttributes) {
     if (import.meta.env.SSR) {
-     return serverCookies.set(name, value, options);
+     return serverCookies.set(name, value, Object.assign({
+      signed: false,  
+      httpOnly: false, // 默认是 true
+      maxAge: typeof options?.expires === 'number' ? options.expires * 86400 * 1000 : undefined
+      },options));
     } else {
       return cookies.set(name, value, options);
     }
@@ -23,7 +27,7 @@ export default {
    */
   get(name: string) {
     if (import.meta.env.SSR) {
-      return serverCookies.get(name);
+      return serverCookies.get(name,{signed:false});
     } else {
       return cookies.get(name);
     }

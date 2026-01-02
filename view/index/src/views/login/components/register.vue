@@ -82,7 +82,7 @@ const rules ={
       required: true,
       message: '确认密码',
       trigger: 'blur',
-      validate:(rule: any, value: string, callback: any) => {
+      validator:(rule: any, value: string, callback: any) => {
         if (!value) {
           callback(new Error('请输入确认密码'))
         } else if (value !== registerParams.password) {

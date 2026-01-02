@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Post, Inject, Param } from '@midwayjs/core';
+import { Body, Controller, Get, Post, Inject } from '@midwayjs/core';
 import { BaseController } from './base.controller.js';
 import { User } from '../../../entities/user.entity.js';
-import { UserCreateDto } from '../dto/userCreate.dto.js';
 import { UserUpdateDto } from '../dto/userUpdate.dto.js';
 import { UserService } from '../service/user.service.js';
-import { ApiOperationResponse } from '@/decorators/index.js';
+import { ApiOperationResponse, IndexPermission } from '@/decorators/index.js';
+import { Context } from '@midwayjs/koa';
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
@@ -14,37 +14,32 @@ import { ApiOperationResponse } from '@/decorators/index.js';
 export class UserController extends BaseController {
   @Inject()
   userService: UserService;
-
-  //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/add')
-  @ApiOperationResponse({
-    responseType: User,
-    summary: '添加用户信息',
-  })
-  async register(@Body() createDto: UserCreateDto) {
-    return this.success(await this.userService.create(createDto));
-  }
+  
+  @Inject()
+  ctx:Context
 
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Get('/info/:id')
+  @Get('/info')
   @ApiOperationResponse({
     responseType: User,
-    summary: '根据id获取用户详情',
+    summary: '获取当前用户的信息',
   })
-  async findOne(@Param('id') id: string) {
-    const entity = await this.userService.findOne(id);
+  @IndexPermission()
+  async info() {
+    const entity = await this.userService.findOne(this.ctx.userInfo.id);
     return this.success(entity);
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/up/:id')
+  @Post('/up')
   @ApiOperationResponse({
     responseType: User,
-    summary: '根据id更新用户详情',
+    summary: '更新当前用户信息',
   })
-  async update(@Param('id') id: string, @Body() updateDto: UserUpdateDto) {
-    return this.success(await this.userService.update(id, updateDto));
+  @IndexPermission()
+  async update( @Body() updateDto: UserUpdateDto) {
+    return this.success(await this.userService.update(this.ctx.userInfo.id, updateDto));
   }
 
 

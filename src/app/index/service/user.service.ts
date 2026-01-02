@@ -61,6 +61,11 @@ export class UserService {
     if (!entity) {
       throw new BadRequestError('没有对应的信息');
     }
+    if(entity.username != updateDto.username && updateDto.username !== undefined){
+      if(await this.UserRepository.findOne({where:{username:updateDto.username}})){
+        throw new BadRequestError('用户名已被占用');
+      }
+    }
     const password = entity.password;
     const salf = entity.salt;
     if (updateDto.avatar !== undefined) {

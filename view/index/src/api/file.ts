@@ -15,7 +15,7 @@ export class File {
 
 export type FileInfo = Required<File> & {
   id: string; //ID
-  createdUser: NonNullable<UserInfo>;
+  createdUser: NonNullable<Omit<UserInfo,'avatar'>>;
   size: number;
   createdAt: string; //创建时间
   updatedA: string; //最后更新时间

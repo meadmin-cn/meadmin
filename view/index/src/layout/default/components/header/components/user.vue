@@ -11,7 +11,7 @@
   <el-dropdown-menu slot="dropdown">
     <template v-if="userStore.user.id" >
       <el-dropdown-item>
-      <router-link :to="PageEnum.LOGIN">个人中心</router-link>
+      <router-link :to="PageEnum.USER">个人中心</router-link>
     </el-dropdown-item>
       <el-dropdown-item>
       <span @click="userStore.logOut">退出登录</span>

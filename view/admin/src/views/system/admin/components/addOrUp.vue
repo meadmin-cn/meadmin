@@ -1,5 +1,5 @@
 <template>
-  <me-dialog v-model="show" :title="t(id ? '编辑' : '新增')" :close-on-click-modal="false" @closed="$emit('closed')">
+  <me-dialog v-model="show" :title="t(id ? '编辑' : '新增')" :close-on-click-modal="false" @closed="emit('closed')">
     <el-form v-loading="loading" ref="formEl" :model="info" :rules="rules" class="add" label-width="auto">
       <el-form-item :label="t('角色组')" prop="roleIds">
         <el-tree-select v-model="info.roleIds" :data="treeAllList || []" check-strictly node-key="id" multiple filterable :props="{ label: 'roleName' }" :render-after-expand="false" />

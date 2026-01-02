@@ -113,13 +113,13 @@
 <script setup lang="ts" name="SystemAdmin">
 import { systemAdminListApi, SystemAdminListParam, delSystemAdminApi, SystemAdminInfo } from '@/api/system/admin';
 import { useLocalesI18n } from '@/locales/i18n';
+import Info from './components/info.vue';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
 import { formatterStr, formatterAt, createformatterDictFn } from '@/utils/helper.js';
 import { VxeColumnPropTypes } from 'vxe-table';
 import { SystemRoleInfo } from '@/api/system/role';
 import { permission } from '@/utils/permission.js';
-import Info from './components/info.vue';
 import { getDict } from './dict.js';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemAdmin']);
 const dict = getDict(t);

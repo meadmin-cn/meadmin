@@ -1,23 +1,23 @@
-import './helper/dotenv.js';
-import { Configuration, App, IMidwayContainer, Init, IMidwayApplication, Inject, MidwayDecoratorService, Logger, ILogger } from '@midwayjs/core';
+import { App, Configuration, ILogger, IMidwayApplication, IMidwayContainer, Init, Inject, Logger, MidwayDecoratorService } from '@midwayjs/core';
+import * as info from '@midwayjs/info';
 import * as koa from '@midwayjs/koa';
 import * as validate from '@midwayjs/validate';
-import * as info from '@midwayjs/info';
+import './helper/dotenv.js';
 // import { ReportMiddleware } from './middleware/report.middleware.js';
 import DefaultConfig from '@/config/config.default.js';
 import UnittestConfig from '@/config/config.unittest.js';
 import * as meadmin from '@meadmin/core';
+import * as viteView from '@meadmin/midway-vite-view'; //引入view组件
+import * as busboy from '@midwayjs/busboy';
+import * as cacheManager from '@midwayjs/cache-manager';
+import * as captcha from '@midwayjs/captcha';
+import * as i18n from '@midwayjs/i18n';
+import * as redis from '@midwayjs/redis';
+import * as staticFile from '@midwayjs/static-file';
 import * as swagger from '@midwayjs/swagger';
 import { RegistreDecorators } from './decorators/index.js';
-import * as viteView from '@meadmin/midway-vite-view'; //引入view组件
-import * as cacheManager from '@midwayjs/cache-manager';
-import * as redis from '@midwayjs/redis';
 import { filters } from './filter/index.js';
 import { initLogger } from './logger.js';
-import * as i18n from '@midwayjs/i18n';
-import * as captcha from '@midwayjs/captcha';
-import * as busboy from '@midwayjs/busboy';
-import * as staticFile from '@midwayjs/static-file';
 
 const registreDecorators = new RegistreDecorators();
 

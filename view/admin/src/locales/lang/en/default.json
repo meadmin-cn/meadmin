@@ -54,5 +54,8 @@
   "查询": "Query",
   "操作": "Operate",
   "上传": "Upload",
-  "选择": "Select"
+  "选择": "Select",
+  "编辑": "Edit",
+  "新增": "Add",
+  "详情": "Details"
 }

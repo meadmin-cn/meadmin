@@ -23,10 +23,13 @@
     <% include('./tableColum.vue.art', {...entitySchema, entity:entity}) %>
     <vxe-column{{if adminPermission}} v-if="permission(['{{replaceNames.name}}Edit','{{replaceNames.name}}Del'])"{{/if}} :title="t('操作')" fixed="right" min-width="150px">
       <template #default="{ row }: { row: {{@ replaceNames.Name}}Info }">
-        <el-button{{if adminPermission}} v-if="permission('{{replaceNames.name}}Edit')"{{/if}} @click="showAddOrUp({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})">
+        <el-button{{if adminPermission}} v-if="permission('{{replaceNames.name}}Info')"{{/if}} @click="showInfo({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})" :title="t('详情')">
+          <mel-icon-memo />
+        </el-button>
+        <el-button{{if adminPermission}} v-if="permission('{{replaceNames.name}}Edit')"{{/if}} @click="showAddOrUp({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})" :title="t('编辑')">
           <mel-icon-edit />
         </el-button>
-        <el-popconfirm{{if adminPermission}} v-if="permission('{{replaceNames.name}}Del')"{{/if}} :title="t('确认删除？')" placement="left" @confirm="del({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})">
+        <el-popconfirm{{if adminPermission}} v-if="permission('{{replaceNames.name}}Del')"{{/if}} :title="t('确认删除？')" placement="left" @confirm="del({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})" :title="t('删除')">
           <template #reference>
             <el-button :key="{{if entity.pk.length===1}}row.{{@ entity.pk[0]}}{{else}}`${<%- entity.pk.join('}__${')%>}`{{/if}}" :loading="delLoading && {{if entity.pk.length===1}}delId === row.{{@ entity.pk[0]}}{{else}}delKey=`${<%- entity.pk.join('}__${')%>}`{{/if}}" type="danger">
               <mel-icon-delete />
@@ -42,6 +45,7 @@
 <script setup lang="ts" name="{{@ replaceNames.Name}}">
 import { {{@ replaceNames.name}}ListApi, {{@ replaceNames.Name}}ListParam, del{{@ replaceNames.Name}}Api, {{@ replaceNames.Name}}Info } from '@/api/{{replaceNames.namePath}}';
 import { useLocalesI18n } from '@/locales/i18n';
+import Info from './components/info.vue';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
 import {formatterStr{{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At'))}}, formatterAt{{/if}} } from '@/utils/helper.js';
@@ -49,7 +53,10 @@ import {formatterStr{{if $imports.objectKeys(entitySchema.properties).some(k=>k.
 
 const {open} = useActionModel(AddOrUp);
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), '{{@ replaceNames.name}}']);
-<% include('./dict.ts.art', {...entitySchema, entity:entity, replaceNames:replaceNames}) %>
+<% if($imports.objectKeys(entitySchema.properties).some(k=>properties[k].enum || properties[k].description.includes(':'))){%>import { getDict } from '../dict.js';
+const dict = getDict(t);
+import { createformatterDictFn } from '@/utils/helper.js';
+const formatterDict = createformatterDictFn<SystemAdminInfo>(dict);<%}%>
 const params = reactive(new {{@ replaceNames.Name}}ListParam());
 const { loading, data, runAsync } = {{@ replaceNames.name}}ListApi();
 const search = (page = params.page, size = params.size) => runAsync(Object.assign(params, { page, size }));
@@ -60,11 +67,15 @@ const del = async ({{@ entity.pk.map(v=>`${v}:${entitySchema.properties[v].type}
   await delRun({{@ entity.pk.map(v=>`${v}`).join(', ')}});
   await search(1);
 };
+const showInfo  = ({{@ entity.pk.map(v=>`${v}?:${entitySchema.properties[v].type}`).join(', ')}}) => {
+  open({<%- entity.pk.join(', ')%>});
+};
 const showAddOrUp = ({{@ entity.pk.map(v=>`${v}?:${entitySchema.properties[v].type}`).join(', ')}}) => {
   open({<%- entity.pk.join(', ')%>, onSuccess:async ()=>{
     await search(1);
   }});
 };
+
 await Promise.all([loadRes,search(1)]);
 </script>
 

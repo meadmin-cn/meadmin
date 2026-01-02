@@ -170,7 +170,9 @@ const noWriteKey = ['entityPath', 'baseControllerPath'];
 const writeViewFiles = {
   apiPath: '',
   listPath: '',
+  dictPath: '',
   langEnPath: '',
+  info: '',
   addOrUp: '',
 };
 const replaceNames = {
@@ -223,24 +225,28 @@ async function writeContent(templatePath, toPath, writeType: 'api' | 'view') {
   Object.keys(paths).forEach((key) => {
     paths[key] = relativePath(toPath, paths[key], []);
   });
-  recursionWriteFileSync(
-    toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath,
-    await prettier.format(
-      template(resolve(import.meta.dirname, templatePath), {
+  const str =  template(resolve(import.meta.dirname, templatePath), {
         adminPermission,
         replaceNames,
         paths,
         swaggerSchemas,
         entitySchema: swaggerSchemas[replaceNames.Name],
         entity: tableInfo(replaceNames.Name),
-      }),
-      {
-        ...prettierrc,
-        filepath: toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath,
-      },
-    ),
-  );
-  Log.success((toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath) + ' 写入完成');
+  });
+  if(str.trim()){
+    recursionWriteFileSync(
+    toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath,
+      await prettier.format(
+      str,
+        {
+          ...prettierrc,
+          filepath: toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath,
+        },
+      ),
+    );
+    Log.success((toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath) + ' 写入完成');
+  }
+  
 }
 
 //写入后端文件
@@ -262,8 +268,10 @@ function writeViewApi() {
 //写入前端view文件
 function writeViews() {
   return Promise.all([
-    writeContent('../../template/crud/view/views/index.vue.art', writeViewFiles.listPath, 'view'),
     writeContent('../../template/crud/view/views/lang/en.json.art', writeViewFiles.langEnPath, 'view'),
+    writeContent('../../template/crud/view/views/dict.ts.art', writeViewFiles.dictPath, 'view'),
+    writeContent('../../template/crud/view/views/index.vue.art', writeViewFiles.listPath, 'view'),
+    writeContent('../../template/crud/view/views/components/info.vue.art', writeViewFiles.info, 'view'),
     writeContent('../../template/crud/view/views/components/addOrUp.vue.art', writeViewFiles.addOrUp, 'view'),
   ]);
 }
@@ -285,10 +293,32 @@ async function setMenu(model: string, namePath: string, dbConfig: any) {
     },
   });
   await sequelize.models.get('systemMenu').findOrCreate({
+    where: { rule: replaceNames.name + 'List' },
+    defaults: {
+      parentId: systemAdmin.get('id'),
+      title: '列表',
+      menuType: 2, //菜单
+      orderNum: 1,
+      path: '/' + namePath,
+      component: namePath + '/index',
+    },
+  });
+  await sequelize.models.get('systemMenu').findOrCreate({
+    where: { rule: replaceNames.name + 'Info' },
+    defaults: {
+      parentId: systemAdmin.get('id'),
+      title: '详情',
+      menuType: 2, //菜单
+      orderNum: 1,
+      path: '/' + namePath,
+      component: namePath + '/index',
+    },
+  });
+  await sequelize.models.get('systemMenu').findOrCreate({
     where: { rule: replaceNames.name + 'Add' },
     defaults: {
       parentId: systemAdmin.get('id'),
-      title: tableInfo(replaceNames.Name).tableComment,
+      title: '新增',
       menuType: 2, //菜单
       orderNum: 1,
       path: '/' + namePath,
@@ -299,7 +329,7 @@ async function setMenu(model: string, namePath: string, dbConfig: any) {
     where: { rule: replaceNames.name + 'Edit' },
     defaults: {
       parentId: systemAdmin.get('id'),
-      title: tableInfo(replaceNames.Name).tableComment,
+      title: '修改',
       menuType: 2, //菜单
       orderNum: 1,
       path: '/' + namePath,
@@ -310,7 +340,7 @@ async function setMenu(model: string, namePath: string, dbConfig: any) {
     where: { rule: replaceNames.name + 'Del' },
     defaults: {
       parentId: systemAdmin.get('id'),
-      title: tableInfo(replaceNames.Name).tableComment,
+      title: '删除',
       menuType: 2, //菜单
       orderNum: 1,
       path: '/' + namePath,
@@ -365,8 +395,10 @@ export const crudInit = async (program: Command) => {
       writeApiFiles.servicePath = resovePath(`src/app/${options.model}/service/${replaceNames.namePath}`, ['.service', '.js']);
       writeApiFiles.controllerPath = resovePath(`src/app/${options.model}/controller/${replaceNames.namePath}`, ['.controller', '.js']);
       writeViewFiles.apiPath = resovePath(`view/${options.model}/src/api/${replaceNames.namePath}`, ['.js']);
-      writeViewFiles.listPath = resovePath(`view/${options.model}/src/views/${replaceNames.namePath}/index`, ['.vue']);
       writeViewFiles.langEnPath = resovePath(`view/${options.model}/src/views/${replaceNames.namePath}/lang/en`, ['.json']);
+      writeViewFiles.dictPath = resovePath(`view/${options.model}/src/views/${replaceNames.namePath}/lang/dict`, ['.js']);
+      writeViewFiles.listPath = resovePath(`view/${options.model}/src/views/${replaceNames.namePath}/index`, ['.vue']);
+      writeViewFiles.info = resovePath(`view/${options.model}/src/views/${replaceNames.namePath}/components/info`, ['.vue']);
       writeViewFiles.addOrUp = resovePath(`view/${options.model}/src/views/${replaceNames.namePath}/components/addOrUp`, ['.vue']);
       if (options.del) {
         const delPath = [] as string[];

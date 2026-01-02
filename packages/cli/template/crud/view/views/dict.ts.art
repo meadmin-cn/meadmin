@@ -1,6 +1,5 @@
-<% if($imports.objectKeys(properties).some(k=>properties[k].enum || properties[k].description.includes(':'))){%>import { VxeColumnPropTypes } from 'vxe-table';
-const dict = {
-{{each properties}}<% const keyInfo = $imports.getKeyInfo($value.description);%>{{if keyInfo.dict}}
+<% if($imports.objectKeys(entitySchema.properties).some(k=>entitySchema.properties[k].enum || entitySchema.properties[k].description.includes(':'))){%>export const getDict = (t = (str:string)=>str)=>reactive({
+{{each entitySchema.properties}}<% const keyInfo = $imports.getKeyInfo($value.description);%>{{if keyInfo.dict}}
  {{@ $index}}:[
   {{each keyInfo.dictArr $val $key}}{value:{{if $value.type==='string'}}'{{/if}}{{$val.value}}{{if $value.type==='string'}}'{{/if}}, label:t('{{@ $val.label}}')},{{/each}}
  ],{{else if $value.enum}}
@@ -8,9 +7,5 @@ const dict = {
   {{each $value.enum $val $key}}{value:{{if $value.type==='string'}}'{{/if}}{{$val+''}}{{if $value.type==='string'}}'{{/if}}, label:t('{{@ $val+''}}')},{{/each}}
   ],
 {{/if}}{{/each}}
-};
-{{if !noFormatter}}const formatterDict: VxeColumnPropTypes.Formatter<{{@ replaceNames.Name}}Info> = ({ cellValue, column }) => {
-  //因为ts类型判定不得不断言dict
-  return formatterStr({ cellValue: (dict as Record<string, {value:string|number,label:string}[]>)[column.field]?.find(item => item.value == cellValue)?.label });
-}{{/if}}
+});
 <%}%>

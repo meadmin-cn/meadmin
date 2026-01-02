@@ -164,7 +164,7 @@ export class LoginService {
     let translate: MidwayI18nService['translate'];
     if (ctx) {
       const i18n = await ctx.requestContext.getAsync(MidwayI18nService);
-      translate = i18n.translate;
+      translate = (...args)=>i18n.translate(...args);
     }
     if (entity && this.checkPassword(password, entity.salt, entity.password)) {
       if (entity.status !== 1) {

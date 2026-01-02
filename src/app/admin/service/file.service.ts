@@ -65,7 +65,7 @@ export class FileService {
       where[key] = queryDto[key];
     });
     const { count, rows } = await this.FileRepository.findAndCountAll({
-      include:['createdAdmin'],
+      include:['createdAdmin','updatedAdmin'],
       where,
       offset: (queryDto.page - 1) * queryDto.pageSize,
       limit: queryDto.pageSize,
@@ -85,7 +85,9 @@ export class FileService {
    * @returns
    */
   async findOne(id: string) {
-    const entity = await this.FileRepository.findByPk(id);
+    const entity = await this.FileRepository.findByPk(id,{
+      include:['createdAdmin','updatedAdmin'],
+    });
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }

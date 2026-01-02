@@ -64,7 +64,7 @@ export class FileService {
       where[key] = queryDto[key];
     });
     const { count, rows } = await this.FileRepository.findAndCountAll({
-      include:['createdAdmin'],
+      include:['createdUser','updatedUser'],
       where,
       offset: (queryDto.page - 1) * queryDto.pageSize,
       limit: queryDto.pageSize,

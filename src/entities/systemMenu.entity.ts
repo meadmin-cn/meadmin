@@ -1,11 +1,12 @@
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@midwayjs/validate';
 import { DataTypes, NonAttribute } from '@sequelize/core';
-import { Attribute, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
+import { Attribute, BelongsTo, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { SystemRole } from './systemRole.entity.js';
 import { TreeModel } from './abstract/tree.entity.js';
 import { BelongsManyModel } from '../../types/entity.js';
+import { SystemAdmin } from './systemAdmin.entity.js';
 
 //rule规则使用添加接口的校验规则
 @Table({ tableName: 'system_menu', comment: '菜单表' })
@@ -157,11 +158,25 @@ export class SystemMenu extends TreeModel<SystemMenu> {
   })
   createdAdminId: string;
 
+  @ApiPropertyRule({
+    description: '创建者',
+    type: () => SystemAdmin,
+  })
+  @BelongsTo(() => SystemAdmin, 'createdAdminId')
+  declare createdAdmin?: NonAttribute<SystemAdmin | null>;
+
   @Attribute({
     comment: '更新者Id(管理员)',
     type: DataTypes.STRING(20),
   })
   updatedAdminId: string;
+
+  @ApiPropertyRule({
+    description: '最后更新者',
+    type: () => SystemAdmin,
+  })
+  @BelongsTo(() => SystemAdmin, 'updatedAdminId')
+  declare updatedAdmin?: NonAttribute<SystemAdmin | null>;
 }
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export declare interface SystemMenu extends BelongsManyModel<'roles', 'role', 'roles', SystemRole> {}

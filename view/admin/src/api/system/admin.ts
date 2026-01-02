@@ -25,6 +25,8 @@ export type SystemAdminInfo = Omit<SystemAdmin,'roleIds'> & {
   roleMenus: NonNullable<SystemMenuInfo>;
   createdAt: string;//创建时间
   updatedAt: string;//最后更新时间
+  createdAdmin: Omit<SystemAdmin,'createdAdmin'|'updatedAdmin'> | null,
+  updatedAdmin: Omit<SystemAdmin,'createdAdmin'|'updatedAdmin'> | null,
 };
 //添加管理员信息
 export function addSystemAdminApi() {
@@ -82,7 +84,7 @@ export function systemAdminInfoApi(options?: RequestOptions<SystemAdminInfo, [st
   );
 }
 
-export type UpdateSystemAdminInfoParam = Omit<Partial<SystemAdminInfo>, 'id' | 'loginFailure' | 'lastLoginAt' | 'lastLoginIp' | 'createdAt' | 'updatedAt'> & {roleIds:string[]};
+export type UpdateSystemAdminInfoParam = Omit<Partial<SystemAdminInfo>, 'id' | 'loginFailure' | 'lastLoginAt' | 'lastLoginIp' | 'createdAt' | 'updatedAt' | 'createdAdmin' | 'updatedAdmin'> & {roleIds:string[]};
 //修改管理员信息
 export function updateSystemAdminApi(options?: RequestOptions<SystemAdminInfo, [string, UpdateSystemAdminInfoParam]>) {
   return request<SystemAdminInfo, [string, UpdateSystemAdminInfoParam]>(

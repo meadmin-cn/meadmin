@@ -65,6 +65,7 @@ export class SystemMenuService {
     });
     const { count, rows } = await this.SystemMenuRepository.findAndCountAll({
       where,
+      include:['createdAdmin','updatedAdmin'],
       offset: (queryDto.page - 1) * queryDto.pageSize,
       limit: queryDto.pageSize,
       order: [['createdAt', 'DESC']],
@@ -93,7 +94,9 @@ export class SystemMenuService {
    * @returns
    */
   async findOne(id: string) {
-    const entity = await this.SystemMenuRepository.findByPk(id);
+    const entity = await this.SystemMenuRepository.findByPk(id,{
+      include:['createdAdmin','updatedAdmin',]
+    });
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }

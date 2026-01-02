@@ -69,6 +69,7 @@ export class SystemRoleService {
     });
     const { count, rows } = await this.SystemRoleRepository.findAndCountAll({
       where,
+      include:['createdAdmin','updatedAdmin'],
       offset: (queryDto.page - 1) * queryDto.pageSize,
       limit: queryDto.pageSize,
       order: [['orderNum', 'DESC']],
@@ -114,7 +115,7 @@ export class SystemRoleService {
    * @returns
    */
   async findOne(id: string) {
-    const entity = await this.SystemRoleRepository.findByPk(id);
+    const entity = await this.SystemRoleRepository.findByPk(id,{include:['createdAdmin','updatedAdmin']});
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }

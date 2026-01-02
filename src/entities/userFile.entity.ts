@@ -71,6 +71,13 @@ export class UserFile extends BaseModel<UserFile> {
   })
   updatedUserId: string;
 
+  @ApiPropertyRule({
+    description: '最后更新者',
+    type: () => User,
+  })
+  @BelongsTo(() => User, 'updatedUserId')
+  declare updatedUser?: NonAttribute<User>;
+
   //json转义需要加上url属性，否则创建成功后的返回实体没有对应参数返回
   toJSON() {
     return Object.assign(

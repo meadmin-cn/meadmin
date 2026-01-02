@@ -106,7 +106,7 @@ export class SystemAdmin extends DelParanoidModel<SystemAdmin> {
   updatedAdminId: string;
 
   @ApiPropertyRule({
-    description: '最后更新建者',
+    description: '最后更新者',
     type: () => SystemAdmin,
   })
   @BelongsTo(() => SystemAdmin, 'updatedAdminId')

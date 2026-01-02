@@ -1,6 +1,7 @@
 import request, { RequestOptions } from '@/utils/request.js';
 import { PageParam, PageResult } from '@/api/api.model.js';
 import { TreeArrayItem } from '@/utils/helper.js';
+import { SystemAdmin } from './admin.js';
 
 //菜单
 export class SystemMenu {
@@ -26,6 +27,8 @@ export class SystemMenu {
 
 export type SystemMenuInfo = SystemMenu & {
   id: string; //ID
+  createdAdmin: Omit<SystemAdmin,'createdAdmin'|'updatedAdmin'> | null,
+  updatedAdmin: Omit<SystemAdmin,'createdAdmin'|'updatedAdmin'> | null,
 };
 //添加菜单信息
 export function addSystemMenuApi() {
@@ -97,7 +100,7 @@ export function systemMenuInfoApi(options?: RequestOptions<SystemMenuInfo, [stri
   );
 }
 
-export type UpdateSystemMenuInfoParam = Partial<SystemMenuInfo>;
+export type UpdateSystemMenuInfoParam = Omit<Partial<SystemMenuInfo>,'id'| 'createdAt' | 'updatedAt' | 'createdAdmin' | 'updatedAdmin'>;
 //修改菜单信息
 export function updateSystemMenuApi(options?: RequestOptions<SystemMenuInfo, [string, UpdateSystemMenuInfoParam]>) {
   return request<SystemMenuInfo, [string, UpdateSystemMenuInfoParam]>(

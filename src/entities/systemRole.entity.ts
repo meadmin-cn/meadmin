@@ -1,7 +1,7 @@
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@midwayjs/validate';
 import { DataTypes, NonAttribute } from '@sequelize/core';
-import { Attribute, Default, PrimaryKey, Table, BelongsToMany } from '@sequelize/core/decorators-legacy';
+import { Attribute, Default, PrimaryKey, Table, BelongsToMany, BelongsTo } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { SystemMenu } from './systemMenu.entity.js';
 import { TreeModel } from './abstract/tree.entity.js';
@@ -82,11 +82,26 @@ export class SystemRole extends TreeModel<SystemRole> {
   })
   createdAdminId: string;
 
+  @ApiPropertyRule({
+    description: '创建者',
+    type: () => SystemAdmin,
+  })
+  @BelongsTo(() => SystemAdmin, 'createdAdminId')
+  declare createdAdmin?: NonAttribute<SystemAdmin | null>;
+
   @Attribute({
     comment: '更新者Id(管理员)',
     type: DataTypes.STRING(20),
   })
   updatedAdminId: string;
+
+  @ApiPropertyRule({
+    description: '最后更新者',
+    type: () => SystemAdmin,
+  })
+  @BelongsTo(() => SystemAdmin, 'updatedAdminId')
+  declare updatedAdmin?: NonAttribute<SystemAdmin  | null>;
+  
 
   @Attribute({
     comment: '超级管理员:1=是;0=不是',

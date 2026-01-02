@@ -7,8 +7,8 @@ export default (el: HTMLDivElement & { fullscreen: boolean }) => {
   const resizeEvent = new CustomEvent('drag-resize', { detail: '尺寸变化', bubbles: false });
   el.fullscreen = false;
   //当前宽高
-  let nowWidth = el.offsetWidth;
-  let nowHight = el.offsetHeight;
+  let nowWidth = el.offsetWidth+0.5;
+  let nowHight = el.offsetHeight+0.5;
   //弹框可拉伸最小宽高
   const minWidth = Math.min(nowWidth, 300);
   const minHeight = Math.min(nowHight, 300);

@@ -1,6 +1,5 @@
 import { Controller, Get } from '@midwayjs/core';
 import { BaseController } from './base.controller.js';
-import { IndexPermission } from '@/decorators/index.js';
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
@@ -8,7 +7,6 @@ import { IndexPermission } from '@/decorators/index.js';
  */
 @Controller('index')
 export class IndexController extends BaseController {
-  @IndexPermission()
   @Get('/', { summary: '网站介绍' })
   async index() {
     return this.success({

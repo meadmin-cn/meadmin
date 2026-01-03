@@ -11,7 +11,7 @@ import { ExampleBook } from "./exampleBook.entity.js";
 import { User } from "./user.entity.js";
 
 //rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
-@Table({ tableName: 'example_demo', comment: '示例_' })
+@Table({ tableName: 'example_demo', comment: '示例_Demo' })
 //继承自DelParanoidModel则使用软删除。
 export class ExampleDemo extends DelParanoidModel<ExampleDemo> {
   //自动生成的主键 

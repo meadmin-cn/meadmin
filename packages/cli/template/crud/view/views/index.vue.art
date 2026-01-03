@@ -17,7 +17,7 @@
       layout: 'sizes, prev, pager, next, jumper, ->, total',
       change: search,
     }"
-    {{if adminPermission}}:onAdd="permission('{{replaceNames.name}}Add')?showAddOrUp:undefined"{{else}:onAdd="showAddOrUp"{{/if}}}
+    {{if adminPermission}}:onAdd="permission('{{replaceNames.name}}Add')?showAddOrUp:undefined"{{else}}:onAdd="showAddOrUp"{{/if}}
     @refresh="search(1)"
   >
     <% include('./tableColum.vue.art', {...entitySchema, entity:entity}) %>
@@ -48,12 +48,12 @@ import { useLocalesI18n } from '@/locales/i18n';
 import Info from './components/info.vue';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
-import { formatterStr {{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At')) }}, formatterAt {{/if}} } from '@/utils/helper.js';
+import { formatterStr <% if( $imports.objectKeys(entitySchema.properties).some( k=>k.endsWith('At') ) ){ %>, formatterAt <%}%> } from '@/utils/helper.js';
 {{if adminPermission}}import { permission } from '@/utils/permission.js';{{/if}}
 
 const {open} = useActionModel(AddOrUp);
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), '{{@ replaceNames.name}}']);
-<% if($imports.objectKeys(entitySchema.properties).some(k=>properties[k].enum || properties[k].description.includes(':'))){%>import { getDict } from '../dict.js';
+<% if( $imports.objectKeys(entitySchema.properties).some( k=>entitySchema.properties[k].enum || entitySchema.properties[k].description.includes(':') ) ){ %>import { getDict } from '../dict.js';
 const dict = getDict(t);
 import { createformatterDictFn } from '@/utils/helper.js';
 const formatterDict = createformatterDictFn<SystemAdminInfo>(dict);<%}%>

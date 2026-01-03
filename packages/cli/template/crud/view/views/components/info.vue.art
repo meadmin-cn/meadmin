@@ -1,11 +1,11 @@
 <template>
   <me-dialog v-model="show" :title="t('详情')" :close-on-click-modal="false" @closed="emit('closed')">
     <el-descriptions class="info" :border="true" v-loading="loading">
-      {{each properties}}<% const keyInfo = $imports.getKeyInfo($value.description); %>{{if $index.endsWith('At')}}
+      {{each properties}}<% const keyInfo = $imports.getKeyInfo($value.description); %>
       <el-descriptions-item :label="t('{{@ keyInfo.name}}')">{{@ $imports.leftTag()}} <% if ($value.enum || $value.description.includes(':')){%>formatterDictExec{{else if $index.endsWith('At')}}formatterAtExec{{else}}formatterStrExec<%}%>(data?.{{@ $index}}) {{@ $imports.rightTag()}}</el-descriptions-item>{{/each}}
     </el-descriptions>
     <template #footer>
-      <me-button @click="() => (show = false)">{{ t('关闭') }}</me-button>
+      <me-button @click="() => (show = false)">{{@ $imports.leftTag()}} t('关闭') {{@ $imports.rightTag()}}</me-button>
     </template>
   </me-dialog>
 </template>
@@ -16,7 +16,7 @@ import { useLocalesI18n } from '@/locales/hooks.js';
 import { formatterAtExec, , formatterStrExec } from '@/utils/helper.js';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), '{{@ replaceNames.name}}']);
 await loadRes;
-<% if($imports.objectKeys(entitySchema.properties).some(k=>properties[k].enum || properties[k].description.includes(':'))){%>import { getDict } from '../dict.js';
+<% if( $imports.objectKeys(entitySchema.properties).some( k=>entitySchema.properties[k].enum || entitySchema.properties[k].description.includes(':') ) ){ %>import { getDict } from '../dict.js';
 import {formatterDictExec} from '@/utils/helper.js';
 const dict = getDict(t);<%}%>
 const show = defineModel<boolean>();

@@ -19,7 +19,7 @@ import { FormInstance, FormRules } from 'element-plus';
 {{if $imports.objectValues(entitySchema.properties).some(value=>value.rule?._rules.some(v=>v.name==='mobile'))}}import { isMobile } from '@/utils/validate.js';{{/if}}
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), '{{@ replaceNames.name}}']);
 await loadRes;
-<% if($imports.objectKeys(entitySchema.properties).some(k=>properties[k].enum || properties[k].description.includes(':'))){%>import { getDict } from '../dict.js';
+<% if( $imports.objectKeys(entitySchema.properties).some( k=>entitySchema.properties[k].enum || entitySchema.properties[k].description.includes(':') ) ){ %>import { getDict } from '../dict.js';
 const dict = getDict(t);<%}%>
 const show = defineModel<boolean>();
 const props = defineProps<{

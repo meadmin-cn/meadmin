@@ -1,11 +1,81 @@
-import { Model, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToManyCreateAssociationMixin, InferAttributesOptions } from '@sequelize/core';
+import { Model, HasManyGetAssociationsMixin, HasManySetAssociationsMixin,HasManyAddAssociationMixin,HasManyAddAssociationsMixin,HasManyRemoveAssociationMixin,HasManyRemoveAssociationsMixin,HasManyCreateAssociationMixin,HasManyHasAssociationMixin,HasManyHasAssociationsMixin,HasManyCountAssociationsMixin,HasOneGetAssociationMixin, HasOneSetAssociationMixin,HasOneCreateAssociationMixin,BelongsToGetAssociationMixin,BelongsToSetAssociationMixin,BelongsToCreateAssociationMixin,BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToManyCreateAssociationMixin, InferAttributesOptions } from '@sequelize/core';
 import type {
   AnyFunction,
 } from '@sequelize/utils';
+
+export type HasOneModel<
+  AssociationName extends string, //关联字段
+  T extends Model, //关联模型
+  K = 'id', //关联模型主键key
+> = {
+  //获取关联信息
+  [Key in `get${Capitalize<AssociationName>}`]: HasOneGetAssociationMixin<T>;
+} & {
+  //设置关联信息
+  [Key in `set${Capitalize<AssociationName>}`]: HasOneSetAssociationMixin<T, T[K]>;
+} & {
+  //创建关联信息
+  [Key in `create${Capitalize<AssociationName>}`]: HasOneCreateAssociationMixin<T, AssociationName>;
+};
+
+export type HasManyModel<
+  AssociationName extends string, //关联字段
+  SingularAssociationName extends string, //关联单数形式
+  PluralAssociationName extends string, //关联复数形式
+  T extends Model, //关联模型
+  K = 'id', //关联模型主键key
+> = {
+//获取关联信息
+  declare getComments: HasManyGetAssociationsMixin<T>;
+  //获取关联信息
+  [Key in `get${Capitalize<AssociationName>}`]: HasManyGetAssociationsMixin<T>;
+} & {
+  //设置关联信息，添加新的关联之前删除旧的关联（多个）
+  [Key in `set${Capitalize<AssociationName>}`]: HasManySetAssociationsMixin<T, T[K]>;
+} & {
+  //添加新的关联关联信息，不删除旧的关联（单个）
+  [Key in `add${Capitalize<SingularAssociationName>}`]: HasManyAddAssociationMixin<T, T[K]>;
+} & {
+  //添加新的关联关联信息，不删除旧的关联（多个）
+  [Key in `add${Capitalize<PluralAssociationName>}`]: HasManyAddAssociationsMixin<T, T[K]>;
+} & {
+  //清除关联信息（单个）
+  [Key in `remove${Capitalize<SingularAssociationName>}`]: HasManyRemoveAssociationMixin<T, T[K]>;
+} & {
+  //清除关联信息（多个）
+  [Key in `remove${Capitalize<PluralAssociationName>}`]: HasManyRemoveAssociationsMixin<T, T[K]>;
+} & {
+  //关联创建器用于创建新的关联模型并将其与源模型关联
+  [Key in `create${Capitalize<AssociationName>}`]: HasManyCreateAssociationMixin<T,AssociationName>;
+} & {
+  //检查是否关联（单个）
+  [Key in `has${Capitalize<SingularAssociationName>}`]: HasManyHasAssociationMixin<T, T[K]>;
+} & {
+  //检查是否关联（多个&关系）
+  [Key in `has${Capitalize<PluralAssociationName>}`]: HasManyHasAssociationsMixin<T, T[K]>;
+} & {
+  //统计关联模型数量
+  [Key in `counts${Capitalize<AssociationName>}`]: HasManyCountAssociationsMixin<T>;
+}; 
+
+export type BelongsToModel<
+  AssociationName extends string, //关联字段
+  T extends Model, //关联模型
+  K = 'id', //关联模型主键key
+> = {
+  //获取关联信息
+  [Key in `get${Capitalize<AssociationName>}`]: BelongsToGetAssociationMixin<T>;
+} & {
+  //设置关联信息
+  [Key in `set${Capitalize<AssociationName>}`]: BelongsToSetAssociationMixin<T, T[K]>;
+} & {
+  //关联创建器用于创建新的关联模型并将其与源模型关联
+  [Key in `create${Capitalize<AssociationName>}`]: BelongsToCreateAssociationMixin<T, AssociationName>;
+} 
 export type BelongsManyModel<
   AssociationName extends string, //关联字段
   SingularAssociationName extends string, //关联单数形式
-  PluralAssociationName extends string, //关联负数形式
+  PluralAssociationName extends string, //关联复数形式
   T extends Model, //关联模型
   K = 'id', //关联模型主键key
 > = {
@@ -28,7 +98,7 @@ export type BelongsManyModel<
   [Key in `remove${Capitalize<PluralAssociationName>}`]: BelongsToManyAddAssociationsMixin<T, T[K]>;
 } & {
   //关联创建器用于创建新的关联模型并将其与源模型关联
-  [Key in `create${Capitalize<AssociationName>}`]: BelongsToManyCreateAssociationMixin<T>;
+  [Key in `create${Capitalize<AssociationName>}`]: BelongsToManyCreateAssociationMixin<T, AssociationName>;
 } & {
   //检查是否关联（单个）
   [Key in `has${Capitalize<SingularAssociationName>}`]: BelongsToManyHasAssociationMixin<T, T[K]>;

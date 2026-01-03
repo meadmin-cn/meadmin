@@ -6,13 +6,10 @@ import { ApiPropertyRule } from '@/decorators/index.js';
 import { SystemMenu } from './systemMenu.entity.js';
 import { TreeModel } from './abstract/tree.entity.js';
 import { BelongsManyModel } from '../../types/entity.js';
-import { ApiExtraModel } from '@midwayjs/swagger';
 import { SystemAdmin } from './systemAdmin.entity.js';
 
 //rule规则使用添加接口的校验规则
-@ApiExtraModel(SystemMenu)
 @Table({ tableName: 'system_role', comment: '角色表' })
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class SystemRole extends TreeModel<SystemRole> {
   @Attribute({ type: DataTypes.STRING(20), allowNull: false })
   @PrimaryKey
@@ -62,7 +59,7 @@ export class SystemRole extends TreeModel<SystemRole> {
 
   @BelongsToMany(() => SystemMenu, {
     through: 'role_menu', //中间表名称 或者 对应的Model
-    inverse: {
+    inverse: {//对向模型的反向关联declare字段
       as: 'roles',
     },
   })
@@ -112,5 +109,4 @@ export class SystemRole extends TreeModel<SystemRole> {
   @ApiPropertyRule({ description: '超级管理员:1=是;0=不是', rule: RuleType.number().equal(1, 0).required() })
   isSuper: number;
 }
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export declare interface SystemRole extends BelongsManyModel<'menus', 'menu', 'menus', SystemMenu> {}

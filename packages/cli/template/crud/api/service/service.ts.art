@@ -7,8 +7,10 @@ import { {{@ replaceNames.UpdateDto}} } from '{{@ paths.updateDtoPath}}';
 import { {{@ replaceNames.Name}} } from '{{@ paths.entityPath}}';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { Transaction } from '@/decorators/index.js';
+import { Op } from '@sequelize/core';{{each $imports.objectKeys(entity.belongsToEntity)}}<% const valueEnitty = entity.belongsToEntity[$value]; %>{{if ['File'].includes(valueEnitty.entityName)}}<% return; %>{{/if}}
+import { {{@ valueEnitty.entityName}} } from '{{@ paths.entityPath.replace(replaceNames.name,valueEnitty.entityFileName)}}';{{/each}}{{each $imports.objectKeys(entity.belongsToManyEntity)}}<% const valueEnitty = entity.belongsToManyEntity[$value]; %>{{if ['File'].includes(valueEnitty.entityName)}}<% return; %>{{/if}}
+import { {{@ valueEnitty.entityName}} } from '{{@ paths.entityPath.replace(replaceNames.name,valueEnitty.entityFileName)}}';{{/each}}
 
-{{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At'))}}import { Op } from '@sequelize/core';{{/if}}
 {{if entity.pk.length > 1}}type PK = {
   {{each entity.pk}}
   {{@ $value}}: {{@ entitySchema.properties[$value].type}},
@@ -18,10 +20,74 @@ import { Transaction } from '@/decorators/index.js';
 @Provide()
 export class {{@ replaceNames.Service}} {
   @InjectRepository({{@ replaceNames.Name}})
-  {{@ replaceNames.Name}}Repository: typeof {{@ replaceNames.Name}}
+  {{@ replaceNames.name}}Repository: typeof {{@ replaceNames.Name}}
   
   @Inject()
   i18nService: MidwayI18nService;
+  <% const hasStatement = ['File']; %>
+  {{each $imports.objectKeys(entity.belongsToEntity).filter(v=>v!='File')}}<% const valueEnitty = entity.belongsToEntity[$value]; %>{{if hasStatement.includes(valueEnitty.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEnitty.entityName);%>{{/if}}
+  //查询belongsTo关联模型{{@ $value}}{{@ valueEnitty.tableComment}}
+  @InjectRepository({{@ valueEnitty.entityName}})
+  {{@ valueEnitty.entityFileName}}Repository: typeof {{@ valueEnitty.entityName}}
+
+ /**
+   * 获取{{@ valueEnitty.tableComment}}信息
+   * @param queryDto
+   * @returns
+   */
+  @Transaction()
+  async get{{@ valueEnitty.entityName}}(page:number,pageSize:number,{{@ valueEnitty.pk[0]}}:{{@ swaggerSchemas[valueEnitty.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}}{{if valueEnitty.nameKeys.length}},{{@ valueEnitty.nameKeys[0]}}: string = '', {{/if}}) {
+    const where = {};
+    if({{@ valueEnitty.pk[0]}}){
+      where['{{@ valueEnitty.pk[0]}}'] = {{@ valueEnitty.pk[0]}};
+    }
+    {{if valueEnitty.nameKeys.length}}if({{@ valueEnitty.nameKeys[0]}}){
+      where['{{@ valueEnitty.nameKeys[0]}}'] =  { [Op.like]: '%'+{{@ valueEnitty.nameKeys[0]}}+'%' };
+    }{{/if}}
+    const { count, rows } = await this.{{@ replaceNames.name}}Repository.findAndCountAll({
+      where,
+      offset: (page - 1) *  pageSize,
+      limit: pageSize,
+    });
+    return {
+      list: rows,
+      total: count,
+      page: page,
+      pageSize: pageSize,
+    };
+  }{{/each}}
+  
+  {{each $imports.objectKeys(entity.belongsToManyEntity).filter(v=>v!='File')}}<% const valueEnitty = entity.belongsToManyEntity[$value]; %>{{if hasStatement.includes(valueEnitty.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEnitty.entityName);%>{{/if}}
+  //查询belongsToMany关联模型{{@ $value}}{{@ valueEnitty.tableComment}}
+  @InjectRepository({{@ valueEnitty.entityName}})
+  {{@ valueEnitty.entityFileName}}Repository: typeof {{@ valueEnitty.entityName}}
+
+  /**
+   * 获取{{@ valueEnitty.tableComment}}信息
+   * @param queryDto
+   * @returns
+   */
+  @Transaction()
+  async get{{@ valueEnitty.entityName}}(page:number,pageSize:number,{{@ valueEnitty.pk[0]}}:{{@ swaggerSchemas[valueEnitty.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}}{{if valueEnitty.nameKeys.length}},{{@ valueEnitty.nameKeys[0]}}: string = '', {{/if}}) {
+    const where = {};
+    if({{@ valueEnitty.pk[0]}}){
+      where['{{@ valueEnitty.pk[0]}}'] = {{@ valueEnitty.pk[0]}};
+    }
+    {{if valueEnitty.nameKeys.length}}if({{@ valueEnitty.nameKeys[0]}}){
+      where['{{@ valueEnitty.nameKeys[0]}}'] =  { [Op.like]: '%'+{{@ valueEnitty.nameKeys[0]}}+'%' };
+    }{{/if}}
+    const { count, rows } = await this.{{@ replaceNames.name}}Repository.findAndCountAll({
+      where,
+      offset: (page - 1) *  pageSize,
+      limit: pageSize,
+    });
+    return {
+      list: rows,
+      total: count,
+      page: page,
+      pageSize: pageSize,
+    };
+  }{{/each}}
 
   /**
    * 创建数据
@@ -30,7 +96,7 @@ export class {{@ replaceNames.Service}} {
    */
   @Transaction()
   async create(createDto: {{@ replaceNames.CreateDto}}) {
-    const entity = this.{{@ replaceNames.Name}}Repository.build(createDto);
+    const entity = this.{{@ replaceNames.name}}Repository.build(createDto);
     return await entity.save();
   }
 
@@ -61,7 +127,7 @@ export class {{@ replaceNames.Service}} {
       }{{/if}}{{/each}}
       where[key] = queryDto[key];
     });    
-    const { count, rows } = await this.{{@ replaceNames.Name}}Repository.findAndCountAll({
+    const { count, rows } = await this.{{@ replaceNames.name}}Repository.findAndCountAll({
       where,
       offset: (queryDto.page - 1) *  queryDto.pageSize,
       limit: queryDto.pageSize,
@@ -82,7 +148,7 @@ export class {{@ replaceNames.Service}} {
    */
   @Transaction()
   async findOne({{if entity.pk.length > 1}}pk:PK{{else}}{{@ entity.pk[0]}}: {{@ entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
-    const entity = await this.{{@ replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}});
+    const entity = await this.{{@ replaceNames.name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}});
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
@@ -97,7 +163,7 @@ export class {{@ replaceNames.Service}} {
    */
   @Transaction()
   async update({{if entity.pk.length > 1}}pk:PK{{else}}{{@ entity.pk[0]}}: {{@ entitySchema.properties[entity.pk[0]].type}}{{/if}}, updateDto: {{@ replaceNames.UpdateDto}}) {
-    const entity = await this.{{@ replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}});
+    const entity = await this.{{@ replaceNames.name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}});
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
@@ -112,7 +178,7 @@ export class {{@ replaceNames.Service}} {
    */
   @Transaction()
   async remove({{if entity.pk.length > 1}}pk:PK{{else}}{{@ entity.pk[0]}}: {{@ entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
-    const entity = await this.{{@ replaceNames.Name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}});
+    const entity = await this.{{@ replaceNames.name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}});
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }

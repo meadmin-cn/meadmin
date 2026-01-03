@@ -48,7 +48,7 @@ import { useLocalesI18n } from '@/locales/i18n';
 import Info from './components/info.vue';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
-import {formatterStr{{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At'))}}, formatterAt{{/if}} } from '@/utils/helper.js';
+import { formatterStr {{if $imports.objectKeys(entitySchema.properties).some(k=>k.endsWith('At')) }}, formatterAt {{/if}} } from '@/utils/helper.js';
 {{if adminPermission}}import { permission } from '@/utils/permission.js';{{/if}}
 
 const {open} = useActionModel(AddOrUp);

@@ -9,13 +9,50 @@ import { ApiOperationResponse } from '@/decorators/index.js';
 {{if adminPermission}}import { AdminPermission } from '@/decorators/index.js';{{/if}}
 
 /**
- * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
+ * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。
  * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址
  */
 @Controller('{{@ replaceNames.controllerPath}}')
 export class {{@ replaceNames.Controller}} extends BaseController {
   @Inject()
   {{@ replaceNames.service}}: {{@ replaceNames.Service}};
+
+  <% const hasStatement = ['File']; %>
+  {{each $imports.objectKeys(entity.belongsToEntity)}}<% const valueEnitty = entity.belongsToEntity[$value]; %>{{if hasStatement.includes(valueEnitty.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEnitty.entityName);%>{{/if}}
+  //查询belongsTo关联模型{{@ $value}}{{@ valueEnitty.tableComment}}
+  //获取{{@ valueEnitty.tableComment}}信息
+  @Post('/get{{@ valueEnitty.entityName}}')
+  @ApiOperationResponse({
+    responseType: {{@ replaceNames.Name}},
+    summary: '添加{{@ entity.tableComment}}信息',
+  }){{if adminPermission}}
+  @AdminPermission('{{@replaceNames.Name}}List'){{/if}}
+  async get{{@ valueEnitty.entityName}}(
+    @Body('{{@ valueEnitty.pk[0]}}') {{@ valueEnitty.pk[0]}}: {{@ swaggerSchemas[valueEnitty.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}},{{if valueEnitty.nameKeys.length}}
+    @Body('{{@ valueEnitty.nameKeys[0]}}') {{@ valueEnitty.nameKeys[0]}}: string,{{/if}}
+    @Body('page') page = 1,
+    @Body('pageSize') pageSize=10
+  ) {
+    return this.success(await this.{{@ replaceNames.service}}.get{{@ valueEnitty.entityName}}(page,pageSize,{{@ valueEnitty.pk[0]}}{{if valueEnitty.nameKeys.length}},{{@ valueEnitty.nameKeys[0]}}{{/if}}));
+  }{{/each}}
+
+  {{each $imports.objectKeys(entity.belongsToManyEntity)}}<% const valueEnitty = entity.belongsToManyEntity[$value]; %>{{if hasStatement.includes(valueEnitty.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEnitty.entityName);%>{{/if}}
+  //查询belongsToMany关联模型{{@ $value}}{{@ valueEnitty.tableComment}}
+  //获取{{@ valueEnitty.tableComment}}信息
+  @Post('/get{{@ valueEnitty.entityName}}')
+  @ApiOperationResponse({
+    responseType: {{@ replaceNames.Name}},
+    summary: '添加{{@ entity.tableComment}}信息',
+  }){{if adminPermission}}
+  @AdminPermission('{{@replaceNames.Name}}List'){{/if}}
+  async get{{@ valueEnitty.entityName}}(
+    @Body('{{@ valueEnitty.pk[0]}}') {{@ valueEnitty.pk[0]}}: {{@ swaggerSchemas[valueEnitty.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}},{{if valueEnitty.nameKeys.length}}
+    @Body('{{@ valueEnitty.nameKeys[0]}}') {{@ valueEnitty.nameKeys[0]}}: string,{{/if}}
+    @Body('page') page = 1,
+    @Body('pageSize') pageSize=10
+  ) {
+    return this.success(await this.{{@ replaceNames.service}}.get{{@ valueEnitty.entityName}}(page,pageSize,{{@ valueEnitty.pk[0]}}{{if valueEnitty.nameKeys.length}},{{@ valueEnitty.nameKeys[0]}}{{/if}}));
+  }{{/each}}
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
   @Post('/add')

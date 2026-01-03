@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync, existsSync, rmSync } from 'node:fs';
+import { mkdirSync, writeFileSync, existsSync, rmSync, WriteFileOptions } from 'node:fs';
 import { dirname } from 'node:path';
 /**
  * 写入文件【当文件所在文件夹不存在时会递归创建】
@@ -6,10 +6,10 @@ import { dirname } from 'node:path';
  * @param content 
  * @returns 
  */
-export function recursionWriteFileSync(filePath:string, content:string) {
+export function recursionWriteFileSync(filePath:string, content:string , options?:WriteFileOptions) {
   const path = dirname(filePath);
   mkdirSync(path, { recursive: true });
-  writeFileSync(filePath, content);
+  writeFileSync(filePath, content, options);
   return true;
 }
 

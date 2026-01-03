@@ -108,9 +108,10 @@ const getSchemas = (documentBuilder: DocumentBuilder, entitySchemaName: string) 
 /**
  * 获取数据库信息
  * @param entityName 实例className
+ * @param noBelongs 不查询belongs关联
  * @returns
  */
-function tableInfo(entityName) {
+function tableInfo(entityName, noBelongs = false) {
   if (tableInfos[entityName]) {
     return tableInfos[entityName];
   }
@@ -134,12 +135,53 @@ function tableInfo(entityName) {
         autoAttributes.push(attribute);
       }
     });
+    if(swaggerSchemas[entityName]?.properties?.['createdAdmin']){
+      autoAttributes.push('createdAdmin');
+    }
+    if(swaggerSchemas[entityName]?.properties?.['updatedAdmin']){
+      autoAttributes.push('updatedAdmin');
+    }
+    const belongsTo = [];
+    const belongsToEntity = {};
+    const belongsToMany = [];
+    const belongsToManyEntity = {};
+    if(!noBelongs){
+      Object.keys(modelDefinition.associations).forEach(key=>{
+        if(['createdAdmin','updatedAdmin','createdUser','createdUser'].includes(key)){
+          return;
+        }
+        if(modelDefinition.associations[key].isSelfAssociation){//TODO::自关联暂不支持
+          return;
+        }
+        if('BelongsTo' === modelDefinition.associations[key].associationType){
+          belongsTo.push(key);
+          belongsToEntity[key] = tableInfo(modelDefinition.associations[key].target.name, true);
+        }
+        if('BelongsToMany' === modelDefinition.associations[key].associationType){
+          belongsToMany.push(key);
+          belongsToManyEntity[key] = tableInfo(modelDefinition.associations[key].target.name, true);
+        }
+      })
+    }
+    const nameKeys = [];//可快捷查询的name
+    for (const key of modelDefinition.attributes.keys()) {
+      if((key.endsWith('name') || key.endsWith('Name'))  && ['VARCHAR','CHAR','STRING'].some(v=>modelDefinition.attributes.get(key).type.toString().includes(v))){
+        nameKeys.push(key);
+      }
+    }
     tableInfos[entityName] = {
+      entityName,
+      entityFileName:lowerFirstCase(entityName),
       tableComment,
       pk: Array.from(modelDefinition.primaryKeysAttributeNames) as string[],
       deletedAt: modelDefinition.options.deletedAt,
       attributes: modelDefinition.attributes,
       autoAttributes,
+      belongsTo,
+      belongsToEntity,
+      belongsToMany,
+      belongsToManyEntity,
+      nameKeys,
     };
   }
   return tableInfos[entityName];
@@ -243,6 +285,7 @@ async function writeContent(templatePath, toPath, writeType: 'api' | 'view') {
           filepath: toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath,
         },
       ),
+      {flag:'w'}
     );
     Log.success((toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath) + ' 写入完成');
   }
@@ -282,79 +325,104 @@ function writeViews() {
  */
 async function setMenu(model: string, namePath: string, dbConfig: any) {
   sequelize = new Sequelize(await getConfig(dbConfig, 'system*'));
-  const [systemAdmin] = await sequelize.models.get('systemMenu').findOrCreate({
-    where: { rule: replaceNames.Name },
-    defaults: {
-      title: tableInfo(replaceNames.Name).tableComment,
-      menuType: 2, //菜单
-      orderNum: 1,
-      path: '/' + namePath,
-      component: namePath + '/index',
-    },
-  });
+  let parentId:string |null = null;
+  let paths = [];
+  const langFilePath = resovePath(`view/${model}/src/locales/lang/en/menu`, ['.json']);
+  const lang = await import(pathToFileURL(langFilePath).href, { with: { type: 'json' } });
+  const comments = tableInfo(replaceNames.Name).tableComment.split('_');
+  const menuNames = namePath.split('/').filter(v=>v);
+  for(let i = 0 ; i<menuNames.length; i++){
+    const menu = menuNames[i]; 
+    paths.push(menu);
+    let menuTitle = upFirstCase(toHump(menu));
+    if(comments.length === menuNames.length){
+      lang.default[comments[i]] = menuTitle;
+      menuTitle = comments[i];
+    }else{
+      if(i === (menuNames.length - 1)){
+        lang.default[tableInfo(replaceNames.Name).tableComment] = menuTitle;
+        menuTitle = tableInfo(replaceNames.Name).tableComment;
+      }else{
+        lang.default[menuTitle] = menuTitle;
+      }
+    }
+    if(i < (menuNames.length - 1)){
+      const [menuEntity] = await sequelize.models.get('systemMenu').findOrCreate({
+        where: { rule: paths.join('_') },
+        defaults: {
+          title: menuTitle,
+          menuType: 1, //目录
+          orderNum: 999,
+          path: menu,
+          parentId,
+        },
+      });
+      parentId = menuEntity.get('id') as string;
+    }else{
+      const [menuEntity] = await sequelize.models.get('systemMenu').findOrCreate({
+        where: { rule: paths.join('_') },
+        defaults: {
+          title: menuTitle,
+          menuType: 2, //菜单
+          orderNum: 999,
+          path: menu,
+          component: namePath + '/index',
+        },
+      });
+      parentId = menuEntity.get('id') as string;
+    }
+   
+  }
   await sequelize.models.get('systemMenu').findOrCreate({
-    where: { rule: replaceNames.name + 'List' },
+    where: { rule: paths.join('_') + '_list' },
     defaults: {
-      parentId: systemAdmin.get('id'),
+      parentId,
       title: '列表',
-      menuType: 2, //菜单
-      orderNum: 1,
-      path: '/' + namePath,
-      component: namePath + '/index',
+      menuType: 3, //按钮
+      orderNum: 99,
     },
   });
   await sequelize.models.get('systemMenu').findOrCreate({
-    where: { rule: replaceNames.name + 'Info' },
+    where: { rule: paths.join('_') + '_info' },
     defaults: {
-      parentId: systemAdmin.get('id'),
+      parentId,
       title: '详情',
-      menuType: 2, //菜单
-      orderNum: 1,
-      path: '/' + namePath,
-      component: namePath + '/index',
+      menuType: 3, //按钮
+      orderNum: 98,
     },
   });
   await sequelize.models.get('systemMenu').findOrCreate({
-    where: { rule: replaceNames.name + 'Add' },
+    where: { rule: paths.join('_') + '_add' },
     defaults: {
-      parentId: systemAdmin.get('id'),
+      parentId,
       title: '新增',
-      menuType: 2, //菜单
-      orderNum: 1,
-      path: '/' + namePath,
-      component: namePath + '/index',
+      menuType: 3, //按钮
+      orderNum: 97,
     },
   });
   await sequelize.models.get('systemMenu').findOrCreate({
-    where: { rule: replaceNames.name + 'Edit' },
+    where: { rule: paths.join('_') + '_edit' },
     defaults: {
-      parentId: systemAdmin.get('id'),
+      parentId,
       title: '修改',
-      menuType: 2, //菜单
-      orderNum: 1,
-      path: '/' + namePath,
-      component: namePath + '/index',
+      menuType: 3, //按钮
+      orderNum: 96,
     },
   });
   await sequelize.models.get('systemMenu').findOrCreate({
-    where: { rule: replaceNames.name + 'Del' },
+    where: { rule: paths.join('_') + '_del' },
     defaults: {
-      parentId: systemAdmin.get('id'),
+      parentId,
       title: '删除',
-      menuType: 2, //菜单
-      orderNum: 1,
-      path: '/' + namePath,
-      component: namePath + '/index',
+      menuType: 3, //按钮
+      orderNum: 95,
     },
   });
-  const filePath = resovePath(`view/${model}/src/locales/lang/en/menu`, ['.json']);
-  const menuJson = await import(pathToFileURL(filePath).href, { with: { type: 'json' } });
-  menuJson.default[tableInfo(replaceNames.Name).tableComment] = replaceNames.Name;
   recursionWriteFileSync(
-    filePath,
-    await prettier.format(JSON.stringify(menuJson.default), {
+    langFilePath,
+    await prettier.format(JSON.stringify(lang.default), {
       ...prettierrc,
-      filepath: filePath,
+      filepath: langFilePath,
     }),
   );
   return;
@@ -371,13 +439,14 @@ export const crudInit = async (program: Command) => {
     .option('--del', '删除crud创建的文件')
     .option('--path <char>', '生成的路径，默认根据驼峰转多级路径')
     .option('-c, --controller <char>', '生成的controller路径，默认使用path')
-    .option('-m, --menu', '生成菜单')
+    .option('--menu', '生成菜单')
     .option('--cov, --coverage <char>', '生成代码发覆盖范围：b后端代码、a前端api接口代码、v前端view 代码、p后台权限校验，默认值bavp', 'bavp')
     .action(async (file: string, options) => {
       sequelize = new Sequelize(await getConfig(options.dbConfig, options.name));
       const noSuffixEntityPath = relativePath('', file, ['.entity', '.ts']);
       const entityFileName = lowerFirstCase(toHump(relativePath('', noSuffixEntityPath, []).split('/').pop()!));
       replaceNames.namePath = options.path ? options.path : normalizeToKebabOrSnakeCase(entityFileName, '/');
+      replaceNames.namePath = replaceNames.namePath.replaceAll('//','/');
       if (replaceNames.namePath.endsWith('/')) {
         replaceNames.namePath = replaceNames.namePath.slice(0, -1);
       }

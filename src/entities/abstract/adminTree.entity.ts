@@ -13,15 +13,15 @@ import {
   sql,
 } from '@sequelize/core';
 import { AfterDestroy, AfterUpdate, Attribute, BeforeCreate, Table } from '@sequelize/core/decorators-legacy';
-import { BaseModel } from './base.entity.js';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { RuleType } from '@midwayjs/validate';
 import { uuid } from '@/helper/snowflake.js';
 import { listToTree } from '@/helper/utils.js';
+import { AdminBaseModel } from './adminBase.entity.js';
 
 //无限级树形
 @Table.Abstract
-export class TreeModel<M extends TreeModel<any> = any> extends BaseModel<M> {
+export class AdminTreeModel<M extends AdminTreeModel<any> = any> extends AdminBaseModel<M> {
   @Attribute({
     comment: '父级id',
     type: DataTypes.STRING(100),

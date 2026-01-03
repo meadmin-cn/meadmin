@@ -10,5 +10,21 @@
         "midway-vite-view",
         "meadmin-view-admin",
         "core"
-    ]
+    ],
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": false,
+        "source.removeUnusedImports": true
+    },
+    "[typescript]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": false,
+            "source.removeUnusedImports": true
+        }
+    },
+    "[javascript]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": false,
+            "source.removeUnusedImports": true
+        }
+    }
 }

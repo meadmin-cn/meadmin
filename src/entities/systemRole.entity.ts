@@ -1,16 +1,16 @@
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@midwayjs/validate';
 import { DataTypes, NonAttribute } from '@sequelize/core';
-import { Attribute, Default, PrimaryKey, Table, BelongsToMany, BelongsTo } from '@sequelize/core/decorators-legacy';
+import { Attribute, Default, PrimaryKey, Table, BelongsToMany, Unique } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { SystemMenu } from './systemMenu.entity.js';
-import { TreeModel } from './abstract/tree.entity.js';
+import { AdminTreeModel } from './abstract/adminTree.entity.js';
 import { BelongsManyModel } from '../../types/entity.js';
 import { SystemAdmin } from './systemAdmin.entity.js';
 
 //rule规则使用添加接口的校验规则
 @Table({ tableName: 'system_role', comment: '角色表' })
-export class SystemRole extends TreeModel<SystemRole> {
+export class SystemRole extends AdminTreeModel<SystemRole> {
   @Attribute({ type: DataTypes.STRING(20), allowNull: false })
   @PrimaryKey
   @Default(uuid)
@@ -21,6 +21,7 @@ export class SystemRole extends TreeModel<SystemRole> {
   @ApiPropertyRule({ description: '角色名称', rule: RuleType.string().max(50).min(1).required().empty('') })
   roleName: string;
 
+  @Unique()
   @Attribute({ type: DataTypes.STRING(50), comment: '角色标识', defaultValue: '', allowNull: false })
   @ApiPropertyRule({ description: '角色标识', rule: RuleType.string().max(50).min(1).required().empty('') })
   roleKey: string;
@@ -69,37 +70,10 @@ export class SystemRole extends TreeModel<SystemRole> {
     items: {
       type: () => SystemMenu,
     },
-    rule: RuleType.array(),
+    rule: RuleType.array().items(RuleType.object({id:RuleType.string().required()})),
   })
   menus?: NonAttribute<SystemMenu[]>;
-
-  @Attribute({
-    comment: '创建者Id(管理员)',
-    type: DataTypes.STRING(20),
-  })
-  createdAdminId: string;
-
-  @ApiPropertyRule({
-    description: '创建者',
-    type: () => SystemAdmin,
-  })
-  @BelongsTo(() => SystemAdmin, 'createdAdminId')
-  declare createdAdmin?: NonAttribute<SystemAdmin | null>;
-
-  @Attribute({
-    comment: '更新者Id(管理员)',
-    type: DataTypes.STRING(20),
-  })
-  updatedAdminId: string;
-
-  @ApiPropertyRule({
-    description: '最后更新者',
-    type: () => SystemAdmin,
-  })
-  @BelongsTo(() => SystemAdmin, 'updatedAdminId')
-  declare updatedAdmin?: NonAttribute<SystemAdmin  | null>;
   
-
   @Attribute({
     comment: '超级管理员:1=是;0=不是',
     defaultValue: 0,

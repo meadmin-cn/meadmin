@@ -1,19 +1,18 @@
-import { Attribute, BelongsTo, BelongsToMany, Default, PrimaryKey, Table, Unique } from "@sequelize/core/decorators-legacy";
-import { DelParanoidModel } from "./abstract/delParanoid.entity.js";
-import { DataTypes, NonAttribute } from "@sequelize/core";
+import { Attribute, BelongsTo, BelongsToMany, Default, DeletedAt, Index, PrimaryKey, Table } from "@sequelize/core/decorators-legacy";
+import { DataTypes, NonAttribute, Op } from "@sequelize/core";
 import { uuid } from "@/helper/snowflake.js";
 import { ApiPropertyRule } from "@/decorators/index.js";
 import { RuleType } from "@/ruleType/index.js";
-import { SystemAdmin } from "./systemAdmin.entity.js";
 import { File } from './file.entity.js';
 import { BelongsManyModel, BelongsToModel } from "../../types/entity.js";
 import { ExampleBook } from "./exampleBook.entity.js";
 import { User } from "./user.entity.js";
+import { AdminBaseModel } from "./abstract/adminBase.entity.js";
 
 //rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
 @Table({ tableName: 'example_demo', comment: '示例_Demo' })
 //继承自DelParanoidModel则使用软删除。
-export class ExampleDemo extends DelParanoidModel<ExampleDemo> {
+export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
   //自动生成的主键 
   @Attribute({ type: DataTypes.STRING(20), allowNull: false })
   @PrimaryKey
@@ -22,13 +21,13 @@ export class ExampleDemo extends DelParanoidModel<ExampleDemo> {
   id: string;
 
   //唯一索引名称必须全库唯一，当两个null值时唯一索引会认为不是同一个值
-  @Unique('demo_mobile')
+  @Index({unique:true, where:{deletedAt: { [Op.not]: null }}}) //局部唯一索引设置只有不删除的数据加索引
   @Attribute({ type: DataTypes.STRING(11), comment: '手机号' })
   @ApiPropertyRule({ description: '手机号', rule: RuleType.string().mobile().description('手机号').required() })
   mobile: string;
 
   //软删除唯一标识，不删除的为'',可用于声明关联唯一索引,不需声明唯一索引的 可以不声明（DelParanoidModel已自动声明）
-  @Unique('demo_mobile')
+  @Index({unique:true, where:{deletedAt: { [Op.not]: null }}}) //局部唯一索引设置只有不删除的数据加索引
   declare deletedVersion: string;
 
   //以“名称:值1=说明1;值2=说明2”，格式声明的备注会自动创建字典和下拉列表，并且支持number、string两种类型
@@ -41,13 +40,11 @@ export class ExampleDemo extends DelParanoidModel<ExampleDemo> {
   @ApiPropertyRule({ description: '类型:0=书籍;1=电子产品;2=卡片', rule: RuleType.number().equal(0,1,2).required() })
   type: number;
 
-
   //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null) 
   //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。
   @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '名称', rule: RuleType.string().max(20).min(1).required() })
   name: string;
-
 
   //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/
   @BelongsToMany(() => ExampleBook, {
@@ -60,21 +57,21 @@ export class ExampleDemo extends DelParanoidModel<ExampleDemo> {
     items: {
       type: () => ExampleBook,
     },
-    rule: RuleType.array(),
+    rule: RuleType.array().items(RuleType.object({id:RuleType.string().required()})),
   })
   books?: NonAttribute<ExampleBook[]>;
 
   //反向BelongsTo关联从属， 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to/
   @Attribute({ type: DataTypes.STRING(20), comment: '关联前台用户id',})
   userId: string;
-  @ApiPropertyRule({ description: '用户', type: () => User, rule: RuleType.object() })
+  @ApiPropertyRule({ description: '用户', type: () => User, rule: RuleType.object({id:RuleType.string().required()}) })
   @BelongsTo(() => User, /* 外键名称 */ 'userId')
   user?: NonAttribute<User>;
 
   //反向BelongsTo关联从属，File类型创建单文件
   @Attribute({ type: DataTypes.STRING(20), comment: '头像附件id',})
   avatarFileId: string;
-  @ApiPropertyRule({ description: '头像', type: () => File, rule: RuleType.object() })
+  @ApiPropertyRule({ description: '头像', type: () => File, rule: RuleType.object({id:RuleType.string().required()}) })
   @BelongsTo(() => File, /* 外键名称 */ 'avatarFileId')
   avatar?: NonAttribute<File>
 
@@ -88,37 +85,14 @@ export class ExampleDemo extends DelParanoidModel<ExampleDemo> {
     items: {
       type: () => File,
     },
-    rule: RuleType.array(),
+    rule: RuleType.array().items(RuleType.object({id:RuleType.string().required()})),
   })
   files?: NonAttribute<File[]>
 
-  //声明后会自动更新创建者
-  @Attribute({
-    comment: '创建者Id(管理员)',
-    type: DataTypes.STRING(20),
-  })
-  createdAdminId: string;
+  @DeletedAt//设置为软删除
+  @Attribute({ comment: '删除时间' })
+  declare deletedAt: Date | null;
 
-  @ApiPropertyRule({
-    description: '创建者',
-    type: () => SystemAdmin,
-  })
-  @BelongsTo(() => SystemAdmin, 'createdAdminId')
-  declare createdAdmin?: NonAttribute<SystemAdmin | null>;
-
-  //声明后会自动更新更新者
-  @Attribute({
-    comment: '更新者Id(管理员)',
-    type: DataTypes.STRING(20),
-  })
-  updatedAdminId: string;
-
-  @ApiPropertyRule({
-    description: '最后更新者',
-    type: () => SystemAdmin,
-  })
-  @BelongsTo(() => SystemAdmin, 'updatedAdminId')
-  declare updatedAdmin?: NonAttribute<SystemAdmin  | null>;
 }
 //声明自动关联方法
 export declare interface ExampleDemo extends BelongsManyModel<'books', 'book', 'books', ExampleBook> {}

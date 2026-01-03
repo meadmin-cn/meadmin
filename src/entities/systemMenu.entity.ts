@@ -4,14 +4,13 @@ import { DataTypes, NonAttribute } from '@sequelize/core';
 import { Attribute, BelongsTo, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { SystemRole } from './systemRole.entity.js';
-import { TreeModel } from './abstract/tree.entity.js';
+import { AdminTreeModel } from './abstract/adminTree.entity.js';
 import { BelongsManyModel } from '../../types/entity.js';
 import { SystemAdmin } from './systemAdmin.entity.js';
 
 //rule规则使用添加接口的校验规则
 @Table({ tableName: 'system_menu', comment: '菜单表' })
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class SystemMenu extends TreeModel<SystemMenu> {
+export class SystemMenu extends AdminTreeModel<SystemMenu> {
   @Attribute({ type: DataTypes.STRING(20), allowNull: false })
   @PrimaryKey
   @Default(uuid)
@@ -44,6 +43,7 @@ export class SystemMenu extends TreeModel<SystemMenu> {
   @ApiPropertyRule({ description: '状态:1=启用;0=禁用', rule: RuleType.number().valid(1, 0) })
   status: number;
 
+  @Unique()
   @Attribute({
     comment: '权限',
     type: DataTypes.STRING(100),
@@ -51,7 +51,6 @@ export class SystemMenu extends TreeModel<SystemMenu> {
     allowNull: false,
   })
   @ApiPropertyRule({ description: '权限', rule: RuleType.string().max(100).required() })
-  @Unique('systemAdminRule')
   rule: string;
 
   @Attribute({
@@ -152,31 +151,5 @@ export class SystemMenu extends TreeModel<SystemMenu> {
   /** Declared by {@link SystemRole.menus} */
   //具有当前菜单的角色
   declare roles?: NonAttribute<SystemRole[]>;
-  @Attribute({
-    comment: '创建者Id(管理员)',
-    type: DataTypes.STRING(20),
-  })
-  createdAdminId: string;
-
-  @ApiPropertyRule({
-    description: '创建者',
-    type: () => SystemAdmin,
-  })
-  @BelongsTo(() => SystemAdmin, 'createdAdminId')
-  declare createdAdmin?: NonAttribute<SystemAdmin | null>;
-
-  @Attribute({
-    comment: '更新者Id(管理员)',
-    type: DataTypes.STRING(20),
-  })
-  updatedAdminId: string;
-
-  @ApiPropertyRule({
-    description: '最后更新者',
-    type: () => SystemAdmin,
-  })
-  @BelongsTo(() => SystemAdmin, 'updatedAdminId')
-  declare updatedAdmin?: NonAttribute<SystemAdmin | null>;
 }
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export declare interface SystemMenu extends BelongsManyModel<'roles', 'role', 'roles', SystemRole> {}

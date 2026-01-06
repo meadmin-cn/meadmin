@@ -12,19 +12,19 @@
         "core"
     ],
     "editor.codeActionsOnSave": {
-        "source.organizeImports": false,
-        "source.removeUnusedImports": true
+        "source.organizeImports": "never",
+        "source.removeUnusedImports": "explicit"
     },
     "[typescript]": {
         "editor.codeActionsOnSave": {
-            "source.organizeImports": false,
-            "source.removeUnusedImports": true
+            "source.organizeImports": "never",
+            "source.removeUnusedImports": "explicit"
         }
     },
     "[javascript]": {
         "editor.codeActionsOnSave": {
-            "source.organizeImports": false,
-            "source.removeUnusedImports": true
+            "source.organizeImports": "never",
+            "source.removeUnusedImports": "explicit"
         }
     }
 }

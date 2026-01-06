@@ -1,12 +1,11 @@
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@midwayjs/validate';
 import { DataTypes, NonAttribute } from '@sequelize/core';
-import { Attribute, BelongsTo, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
+import { Attribute, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { SystemRole } from './systemRole.entity.js';
 import { AdminTreeModel } from './abstract/adminTree.entity.js';
 import { BelongsManyModel } from '../../types/entity.js';
-import { SystemAdmin } from './systemAdmin.entity.js';
 
 //rule规则使用添加接口的校验规则
 @Table({ tableName: 'system_menu', comment: '菜单表' })

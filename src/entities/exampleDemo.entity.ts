@@ -21,14 +21,11 @@ export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
   id: string;
 
   //唯一索引名称必须全库唯一，当两个null值时唯一索引会认为不是同一个值
-  @Index({unique:true, where:{deletedAt: { [Op.not]: null }}}) //局部唯一索引设置只有不删除的数据加索引
+  @Index({unique:true, where:{'deleted_at': { [Op.isNot]: null }}}) //局部唯一索引设置只有不删除的数据加索引
   @Attribute({ type: DataTypes.STRING(11), comment: '手机号' })
   @ApiPropertyRule({ description: '手机号', rule: RuleType.string().mobile().description('手机号').required() })
   mobile: string;
 
-  //软删除唯一标识，不删除的为'',可用于声明关联唯一索引,不需声明唯一索引的 可以不声明（DelParanoidModel已自动声明）
-  @Index({unique:true, where:{deletedAt: { [Op.not]: null }}}) //局部唯一索引设置只有不删除的数据加索引
-  declare deletedVersion: string;
 
   //以“名称:值1=说明1;值2=说明2”，格式声明的备注会自动创建字典和下拉列表，并且支持number、string两种类型
   @Attribute({

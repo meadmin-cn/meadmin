@@ -1,9 +1,10 @@
-import { Attribute, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
+import { Attribute, Default, HasMany, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
 import { ApiPropertyRule } from '@/decorators/index.js';
-import { DataTypes } from '@sequelize/core';
+import { DataTypes, NonAttribute } from '@sequelize/core';
 import { AdminBaseModel } from './abstract/adminBase.entity.js';
+import { SystemAdmin } from './systemAdmin.entity.js';
 
 //rule规则使用添加接口的校验规则
 @Table({ tableName: 'file', comment: '附件表' })
@@ -18,7 +19,6 @@ export class File extends AdminBaseModel<File> {
   @ApiPropertyRule({ description: '文件名', rule: RuleType.string().max(300).min(1).required().empty('') })
   name: string;
 
-  @Unique('admin_file_storage_path')
   @Attribute({ type: DataTypes.STRING(200), comment: '路径', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '路径', rule: RuleType.string() })
   path: string;
@@ -31,7 +31,6 @@ export class File extends AdminBaseModel<File> {
   @ApiPropertyRule({ description: '文件大小', rule: RuleType.number() })
   size: number;
 
-  @Unique('admin_file_storage_path')
   @Attribute({ type: DataTypes.STRING(50), comment: '存储引擎', allowNull: false, defaultValue: 'storage' })
   @ApiPropertyRule({ description: '存储引擎', rule: RuleType.string() })
   storage: string;
@@ -48,6 +47,14 @@ export class File extends AdminBaseModel<File> {
   get url(): string {
     return ('/api/admin/file/get/'+this.id+'/'+this.name);
   }
+
+  //为了规避admin和file的循环引用问题，在file声明admin avatar的关联
+  @HasMany(() => SystemAdmin, 
+  {
+    foreignKey: 'avatarFileId',
+    inverse:{as: 'avatar'},
+  })
+  declare avatarAdmins?: NonAttribute<SystemAdmin[]>;
 
   //json转义需要加上url属性，否则创建成功后的返回实体没有对应参数返回
   toJSON() {

@@ -8,7 +8,7 @@ import { RuleType } from '@midwayjs/validate';
 export class UserUpdateDto extends PartialType(
   OmitDtoType(
     User as new () => InferAttributesLoose<User>, //只保留声明属性
-    ['id', 'createdAt', 'updatedAt', 'deletedAt', 'deletedVersion', 'createdAdminId', 'updatedAdminId','lastLoginAt','lastLoginIp','status','loginFailure'], //排除自动创建的字段
+    ['id', 'createdAt', 'updatedAt', 'deletedAt', 'createdUserId', 'updatedUserId','lastLoginAt','lastLoginIp','status','loginFailure'], //排除自动创建的字段
   ),
 ) {
   @ApiPropertyRule({ description: '原始密码', rule: RuleType.string() })

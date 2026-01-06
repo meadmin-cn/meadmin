@@ -10,7 +10,7 @@ import {
   InferCreationAttributes,
   FindOptions,
   Attributes,
-  sql,
+  sql
 } from '@sequelize/core';
 import { AfterDestroy, AfterUpdate, Attribute, BeforeCreate, Table } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
@@ -22,6 +22,7 @@ import { AdminBaseModel } from './adminBase.entity.js';
 //无限级树形
 @Table.Abstract
 export class AdminTreeModel<M extends AdminTreeModel<any> = any> extends AdminBaseModel<M> {
+
   @Attribute({
     comment: '父级id',
     type: DataTypes.STRING(100),
@@ -50,9 +51,9 @@ export class AdminTreeModel<M extends AdminTreeModel<any> = any> extends AdminBa
   lockVersion: string;
 
   @BeforeCreate()
-  static async setLeftRightByCreate<M extends TreeModel>(this: ModelStatic<M>, info: M, options: CreateOptions<any>) {
+  static async setLeftRightByCreate<M extends AdminTreeModel>(this: ModelStatic<M>, info: M, options: CreateOptions<any>) {
     const model = info.modelDefinition.model;
-    type MInfo = Model<InferAttributes<TreeModel>, InferCreationAttributes<TreeModel>>;
+    type MInfo = Model<InferAttributes<AdminTreeModel>, InferCreationAttributes<AdminTreeModel>>;
     let left = 1;
     if (info.parentId) {
       const parentinfo = (await model.findByPk<MInfo>(info.parentId, { transaction: options.transaction })) as M;
@@ -86,10 +87,10 @@ export class AdminTreeModel<M extends AdminTreeModel<any> = any> extends AdminBa
   }
 
   @AfterDestroy()
-  static async setLeftRightByDestory<M extends TreeModel>(this: ModelStatic<M>, info: M, options: InstanceDestroyOptions) {
+  static async setLeftRightByDestory<M extends AdminTreeModel>(this: ModelStatic<M>, info: M, options: InstanceDestroyOptions) {
     //删除子孙级
     const model = info.modelDefinition.model;
-    type MInfo = Model<InferAttributes<TreeModel>, InferCreationAttributes<TreeModel>>;
+    type MInfo = Model<InferAttributes<AdminTreeModel>, InferCreationAttributes<AdminTreeModel>>;
     await model.destroy<MInfo>({
       where: {
         left: { [Op.gt]: info.left },
@@ -126,11 +127,11 @@ export class AdminTreeModel<M extends AdminTreeModel<any> = any> extends AdminBa
   }
 
   @AfterUpdate()
-  static async setLeftRightByUpdate<M extends TreeModel>(this: ModelStatic<M>, info: M, options: InstanceUpdateOptions<any>) {
+  static async setLeftRightByUpdate<M extends AdminTreeModel>(this: ModelStatic<M>, info: M, options: InstanceUpdateOptions<any>) {
     const version = uuid();
     const oldLeft = info.left;
     const model = info.modelDefinition.model;
-    type MInfo = Model<InferAttributes<TreeModel>, InferCreationAttributes<TreeModel>>;
+    type MInfo = Model<InferAttributes<AdminTreeModel>, InferCreationAttributes<AdminTreeModel>>;
     //锁定当前及当前子孙数据
     await model.update<MInfo>(
       {

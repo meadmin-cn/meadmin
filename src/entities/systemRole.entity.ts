@@ -48,9 +48,14 @@ export class SystemRole extends AdminTreeModel<SystemRole> {
   @ApiPropertyRule({ description: '备注', rule: RuleType.string().max(100).min(1) })
   remark: string;
 
-  /** Declared by {@link Admin.roles} */
+  @BelongsToMany(() => SystemAdmin, {
+    through: 'admin_role', //中间表名称 或者 对应的Model
+    inverse: {
+      as: 'roles',
+    },
+  })
   @ApiPropertyRule({
-    description: '关联用户',
+    description: '关联管理员',
     type: 'array',
     items: {
       type: () => SystemAdmin,

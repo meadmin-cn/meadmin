@@ -1,8 +1,8 @@
 import { Attribute, BelongsTo, Table } from "@sequelize/core/decorators-legacy";
 import { BaseModel } from "./base.entity.js";
-import { SystemAdmin } from "../systemAdmin.entity.js";
-import { ApiPropertyRule } from "@/decorators/index.js";
 import { DataTypes, NonAttribute } from "@sequelize/core";
+import { ApiPropertyRule } from "@/decorators/swagger.js";
+import { SystemAdmin } from "../systemAdmin.entity.js";
 
 //AdminBaseModel 后台实体基础类
 @Table.Abstract

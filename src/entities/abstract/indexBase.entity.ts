@@ -8,7 +8,7 @@ import { User } from "../user.entity.js";
 @Table.Abstract
 export class IndexBaseModel<M extends IndexBaseModel<any>> extends BaseModel<M> {
 
-   @ApiPropertyRule({
+  @ApiPropertyRule({
     description: '创建者Id',
     type: 'string',
   })

@@ -1,9 +1,11 @@
-import { Attribute, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
+import { Attribute, Default, HasMany, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
 import { ApiPropertyRule } from '@/decorators/index.js';
-import { DataTypes } from '@sequelize/core';
+import { DataTypes, NonAttribute } from '@sequelize/core';
 import { IndexBaseModel } from './abstract/indexBase.entity.js';
+import { User } from './user.entity.js';
+
 
 //rule规则使用添加接口的校验规则
 @Table({ tableName: 'user_file', comment: '用户附件表(前台)' })
@@ -18,7 +20,6 @@ export class UserFile extends IndexBaseModel<UserFile> {
   @ApiPropertyRule({ description: '文件名', rule: RuleType.string().max(300).min(1).required().empty('') })
   name: string;
 
-  @Unique('user_file_storage_path')
   @Attribute({ type: DataTypes.STRING(200), comment: '路径', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '路径', rule: RuleType.string() })
   path: string;
@@ -31,7 +32,6 @@ export class UserFile extends IndexBaseModel<UserFile> {
   @ApiPropertyRule({ description: '文件大小', rule: RuleType.number() })
   size: number;
 
-  @Unique('user_file_storage_path')
   @Attribute({ type: DataTypes.STRING(50), comment: '存储引擎', allowNull: false, defaultValue: 'storage' })
   @ApiPropertyRule({ description: '存储引擎', rule: RuleType.string() })
   storage: string;
@@ -49,6 +49,14 @@ export class UserFile extends IndexBaseModel<UserFile> {
     return ('/api/index/file/get/'+this.id+'/'+this.name);
   }
 
+  //为了规避user和userFile的循环引用问题，在userFile声明user avatar的关联
+  @HasMany(() => User, 
+  {
+    foreignKey: 'avatarFileId',
+    inverse:{as: 'avatar'},
+  })
+  declare avatarUsers?: NonAttribute<User[]>;
+  
   //json转义需要加上url属性，否则创建成功后的返回实体没有对应参数返回
   toJSON() {
     return Object.assign(

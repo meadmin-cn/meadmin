@@ -38,7 +38,7 @@
             preview-teleported
             fit="scale-down"
           />
-          <a v-else :href="row.url" target="_blank" :title="t('点击下载')">
+          <a class="el-link el-link--primary" v-else :href="row.url" target="_blank" :title="t('点击下载')">
             <mel-icon-download size="20px"></mel-icon-download>
           </a>
         </template>

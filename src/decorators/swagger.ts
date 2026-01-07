@@ -131,16 +131,16 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & { rule?: RuleType
     } else if (options.enum && !options.enum.length) {
       options.enum = undefined;
     }
+    if (!options.required && !(options.rule as any)._invalids?._values.has(null)) {
+      //如果不是必填值，允许null
+      options.rule = options.rule.allow(null);
+    }
     if (options.rule.type === 'number') {
       if (options.maximum !== undefined) {
         options.maximum = options.rule.$_getRule('max')?.args?.limit;
       }
       if (options.minimum !== undefined) {
         options.minimum = options.rule.$_getRule('min')?.args?.limit;
-      }
-      if (!options.required && !(options.rule as any)._invalids?._values.has(null)) {
-        //如果不是必填值，允许null
-        options.rule = options.rule.allow(null);
       }
     }
     if (options.rule.type === 'string') {
@@ -154,10 +154,7 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & { rule?: RuleType
         //如果不是必填值，允许空串
         options.rule = options.rule.allow('');
       }
-      if (!options.required && !(options.rule as any)._invalids?._values.has(null)) {
-        //如果不是必填值，允许null
-        options.rule = options.rule.allow(null);
-      }
+      
     }
 
     if (options.default !== undefined) {

@@ -96,8 +96,18 @@ export class {{@ replaceNames.Service}} {
    */
   @Transaction()
   async create(createDto: {{@ replaceNames.CreateDto}}) {
-    const entity = this.{{@ replaceNames.name}}Repository.build(createDto);
-    return await entity.save();
+    const entity = await this.{{@ replaceNames.name}}Repository.create(createDto);
+    {{each entity.belongsTo}}
+    if(createDto.{{@ $value}}){
+      await entity.set{{@ $imports.upFirstCase($value)}}(createDto.{{@ $value}});
+    }
+    {{/each}}
+    {{each entity.belongsToMany}}
+    if(createDto.{{@ $value}}){
+      await entity.set{{@ $imports.upFirstCase($value)}}(createDto.{{@ $value}});
+    }
+    {{/each}}
+    return entity;
   }
 
   /**
@@ -131,8 +141,9 @@ export class {{@ replaceNames.Service}} {
       where,
       offset: (queryDto.page - 1) *  queryDto.pageSize,
       limit: queryDto.pageSize,
-      {{if $imports.objectKeys(entitySchema.properties).includes('createdAt')}}order: [['createdAt', 'DESC']],
-    {{/if}}})
+      {{if entity.belongs.length }}include:['{{@ entity.belongs.join("','")}}'],{{/if}}
+      {{if $imports.objectKeys(entitySchema.properties).includes('createdAt')}}order: [['createdAt', 'DESC']],{{/if}}
+    });
     return {
       list: rows,
       total: count,
@@ -148,7 +159,7 @@ export class {{@ replaceNames.Service}} {
    */
   @Transaction()
   async findOne({{if entity.pk.length > 1}}pk:PK{{else}}{{@ entity.pk[0]}}: {{@ entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
-    const entity = await this.{{@ replaceNames.name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}});
+    const entity = await this.{{@ replaceNames.name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}}{{if entity.belongs.length }} ,{include:['{{@ entity.belongs.join("','")}}']}{{/if}});
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
@@ -168,6 +179,16 @@ export class {{@ replaceNames.Service}} {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
     Object.assign(entity, updateDto);
+    {{each entity.belongsTo}}
+    if(updateDto.{{@ $value}} !== undefined){
+      await entity.set{{@ $imports.upFirstCase($value)}}(updateDto.{{@ $value}});
+    }
+    {{/each}}
+    {{each entity.belongsToMany}}
+    if(updateDto.{{@ $value}}){
+     await entity.set{{@ $imports.upFirstCase($value)}}(updateDto.{{@ $value}});
+    }
+    {{/each}}
     return await entity.save();
   }
 

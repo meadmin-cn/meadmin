@@ -1,5 +1,7 @@
 import request, { RequestOptions } from '@/utils/request.js';
 import { PageParam, PageResult } from '@/api/api.model.js';
+import { FileInfo } from '@/api/file.js';
+import { SystemAdminInfo } from '@/api/system/admin.js';
 
 {{each swaggerSchemas}}
 {{if $index === replaceNames.Name}}

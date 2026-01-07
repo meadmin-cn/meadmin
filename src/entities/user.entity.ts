@@ -4,12 +4,9 @@ import { ApiPropertyRule } from '@/decorators/index.js';
 import { RuleType } from '@/ruleType/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { UserFile } from './userFile.entity.js';
-import { ApiExtraModel, getSchemaPath } from '@midwayjs/swagger';
+import { getSchemaPath } from '@midwayjs/swagger';
 import { BaseModel } from './abstract/base.entity.js';
 
-(async()=>{
-  ApiExtraModel((await import('./userFile.entity.js')).UserFile);
-})();
 
 //rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
 @Table({ tableName: 'user', comment: '用户表' })

@@ -12,26 +12,31 @@
     :data="data?.list"
     :pagination-options="{
       currentPage: params.page,
-      pageSize: params.size,
+      pageSize: params.pageSize,
       total: data?.total ?? 0,
       layout: 'sizes, prev, pager, next, jumper, ->, total',
       change: search,
     }"
-    {{if adminPermission}}:onAdd="permission('{{replaceNames.name}}Add')?showAddOrUp:undefined"{{else}}:onAdd="showAddOrUp"{{/if}}
+    {{if adminPermission}}:onAdd="permission('{{replaceNames.roleName}}_add')?showAddOrUp:undefined"{{else}}:onAdd="showAddOrUp"{{/if}}
     @refresh="search(1)"
   >
-    <% include('./tableColum.vue.art', {...entitySchema, entity:entity}) %>
-    <vxe-column{{if adminPermission}} v-if="permission(['{{replaceNames.name}}Edit','{{replaceNames.name}}Del'])"{{/if}} :title="t('操作')" fixed="right" min-width="150px">
+    <% include('./tableColum.vue.art', {...entitySchema, entity:entity}) %>{{if entitySchema.properties.createdAdmin}}
+    <vxe-column field="createdAdmin" :title="t('{{@ entitySchema.properties.createdAdmin.description}}')" :formatter="formatterObjectFn(obj=>`${obj.nickname}(${obj.username})`)"></vxe-column>
+    {{/if}}
+    {{if entitySchema.properties.updatedAdmin}}
+    <vxe-column field="updatedAdmin" :title="t('{{@ entitySchema.properties.updatedAdmin.description}}')" :formatter="formatterObjectFn(obj=>`${obj.nickname}(${obj.username})`)"></vxe-column>
+    {{/if}}
+    <vxe-column{{if adminPermission}} v-if="permission(['{{replaceNames.roleName}}_edit','{{replaceNames.name}}Del'])"{{/if}} :title="t('操作')" fixed="right" min-width="150px">
       <template #default="{ row }: { row: {{@ replaceNames.Name}}Info }">
-        <el-button{{if adminPermission}} v-if="permission('{{replaceNames.name}}Info')"{{/if}} @click="showInfo({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})" :title="t('详情')">
+        <el-button{{if adminPermission}} v-if="permission('{{replaceNames.roleName}}_info')"{{/if}} @click="showInfo({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})" :title="t('详情')">
           <mel-icon-memo />
         </el-button>
-        <el-button{{if adminPermission}} v-if="permission('{{replaceNames.name}}Edit')"{{/if}} @click="showAddOrUp({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})" :title="t('编辑')">
+        <el-button{{if adminPermission}} v-if="permission('{{replaceNames.roleName}}_edit')"{{/if}} @click="showAddOrUp({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})" :title="t('编辑')">
           <mel-icon-edit />
         </el-button>
-        <el-popconfirm{{if adminPermission}} v-if="permission('{{replaceNames.name}}Del')"{{/if}} :title="t('确认删除？')" placement="left" @confirm="del({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})" :title="t('删除')">
+        <el-popconfirm{{if adminPermission}} v-if="permission('{{replaceNames.roleName}}_del')"{{/if}} :title="t('确认删除？')" placement="left" @confirm="del({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})" >
           <template #reference>
-            <el-button :key="{{if entity.pk.length===1}}row.{{@ entity.pk[0]}}{{else}}`${<%- entity.pk.join('}__${')%>}`{{/if}}" :loading="delLoading && {{if entity.pk.length===1}}delId === row.{{@ entity.pk[0]}}{{else}}delKey=`${<%- entity.pk.join('}__${')%>}`{{/if}}" type="danger">
+            <el-button :key="{{if entity.pk.length===1}}row.{{@ entity.pk[0]}}{{else}}`${<%- entity.pk.join('}__${')%>}`{{/if}}" :loading="delLoading && {{if entity.pk.length===1}}delId === row.{{@ entity.pk[0]}}{{else}}delKey=`${<%- entity.pk.join('}__${')%>}`{{/if}}" type="danger" :title="t('删除')">
               <mel-icon-delete />
             </el-button>
           </template>
@@ -48,18 +53,18 @@ import { useLocalesI18n } from '@/locales/i18n';
 import Info from './components/info.vue';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
-import { formatterStr <% if( $imports.objectKeys(entitySchema.properties).some( k=>k.endsWith('At') ) ){ %>, formatterAt <%}%> } from '@/utils/helper.js';
+import { formatterStr <% if( $imports.objectKeys(entitySchema.properties).some( k=>k.endsWith('At') ) ){ %>, formatterAt <%}%> ,formatterObjectFn, clearEmptyParam } from '@/utils/helper.js';
 {{if adminPermission}}import { permission } from '@/utils/permission.js';{{/if}}
 
 const {open} = useActionModel(AddOrUp);
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), '{{@ replaceNames.name}}']);
-<% if( $imports.objectKeys(entitySchema.properties).some( k=>entitySchema.properties[k].enum || entitySchema.properties[k].description.includes(':') ) ){ %>import { getDict } from '../dict.js';
+<% if( $imports.objectKeys(entitySchema.properties).some( k=>entitySchema.properties[k].enum || entitySchema.properties[k].description.includes(':') ) ){ %>import { getDict } from './dict.js';
 const dict = getDict(t);
 import { createformatterDictFn } from '@/utils/helper.js';
-const formatterDict = createformatterDictFn<SystemAdminInfo>(dict);<%}%>
+const formatterDict = createformatterDictFn<{{@ replaceNames.Name}}Info>(dict);<%}%>
 const params = reactive(new {{@ replaceNames.Name}}ListParam());
 const { loading, data, runAsync } = {{@ replaceNames.name}}ListApi();
-const search = (page = params.page, size = params.size) => runAsync(Object.assign(params, { page, size }));
+const search = (page = params.page, pageSize = params.pageSize) => runAsync(Object.assign(params, { page, pageSize }));
 const { runAsync: delRun, loading: delLoading } = del{{@ replaceNames.Name}}Api();
 {{if entity.pk.length==1}}const delId = ref<string>();{{else}}const delKey = ref<string>();{{/if}}
 const del = async ({{@ entity.pk.map(v=>`${v}:${entitySchema.properties[v].type}`).join(', ')}}) => {

@@ -1,2 +1,2 @@
-{{each properties}}<% const keyInfo = $imports.getKeyInfo($value.description); %>
+{{each properties}}{{if ['createdAdmin','updatedAdmin'].includes($index)}} <% return; %>{{/if}}<% const keyInfo = $imports.getKeyInfo($value.description); %>
 <vxe-column field="{{@ $index}}" :title="t('{{@ keyInfo.name}}')" :formatter="<% if ($value.enum || $value.description.includes(':')){%>formatterDict{{else if $index.endsWith('At')}}formatterAt{{else}}formatterStr<%}%>"></vxe-column>{{/each}}

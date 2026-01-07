@@ -22,7 +22,7 @@
 </template>
 <script lang="ts" name="MeUpload" setup>
 import { FileInfo } from '@/api/file';
-import { UploadInstance, UploadFile, UploadFiles, UploadRequestHandler, UploadRequestOptions, UploadRawFile, genFileId, UploadUserFile } from 'element-plus';
+import { UploadInstance, UploadFile, UploadFiles, UploadRequestHandler, UploadRequestOptions, UploadUserFile } from 'element-plus';
 import { createImageViewer } from './service/meImageViewer';
 import { omit } from 'lodash-es';
 import { fileUpload } from '@/utils/fileUpload';

@@ -1,4 +1,4 @@
-{{each properties}}<% const keyInfo = $imports.getKeyInfo($value.description); %>{{if ['number','string','integer'].includes($value.type) && !entity.autoAttributes.includes($index)}}
+{{each properties}}<% const keyInfo = $imports.getKeyInfo($value.description); %>{{if !entity.autoAttributes.includes($index)}}{{if ['number','string','integer'].includes($value.type)}}
 <el-form-item :label="t('{{@ keyInfo.name}}')" prop="{{@ $index}}">
   {{if $value.enum || keyInfo.dict}}<el-select v-model="info.{{@ $index}}" {{if !required.includes($index)}}:value-on-clear="null" clearable {{/if}}>
     <el-option v-for="val in dict.{{@ $index}}" :key="val.value" :value="val.value" :label="val.label" />
@@ -11,4 +11,10 @@
 </el-form-item>{{else if $value.type==='boolean'}}
 <el-form-item :label="t('{{@ keyInfo.name}}')" prop="{{@ $index}}">
   <el-switch v-model="info.{{@ $index}}" />
-</el-form-item>{{/if}}{{/each}}
+</el-form-item>{{else if $value.type === 'array'}}{{if $value?.items.$ref === '#/components/schemas/FileInfo'}}
+<el-form-item :label="t('{{@ keyInfo.name}}')" prop="{{@ $index}}">
+  <me-upload list-type="picture" v-model="info.{{@ $index}}" ></me-upload>
+</el-form-item>{{/if}}{{else if $value.$ref === '#/components/schemas/FileInfo'}}  
+<el-form-item :label="t('{{@ keyInfo.name}}')" prop="{{@ $index}}">
+  <me-upload list-type="picture" :limit="1" :model-value="info.{{@ $index}}?[info.{{@ $index}}]:[]" @update:modelValue="(files)=>info.{{@ $index}} =files.length? files[0]:null" ></me-upload>
+</el-form-item>{{/if}}{{/if}}{{/each}}

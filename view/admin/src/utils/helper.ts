@@ -251,8 +251,8 @@ export function formatterStrExec<T = string | null | undefined>(str:T){
 }
 
 //格式化字典数据执行
-export function formatterDictExec<D extends Record<string, { value: string | number; label: string }[]>,T = string | null | undefined>(dict:D,column:any,value:T ){
-  return  formatterStrExec( dict[column]?.find((item) => item.value == value)?.label);
+export function formatterDictExec<D extends Record<string, { value: string | number; label: string }[]>,T = string | null | undefined>(dict:D,field:string,value:T ){
+  return  formatterStrExec( dict[field]?.find((item) => item.value == value)?.label);
 }
 
 //格式化时间数据执行
@@ -274,8 +274,16 @@ export function formatterAt({ cellValue }: { cellValue: string | null | undefine
 //格式化表格字典数据函数
 export function createformatterDictFn<T>(dict: Record<string, { value: string | number; label: string }[]>) {
   //因为ts类型判定不得不断言dict
-  return (data: { cellValue: any; column: VxeTableDefines.ColumnInfo<T> }) => 
-    formatterDictExec(dict,data.column,data.cellValue);
+  return (data: { cellValue: any; column: VxeTableDefines.ColumnInfo<T> }) => {
+    return formatterDictExec(dict,data.column.field,data.cellValue);
+  }
+}
+
+//格式化对象
+export function formatterObjectFn(field:string | ((data:Record<string,any>)=>string)){
+  return (data: { cellValue: any }) => {
+    return formatterStrExec(typeof field === 'string' ? data.cellValue[field]:field(data.cellValue));
+  }
 }
 
 

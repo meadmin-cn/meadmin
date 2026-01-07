@@ -39,7 +39,7 @@ export class SystemAdminService {
     
     await entity.save();
     if (createDto.roleIds) {
-      entity.setRoles(createDto.roleIds);
+      await entity.setRoles(createDto.roleIds);
     }
     return entity;
   }
@@ -186,7 +186,7 @@ export class SystemAdminService {
       entity.salt = salf;
     }
     if (updateDto.roleIds) {
-      entity.setRoles(updateDto.roleIds);
+      await entity.setRoles(updateDto.roleIds);
     }
     return await entity.save();
   }

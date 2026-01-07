@@ -7,18 +7,12 @@ import { SystemRole } from './systemRole.entity.js';
 import { BelongsManyModel } from '../../types/entity.js';
 import { SystemMenu } from './systemMenu.entity.js';
 import { File } from './file.entity.js';
-import { ApiExtraModel, getSchemaPath } from '@midwayjs/swagger';
+import { getSchemaPath } from '@midwayjs/swagger';
 import { BaseModel } from './abstract/base.entity.js';
-(async()=>{
-  ApiExtraModel((await import('./file.entity.js')).File);
-  ApiExtraModel((await import('./systemRole.entity.js')).SystemRole);
-  ApiExtraModel((await import('./systemMenu.entity.js')).SystemMenu);
-})();
 
 //rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
 @Table({ tableName: 'system_admin', comment: '管理员表' })
 //避免循环引用，继承BaseModel 而非 AdminBaseModel，其余后台表继承AdminBaseModel即可。注意SystemAdmin扩展字段时不能import其余Model以规避循环引用，如需增加外键关联,需用inverse将关联设置另一侧
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class SystemAdmin extends BaseModel<SystemAdmin> {
   @Attribute({ type: DataTypes.STRING(20), allowNull: false })
   @PrimaryKey
@@ -166,5 +160,4 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
     );
   }
 }
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export declare interface SystemAdmin extends BelongsManyModel<'roles', 'role', 'roles', SystemRole> {}

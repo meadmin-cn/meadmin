@@ -46,3 +46,15 @@ declare global {
 
   type ValueOfMap<T extends Map> = ReturnType<T['get']>;
 }
+
+//_或-间隔转换为驼峰
+type CamelCase<S extends string> =     S extends `${infer First}_${infer Second}${infer Rest}`
+        ? `${First}${Uppercase<Second>}${CamelCase<Rest>}`
+        :  S extends `${infer First}-${infer Second}${infer Rest}`
+          ? `${First}${Uppercase<Second>}${CamelCase<Rest>}`
+          : S
+
+//数组key转换为驼峰
+type SnakeToCamelCase<T> = {
+  [K in keyof T as CamelCase<K>]: T[K];
+};

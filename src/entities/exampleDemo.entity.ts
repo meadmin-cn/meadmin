@@ -61,14 +61,14 @@ export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
   //反向BelongsTo关联从属， 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to/
   @Attribute({ type: DataTypes.STRING(20), comment: '关联前台用户id',})
   userId: string;
-  @ApiPropertyRule({ description: '用户', type: () => User, rule: RuleType.object({id:RuleType.string().required()}) })
+  @ApiPropertyRule({ description: '用户', type: () => User, rule: RuleType.object({id:RuleType.string().required()}).pattern(RuleType.string(), RuleType.any()) })
   @BelongsTo(() => User, /* 外键名称 */ 'userId')
   user?: NonAttribute<User>;
 
   //反向BelongsTo关联从属，File类型创建单文件
   @Attribute({ type: DataTypes.STRING(20), comment: '头像附件id',})
   avatarFileId: string;
-  @ApiPropertyRule({ description: '头像', type: () => File, rule: RuleType.object({id:RuleType.string().required()}) })
+  @ApiPropertyRule({ description: '头像', type: () => File, rule: RuleType.object({id:RuleType.string().required()}).pattern(RuleType.string(), RuleType.any()) })
   @BelongsTo(() => File, /* 外键名称 */ 'avatarFileId')
   avatar?: NonAttribute<File>
 

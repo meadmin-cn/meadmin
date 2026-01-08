@@ -2,7 +2,7 @@
   <me-dialog v-model="show" :title="t({{@ entity.pk[0]}} ? '编辑' : '新增')" :close-on-click-modal="false"
     @closed="emit('closed')">
     <el-form v-loading="loading" ref="formEl" :model="info" :rules="rules" class="add" label-width="auto">
-      <% include('./addOrUpItem.vue.art', {...entitySchema, entity:entity}) %>
+      <% include('./addOrUpItem.vue.art', {...entitySchema, entity:entity, belongsToEntity:entity.belongsToEntity, belongsToManyEntity:entity.belongsToManyEntity}) %>
     </el-form>
     <template #footer>
       <me-button @click="() => show = false">{{@ $imports.leftTag()}} t('取消') {{@ $imports.rightTag()}}</me-button>
@@ -31,6 +31,30 @@ const emit = defineEmits<{
   (e: 'success'): void;
   (e: 'closed'): void;
 }>();
+
+<% const hasStatement = ['File']; %>
+{{each $imports.objectKeys(entity.belongsToEntity)}}<% const valueEntity = entity.belongsToEntity[$value]; %>{{if hasStatement.includes(valueEntity.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEntity.entityName);%>{{/if}}
+import {get{{@ valueEntity.entityName}}Api} from '@/api/{{@ replaceNames.namePath}}';
+const serach{{@ valueEntity.entityName}} = async (query:string,page:number,pageSize:number)=>{
+  return await get{{@ valueEntity.entityName}}Api().runAsync({
+    {{@ valueEntity.nameKeys?.[0] || valueEntity.pk[0]}}:query,
+    page:page,
+    pageSize:pageSize
+  })
+}
+{{/each}}
+
+{{each $imports.objectKeys(entity.belongsToManyEntity)}}<% const valueEntity = entity.belongsToManyEntity[$value]; %>{{if hasStatement.includes(valueEntity.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEntity.entityName);%>{{/if}}
+import {get{{@ valueEntity.entityName}}Api} from '@/api/{{@ replaceNames.namePath}}';
+const serach{{@ valueEntity.entityName}} = async (query:string,page:number,pageSize:number)=>{
+  return await get{{@ valueEntity.entityName}}Api().runAsync({
+    {{@ valueEntity.nameKeys?.[0] || valueEntity.pk[0]}}:query,
+    page:page,
+    pageSize:pageSize
+  })
+}
+{{/each}}
+
 const info = reactive(new {{@ replaceNames.Name}}());
 const loading = ref(false);
 watch(

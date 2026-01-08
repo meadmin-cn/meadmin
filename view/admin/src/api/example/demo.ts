@@ -61,6 +61,50 @@ export type UserFile = {
   updatedAt: string; //最后更新时间
 };
 
+//获取用户信息
+export function getUserApi() {
+  return request<
+    PageResult<User>,
+    [
+      {
+        id?: string;
+        username?: string;
+        page: number;
+        pageSize: number;
+      },
+    ]
+  >(
+    (data) => ({
+      url: 'example/demo/getUser',
+      method: 'post',
+      data: data,
+    }),
+    { noLoading: true },
+  );
+}
+
+//获取示例_书籍信息
+export function getExampleBookApi() {
+  return request<
+    PageResult<ExampleBook>,
+    [
+      {
+        id?: string;
+        name?: string;
+        page: number;
+        pageSize: number;
+      },
+    ]
+  >(
+    (data) => ({
+      url: 'example/demo/getExampleBook',
+      method: 'post',
+      data: data,
+    }),
+    { noLoading: true },
+  );
+}
+
 export type ExampleDemoInfo = ExampleDemo & {
   id: string; //ID
   createdAt: string; //创建时间

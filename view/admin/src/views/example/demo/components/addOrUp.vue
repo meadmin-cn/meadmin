@@ -12,11 +12,17 @@
       <el-form-item :label="t('名称')" prop="name">
         <el-input v-model="info.name"></el-input>
       </el-form-item>
+      <el-form-item :label="t('书籍')" prop="books">
+        <me-select-list v-model="info.books" :props="{ label: 'name', value: 'id' }" value-key="id" @search="serachExampleBook" :multiple="true"></me-select-list>
+      </el-form-item>
+      <el-form-item :label="t('用户')" prop="user">
+        <me-select-list v-model="info.user" :props="{ label: 'username', value: 'id' }" value-key="id" @search="serachUser" clearable></me-select-list>
+      </el-form-item>
       <el-form-item :label="t('头像')" prop="avatar">
-        <me-upload list-type="picture" :limit="1" :model-value="info.avatar ? [info.avatar] : []" @update:modelValue="(files) => (info.avatar = files.length ? files[0] : null)"></me-upload>
+        <me-upload :limit="1" :model-value="info.avatar ? [info.avatar] : []" @update:modelValue="(files) => (info.avatar = files.length ? files[0] : null)"></me-upload>
       </el-form-item>
       <el-form-item :label="t('附件')" prop="files">
-        <me-upload list-type="picture" v-model="info.files"></me-upload>
+        <me-upload v-model="info.files"></me-upload>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -44,6 +50,25 @@ const emit = defineEmits<{
   (e: 'success'): void;
   (e: 'closed'): void;
 }>();
+
+import { getUserApi } from '@/api/example/demo';
+const serachUser = async (query: string, page: number, pageSize: number) => {
+  return await getUserApi().runAsync({
+    username: query,
+    page: page,
+    pageSize: pageSize,
+  });
+};
+
+import { getExampleBookApi } from '@/api/example/demo';
+const serachExampleBook = async (query: string, page: number, pageSize: number) => {
+  return await getExampleBookApi().runAsync({
+    name: query,
+    page: page,
+    pageSize: pageSize,
+  });
+};
+
 const info = reactive(new ExampleDemo());
 const loading = ref(false);
 watch(

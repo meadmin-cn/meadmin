@@ -18,40 +18,40 @@ export class {{@ replaceNames.Controller}} extends BaseController {
   {{@ replaceNames.service}}: {{@ replaceNames.Service}};
 
   <% const hasStatement = ['File']; %>
-  {{each $imports.objectKeys(entity.belongsToEntity)}}<% const valueEnitty = entity.belongsToEntity[$value]; %>{{if hasStatement.includes(valueEnitty.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEnitty.entityName);%>{{/if}}
-  //查询belongsTo关联模型{{@ $value}}{{@ valueEnitty.tableComment}}
-  //获取{{@ valueEnitty.tableComment}}信息
-  @Post('/get{{@ valueEnitty.entityName}}')
+  {{each $imports.objectKeys(entity.belongsToEntity)}}<% const valueEntity = entity.belongsToEntity[$value]; %>{{if hasStatement.includes(valueEntity.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEntity.entityName);%>{{/if}}
+  //查询belongsTo关联模型{{@ $value}}{{@ valueEntity.tableComment}}
+  //获取{{@ valueEntity.tableComment}}信息
+  @Post('/get{{@ valueEntity.entityName}}')
   @ApiOperationResponse({
     responseType: {{@ replaceNames.Name}},
-    summary: '添加{{@ entity.tableComment}}信息',
+    summary: '查询{{@ valueEntity.tableComment}}信息',
   }){{if adminPermission}}
   @AdminPermission('{{@replaceNames.Name}}List'){{/if}}
-  async get{{@ valueEnitty.entityName}}(
-    @Body('{{@ valueEnitty.pk[0]}}') {{@ valueEnitty.pk[0]}}: {{@ swaggerSchemas[valueEnitty.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}},{{if valueEnitty.nameKeys.length}}
-    @Body('{{@ valueEnitty.nameKeys[0]}}') {{@ valueEnitty.nameKeys[0]}}: string,{{/if}}
+  async get{{@ valueEntity.entityName}}(
+    @Body('{{@ valueEntity.pk[0]}}') {{@ valueEntity.pk[0]}}: {{@ swaggerSchemas[valueEntity.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}},{{if valueEntity.nameKeys.length}}
+    @Body('{{@ valueEntity.nameKeys[0]}}') {{@ valueEntity.nameKeys[0]}}: string,{{/if}}
     @Body('page') page = 1,
     @Body('pageSize') pageSize=10
   ) {
-    return this.success(await this.{{@ replaceNames.service}}.get{{@ valueEnitty.entityName}}(page,pageSize,{{@ valueEnitty.pk[0]}}{{if valueEnitty.nameKeys.length}},{{@ valueEnitty.nameKeys[0]}}{{/if}}));
+    return this.success(await this.{{@ replaceNames.service}}.get{{@ valueEntity.entityName}}(page,pageSize,{{@ valueEntity.pk[0]}}{{if valueEntity.nameKeys.length}},{{@ valueEntity.nameKeys[0]}}{{/if}}));
   }{{/each}}
 
-  {{each $imports.objectKeys(entity.belongsToManyEntity)}}<% const valueEnitty = entity.belongsToManyEntity[$value]; %>{{if hasStatement.includes(valueEnitty.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEnitty.entityName);%>{{/if}}
-  //查询belongsToMany关联模型{{@ $value}}{{@ valueEnitty.tableComment}}
-  //获取{{@ valueEnitty.tableComment}}信息
-  @Post('/get{{@ valueEnitty.entityName}}')
+  {{each $imports.objectKeys(entity.belongsToManyEntity)}}<% const valueEntity = entity.belongsToManyEntity[$value]; %>{{if hasStatement.includes(valueEntity.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEntity.entityName);%>{{/if}}
+  //查询belongsToMany关联模型{{@ $value}}{{@ valueEntity.tableComment}}
+  //获取{{@ valueEntity.tableComment}}信息
+  @Post('/get{{@ valueEntity.entityName}}')
   @ApiOperationResponse({
     responseType: {{@ replaceNames.Name}},
-    summary: '添加{{@ entity.tableComment}}信息',
+    summary: '查询{{@ valueEntity.tableComment}}信息',
   }){{if adminPermission}}
   @AdminPermission('{{@replaceNames.Name}}List'){{/if}}
-  async get{{@ valueEnitty.entityName}}(
-    @Body('{{@ valueEnitty.pk[0]}}') {{@ valueEnitty.pk[0]}}: {{@ swaggerSchemas[valueEnitty.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}},{{if valueEnitty.nameKeys.length}}
-    @Body('{{@ valueEnitty.nameKeys[0]}}') {{@ valueEnitty.nameKeys[0]}}: string,{{/if}}
+  async get{{@ valueEntity.entityName}}(
+    @Body('{{@ valueEntity.pk[0]}}') {{@ valueEntity.pk[0]}}: {{@ swaggerSchemas[valueEntity.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}},{{if valueEntity.nameKeys.length}}
+    @Body('{{@ valueEntity.nameKeys[0]}}') {{@ valueEntity.nameKeys[0]}}: string,{{/if}}
     @Body('page') page = 1,
     @Body('pageSize') pageSize=10
   ) {
-    return this.success(await this.{{@ replaceNames.service}}.get{{@ valueEnitty.entityName}}(page,pageSize,{{@ valueEnitty.pk[0]}}{{if valueEnitty.nameKeys.length}},{{@ valueEnitty.nameKeys[0]}}{{/if}}));
+    return this.success(await this.{{@ replaceNames.service}}.get{{@ valueEntity.entityName}}(page,pageSize,{{@ valueEntity.pk[0]}}{{if valueEntity.nameKeys.length}},{{@ valueEntity.nameKeys[0]}}{{/if}}));
   }{{/each}}
 
   //接口方法必须加async 方法的接口装饰器值必须/开头

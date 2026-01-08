@@ -26,5 +26,7 @@
             "source.organizeImports": "never",
             "source.removeUnusedImports": "explicit"
         }
-    }
+    },
+    "vue.suggest.componentNameCasing": "alwaysKebabCase",
+    "vue.suggest.propNameCasing": "alwaysKebabCase"
 }

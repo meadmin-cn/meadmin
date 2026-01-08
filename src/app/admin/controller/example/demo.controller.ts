@@ -21,7 +21,7 @@ export class ExampleDemoController extends BaseController {
   @Post('/getUser')
   @ApiOperationResponse({
     responseType: ExampleDemo,
-    summary: '添加示例_Demo信息',
+    summary: '查询用户信息',
   })
   @AdminPermission('ExampleDemoList')
   async getUser(@Body('id') id: string, @Body('username') username: string, @Body('page') page = 1, @Body('pageSize') pageSize = 10) {
@@ -33,7 +33,7 @@ export class ExampleDemoController extends BaseController {
   @Post('/getExampleBook')
   @ApiOperationResponse({
     responseType: ExampleDemo,
-    summary: '添加示例_Demo信息',
+    summary: '查询示例_书籍信息',
   })
   @AdminPermission('ExampleDemoList')
   async getExampleBook(@Body('id') id: string, @Body('name') name: string, @Body('page') page = 1, @Body('pageSize') pageSize = 10) {

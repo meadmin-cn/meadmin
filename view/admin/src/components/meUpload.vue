@@ -29,8 +29,9 @@ import { fileUpload } from '@/utils/fileUpload';
 import { isImage } from '@/utils/helper';
 import { useMeSelectFile } from '@/components/meSelectFile/meSelectFile.js';
 import { useLocalesI18n } from '@/locales/hooks';
+import { snakeToCamelCaseObj } from '@/utils/formatting.js';
 let { t } = useLocalesI18n();
-const attrs = useAttrs();
+const attrs = snakeToCamelCaseObj(useAttrs());
 defineOptions({ inheritAttrs: false });
 const { showSelect = true } = defineProps<{
   showSelect?: boolean;

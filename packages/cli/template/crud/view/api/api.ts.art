@@ -14,6 +14,44 @@ export type {{@ $index}} = {
 {{/if}}
 }
 {{/each}}
+
+<% const hasStatement = ['File']; %>
+{{each $imports.objectKeys(entity.belongsToEntity)}}<% const valueEnitty = entity.belongsToEntity[$value]; %>{{if hasStatement.includes(valueEnitty.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEnitty.entityName);%>{{/if}}
+//获取{{@ valueEnitty.tableComment}}信息
+export function get{{@ valueEnitty.entityName}}Api() {
+  return request<PageResult<{{@ valueEnitty.entityName}}>, [{
+    {{@ valueEnitty.pk[0]}}?: {{@ swaggerSchemas[valueEnitty.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}},{{if valueEnitty.nameKeys.length}}
+    {{@ valueEnitty.nameKeys[0]}}?: string,{{/if}}
+    page:number,
+    pageSize:number,
+  }]>(
+    (data) => ({
+      url: '{{@ replaceNames.controllerPath}}/get{{@ valueEnitty.entityName}}',
+      method: 'post',
+      data: data,
+    }),
+    { noLoading: true },
+  );
+}{{/each}}
+
+{{each $imports.objectKeys(entity.belongsToManyEntity)}}<% const valueEnitty = entity.belongsToManyEntity[$value]; %>{{if hasStatement.includes(valueEnitty.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEnitty.entityName);%>{{/if}}
+//获取{{@ valueEnitty.tableComment}}信息
+export function get{{@ valueEnitty.entityName}}Api() {
+  return request<PageResult<{{@ valueEnitty.entityName}}>, [{
+    {{@ valueEnitty.pk[0]}}?: {{@ swaggerSchemas[valueEnitty.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}},{{if valueEnitty.nameKeys.length}}
+    {{@ valueEnitty.nameKeys[0]}}?: string,{{/if}}
+    page:number,
+    pageSize:number,
+  }]>(
+    (data) => ({
+      url: '{{@ replaceNames.controllerPath}}/get{{@ valueEnitty.entityName}}',
+      method: 'post',
+      data: data,
+    }),
+    { noLoading: true },
+  );
+}{{/each}}
+
 export type {{@ replaceNames.Name}}Info = {{@ replaceNames.Name}} & {
   {{each entity.autoAttributes}}{{if swaggerSchemas[replaceNames.Name].properties[$value]}}
   {{@ $value}}: <% include('./valueType.ts.art', {...swaggerSchemas[replaceNames.Name].properties[$value],key:$value,entity:entity}) %>, {{if swaggerSchemas[replaceNames.Name].properties[$value]?.description}}//{{@ swaggerSchemas[replaceNames.Name].properties[$value]?.description}}{{/if}}{{/if}}{{/each}}

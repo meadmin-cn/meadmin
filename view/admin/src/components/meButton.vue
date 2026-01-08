@@ -7,12 +7,13 @@
 </template>
 
 <script setup lang="ts" name="MeButton">
+import { snakeToCamelCaseObj } from '@/utils/formatting.js';
 import { ButtonInstance } from 'element-plus';
 import { omit } from 'lodash-es';
-import { ComponentInstance, ComponentPublicInstance } from 'vue';
+import { ComponentPublicInstance } from 'vue';
 
 const loading = ref(false);
-const attrs = useAttrs();
+const attrs = snakeToCamelCaseObj(useAttrs());
 defineOptions({inheritAttrs:false});
 async function handleClick(event:MouseEvent) {
   loading.value = true;

@@ -7,9 +7,9 @@ import { {{@ replaceNames.UpdateDto}} } from '{{@ paths.updateDtoPath}}';
 import { {{@ replaceNames.Name}} } from '{{@ paths.entityPath}}';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { Transaction } from '@/decorators/index.js';
-import { Op } from '@sequelize/core';{{each $imports.objectKeys(entity.belongsToEntity)}}<% const valueEnitty = entity.belongsToEntity[$value]; %>{{if ['File'].includes(valueEnitty.entityName)}}<% return; %>{{/if}}
-import { {{@ valueEnitty.entityName}} } from '{{@ paths.entityPath.replace(replaceNames.name,valueEnitty.entityFileName)}}';{{/each}}{{each $imports.objectKeys(entity.belongsToManyEntity)}}<% const valueEnitty = entity.belongsToManyEntity[$value]; %>{{if ['File'].includes(valueEnitty.entityName)}}<% return; %>{{/if}}
-import { {{@ valueEnitty.entityName}} } from '{{@ paths.entityPath.replace(replaceNames.name,valueEnitty.entityFileName)}}';{{/each}}
+import { Op } from '@sequelize/core';{{each $imports.objectKeys(entity.belongsToEntity)}}<% const valueEntity = entity.belongsToEntity[$value]; %>{{if ['File'].includes(valueEntity.entityName)}}<% return; %>{{/if}}
+import { {{@ valueEntity.entityName}} } from '{{@ paths.entityPath.replace(replaceNames.name,valueEntity.entityFileName)}}';{{/each}}{{each $imports.objectKeys(entity.belongsToManyEntity)}}<% const valueEntity = entity.belongsToManyEntity[$value]; %>{{if ['File'].includes(valueEntity.entityName)}}<% return; %>{{/if}}
+import { {{@ valueEntity.entityName}} } from '{{@ paths.entityPath.replace(replaceNames.name,valueEntity.entityFileName)}}';{{/each}}
 
 {{if entity.pk.length > 1}}type PK = {
   {{each entity.pk}}
@@ -25,26 +25,26 @@ export class {{@ replaceNames.Service}} {
   @Inject()
   i18nService: MidwayI18nService;
   <% const hasStatement = ['File']; %>
-  {{each $imports.objectKeys(entity.belongsToEntity).filter(v=>v!='File')}}<% const valueEnitty = entity.belongsToEntity[$value]; %>{{if hasStatement.includes(valueEnitty.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEnitty.entityName);%>{{/if}}
-  //查询belongsTo关联模型{{@ $value}}{{@ valueEnitty.tableComment}}
-  @InjectRepository({{@ valueEnitty.entityName}})
-  {{@ valueEnitty.entityFileName}}Repository: typeof {{@ valueEnitty.entityName}}
+  {{each $imports.objectKeys(entity.belongsToEntity).filter(v=>v!='File')}}<% const valueEntity = entity.belongsToEntity[$value]; %>{{if hasStatement.includes(valueEntity.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEntity.entityName);%>{{/if}}
+  //查询belongsTo关联模型{{@ $value}}{{@ valueEntity.tableComment}}
+  @InjectRepository({{@ valueEntity.entityName}})
+  {{@ valueEntity.entityFileName}}Repository: typeof {{@ valueEntity.entityName}}
 
  /**
-   * 获取{{@ valueEnitty.tableComment}}信息
+   * 获取{{@ valueEntity.tableComment}}信息
    * @param queryDto
    * @returns
    */
   @Transaction()
-  async get{{@ valueEnitty.entityName}}(page:number,pageSize:number,{{@ valueEnitty.pk[0]}}:{{@ swaggerSchemas[valueEnitty.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}}{{if valueEnitty.nameKeys.length}},{{@ valueEnitty.nameKeys[0]}}: string = '', {{/if}}) {
+  async get{{@ valueEntity.entityName}}(page:number,pageSize:number,{{@ valueEntity.pk[0]}}:{{@ swaggerSchemas[valueEntity.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}}{{if valueEntity.nameKeys.length}},{{@ valueEntity.nameKeys[0]}}: string = '', {{/if}}) {
     const where = {};
-    if({{@ valueEnitty.pk[0]}}){
-      where['{{@ valueEnitty.pk[0]}}'] = {{@ valueEnitty.pk[0]}};
+    if({{@ valueEntity.pk[0]}}){
+      where['{{@ valueEntity.pk[0]}}'] = {{@ valueEntity.pk[0]}};
     }
-    {{if valueEnitty.nameKeys.length}}if({{@ valueEnitty.nameKeys[0]}}){
-      where['{{@ valueEnitty.nameKeys[0]}}'] =  { [Op.like]: '%'+{{@ valueEnitty.nameKeys[0]}}+'%' };
+    {{if valueEntity.nameKeys.length}}if({{@ valueEntity.nameKeys[0]}}){
+      where['{{@ valueEntity.nameKeys[0]}}'] =  { [Op.like]: '%'+{{@ valueEntity.nameKeys[0]}}+'%' };
     }{{/if}}
-    const { count, rows } = await this.{{@ replaceNames.name}}Repository.findAndCountAll({
+    const { count, rows } = await this.{{@ valueEntity.entityFileName}}Repository.findAndCountAll({
       where,
       offset: (page - 1) *  pageSize,
       limit: pageSize,
@@ -57,26 +57,26 @@ export class {{@ replaceNames.Service}} {
     };
   }{{/each}}
   
-  {{each $imports.objectKeys(entity.belongsToManyEntity).filter(v=>v!='File')}}<% const valueEnitty = entity.belongsToManyEntity[$value]; %>{{if hasStatement.includes(valueEnitty.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEnitty.entityName);%>{{/if}}
-  //查询belongsToMany关联模型{{@ $value}}{{@ valueEnitty.tableComment}}
-  @InjectRepository({{@ valueEnitty.entityName}})
-  {{@ valueEnitty.entityFileName}}Repository: typeof {{@ valueEnitty.entityName}}
+  {{each $imports.objectKeys(entity.belongsToManyEntity).filter(v=>v!='File')}}<% const valueEntity = entity.belongsToManyEntity[$value]; %>{{if hasStatement.includes(valueEntity.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEntity.entityName);%>{{/if}}
+  //查询belongsToMany关联模型{{@ $value}}{{@ valueEntity.tableComment}}
+  @InjectRepository({{@ valueEntity.entityName}})
+  {{@ valueEntity.entityFileName}}Repository: typeof {{@ valueEntity.entityName}}
 
   /**
-   * 获取{{@ valueEnitty.tableComment}}信息
+   * 获取{{@ valueEntity.tableComment}}信息
    * @param queryDto
    * @returns
    */
   @Transaction()
-  async get{{@ valueEnitty.entityName}}(page:number,pageSize:number,{{@ valueEnitty.pk[0]}}:{{@ swaggerSchemas[valueEnitty.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}}{{if valueEnitty.nameKeys.length}},{{@ valueEnitty.nameKeys[0]}}: string = '', {{/if}}) {
+  async get{{@ valueEntity.entityName}}(page:number,pageSize:number,{{@ valueEntity.pk[0]}}:{{@ swaggerSchemas[valueEntity.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}}{{if valueEntity.nameKeys.length}},{{@ valueEntity.nameKeys[0]}}: string = '', {{/if}}) {
     const where = {};
-    if({{@ valueEnitty.pk[0]}}){
-      where['{{@ valueEnitty.pk[0]}}'] = {{@ valueEnitty.pk[0]}};
+    if({{@ valueEntity.pk[0]}}){
+      where['{{@ valueEntity.pk[0]}}'] = {{@ valueEntity.pk[0]}};
     }
-    {{if valueEnitty.nameKeys.length}}if({{@ valueEnitty.nameKeys[0]}}){
-      where['{{@ valueEnitty.nameKeys[0]}}'] =  { [Op.like]: '%'+{{@ valueEnitty.nameKeys[0]}}+'%' };
+    {{if valueEntity.nameKeys.length}}if({{@ valueEntity.nameKeys[0]}}){
+      where['{{@ valueEntity.nameKeys[0]}}'] =  { [Op.like]: '%'+{{@ valueEntity.nameKeys[0]}}+'%' };
     }{{/if}}
-    const { count, rows } = await this.{{@ replaceNames.name}}Repository.findAndCountAll({
+    const { count, rows } = await this.{{@ valueEntity.entityFileName}}Repository.findAndCountAll({
       where,
       offset: (page - 1) *  pageSize,
       limit: pageSize,
@@ -98,13 +98,13 @@ export class {{@ replaceNames.Service}} {
   async create(createDto: {{@ replaceNames.CreateDto}}) {
     const entity = await this.{{@ replaceNames.name}}Repository.create(createDto);
     {{each entity.belongsTo}}
-    if(createDto.{{@ $value}}){
-      await entity.set{{@ $imports.upFirstCase($value)}}(createDto.{{@ $value}});
+    if(createDto.{{@ $value}}){//关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.set{{@ $imports.upFirstCase($value)}}(createDto.{{@ $value}}.{{@ entity.belongsToEntity[$value].pk[0]}});
     }
     {{/each}}
     {{each entity.belongsToMany}}
-    if(createDto.{{@ $value}}){
-      await entity.set{{@ $imports.upFirstCase($value)}}(createDto.{{@ $value}});
+    if(createDto.{{@ $value}}){//关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+     await entity.set{{@ $imports.upFirstCase($value)}}(createDto.{{@ $value}}.map(v=>v.{{@ entity.belongsToManyEntity[$value].pk[0]}}));
     }
     {{/each}}
     return entity;
@@ -180,13 +180,13 @@ export class {{@ replaceNames.Service}} {
     }
     Object.assign(entity, updateDto);
     {{each entity.belongsTo}}
-    if(updateDto.{{@ $value}} !== undefined){
-      await entity.set{{@ $imports.upFirstCase($value)}}(updateDto.{{@ $value}});
+    if(updateDto.{{@ $value}} !== undefined){//关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.set{{@ $imports.upFirstCase($value)}}(updateDto.{{@ $value}}?.{{@ entity.belongsToEntity[$value].pk[0]}} ?? null);
     }
     {{/each}}
     {{each entity.belongsToMany}}
-    if(updateDto.{{@ $value}}){
-     await entity.set{{@ $imports.upFirstCase($value)}}(updateDto.{{@ $value}});
+    if(updateDto.{{@ $value}}){//关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+     await entity.set{{@ $imports.upFirstCase($value)}}(updateDto.{{@ $value}}.map(v=>v.{{@ entity.belongsToManyEntity[$value].pk[0]}}));
     }
     {{/each}}
     return await entity.save();

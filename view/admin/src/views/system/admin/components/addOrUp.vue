@@ -36,12 +36,11 @@
 </template>
 
 <script setup lang="ts" name="AddOrUpSystemAdmin">
-import { SystemAdmin, SystemAdminInfo, addSystemAdminApi, updateSystemAdminApi, systemAdminInfoApi } from '@/api/system/admin';
+import { SystemAdmin, addSystemAdminApi, updateSystemAdminApi, systemAdminInfoApi } from '@/api/system/admin';
 import { useLocalesI18n } from '@/locales/i18n';
-import { resetObj, formatterStr } from '@/utils/helper';
+import { resetObj } from '@/utils/helper';
 import { FormInstance, FormRules } from 'element-plus';
 import { isMobile } from '@/utils/validate.js';
-import { VxeColumnPropTypes } from 'vxe-table';
 import { systemRoleTreeAllApi } from '@/api/system/role';
 import { getDict } from '../dict.js';
 const { data: treeAllList, runAsync: getTreeAllAsync } = systemRoleTreeAllApi();

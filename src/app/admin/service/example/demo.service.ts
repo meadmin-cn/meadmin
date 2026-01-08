@@ -37,7 +37,7 @@ export class ExampleDemoService {
     if (username) {
       where['username'] = { [Op.like]: '%' + username + '%' };
     }
-    const { count, rows } = await this.exampleDemoRepository.findAndCountAll({
+    const { count, rows } = await this.userRepository.findAndCountAll({
       where,
       offset: (page - 1) * pageSize,
       limit: pageSize,
@@ -68,7 +68,7 @@ export class ExampleDemoService {
     if (name) {
       where['name'] = { [Op.like]: '%' + name + '%' };
     }
-    const { count, rows } = await this.exampleDemoRepository.findAndCountAll({
+    const { count, rows } = await this.exampleBookRepository.findAndCountAll({
       where,
       offset: (page - 1) * pageSize,
       limit: pageSize,
@@ -91,19 +91,23 @@ export class ExampleDemoService {
     const entity = await this.exampleDemoRepository.create(createDto);
 
     if (createDto.user) {
-      await entity.setUser(createDto.user);
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setUser(createDto.user.id);
     }
 
     if (createDto.avatar) {
-      await entity.setAvatar(createDto.avatar);
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setAvatar(createDto.avatar.id);
     }
 
     if (createDto.books) {
-      await entity.setBooks(createDto.books);
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setBooks(createDto.books.map((v) => v.id));
     }
 
     if (createDto.files) {
-      await entity.setFiles(createDto.files);
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setFiles(createDto.files.map((v) => v.id));
     }
 
     return entity;
@@ -192,19 +196,23 @@ export class ExampleDemoService {
     Object.assign(entity, updateDto);
 
     if (updateDto.user !== undefined) {
-      await entity.setUser(updateDto.user);
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setUser(updateDto.user?.id ?? null);
     }
 
     if (updateDto.avatar !== undefined) {
-      await entity.setAvatar(updateDto.avatar);
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setAvatar(updateDto.avatar?.id ?? null);
     }
 
     if (updateDto.books) {
-      await entity.setBooks(updateDto.books);
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setBooks(updateDto.books.map((v) => v.id));
     }
 
     if (updateDto.files) {
-      await entity.setFiles(updateDto.files);
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setFiles(updateDto.files.map((v) => v.id));
     }
 
     return await entity.save();

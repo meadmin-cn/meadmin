@@ -1,7 +1,7 @@
 // src/decorator/logging.decorator.ts
 import { createCustomMethodDecorator, JoinPoint, MidwayDecoratorService, REQUEST_OBJ_CTX_KEY } from '@midwayjs/core';
 import { ForbiddenError, UnauthorizedError } from '@midwayjs/core/dist/error/http.js';
-import { RegistreDecorator } from '../../../types/decorator.js';
+import { RegistreDecorator } from '@/types/decorator.js';
 import { Context } from '@midwayjs/koa';
 
 // 装饰器内部的唯一 id

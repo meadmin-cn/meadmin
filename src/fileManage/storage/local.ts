@@ -3,7 +3,7 @@ import { relative, resolve } from 'node:path';
 import { createWriteStream, mkdirSync, renameSync, statSync, appendFileSync, createReadStream, existsSync, rmSync } from 'node:fs';
 import { app } from '@meadmin/core';
 import { BaseStorage } from './base.js';
-import { UploadParam, UploadResult, UpStorageInterface } from '../../../types/fileManage.js';
+import { UploadParam, UploadResult, UpStorageInterface } from '@/types/fileManage.js';
 export class LocalStorage extends BaseStorage implements UpStorageInterface {
   get path() {
     return '/' + this.model + '/';

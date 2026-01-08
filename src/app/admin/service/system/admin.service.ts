@@ -6,7 +6,6 @@ import { SystemAdminQueryDto } from '../../dto/system/adminQuery.dto.js';
 import { SystemAdminUpdateDto } from '../../dto/system/adminUpdate.dto.js';
 import { SystemAdmin } from '../../../../entities/systemAdmin.entity.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
-
 import { Op } from '@sequelize/core';
 import { LoginService } from '../login.serveice.js';
 import { SystemMenu } from '@/entities/systemMenu.entity.js';

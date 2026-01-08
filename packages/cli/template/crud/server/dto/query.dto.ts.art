@@ -1,6 +1,6 @@
 import { IntersectionType, PartialType } from '@/helper/dto.js';
 import { {{@ replaceNames.Name}} } from '{{@ paths.entityPath}}';
-import { InferAttributesLoose } from '@/../types/entity.js';
+import { InferAttributesLoose } from '@/types/entity.js';
 import { PageDto } from '@/dto/page.dto.js';
 {{if $imports.objectKeys(entitySchema.properties).some(v=>v.endsWith('At'))}}import { ApiPropertyRule } from '@/decorators/index.js';
 import { RuleType } from '@/ruleType/index.js';{{/if}}

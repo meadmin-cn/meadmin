@@ -1,6 +1,6 @@
 // 开启事务
 import { createCustomMethodDecorator, IMidwayContainer, JoinPoint, MidwayDecoratorService } from '@midwayjs/core';
-import { RegistreDecorator } from '../../types/decorator.js';
+import { RegistreDecorator } from '@/types/decorator.js';
 import { SequelizeDataSourceManagerService } from '@/service/dataSourceManager.service.js';
 import { ManagedTransactionOptions } from '@sequelize/core';
 

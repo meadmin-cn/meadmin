@@ -1,4 +1,4 @@
-import { Model, HasManyGetAssociationsMixin, HasManySetAssociationsMixin, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManyCreateAssociationMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyCountAssociationsMixin, HasOneGetAssociationMixin, HasOneSetAssociationMixin, HasOneCreateAssociationMixin, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, BelongsToCreateAssociationMixin, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToManyCreateAssociationMixin, InferAttributesOptions } from '@sequelize/core';
+import { Model, HasManyGetAssociationsMixin, HasManySetAssociationsMixin, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManyCreateAssociationMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyCountAssociationsMixin, HasOneGetAssociationMixin, HasOneSetAssociationMixin, HasOneCreateAssociationMixin, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, BelongsToCreateAssociationMixin, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToManyCreateAssociationMixin, InferAttributesOptions, CreationAttributes } from '@sequelize/core';
 import type {
   AnyFunction,
 } from '@sequelize/utils';
@@ -6,8 +6,8 @@ import type {
 export type HasOneModel<
   AssociationName extends string, //关联字段
   T extends Model, //关联模型
-  ForeignKey,//外键
-  K = 'id', //关联模型主键key
+  ForeignKey extends keyof CreationAttributes<T> = never,//外键
+  K extends keyof T = 'id' extends keyof T ? 'id':never, //关联模型主键key
 > = {
   //获取关联信息
   [Key in `get${Capitalize<AssociationName>}`]: HasOneGetAssociationMixin<T>;
@@ -24,11 +24,9 @@ export type HasManyModel<
   SingularAssociationName extends string, //关联单数形式
   PluralAssociationName extends string, //关联复数形式
   T extends Model, //关联模型
-  ForeignKey,//外键
-  K = 'id', //关联模型主键key
+  ForeignKey extends keyof CreationAttributes<T> = never,//外键
+  K extends keyof T = 'id' extends keyof T ? 'id':never, //关联模型主键key
 > = {
-//获取关联信息
-  declare getComments: HasManyGetAssociationsMixin<T>;
   //获取关联信息
   [Key in `get${Capitalize<AssociationName>}`]: HasManyGetAssociationsMixin<T>;
 } & {
@@ -63,7 +61,7 @@ export type HasManyModel<
 export type BelongsToModel<
   AssociationName extends string, //关联字段
   T extends Model, //关联模型
-  K = 'id', //关联模型主键key
+  K extends keyof T = 'id' extends keyof T ? 'id':never, //关联模型主键key
 > = {
   //获取关联信息
   [Key in `get${Capitalize<AssociationName>}`]: BelongsToGetAssociationMixin<T>;
@@ -79,7 +77,7 @@ export type BelongsManyModel<
   SingularAssociationName extends string, //关联单数形式
   PluralAssociationName extends string, //关联复数形式
   T extends Model, //关联模型
-  K = 'id', //关联模型主键key
+  K extends keyof T = 'id' extends keyof T ? 'id':never, //关联模型主键key
 > = {
   //获取关联信息
   [Key in `get${Capitalize<AssociationName>}`]: BelongsToManyGetAssociationsMixin<T>;

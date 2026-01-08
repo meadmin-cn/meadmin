@@ -1,5 +1,5 @@
 import { User } from '../../../entities/user.entity.js';
-import { InferAttributesLoose } from '@/../types/entity.js';
+import { InferAttributesLoose } from '@/types/entity.js';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { PartialType, OmitDtoType } from '@/helper/dto.js';
 import { RuleType } from '@midwayjs/validate';

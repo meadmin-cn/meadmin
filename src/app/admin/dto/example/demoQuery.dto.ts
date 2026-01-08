@@ -1,4 +1,4 @@
-import { InferAttributesLoose } from '@/../types/entity.js';
+import { InferAttributesLoose } from '@/types/entity.js';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { PageDto } from '@/dto/page.dto.js';
 import { IntersectionType, PartialType } from '@/helper/dto.js';

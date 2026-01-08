@@ -5,7 +5,6 @@ import { Attribute, Default, PrimaryKey, Table, Unique } from '@sequelize/core/d
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { SystemRole } from './systemRole.entity.js';
 import { AdminTreeModel } from './abstract/adminTree.entity.js';
-import { BelongsManyModel } from '../../types/entity.js';
 
 //rule规则使用添加接口的校验规则
 @Table({ tableName: 'system_menu', comment: '菜单表' })
@@ -151,4 +150,3 @@ export class SystemMenu extends AdminTreeModel<SystemMenu> {
   //具有当前菜单的角色
   declare roles?: NonAttribute<SystemRole[]>;
 }
-export declare interface SystemMenu extends BelongsManyModel<'roles', 'role', 'roles', SystemRole> {}

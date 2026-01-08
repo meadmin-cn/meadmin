@@ -1,3 +1,6 @@
+import { UploadStreamFileInfo } from "@midwayjs/busboy";
+import { ReadStream } from "node:fs";
+
 export type UploadParam = {
   //文件名
   name: string;

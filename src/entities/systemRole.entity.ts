@@ -5,7 +5,7 @@ import { Attribute, Default, PrimaryKey, Table, BelongsToMany, Unique } from '@s
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { SystemMenu } from './systemMenu.entity.js';
 import { AdminTreeModel } from './abstract/adminTree.entity.js';
-import { BelongsManyModel } from '../../types/entity.js';
+import { BelongsManyModel } from '@/types/entity.js';
 import { SystemAdmin } from './systemAdmin.entity.js';
 
 //rule规则使用添加接口的校验规则
@@ -88,4 +88,5 @@ export class SystemRole extends AdminTreeModel<SystemRole> {
   @ApiPropertyRule({ description: '超级管理员:1=是;0=不是', rule: RuleType.number().equal(1, 0).required() })
   isSuper: number;
 }
+//扩展BelongsManyModel方法，应只声明在一侧，避免ts 循环引用错误
 export declare interface SystemRole extends BelongsManyModel<'menus', 'menu', 'menus', SystemMenu> {}

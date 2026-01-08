@@ -1,7 +1,7 @@
 // src/decorator/logging.decorator.ts
 import { createCustomMethodDecorator, JoinPoint, MidwayDecoratorService, REQUEST_OBJ_CTX_KEY } from '@midwayjs/core';
 import { UnauthorizedError } from '@midwayjs/core/dist/error/http.js';
-import { RegistreDecorator } from '../../../types/decorator.js';
+import { RegistreDecorator } from '@/types/decorator.js';
 
 // 装饰器内部的唯一 id
 export const INDEX_PERMISSION_KEY = 'decorator:index_promise';

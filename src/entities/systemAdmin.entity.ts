@@ -4,7 +4,7 @@ import { DataTypes, NonAttribute, Op } from '@sequelize/core';
 import { Attribute, PrimaryKey, Default, Table, Index, DeletedAt, BelongsTo } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { SystemRole } from './systemRole.entity.js';
-import { BelongsManyModel } from '../../types/entity.js';
+import { BelongsManyModel } from '@/types/entity.js';
 import { SystemMenu } from './systemMenu.entity.js';
 import { File } from './file.entity.js';
 import { getSchemaPath } from '@midwayjs/swagger';

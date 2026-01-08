@@ -9,7 +9,7 @@ export * from './admin/permission.js';
 import { SequelizeRegistreDecorators } from './sequelize.js';
 import { IndexPermissionRegistreDecorators } from './index/permission.js';
 import {AdminPermissionRegistreDecorators} from './admin/permission.js';
-import { RegistreDecorator } from '../../types/decorator.js';
+import { RegistreDecorator } from '@/types/decorator.js';
 import {TransactionRegistreDecorators} from './transactions.js';
 
 export class RegistreDecorators {

@@ -1,4 +1,4 @@
-import { InferAttributesLoose } from '@/../types/entity.js';
+import { InferAttributesLoose } from '@/types/entity.js';
 import { SystemRole } from '../../../../entities/systemRole.entity.js';
 import { OmitDtoType, PartialType } from '@/helper/dto.js';
 import { ApiPropertyRule } from '@/decorators/index.js';

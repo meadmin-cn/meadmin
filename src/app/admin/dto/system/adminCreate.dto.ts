@@ -1,6 +1,6 @@
 import { SystemAdmin } from '../../../../entities/systemAdmin.entity.js';
 import { OmitDtoType } from '@/helper/dto.js';
-import { InferAttributesLoose } from '@/../types/entity.js';
+import { InferAttributesLoose } from '@/types/entity.js';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { RuleType } from '@/ruleType/index.js';
 

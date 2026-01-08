@@ -1,6 +1,6 @@
 import { IntersectionType, PartialType } from '@/helper/dto.js';
 import { File } from '../../../entities/file.entity.js';
-import { InferAttributesLoose } from '@/../types/entity.js';
+import { InferAttributesLoose } from '@/types/entity.js';
 import { PageDto } from '@/dto/page.dto.js';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { RuleType } from '@/ruleType/index.js';

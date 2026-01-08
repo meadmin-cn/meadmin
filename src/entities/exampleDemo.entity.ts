@@ -4,7 +4,7 @@ import { uuid } from "@/helper/snowflake.js";
 import { ApiPropertyRule } from "@/decorators/index.js";
 import { RuleType } from "@/ruleType/index.js";
 import { File } from './file.entity.js';
-import { BelongsManyModel, BelongsToModel } from "../../types/entity.js";
+import { BelongsManyModel, BelongsToModel } from "@/types/entity.js";
 import { ExampleBook } from "./exampleBook.entity.js";
 import { User } from "./user.entity.js";
 import { AdminBaseModel } from "./abstract/adminBase.entity.js";

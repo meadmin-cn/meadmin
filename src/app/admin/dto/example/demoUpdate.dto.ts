@@ -1,4 +1,4 @@
-import { InferAttributesLoose } from '@/../types/entity.js';
+import { InferAttributesLoose } from '@/types/entity.js';
 import { OmitDtoType, PartialType } from '@/helper/dto.js';
 import { ExampleDemo } from '../../../../entities/exampleDemo.entity.js';
 

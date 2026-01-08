@@ -1,4 +1,4 @@
-import { UpStorageFunction } from "../../types/fileManage.js";
+import { UpStorageFunction } from "@/types/fileManage.js";
 import { LocalStorage } from "./storage/local.js";
 export interface UploadStorageInterface{
   [key:string]:UpStorageFunction;

@@ -1,4 +1,4 @@
-import { InferAttributesLoose } from '@/../types/entity.js';
+import { InferAttributesLoose } from '@/types/entity.js';
 import { SystemMenu } from '../../../../entities/systemMenu.entity.js';
 import { OmitDtoType, PartialType } from '@/helper/dto.js';
 

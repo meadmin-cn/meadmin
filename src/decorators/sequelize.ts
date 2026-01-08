@@ -5,7 +5,7 @@ import {
   MidwayDecoratorService,
 } from '@midwayjs/core';
 import { Model } from '@sequelize/core';
-import { RegistreDecorator } from '../../types/decorator.js';
+import { RegistreDecorator } from '@/types/decorator.js';
 
 
 //sequize获取Repository

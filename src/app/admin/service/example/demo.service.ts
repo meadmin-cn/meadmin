@@ -154,7 +154,20 @@ export class ExampleDemoService {
       where,
       offset: (queryDto.page - 1) * queryDto.pageSize,
       limit: queryDto.pageSize,
-      include: ['createdAdmin', 'updatedAdmin', 'books', 'booksExampleDemos', 'bookExampleDemo', 'user', 'avatar', 'files', 'filesExampleDemos', 'fileExampleDemo'],
+      include: [
+        'createdAdmin',
+        'updatedAdmin',
+        'books',
+        'user',
+        {
+          association: 'avatar',
+          attributes: { exclude: [] }, //必须设置attributes否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+        {
+          association: 'files',
+          attributes: { exclude: [] }, //必须设置attributes否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+      ],
       order: [['createdAt', 'DESC']],
     });
     return {
@@ -173,7 +186,20 @@ export class ExampleDemoService {
   @Transaction()
   async findOne(id: string) {
     const entity = await this.exampleDemoRepository.findByPk(id, {
-      include: ['createdAdmin', 'updatedAdmin', 'books', 'booksExampleDemos', 'bookExampleDemo', 'user', 'avatar', 'files', 'filesExampleDemos', 'fileExampleDemo'],
+      include: [
+        'createdAdmin',
+        'updatedAdmin',
+        'books',
+        'user',
+        {
+          association: 'avatar',
+          attributes: { exclude: [] }, //必须设置attributes否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+        {
+          association: 'files',
+          attributes: { exclude: [] }, //必须设置attributes否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+      ],
     });
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));

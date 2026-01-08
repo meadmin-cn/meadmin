@@ -20,13 +20,10 @@
     {{if adminPermission}}:onAdd="permission('{{replaceNames.roleName}}_add')?showAddOrUp:undefined"{{else}}:onAdd="showAddOrUp"{{/if}}
     @refresh="search(1)"
   >
-    <% include('./tableColum.vue.art', {...entitySchema, entity:entity}) %>{{if entitySchema.properties.createdAdmin}}
+    <% include('./tableColum.vue.art', {...entitySchema, replaceNames, entity:entity,  belongsToEntity:entity.belongsToEntity, belongsToManyEntity:entity.belongsToManyEntity}) %>{{if entitySchema.properties.createdAdmin}}
     <vxe-column field="createdAdmin" :title="t('{{@ entitySchema.properties.createdAdmin.description}}')" :formatter="formatterObjectFn(obj=>`${obj.nickname}(${obj.username})`)"></vxe-column>
-    {{/if}}
-    {{if entitySchema.properties.updatedAdmin}}
-    <vxe-column field="updatedAdmin" :title="t('{{@ entitySchema.properties.updatedAdmin.description}}')" :formatter="formatterObjectFn(obj=>`${obj.nickname}(${obj.username})`)"></vxe-column>
-    {{/if}}
-    <vxe-column{{if adminPermission}} v-if="permission(['{{replaceNames.roleName}}_edit','{{replaceNames.name}}Del'])"{{/if}} :title="t('操作')" fixed="right" min-width="150px">
+    {{/if}}{{if entitySchema.properties.updatedAdmin}}<vxe-column field="updatedAdmin" :title="t('{{@ entitySchema.properties.updatedAdmin.description}}')" :formatter="formatterObjectFn(obj=>`${obj.nickname}(${obj.username})`)"></vxe-column>
+    {{/if}}<vxe-column{{if adminPermission}} v-if="permission(['{{replaceNames.roleName}}_edit','{{replaceNames.name}}Del'])"{{/if}} :title="t('操作')" fixed="right" min-width="150px">
       <template #default="{ row }: { row: {{@ replaceNames.Name}}Info }">
         <el-button{{if adminPermission}} v-if="permission('{{replaceNames.roleName}}_info')"{{/if}} @click="showInfo({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})" :title="t('详情')">
           <mel-icon-memo />
@@ -53,10 +50,10 @@ import { useLocalesI18n } from '@/locales/i18n';
 import Info from './components/info.vue';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
-import { formatterStr <% if( $imports.objectKeys(entitySchema.properties).some( k=>k.endsWith('At') ) ){ %>, formatterAt <%}%> ,formatterObjectFn, clearEmptyParam } from '@/utils/helper.js';
+import { formatterStr <% if( $imports.objectKeys(entitySchema.properties).some( k=>k.endsWith('At') ) ){ %>, formatterAt <%}%> ,formatterObjectFn,formatterArrFn, clearEmptyParam } from '@/utils/helper.js';
 {{if adminPermission}}import { permission } from '@/utils/permission.js';{{/if}}
-
-const {open} = useActionModel(AddOrUp);
+const {open:openInfo} = useActionModel(Info);
+const {open:openAddOrUp} = useActionModel(AddOrUp);
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), '{{@ replaceNames.name}}']);
 <% if( $imports.objectKeys(entitySchema.properties).some( k=>entitySchema.properties[k].enum || entitySchema.properties[k].description.includes(':') ) ){ %>import { getDict } from './dict.js';
 const dict = getDict(t);
@@ -73,10 +70,10 @@ const del = async ({{@ entity.pk.map(v=>`${v}:${entitySchema.properties[v].type}
   await search(1);
 };
 const showInfo  = ({{@ entity.pk.map(v=>`${v}?:${entitySchema.properties[v].type}`).join(', ')}}) => {
-  open({<%- entity.pk.join(', ')%>});
+  openInfo({<%- entity.pk.join(', ')%>});
 };
 const showAddOrUp = ({{@ entity.pk.map(v=>`${v}?:${entitySchema.properties[v].type}`).join(', ')}}) => {
-  open({<%- entity.pk.join(', ')%>, onSuccess:async ()=>{
+  openAddOrUp({<%- entity.pk.join(', ')%>, onSuccess:async ()=>{
     await search(1);
   }});
 };

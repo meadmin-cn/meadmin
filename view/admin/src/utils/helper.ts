@@ -279,17 +279,38 @@ export function createformatterDictFn<T>(dict: Record<string, { value: string | 
   }
 }
 
-//格式化对象
+//创建格式化vxe表格对象函数
 export function formatterObjectFn(field:string | ((data:Record<string,any>)=>string)){
   return (data: { cellValue: any }) => {
     return formatterStrExec(typeof field === 'string' ? data.cellValue[field]:field(data.cellValue));
   }
 }
 
+//创建格式化对象函数
+export function formatterObjectExecFn(field:string | ((data:Record<string,any>)=>string)){
+  return (data?:Record<string,any> | null) => {
+    return formatterStrExec(typeof field === 'string' ? data?.[field]:field(data ?? {}));
+  }
+}
+
+//创建格式化数组函数
+export function formatterArrFn(field?:string | ((data:Record<string,any>)=>string), delimiter='、' ){
+  return (data: { cellValue: any }) => {
+    return data.cellValue.map((v: any)=>field?formatterStrExec(typeof field === 'string' ? v[field]:field(v)):v).join(delimiter);
+  }
+}
+
+//创建格式化数组函数
+export function formatterArrExecFn(field?:string | ((data:Record<string,any>)=>string), delimiter='、' ){
+  return (data?: any[]) => {
+    return (data ?? []).map((v: any)=>field?formatterStrExec(typeof field === 'string' ? v[field]:field(v)):v).join(delimiter);
+  }
+}
 
 
 //根据文件名判断是否是图片
-export function isImage(filename: string) {
+export function isImage(filename?: string) {
+  if(!filename) return false;
   const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
   const fileExtension = filename.split('.').pop()?.toLowerCase();
   return fileExtension ? imageExtensions.includes(fileExtension) : false;

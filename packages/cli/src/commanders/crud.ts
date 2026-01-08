@@ -149,6 +149,7 @@ function tableInfo(entityName, noBelongs = false) {
     if(swaggerSchemas[entityName]?.properties?.['updatedAdmin']){
       autoAttributes.push('updatedAdmin');
     }
+    const belongs = [];
     const belongsTo = [];
     const belongsToEntity = {};
     const belongsToMany = [];
@@ -156,16 +157,19 @@ function tableInfo(entityName, noBelongs = false) {
     if(!noBelongs){
       Object.keys(modelDefinition.associations).forEach(key=>{
         if(['createdAdmin','updatedAdmin','createdUser','createdUser'].includes(key)){
+          belongs.push(key);
           return;
         }
         if(modelDefinition.associations[key].isSelfAssociation){//TODO::自关联暂不支持
           return;
         }
         if('BelongsTo' === modelDefinition.associations[key].associationType){
+          belongs.push(key);
           belongsTo.push(key);
           belongsToEntity[key] = tableInfo(modelDefinition.associations[key].target.name, true);
         }
         if('BelongsToMany' === modelDefinition.associations[key].associationType){
+          belongs.push(key);
           belongsToMany.push(key);
           belongsToManyEntity[key] = tableInfo(modelDefinition.associations[key].target.name, true);
         }
@@ -189,7 +193,7 @@ function tableInfo(entityName, noBelongs = false) {
       belongsToEntity,
       belongsToMany,
       belongsToManyEntity,
-      belongs:Object.keys(modelDefinition.associations),
+      belongs:belongs,
       nameKeys,
     };
   }

@@ -49,16 +49,22 @@
       <vxe-column field="mobile" :title="t('手机号')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="type" :title="t('类型')" :formatter="formatterDict"></vxe-column>
       <vxe-column field="name" :title="t('名称')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="books" :title="t('书籍')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="user" :title="t('用户')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="avatar" :title="t('头像')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="files" :title="t('附件')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="books" :title="t('书籍')" :formatter="formatterArrFn('name')"></vxe-column>
+      <vxe-column field="user" :title="t('用户')" :formatter="formatterObjectFn('username')"></vxe-column>
+      <vxe-column field="avatar" :title="t('头像')">
+        <template #default="{ row }: { row: ExampleDemoInfo }">
+          <me-table-file-item :files="row.avatar ? [row.avatar] : []"></me-table-file-item>
+        </template>
+      </vxe-column>
+      <vxe-column field="files" :title="t('附件')">
+        <template #default="{ row }: { row: ExampleDemoInfo }">
+          <me-table-file-item :files="row.files"></me-table-file-item>
+        </template>
+      </vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="createdAdmin" :title="t('创建者')" :formatter="formatterObjectFn((obj) => `${obj.nickname}(${obj.username})`)"></vxe-column>
-
       <vxe-column field="updatedAdmin" :title="t('最后更新者')" :formatter="formatterObjectFn((obj) => `${obj.nickname}(${obj.username})`)"></vxe-column>
-
       <vxe-column v-if="permission(['example_demo_edit', 'exampleDemoDel'])" :title="t('操作')" fixed="right" min-width="150px">
         <template #default="{ row }: { row: ExampleDemoInfo }">
           <el-button v-if="permission('example_demo_info')" @click="showInfo(row.id)" :title="t('详情')">
@@ -84,12 +90,13 @@
 import { delExampleDemoApi, ExampleDemoInfo, exampleDemoListApi, ExampleDemoListParam } from '@/api/example/demo';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
-import { createformatterDictFn, formatterAt, formatterObjectFn, formatterStr } from '@/utils/helper.js';
+import { createformatterDictFn, formatterArrFn, formatterAt, formatterObjectFn, formatterStr } from '@/utils/helper.js';
 import { permission } from '@/utils/permission.js';
 import AddOrUp from './components/addOrUp.vue';
+import Info from './components/info.vue';
 import { getDict } from './dict.js';
-
-const { open } = useActionModel(AddOrUp);
+const { open: openInfo } = useActionModel(Info);
+const { open: openAddOrUp } = useActionModel(AddOrUp);
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'exampleDemo']);
 const dict = getDict(t);
 const formatterDict = createformatterDictFn<ExampleDemoInfo>(dict);
@@ -104,10 +111,10 @@ const del = async (id: string) => {
   await search(1);
 };
 const showInfo = (id?: string) => {
-  open({ id });
+  openInfo({ id });
 };
 const showAddOrUp = (id?: string) => {
-  open({
+  openAddOrUp({
     id,
     onSuccess: async () => {
       await search(1);

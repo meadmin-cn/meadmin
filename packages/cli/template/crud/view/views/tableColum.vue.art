@@ -1,2 +1,19 @@
 {{each properties}}{{if ['createdAdmin','updatedAdmin'].includes($index)}} <% return; %>{{/if}}<% const keyInfo = $imports.getKeyInfo($value.description); %>
-<vxe-column field="{{@ $index}}" :title="t('{{@ keyInfo.name}}')" :formatter="<% if ($value.enum || $value.description.includes(':')){%>formatterDict{{else if $index.endsWith('At')}}formatterAt{{else}}formatterStr<%}%>"></vxe-column>{{/each}}
+<vxe-column field="{{@ $index}}" :title="t('{{@ keyInfo.name}}')" {{if $value.$ref !== '#/components/schemas/FileInfo' &&  $value.items?.$ref !== '#/components/schemas/FileInfo'}}:formatter="<% if ($value.enum || $value.description.includes(':')){%>formatterDict
+
+{{else if $index.endsWith('At')}}formatterAt
+{{else if $value.type === 'array'}}{{if $value.items?.$ref }}<% const entityName =  $value.items.$ref.replace('#/components/schemas/',''); %><% const valueEntity = belongsToManyEntity[$index] || belongsToEntity[$index]; %>
+{{if valueEntity}}formatterArrFn('{{@ valueEntity.nameKeys?.[0] || valueEntity.pk[0]}}'){{else}}formatterArrFn{{/if}}
+
+ {{else}}formatterArrFn(){{/if}}
+{{else if $value.$ref}}<% const entityName =  $value.$ref.replace('#/components/schemas/',''); %><% const valueEntity = belongsToManyEntity[$index] || belongsToEntity[$index]; %>
+{{if valueEntity}}formatterObjectFn('{{@ valueEntity.nameKeys?.[0] || valueEntity.pk[0]}}'){{else}}formatterStr{{/if}}
+{{else}}formatterStr<%}%>"{{/if}}>{{if $value.$ref === '#/components/schemas/FileInfo'}}
+<template #default="{ row }: { row: {{@ replaceNames.Name}}Info }">
+  <me-table-file-item :files="row.{{$index}}?[row.{{$index}}]:[]"></me-table-file-item>
+</template>
+{{else if $value.type==='array' && $value.items?.$ref === '#/components/schemas/FileInfo'}}
+<template #default="{ row }: { row: {{@ replaceNames.Name}}Info }">
+  <me-table-file-item :files="row.{{$index}}"></me-table-file-item>
+</template>
+{{/if}}</vxe-column>{{/each}}

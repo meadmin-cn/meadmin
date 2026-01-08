@@ -17,6 +17,33 @@ import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj<% if($imports.objectValues(entitySchema.properties).some(v=>v.enum || v.description.includes(':'))){%>, formatterStr<%}%> } from '@/utils/helper';
 import { FormInstance, FormRules } from 'element-plus';
 {{if $imports.objectValues(entitySchema.properties).some(value=>value.rule?._rules.some(v=>v.name==='mobile'))}}import { isMobile } from '@/utils/validate.js';{{/if}}
+//接口需要现在setup顶层初始化（如果是异步setup需要在异步调用之前初始化），否则会有unMounted，非法调用警告，因为vueRequest使用了unMounted
+const { runAsync:updateRunAsync } = update{{@ replaceNames.Name}}Api();
+const { runAsync:addRunAsync } = add{{@ replaceNames.Name}}Api();
+<% const hasStatement = ['File']; %>
+{{each $imports.objectKeys(entity.belongsToEntity)}}<% const valueEntity = entity.belongsToEntity[$value]; %>{{if hasStatement.includes(valueEntity.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEntity.entityName);%>{{/if}}
+import {get{{@ valueEntity.entityName}}Api} from '@/api/{{@ replaceNames.namePath}}';
+const { runAsync:get{{@ valueEntity.entityName}}RunAsync } = get{{@ valueEntity.entityName}}Api();
+const serach{{@ valueEntity.entityName}} = async (query:string,page:number,pageSize:number)=>{
+  return await get{{@ valueEntity.entityName}}RunAsync({
+    {{@ valueEntity.nameKeys?.[0] || valueEntity.pk[0]}}:query,
+    page:page,
+    pageSize:pageSize
+  })
+}
+{{/each}}
+{{each $imports.objectKeys(entity.belongsToManyEntity)}}<% const valueEntity = entity.belongsToManyEntity[$value]; %>{{if hasStatement.includes(valueEntity.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEntity.entityName);%>{{/if}}
+import {get{{@ valueEntity.entityName}}Api} from '@/api/{{@ replaceNames.namePath}}';
+const { runAsync:get{{@ valueEntity.entityName}}RunAsync } = get{{@ valueEntity.entityName}}Api();
+const serach{{@ valueEntity.entityName}} = async (query:string,page:number,pageSize:number)=>{
+  return await get{{@ valueEntity.entityName}}RunAsync({
+    {{@ valueEntity.nameKeys?.[0] || valueEntity.pk[0]}}:query,
+    page:page,
+    pageSize:pageSize
+  })
+}
+{{/each}}
+
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), '{{@ replaceNames.name}}']);
 await loadRes;
 <% if( $imports.objectKeys(entitySchema.properties).some( k=>entitySchema.properties[k].enum || entitySchema.properties[k].description.includes(':') ) ){ %>import { getDict } from '../dict.js';
@@ -32,28 +59,7 @@ const emit = defineEmits<{
   (e: 'closed'): void;
 }>();
 
-<% const hasStatement = ['File']; %>
-{{each $imports.objectKeys(entity.belongsToEntity)}}<% const valueEntity = entity.belongsToEntity[$value]; %>{{if hasStatement.includes(valueEntity.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEntity.entityName);%>{{/if}}
-import {get{{@ valueEntity.entityName}}Api} from '@/api/{{@ replaceNames.namePath}}';
-const serach{{@ valueEntity.entityName}} = async (query:string,page:number,pageSize:number)=>{
-  return await get{{@ valueEntity.entityName}}Api().runAsync({
-    {{@ valueEntity.nameKeys?.[0] || valueEntity.pk[0]}}:query,
-    page:page,
-    pageSize:pageSize
-  })
-}
-{{/each}}
 
-{{each $imports.objectKeys(entity.belongsToManyEntity)}}<% const valueEntity = entity.belongsToManyEntity[$value]; %>{{if hasStatement.includes(valueEntity.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEntity.entityName);%>{{/if}}
-import {get{{@ valueEntity.entityName}}Api} from '@/api/{{@ replaceNames.namePath}}';
-const serach{{@ valueEntity.entityName}} = async (query:string,page:number,pageSize:number)=>{
-  return await get{{@ valueEntity.entityName}}Api().runAsync({
-    {{@ valueEntity.nameKeys?.[0] || valueEntity.pk[0]}}:query,
-    page:page,
-    pageSize:pageSize
-  })
-}
-{{/each}}
 
 const info = reactive(new {{@ replaceNames.Name}}());
 const loading = ref(false);
@@ -79,9 +85,9 @@ const submit = async () => {
     return formEl.value!.scrollToField(Object.keys(invalidFields!)[0]);
   }
   if (props.{{@ entity.pk[0]}}) {
-    await update{{@ replaceNames.Name}}Api().runAsync(props.{{@ entity.pk.join(', props.')}}, info);
+    await updateRunAsync(props.{{@ entity.pk.join(', props.')}}, info);
   } else {
-    await add{{@ replaceNames.Name}}Api().runAsync(info);
+    await addRunAsync(info);
   }
   show.value = false;
   emit('success');

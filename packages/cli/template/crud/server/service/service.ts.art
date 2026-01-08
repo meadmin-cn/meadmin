@@ -141,7 +141,13 @@ export class {{@ replaceNames.Service}} {
       where,
       offset: (queryDto.page - 1) *  queryDto.pageSize,
       limit: queryDto.pageSize,
-      {{if entity.belongs.length }}include:['{{@ entity.belongs.join("','")}}'],{{/if}}
+      {{if entity.belongs.length }}include:[
+        {{each entity.belongs}}<% const valueEntity = entity.belongsToManyEntity[$value] ||  entity.belongsToEntity[$value]; %>{{if valueEntity?.entityName === 'File'}}{
+          association: '{{@ $value}}',
+          attributes: { exclude: [] }, //必须设置attributes否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+        {{else}}'{{@ $value}}',{{/if}}{{/each}}
+      ],{{/if}}
       {{if $imports.objectKeys(entitySchema.properties).includes('createdAt')}}order: [['createdAt', 'DESC']],{{/if}}
     });
     return {
@@ -159,7 +165,13 @@ export class {{@ replaceNames.Service}} {
    */
   @Transaction()
   async findOne({{if entity.pk.length > 1}}pk:PK{{else}}{{@ entity.pk[0]}}: {{@ entitySchema.properties[entity.pk[0]].type}}{{/if}}) {
-    const entity = await this.{{@ replaceNames.name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}}{{if entity.belongs.length }} ,{include:['{{@ entity.belongs.join("','")}}']}{{/if}});
+    const entity = await this.{{@ replaceNames.name}}Repository.findByPk({{if entity.pk.length > 1}}pk{{else}}{{@ entity.pk[0]}}{{/if}} {{if entity.belongs.length }},{include:[
+        {{each entity.belongs}}<% const valueEntity = entity.belongsToManyEntity[$value] ||  entity.belongsToEntity[$value]; %>{{if valueEntity?.entityName === 'File'}}{
+          association: '{{@ $value}}',
+          attributes: { exclude: [] }, //必须设置attributes否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+        {{else}}'{{@ $value}}',{{/if}}{{/each}}
+      ]}{{/if}});
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }

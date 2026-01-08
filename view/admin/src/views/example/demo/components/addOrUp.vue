@@ -38,7 +38,31 @@ import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
 import { isMobile } from '@/utils/validate.js';
 import { FormInstance, FormRules } from 'element-plus';
+//接口需要现在setup顶层初始化（如果是异步setup需要在异步调用之前初始化），否则会有unMounted，非法调用警告，因为vueRequest使用了unMounted
+const { runAsync: updateRunAsync } = updateExampleDemoApi();
+const { runAsync: addRunAsync } = addExampleDemoApi();
+
+import { getUserApi } from '@/api/example/demo';
+const { runAsync: getUserRunAsync } = getUserApi();
+const serachUser = async (query: string, page: number, pageSize: number) => {
+  return await getUserRunAsync({
+    username: query,
+    page: page,
+    pageSize: pageSize,
+  });
+};
+
+import { getExampleBookApi } from '@/api/example/demo';
 import { getDict } from '../dict.js';
+const { runAsync: getExampleBookRunAsync } = getExampleBookApi();
+const serachExampleBook = async (query: string, page: number, pageSize: number) => {
+  return await getExampleBookRunAsync({
+    name: query,
+    page: page,
+    pageSize: pageSize,
+  });
+};
+
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'exampleDemo']);
 await loadRes;
 const dict = getDict(t);
@@ -50,24 +74,6 @@ const emit = defineEmits<{
   (e: 'success'): void;
   (e: 'closed'): void;
 }>();
-
-import { getUserApi } from '@/api/example/demo';
-const serachUser = async (query: string, page: number, pageSize: number) => {
-  return await getUserApi().runAsync({
-    username: query,
-    page: page,
-    pageSize: pageSize,
-  });
-};
-
-import { getExampleBookApi } from '@/api/example/demo';
-const serachExampleBook = async (query: string, page: number, pageSize: number) => {
-  return await getExampleBookApi().runAsync({
-    name: query,
-    page: page,
-    pageSize: pageSize,
-  });
-};
 
 const info = reactive(new ExampleDemo());
 const loading = ref(false);
@@ -101,9 +107,9 @@ const submit = async () => {
     return formEl.value!.scrollToField(Object.keys(invalidFields!)[0]);
   }
   if (props.id) {
-    await updateExampleDemoApi().runAsync(props.id, info);
+    await updateRunAsync(props.id, info);
   } else {
-    await addExampleDemoApi().runAsync(info);
+    await addRunAsync(info);
   }
   show.value = false;
   emit('success');

@@ -6,6 +6,8 @@ import { uuid } from '@/helper/snowflake.js';
 import { UserFile } from './userFile.entity.js';
 import { getSchemaPath } from '@midwayjs/swagger';
 import { BaseModel } from './abstract/base.entity.js';
+import { BelongsToModel } from '@/types/entity.js';
+import { SystemAdmin } from './systemAdmin.entity.js';
 
 
 //rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
@@ -37,7 +39,7 @@ export class User extends BaseModel<User> {
   @Attribute({ type: DataTypes.STRING(20), comment: '头像附件id' })
   avatarFileId: string;
 
-  @ApiPropertyRule({ description: '头像（优先级高于avatarFileId）', $ref: getSchemaPath('UserFile'), rule: RuleType.object({id:RuleType.string().required()}) })
+  @ApiPropertyRule({ description: '头像', $ref: getSchemaPath('UserFile'), rule: RuleType.object({id:RuleType.string().required()}) })
   // @BelongsTo(() => UserFile, /* foreign key */ 'avatarFileId')  避免循环引用，将外键配置放在userFile表中
   avatar?: NonAttribute<UserFile>;
 
@@ -90,35 +92,61 @@ export class User extends BaseModel<User> {
   declare deletedAt: Date | null;
 
  @ApiPropertyRule({
-    description: '创建者Id',
+    description: '创建者(用户)Id',
     type: 'string',
   })
   @Attribute({
-    comment: '创建者Id(用户)',
+    comment: '创建者(用户)Id',
     type: DataTypes.STRING(20),
   })
-  createdUserId: string;
+  createdUserId: string | null;
 
   @ApiPropertyRule({
-    description: '创建者',
+    description: '创建者(用户)',
     type: () => User,
   })
-  @BelongsTo(() => User, 'createdUserId')
+  @BelongsTo(() => User, {foreignKey:'createdUserId',foreignKeyConstraints:false})
   declare createdUser?: NonAttribute<User>;
 
   @Attribute({
-    comment: '更新者Id(管理员)',
+    comment: '最后更新者(用户)Id',
     type: DataTypes.STRING(20),
   })
-  updatedUserId: string;
+  updatedUserId: string | null;
 
   @ApiPropertyRule({
-    description: '最后更新者',
+    description: '最后更新者(用户)',
     type: () => User,
   })
-  @BelongsTo(() => User, 'updatedUserId')
+  @BelongsTo(() => User, {foreignKey:'updatedUserId',foreignKeyConstraints:false})
   declare updatedUser?: NonAttribute<User>;
 
+
+  @Attribute({
+    comment: '创建者(管理员)Id',
+    type: DataTypes.STRING(20),
+  })
+  createdAdminId: string | null;
+
+  @ApiPropertyRule({
+    description: '创建者(管理员)',
+    type: () => SystemAdmin,
+  })
+  @BelongsTo(() => SystemAdmin, {foreignKey:'createdAdminId',foreignKeyConstraints:false})
+  declare createdAdmin?: NonAttribute<SystemAdmin | null>;
+
+  @Attribute({
+    comment: '最后更新者(管理员)Id',
+    type: DataTypes.STRING(20),
+  })
+  updatedAdminId: string | null;
+
+  @ApiPropertyRule({
+    description: '最后更新者(管理员)',
+    type: () => SystemAdmin,
+  })
+  @BelongsTo(() => SystemAdmin, {foreignKey:'updatedAdminId',foreignKeyConstraints:false})
+  declare updatedAdmin?: NonAttribute<SystemAdmin  | null>;
 
   //json转义时丢弃password
   toJSON() {
@@ -131,3 +159,4 @@ export class User extends BaseModel<User> {
     );
   }
 }
+export declare interface User extends BelongsToModel<'avatar', UserFile> {}

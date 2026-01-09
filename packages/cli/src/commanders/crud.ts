@@ -138,7 +138,7 @@ function tableInfo(entityName, noBelongs = false) {
       tableComment = tableComment.slice(0, -1);
     }
     const autoAttributes = [...modelDefinition.primaryKeysAttributeNames, ...modelDefinition.readOnlyAttributeNames];
-    ['deletedVersion', 'createdAdminId', 'updatedAdminId'].forEach((attribute) => {
+    ['deletedVersion', 'createdAdminId', 'updatedAdminId', 'createdUserId', 'updatedUserId'].forEach((attribute) => {
       if (modelDefinition.attributes.has(attribute)) {
         autoAttributes.push(attribute);
       }
@@ -149,6 +149,12 @@ function tableInfo(entityName, noBelongs = false) {
     if(swaggerSchemas[entityName]?.properties?.['updatedAdmin']){
       autoAttributes.push('updatedAdmin');
     }
+    if(swaggerSchemas[entityName]?.properties?.['createdUser']){
+      autoAttributes.push('createdUser');
+    }
+    if(swaggerSchemas[entityName]?.properties?.['updatedUser']){
+      autoAttributes.push('updatedUser');
+    }
     const belongs = [];
     const belongsTo = [];
     const belongsToEntity = {};
@@ -156,7 +162,7 @@ function tableInfo(entityName, noBelongs = false) {
     const belongsToManyEntity = {};
     if(!noBelongs){
       Object.keys(modelDefinition.associations).forEach(key=>{
-        if(['createdAdmin','updatedAdmin','createdUser','createdUser'].includes(key)){
+        if(['createdAdmin','updatedAdmin','createdUser','updatedUser'].includes(key)){
           belongs.push(key);
           return;
         }

@@ -282,14 +282,14 @@ export function createformatterDictFn<T>(dict: Record<string, { value: string | 
 //创建格式化vxe表格对象函数
 export function formatterObjectFn(field:string | ((data:Record<string,any>)=>string)){
   return (data: { cellValue: any }) => {
-    return formatterStrExec(typeof field === 'string' ? data.cellValue[field]:field(data.cellValue));
+    return data.cellValue? formatterStrExec(typeof field === 'string' ? data.cellValue[field]:field(data.cellValue)) :formatterStrExec('');
   }
 }
 
 //创建格式化对象函数
 export function formatterObjectExecFn(field:string | ((data:Record<string,any>)=>string)){
   return (data?:Record<string,any> | null) => {
-    return formatterStrExec(typeof field === 'string' ? data?.[field]:field(data ?? {}));
+    return data ? formatterStrExec(typeof field === 'string' ? data?.[field]:field(data ?? {})) :formatterStrExec('');
   }
 }
 

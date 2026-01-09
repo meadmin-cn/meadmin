@@ -30,7 +30,7 @@ export type User = {
   username: string; //用户名
   nickname: string; //昵称
   password: string; //密码
-  avatar: UserFile | null; //头像（优先级高于avatarFileId）
+  avatar: UserFile | null; //头像
   email: string | null; //邮箱
   mobile: string | null; //手机号
   loginFailure: number; //登录失败次数

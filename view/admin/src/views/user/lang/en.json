@@ -1,0 +1,18 @@
+{
+  "ID": "Id",
+  "用户名": "Username",
+  "昵称": "Nickname",
+  "密码": "Password",
+  "头像": "Avatar",
+  "邮箱": "Email",
+  "手机号": "Mobile",
+  "登录失败次数": "Login failure",
+  "最后登录时间": "Last login time",
+  "最后登录ip": "Last login ip",
+  "状态": "Status",
+  "创建者Id": "Created user id",
+  "创建者": "Created user",
+  "最后更新者": "Updated user",
+  "创建时间": "Created time",
+  "最后更新时间": "Updated time"
+}

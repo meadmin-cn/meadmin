@@ -9,28 +9,28 @@ import { SystemAdmin } from "../systemAdmin.entity.js";
 export class AdminBaseModel<M extends AdminBaseModel<any>> extends BaseModel<M> {
 
   @Attribute({
-    comment: '创建者Id(管理员)',
+    comment: '创建者(管理员)Id',
     type: DataTypes.STRING(20),
   })
   createdAdminId: string;
 
   @ApiPropertyRule({
-    description: '创建者',
+    description: '创建者(管理员)',
     type: () => SystemAdmin,
   })
-  @BelongsTo(() => SystemAdmin, 'createdAdminId')
+  @BelongsTo(() => SystemAdmin, {foreignKey:'createdAdminId',foreignKeyConstraints:false})
   declare createdAdmin?: NonAttribute<SystemAdmin | null>;
 
   @Attribute({
-    comment: '更新者Id(管理员)',
+    comment: '最后更新者(管理员)Id',
     type: DataTypes.STRING(20),
   })
   updatedAdminId: string;
 
   @ApiPropertyRule({
-    description: '最后更新者',
+    description: '最后更新者(管理员)',
     type: () => SystemAdmin,
   })
-  @BelongsTo(() => SystemAdmin, 'updatedAdminId')
+  @BelongsTo(() => SystemAdmin, {foreignKey:'updatedAdminId',foreignKeyConstraints:false})
   declare updatedAdmin?: NonAttribute<SystemAdmin  | null>;
 }

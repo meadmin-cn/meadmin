@@ -28,9 +28,6 @@ export class SystemAdminService {
    * @returns
    */
   async create(createDto: SystemAdminCreateDto) {
-    if (createDto.avatar?.id !== undefined) {
-      createDto.avatarFileId = createDto.avatar?.id ?? null;
-    }
     if (createDto.password) {
       Object.assign(createDto, this.loginService.entityPassword(createDto.password));
     }
@@ -39,6 +36,9 @@ export class SystemAdminService {
     await entity.save();
     if (createDto.roleIds) {
       await entity.setRoles(createDto.roleIds);
+    }
+    if (createDto.avatar) {
+      await entity.setAvatar(createDto.avatar.id);
     }
     return entity;
   }
@@ -174,9 +174,6 @@ export class SystemAdminService {
     }
     const password = entity.password;
     const salf = entity.salt;
-    if (updateDto.avatar !== undefined) {
-      updateDto.avatarFileId = updateDto.avatar?.id ?? null;
-    }
     Object.assign(entity, updateDto);
     if (updateDto.password) {
       Object.assign(entity, this.loginService.entityPassword(updateDto.password));
@@ -186,6 +183,10 @@ export class SystemAdminService {
     }
     if (updateDto.roleIds) {
       await entity.setRoles(updateDto.roleIds);
+    }
+    if (updateDto.avatar !== undefined) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setAvatar(updateDto.avatar?.id ?? null);
     }
     return await entity.save();
   }

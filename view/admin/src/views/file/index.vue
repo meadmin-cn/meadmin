@@ -44,7 +44,7 @@
       total: data?.total ?? 0,
       layout: 'sizes, prev, pager, next, jumper, ->, total',
       change: search,
-    }" align="center" border @refresh="search(1)" @add="showAdd()">
+    }" align="center" border  :onAdd="permission('file_add')?showAdd:undefined" @refresh="search(1)">
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
       <vxe-column :title="t('预览')">
          <template #default="{ row }: { row: FileInfo }">
@@ -56,7 +56,7 @@
       <vxe-column field="mimeType" :title="t('mime类型')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="size" :title="t('文件大小')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="storage" :title="t('存储引擎')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="createdAdmin" :title="t('创建者')" :formatter="formatterStr">
+      <vxe-column field="createdAdmin" :title="t('创建者(管理员))')" :formatter="formatterStr">
         <template #default="{ row }: { row: FileInfo }">
           {{ row.createdAdmin.nickname }}({{ row.createdAdmin.username }})
         </template>
@@ -64,7 +64,7 @@
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column :title="t('操作')" v-if="permission(['file_info', 'file_edit', 'file_del'])" fixed="right" min-width="150px">
         <template #default="{ row }: { row: FileInfo }">
-          <me-button v-if="permission('example_demo_info')" @click="showInfo(row.id)" link :title="t('详情')">
+          <me-button v-if="permission('file_info')" @click="showInfo(row.id)" link :title="t('详情')">
             <mel-icon-memo />
           </me-button>
           <el-button v-if="permission('file_edit')" @click="showUp(row.id)" link :title="t('编辑')">
@@ -92,7 +92,6 @@ import { formatterStr, formatterAt } from '@/utils/helper.js';
 import { permission } from '@/utils/permission.js';
 import Add from './components/add.vue';
 import Info from './components/info.vue';
-
 const { open: openUp } = useActionModel(Up);
 const { open: openAdd } = useActionModel(Add);
 const { open: openInfo } = useActionModel(Info);

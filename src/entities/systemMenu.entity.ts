@@ -15,7 +15,7 @@ export class SystemMenu extends AdminTreeModel<SystemMenu> {
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
   id: string;
 
-  @BelongsTo(()=>SystemMenu,'parentId')
+  @BelongsTo(()=>SystemMenu,{ foreignKey:'parentId',foreignKeyConstraints:false})//不创建数据库外键约束
   @ApiPropertyRule({ description: '父级', type: ()=>SystemMenu })
   declare parent?: NonAttribute<SystemMenu>;
 

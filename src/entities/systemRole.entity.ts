@@ -17,7 +17,7 @@ export class SystemRole extends AdminTreeModel<SystemRole> {
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
   id: string;
 
-  @BelongsTo(()=>SystemRole,'parentId')
+  @BelongsTo(()=>SystemRole,{ foreignKey:'parentId',foreignKeyConstraints:false})//不创建数据库外键约束
   @ApiPropertyRule({ description: '父级', type: ()=>SystemMenu })
   declare parent?: NonAttribute<SystemRole>;
 

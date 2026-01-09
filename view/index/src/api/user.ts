@@ -1,5 +1,5 @@
 import request, { RequestOptions } from '@/utils/request.js';
-import {FileInfo} from './file.js';
+import { FileInfo } from './file.js';
 
 
 
@@ -7,7 +7,7 @@ export type UserInfo = {
   id: string; //ID
   username:string; //用户名
   nickname:string; //昵称
-  avatar:FileInfo | null | undefined; //头像（优先级高于avatarFileId）
+  avatar:FileInfo | null | undefined; //头像
   email:string|null; //邮箱
   mobile: string|null; //手机号
   password: string; //密码

@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Post, Inject, Param, Files, Fields, Config } from '@midwayjs/core';
 import { BaseController } from './base.controller.js';
 import { File } from '../../../entities/file.entity.js';
-import { FileCreateDto } from '../dto/fileCreate.dto.js';
 import { FileQueryDto } from '../dto/fileQuery.dto.js';
 import { FileUpdateDto } from '../dto/fileUpdate.dto.js';
 import { FileService } from '../service/file.service.js';
@@ -50,16 +49,6 @@ export class FileController extends BaseController {
     const file = files[0]; //只获取一个文件，不支持多文件数组
     const res = await uploadStorage.localStorage('admin').upload(file,params);
     return this.success(res?(await this.fileService.create(res)):{});
-  }
-
-  //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/add')
-  @ApiOperationResponse({
-    responseType: File,
-    summary: '添加附件信息',
-  })
-  async add(@Body() createDto: FileCreateDto) {
-    return this.success(await this.fileService.create(createDto));
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头

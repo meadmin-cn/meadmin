@@ -4,10 +4,11 @@ import { DataTypes, NonAttribute, Op } from '@sequelize/core';
 import { Attribute, PrimaryKey, Default, Table, Index, DeletedAt, BelongsTo } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { SystemRole } from './systemRole.entity.js';
-import { BelongsManyModel } from '@/types/entity.js';
+import { BelongsManyModel, BelongsToModel } from '@/types/entity.js';
 import { SystemMenu } from './systemMenu.entity.js';
 import { File } from './file.entity.js';
 import { getSchemaPath } from '@midwayjs/swagger';
+// import { BaseModel } from './abstract/base.entity.js';
 import { BaseModel } from './abstract/base.entity.js';
 
 //rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
@@ -124,29 +125,29 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
   }
 
   @Attribute({
-    comment: '创建者Id(管理员)',
+    comment: '创建者(管理员)Id',
     type: DataTypes.STRING(20),
   })
   createdAdminId: string;
 
   @ApiPropertyRule({
-    description: '创建者',
+    description: '创建者(管理员)',
     type: () => SystemAdmin,
   })
-  @BelongsTo(() => SystemAdmin, 'createdAdminId')
+  @BelongsTo(() => SystemAdmin, {foreignKey:'createdAdminId',foreignKeyConstraints:false})
   declare createdAdmin?: NonAttribute<SystemAdmin | null>;
 
   @Attribute({
-    comment: '更新者Id(管理员)',
+    comment: '最后更新者(管理员)Id',
     type: DataTypes.STRING(20),
   })
   updatedAdminId: string;
 
   @ApiPropertyRule({
-    description: '最后更新者',
+    description: '最后更新者(管理员)',
     type: () => SystemAdmin,
   })
-  @BelongsTo(() => SystemAdmin, 'updatedAdminId')
+  @BelongsTo(() => SystemAdmin, {foreignKey:'updatedAdminId',foreignKeyConstraints:false})
   declare updatedAdmin?: NonAttribute<SystemAdmin  | null>;
 
   //json转义时丢弃password
@@ -161,3 +162,4 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
   }
 }
 export declare interface SystemAdmin extends BelongsManyModel<'roles', 'role', 'roles', SystemRole> {}
+export declare interface SystemAdmin extends BelongsToModel<'avatar', File> {}

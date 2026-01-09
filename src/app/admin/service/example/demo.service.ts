@@ -161,11 +161,11 @@ export class ExampleDemoService {
         'user',
         {
           association: 'avatar',
-          attributes: { exclude: [] }, //必须设置attributes否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
         },
         {
           association: 'files',
-          attributes: { exclude: [] }, //必须设置attributes否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
         },
       ],
       order: [['createdAt', 'DESC']],
@@ -193,11 +193,11 @@ export class ExampleDemoService {
         'user',
         {
           association: 'avatar',
-          attributes: { exclude: [] }, //必须设置attributes否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
         },
         {
           association: 'files',
-          attributes: { exclude: [] }, //必须设置attributes否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
         },
       ],
     });

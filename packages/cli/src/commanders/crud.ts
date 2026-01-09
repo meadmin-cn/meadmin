@@ -419,7 +419,7 @@ async function setMenu(model: string, namePath: string, sequelize: Sequelize) {
     where: { rule: paths.join('_') + '_edit' },
     defaults: {
       parentId,
-      title: '修改',
+      title: '编辑',
       menuType: 3, //按钮
       orderNum: 96,
     },

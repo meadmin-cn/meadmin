@@ -45,7 +45,7 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
 
   @Index({unique:true, where:{'deleted_at': { [Op.isNot]: null }}}) //局部唯一索引设置只有不删除的数据加索引
   @Attribute({ type: DataTypes.STRING(100), comment: '邮箱'})
-  @ApiPropertyRule({ description: '邮箱', rule: RuleType.string().email().max(100).required() })
+  @ApiPropertyRule({ description: '邮箱', rule: RuleType.string().email().max(100) })
   email: string;
 
   @Index({unique:true, where:{'deleted_at': { [Op.isNot]: null }}}) //局部唯一索引设置只有不删除的数据加索引

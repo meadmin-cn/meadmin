@@ -91,7 +91,7 @@ export function {{@ replaceNames.name}}InfoApi(options?: RequestOptions<{{@ repl
       url: `{{@ replaceNames.controllerPath}}/info/${<%- entity.pk.join('/${') %>}`,
       method: 'get',
     }),
-    options,
+    Object.assign({ noLoading: true }, options),
   );
 }
 

@@ -30,23 +30,18 @@
 </template>
 
 <script setup lang="ts" name="AddOrUpSystemRole">
-import { SystemRole, SystemRoleInfo, addSystemRoleApi, updateSystemRoleApi, systemRoleInfoApi, systemRoleTreeAllApi } from '@/api/system/role';
+import { SystemRole, addSystemRoleApi, updateSystemRoleApi, systemRoleInfoApi, systemRoleTreeAllApi } from '@/api/system/role';
 import { useLocalesI18n } from '@/locales/i18n';
-import { resetObj, formatterStr } from '@/utils/helper';
+import { resetObj } from '@/utils/helper';
 import { FormInstance, FormRules } from 'element-plus';
-import { VxeColumnPropTypes } from 'vxe-table';
+import { getDict } from '../dict.js';
+const {runAsync: systemRoleInfoApiRunSync} = systemRoleInfoApi();
+const {runAsync: updateSystemRoleApiRunAsync} = updateSystemRoleApi();
+const {runAsync: addSystemRoleApiRunAsync} = addSystemRoleApi();
+const { data:treeAllList, runAsync:getTreeAllAsync } = systemRoleTreeAllApi();
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemRole']);
-await loadRes;
-const dict = {
-  status: [
-    { value: 1, label: t('启用') },
-    { value: 0, label: t('禁用') },
-  ],
-};
-const formatterDict: VxeColumnPropTypes.Formatter<SystemRoleInfo> = ({ cellValue, column }) => {
-  //因为ts类型判定不得不断言dict
-  return formatterStr({ cellValue: (dict as Record<string, { value: string | number; label: string }[]>)[column.field]?.find((item) => item.value == cellValue)?.label });
-};
+await Promise.all([loadRes,getTreeAllAsync()]);
+const dict = getDict(t);
 const show = defineModel<boolean>();
 const props = defineProps<{
   id?: string;
@@ -55,8 +50,6 @@ const emit = defineEmits<{
   (e: 'success'): void;
   (e: 'closed'): void;
 }>();
-const { data:treeAllList,runAsync:getTreeAllAsync } = systemRoleTreeAllApi();
-getTreeAllAsync();
 const info = reactive(new SystemRole());
 const loading = ref(false);
 watch(
@@ -64,7 +57,7 @@ watch(
   async (id?: string) => {
     if (id) {
       loading.value = true;
-      resetObj(info, await systemRoleInfoApi({ noLoading: true }).runAsync(id));
+      resetObj(info, await systemRoleInfoApiRunSync(id));
       loading.value = false;
     }
   },
@@ -91,9 +84,9 @@ const submit = async () => {
     return formEl.value!.scrollToField(Object.keys(invalidFields!)[0]);
   }
   if (props.id) {
-    await updateSystemRoleApi().runAsync(props.id, info);
+    await updateSystemRoleApiRunAsync(props.id, info);
   } else {
-    await addSystemRoleApi().runAsync(info);
+    await addSystemRoleApiRunAsync(info);
   }
   emit('success');
   show.value = false;

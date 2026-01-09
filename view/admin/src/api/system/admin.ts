@@ -80,7 +80,7 @@ export function systemAdminInfoApi(options?: RequestOptions<SystemAdminInfo, [st
       url: `system/admin/info/${id}`,
       method: 'get',
     }),
-    options,
+    Object.assign({ noLoading: true }, options),
   );
 }
 

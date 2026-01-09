@@ -53,31 +53,31 @@
       <vxe-column field="user" :title="t('用户')" :formatter="formatterObjectFn('username')"></vxe-column>
       <vxe-column field="avatar" :title="t('头像')">
         <template #default="{ row }: { row: ExampleDemoInfo }">
-          <me-table-file-item :files="row.avatar ? [row.avatar] : []"></me-table-file-item>
+          <me-files-view :files="row.avatar ? [row.avatar] : []"></me-files-view>
         </template>
       </vxe-column>
       <vxe-column field="files" :title="t('附件')">
         <template #default="{ row }: { row: ExampleDemoInfo }">
-          <me-table-file-item :files="row.files"></me-table-file-item>
+          <me-files-view :files="row.files"></me-files-view>
         </template>
       </vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="createdAdmin" :title="t('创建者')" :formatter="formatterObjectFn((obj) => `${obj.nickname}(${obj.username})`)"></vxe-column>
       <vxe-column field="updatedAdmin" :title="t('最后更新者')" :formatter="formatterObjectFn((obj) => `${obj.nickname}(${obj.username})`)"></vxe-column>
-      <vxe-column v-if="permission(['example_demo_edit', 'exampleDemoDel'])" :title="t('操作')" fixed="right" min-width="150px">
+      <vxe-column v-if="permission(['example_demo_add', 'example_demo_edit', 'exampleDemo_del'])" :title="t('操作')" fixed="right" min-width="150px">
         <template #default="{ row }: { row: ExampleDemoInfo }">
-          <el-button v-if="permission('example_demo_info')" @click="showInfo(row.id)" :title="t('详情')">
+          <me-button v-if="permission('example_demo_info')" @click="showInfo(row.id)" link :title="t('详情')">
             <mel-icon-memo />
-          </el-button>
-          <el-button v-if="permission('example_demo_edit')" @click="showAddOrUp(row.id)" :title="t('编辑')">
+          </me-button>
+          <me-button v-if="permission('example_demo_edit')" @click="showAddOrUp(row.id)" link :title="t('编辑')">
             <mel-icon-edit />
-          </el-button>
+          </me-button>
           <el-popconfirm v-if="permission('example_demo_del')" :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
             <template #reference>
-              <el-button :key="row.id" :loading="delLoading && delId === row.id" type="danger" :title="t('删除')">
+              <me-button :key="row.id" :loading="delLoading && delId === row.id" type="danger" link :title="t('删除')">
                 <mel-icon-delete />
-              </el-button>
+              </me-button>
             </template>
           </el-popconfirm>
         </template>

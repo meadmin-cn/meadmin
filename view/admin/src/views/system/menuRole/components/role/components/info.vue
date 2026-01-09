@@ -2,32 +2,12 @@
   <me-dialog v-model="show" :title="t('详情')" :close-on-click-modal="false" @closed="emit('closed')">
     <el-descriptions class="info" :border="true" v-loading="loading">
       <el-descriptions-item :label="t('ID')">{{ formatterStrExec(data?.id) }}</el-descriptions-item>
-      <el-descriptions-item :label="t('用户名')">{{ formatterStrExec(data?.username) }}</el-descriptions-item>
-      <el-descriptions-item :label="t('昵称')">{{ formatterStrExec(data?.nickname) }}</el-descriptions-item>
-      <el-descriptions-item :label="t('头像')">
-        <me-files-view :files="data?.avatar ? [data.avatar] : []"></me-files-view>
-      </el-descriptions-item>
-      <el-descriptions-item :label="t('邮箱')">
-        {{ formatterStrExec(data?.email) }}
-      </el-descriptions-item>
-      <el-descriptions-item :label="t('手机号')">
-        {{ formatterStrExec(data?.mobile) }}
-      </el-descriptions-item>
-      <el-descriptions-item :label="t('登录失败次数')">
-        {{ formatterStrExec(data?.loginFailure) }}
-      </el-descriptions-item>
-      <el-descriptions-item :label="t('最后登录时间')">
-        {{ formatterStrExec(data?.lastLoginAt) }}
-      </el-descriptions-item>
-      <el-descriptions-item :label="t('最后登录ip')">
-        {{ formatterStrExec(data?.lastLoginIp) }}
-      </el-descriptions-item>
-      <el-descriptions-item :label="t('状态')">
-        {{ formatterDictExec(dict, 'status', data?.status) }}
-      </el-descriptions-item>
-      <el-descriptions-item :label="t('具有的角色')">
-        <el-tag v-for="item in data?.roles || []">{{ item.roleName }}</el-tag>
-      </el-descriptions-item>
+      <el-descriptions-item :label="t('父级')">{{ formatterStrExec(data?.parent?.roleName) }}</el-descriptions-item>
+      <el-descriptions-item :label="t('角色名称')">{{ formatterStrExec(data?.roleName) }}</el-descriptions-item>
+      <el-descriptions-item :label="t('角色标识')">{{ formatterStrExec(data?.roleKey) }}</el-descriptions-item>
+      <el-descriptions-item :label="t('排序(降序)')">{{ formatterStrExec(data?.orderNum) }}</el-descriptions-item>
+      <el-descriptions-item :label="t('状态')">{{ formatterDictExec(dict, 'status',data?.status) }}</el-descriptions-item>
+      <el-descriptions-item :label="t('备注')">{{ formatterStrExec(data?.remark) }}</el-descriptions-item>
       <el-descriptions-item :label="t('创建时间')">
         {{ formatterAtExec(data?.createdAt) }}
       </el-descriptions-item>
@@ -44,10 +24,10 @@
 </template>
 
 <script setup lang="ts" name="Info">
-import { systemAdminInfoApi } from '@/api/system/admin.js';
 import { useLocalesI18n } from '@/locales/hooks.js';
-import { formatterAtExec, formatterDictExec, formatterStrExec } from '@/utils/helper.js';
+import { formatterAtExec, formatterStrExec, formatterDictExec } from '@/utils/helper.js';
 import { getDict } from '../dict.js';
+import { systemRoleInfoApi } from '@/api/system/role.js';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemAdmin']);
 await loadRes;
 const dict = getDict(t);
@@ -58,7 +38,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'closed'): void;
 }>();
-const { data, loading, runAsync } = systemAdminInfoApi();
+const { data, loading, runAsync } = systemRoleInfoApi();
 watch(
   () => props.id,
   async (id?: string) => {
@@ -71,6 +51,9 @@ watch(
 </script>
 <style lang="scss" scoped>
 .info {
-
+  .view-img {
+    width: 80px;
+    height: 80px;
+  }
 }
 </style>

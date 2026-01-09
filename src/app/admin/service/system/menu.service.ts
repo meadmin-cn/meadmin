@@ -95,7 +95,7 @@ export class SystemMenuService {
    */
   async findOne(id: string) {
     const entity = await this.SystemMenuRepository.findByPk(id,{
-      include:['createdAdmin','updatedAdmin',]
+      include:['parent','createdAdmin','updatedAdmin',]
     });
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));

@@ -13,7 +13,7 @@
         </el-select>
       </el-form-item>
       <el-form-item :label="t('状态')" prop="status">
-        <el-select v-model="info.status" :value-on-clear="null" clearable>
+        <el-select v-model="info.status" :value-on-clear="null" >
           <el-option v-for="val in dict.status" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
       </el-form-item>
@@ -71,54 +71,18 @@
 </template>
 
 <script setup lang="ts" name="AddOrUpSystemMenu">
-import { SystemMenu, SystemMenuInfo, addSystemMenuApi, updateSystemMenuApi, systemMenuInfoApi, systemMenuTreeAllApi } from '@/api/system/menu';
+import { SystemMenu, addSystemMenuApi, updateSystemMenuApi, systemMenuInfoApi, systemMenuTreeAllApi } from '@/api/system/menu';
 import { useLocalesI18n } from '@/locales/i18n';
-import { resetObj, formatterStr } from '@/utils/helper';
+import { resetObj } from '@/utils/helper';
 import { FormInstance, FormRules } from 'element-plus';
-import { VxeColumnPropTypes } from 'vxe-table';
+import { getDict } from '../dict.js';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemMenu']);
-await loadRes;
-const dict = {
-  menuType: [
-    { value: 1, label: t('目录') },
-    { value: 2, label: t('菜单') },
-    { value: 3, label: t('按钮') },
-  ],
-  status: [
-    { value: 1, label: t('启用') },
-    { value: 0, label: t('禁用') },
-  ],
-  isLink: [
-    { value: 1, label: t('是') },
-    { value: 0, label: t('否') },
-  ],
-  hideMenu: [
-    { value: 1, label: t('是') },
-    { value: 0, label: t('否') },
-  ],
-  cache: [
-    { value: 1, label: t('是') },
-    { value: 0, label: t('否') },
-  ],
-  affix: [
-    { value: 1, label: t('是') },
-    { value: 0, label: t('否') },
-  ],
-  alwaysShow: [
-    { value: 1, label: t('是') },
-    { value: 0, label: t('否') },
-  ],
-  breadcrumb: [
-    { value: 1, label: t('展示') },
-    { value: 0, label: t('不展示') },
-  ],
-};
 const { data:treeAllList,runAsync:getTreeAllAsync } = systemMenuTreeAllApi();
-getTreeAllAsync();
-const formatterDict: VxeColumnPropTypes.Formatter<SystemMenuInfo> = ({ cellValue, column }) => {
-  //因为ts类型判定不得不断言dict
-  return formatterStr({ cellValue: (dict as Record<string, { value: string | number; label: string }[]>)[column.field]?.find((item) => item.value == cellValue)?.label });
-};
+const { runAsync: updateSystemMenuApiRunAsync} = updateSystemMenuApi();
+const { runAsync: addSystemMenuApiRunAsync } = addSystemMenuApi();
+const { runAsync: systemMenuInfoApiRunAsync } = systemMenuInfoApi();
+await Promise.all([loadRes, getTreeAllAsync()]);
+const dict = getDict(t);
 const show = defineModel<boolean>();
 const props = defineProps<{
   id?: string;
@@ -134,7 +98,7 @@ watch(
   async (id?: string) => {
     if (id) {
       loading.value = true;
-      resetObj(info, await systemMenuInfoApi({ noLoading: true }).runAsync(id));
+      resetObj(info, await systemMenuInfoApiRunAsync(id));
       loading.value = false;
     }
   },
@@ -164,9 +128,9 @@ const submit = async () => {
     return formEl.value!.scrollToField(Object.keys(invalidFields!)[0]);
   }
   if (props.id) {
-    await updateSystemMenuApi().runAsync(props.id, info);
+    await updateSystemMenuApiRunAsync(props.id, info);
   } else {
-    await addSystemMenuApi().runAsync(info);
+    await addSystemMenuApiRunAsync(info);
   }
   show.value = false;
   emit('success');

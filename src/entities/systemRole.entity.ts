@@ -1,7 +1,7 @@
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@midwayjs/validate';
 import { DataTypes, NonAttribute } from '@sequelize/core';
-import { Attribute, Default, PrimaryKey, Table, BelongsToMany, Unique } from '@sequelize/core/decorators-legacy';
+import { Attribute, Default, PrimaryKey, Table, BelongsToMany, Unique, BelongsTo } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { SystemMenu } from './systemMenu.entity.js';
 import { AdminTreeModel } from './abstract/adminTree.entity.js';
@@ -16,6 +16,10 @@ export class SystemRole extends AdminTreeModel<SystemRole> {
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
   id: string;
+
+  @BelongsTo(()=>SystemRole,'parentId')
+  @ApiPropertyRule({ description: '父级', type: ()=>SystemMenu })
+  declare parent?: NonAttribute<SystemRole>;
 
   @Attribute({ type: DataTypes.STRING(50), comment: '角色名称', defaultValue: '', allowNull: false })
   @ApiPropertyRule({ description: '角色名称', rule: RuleType.string().max(50).min(1).required().empty('') })

@@ -9,9 +9,9 @@ export class SystemMenu {
   parentId = '' as string | null; //父级id
   title = '' as string; //菜单名称
   menuType = undefined as 1 | 2 | 3 | undefined; //类型:1=目录;2=菜单;3=按钮
-  status = undefined as 1 | 0 | undefined; //状态:1=启用;0=禁用
+  status = 1 as 1 | 0 | undefined; //状态:1=启用;0=禁用
   rule = '' as string; //权限
-  orderNum = undefined as number | undefined; //排序(降序)
+  orderNum = 999 as number | undefined; //排序(降序)
   path = '' as string; //路径
   isLink = 0 as 0 | 1 | undefined; //外链:1=是;0=否
   component = '' as string; //组件路径(相对于views文件夹)
@@ -91,12 +91,12 @@ export function systemMenuTreeAllApi(options?: RequestOptions<SystemMenuTreeAll,
 
 //根据id获取菜单详情
 export function systemMenuInfoApi(options?: RequestOptions<SystemMenuInfo, [string]>) {
-  return request<SystemMenuInfo, [string]>(
+  return request<SystemMenuInfo & {parent?:SystemMenuInfo|null}, [string]>(
     (id) => ({
       url: `system/menu/info/${id}`,
       method: 'get',
     }),
-    options,
+    Object.assign({ noLoading: true }, options),
   );
 }
 

@@ -11,7 +11,7 @@
         <el-input v-model="info.nickname" clearable></el-input>
       </el-form-item>
       <el-form-item :label="t('密码')" prop="password">
-        <el-input v-model="info.password" clearable></el-input>
+        <el-input v-model="info.password" clearable :placeholder="t('留空，代表不修改密码')"></el-input>
       </el-form-item>
       <el-form-item :label="t('头像')" prop="avatar">
         <me-upload list-type="picture" :limit="1" :model-value="info.avatar?[info.avatar]:[]" @update:modelValue="(files)=>info.avatar =files.length? files[0]:null" ></me-upload>
@@ -44,9 +44,11 @@ import { isMobile } from '@/utils/validate.js';
 import { systemRoleTreeAllApi } from '@/api/system/role';
 import { getDict } from '../dict.js';
 const { data: treeAllList, runAsync: getTreeAllAsync } = systemRoleTreeAllApi();
-getTreeAllAsync();
+const { runAsync: systemAdminInfoApiRunAsync } = systemAdminInfoApi();
+const { runAsync: updateSystemAdminApiRunsync } = updateSystemAdminApi();
+const { runAsync: addSystemAdminApiRunsync } = addSystemAdminApi();
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemAdmin']);
-await loadRes;
+await Promise.all([loadRes, getTreeAllAsync()]);
 const dict = getDict(t);
 const show = defineModel<boolean>();
 const props = defineProps<{
@@ -63,7 +65,7 @@ watch(
   async (id?: string) => {
     if (id) {
       loading.value = true;
-      const enitity = await systemAdminInfoApi({ noLoading: true }).runAsync(id);
+      const enitity = await systemAdminInfoApiRunAsync(id);
       resetObj(info, Object.assign({ roleIds: enitity.roles.map((item) => item.id) }, enitity));
       loading.value = false;
     }
@@ -99,9 +101,9 @@ const submit = async () => {
     return formEl.value!.scrollToField(Object.keys(invalidFields!)[0]);
   }
   if (props.id) {
-    await updateSystemAdminApi().runAsync(props.id, info);
+    await updateSystemAdminApiRunsync(props.id, info);
   } else {
-    await addSystemAdminApi().runAsync(info);
+    await addSystemAdminApiRunsync(info);
   }
   show.value = false;
   emit('success');

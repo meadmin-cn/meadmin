@@ -41,6 +41,7 @@ import { FormInstance, FormRules } from 'element-plus';
 //接口需要现在setup顶层初始化（如果是异步setup需要在异步调用之前初始化），否则会有unMounted，非法调用警告，因为vueRequest使用了unMounted
 const { runAsync: updateRunAsync } = updateExampleDemoApi();
 const { runAsync: addRunAsync } = addExampleDemoApi();
+const { runAsync: infoRunAsync } = exampleDemoInfoApi();
 
 import { getUserApi } from '@/api/example/demo';
 const { runAsync: getUserRunAsync } = getUserApi();
@@ -82,7 +83,7 @@ watch(
   async (id?: string) => {
     if (id) {
       loading.value = true;
-      resetObj(info, await exampleDemoInfoApi({ noLoading: true }).runAsync(id));
+      resetObj(info, await infoRunAsync(id));
       loading.value = false;
     }
   },

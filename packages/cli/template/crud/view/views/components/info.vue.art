@@ -3,9 +3,9 @@
     <el-descriptions class="info" :border="true" v-loading="loading">
       {{each entitySchema.properties}} {{if ['createdAdmin','updatedAdmin'].includes($index)}} <% return; %>{{/if}} <% const keyInfo = $imports.getKeyInfo($value.description); %>
       <el-descriptions-item :label="t('{{@ keyInfo.name}}')">{{if $value.$ref === '#/components/schemas/FileInfo'}}
-  <me-table-file-item :files="data?.{{$index}}?[data.{{$index}}]:[]"></me-table-file-item>
+  <me-files-view :files="data?.{{$index}}?[data.{{$index}}]:[]"></me-files-view>
 {{else if $value.type==='array' && $value.items?.$ref === '#/components/schemas/FileInfo'}}
-  <me-table-file-item :files="data?.{{$index}}??[]"></me-table-file-item>
+  <me-files-view :files="data?.{{$index}}??[]"></me-files-view>
 {{else}} {{@ $imports.leftTag()}} 
 <% if ($value.enum || $value.description.includes(':')){%>
 formatterDictExec(dict,'{{@ $index}}',
@@ -18,8 +18,8 @@ formatterAtExec(
 {{else if $value.$ref}}<% const entityName =  $value.$ref.replace('#/components/schemas/',''); %><% const valueEntity = entity.belongsToManyEntity[$index] || entity.belongsToEntity[$index]; %>
 {{if valueEntity}}formatterObjectExecFn('{{@ valueEntity.nameKeys?.[0] || valueEntity.pk[0]}}')({{else}}formatterStrExec({{/if}}
 {{else}}formatterStrExec(<%}%>data?.{{@ $index}}) {{@ $imports.rightTag()}}{{/if}}      </el-descriptions-item>{{/each}}{{if entitySchema.properties.createdAdmin}}
-      <el-descriptions-item :label="t('{{@ entitySchema.properties.createdAdmin.description}}')">  {{@ $imports.leftTag()}}  formatterObjectExecFn(obj=>`${obj.nickname}(${obj.username})`)(data?.user) {{@ $imports.rightTag()}} </el-descriptions-item>
-    {{/if}}{{if entitySchema.properties.updatedAdmin}}<el-descriptions-item :label="t('{{@ entitySchema.properties.updatedAdmin.description}}')">  {{@ $imports.leftTag()}}  formatterObjectExecFn(obj=>`${obj.nickname}(${obj.username})`)(data?.user) {{@ $imports.rightTag()}} </el-descriptions-item>{{/if}}
+      <el-descriptions-item :label="t('{{@ entitySchema.properties.createdAdmin.description}}')">  {{@ $imports.leftTag()}}  formatterObjectExecFn(obj=>`${obj.nickname}(${obj.username})`)(data?.createdAdmin) {{@ $imports.rightTag()}} </el-descriptions-item>
+    {{/if}}{{if entitySchema.properties.updatedAdmin}}<el-descriptions-item :label="t('{{@ entitySchema.properties.updatedAdmin.description}}')">  {{@ $imports.leftTag()}}  formatterObjectExecFn(obj=>`${obj.nickname}(${obj.username})`)(data?.updatedAdmin) {{@ $imports.rightTag()}} </el-descriptions-item>{{/if}}
     </el-descriptions>
     <template #footer>
       <me-button @click="() => (show = false)">{{@ $imports.leftTag()}} t('关闭') {{@ $imports.rightTag()}}</me-button>
@@ -45,7 +45,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'closed'): void;
 }>();
-const { data, loading, runAsync } = {{@ replaceNames.name}}InfoApi({ noLoading: true });
+const { data, loading, runAsync } = {{@ replaceNames.name}}InfoApi();
 watch(
   () => {{if entity.pk.length===1}}props.{{@ entity.pk[0]}}{{else}}[props.{{@ entity.pk.join(', props.')}}]{{/if}},
   async ({{@ entity.pk.map(v=>`${v}?:${entitySchema.properties[v].type}`).join(', ')}}) => {

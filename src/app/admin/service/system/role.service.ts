@@ -115,7 +115,7 @@ export class SystemRoleService {
    * @returns
    */
   async findOne(id: string) {
-    const entity = await this.SystemRoleRepository.findByPk(id,{include:['createdAdmin','updatedAdmin']});
+    const entity = await this.SystemRoleRepository.findByPk(id,{include:['parent','createdAdmin','updatedAdmin']});
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }

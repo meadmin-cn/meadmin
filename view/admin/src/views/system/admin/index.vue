@@ -57,25 +57,15 @@
         layout: 'sizes, prev, pager, next, jumper, ->, total',
         change: search,
       }"
-      :onAdd="permission('systemAdminAdd')?showAddOrUp:undefined"
+      :onAdd="permission('system_admin_add')?showAddOrUp:undefined"
       @refresh="search(1)"
     >
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="username" :title="t('用户名')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="nickname" :title="t('昵称')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="avatar" :title="t('头像')" :formatter="formatterStr">
+      <vxe-column field="avatar" :title="t('头像')">
         <template #default="{ row }: { row: SystemAdminInfo }">
-          <el-image
-            class="view-img"
-            :src="row.avatar?.url"
-            :zoom-rate="1.2"
-            :max-scale="7"
-            :min-scale="0.2"
-            :preview-src-list="row.avatar?.url?[row.avatar.url]:undefined"
-            show-progress
-            preview-teleported
-            fit="scale-down"
-          />
+          <me-files-view :files="row.avatar ? [row.avatar] : []"></me-files-view>
         </template>
       </vxe-column>
       <vxe-column field="email" :title="t('邮箱')" :formatter="formatterStr"></vxe-column>
@@ -84,23 +74,23 @@
       <vxe-column field="lastLoginAt" :title="t('最后登录时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="lastLoginIp" :title="t('最后登录ip')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="status" :title="t('状态')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="roles" :title="t('具有的角色')" :formatter="({cellValue}:{cellValue:SystemRoleInfo[]})=>cellValue.map(item=>item.roleName).join(',')"></vxe-column>
+      <vxe-column field="roles" :title="t('具有的角色')" :formatter="formatterArrFn(obj=>obj.roleName)"></vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column>
-      <vxe-column  v-if="permission(['systemAdminInfo','systemAdminEdit','systemAdminDel'])" :title="t('操作')" fixed="right">
+      <vxe-column  v-if="permission(['system_admin_info','system_admin_edit','system_admin_del'])" :title="t('操作')" fixed="right">
         <template #default="{ row }: { row: SystemAdminInfo }">
           <span>
-            <el-button  @click="showInfo(row.id)" link :title="t('详情')">
+            <me-button  @click="showInfo(row.id)" link :title="t('详情')">
               <mel-icon-memo />
-            </el-button>
-            <el-button v-if="permission('systemAdminEdit')" @click="showAddOrUp(row.id)" link :title="t('编辑')">
+            </me-button>
+            <me-button v-if="permission('system_admin_edit')" @click="showAddOrUp(row.id)" link :title="t('编辑')">
               <mel-icon-edit />
-            </el-button>
-            <el-popconfirm v-if="permission('systemAdminDel')" :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
+            </me-button>
+            <el-popconfirm v-if="permission('system_admin_del')" :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
               <template #reference>
-                <el-button :key="row.id" :loading="delLoading && delId === row.id" type="danger" link :title="t('删除')">
+                <me-button :key="row.id" :loading="delLoading && delId === row.id" type="danger" link :title="t('删除')">
                   <mel-icon-delete />
-                </el-button>
+                </me-button>
               </template>
             </el-popconfirm>
           </span>
@@ -116,9 +106,7 @@ import { useLocalesI18n } from '@/locales/i18n';
 import Info from './components/info.vue';
 import AddOrUp from './components/addOrUp.vue';
 import { useActionModel } from '@/hooks/index.js';
-import { formatterStr, formatterAt, createformatterDictFn } from '@/utils/helper.js';
-import { VxeColumnPropTypes } from 'vxe-table';
-import { SystemRoleInfo } from '@/api/system/role';
+import { formatterStr, formatterAt, formatterArrFn, createformatterDictFn } from '@/utils/helper.js';
 import { permission } from '@/utils/permission.js';
 import { getDict } from './dict.js';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemAdmin']);

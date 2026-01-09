@@ -20,6 +20,7 @@ import { FormInstance, FormRules } from 'element-plus';
 //接口需要现在setup顶层初始化（如果是异步setup需要在异步调用之前初始化），否则会有unMounted，非法调用警告，因为vueRequest使用了unMounted
 const { runAsync:updateRunAsync } = update{{@ replaceNames.Name}}Api();
 const { runAsync:addRunAsync } = add{{@ replaceNames.Name}}Api();
+const { runAsync:infoRunAsync } = {{@ replaceNames.name}}InfoApi();
 <% const hasStatement = ['File']; %>
 {{each $imports.objectKeys(entity.belongsToEntity)}}<% const valueEntity = entity.belongsToEntity[$value]; %>{{if hasStatement.includes(valueEntity.entityName)}}<% return; %>{{else}}<% hasStatement.push(valueEntity.entityName);%>{{/if}}
 import {get{{@ valueEntity.entityName}}Api} from '@/api/{{@ replaceNames.namePath}}';
@@ -68,7 +69,7 @@ watch(
   async ({{@ entity.pk.map(v=>`${v}?:${entitySchema.properties[v].type}`).join(', ')}}) => {
     if ({{@ entity.pk[0]}}) {
       loading.value = true;
-      resetObj(info, await {{@ replaceNames.name}}InfoApi({ noLoading: true }).runAsync({{@ entity.pk.join(', ')}}));
+      resetObj(info, await infoRunAsync({{@ entity.pk.join(', ')}}));
       loading.value = false;
     }
   },

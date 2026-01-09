@@ -14,5 +14,6 @@
   "具有权限的菜单": "Role menus",
   "创建时间": "Created time",
   "最后更新时间": "Updated time",
-  "角色组": "Role Group"
+  "角色组": "Role Group",
+  "留空，代表不修改密码":"Leave blank to keep the password unchanged"
 }

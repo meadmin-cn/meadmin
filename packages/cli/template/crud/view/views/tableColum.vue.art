@@ -10,10 +10,10 @@
 {{if valueEntity}}formatterObjectFn('{{@ valueEntity.nameKeys?.[0] || valueEntity.pk[0]}}'){{else}}formatterStr{{/if}}
 {{else}}formatterStr<%}%>"{{/if}}>{{if $value.$ref === '#/components/schemas/FileInfo'}}
 <template #default="{ row }: { row: {{@ replaceNames.Name}}Info }">
-  <me-table-file-item :files="row.{{$index}}?[row.{{$index}}]:[]"></me-table-file-item>
+  <me-files-view :files="row.{{$index}}?[row.{{$index}}]:[]"></me-files-view>
 </template>
 {{else if $value.type==='array' && $value.items?.$ref === '#/components/schemas/FileInfo'}}
 <template #default="{ row }: { row: {{@ replaceNames.Name}}Info }">
-  <me-table-file-item :files="row.{{$index}}"></me-table-file-item>
+  <me-files-view :files="row.{{$index}}"></me-files-view>
 </template>
 {{/if}}</vxe-column>{{/each}}

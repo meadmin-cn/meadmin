@@ -160,7 +160,7 @@ export function exampleDemoInfoApi(options?: RequestOptions<ExampleDemoInfo, [st
       url: `example/demo/info/${id}`,
       method: 'get',
     }),
-    options,
+    Object.assign({ noLoading: true }, options),
   );
 }
 

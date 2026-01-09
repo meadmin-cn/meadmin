@@ -6,7 +6,7 @@
           <el-input v-model="params.id" clearable></el-input>
         </el-form-item>
         <el-form-item :label="t('文件名')" prop="name">
-          <el-input v-model="params.filename" clearable></el-input>
+          <el-input v-model="params.name" clearable></el-input>
         </el-form-item>
         <el-form-item :label="t('路径')" prop="path">
           <el-input v-model="params.path" clearable></el-input>
@@ -46,6 +46,11 @@
       change: search,
     }" align="center" border @refresh="search(1)" @add="showAdd()">
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
+      <vxe-column :title="t('预览')">
+         <template #default="{ row }: { row: FileInfo }">
+          <me-files-view :files=" [row]"></me-files-view>
+         </template>
+      </vxe-column>
       <vxe-column field="name" :title="t('文件名')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="path" :title="t('路径')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="mimeType" :title="t('mime类型')" :formatter="formatterStr"></vxe-column>
@@ -57,14 +62,17 @@
         </template>
       </vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
-      <vxe-column :title="t('操作')" fixed="right" min-width="150px">
+      <vxe-column :title="t('操作')" v-if="permission(['file_info', 'file_edit', 'file_del'])" fixed="right" min-width="150px">
         <template #default="{ row }: { row: FileInfo }">
-          <el-button @click="showUp(row.id)">
+          <me-button v-if="permission('example_demo_info')" @click="showInfo(row.id)" link :title="t('详情')">
+            <mel-icon-memo />
+          </me-button>
+          <el-button v-if="permission('file_edit')" @click="showUp(row.id)" link :title="t('编辑')">
             <mel-icon-edit />
           </el-button>
-          <el-popconfirm :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
+          <el-popconfirm v-if="permission('file_del')" :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
             <template #reference>
-              <el-button :key="row.id" :loading="delLoading && delId === row.id" type="danger">
+              <el-button :key="row.id" link :loading="delLoading && delId === row.id"  :title="t('删除')" type="danger">
                 <mel-icon-delete />
               </el-button>
             </template>
@@ -81,9 +89,13 @@ import { useLocalesI18n } from '@/locales/i18n';
 import Up from './components/up.vue';
 import { useActionModel } from '@/hooks/index.js';
 import { formatterStr, formatterAt } from '@/utils/helper.js';
+import { permission } from '@/utils/permission.js';
 import Add from './components/add.vue';
-const { open: OpenUp } = useActionModel(Up);
-const { open: OpenAdd } = useActionModel(Add);
+import Info from './components/info.vue';
+
+const { open: openUp } = useActionModel(Up);
+const { open: openAdd } = useActionModel(Add);
+const { open: openInfo } = useActionModel(Info);
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'file']);
 const params = reactive(new FileListParam());
 const { loading, data, runAsync } = fileListApi();
@@ -96,19 +108,24 @@ const del = async (id: string) => {
   await search(1);
 };
 const showAdd = () => {
-  OpenAdd({
+  openAdd({
     onClosed: async () => {
       await search(1);
     }
   })
 }
 const showUp = (id: string) => {
-  OpenUp({
+  openUp({
     id,
     onSuccess: async () => {
       await search(1);
     },
   });
 };
+const showInfo = (id: string)=>{
+  openInfo({
+    id
+  });
+} 
 await Promise.all([loadRes, search(1)]);
 </script>

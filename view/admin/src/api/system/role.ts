@@ -77,12 +77,12 @@ export function systemRoleTreeAllApi(options?: RequestOptions<SystemRoleTreeAll,
 
 //根据id获取角色详情
 export function systemRoleInfoApi(options?: RequestOptions<SystemRoleInfo, [string]>) {
-  return request<SystemRoleInfo, [string]>(
+  return request<SystemRoleInfo & {parent?:SystemRoleInfo | null}, [string]>(
     (id) => ({
       url: `system/role/info/${id}`,
       method: 'get',
     }),
-    options,
+    Object.assign({ noLoading: true }, options),
   );
 }
 

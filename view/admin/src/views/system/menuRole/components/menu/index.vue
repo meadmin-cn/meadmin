@@ -10,15 +10,15 @@
       :checkbox-config="{ labelField: 'id' }"
       :row-config="{ keyField: 'id', useKey: true }"
       :column-config="{ useKey: true }"
+      :quick-search-placeholder="t('输入菜单名称快捷查询')"
+      :onAdd="permission('system_menu')?showAddOrUp:undefined"
       align="center"
       border
       me-class="table-menu"
       height="auto"
       show-overflow
-      :quick-search-placeholder="t('输入菜单名称快捷查询')"
       @refresh="getMenu"
       @quick-search="search"
-      @add="showAddOrUp()"
     >
       <vxe-column type="checkbox" tree-node width="240px" align="left" header-align="center" field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="title" :title="t('菜单名称')" type="html"></vxe-column>
@@ -29,20 +29,23 @@
       <vxe-column field="isLink" :title="t('外链')" :formatter="formatterDict"></vxe-column>
       <vxe-column field="component" :title="t('组件路径')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="orderNum" :title="t('排序(降序)')" :formatter="formatterStr"></vxe-column>
-      <vxe-column title="操作">
+      <vxe-column title="操作" v-if="permission(['system_menu_info','system_menu_edit','system_menu_del'])" fixed="right">
         <template #default="{ row }">
-          <el-button @click="showAddOrUp(row.id)"><mel-icon-edit /></el-button>
-          <el-popconfirm :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
+          <me-button v-if="permission('system_menu_info')"   @click="showInfo(row.id)" link :title="t('详情')">
+            <mel-icon-memo />
+          </me-button>
+          <me-button v-if="permission('system_menu_edit')"  @click="showAddOrUp(row.id)" link :title="t('编辑')"><mel-icon-edit /></me-button>
+          <el-popconfirm v-if="permission('system_menu_del')"  :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
             <template #reference>
-              <el-button :key="row.id" :loading="delLoading && delId === row.id" type="danger">
+              <me-button :key="row.id" :loading="delLoading && delId === row.id" :title="t('删除')" link type="danger">
                 <mel-icon-delete />
-              </el-button>
+              </me-button>
             </template>
           </el-popconfirm>
         </template>
       </vxe-column>
       <template #toolsButton>
-        <el-button
+        <me-button
           type="success"
           :disabled="isSuper !== 0"
           @click="
@@ -52,8 +55,7 @@
                 menuRef!.vxeTableRef!.getCheckboxRecords(true).map((item) => item.id),
               )
           "
-          >保存</el-button
-        >
+          >保存</me-button>
       </template>
     </me-vxe-table>
   </div>
@@ -62,52 +64,22 @@
 import { delSystemMenuApi, SystemMenuInfo, systemMenuTreeAllApi, SystemMenuTreeAll } from '@/api/system/menu';
 import { useLocalesI18n } from '@/locales/i18n';
 import AddOrUp from './components/addOrUp.vue';
+import Info from './components/info.vue';
 import { useActionModel } from '@/hooks/index.js';
 import { formatterStr, searchTreeTable } from '@/utils/helper.js';
 import { VxeColumnPropTypes } from 'vxe-table';
 import { cloneDeep } from 'lodash-es';
+import { getDict } from './dict.js';
+import { permission } from '@/utils/permission.js';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemMenu']);
 const menuRef = ref<MeVxeTableInstance>();
-const dict = {
-  menuType: [
-    { value: 1, label: t('目录') },
-    { value: 2, label: t('菜单') },
-    { value: 3, label: t('按钮') },
-  ],
-  status: [
-    { value: 1, label: t('启用') },
-    { value: 0, label: t('禁用') },
-  ],
-  isLink: [
-    { value: 1, label: t('是') },
-    { value: 0, label: t('否') },
-  ],
-  hideMenu: [
-    { value: 1, label: t('是') },
-    { value: 0, label: t('否') },
-  ],
-  cache: [
-    { value: 1, label: t('是') },
-    { value: 0, label: t('否') },
-  ],
-  affix: [
-    { value: 1, label: t('是') },
-    { value: 0, label: t('否') },
-  ],
-  alwaysShow: [
-    { value: 1, label: t('是') },
-    { value: 0, label: t('否') },
-  ],
-  breadcrumb: [
-    { value: 1, label: t('展示') },
-    { value: 0, label: t('不展示') },
-  ],
-};
+const dict = getDict(t);
 const formatterDict: VxeColumnPropTypes.Formatter<SystemMenuInfo> = ({ cellValue, column }) => {
   //因为ts类型判定不得不断言dict
   return formatterStr({ cellValue: (dict as Record<string, { value: string | number; label: string }[]>)[column.field]?.find((item) => item.value == cellValue)?.label });
 };
 const { open } = useActionModel(AddOrUp);
+const {open:openInfo} = useActionModel(Info);
 
 const { checkedMenuIds = [], isSuper = 0 } = defineProps<{ checkedMenuIds: string[]; isSuper: 0 | 1 }>();
 const emit = defineEmits<{
@@ -126,7 +98,7 @@ onMounted(() => {
       menuRef.value!.vxeTableRef!.setCheckboxRow(
         checkedMenuIds.reduce((previousValue, currentValue) => {
           const row = menuRef.value!.vxeTableRef!.getRowById(currentValue);
-          if (!row.children?.length) {
+          if (!row?.children?.length) {
             previousValue.push(row);
           }
           return previousValue;
@@ -164,6 +136,9 @@ const showAddOrUp = (id?: string) => {
       await getMenu();
     },
   });
+};
+const showInfo = (id?: string) => {
+  openInfo({id});
 };
 await Promise.all([loadRes,getMenu()]);
 </script>

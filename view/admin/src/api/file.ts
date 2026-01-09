@@ -16,6 +16,7 @@ export class File {
 export type FileInfo = Required<File> & {
   id: string; //ID
   createdAdmin:  Omit<SystemAdminInfo, 'roles' | 'roleMenus'>;
+  updatedAdmin:  Omit<SystemAdminInfo, 'roles' | 'roleMenus'>;
   size: number;
   createdAt: string; //创建时间
   updatedAt: string; //最后更新时间
@@ -52,7 +53,7 @@ export function uploadFileApi<T extends boolean = true>(returnAxios = true as T)
 export type FileListResult = PageResult<FileInfo>;
 export class FileListParam extends PageParam {
   id?: string; //ID
-  filename?: string; //文件名
+  name?: string; //文件名
   path?: string; //路径
   mimeType?: string; //mime类型
   size?: number | null; //文件大小(字节)

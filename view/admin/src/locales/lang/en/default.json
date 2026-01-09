@@ -57,5 +57,9 @@
   "选择": "Select",
   "编辑": "Edit",
   "新增": "Add",
-  "详情": "Details"
+  "详情": "Details",
+  "预览": "Preview",
+  "下载": "Download",
+  "点击预览": "Click Preview",
+  "点击下载": "Click Download"
 }

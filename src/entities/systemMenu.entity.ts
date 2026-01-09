@@ -1,7 +1,7 @@
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@midwayjs/validate';
 import { DataTypes, NonAttribute } from '@sequelize/core';
-import { Attribute, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
+import { Attribute, BelongsTo, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { SystemRole } from './systemRole.entity.js';
 import { AdminTreeModel } from './abstract/adminTree.entity.js';
@@ -14,6 +14,10 @@ export class SystemMenu extends AdminTreeModel<SystemMenu> {
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
   id: string;
+
+  @BelongsTo(()=>SystemMenu,'parentId')
+  @ApiPropertyRule({ description: '父级', type: ()=>SystemMenu })
+  declare parent?: NonAttribute<SystemMenu>;
 
   @Attribute({
     comment: '菜单名称',
@@ -66,7 +70,7 @@ export class SystemMenu extends AdminTreeModel<SystemMenu> {
     defaultValue: '',
     allowNull: false,
   })
-  @ApiPropertyRule({ description: '路径', rule: RuleType.string().max(500).when('menuType', { is: 2, then: RuleType.required() }) })
+  @ApiPropertyRule({ description: '路径', rule: RuleType.string().max(500).when('menuType', { is: 2, then: RuleType.required().not(null) }) })
   path: string;
 
   @Attribute({
@@ -88,7 +92,7 @@ export class SystemMenu extends AdminTreeModel<SystemMenu> {
     description: '组件路径(相对于views文件夹)',
     rule: RuleType.string()
       .max(500)
-      .when('menuType', { is: 2, then: RuleType.when('isUrl', { is: 0, then: RuleType.required() }) }),
+      .when('menuType', { is: 2, then: RuleType.when('isUrl', { is: 0, then: RuleType.required().not(null) }) }),
   })
   component: string;
 

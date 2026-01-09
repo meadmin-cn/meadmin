@@ -23,19 +23,19 @@
     <% include('./tableColum.vue.art', {...entitySchema, replaceNames, entity:entity,  belongsToEntity:entity.belongsToEntity, belongsToManyEntity:entity.belongsToManyEntity}) %>{{if entitySchema.properties.createdAdmin}}
     <vxe-column field="createdAdmin" :title="t('{{@ entitySchema.properties.createdAdmin.description}}')" :formatter="formatterObjectFn(obj=>`${obj.nickname}(${obj.username})`)"></vxe-column>
     {{/if}}{{if entitySchema.properties.updatedAdmin}}<vxe-column field="updatedAdmin" :title="t('{{@ entitySchema.properties.updatedAdmin.description}}')" :formatter="formatterObjectFn(obj=>`${obj.nickname}(${obj.username})`)"></vxe-column>
-    {{/if}}<vxe-column{{if adminPermission}} v-if="permission(['{{replaceNames.roleName}}_edit','{{replaceNames.name}}Del'])"{{/if}} :title="t('操作')" fixed="right" min-width="150px">
+    {{/if}}<vxe-column{{if adminPermission}} v-if="permission(['{{replaceNames.roleName}}_add','{{replaceNames.roleName}}_edit','{{replaceNames.name}}_del'])"{{/if}} :title="t('操作')" fixed="right" min-width="150px">
       <template #default="{ row }: { row: {{@ replaceNames.Name}}Info }">
-        <el-button{{if adminPermission}} v-if="permission('{{replaceNames.roleName}}_info')"{{/if}} @click="showInfo({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})" :title="t('详情')">
+        <me-button{{if adminPermission}} v-if="permission('{{replaceNames.roleName}}_info')"{{/if}} @click="showInfo({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})" link :title="t('详情')" >
           <mel-icon-memo />
-        </el-button>
-        <el-button{{if adminPermission}} v-if="permission('{{replaceNames.roleName}}_edit')"{{/if}} @click="showAddOrUp({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})" :title="t('编辑')">
+        </me-button>
+        <me-button{{if adminPermission}} v-if="permission('{{replaceNames.roleName}}_edit')"{{/if}} @click="showAddOrUp({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})" link :title="t('编辑')" >
           <mel-icon-edit />
-        </el-button>
+        </me-button>
         <el-popconfirm{{if adminPermission}} v-if="permission('{{replaceNames.roleName}}_del')"{{/if}} :title="t('确认删除？')" placement="left" @confirm="del({{@ entity.pk.map(v=>`row.${v}`).join(', ')}})" >
           <template #reference>
-            <el-button :key="{{if entity.pk.length===1}}row.{{@ entity.pk[0]}}{{else}}`${<%- entity.pk.join('}__${')%>}`{{/if}}" :loading="delLoading && {{if entity.pk.length===1}}delId === row.{{@ entity.pk[0]}}{{else}}delKey=`${<%- entity.pk.join('}__${')%>}`{{/if}}" type="danger" :title="t('删除')">
+            <me-button :key="{{if entity.pk.length===1}}row.{{@ entity.pk[0]}}{{else}}`${<%- entity.pk.join('}__${')%>}`{{/if}}" :loading="delLoading && {{if entity.pk.length===1}}delId === row.{{@ entity.pk[0]}}{{else}}delKey=`${<%- entity.pk.join('}__${')%>}`{{/if}}" type="danger" link :title="t('删除')">
               <mel-icon-delete />
-            </el-button>
+            </me-button>
           </template>
         </el-popconfirm>
       </template>

@@ -144,6 +144,7 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & { rule?: RuleType
       }
     }
     if (options.rule.type === 'string') {
+      options.rule.empty('');//将 空串视为空而不是无效值,否则空串会被 stripUnknown 配置 视为无效值处理掉
       if (options.maxLength !== undefined) {
         options.maxLength = options.rule.$_getRule('max')?.args?.limit;
       }

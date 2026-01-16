@@ -16,12 +16,19 @@
     "dist/**/*.d.ts",
     "template"
   ],
+  "bugs": {
+    "url": "https://github.com/meadmin-cn/meadmin"
+  },
+  "author": "yuntian001",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meadmin-cn/meadmin"
+  },
   "exports": {
     ".": "./dist/index.js",
     "./utils/formatting": "./dist/utils/formatting.js"
   },
   "keywords": [],
-  "author": "",
   "license": "MIT",
   "devDependencies": {
     "@types/mocha": "^10.0.10",

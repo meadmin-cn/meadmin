@@ -25,12 +25,12 @@
     "midway ssr"
   ],
   "bugs": {
-    "url": "https://github.com/yuntian001/midway-vite-view/issues"
+    "url": "https://github.com/meadmin-cn/meadmin"
   },
   "author": "yuntian001",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yuntian001/midway-vite-view.git"
+    "url": "https://github.com/meadmin-cn/meadmin"
   },
   "files": [
     "dist/*",

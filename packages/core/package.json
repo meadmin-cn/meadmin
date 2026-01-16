@@ -14,6 +14,14 @@
     "dist/**/*.d.ts",
     "index.d.ts"
   ],
+  "bugs": {
+    "url": "https://github.com/meadmin-cn/meadmin"
+  },
+  "author": "yuntian001",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meadmin-cn/meadmin"
+  },
   "dependencies": {
     "tsx": "^4.20.5"
   },
@@ -52,10 +60,5 @@
     "ci": "npm run cov",
     "build": "mwtsc --cleanOutDir"
   },
-  "repository": {
-    "type": "git",
-    "url": ""
-  },
-  "author": "anonymous",
   "license": "MIT"
 }

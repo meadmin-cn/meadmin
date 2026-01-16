@@ -1,8 +1,8 @@
+import { localeConfig as config } from '@/config';
+import { useGlobalStore, useSettingStore } from '@/store';
 import { App } from 'vue';
 import { createI18n, I18nOptions } from 'vue-i18n';
-import { localeConfig as config } from '@/config';
 import { setI18nLanguage } from './helper';
-import { useGlobalStore, useSettingStore } from '@/store';
 
 // 安装VueI18n
 export const installI18n = async (app: App) => {

@@ -1,11 +1,11 @@
+import { useGlobalStore, useSettingStore, useUserStore } from '@/store';
 import { closeLoading, loading } from '@/utils/loading';
-import { useUserStore, useGlobalStore, useSettingStore } from '@/store';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 import { ElMessage } from 'element-plus';
-import log from './log';
-import { useRequest, Options, setGlobalOptions } from 'vue-request';
 import qs from 'qs';
+import { Options, setGlobalOptions, useRequest } from 'vue-request';
 import { clearEmptyParam } from './helper.js';
+import log from './log';
 const t = (...args: [string | number]) => useGlobalStore().i18n.t(...args);
 const service = axios.create({
   baseURL: '/api/admin/', // url = base url + request url
@@ -59,8 +59,15 @@ setGlobalOptions({
 });
 
 // 请求函数，当请求失败时直接抛出异常;
-export function request<R, P extends unknown[] = []>(axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>, options?: RequestOptions<R, P>): ReturnType<typeof useRequest<R, P>>;
-export function request<R, P extends unknown[] = [], T extends boolean = boolean>(axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>, options: RequestOptions<R, P>, returnAxios: T): T extends true ? (...args: P) => Promise<R> : ReturnType<typeof useRequest<R, P>>;
+export function request<R, P extends unknown[] = []>(
+  axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>,
+  options?: RequestOptions<R, P>,
+): ReturnType<typeof useRequest<R, P>>;
+export function request<R, P extends unknown[] = [], T extends boolean = boolean>(
+  axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>,
+  options: RequestOptions<R, P>,
+  returnAxios: T,
+): T extends true ? (...args: P) => Promise<R> : ReturnType<typeof useRequest<R, P>>;
 
 /**
  * 请求函数
@@ -75,13 +82,13 @@ export function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (
       //loading放到微任务中去执行以确保在自动调用请求时等待所有的宏任务中的生命周期函数执行完再创建loading实例 以规避currentInstance的相关警告
       !options?.noLoading && Promise.resolve(undefined).then(loading);
       const config = await axiosConfig(...args);
-      if(options?.clearEmpty){
+      if (options?.clearEmpty) {
         if (config.params) config.params = clearEmptyParam(config.params, options?.clearEmpty);
-        if (config.data) config.data = clearEmptyParam(config.data , options?.clearEmpty);
+        if (config.data) config.data = clearEmptyParam(config.data, options?.clearEmpty);
       }
       const locale = useSettingStore().locale;
-      if(locale){
-        config.params = Object.assign({locale}, config.params);
+      if (locale) {
+        config.params = Object.assign({ locale }, config.params);
       }
       const { data: res } = await service(config);
       if (!res || res.code === undefined) {
@@ -93,32 +100,32 @@ export function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (
           confirmButtonText: '去 登 陆',
           cancelButtonText: '取消',
           type: 'warning',
-          showClose:false,
-          closeOnClickModal:false,
-          closeOnPressEscape:false,
-          closeOnHashChange:false,
-        }).then(async () => {
-          await useUserStore().logOut();
-        }).catch(() => {
-
-        });
+          showClose: false,
+          closeOnClickModal: false,
+          closeOnPressEscape: false,
+          closeOnHashChange: false,
+        })
+          .then(async () => {
+            await useUserStore().logOut();
+          })
+          .catch(() => {});
         throw Error(res.msg);
       }
       // 没有权限
-      if(res.code === '403'){
+      if (res.code === '403') {
         ElMessageBox.confirm(res.msg, '无权限访问', {
           confirmButtonText: '切换账户',
           cancelButtonText: '取消',
           type: 'warning',
-          showClose:false,
-          closeOnClickModal:false,
-          closeOnPressEscape:false,
-          closeOnHashChange:false,
-        }).then(async () => {
-          await useUserStore().logOut();
-        }).catch(() => {
-          
-        });
+          showClose: false,
+          closeOnClickModal: false,
+          closeOnPressEscape: false,
+          closeOnHashChange: false,
+        })
+          .then(async () => {
+            await useUserStore().logOut();
+          })
+          .catch(() => {});
         throw Error(res.msg);
       }
       if (res.code !== '200') {

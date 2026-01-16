@@ -1,6 +1,6 @@
-import { Inject, Controller } from '@midwayjs/core';
-import { ResponseService } from '@/service/response.service.js';
 import { CodeEunm } from '@/dict/code.enum.js';
+import { ResponseService } from '@/service/response.service.js';
+import { Controller, Inject } from '@midwayjs/core';
 
 @Controller('/api')
 export abstract class ApiController {

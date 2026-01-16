@@ -11,9 +11,9 @@ export default {
   },
   viteView: {
     // prod: true,
-    views:{
-      'index/index.html':'index/src/entry-server.js',
-      'admin/index.html':'admin/src/entry-server.js',
-    }
+    views: {
+      'index/index.html': 'index/src/entry-server.js',
+      'admin/index.html': 'admin/src/entry-server.js',
+    },
   },
 } as MidwayConfig;

@@ -1,4 +1,4 @@
-import { pathToFileURL } from "node:url";
+import { pathToFileURL } from 'node:url';
 
 export async function getConfig(dbConfig, name) {
   const infos = await import(pathToFileURL(dbConfig).href);

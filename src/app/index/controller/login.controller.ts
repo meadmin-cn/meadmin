@@ -1,18 +1,18 @@
-import { Body, Controller, Get, Inject, Post, Query } from '@midwayjs/core';
-import { BaseController } from './base.controller.js';
 import { ApiOperationResponse } from '@/decorators/swagger.js';
-import { LoginParamDto } from '../dto/loginParam.dto.js';
-import { LoginService } from '../service/login.serveice.js';
-import { LoginResultDto } from '../dto/loginResult.dto.js';
-import { Context } from '@midwayjs/koa';
+import { User } from '@/entities/user.entity.js';
 import { CaptchaService } from '@midwayjs/captcha';
+import { Body, Controller, Get, Inject, Post, Query } from '@midwayjs/core';
+import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
+import { Context } from '@midwayjs/koa';
 import { random } from 'lodash-es';
 import { CaptchaResultDto } from '../dto/captchaResult.dto.js';
-import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { LoginCaptchaParamDto } from '../dto/loginCaptchaParam.dto.js';
-import { User } from '@/entities/user.entity.js';
+import { LoginParamDto } from '../dto/loginParam.dto.js';
+import { LoginResultDto } from '../dto/loginResult.dto.js';
 import { UserCreateDto } from '../dto/userCreate.dto.js';
+import { LoginService } from '../service/login.serveice.js';
 import { UserService } from '../service/user.service.js';
+import { BaseController } from './base.controller.js';
 
 @Controller('login')
 export class LoginController extends BaseController {
@@ -69,8 +69,7 @@ export class LoginController extends BaseController {
     return this.success(this.ctx.userInfo);
   }
 
-
-   //接口方法必须加async 方法的接口装饰器值必须/开头
+  //接口方法必须加async 方法的接口装饰器值必须/开头
   @Post('/register')
   @ApiOperationResponse({
     responseType: User,

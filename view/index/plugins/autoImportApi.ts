@@ -1,5 +1,5 @@
-import AutoImport from 'unplugin-auto-import/vite';
 import { resolve } from 'path';
+import AutoImport from 'unplugin-auto-import/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 function pathResolve(dir: string) {
   return resolve(import.meta.dirname, '../', dir);

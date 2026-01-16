@@ -53,7 +53,7 @@
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column :title="t('操作')" fixed="right">
         <template #default="{ row }: { row: FileInfo }">
-          <el-button @click="select(row)"> <mel-icon-select  />{{ t('选择') }} </el-button>
+          <el-button @click="select(row)"> <mel-icon-select />{{ t('选择') }} </el-button>
         </template>
       </vxe-column>
     </me-vxe-table>
@@ -61,10 +61,10 @@
 </template>
 
 <script setup lang="ts" name="MeSelectFile">
-import { fileMyListApi, FileListParam, FileInfo } from '@/api/file';
+import { FileInfo, FileListParam, fileMyListApi } from '@/api/file';
 import { useLocalesI18n } from '@/locales/i18n';
-import { formatterStr, formatterAt } from '@/utils/helper.js';
 import { isImage } from '@/utils/helper';
+import { formatterAt, formatterStr } from '@/utils/helper.js';
 const show = defineModel<boolean>('show');
 const emit = defineEmits<{
   closed: [];
@@ -84,8 +84,8 @@ await Promise.all([loadRes, search(1)]);
 .me-select-file-da0344ese {
   height: 60vh;
   width: 80vw;
-  .view-img{
-    width: 50px; 
+  .view-img {
+    width: 50px;
     height: 50px;
   }
 }

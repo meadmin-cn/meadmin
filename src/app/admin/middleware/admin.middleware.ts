@@ -1,7 +1,7 @@
 import { Config, IMiddleware, Inject, Middleware, NextFunction } from '@midwayjs/core';
-import { LoginService } from '../service/login.serveice.js';
-import { Context } from '@midwayjs/koa';
 import { UnauthorizedError } from '@midwayjs/core/dist/error/http.js';
+import { Context } from '@midwayjs/koa';
+import { LoginService } from '../service/login.serveice.js';
 
 @Middleware()
 export class AdminMiddleware implements IMiddleware<Context, NextFunction> {

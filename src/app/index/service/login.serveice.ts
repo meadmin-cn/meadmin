@@ -1,10 +1,10 @@
 import { InjectRepository } from '@/decorators/sequelize.js';
 import { User } from '@/entities/user.entity.js';
+import { CachingFactory, MidwayCache } from '@midwayjs/cache-manager';
 import { Config, Context, Init, Inject, Singleton } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
-import { pbkdf2Sync, randomBytes } from 'node:crypto';
-import { CachingFactory, MidwayCache } from '@midwayjs/cache-manager';
 import dayjs from 'dayjs';
+import { pbkdf2Sync, randomBytes } from 'node:crypto';
 
 export const tokenPrefix = 'Index:Token:';
 export const indexPrefix = 'Index:Index:';

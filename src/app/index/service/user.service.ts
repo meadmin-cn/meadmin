@@ -1,9 +1,9 @@
-import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { InjectRepository } from '@/decorators/index.js';
-import { Provide, Inject } from '@midwayjs/core';
+import { Inject, Provide } from '@midwayjs/core';
+import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
+import { User } from '../../../entities/user.entity.js';
 import { UserCreateDto } from '../dto/userCreate.dto.js';
 import { UserUpdateDto } from '../dto/userUpdate.dto.js';
-import { User } from '../../../entities/user.entity.js';
 import { LoginService } from './login.serveice.js';
 
 //用户
@@ -14,7 +14,7 @@ export class UserService {
 
   @Inject()
   loginService: LoginService;
-    
+
   /**
    * 创建数据
    * @param createDto
@@ -31,18 +31,19 @@ export class UserService {
     return await entity.save();
   }
 
-
   /**
    * 根据主键获取一条信息
    * @param id 主键
    * @returns
    */
   async findOne(id: string) {
-    const entity = await this.UserRepository.findByPk(id,{
-       include: [{
+    const entity = await this.UserRepository.findByPk(id, {
+      include: [
+        {
           association: 'avatar',
           attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
-        },]
+        },
+      ],
     });
     if (!entity) {
       throw new BadRequestError('没有对应的信息');
@@ -61,8 +62,8 @@ export class UserService {
     if (!entity) {
       throw new BadRequestError('没有对应的信息');
     }
-    if(entity.username != updateDto.username && updateDto.username !== undefined){
-      if(await this.UserRepository.findOne({where:{username:updateDto.username}})){
+    if (entity.username != updateDto.username && updateDto.username !== undefined) {
+      if (await this.UserRepository.findOne({ where: { username: updateDto.username } })) {
         throw new BadRequestError('用户名已被占用');
       }
     }
@@ -73,9 +74,9 @@ export class UserService {
     }
     Object.assign(entity, updateDto);
     if (updateDto.password) {
-        if (!this.loginService.checkPassword(updateDto.orgPassword, salf, password)) {
-          throw new BadRequestError('原始密码错误');
-        }
+      if (!this.loginService.checkPassword(updateDto.orgPassword, salf, password)) {
+        throw new BadRequestError('原始密码错误');
+      }
       Object.assign(entity, this.loginService.entityPassword(updateDto.password));
     } else {
       entity.password = password;
@@ -83,5 +84,4 @@ export class UserService {
     }
     return await entity.save();
   }
-
 }

@@ -32,11 +32,7 @@ export class CustomSnowflake {
     this.lastTimestamp = timestamp; // 更新上次生成ID的时间戳
 
     // 生成ID，包括时间戳、机器ID和序列号
-    const id = (
-      (BigInt(timestamp - this.epoch) << 22n) |
-      (BigInt(this.workerId) << 10n) |
-      BigInt(this.sequence)
-    ).toString(10);
+    const id = ((BigInt(timestamp - this.epoch) << 22n) | (BigInt(this.workerId) << 10n) | BigInt(this.sequence)).toString(10);
     return id;
   }
 

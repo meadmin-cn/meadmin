@@ -4,11 +4,11 @@
       <el-descriptions-item :label="t('ID')"> {{ formatterStrExec(data?.id) }} </el-descriptions-item>
       <el-descriptions-item :label="t('文件名')" :span="2"> {{ formatterStrExec(data?.name) }} </el-descriptions-item>
       <el-descriptions-item :label="t('mime类型')"> {{ formatterStrExec(data?.mimeType) }} </el-descriptions-item>
-      <el-descriptions-item :label="t('路径')" :span="2"> {{ formatterStrExec( data?.path) }} </el-descriptions-item>
+      <el-descriptions-item :label="t('路径')" :span="2"> {{ formatterStrExec(data?.path) }} </el-descriptions-item>
       <el-descriptions-item :label="t('文件大小')"> {{ formatterStrExec(data?.size) }} </el-descriptions-item>
       <el-descriptions-item :label="t('存储引擎')"> {{ formatterStrExec(data?.storage) }} </el-descriptions-item>
       <el-descriptions-item :label="t('预览')" :span="2">
-        <me-files-view :files="data?[data]:[]"></me-files-view>
+        <me-files-view :files="data ? [data] : []"></me-files-view>
       </el-descriptions-item>
       <el-descriptions-item :label="t('创建时间')"> {{ formatterAtExec(data?.createdAt) }} </el-descriptions-item>
       <el-descriptions-item :label="t('最后更新时间')"> {{ formatterAtExec(data?.updatedAt) }} </el-descriptions-item>

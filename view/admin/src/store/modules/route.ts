@@ -1,11 +1,11 @@
-import MenuModeEnum from '@/dict/menuModeEnum';
-import { filterAsyncRoutes } from '@/utils/permission';
-import useUserStore from './user';
-import { router, constantRoutes, asyncRoutes, flatteningRoutes2 } from '@/router';
-import { RouteRecordRaw } from 'vue-router';
 import { settingConfig } from '@/config';
+import MenuModeEnum from '@/dict/menuModeEnum';
 import { PageEnum } from '@/dict/pageEnum';
+import { asyncRoutes, constantRoutes, flatteningRoutes2, router } from '@/router';
 import { Layout } from '@/router/constant';
+import { filterAsyncRoutes } from '@/utils/permission';
+import { RouteRecordRaw } from 'vue-router';
+import useUserStore from './user';
 export default defineStore('route', {
   state: () => ({
     addRoutes: [] as RouteRecordRaw[],
@@ -46,24 +46,24 @@ export default defineStore('route', {
         true,
       ).forEach((route) => router.addRoute(route));
     },
-    firstMenu: function(menus?:RouteRecordRaw[]){
+    firstMenu: function (menus?: RouteRecordRaw[]) {
       let path = PageEnum.LOGIN as string;
-      if(!menus){
+      if (!menus) {
         menus = this.addRoutes;
       }
-      for (let i=0; i<menus.length; i++){
-        if(menus[i].children?.length){
+      for (let i = 0; i < menus.length; i++) {
+        if (menus[i].children?.length) {
           path = this.firstMenu(menus[i].children!);
-        }else{
-          if(!menus[i].meta?.isLink){
-            path = menus[i].path
+        } else {
+          if (!menus[i].meta?.isLink) {
+            path = menus[i].path;
           }
         }
-        if(path){
+        if (path) {
           return path;
         }
       }
       return path;
-    }
+    },
   },
 });

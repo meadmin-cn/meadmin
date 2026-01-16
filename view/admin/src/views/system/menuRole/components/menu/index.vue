@@ -11,7 +11,7 @@
       :row-config="{ keyField: 'id', useKey: true }"
       :column-config="{ useKey: true }"
       :quick-search-placeholder="t('输入菜单名称快捷查询')"
-      :onAdd="permission('system_menu')?showAddOrUp:undefined"
+      :onAdd="permission('system_menu') ? showAddOrUp : undefined"
       align="center"
       border
       me-class="table-menu"
@@ -29,13 +29,13 @@
       <vxe-column field="isLink" :title="t('外链')" :formatter="formatterDict"></vxe-column>
       <vxe-column field="component" :title="t('组件路径')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="orderNum" :title="t('排序(降序)')" :formatter="formatterStr"></vxe-column>
-      <vxe-column title="操作" v-if="permission(['system_menu_info','system_menu_edit','system_menu_del'])" fixed="right">
+      <vxe-column title="操作" v-if="permission(['system_menu_info', 'system_menu_edit', 'system_menu_del'])" fixed="right">
         <template #default="{ row }">
-          <me-button v-if="permission('system_menu_info')"   @click="showInfo(row.id)" link :title="t('详情')">
+          <me-button v-if="permission('system_menu_info')" @click="showInfo(row.id)" link :title="t('详情')">
             <mel-icon-memo />
           </me-button>
-          <me-button v-if="permission('system_menu_edit')"  @click="showAddOrUp(row.id)" link :title="t('编辑')"><mel-icon-edit /></me-button>
-          <el-popconfirm v-if="permission('system_menu_del')"  :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
+          <me-button v-if="permission('system_menu_edit')" @click="showAddOrUp(row.id)" link :title="t('编辑')"><mel-icon-edit /></me-button>
+          <el-popconfirm v-if="permission('system_menu_del')" :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
             <template #reference>
               <me-button :key="row.id" :loading="delLoading && delId === row.id" :title="t('删除')" link type="danger">
                 <mel-icon-delete />
@@ -55,22 +55,23 @@
                 menuRef!.vxeTableRef!.getCheckboxRecords(true).map((item) => item.id),
               )
           "
-          >保存</me-button>
+          >保存</me-button
+        >
       </template>
     </me-vxe-table>
   </div>
 </template>
 <script setup lang="ts" name="Menu">
-import { delSystemMenuApi, SystemMenuInfo, systemMenuTreeAllApi, SystemMenuTreeAll } from '@/api/system/menu';
+import { delSystemMenuApi, SystemMenuInfo, SystemMenuTreeAll, systemMenuTreeAllApi } from '@/api/system/menu';
+import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
+import { formatterStr, searchTreeTable } from '@/utils/helper.js';
+import { permission } from '@/utils/permission.js';
+import { cloneDeep } from 'lodash-es';
+import { VxeColumnPropTypes } from 'vxe-table';
 import AddOrUp from './components/addOrUp.vue';
 import Info from './components/info.vue';
-import { useActionModel } from '@/hooks/index.js';
-import { formatterStr, searchTreeTable } from '@/utils/helper.js';
-import { VxeColumnPropTypes } from 'vxe-table';
-import { cloneDeep } from 'lodash-es';
 import { getDict } from './dict.js';
-import { permission } from '@/utils/permission.js';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemMenu']);
 const menuRef = ref<MeVxeTableInstance>();
 const dict = getDict(t);
@@ -79,7 +80,7 @@ const formatterDict: VxeColumnPropTypes.Formatter<SystemMenuInfo> = ({ cellValue
   return formatterStr({ cellValue: (dict as Record<string, { value: string | number; label: string }[]>)[column.field]?.find((item) => item.value == cellValue)?.label });
 };
 const { open } = useActionModel(AddOrUp);
-const {open:openInfo} = useActionModel(Info);
+const { open: openInfo } = useActionModel(Info);
 
 const { checkedMenuIds = [], isSuper = 0 } = defineProps<{ checkedMenuIds: string[]; isSuper: 0 | 1 }>();
 const emit = defineEmits<{
@@ -138,9 +139,9 @@ const showAddOrUp = (id?: string) => {
   });
 };
 const showInfo = (id?: string) => {
-  openInfo({id});
+  openInfo({ id });
 };
-await Promise.all([loadRes,getMenu()]);
+await Promise.all([loadRes, getMenu()]);
 </script>
 <style lang="scss" scoped>
 .menu {

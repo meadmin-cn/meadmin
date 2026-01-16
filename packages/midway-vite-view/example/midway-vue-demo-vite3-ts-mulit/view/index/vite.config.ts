@@ -114,8 +114,8 @@ export default defineConfig(({ command, ssrBuild }) => ({
   ssr: {
     format: 'cjs',
   },
-  define:{
-    '__AA__':"'a_index'",
-    "__BB__":"'b_index'"
-  }
+  define: {
+    __AA__: "'a_index'",
+    __BB__: "'b_index'",
+  },
 }));

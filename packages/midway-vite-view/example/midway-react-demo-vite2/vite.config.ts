@@ -4,7 +4,7 @@ import px2vp = require('postcss-px2vp');
 import legacy from '@vitejs/plugin-legacy';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import {AntdResolve, createStyleImportPlugin } from 'vite-plugin-style-import'
+import { AntdResolve, createStyleImportPlugin } from 'vite-plugin-style-import';
 /**
  * @type {import('vite').UserConfig}
  */
@@ -22,9 +22,7 @@ export default defineConfig({
       root: process.cwd() + '/view',
     }),
     createStyleImportPlugin({
-      resolves: [
-        AntdResolve()
-      ]
+      resolves: [AntdResolve()],
     }),
   ],
   server: {

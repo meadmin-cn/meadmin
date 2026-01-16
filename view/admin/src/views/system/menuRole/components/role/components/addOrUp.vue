@@ -2,7 +2,7 @@
   <me-dialog v-model="show" :title="t(id ? '编辑' : '新增')" :close-on-click-modal="false" @closed="$emit('closed')">
     <el-form v-loading="loading" ref="formEl" :model="info" :rules="rules" class="add" label-width="auto">
       <el-form-item :label="t('父级')" prop="parentId">
-        <el-tree-select v-model="info.parentId" :data="treeAllList || []" check-strictly node-key="id" :props="{label:'roleName'}" :render-after-expand="false"/>
+        <el-tree-select v-model="info.parentId" :data="treeAllList || []" check-strictly node-key="id" :props="{ label: 'roleName' }" :render-after-expand="false" />
       </el-form-item>
       <el-form-item :label="t('角色名称')" prop="roleName">
         <el-input v-model="info.roleName"></el-input>
@@ -30,17 +30,17 @@
 </template>
 
 <script setup lang="ts" name="AddOrUpSystemRole">
-import { SystemRole, addSystemRoleApi, updateSystemRoleApi, systemRoleInfoApi, systemRoleTreeAllApi } from '@/api/system/role';
+import { SystemRole, addSystemRoleApi, systemRoleInfoApi, systemRoleTreeAllApi, updateSystemRoleApi } from '@/api/system/role';
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
 import { FormInstance, FormRules } from 'element-plus';
 import { getDict } from '../dict.js';
-const {runAsync: systemRoleInfoApiRunSync} = systemRoleInfoApi();
-const {runAsync: updateSystemRoleApiRunAsync} = updateSystemRoleApi();
-const {runAsync: addSystemRoleApiRunAsync} = addSystemRoleApi();
-const { data:treeAllList, runAsync:getTreeAllAsync } = systemRoleTreeAllApi();
+const { runAsync: systemRoleInfoApiRunSync } = systemRoleInfoApi();
+const { runAsync: updateSystemRoleApiRunAsync } = updateSystemRoleApi();
+const { runAsync: addSystemRoleApiRunAsync } = addSystemRoleApi();
+const { data: treeAllList, runAsync: getTreeAllAsync } = systemRoleTreeAllApi();
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemRole']);
-await Promise.all([loadRes,getTreeAllAsync()]);
+await Promise.all([loadRes, getTreeAllAsync()]);
 const dict = getDict(t);
 const show = defineModel<boolean>();
 const props = defineProps<{

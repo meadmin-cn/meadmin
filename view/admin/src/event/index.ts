@@ -1,12 +1,12 @@
 /**
  * 事件总线
  */
-import Mitt from '@/utils/mitt';
-import { NavigationFailure, RouteLocationNormalized } from 'vue-router';
 import EventEnum from '@/dict/eventEnmu';
+import Mitt from '@/utils/mitt';
+import { DynamicViewsModules } from '@/utils/permission';
 import { App } from 'vue';
 import { Composer } from 'vue-i18n';
-import { DynamicViewsModules } from '@/utils/permission';
+import { NavigationFailure, RouteLocationNormalized } from 'vue-router';
 interface Events {
   // 事件总线
   [EventEnum.START]: App;

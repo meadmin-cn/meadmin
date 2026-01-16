@@ -9,7 +9,7 @@ export class LoginInfoResultDto {
     description: '有权限的菜单',
     type: 'array',
     items: {
-      type: ()=>SystemMenu,
+      type: () => SystemMenu,
     },
   })
   menus: SystemMenu[];

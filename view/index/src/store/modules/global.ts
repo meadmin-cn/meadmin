@@ -1,8 +1,8 @@
 import { event, mitter } from '@/event';
 import { Component, VNode } from 'vue';
 const WIDTH = 992; // refer to Bootstrap's responsive design
-let  isMobile = ref(false);
-if(!import.meta.env.SSR){
+let isMobile = ref(false);
+if (!import.meta.env.SSR) {
   isMobile.value = window.document.body.offsetWidth < WIDTH;
 }
 mitter.on(event.RESIZE, () => {

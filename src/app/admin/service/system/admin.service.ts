@@ -1,14 +1,14 @@
-import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { InjectRepository } from '@/decorators/index.js';
-import { Provide, Inject } from '@midwayjs/core';
+import { SystemMenu } from '@/entities/systemMenu.entity.js';
+import { Inject, Provide } from '@midwayjs/core';
+import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
+import { MidwayI18nService } from '@midwayjs/i18n';
+import { Op } from '@sequelize/core';
+import { SystemAdmin } from '../../../../entities/systemAdmin.entity.js';
 import { SystemAdminCreateDto } from '../../dto/system/adminCreate.dto.js';
 import { SystemAdminQueryDto } from '../../dto/system/adminQuery.dto.js';
 import { SystemAdminUpdateDto } from '../../dto/system/adminUpdate.dto.js';
-import { SystemAdmin } from '../../../../entities/systemAdmin.entity.js';
-import { MidwayI18nService } from '@midwayjs/i18n';
-import { Op } from '@sequelize/core';
 import { LoginService } from '../login.serveice.js';
-import { SystemMenu } from '@/entities/systemMenu.entity.js';
 
 //管理员
 @Provide()
@@ -32,7 +32,7 @@ export class SystemAdminService {
       Object.assign(createDto, this.loginService.entityPassword(createDto.password));
     }
     const entity = this.SystemAdminRepository.build(createDto);
-    
+
     await entity.save();
     if (createDto.roleIds) {
       await entity.setRoles(createDto.roleIds);
@@ -116,7 +116,7 @@ export class SystemAdminService {
         {
           association: 'avatar',
           attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
-        }
+        },
       ],
     });
     return {

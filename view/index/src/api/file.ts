@@ -1,5 +1,5 @@
-import request, { RequestOptions } from '@/utils/request.js';
 import { PageParam, PageResult } from '@/api/api.model.js';
+import request, { RequestOptions } from '@/utils/request.js';
 import { UserInfo } from './user.js';
 
 //附件
@@ -15,7 +15,7 @@ export class File {
 
 export type FileInfo = Required<File> & {
   id: string; //ID
-  createdUser: NonNullable<Omit<UserInfo,'avatar'>>;
+  createdUser: NonNullable<Omit<UserInfo, 'avatar'>>;
   size: number;
   createdAt: string; //创建时间
   updatedA: string; //最后更新时间
@@ -45,7 +45,7 @@ export function uploadFileApi<T extends boolean = true>(returnAxios = true as T)
       },
     }),
     { success: false, noLoading: true },
-    returnAxios
+    returnAxios,
   );
 }
 
@@ -98,7 +98,7 @@ export function fileInfoApi(options?: RequestOptions<FileInfo, [string]>) {
   );
 }
 
-export type UpdateFileInfoParam = Omit<Partial<FileInfo>,'id' | 'createdAt' | 'updatedAt' | 'createdUser'>;
+export type UpdateFileInfoParam = Omit<Partial<FileInfo>, 'id' | 'createdAt' | 'updatedAt' | 'createdUser'>;
 //修改附件信息
 export function updateFileApi(options?: RequestOptions<FileInfo, [string, UpdateFileInfoParam]>) {
   return request<FileInfo, [string, UpdateFileInfoParam]>(

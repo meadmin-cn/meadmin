@@ -1,5 +1,5 @@
-import { formatWithArray, formatWithObject } from "@midwayjs/i18n/dist/utils.js";
-import { clone } from "lodash-es";
+import { formatWithArray, formatWithObject } from '@midwayjs/i18n/dist/utils.js';
+import { clone } from 'lodash-es';
 
 export type TreeArrayItem<T, C extends string | number> = { [K in C]: TreeArrayItem<T, C>[] } & T;
 /**
@@ -15,7 +15,7 @@ export function listToTree<T extends Record<string, any>>(arr: T[], key: keyof T
   const newArr = clone(arr);
   newArr.forEach((item) => {
     (item as any)[childrenKey] = [];
-    treeNode.set(item[key],item);
+    treeNode.set(item[key], item);
   });
   const rootArr = [] as Array<TreeArrayItem<T, typeof childrenKey>>;
   arr.forEach((item) => {
@@ -32,7 +32,7 @@ export function listToTree<T extends Record<string, any>>(arr: T[], key: keyof T
 /**
  * 提取大括号内容
  * @param text 监测的值
- * @returns 
+ * @returns
  */
 export function extractBracesContent(text: string) {
   const result = [];
@@ -48,11 +48,10 @@ export function extractBracesContent(text: string) {
   return result;
 }
 
-export function formatText(message:string, args:Array<string|number>|Record<string,string|number>) {
-    if (Array.isArray(args)) {
-      return formatWithArray(message, args);
-    }
-    else {
-      return formatWithObject(message, args);
-    }
+export function formatText(message: string, args: Array<string | number> | Record<string, string | number>) {
+  if (Array.isArray(args)) {
+    return formatWithArray(message, args);
+  } else {
+    return formatWithObject(message, args);
+  }
 }

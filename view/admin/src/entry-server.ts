@@ -1,16 +1,12 @@
 import { basename } from 'node:path';
+import serialize from 'serialize-javascript';
 import { renderToString } from 'vue/server-renderer';
 import { createApp } from './main';
-import serialize from 'serialize-javascript';
 
 export async function render(url: string, manifest: Record<string, string[]>) {
   const { app, router, pinia } = await createApp();
   // set the router to the desired URL before rendering (需要把base,替换为/)
-  await router.push(
-    url === router.options.history.base
-      ? '/'
-      : url.replace(router.options.history.base + '/', '/')
-  );
+  await router.push(url === router.options.history.base ? '/' : url.replace(router.options.history.base + '/', '/'));
   await router.isReady();
   // passing SSR context object which will be available via useSSRContext()
   // @vitejs/plugin-vue injects code into a component's setup() that registers
@@ -23,22 +19,17 @@ export async function render(url: string, manifest: Record<string, string[]>) {
   // which we can then use to determine what files need to be preloaded for this
   // request.
   const __pinia = serialize(pinia.state.value);
-  const preloadLinks =
-    `<script>window.__pinia=${__pinia};</script>\n` +
-    renderPreloadLinks(ctx.modules, manifest);
+  const preloadLinks = `<script>window.__pinia=${__pinia};</script>\n` + renderPreloadLinks(ctx.modules, manifest);
   return [html, preloadLinks];
 }
 
-function renderPreloadLinks(
-  modules: string[],
-  manifest: Record<string, string[]>
-) {
+function renderPreloadLinks(modules: string[], manifest: Record<string, string[]>) {
   let links = '';
   const seen = new Set();
-  modules.forEach(id => {
+  modules.forEach((id) => {
     const files = manifest[id];
     if (files) {
-      files.forEach(file => {
+      files.forEach((file) => {
         if (!seen.has(file)) {
           seen.add(file);
           const filename = basename(file);

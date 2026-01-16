@@ -7,7 +7,7 @@ import { Component, onBeforeUnmount } from 'vue';
  * @param showKey 组件否展示绑定的v-model对应key
  * @returns
  */
-export const useActionModel = <T extends Component, const K extends Exclude<string,'onClosed'> = 'modelValue'>(component: T, closeRemove = true,   showKey = 'modelValue' as K ) => {
+export const useActionModel = <T extends Component, const K extends Exclude<string, 'onClosed'> = 'modelValue'>(component: T, closeRemove = true, showKey = 'modelValue' as K) => {
   const show = ref(false);
   let key = '' as string | number | symbol;
   const globalStore = useGlobalStore();
@@ -18,7 +18,7 @@ export const useActionModel = <T extends Component, const K extends Exclude<stri
       key = '';
     }
   };
-  const open = (props?:  Omit<ComponentProps<T>, K>) => {
+  const open = (props?: Omit<ComponentProps<T>, K>) => {
     closeRemove && close();
     show.value = true;
     if (!key) {

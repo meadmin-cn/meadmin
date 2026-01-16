@@ -1,7 +1,7 @@
 import { CodeEunm } from '@/dict/code.enum.js';
-import { MidwayI18nService } from '@midwayjs/i18n';
 import { ResponseService } from '@/service/response.service.js';
 import { Catch, Config, Context, ILogger, Logger } from '@midwayjs/core';
+import { MidwayI18nService } from '@midwayjs/i18n';
 import { ValidationError } from '@sequelize/core';
 
 @Catch()

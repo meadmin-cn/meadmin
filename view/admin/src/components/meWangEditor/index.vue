@@ -23,12 +23,12 @@
 </template>
 
 <script setup lang="ts" name="MeWangEditor">
-import '@wangeditor/editor/dist/css/style.css'; // 引入 css
-import './meWangEditor.scss';
-import { onBeforeUnmount, shallowRef, PropType } from 'vue';
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
-import { i18nChangeLanguage, IEditorConfig, IToolbarConfig, IDomEditor, SlateDescendant } from '@wangeditor/editor';
 import { useGlobalStore } from '@/store';
+import { i18nChangeLanguage, IDomEditor, IEditorConfig, IToolbarConfig, SlateDescendant } from '@wangeditor/editor';
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
+import '@wangeditor/editor/dist/css/style.css'; // 引入 css
+import { onBeforeUnmount, PropType, shallowRef } from 'vue';
+import './meWangEditor.scss';
 defineProps({
   mode: {
     type: String as PropType<'simple' | 'default'>,

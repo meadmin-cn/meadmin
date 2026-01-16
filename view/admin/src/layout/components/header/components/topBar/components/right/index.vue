@@ -12,8 +12,8 @@
 </template>
 <script setup lang="ts" name="Right">
 import { localeConfig } from '@/config';
-import MessageBox from './components/messageBox.vue';
 import { useSettingStore } from '@/store';
+import MessageBox from './components/messageBox.vue';
 import User from './components/user.vue';
 const { themeConfig } = storeToRefs(useSettingStore());
 </script>

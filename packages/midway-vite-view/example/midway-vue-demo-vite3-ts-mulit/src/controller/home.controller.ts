@@ -9,7 +9,7 @@ export class HomeController {
   @Get('*')
   async home(): Promise<string> {
     console.log(123);
-    if(this.ctx.originalUrl.startsWith('/admin')){
+    if (this.ctx.originalUrl.startsWith('/admin')) {
       return this.ctx.render('admin/index.html');
     }
     return this.ctx.render('index/index.html');

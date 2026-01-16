@@ -1,10 +1,10 @@
 import '@/styles/index.scss';
-import { event, mitter } from './event';
-import { App } from 'vue';
-import { installStore } from './store/index.js';
-import { installRoute } from './router/index.js';
-import { installIcon } from './icons/index.js';
 import nProgress from 'nprogress';
+import { App } from 'vue';
+import { event, mitter } from './event';
+import { installIcon } from './icons/index.js';
+import { installRoute } from './router/index.js';
+import { installStore } from './store/index.js';
 export let app: App;
 export async function bootscrapt(appObj: App) {
   app = appObj;

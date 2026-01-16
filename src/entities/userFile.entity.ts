@@ -1,11 +1,10 @@
-import { Attribute, Default, HasMany, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
+import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
-import { ApiPropertyRule } from '@/decorators/index.js';
 import { DataTypes, NonAttribute } from '@sequelize/core';
+import { Attribute, Default, HasMany, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
 import { IndexBaseModel } from './abstract/indexBase.entity.js';
 import { User } from './user.entity.js';
-
 
 //rule规则使用添加接口的校验规则
 @Table({ tableName: 'user_file', comment: '用户附件表(前台)' })
@@ -46,17 +45,16 @@ export class UserFile extends IndexBaseModel<UserFile> {
     type: 'string',
   })
   get url(): string {
-    return ('/api/index/file/get/'+this.id+'/'+this.name);
+    return '/api/index/file/get/' + this.id + '/' + this.name;
   }
 
   //为了规避user和userFile的循环引用问题，在userFile声明user avatar的关联
-  @HasMany(() => User, 
-  {
+  @HasMany(() => User, {
     foreignKey: 'avatarFileId',
-    inverse:{as: 'avatar'},
+    inverse: { as: 'avatar' },
   })
   declare avatarUsers?: NonAttribute<User[]>;
-  
+
   //json转义需要加上url属性，否则创建成功后的返回实体没有对应参数返回
   toJSON() {
     return Object.assign(

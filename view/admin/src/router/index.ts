@@ -1,13 +1,13 @@
-import { createRouter, createMemoryHistory, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { PageEnum } from '@/dict/pageEnum';
-import { App } from 'vue';
-import { setupRouterGuard } from './guard';
-import { concatObjectValue } from '@/utils/helper';
 import { Layout } from '@/router/constant';
-export const asyncRoutes = concatObjectValue<RouteRecordRaw>(import.meta.glob('./routes/*.ts', { eager: true, import: 'routes' }));
+import { useRouteStore } from '@/store/index.js';
+import { concatObjectValue } from '@/utils/helper';
 import { isExternal } from '@/utils/validate';
 import { resolve } from 'path-browserify';
-import { useRouteStore } from '@/store/index.js';
+import { App } from 'vue';
+import { createMemoryHistory, createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { setupRouterGuard } from './guard';
+export const asyncRoutes = concatObjectValue<RouteRecordRaw>(import.meta.glob('./routes/*.ts', { eager: true, import: 'routes' }));
 
 export const constantRoutes: RouteRecordRaw[] = [
   {
@@ -24,7 +24,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       hideMenu: true,
       title: '首页',
     },
-    redirect:()=>useRouteStore().firstMenu()
+    redirect: () => useRouteStore().firstMenu(),
   },
   {
     path: '/redirect',

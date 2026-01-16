@@ -1,5 +1,5 @@
 <template>
-  <el-config-provider :value-on-clear="()=>null">
+  <el-config-provider :value-on-clear="() => null">
     <router-view v-slot="{ Component }">
       <me-component :is="Component" done-progress close-loading="layout"></me-component>
     </router-view>
@@ -12,8 +12,8 @@
   </el-config-provider>
 </template>
 <script setup lang="ts">
-import { useGlobalStore, useSettingStore } from '@/store';
 import { SizeEnum } from '@/dict/configEnum';
+import { useGlobalStore, useSettingStore } from '@/store';
 import SetElGlobel from './setElGlobel';
 const settingStore = useSettingStore();
 const htmlDom = document.getElementsByTagName('html')[0];

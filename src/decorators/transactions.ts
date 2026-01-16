@@ -1,7 +1,7 @@
 // 开启事务
-import { createCustomMethodDecorator, IMidwayContainer, JoinPoint, MidwayDecoratorService } from '@midwayjs/core';
-import { RegistreDecorator } from '@/types/decorator.js';
 import { SequelizeDataSourceManagerService } from '@/service/dataSourceManager.service.js';
+import { RegistreDecorator } from '@/types/decorator.js';
+import { createCustomMethodDecorator, IMidwayContainer, JoinPoint, MidwayDecoratorService } from '@midwayjs/core';
 import { ManagedTransactionOptions } from '@sequelize/core';
 
 // 装饰器内部的唯一 id

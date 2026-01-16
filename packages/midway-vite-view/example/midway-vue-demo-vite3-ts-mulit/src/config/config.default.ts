@@ -7,9 +7,9 @@ export default {
   koa: {
     port: 7001,
   },
-  staticFile:{
-    gzip:true,
-    usePrecompiledGzip:true
+  staticFile: {
+    gzip: true,
+    usePrecompiledGzip: true,
   },
   view: {
     //midwayjs 视图配置 说明参考 https://midwayjs.org/docs/extensions/render
@@ -21,12 +21,12 @@ export default {
       'index/index.html': {
         entryServer: 'index/src/entry-server.ts',
         root: 'index',
-        viteConfigFile: join(__dirname, '../../view/index/vite.config.ts')
+        viteConfigFile: join(__dirname, '../../view/index/vite.config.ts'),
       },
       'admin/index.html': {
         entryServer: 'admin/src/entry-server.ts',
         root: 'admin',
-        viteConfigFile: join(__dirname, '../../view/admin/vite.config.ts')
+        viteConfigFile: join(__dirname, '../../view/admin/vite.config.ts'),
       },
     },
     viteConfigFile: join(__dirname, '../../view/vite.config.ts'),

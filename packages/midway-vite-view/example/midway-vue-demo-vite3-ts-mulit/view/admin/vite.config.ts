@@ -114,8 +114,8 @@ export default defineConfig(({ command, ssrBuild }) => ({
   ssr: {
     format: 'cjs',
   },
-  define:{
-    '__AA__':"'a_admin'",
-    "__CC__":"'c_admin'"
-  }
+  define: {
+    __AA__: "'a_admin'",
+    __CC__: "'c_admin'",
+  },
 }));

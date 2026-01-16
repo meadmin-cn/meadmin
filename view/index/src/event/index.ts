@@ -1,10 +1,10 @@
 /**
  * 事件总线
  */
-import Mitt from '@/utils/mitt';
-import { NavigationFailure, RouteLocationNormalized } from 'vue-router';
 import EventEnum from '@/dict/eventEnmu';
+import Mitt from '@/utils/mitt';
 import { App } from 'vue';
+import { NavigationFailure, RouteLocationNormalized } from 'vue-router';
 interface Events {
   // 事件总线
   [EventEnum.START]: App;

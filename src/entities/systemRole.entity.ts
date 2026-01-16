@@ -1,12 +1,12 @@
+import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
+import { BelongsManyModel } from '@/types/entity.js';
 import { RuleType } from '@midwayjs/validate';
 import { DataTypes, NonAttribute } from '@sequelize/core';
-import { Attribute, Default, PrimaryKey, Table, BelongsToMany, Unique, BelongsTo } from '@sequelize/core/decorators-legacy';
-import { ApiPropertyRule } from '@/decorators/index.js';
-import { SystemMenu } from './systemMenu.entity.js';
+import { Attribute, BelongsTo, BelongsToMany, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
 import { AdminTreeModel } from './abstract/adminTree.entity.js';
-import { BelongsManyModel } from '@/types/entity.js';
 import { SystemAdmin } from './systemAdmin.entity.js';
+import { SystemMenu } from './systemMenu.entity.js';
 
 //rule规则使用添加接口的校验规则
 @Table({ tableName: 'system_role', comment: '角色表' })
@@ -17,8 +17,8 @@ export class SystemRole extends AdminTreeModel<SystemRole> {
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
   id: string;
 
-  @BelongsTo(()=>SystemRole,{ foreignKey:'parentId',foreignKeyConstraints:false})//不创建数据库外键约束
-  @ApiPropertyRule({ description: '父级', type: ()=>SystemMenu })
+  @BelongsTo(() => SystemRole, { foreignKey: 'parentId', foreignKeyConstraints: false }) //不创建数据库外键约束
+  @ApiPropertyRule({ description: '父级', type: () => SystemMenu })
   declare parent?: NonAttribute<SystemRole>;
 
   @Attribute({ type: DataTypes.STRING(50), comment: '角色名称', defaultValue: '', allowNull: false })
@@ -69,7 +69,8 @@ export class SystemRole extends AdminTreeModel<SystemRole> {
 
   @BelongsToMany(() => SystemMenu, {
     through: 'role_menu', //中间表名称 或者 对应的Model
-    inverse: {//对向模型的反向关联declare字段
+    inverse: {
+      //对向模型的反向关联declare字段
       as: 'roles',
     },
   })
@@ -79,10 +80,10 @@ export class SystemRole extends AdminTreeModel<SystemRole> {
     items: {
       type: () => SystemMenu,
     },
-    rule: RuleType.array().items(RuleType.object({id:RuleType.string().required()})),
+    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),
   })
   menus?: NonAttribute<SystemMenu[]>;
-  
+
   @Attribute({
     comment: '超级管理员:1=是;0=不是',
     defaultValue: 0,

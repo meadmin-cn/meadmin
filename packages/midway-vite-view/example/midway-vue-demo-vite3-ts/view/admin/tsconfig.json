@@ -12,8 +12,14 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
-    "typeRoots": ["./node_modules/@types/", "./types"],
+    "typeRoots": ["./node_modules/@types/", "./types"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue","./types/**/*.d.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "./types/**/*.d.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

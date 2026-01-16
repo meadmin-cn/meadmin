@@ -1,6 +1,6 @@
 import { PageEnum } from '@/dict/pageEnum';
-import { RouteRecordRaw } from 'vue-router';
 import Layout from '@/layout/default/index.vue';
+import { RouteRecordRaw } from 'vue-router';
 export const routes: RouteRecordRaw[] = [
   {
     path: PageEnum.HOME,

@@ -8,4 +8,4 @@ const settingConfig = {
   openKeepAlive: true, // 是否开启KeepAlive缓存
   menuMode: MenuModeEnum.API, // 菜单模式
 };
-export { loginConfig, localeConfig, themeConfig, settingKey, settingConfig };
+export { localeConfig, loginConfig, settingConfig, settingKey, themeConfig };

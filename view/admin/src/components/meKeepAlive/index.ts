@@ -1,30 +1,30 @@
+import { invokeArrayFns, isArray, isString } from '@vue/shared';
 import {
-  ConcreteComponent,
-  getCurrentInstance,
-  SetupContext,
   ComponentOptions,
+  ConcreteComponent,
+  RendererElement,
+  RendererNode,
+  SetupContext,
   VNode,
-  cloneVNode,
-  isVNode,
   VNodeProps,
+  cloneVNode,
+  getCurrentInstance,
+  isVNode,
   onBeforeUnmount,
   onMounted,
   onUpdated,
-  watch,
-  RendererElement,
-  RendererNode,
   setTransitionHooks,
   warn,
+  watch,
 } from 'vue';
+import { isAsyncWrapper } from './core/apiAsyncComponent';
 import { getComponentName } from './core/component';
-import { invokeVNodeHook } from './core/vnode';
-import { isString, isArray, invokeArrayFns } from '@vue/shared';
-import { ShapeFlags } from './core/shapeFlags';
-import { RendererInternals, queuePostRenderEffect, MoveType } from './core/renderer';
 import { ComponentRenderContext } from './core/componentPublicInstance';
 import { devtoolsComponentAdded } from './core/devtools';
-import { isAsyncWrapper } from './core/apiAsyncComponent';
+import { MoveType, RendererInternals, queuePostRenderEffect } from './core/renderer';
+import { ShapeFlags } from './core/shapeFlags';
 import { isSuspense } from './core/Suspense';
+import { invokeVNodeHook } from './core/vnode';
 type MatchPattern = string | RegExp | Array<string | RegExp>;
 export interface MeKeepAliveProps {
   include?: MatchPattern;
@@ -39,13 +39,7 @@ type Cache = Map<CacheKey, VNode>;
 type Keys = Set<CacheKey>;
 export interface KeepAliveContext extends ComponentRenderContext {
   renderer: RendererInternals;
-  activate: (
-    vnode: VNode,
-    container: RendererElement,
-    anchor: RendererNode | null,
-    isSVG: boolean,
-    optimized: boolean,
-  ) => void;
+  activate: (vnode: VNode, container: RendererElement, anchor: RendererNode | null, isSVG: boolean, optimized: boolean) => void;
   deactivate: (vnode: VNode) => void;
 }
 
@@ -245,10 +239,7 @@ const KeepAliveImpl: ComponentOptions = {
         }
         current = null;
         return children;
-      } else if (
-        !isVNode(rawVNode) ||
-        (!(rawVNode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) && !(rawVNode.shapeFlag & ShapeFlags.SUSPENSE))
-      ) {
+      } else if (!isVNode(rawVNode) || (!(rawVNode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) && !(rawVNode.shapeFlag & ShapeFlags.SUSPENSE))) {
         current = null;
         return rawVNode;
       }
@@ -258,9 +249,7 @@ const KeepAliveImpl: ComponentOptions = {
 
       // for async components, name check should be based in its loaded
       // inner component if available
-      const name = getComponentName(
-        isAsyncWrapper(vnode) ? (vnode.type as ComponentOptions).__asyncResolved || {} : comp,
-      );
+      const name = getComponentName(isAsyncWrapper(vnode) ? (vnode.type as ComponentOptions).__asyncResolved || {} : comp);
       const key = vnode.key == null ? comp : vnode.key;
       const { include, exclude, includeKey, excludeKey, max } = props;
       if (

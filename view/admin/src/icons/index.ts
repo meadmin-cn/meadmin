@@ -1,37 +1,41 @@
 import * as elementPlusIconsVue from '@element-plus/icons-vue';
+import { upperFirst } from 'lodash-es';
 import path from 'path-browserify';
 import { App, Component, h } from 'vue';
-import { upperFirst } from 'lodash-es';
 
 export function installIcon(app: App) {
   function componentIcon(name: string, iconComponent: Component) {
-    app.component(name, defineComponent({
-      props: {
-        size: [Number, String],
-        color: String,
-      },
-      setup(props) {
-        let fontSize: string | undefined;
-        if (props.size) {
-          if (typeof props.size === 'string') {
-            fontSize = props.size;
-          } else if (typeof props.size === 'number') {
-            fontSize = `${props.size}px`;
+    app.component(
+      name,
+      defineComponent({
+        props: {
+          size: [Number, String],
+          color: String,
+        },
+        setup(props) {
+          let fontSize: string | undefined;
+          if (props.size) {
+            if (typeof props.size === 'string') {
+              fontSize = props.size;
+            } else if (typeof props.size === 'number') {
+              fontSize = `${props.size}px`;
+            }
           }
-        }
-        return ()=>h(
-          'i',
-          {
-            class: 'el-icon',
-            style: {
-              fontSize,
-              color: props.color,
-            },
-          },
-          h(iconComponent),
-        );
-      },
-    }));
+          return () =>
+            h(
+              'i',
+              {
+                class: 'el-icon',
+                style: {
+                  fontSize,
+                  color: props.color,
+                },
+              },
+              h(iconComponent),
+            );
+        },
+      }),
+    );
   }
   // 注册element icons
   for (const [key, component] of Object.entries(elementPlusIconsVue)) {

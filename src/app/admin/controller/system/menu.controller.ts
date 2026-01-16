@@ -1,12 +1,12 @@
-import { Body, Controller, Get, Post, Inject, Param } from '@midwayjs/core';
-import { BaseController } from '../base.controller.js';
+import { ApiOperationResponse } from '@/decorators/index.js';
+import { Body, Controller, Get, Inject, Param, Post } from '@midwayjs/core';
 import { SystemMenu } from '../../../../entities/systemMenu.entity.js';
 import { SystemMenuCreateDto } from '../../dto/system/menuCreate.dto.js';
 import { SystemMenuQueryDto } from '../../dto/system/menuQuery.dto.js';
+import { SystemMenuTreeAllResultDto } from '../../dto/system/menuTreeAllResult.dto.js';
 import { SystemMenuUpdateDto } from '../../dto/system/menuUpdate.dto.js';
 import { SystemMenuService } from '../../service/system/menu.service.js';
-import { ApiOperationResponse } from '@/decorators/index.js';
-import { SystemMenuTreeAllResultDto } from '../../dto/system/menuTreeAllResult.dto.js';
+import { BaseController } from '../base.controller.js';
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
@@ -37,15 +37,15 @@ export class SystemMenuController extends BaseController {
     return this.success(await this.systemMenuService.list(queryDto));
   }
 
-    //接口方法必须加async 方法的接口装饰器值必须/开头
-    @Get('/treeAll')
-    @ApiOperationResponse({
-      responseList: SystemMenuTreeAllResultDto,
-      summary: '获取所有菜单(按父子级返回)',
-    })
-    async treeAll() {
-      return this.success(await this.systemMenuService.treeAll());
-    }
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Get('/treeAll')
+  @ApiOperationResponse({
+    responseList: SystemMenuTreeAllResultDto,
+    summary: '获取所有菜单(按父子级返回)',
+  })
+  async treeAll() {
+    return this.success(await this.systemMenuService.treeAll());
+  }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
   @Get('/info/:id')

@@ -71,6 +71,5 @@ watch(
 </script>
 <style lang="scss" scoped>
 .info {
-
 }
 </style>

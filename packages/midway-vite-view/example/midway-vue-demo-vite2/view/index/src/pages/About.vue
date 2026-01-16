@@ -5,22 +5,22 @@
 </template>
 
 <script>
-import Button from '../components/button'
+import Button from '../components/button';
 
 export default {
   async setup() {
     const url = import.meta.env.SSR
       ? import.meta.url
-      : document.querySelector('.import-meta-url').textContent
+      : document.querySelector('.import-meta-url').textContent;
     return {
       msg: 'About',
-      url
-    }
+      url,
+    };
   },
   components: {
-    Button
-  }
-}
+    Button,
+  },
+};
 </script>
 
 <style scoped>

@@ -34,22 +34,13 @@ export class Log {
     console.info(`${this.context}[${new Date().toLocaleString()}] ${message}`, data ?? '');
   }
   public success(message: string, data?: any) {
-    console.info(
-      `${this.context}${colorConfig.green} [${new Date().toLocaleString()}] ${message}\x1B[0m`,
-      data ?? '',
-    );
+    console.info(`${this.context}${colorConfig.green} [${new Date().toLocaleString()}] ${message}\x1B[0m`, data ?? '');
   }
   public warn(message: string, data?: any) {
-    console.warn(
-      `${this.context}${colorConfig.yellow} [${new Date().toLocaleString()}] ${message}\x1B[0m`,
-      data ?? '',
-    );
+    console.warn(`${this.context}${colorConfig.yellow} [${new Date().toLocaleString()}] ${message}\x1B[0m`, data ?? '');
   }
   public error(message: string, data?: any) {
-    console.error(
-      `${this.context}${colorConfig.red} [${new Date().toLocaleString()}] ${message}\x1B[0m`,
-      data ?? '',
-    );
+    console.error(`${this.context}${colorConfig.red} [${new Date().toLocaleString()}] ${message}\x1B[0m`, data ?? '');
   }
   public static log(message: string, data?: any) {
     return new Log('meadmin').log(message, data);

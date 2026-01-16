@@ -1,13 +1,13 @@
-import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { InjectRepository } from '@/decorators/index.js';
-import { Provide, Inject } from '@midwayjs/core';
+import { SystemMenu } from '@/entities/systemMenu.entity.js';
+import { Inject, Provide } from '@midwayjs/core';
+import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
+import { MidwayI18nService } from '@midwayjs/i18n';
+import { Op } from '@sequelize/core';
+import { SystemRole } from '../../../../entities/systemRole.entity.js';
 import { SystemRoleCreateDto } from '../../dto/system/roleCreate.dto.js';
 import { SystemRoleQueryDto } from '../../dto/system/roleQuery.dto.js';
 import { SystemRoleUpdateDto } from '../../dto/system/roleUpdate.dto.js';
-import { SystemRole } from '../../../../entities/systemRole.entity.js';
-import { MidwayI18nService } from '@midwayjs/i18n';
-import { Op } from '@sequelize/core';
-import { SystemMenu } from '@/entities/systemMenu.entity.js';
 
 //角色
 @Provide()
@@ -69,7 +69,7 @@ export class SystemRoleService {
     });
     const { count, rows } = await this.SystemRoleRepository.findAndCountAll({
       where,
-      include:['createdAdmin','updatedAdmin'],
+      include: ['createdAdmin', 'updatedAdmin'],
       offset: (queryDto.page - 1) * queryDto.pageSize,
       limit: queryDto.pageSize,
       order: [['orderNum', 'DESC']],
@@ -84,27 +84,28 @@ export class SystemRoleService {
 
   /**
    * 获取角色树形结构
-   * @returns 
+   * @returns
    */
-  async treeAll(){
-    const list =  await this.SystemRoleRepository.getTree({
+  async treeAll() {
+    const list = await this.SystemRoleRepository.getTree({
       order: [['orderNum', 'DESC']],
-      include:{//关联查询菜单
-        association:'menus',
-        attributes:['id'],
-      }
+      include: {
+        //关联查询菜单
+        association: 'menus',
+        attributes: ['id'],
+      },
     });
-    const menusAll = await this.SystemMenuRepository.findAll({attributes:['id']});
-    const deepSetSuper = (arr: typeof list)=>{
-      arr.forEach(item => {
-        if(item.children){
+    const menusAll = await this.SystemMenuRepository.findAll({ attributes: ['id'] });
+    const deepSetSuper = (arr: typeof list) => {
+      arr.forEach((item) => {
+        if (item.children) {
           deepSetSuper(item.children);
         }
-        if(item.isSuper){
+        if (item.isSuper) {
           item.menus = menusAll;
         }
       });
-    }
+    };
     deepSetSuper(list);
     return list;
   }
@@ -115,7 +116,7 @@ export class SystemRoleService {
    * @returns
    */
   async findOne(id: string) {
-    const entity = await this.SystemRoleRepository.findByPk(id,{include:['parent','createdAdmin','updatedAdmin']});
+    const entity = await this.SystemRoleRepository.findByPk(id, { include: ['parent', 'createdAdmin', 'updatedAdmin'] });
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
@@ -134,10 +135,10 @@ export class SystemRoleService {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
     updateDto.isSuper = entity.isSuper;
-    if(updateDto.menuIds){
+    if (updateDto.menuIds) {
       await entity.setMenus(updateDto.menuIds);
       entity.menus = await entity.getMenus();
-      if(Object.keys(updateDto).length === 1){
+      if (Object.keys(updateDto).length === 1) {
         return entity;
       }
     }

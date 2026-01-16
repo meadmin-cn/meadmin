@@ -1,5 +1,5 @@
 {
-  "extends":"../../tsconfig.json",
+  "extends": "../../tsconfig.json",
   "compileOnSave": true,
   "compilerOptions": {
     "rootDir": "src",
@@ -7,13 +7,5 @@
     "baseUrl": ".",
     "paths": {}
   },
-  "exclude": [
-    "*.js",
-    "*.ts",
-    "dist",
-    "node_modules",
-    "test",
-    "packages",
-    "template"
-  ]
+  "exclude": ["*.js", "*.ts", "dist", "node_modules", "test", "packages", "template"]
 }

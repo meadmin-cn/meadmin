@@ -1,6 +1,6 @@
-import { Catch, httpError } from '@midwayjs/core';
-import { ResponseService } from '@/service/response.service.js';
 import { CodeEunm } from '@/dict/code.enum.js';
+import { ResponseService } from '@/service/response.service.js';
+import { Catch, httpError } from '@midwayjs/core';
 
 @Catch(httpError.UnauthorizedError)
 export class UnauthorizedErrorFilter {

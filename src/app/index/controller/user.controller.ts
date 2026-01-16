@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Post, Inject } from '@midwayjs/core';
-import { BaseController } from './base.controller.js';
+import { ApiOperationResponse, IndexPermission } from '@/decorators/index.js';
+import { Body, Controller, Get, Inject, Post } from '@midwayjs/core';
+import { Context } from '@midwayjs/koa';
 import { User } from '../../../entities/user.entity.js';
 import { UserUpdateDto } from '../dto/userUpdate.dto.js';
 import { UserService } from '../service/user.service.js';
-import { ApiOperationResponse, IndexPermission } from '@/decorators/index.js';
-import { Context } from '@midwayjs/koa';
+import { BaseController } from './base.controller.js';
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
@@ -14,10 +14,9 @@ import { Context } from '@midwayjs/koa';
 export class UserController extends BaseController {
   @Inject()
   userService: UserService;
-  
-  @Inject()
-  ctx:Context
 
+  @Inject()
+  ctx: Context;
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
   @Get('/info')
@@ -38,9 +37,7 @@ export class UserController extends BaseController {
     summary: '更新当前用户信息',
   })
   @IndexPermission()
-  async update( @Body() updateDto: UserUpdateDto) {
+  async update(@Body() updateDto: UserUpdateDto) {
     return this.success(await this.userService.update(this.ctx.userInfo.id, updateDto));
   }
-
-
 }

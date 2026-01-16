@@ -43,5 +43,5 @@ module.exports = {
   embeddedLanguageFormatting: 'auto',
   // html, vue, jsx 中每个属性占一行
   singleAttributePerLine: false,
-  plugins: ["prettier-plugin-organize-imports"] //让 Prettier 可以整理你的导入语句（例如排序、合并和移除未使用的导入语句）organizeImports。这与在 VS Code 中使用“Organize Imports”操作的效果相同。
-}
+  plugins: ['prettier-plugin-organize-imports'], //让 Prettier 可以整理你的导入语句（例如排序、合并和移除未使用的导入语句）organizeImports。这与在 VS Code 中使用“Organize Imports”操作的效果相同。
+};

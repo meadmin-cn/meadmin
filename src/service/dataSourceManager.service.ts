@@ -1,14 +1,4 @@
-import {
-  Config,
-  DataSourceManager,
-  ILogger,
-  Init,
-  Inject,
-  Logger,
-  Provide,
-  Scope,
-  ScopeEnum,
-} from '@midwayjs/core';
+import { Config, DataSourceManager, ILogger, Init, Inject, Logger, Provide, Scope, ScopeEnum } from '@midwayjs/core';
 import Sequelize from '@sequelize/core';
 
 @Provide()
@@ -35,10 +25,7 @@ export class SequelizeDataSourceManagerService extends DataSourceManager<Sequeli
     return 'sequelize';
   }
 
-  protected async createDataSource(
-    config: any,
-    dataSourceName: string
-  ): Promise<Sequelize> {
+  protected async createDataSource(config: any, dataSourceName: string): Promise<Sequelize> {
     const client = new Sequelize(config);
     const isConnected = await this.checkConnected(client);
 
@@ -46,10 +33,7 @@ export class SequelizeDataSourceManagerService extends DataSourceManager<Sequeli
       await client.sync(config.syncOptions);
     }
 
-    this.coreLogger.info(
-      '[midway:sequelize] client created: %s',
-      dataSourceName
-    );
+    this.coreLogger.info('[midway:sequelize] client created: %s', dataSourceName);
     return client;
   }
 

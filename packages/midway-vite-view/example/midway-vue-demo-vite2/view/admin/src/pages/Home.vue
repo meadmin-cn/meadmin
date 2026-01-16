@@ -20,26 +20,29 @@
 </template>
 
 <script setup>
-import foo from '@foo'
-import { msg as virtualMsg } from '@virtual-file'
-import { reactive, defineAsyncComponent } from 'vue'
-import Button from '../components/button'
-const ImportType = load('ImportType')
+import foo from '@foo';
+import { msg as virtualMsg } from '@virtual-file';
+import { reactive, defineAsyncComponent } from 'vue';
+import Button from '../components/button';
+const ImportType = load('ImportType');
 const Foo = defineAsyncComponent(() =>
-  import('../components/Foo').then((mod) => mod.Foo)
-)
-console.log(import.meta.env)
+  import('../components/Foo').then(mod => mod.Foo)
+);
+console.log(import.meta.env);
 function load(file) {
-  return defineAsyncComponent(() => import(`../components/${file}.vue`))
+  return defineAsyncComponent(() => import(`../components/${file}.vue`));
 }
-const url = import.meta.env.SSR?import.meta.url :( window.document.getElementsByClassName('import-meta-url')[0]?.textContent|| window.location.href);
-const protocol = new URL(url).protocol
+const url = import.meta.env.SSR
+  ? import.meta.url
+  : window.document.getElementsByClassName('import-meta-url')[0]?.textContent ||
+    window.location.href;
+const protocol = new URL(url).protocol;
 
 const state = reactive({
   count: 0,
   protocol,
-  url
-})
+  url,
+});
 // console.log(window.location.href);//测试服务端渲染报错
 </script>
 

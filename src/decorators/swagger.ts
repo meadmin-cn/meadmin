@@ -1,9 +1,9 @@
 import { ApiPageRes, PageRes } from '@/response/apiPage.res.js';
 import { ApiSuccessRes, ApiSuccessResArr } from '@/response/apiSuccess.res.js';
+import { getKeyInfo } from '@meadmin/cli/utils/formatting';
 import { createCustomMethodDecorator } from '@midwayjs/core';
 import { ApiExtraModel, ApiOperation, ApiOperationOptions, ApiProperty, ApiPropertyOptions, ApiResponse, getSchemaPath, Type } from '@midwayjs/swagger';
 import { Rule, RuleType } from '@midwayjs/validate';
-import { getKeyInfo } from '@meadmin/cli/utils/formatting';
 
 // 装饰器内部的唯一 id
 export const API_OPERATIN_RESONSE_KEY = 'meadmin:swagger:api_operation_respose';
@@ -144,7 +144,7 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & { rule?: RuleType
       }
     }
     if (options.rule.type === 'string') {
-      options.rule.empty('');//将 空串视为空而不是无效值,否则空串会被 stripUnknown 配置 视为无效值处理掉
+      options.rule.empty(''); //将 空串视为空而不是无效值,否则空串会被 stripUnknown 配置 视为无效值处理掉
       if (options.maxLength !== undefined) {
         options.maxLength = options.rule.$_getRule('max')?.args?.limit;
       }
@@ -155,7 +155,6 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & { rule?: RuleType
         //如果不是必填值，允许空串
         options.rule = options.rule.allow('');
       }
-      
     }
 
     if (options.default !== undefined) {

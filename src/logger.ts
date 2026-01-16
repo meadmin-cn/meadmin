@@ -1,16 +1,16 @@
 import { ILogger } from '@midwayjs/core';
 
 export let appLogger: ILogger = {
-   info:console.log,
-   debug:console.log,
-   error:console.log,
-   warn:console.log
+  info: console.log,
+  debug: console.log,
+  error: console.log,
+  warn: console.log,
 }; //应用logger 必须在ready 后调用
-export let coreLogger: ILogger= {
-   info:console.log,
-   debug:console.log,
-   error:console.log,
-   warn:console.log
+export let coreLogger: ILogger = {
+  info: console.log,
+  debug: console.log,
+  error: console.log,
+  warn: console.log,
 }; //框架级别logger 必须在ready 后调用
 
 /**

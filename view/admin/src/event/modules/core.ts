@@ -1,12 +1,12 @@
-import { installRoute } from '@/router';
-import { installStore } from '@/store';
-import { event, mitter } from '../index';
+import { settingConfig, settingKey } from '@/config';
 import { installIcon } from '@/icons';
 import { installI18n } from '@/locales/i18n';
+import { installRoute } from '@/router';
+import { installStore } from '@/store';
+import { permission } from '@/utils/permission';
 import nProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import { permission } from '@/utils/permission';
-import { settingKey, settingConfig } from '@/config';
+import { event, mitter } from '../index';
 mitter.once(event.START, async (app) => {
   if (localStorage.getItem(`${settingKey}-version`) !== settingConfig.version) {
     localStorage.clear();

@@ -1,13 +1,12 @@
+import { setEnv } from '@/utils/env.js';
 import { Command } from 'commander';
-import { loadConfigFromFile, build as buildVite } from 'vite';
+import extend from 'extend2';
+import fsPromises from 'fs/promises';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import fsPromises from 'fs/promises';
-import { ViteViewConfig } from '../../interface.js';
 import { resolve } from 'path';
-import { normalizePath } from 'vite';
-import extend from 'extend2';
-import { setEnv } from '@/utils/env.js';
+import { build as buildVite, loadConfigFromFile, normalizePath } from 'vite';
+import { ViteViewConfig } from '../../interface.js';
 //递归遍历文件并执行callback
 const fileDisplay = async function (
   filePath: string,
@@ -58,9 +57,8 @@ export function lookupFile(
   }
 }
 
-
 export class Build {
-  public options = {} as Record<string,any>;
+  public options = {} as Record<string, any>;
   private pages = {} as Record<
     string,
     {
@@ -391,9 +389,7 @@ export class Build {
   }
 }
 
-
-
-export const buildInit =  (program: Command) => {
+export const buildInit = (program: Command) => {
   program
     .command('build')
     .description('build vite文件')
@@ -402,16 +398,31 @@ export const buildInit =  (program: Command) => {
       '构建方式:1=根据配置文件自动构建，2=自动寻找viewDir文件夹下的index.html和entry-server.js进行构建',
       '1'
     )
-    .option('--config <char>', '配置文件夹/配置文件','src/config')
-    .option('--outDir <char>', '编译输出目录默认为，默认为staticFile.dirs[staticFileKey].dir或public')
-    .option('--viteConfigFile <char>', 'views dir 默认 viteView.viteConfigFile或view')
+    .option('--config <char>', '配置文件夹/配置文件', 'src/config')
+    .option(
+      '--outDir <char>',
+      '编译输出目录默认为，默认为staticFile.dirs[staticFileKey].dir或public'
+    )
+    .option(
+      '--viteConfigFile <char>',
+      'views dir 默认 viteView.viteConfigFile或view'
+    )
     .option('--viewDir <char>', 'views dir 默认 view')
-    .option('--prefix <char>', '静态缓存前缀 默认为staticFile.dirs[staticFileKey].prefix或/public')
+    .option(
+      '--prefix <char>',
+      '静态缓存前缀 默认为staticFile.dirs[staticFileKey].prefix或/public'
+    )
     .option('--outPrefix <char>', '编译输出前缀 默认为viteView.outPrefix或html')
-    .option('--staticFileKey <char>', '使用的staticFile.dirs的key  默认为viteView.staticFileKey或default')
-    .option('-r --root <char>', 'vite config 的rootdir 必须是相对于viewDir的相对路径')
-    .option('-m, --module <char>', 'env环境变量','production')
-    .action(async (options) => {
+    .option(
+      '--staticFileKey <char>',
+      '使用的staticFile.dirs的key  默认为viteView.staticFileKey或default'
+    )
+    .option(
+      '-r --root <char>',
+      'vite config 的rootdir 必须是相对于viewDir的相对路径'
+    )
+    .option('-m, --module <char>', 'env环境变量', 'production')
+    .action(async options => {
       setEnv(options.module);
       const build = new Build();
       build.options = options;

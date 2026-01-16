@@ -1,10 +1,10 @@
-import cookies, { CookieAttributes } from 'js-cookie';
 import type { Context } from '@midwayjs/koa';
+import cookies, { CookieAttributes } from 'js-cookie';
 
 let serverCookies: Context['Cookies'];
-export const setSterCookies = (cookies: Context['Cookies'])=>{
-    serverCookies = cookies;
-}
+export const setSterCookies = (cookies: Context['Cookies']) => {
+  serverCookies = cookies;
+};
 //cookie设置兼容服务端和客户端
 export default {
   /**
@@ -12,11 +12,18 @@ export default {
    */
   set(name: string, value: string, options?: CookieAttributes) {
     if (import.meta.env.SSR) {
-     return serverCookies.set(name, value, Object.assign({
-      signed: false,  
-      httpOnly: false, // 默认是 true
-      maxAge: typeof options?.expires === 'number' ? options.expires * 86400 * 1000 : undefined
-      },options));
+      return serverCookies.set(
+        name,
+        value,
+        Object.assign(
+          {
+            signed: false,
+            httpOnly: false, // 默认是 true
+            maxAge: typeof options?.expires === 'number' ? options.expires * 86400 * 1000 : undefined,
+          },
+          options,
+        ),
+      );
     } else {
       return cookies.set(name, value, options);
     }
@@ -27,7 +34,7 @@ export default {
    */
   get(name: string) {
     if (import.meta.env.SSR) {
-      return serverCookies.get(name,{signed:false});
+      return serverCookies.get(name, { signed: false });
     } else {
       return cookies.get(name);
     }

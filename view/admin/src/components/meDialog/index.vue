@@ -7,7 +7,6 @@
 </template>
 <script lang="ts">
 import { ElDialog } from 'element-plus';
-import { ComponentOptionsMixin, ExtractPublicPropTypes, Ref } from 'vue';
 import minMax from './hooks/minMax';
 const props = {
   full: {
@@ -22,7 +21,7 @@ const props = {
 
 const emits = ['open'] as unknown as {
   open: () => void;
-} & ArrayEmitsOptionsToFns<Parameters<InstanceType<typeof ElDialog>['$emit']>>;;
+} & ArrayEmitsOptionsToFns<Parameters<InstanceType<typeof ElDialog>['$emit']>>;
 export default defineComponent({
   name: 'MeDialog',
   props: props as unknown as typeof props & ComponentObjectPropsOptionsFromData<InstanceType<typeof ElDialog>['$props']>,
@@ -73,7 +72,7 @@ export default defineComponent({
     flex: 1;
     margin-top: 10px;
     flex-shrink: 0;
-    padding: 0 10px
+    padding: 0 10px;
   }
   .el-dialog__footer {
     position: sticky;

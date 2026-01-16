@@ -9,9 +9,9 @@ export function isExternal(path: string) {
 
 /**
  * 是否是手机号
- * @param value 
- * @returns 
+ * @param value
+ * @returns
  */
-export function isMobile(value: string|number){
-  return /^1\d{10}$/.test(value+'');
+export function isMobile(value: string | number) {
+  return /^1\d{10}$/.test(value + '');
 }

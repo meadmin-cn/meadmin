@@ -1,32 +1,27 @@
 {
-    "typescript.tsdk": "node_modules\\typescript\\lib",
-    "editor.tabSize": 2,
-    "typescript.preferences.importModuleSpecifierEnding": "js",
-    "commentTranslate.targetLanguage": "zh-CN",
-    "commentTranslate.source": "DarkCWK.youdao-youdao",
-    "files.eol": "\n",
-    "conventionalCommits.scopes": [
-        "meadmin",
-        "midway-vite-view",
-        "meadmin-view-admin",
-        "core"
-    ],
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "editor.tabSize": 2,
+  "typescript.preferences.importModuleSpecifierEnding": "js",
+  "commentTranslate.targetLanguage": "zh-CN",
+  "commentTranslate.source": "DarkCWK.youdao-youdao",
+  "files.eol": "\n",
+  "conventionalCommits.scopes": ["meadmin", "midway-vite-view", "meadmin-view-admin", "core"],
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "never",
+    "source.removeUnusedImports": "explicit"
+  },
+  "[typescript]": {
     "editor.codeActionsOnSave": {
-        "source.organizeImports": "never",
-        "source.removeUnusedImports": "explicit"
-    },
-    "[typescript]": {
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": "never",
-            "source.removeUnusedImports": "explicit"
-        }
-    },
-    "[javascript]": {
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": "never",
-            "source.removeUnusedImports": "explicit"
-        }
-    },
-    "vue.suggest.componentNameCasing": "alwaysKebabCase",
-    "vue.suggest.propNameCasing": "alwaysKebabCase"
+      "source.organizeImports": "never",
+      "source.removeUnusedImports": "explicit"
+    }
+  },
+  "[javascript]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "never",
+      "source.removeUnusedImports": "explicit"
+    }
+  },
+  "vue.suggest.componentNameCasing": "alwaysKebabCase",
+  "vue.suggest.propNameCasing": "alwaysKebabCase"
 }

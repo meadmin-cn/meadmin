@@ -1,6 +1,6 @@
-import { appLogger } from '../logger.js';
 import { importModels, Options } from '@sequelize/core';
 import { PostgresDialect } from '@sequelize/postgres';
+import { appLogger } from '../logger.js';
 export default async () => ({
   dataSource: {
     default: {
@@ -21,7 +21,7 @@ export default async () => ({
         timezone: 'Asia/Shanghai',
       },
       logging(sql, timing, seqlize?) {
-        appLogger.info('[sql]耗时 %d ms，%s', timing, sql,seqlize?.bind);
+        appLogger.info('[sql]耗时 %d ms，%s', timing, sql, seqlize?.bind);
       },
       benchmark: true, //开启日志打印sql耗时参数传递
     } as Options<PostgresDialect>,

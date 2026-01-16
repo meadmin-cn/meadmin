@@ -1,4 +1,4 @@
-import { CamelCase, SnakeToCamelCase } from "#/global.js";
+import { CamelCase, SnakeToCamelCase } from '#/global.js';
 
 /**
  * 将camelCase字符串更改为kebab-case，用破折号替换空格并保留下划线。
@@ -22,23 +22,22 @@ export function normalizeToKebabOrSnakeCase(str: string, replaceStr = '-') {
  */
 export function snakeToCamelCase<T extends string>(str: T) {
   return str.replace(/[\-_]([A-Za-z])/g, function (all, letter) {
-    return letter.toUpperCase() 
+    return letter.toUpperCase();
   }) as CamelCase<T>;
 }
 
 /**
  * 对象 key kebab-case/kebab_case 更改为 camelCase
- * @param obj 
- * @returns 
+ * @param obj
+ * @returns
  */
-export function snakeToCamelCaseObj<T extends Record<string,any>>(obj:T){
-  const newObj = {} as Record<string,any>;
-  Object.keys(obj).forEach((key)=>{
+export function snakeToCamelCaseObj<T extends Record<string, any>>(obj: T) {
+  const newObj = {} as Record<string, any>;
+  Object.keys(obj).forEach((key) => {
     newObj[snakeToCamelCase(key)] = obj[key];
-  })
-  return newObj as  SnakeToCamelCase<T> ;
+  });
+  return newObj as SnakeToCamelCase<T>;
 }
-
 
 /**
  * 首字母小写
@@ -61,6 +60,3 @@ export function lowerFirstCase(str: string) {
 export function upFirstCase(str: string) {
   return str[0].toUpperCase() + str.slice(1);
 }
-
-
-

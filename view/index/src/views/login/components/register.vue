@@ -12,10 +12,10 @@
         <div class="title">注 册</div>
         <el-form ref="formRef" size="large" :rules="rules" :model="registerParams" @keyup.enter="submit">
           <el-form-item prop="username" class="upload-item">
-            <me-up-avatar v-model="registerParams.avatar" ></me-up-avatar>
+            <me-up-avatar v-model="registerParams.avatar"></me-up-avatar>
           </el-form-item>
           <el-form-item prop="nickname">
-            <el-input  v-model="registerParams.nickname" autofocus placeholder="昵称" clearable />
+            <el-input v-model="registerParams.nickname" autofocus placeholder="昵称" clearable />
           </el-form-item>
           <el-form-item prop="username">
             <el-input v-model="registerParams.username" placeholder="用户名" clearable />
@@ -26,7 +26,7 @@
           <el-form-item prop="password">
             <el-input v-model="registerParams.reqPassword" type="password" placeholder="确认密码" clearable show-password />
           </el-form-item>
-          <me-button class="button submit" @click="submit" >注册</me-button>
+          <me-button class="button submit" @click="submit">注册</me-button>
         </el-form>
       </div>
     </div>
@@ -37,8 +37,8 @@
 import { RegisterParams, registerApi } from '@/api/login';
 import { FormInstance } from 'element-plus';
 let registerParams = reactive(new RegisterParams());
-const rules ={
-  nickanem:[
+const rules = {
+  nickanem: [
     {
       required: true,
       message: '请填写昵称',
@@ -82,20 +82,20 @@ const rules ={
       required: true,
       message: '确认密码',
       trigger: 'blur',
-      validator:(rule: any, value: string, callback: any) => {
+      validator: (rule: any, value: string, callback: any) => {
         if (!value) {
-          callback(new Error('请输入确认密码'))
+          callback(new Error('请输入确认密码'));
         } else if (value !== registerParams.password) {
-          callback(new Error("两次密码不一致"))
+          callback(new Error('两次密码不一致'));
         } else {
-          callback()
+          callback();
         }
-      }
+      },
     },
   ],
 };
 const formRef = ref<FormInstance>();
-const {runAsync} = registerApi({});
+const { runAsync } = registerApi({});
 const submit = async () => {
   formRef.value?.validate(async (valid, fields) => {
     if (valid) {
@@ -117,12 +117,12 @@ const setGo = () => {
 @use 'sass:math';
 
 .register {
-  background-image: linear-gradient(120deg,  #8e44ad,#3498db) !important;
+  background-image: linear-gradient(120deg, #8e44ad, #3498db) !important;
 
   .right {
     background-color: #fff;
   }
-  .upload-item{
+  .upload-item {
     margin-bottom: 5px;
   }
   .upload-avater {
@@ -158,34 +158,34 @@ const setGo = () => {
         display: none;
         flex-direction: column;
         line-height: 100%;
-        .text-desc{
+        .text-desc {
           font-size: 0.8em;
         }
       }
-       i {
+      i {
         font-size: 1.5em;
       }
       @keyframes conicProcess {
-      @for $i from 0 through 100 {
-        #{$i * 1%} {
-          background-image: conic-gradient(#3498db 0deg, #8e44ad #{math.div($i , 100) * 360 * 1deg}, var(--el-border-color-darker) #{math.div($i , 100) * 360 * 1deg});
+        @for $i from 0 through 100 {
+          #{$i * 1%} {
+            background-image: conic-gradient(#3498db 0deg, #8e44ad #{math.div($i, 100) * 360 * 1deg}, var(--el-border-color-darker) #{math.div($i, 100) * 360 * 1deg});
+          }
         }
-      }     
       }
 
-    &:hover{
-      animation: conicProcess 500ms ease-in;
-      animation-fill-mode: forwards;
-      .default-up-icon{
-        display: none;
-      }
-      .text {
-        display: flex;
+      &:hover {
+        animation: conicProcess 500ms ease-in;
+        animation-fill-mode: forwards;
+        .default-up-icon {
+          display: none;
+        }
+        .text {
+          display: flex;
+        }
       }
     }
-    }   
   }
-  :deep(.el-form-item__error){
+  :deep(.el-form-item__error) {
     padding-left: 20px;
   }
 }

@@ -18,8 +18,8 @@ export default (el: HTMLDivElement & { fullscreen: boolean }) => {
   const dialogHeaderEl = el.querySelector('.el-dialog__header') as HTMLDivElement;
   //弹窗
   const dragDom = el;
-  let firstWidth= el.style.width;
-  let firstHeight= el.style.height;
+  let firstWidth = el.style.width;
+  let firstHeight = el.style.height;
   const setWidthHeight = (width: string, height: string) => {
     dragDom.style.maxHeight = 'unset';
     if (width) {

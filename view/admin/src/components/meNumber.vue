@@ -7,9 +7,9 @@
 </template>
 
 <script setup lang="ts">
+import { EasingFunction, TransitionPresets, useTransition } from '@vueuse/core';
 import formatNumber from 'format-number';
 import { PropType } from 'vue';
-import { TransitionPresets, useTransition, EasingFunction } from '@vueuse/core';
 const props = defineProps({
   start: {
     type: Number,
@@ -47,9 +47,7 @@ const output = useTransition(
     duration: computed(() => props.duration),
     onFinished: () => emit('finished'),
     onStarted: () => emit('started'),
-    transition: computed(() =>
-      typeof props.transition === 'string' ? TransitionPresets[props.transition] : props.transition,
-    ),
+    transition: computed(() => (typeof props.transition === 'string' ? TransitionPresets[props.transition] : props.transition)),
   },
 );
 const getFormatInfo = (value: number | [number, string?, string?]) => {

@@ -38,11 +38,11 @@
   <me-setting-menu></me-setting-menu>
 </template>
 <script setup lang="ts" name="Layout">
+import { useGlobalStore, useSettingStore } from '@/store';
+import TagBar from './components/header/components/tagBar/index.vue';
 import LayoutHeader from './components/header/index.vue';
 import LayoutMenu from './components/menu/index.vue';
 import LayoutPage from './components/page.vue';
-import TagBar from './components/header/components/tagBar/index.vue';
-import { useSettingStore, useGlobalStore } from '@/store';
 const { themeConfig, menuType } = storeToRefs(useSettingStore());
 const globalStore = useGlobalStore();
 onMounted(() => {

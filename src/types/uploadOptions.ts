@@ -1,7 +1,7 @@
-import "@midwayjs/busboy";
+import '@midwayjs/busboy';
 
 declare module '@midwayjs/busboy' {
-  export interface UploadOptions{
-    upDir:string;//文件存储文件夹
+  export interface UploadOptions {
+    upDir: string; //文件存储文件夹
   }
 }

@@ -9,9 +9,8 @@ export default {
   },
   viteView: {
     // prod:true,
-    views:{
-      'index.html':'src/entry-server.tsx',
-    }
+    views: {
+      'index.html': 'src/entry-server.tsx',
+    },
   },
 };
-

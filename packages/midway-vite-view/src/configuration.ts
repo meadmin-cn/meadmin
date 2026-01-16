@@ -1,11 +1,11 @@
-import { ViteMiddleware } from './middware/vite.middware.js';
-import { Configuration, Inject, App, Config } from '@midwayjs/core';
-import * as DefaultConfig from './config/config.default.js';
-import * as view from '@midwayjs/view';
-import { ViteView } from './lib/view.js';
+import { App, Config, Configuration, Inject } from '@midwayjs/core';
 import * as koa from '@midwayjs/koa';
 import * as staticFile from '@midwayjs/static-file';
+import * as view from '@midwayjs/view';
+import * as DefaultConfig from './config/config.default.js';
 import { ViteViewConfig } from './interface.js';
+import { ViteView } from './lib/view.js';
+import { ViteMiddleware } from './middware/vite.middware.js';
 import { ViteService } from './service/vite.service.js';
 
 @Configuration({
@@ -48,7 +48,7 @@ export class MidwayViteViewConfiguration {
     }
   }
 
-  async onStop(){
+  async onStop() {
     this.viteService.catchViteAddress();
   }
 }

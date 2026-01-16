@@ -18,9 +18,7 @@
           <el-input
             v-if="quickSearch !== undefined"
             :model-value="quickSearch"
-            :placeholder="
-              typeof quickSearchPlaceholder === 'function' ? quickSearchPlaceholder($t) : quickSearchPlaceholder
-            "
+            :placeholder="typeof quickSearchPlaceholder === 'function' ? quickSearchPlaceholder($t) : quickSearchPlaceholder"
             prefix-icon="mel-icon-search"
             @update:model-value="$emit('update:quickSearch', $event)"
             @change="$emit('quickSearch', $event)"
@@ -32,36 +30,17 @@
               </template>
               <template #default>
                 <el-scrollbar max-height="300px" class="popover-scrollbar-y">
-                  <el-tree
-                    node-key="id"
-                    :default-checked-keys="defaultChecked"
-                    :data="collectColumn"
-                    default-expand-all
-                    :props="elTreeProps"
-                    show-checkbox
-                    @check-change="checkChange"
-                  />
+                  <el-tree node-key="id" :default-checked-keys="defaultChecked" :data="collectColumn" default-expand-all :props="elTreeProps" show-checkbox @check-change="checkChange" />
                 </el-scrollbar>
               </template>
             </el-popover>
-            <el-popover
-              v-if="exportMenu?.length"
-              pure
-              placement="bottom"
-              trigger="click"
-              popper-class="me-vxe-exportmenu-popover el-dropdown__popper"
-            >
+            <el-popover v-if="exportMenu?.length" pure placement="bottom" trigger="click" popper-class="me-vxe-exportmenu-popover el-dropdown__popper">
               <template #reference>
                 <el-button icon="mel-icon-download" :title="$t('导出')" />
               </template>
               <template #default>
                 <ul class="el-dropdown-menu">
-                  <li
-                    v-for="item in exportMenu"
-                    :key="item.label"
-                    class="el-dropdown-menu__item"
-                    @click="handleExport(item.handle, item.filename ?? name!)"
-                  >
+                  <li v-for="item in exportMenu" :key="item.label" class="el-dropdown-menu__item" @click="handleExport(item.handle, item.filename ?? name!)">
                     {{ item.label }}
                   </li>
                 </ul>
@@ -92,20 +71,14 @@
   </div>
 </template>
 <script lang="ts">
-import './install';
-import pagination from './components/pagination.vue';
-import { ComponentCustomProperties, PropType, useTemplateRef } from 'vue';
-import {
-  VxeTableDefines,
-  VxeTableInstance,
-  VxeTableListeners,
-  VxeTableProps,
-  VxeTablePropTypes,
-} from 'vxe-table';
-import { debounce } from 'lodash-es';
 import { TreeNodeData } from 'element-plus/es/components/tree/src/tree.type';
-import resize  from './directives/resize';
-import {getFullHight} from './util';
+import { debounce } from 'lodash-es';
+import { ComponentCustomProperties, PropType, useTemplateRef } from 'vue';
+import { VxeTableDefines, VxeTableInstance, VxeTableListeners, VxeTableProps, VxeTablePropTypes } from 'vxe-table';
+import pagination from './components/pagination.vue';
+import resize from './directives/resize';
+import './install';
+import { getFullHight } from './util';
 const props = {
   meClass: [String, Array] as PropType<string[] | string>,
   name: {
@@ -149,7 +122,7 @@ const props = {
     default: () => (t: ComponentCustomProperties['$t']) => t('快捷搜索'),
   },
   paginationOptions: Object as PropType<InstanceType<typeof pagination>['options']>,
-  autoHeight:{
+  autoHeight: {
     type: Boolean,
     default: true,
   },
@@ -163,9 +136,9 @@ const emits = ['quickSearch', 'refresh', 'add', 'update:quickSearch'] as unknown
 export default defineComponent({
   name: 'MeVxeTable',
   components: { pagination },
-  directives:{resize},
+  directives: { resize },
   inheritAttrs: false,
-  props:props as unknown as ComponentObjectPropsOptionsFromData<VxeTableProps> & typeof props,
+  props: props as unknown as ComponentObjectPropsOptionsFromData<VxeTableProps> & typeof props,
   emits,
   setup(props, { expose }) {
     const vxeTableRef = useTemplateRef<VxeTableInstance>('vxeTableRef');
@@ -183,7 +156,7 @@ export default defineComponent({
     };
     onMounted(async () => {
       await nextTick();
-      await nextTick();//等两次渲染完成才能获取到列
+      await nextTick(); //等两次渲染完成才能获取到列
       const { collectColumn: origionCollectColumn, fullColumn } = vxeTableRef.value!.getTableColumn();
       collectColumn.value = origionCollectColumn;
       defaultChecked.value = fullColumn.reduce((previousValue, currentValue) => {
@@ -195,13 +168,13 @@ export default defineComponent({
     });
     expose({ vxeTableRef });
     const tableHeight = ref<number>();
-    const getTableHeight = (data:{width:number,height:number})=>{
-      if(props.autoHeight){
-        const toolbarHeight = meVxeToolbarRef.value? getFullHight(meVxeToolbarRef.value):0;
-        const paginationHeight = mePaginationRef.value?.$el? getFullHight(mePaginationRef.value?.$el):0;
+    const getTableHeight = (data: { width: number; height: number }) => {
+      if (props.autoHeight) {
+        const toolbarHeight = meVxeToolbarRef.value ? getFullHight(meVxeToolbarRef.value) : 0;
+        const paginationHeight = mePaginationRef.value?.$el ? getFullHight(mePaginationRef.value?.$el) : 0;
         tableHeight.value = data.height - toolbarHeight - paginationHeight;
       }
-    }
+    };
     return {
       elTreeProps: {
         label: (item: TreeNodeData) => (item.type === 'seq' ? '#' : item.title),
@@ -211,10 +184,7 @@ export default defineComponent({
       collectColumn,
       defaultChecked,
       checkChange,
-      handleExport: (
-        handle: (vxeTable: VxeTableInstance, filename: string) => void | 'csv' | 'html' | 'xml' | 'txt',
-        filename: string,
-      ) => {
+      handleExport: (handle: (vxeTable: VxeTableInstance, filename: string) => void | 'csv' | 'html' | 'xml' | 'txt', filename: string) => {
         if (typeof handle === 'string') {
           vxeTableRef.value!.exportData({
             type: handle,
@@ -230,11 +200,9 @@ export default defineComponent({
           Object.assign(
             {
               sheetName: props.name,
-              data: vxeTableRef.value!.getCheckboxRecords().length
-                ? vxeTableRef.value!.getCheckboxRecords()
-                : undefined,
+              data: vxeTableRef.value!.getCheckboxRecords().length ? vxeTableRef.value!.getCheckboxRecords() : undefined,
             },
-            props.print === true?{}:props.print,
+            props.print === true ? {} : props.print,
           ),
         );
       },
@@ -243,7 +211,7 @@ export default defineComponent({
       tableHeight,
       meVxeToolbarRef,
       mePaginationRef,
-      vnodeProps:getCurrentInstance()?.vnode.props
+      vnodeProps: getCurrentInstance()?.vnode.props,
     };
   },
 });
@@ -296,7 +264,7 @@ export default defineComponent({
       }
     }
   }
-  .me-vxe-body{
+  .me-vxe-body {
     flex-shrink: 1;
   }
   .pagination {

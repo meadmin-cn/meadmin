@@ -1,4 +1,4 @@
-import { resolve, relative, extname, dirname } from 'node:path';
+import { dirname, extname, relative, resolve } from 'node:path';
 /**
  * 将camelCase字符串更改为kebab-case，用破折号替换空格并保留下划线。
  *

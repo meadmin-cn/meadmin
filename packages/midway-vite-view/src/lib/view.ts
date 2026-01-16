@@ -1,11 +1,11 @@
-import { ViteService } from '../service/vite.service.js';
-import { Provide, Config, App, Inject } from '@midwayjs/core';
+import { App, Config, Inject, Provide } from '@midwayjs/core';
+import { Application, Context } from '@midwayjs/koa';
 import { StaticFileOptions } from '@midwayjs/static-file';
 import { IViewEngine, RenderOptions } from '@midwayjs/view';
 import * as fs from 'fs';
 import * as path from 'path';
-import { Application, Context } from '@midwayjs/koa';
 import { ViteViewConfig } from '../interface.js';
+import { ViteService } from '../service/vite.service.js';
 
 @Provide()
 export class ViteView implements IViewEngine {
@@ -54,8 +54,12 @@ export class ViteView implements IViewEngine {
         ));
         render = require(entryServerUrl).render;
       }
-      const context = {cookies:this.ctx.cookies,request:this.ctx.request};
-      const [appHtml, preloadLinks, teleports] = await render(url, manifest, context);
+      const context = { cookies: this.ctx.cookies, request: this.ctx.request };
+      const [appHtml, preloadLinks, teleports] = await render(
+        url,
+        manifest,
+        context
+      );
       if (context['url']) {
         // Somewhere a `<Redirect>` was rendered
         return this.ctx.redirect(context['url']);

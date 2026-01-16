@@ -1,5 +1,5 @@
-import request, { RequestOptions } from '@/utils/request.js';
 import { PageParam, PageResult } from '@/api/api.model.js';
+import request, { RequestOptions } from '@/utils/request.js';
 import { SystemAdminInfo } from './system/admin.js';
 
 //附件
@@ -15,8 +15,8 @@ export class File {
 
 export type FileInfo = Required<File> & {
   id: string; //ID
-  createdAdmin:  Omit<SystemAdminInfo, 'roles' | 'roleMenus'>;
-  updatedAdmin:  Omit<SystemAdminInfo, 'roles' | 'roleMenus'>;
+  createdAdmin: Omit<SystemAdminInfo, 'roles' | 'roleMenus'>;
+  updatedAdmin: Omit<SystemAdminInfo, 'roles' | 'roleMenus'>;
   size: number;
   createdAt: string; //创建时间
   updatedAt: string; //最后更新时间
@@ -46,7 +46,7 @@ export function uploadFileApi<T extends boolean = true>(returnAxios = true as T)
       },
     }),
     { success: false, noLoading: true },
-    returnAxios
+    returnAxios,
   );
 }
 
@@ -99,7 +99,7 @@ export function fileInfoApi(options?: RequestOptions<FileInfo, [string]>) {
   );
 }
 
-export type UpdateFileInfoParam = Omit<Partial<FileInfo>,'id' | 'createdAt' | 'updatedAt' | 'createdAdmin'>;
+export type UpdateFileInfoParam = Omit<Partial<FileInfo>, 'id' | 'createdAt' | 'updatedAt' | 'createdAdmin'>;
 //修改附件信息
 export function updateFileApi(options?: RequestOptions<FileInfo, [string, UpdateFileInfoParam]>) {
   return request<FileInfo, [string, UpdateFileInfoParam]>(

@@ -1,14 +1,9 @@
-import {
-  getClassExtendedMetadata,
-  getPropertyType,
-  INJECT_CUSTOM_PROPERTY,
-  saveClassMetadata,
-} from '@midwayjs/core';
+import { getClassExtendedMetadata, getPropertyType, INJECT_CUSTOM_PROPERTY, saveClassMetadata } from '@midwayjs/core';
 import { Dto, OmitDto, PickDto } from '@midwayjs/validate';
 
+import { DECORATORS } from '@midwayjs/swagger/dist/constants.js';
 import { RULES_KEY } from '@midwayjs/validate/dist/constants.js';
 import { cloneDeep } from 'lodash-es';
-import { DECORATORS } from '@midwayjs/swagger/dist/constants.js';
 
 /**
  * PickDto 用于从现有的 DTO 中获取一些属性，变成新的 DTO，
@@ -17,26 +12,15 @@ import { DECORATORS } from '@midwayjs/swagger/dist/constants.js';
  * @param keys
  * @returns
  */
-export function PickDtoType<T, K extends Array<keyof T>>(
-  dto: Dto<T>,
-  keys: K
-): Dto<Pick<T, K[number]>> {
+export function PickDtoType<T, K extends Array<keyof T>>(dto: Dto<T>, keys: K): Dto<Pick<T, K[number]>> {
   const pickedDto = PickDto(dto, keys);
   pickedDto.prototype = Object.prototype;
-  const fatherProperties = getClassExtendedMetadata(
-    INJECT_CUSTOM_PROPERTY,
-    dto
-  ) ?? {};
+  const fatherProperties = getClassExtendedMetadata(INJECT_CUSTOM_PROPERTY, dto) ?? {};
   const pickedProperties: any = {};
   for (const key of keys) {
-    if (
-      fatherProperties[key] &&
-      fatherProperties[key].key === DECORATORS.API_MODEL_PROPERTIES
-    ) {
+    if (fatherProperties[key] && fatherProperties[key].key === DECORATORS.API_MODEL_PROPERTIES) {
       pickedProperties[key] = fatherProperties[key];
-      pickedProperties[key].metadata.type =
-        pickedProperties[key].metadata.type ??
-        getPropertyType(dto.prototype, key as string).name;
+      pickedProperties[key].metadata.type = pickedProperties[key].metadata.type ?? getPropertyType(dto.prototype, key as string).name;
     }
   }
   saveClassMetadata(INJECT_CUSTOM_PROPERTY, pickedProperties, pickedDto);
@@ -50,15 +34,12 @@ export function PickDtoType<T, K extends Array<keyof T>>(
  * @param keys
  * @returns
  */
-export function OmitDtoType<T, K extends Array<keyof T>>(
-  dto: Dto<T>,
-  keys: K
-): Dto<Omit<T, K[number]>> {
+export function OmitDtoType<T, K extends Array<keyof T>>(dto: Dto<T>, keys: K): Dto<Omit<T, K[number]>> {
   let pickedDto = function () {} as any;
-  if(keys.length){
+  if (keys.length) {
     pickedDto = OmitDto(dto, keys);
     pickedDto.prototype = Object.prototype;
-  }else{
+  } else {
     const fatherRule = getClassExtendedMetadata(RULES_KEY, dto);
     const partitalRule: any = {};
     for (const key of Object.keys(fatherRule)) {
@@ -69,20 +50,12 @@ export function OmitDtoType<T, K extends Array<keyof T>>(
     saveClassMetadata(RULES_KEY, partitalRule, pickedDto);
   }
   //设置swagger properties定义
-  const fatherProperties = getClassExtendedMetadata(
-    INJECT_CUSTOM_PROPERTY,
-    dto
-  ) ?? {};
+  const fatherProperties = getClassExtendedMetadata(INJECT_CUSTOM_PROPERTY, dto) ?? {};
   const pickedProperties: any = {};
   for (const key of Object.keys(fatherProperties)) {
-    if (
-      fatherProperties[key].key === DECORATORS.API_MODEL_PROPERTIES &&
-      !keys.includes(key as any)
-    ) {
+    if (fatherProperties[key].key === DECORATORS.API_MODEL_PROPERTIES && !keys.includes(key as any)) {
       pickedProperties[key] = fatherProperties[key];
-      pickedProperties[key].metadata.type =
-      pickedProperties[key].metadata.type ??
-      getPropertyType(dto.prototype, key as string).name;
+      pickedProperties[key].metadata.type = pickedProperties[key].metadata.type ?? getPropertyType(dto.prototype, key as string).name;
     }
   }
   saveClassMetadata(INJECT_CUSTOM_PROPERTY, pickedProperties, pickedDto);
@@ -98,7 +71,7 @@ export function OmitDtoType<T, K extends Array<keyof T>>(
  */
 export function PartialType<T, K extends Array<keyof T>>(
   dto: Dto<T>,
-  keys?: K
+  keys?: K,
 ): K extends unknown
   ? Dto<Partial<T>>
   : Dto<
@@ -123,10 +96,7 @@ export function PartialType<T, K extends Array<keyof T>>(
   }
   saveClassMetadata(RULES_KEY, partitalRule, partitalDto);
   //设置swagger properties定义
-  const fatherProperties = getClassExtendedMetadata(
-    INJECT_CUSTOM_PROPERTY,
-    dto
-  ) ?? {};
+  const fatherProperties = getClassExtendedMetadata(INJECT_CUSTOM_PROPERTY, dto) ?? {};
   const partitalProperties: any = {};
   for (const key of Object.keys(fatherProperties)) {
     if (fatherProperties[key].key === DECORATORS.API_MODEL_PROPERTIES) {
@@ -134,9 +104,7 @@ export function PartialType<T, K extends Array<keyof T>>(
       if (!keys || keys.includes(key as any)) {
         partitalProperties[key].metadata.required = false;
       }
-      partitalProperties[key].metadata.type =
-      partitalProperties[key].metadata.type ??
-      getPropertyType(dto.prototype, key as string).name;
+      partitalProperties[key].metadata.type = partitalProperties[key].metadata.type ?? getPropertyType(dto.prototype, key as string).name;
     }
   }
   saveClassMetadata(INJECT_CUSTOM_PROPERTY, partitalProperties, partitalDto);
@@ -152,7 +120,7 @@ export function PartialType<T, K extends Array<keyof T>>(
  */
 export function RequiredType<T, K extends Array<keyof T>>(
   dto: Dto<T>,
-  keys?: K
+  keys?: K,
 ): K extends unknown
   ? Dto<Required<T>>
   : Dto<
@@ -177,10 +145,7 @@ export function RequiredType<T, K extends Array<keyof T>>(
   }
   saveClassMetadata(RULES_KEY, requiredRule, requiredDto);
   //设置swagger properties定义
-  const fatherProperties = getClassExtendedMetadata(
-    INJECT_CUSTOM_PROPERTY,
-    dto
-  ) ??{};
+  const fatherProperties = getClassExtendedMetadata(INJECT_CUSTOM_PROPERTY, dto) ?? {};
   const partitalProperties: any = {};
   for (const key of Object.keys(fatherProperties)) {
     if (fatherProperties[key].key === DECORATORS.API_MODEL_PROPERTIES) {
@@ -188,9 +153,7 @@ export function RequiredType<T, K extends Array<keyof T>>(
       if (!keys || keys.includes(key as any)) {
         partitalProperties[key].metadata.required = false;
       }
-      partitalProperties[key].metadata.type =
-      partitalProperties[key].metadata.type ??
-      getPropertyType(dto.prototype, key as string).name;
+      partitalProperties[key].metadata.type = partitalProperties[key].metadata.type ?? getPropertyType(dto.prototype, key as string).name;
     }
   }
   saveClassMetadata(INJECT_CUSTOM_PROPERTY, partitalProperties, requiredDto);
@@ -204,10 +167,7 @@ export function RequiredType<T, K extends Array<keyof T>>(
  * @param dto2
  * @returns
  */
-export function IntersectionType<T1, T2>(
-  dto1: Dto<T1>,
-  dto2: Dto<T2>
-): Dto<T1 & T2> {
+export function IntersectionType<T1, T2>(dto1: Dto<T1>, dto2: Dto<T2>): Dto<T1 & T2> {
   //重新声明校验规则
   const dto: any = function () {};
   const fatherRule1 = getClassExtendedMetadata(RULES_KEY, dto1);
@@ -215,29 +175,19 @@ export function IntersectionType<T1, T2>(
   const rule = Object.assign({}, fatherRule1, fatherRule2);
   saveClassMetadata(RULES_KEY, rule, dto);
   //设置swagger properties定义
-  const fatherProperties1 = getClassExtendedMetadata(
-    INJECT_CUSTOM_PROPERTY,
-    dto1
-  )??{};
-  const fatherProperties2 = getClassExtendedMetadata(
-    INJECT_CUSTOM_PROPERTY,
-    dto2
-  )??{};
+  const fatherProperties1 = getClassExtendedMetadata(INJECT_CUSTOM_PROPERTY, dto1) ?? {};
+  const fatherProperties2 = getClassExtendedMetadata(INJECT_CUSTOM_PROPERTY, dto2) ?? {};
   const properties: any = {};
   for (const key of Object.keys(fatherProperties1)) {
     if (fatherProperties1[key].key === DECORATORS.API_MODEL_PROPERTIES) {
       properties[key] = fatherProperties1[key];
-      properties[key].metadata.type =
-        properties[key].metadata.type ??
-        getPropertyType(dto1.prototype, key).name;
+      properties[key].metadata.type = properties[key].metadata.type ?? getPropertyType(dto1.prototype, key).name;
     }
   }
   for (const key of Object.keys(fatherProperties2)) {
     if (fatherProperties2[key].key === DECORATORS.API_MODEL_PROPERTIES) {
       properties[key] = fatherProperties2[key];
-      properties[key].metadata.type =
-        properties[key].metadata.type ??
-        getPropertyType(dto2.prototype, key).name;
+      properties[key].metadata.type = properties[key].metadata.type ?? getPropertyType(dto2.prototype, key).name;
     }
   }
   saveClassMetadata(INJECT_CUSTOM_PROPERTY, properties, dto);

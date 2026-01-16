@@ -1,13 +1,38 @@
-import { Model, HasManyGetAssociationsMixin, HasManySetAssociationsMixin, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManyCreateAssociationMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyCountAssociationsMixin, HasOneGetAssociationMixin, HasOneSetAssociationMixin, HasOneCreateAssociationMixin, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, BelongsToCreateAssociationMixin, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToManyCreateAssociationMixin, InferAttributesOptions, CreationAttributes } from '@sequelize/core';
-import type {
-  AnyFunction,
-} from '@sequelize/utils';
+import {
+  BelongsToCreateAssociationMixin,
+  BelongsToGetAssociationMixin,
+  BelongsToManyAddAssociationMixin,
+  BelongsToManyAddAssociationsMixin,
+  BelongsToManyCreateAssociationMixin,
+  BelongsToManyGetAssociationsMixin,
+  BelongsToManyHasAssociationMixin,
+  BelongsToManyHasAssociationsMixin,
+  BelongsToManySetAssociationsMixin,
+  BelongsToSetAssociationMixin,
+  CreationAttributes,
+  HasManyAddAssociationMixin,
+  HasManyAddAssociationsMixin,
+  HasManyCountAssociationsMixin,
+  HasManyCreateAssociationMixin,
+  HasManyGetAssociationsMixin,
+  HasManyHasAssociationMixin,
+  HasManyHasAssociationsMixin,
+  HasManyRemoveAssociationMixin,
+  HasManyRemoveAssociationsMixin,
+  HasManySetAssociationsMixin,
+  HasOneCreateAssociationMixin,
+  HasOneGetAssociationMixin,
+  HasOneSetAssociationMixin,
+  InferAttributesOptions,
+  Model,
+} from '@sequelize/core';
+import type { AnyFunction } from '@sequelize/utils';
 
 export type HasOneModel<
   AssociationName extends string, //关联字段
   T extends Model, //关联模型
-  ForeignKey extends keyof CreationAttributes<T> = never,//外键
-  K extends keyof T = 'id' extends keyof T ? 'id':never, //关联模型主键key
+  ForeignKey extends keyof CreationAttributes<T> = never, //外键
+  K extends keyof T = 'id' extends keyof T ? 'id' : never, //关联模型主键key
 > = {
   //获取关联信息
   [Key in `get${Capitalize<AssociationName>}`]: HasOneGetAssociationMixin<T>;
@@ -16,7 +41,7 @@ export type HasOneModel<
   [Key in `set${Capitalize<AssociationName>}`]: HasOneSetAssociationMixin<T, T[K]>;
 } & {
   //创建关联信息
-  [Key in `create${Capitalize<AssociationName>}`]: HasOneCreateAssociationMixin<T,ForeignKey>;
+  [Key in `create${Capitalize<AssociationName>}`]: HasOneCreateAssociationMixin<T, ForeignKey>;
 };
 
 export type HasManyModel<
@@ -24,8 +49,8 @@ export type HasManyModel<
   SingularAssociationName extends string, //关联单数形式
   PluralAssociationName extends string, //关联复数形式
   T extends Model, //关联模型
-  ForeignKey extends keyof CreationAttributes<T> = never,//外键
-  K extends keyof T = 'id' extends keyof T ? 'id':never, //关联模型主键key
+  ForeignKey extends keyof CreationAttributes<T> = never, //外键
+  K extends keyof T = 'id' extends keyof T ? 'id' : never, //关联模型主键key
 > = {
   //获取关联信息
   [Key in `get${Capitalize<AssociationName>}`]: HasManyGetAssociationsMixin<T>;
@@ -46,7 +71,7 @@ export type HasManyModel<
   [Key in `remove${Capitalize<PluralAssociationName>}`]: HasManyRemoveAssociationsMixin<T, T[K]>;
 } & {
   //关联创建器用于创建新的关联模型并将其与源模型关联
-  [Key in `create${Capitalize<AssociationName>}`]: HasManyCreateAssociationMixin<T,ForeignKey>;
+  [Key in `create${Capitalize<AssociationName>}`]: HasManyCreateAssociationMixin<T, ForeignKey>;
 } & {
   //检查是否关联（单个）
   [Key in `has${Capitalize<SingularAssociationName>}`]: HasManyHasAssociationMixin<T, T[K]>;
@@ -56,12 +81,12 @@ export type HasManyModel<
 } & {
   //统计关联模型数量
   [Key in `counts${Capitalize<AssociationName>}`]: HasManyCountAssociationsMixin<T>;
-}; 
+};
 
 export type BelongsToModel<
   AssociationName extends string, //关联字段
   T extends Model, //关联模型
-  K extends keyof T = 'id' extends keyof T ? 'id':never, //关联模型主键key
+  K extends keyof T = 'id' extends keyof T ? 'id' : never, //关联模型主键key
 > = {
   //获取关联信息
   [Key in `get${Capitalize<AssociationName>}`]: BelongsToGetAssociationMixin<T>;
@@ -71,13 +96,13 @@ export type BelongsToModel<
 } & {
   //关联创建器用于创建新的关联模型并将其与源模型关联
   [Key in `create${Capitalize<AssociationName>}`]: BelongsToCreateAssociationMixin<T>;
-} 
+};
 export type BelongsManyModel<
   AssociationName extends string, //关联字段
   SingularAssociationName extends string, //关联单数形式
   PluralAssociationName extends string, //关联复数形式
   T extends Model, //关联模型
-  K extends keyof T = 'id' extends keyof T ? 'id':never, //关联模型主键key
+  K extends keyof T = 'id' extends keyof T ? 'id' : never, //关联模型主键key
 > = {
   //获取关联信息
   [Key in `get${Capitalize<AssociationName>}`]: BelongsToManyGetAssociationsMixin<T>;
@@ -117,26 +142,22 @@ export type BelongsManyModel<
  * - 继承自 {@link Model}
  * - 使用 {@link InferAttributesOptions} 的 omit 选项手动排除
  */
-type InternalInferAttributeKeysFromFieldsLoose<
-  M extends Model,
-  Key extends keyof M,
-  Options extends InferAttributesOptions<keyof M | never | ''>,
-> =
+type InternalInferAttributeKeysFromFieldsLoose<M extends Model, Key extends keyof M, Options extends InferAttributesOptions<keyof M | never | ''>> =
   // fields inherited from Model are all excluded
   Key extends keyof Model
     ? never
     : // functions are always excluded
-      M[Key] extends AnyFunction
+    M[Key] extends AnyFunction
+    ? never
+    : // : // fields branded with NonAttribute are excluded
+    //   IsBranded<M[Key], typeof NonAttributeBrand> extends true
+    //   ? never
+    // check 'omit' option is provided & exclude those listed in it
+    Options['omit'] extends string
+    ? Key extends Options['omit']
       ? never
-      // : // fields branded with NonAttribute are excluded
-      //   IsBranded<M[Key], typeof NonAttributeBrand> extends true
-      //   ? never
-        : // check 'omit' option is provided & exclude those listed in it
-          Options['omit'] extends string
-          ? Key extends Options['omit']
-            ? never
-            : Key
-          : Key;
+      : Key
+    : Key;
 /**
  * 用于提取给定模型类属性的实用类型(宽松的不会排除{@link NonAttribute}标记的属性)。
  *
@@ -144,8 +165,8 @@ type InternalInferAttributeKeysFromFieldsLoose<
  * - 从模型继承的属性（中间继承有效），
  * - 类型为函数的属性，
  * - 使用第二个参数手动排除的属性。
- *  
-*  使用 {@link NonAttribute} 会正常再里边没有排除
+ *
+ *  使用 {@link NonAttribute} 会正常再里边没有排除
  * 它无法检测某个属性是否是 getter，你应该使用 `Excluded` 参数将 getter 和 setter 从属性列表中排除。
  *
  * @example
@@ -183,9 +204,6 @@ type InternalInferAttributeKeysFromFieldsLoose<
  * }
  * ```
  */
-export type InferAttributesLoose<
-  M extends Model,
-  Options extends InferAttributesOptions<keyof M | never | ''> = { omit: never },
-> = {
+export type InferAttributesLoose<M extends Model, Options extends InferAttributesOptions<keyof M | never | ''> = { omit: never }> = {
   [Key in keyof M as InternalInferAttributeKeysFromFieldsLoose<M, Key, Options>]: M[Key];
 };

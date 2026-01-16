@@ -1,16 +1,16 @@
-import { Body, Controller, Get, Post, Inject, Param, Files, Fields, Config } from '@midwayjs/core';
-import { BaseController } from './base.controller.js';
+import { ApiOperationResponse } from '@/decorators/index.js';
+import { uploadStorage } from '@/fileManage/index.js';
+import { UploadMiddleware, UploadOptions, UploadStreamFileInfo } from '@midwayjs/busboy';
+import { Body, Config, Controller, Fields, Files, Get, Inject, Param, Post } from '@midwayjs/core';
+import { Context } from '@midwayjs/koa';
+import { ApiBody, BodyContentType } from '@midwayjs/swagger';
 import { File } from '../../../entities/file.entity.js';
 import { FileCreateDto } from '../dto/fileCreate.dto.js';
 import { FileQueryDto } from '../dto/fileQuery.dto.js';
+import { FileUpDto } from '../dto/fileUp.dto.js';
 import { FileUpdateDto } from '../dto/fileUpdate.dto.js';
 import { FileService } from '../service/file.service.js';
-import { ApiOperationResponse } from '@/decorators/index.js';
-import { UploadMiddleware, UploadOptions, UploadStreamFileInfo } from '@midwayjs/busboy';
-import { ApiBody, BodyContentType } from '@midwayjs/swagger';
-import { FileUpDto } from '../dto/fileUp.dto.js';
-import { Context } from '@midwayjs/koa';
-import { uploadStorage } from '@/fileManage/index.js';
+import { BaseController } from './base.controller.js';
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
@@ -30,7 +30,7 @@ export class FileController extends BaseController {
   @Get('/get/:id/:name', { summary: '获取文件流' })
   async getFile(@Param('id') id: string) {
     const entity = await this.fileService.findOne(id);
-    this.ctx.type= entity.mimeType;
+    this.ctx.type = entity.mimeType;
     return await uploadStorage.localStorage('index').getFileReadSteam(entity.path);
   }
 
@@ -48,8 +48,8 @@ export class FileController extends BaseController {
   })
   async upload(@Files() files: Array<UploadStreamFileInfo>, @Fields() params: FileUpDto) {
     const file = files[0]; //只获取一个文件，不支持多文件数组
-    const res = await uploadStorage.localStorage('index').upload(file,params);
-    return this.success(res?(await this.fileService.create(res)):{});
+    const res = await uploadStorage.localStorage('index').upload(file, params);
+    return this.success(res ? await this.fileService.create(res) : {});
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头

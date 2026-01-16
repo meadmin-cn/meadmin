@@ -1,7 +1,7 @@
-import { Language } from 'element-plus/es/locale';
-import { themeConfig, settingKey, localeConfig } from '@/config';
+import { localeConfig, settingKey, themeConfig } from '@/config';
 import { event, mitter } from '@/event';
 import { mixColor } from '@/utils/helper';
+import { Language } from 'element-plus/es/locale';
 import { useGlobalStore } from '../module';
 const { css } = useStyleTag('');
 const useSettingStore = defineStore('setting', {
@@ -26,23 +26,11 @@ const useSettingStore = defineStore('setting', {
       darkStyle.push(`--el-color-primary:${this.themeConfig.primaryColor} !important`);
       style.push('--el-color-primary-rgb:' + mixColor(this.themeConfig.primaryColor, '#000000', 0) + ' !important');
       darkStyle.push('--el-color-primary-rgb:' + mixColor(this.themeConfig.primaryColor, '#000000', 0) + ' !important');
-      style.push(
-        '--el-color-primary-dark-2:' + mixColor(this.themeConfig.primaryColor, '#000000', 0.2) + ' !important',
-      );
-      darkStyle.push(
-        '--el-color-primary-dark-2:' + mixColor(this.themeConfig.primaryColor, '#ffffff', 0.2) + ' !important',
-      );
+      style.push('--el-color-primary-dark-2:' + mixColor(this.themeConfig.primaryColor, '#000000', 0.2) + ' !important');
+      darkStyle.push('--el-color-primary-dark-2:' + mixColor(this.themeConfig.primaryColor, '#ffffff', 0.2) + ' !important');
       [3, 5, 7, 8, 9].forEach((number) => {
-        style.push(
-          `--el-color-primary-light-${number}:` +
-            mixColor(this.themeConfig.primaryColor, '#ffffff', number / 10) +
-            ' !important',
-        );
-        darkStyle.push(
-          `--el-color-primary-light-${number}:` +
-            mixColor(this.themeConfig.primaryColor, '#141414', number / 10) +
-            ' !important',
-        );
+        style.push(`--el-color-primary-light-${number}:` + mixColor(this.themeConfig.primaryColor, '#ffffff', number / 10) + ' !important');
+        darkStyle.push(`--el-color-primary-light-${number}:` + mixColor(this.themeConfig.primaryColor, '#141414', number / 10) + ' !important');
       });
       css.value = ':root{' + style.join(';') + '}' + '.dark{' + darkStyle.join(';') + '}';
     },

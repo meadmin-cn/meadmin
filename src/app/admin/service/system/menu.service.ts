@@ -1,12 +1,12 @@
-import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { InjectRepository } from '@/decorators/index.js';
-import { Provide, Inject } from '@midwayjs/core';
+import { Inject, Provide } from '@midwayjs/core';
+import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
+import { MidwayI18nService } from '@midwayjs/i18n';
+import { Op } from '@sequelize/core';
+import { SystemMenu } from '../../../../entities/systemMenu.entity.js';
 import { SystemMenuCreateDto } from '../../dto/system/menuCreate.dto.js';
 import { SystemMenuQueryDto } from '../../dto/system/menuQuery.dto.js';
 import { SystemMenuUpdateDto } from '../../dto/system/menuUpdate.dto.js';
-import { SystemMenu } from '../../../../entities/systemMenu.entity.js';
-import { MidwayI18nService } from '@midwayjs/i18n';
-import { Op } from '@sequelize/core';
 
 //菜单
 @Provide()
@@ -65,7 +65,7 @@ export class SystemMenuService {
     });
     const { count, rows } = await this.SystemMenuRepository.findAndCountAll({
       where,
-      include:['createdAdmin','updatedAdmin'],
+      include: ['createdAdmin', 'updatedAdmin'],
       offset: (queryDto.page - 1) * queryDto.pageSize,
       limit: queryDto.pageSize,
       order: [['createdAt', 'DESC']],
@@ -78,14 +78,14 @@ export class SystemMenuService {
     };
   }
 
-   /**
+  /**
    * 获取角色树形结构
-   * @returns 
+   * @returns
    */
-  async treeAll(){
+  async treeAll() {
     return await this.SystemMenuRepository.getTree({
-      order: [['orderNum', 'DESC']]
-    })
+      order: [['orderNum', 'DESC']],
+    });
   }
 
   /**
@@ -94,8 +94,8 @@ export class SystemMenuService {
    * @returns
    */
   async findOne(id: string) {
-    const entity = await this.SystemMenuRepository.findByPk(id,{
-      include:['parent','createdAdmin','updatedAdmin',]
+    const entity = await this.SystemMenuRepository.findByPk(id, {
+      include: ['parent', 'createdAdmin', 'updatedAdmin'],
     });
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));

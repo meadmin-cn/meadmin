@@ -20,33 +20,32 @@
 </template>
 
 <script setup>
-import foo from '@foo'
-import { msg as virtualMsg } from '@virtual-file'
-import { reactive, defineAsyncComponent } from 'vue'
-import Button from '../components/button'
-import {useStore} from '../store.js';
-const ImportType = load('ImportType')
+import foo from '@foo';
+import { msg as virtualMsg } from '@virtual-file';
+import { reactive, defineAsyncComponent } from 'vue';
+import Button from '../components/button';
+import { useStore } from '../store.js';
+const ImportType = load('ImportType');
 const Foo = defineAsyncComponent(() =>
-  import('../components/Foo').then((mod) => mod.Foo)
-)
+  import('../components/Foo').then(mod => mod.Foo)
+);
 function load(file) {
-  return defineAsyncComponent(() => import(`../components/${file}.vue`))
+  return defineAsyncComponent(() => import(`../components/${file}.vue`));
 }
 const url = import.meta.env.SSR
   ? import.meta.url
-  : document.querySelector('.import-meta-url')?.textContent
-const protocol = url ? new URL(url).protocol : undefined
+  : document.querySelector('.import-meta-url')?.textContent;
+const protocol = url ? new URL(url).protocol : undefined;
 
 const state = reactive({
   count: 0,
   protocol,
-  url
-})
+  url,
+});
 const store = useStore();
-console.log('counter',store.counter);
-store.counter++;//这里会在服务端和客户端分别执行一次，所以最后是2
-console.log('counter',store.counter);
-
+console.log('counter', store.counter);
+store.counter++; //这里会在服务端和客户端分别执行一次，所以最后是2
+console.log('counter', store.counter);
 </script>
 
 <style scoped>

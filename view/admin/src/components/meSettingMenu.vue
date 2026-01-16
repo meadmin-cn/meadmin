@@ -5,18 +5,8 @@
         <div class="title-content">{{ $t('布局') }}</div>
       </div>
       <div class="info" :style="{ '--primaryColor': themeConfig.primaryColor }">
-        <div
-          class="layout-base layout-left"
-          :class="{ active: themeConfig.menuType === 'sidebar' }"
-          :title="$t('左侧菜单模式')"
-          @click="themeConfig.menuType = 'sidebar'"
-        ></div>
-        <div
-          class="layout-base layout-top"
-          :class="{ active: themeConfig.menuType === 'top' }"
-          :title="$t('顶部菜单混合模式')"
-          @click="themeConfig.menuType = 'top'"
-        ></div>
+        <div class="layout-base layout-left" :class="{ active: themeConfig.menuType === 'sidebar' }" :title="$t('左侧菜单模式')" @click="themeConfig.menuType = 'sidebar'"></div>
+        <div class="layout-base layout-top" :class="{ active: themeConfig.menuType === 'top' }" :title="$t('顶部菜单混合模式')" @click="themeConfig.menuType = 'top'"></div>
       </div>
       <div class="title">
         <div class="title-content">{{ $t('配置') }}</div>
@@ -60,12 +50,8 @@
       <el-form-item :label="$t('标签栏') + $t(' ') + $t('菜单') + $t(' ') + $t('按钮')">
         <el-switch v-model="themeConfig.tagBarMenu"></el-switch>
       </el-form-item>
-      <el-button style="width: 100%" @click="Object.assign(themeConfig, origionThemeConfig)"
-        >{{ $t('重置') }}
-      </el-button>
-      <el-button style="width: 100%; margin: 10px 0" type="danger" @click="clear">
-        {{ $t('清除缓存') }}{{ $t(' ') }}{{ $t('并') }}{{ $t(' ') }}{{ $t('退出登录') }}
-      </el-button>
+      <el-button style="width: 100%" @click="Object.assign(themeConfig, origionThemeConfig)">{{ $t('重置') }} </el-button>
+      <el-button style="width: 100%; margin: 10px 0" type="danger" @click="clear"> {{ $t('清除缓存') }}{{ $t(' ') }}{{ $t('并') }}{{ $t(' ') }}{{ $t('退出登录') }} </el-button>
     </el-form>
   </el-drawer>
 </template>
@@ -75,26 +61,8 @@ import { useSettingStore, useUserStore } from '@/store';
 const setting = useSettingStore();
 const { themeConfig } = storeToRefs(setting);
 const userStore = useUserStore();
-const predefinePrimaryColors = reactive([
-  '#409EFF',
-  '#1890FF',
-  '#304156',
-  '#212121',
-  '#11A983',
-  '#13C2C2',
-  '#6959CD',
-  '#F5222D',
-]);
-const sidebarBgColors = reactive([
-  '#1d1e1f',
-  '#212121',
-  '#273352',
-  '#ffffff',
-  '#191b24',
-  '#191a23',
-  '#304156',
-  '#001628',
-]);
+const predefinePrimaryColors = reactive(['#409EFF', '#1890FF', '#304156', '#212121', '#11A983', '#13C2C2', '#6959CD', '#F5222D']);
+const sidebarBgColors = reactive(['#1d1e1f', '#212121', '#273352', '#ffffff', '#191b24', '#191a23', '#304156', '#001628']);
 const clear = () => {
   setting.clearCache();
   userStore.logOut();

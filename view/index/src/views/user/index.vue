@@ -1,11 +1,8 @@
 <template>
-<div class="index">
-  <div class="left-menu">
-    <div class="title">个人中心</div>
-     <el-menu
-        :default-active="active"
-        class="menu"
-        >
+  <div class="index">
+    <div class="left-menu">
+      <div class="title">个人中心</div>
+      <el-menu :default-active="active" class="menu">
         <el-menu-item index="userInfo">
           <mel-icon-user></mel-icon-user>
           <router-link :to="PageEnum.USER + '/userInfo'">个人资料</router-link>
@@ -18,47 +15,47 @@
           <mel-icon-arrow-right></mel-icon-arrow-right>
           <span @click="userStore.logOut">退出</span>
         </el-menu-item>
-     </el-menu>
+      </el-menu>
+    </div>
+    <div class="right-content">
+      <user-info v-if="active == 'userInfo'"></user-info>
+      <edit-pass v-else-if="active == 'editPass'"></edit-pass>
+    </div>
   </div>
-  <div class="right-content">
-    <user-info v-if="active == 'userInfo'"></user-info>
-    <edit-pass v-else-if="active == 'editPass'"></edit-pass>
-  </div>
-</div>
 </template>
 
 <script setup lang="ts" name="UserIndex">
-import userInfo from './components/userInfo.vue';
-import editPass from './components/editPass.vue';
 import { PageEnum } from '@/dict/pageEnum.js';
 import { useUserStore } from '@/store/index.js';
-const userStore = useUserStore()
-const {active} = defineProps<{
-  active:'userInfo'|'editPass'
+import editPass from './components/editPass.vue';
+import userInfo from './components/userInfo.vue';
+const userStore = useUserStore();
+const { active } = defineProps<{
+  active: 'userInfo' | 'editPass';
 }>();
 </script>
 <style lang="scss" scoped>
-.index{
- padding-top: $page-padding;
- display: flex;
- justify-content: space-between;
- .left-menu{
-  width: 200px;
-  background-color: #fff;
-  .title{
-    height: 50px;
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
-    color: #9ea2ac;
+.index {
+  padding-top: $page-padding;
+  display: flex;
+  justify-content: space-between;
+  .left-menu {
+    width: 200px;
+    background-color: #fff;
+    .title {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      padding-left: 20px;
+      color: #9ea2ac;
+    }
+    .menu {
+      border-right: 0;
+    }
   }
-  .menu{
-    border-right: 0;
-  }
- }
- .right-content{
+  .right-content {
     margin-left: 30px;
-    flex:1;
+    flex: 1;
     background-color: #fff;
     padding: $page-padding;
   }

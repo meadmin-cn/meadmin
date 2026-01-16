@@ -1,5 +1,5 @@
-import { RouteRecordRaw } from 'vue-router';
 import LayoutRoute from '@/layout/layoutRoute.vue';
+import { RouteRecordRaw } from 'vue-router';
 export const routes: RouteRecordRaw[] = [
   {
     path: '1',
@@ -21,7 +21,7 @@ export const routes: RouteRecordRaw[] = [
         component: () => import('@/views/index/index.vue'),
         meta: { title: '演示菜2-2' },
       },
-    ]
+    ],
   },
   {
     path: '3',

@@ -1,13 +1,12 @@
-import { Attribute, BelongsTo, Table } from "@sequelize/core/decorators-legacy";
-import { ApiPropertyRule } from "@/decorators/index.js";
-import { DataTypes, NonAttribute } from "@sequelize/core";
-import { User } from "../user.entity.js";
-import { AdminBaseModel } from "./adminBase.entity.js";
+import { ApiPropertyRule } from '@/decorators/index.js';
+import { DataTypes, NonAttribute } from '@sequelize/core';
+import { Attribute, BelongsTo, Table } from '@sequelize/core/decorators-legacy';
+import { User } from '../user.entity.js';
+import { AdminBaseModel } from './adminBase.entity.js';
 
 //IndexBaseModel 前台台实体基础类
 @Table.Abstract
 export class IndexBaseModel<M extends IndexBaseModel<any>> extends AdminBaseModel<M> {
-
   @ApiPropertyRule({
     description: '创建者(用户)Id',
     type: 'string',
@@ -22,7 +21,7 @@ export class IndexBaseModel<M extends IndexBaseModel<any>> extends AdminBaseMode
     description: '创建者(用户)',
     type: () => User,
   })
-  @BelongsTo(() => User, {foreignKey:'createdUserId',foreignKeyConstraints:false})
+  @BelongsTo(() => User, { foreignKey: 'createdUserId', foreignKeyConstraints: false })
   declare createdUser?: NonAttribute<User>;
 
   @Attribute({
@@ -35,6 +34,6 @@ export class IndexBaseModel<M extends IndexBaseModel<any>> extends AdminBaseMode
     description: '最后更新者(用户)',
     type: () => User,
   })
-  @BelongsTo(() => User, {foreignKey:'updatedUserId',foreignKeyConstraints:false})
+  @BelongsTo(() => User, { foreignKey: 'updatedUserId', foreignKeyConstraints: false })
   declare updatedUser?: NonAttribute<User>;
 }

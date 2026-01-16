@@ -6,21 +6,10 @@
       <div class="title">ME-Admin</div>
       <el-form ref="formRef" :rules="rules" :model="loginParams">
         <el-form-item prop="username">
-          <el-input
-            v-model="loginParams.username"
-            autofocus
-            :placeholder="t('用户名')"
-            clearable
-          />
+          <el-input v-model="loginParams.username" autofocus :placeholder="t('用户名')" clearable />
         </el-form-item>
         <el-form-item prop="password">
-          <el-input
-            v-model="loginParams.password"
-            type="password"
-            :placeholder="t('密码')"
-            clearable
-            show-password
-          />
+          <el-input v-model="loginParams.password" type="password" :placeholder="t('密码')" clearable show-password />
         </el-form-item>
         <el-form-item prop="captcha">
           <el-input v-model="loginParams.captcha" :placeholder="t('验证码')" clearable>
@@ -35,22 +24,22 @@
   </div>
 </template>
 <script setup lang="ts" name="Login">
-import LoginHeader from './components/header.vue';
-import { LoginParams,loginCaptchaApi } from '@/api/login';
+import { LoginParams, loginCaptchaApi } from '@/api/login';
 import { useLocalesI18n } from '@/locales/i18n';
-import type { FormInstance, FormRules } from 'element-plus';
 import { useUserStore } from '@/store';
+import type { FormInstance, FormRules } from 'element-plus';
+import LoginHeader from './components/header.vue';
 const userStore = useUserStore();
 const formRef = ref<FormInstance>();
 const route = useRoute();
 const router = useRouter();
 let loginParams = reactive(new LoginParams());
 //验证码
-const {data:captchaObj,runAsync:getCaptchRun} = loginCaptchaApi();
-const getCaptch = async ()=>{
+const { data: captchaObj, runAsync: getCaptchRun } = loginCaptchaApi();
+const getCaptch = async () => {
   await getCaptchRun();
   loginParams.captchaId = captchaObj.value!.id;
-}
+};
 getCaptch();
 let { t } = useLocalesI18n();
 const rules = computed<FormRules>(() => ({

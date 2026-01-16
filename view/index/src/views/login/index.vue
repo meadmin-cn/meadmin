@@ -1,8 +1,8 @@
 <template>
   <div class="index">
     <div class="content">
-      <login class="content-body" :class="{hidden:show === 'register'}" @go="id=>show=id"></login>
-      <register class="content-body"  @go="id=>show=id"></register>
+      <login class="content-body" :class="{ hidden: show === 'register' }" @go="(id) => (show = id)"></login>
+      <register class="content-body" @go="(id) => (show = id)"></register>
     </div>
   </div>
 </template>
@@ -10,11 +10,11 @@
 <script setup lang="ts" name="Login">
 import Login from './components/login.vue';
 import Register from './components/register.vue';
-const {type = 'login'} = defineProps<{type:'login'|'register'}>()
-const show = ref('login' as 'login'|'register');
-watchEffect(()=>{
+const { type = 'login' } = defineProps<{ type: 'login' | 'register' }>();
+const show = ref('login' as 'login' | 'register');
+watchEffect(() => {
   show.value = type;
-})
+});
 </script>
 <style lang="scss" scoped>
 .index {
@@ -72,7 +72,7 @@ watchEffect(()=>{
           .submit {
             width: 200px;
             background: linear-gradient(120deg, #3498db, #8e44ad);
-            color:#fff;
+            color: #fff;
           }
 
           .el-input__wrapper {
@@ -83,23 +83,22 @@ watchEffect(()=>{
               border-bottom: 1px solid #dcdfe6;
               padding: 5px;
             }
-             &:after {
+            &:after {
               content: '';
               width: 0;
               position: absolute;
               left: 15px;
-              right:15px;
+              right: 15px;
               bottom: 1px;
               height: 1px;
               transition: width 500ms ease-in;
             }
             &:hover::after {
-                width: calc(100% - 30px);
-                background-image: linear-gradient(90deg,#3498db,#8e44ad);
+              width: calc(100% - 30px);
+              background-image: linear-gradient(90deg, #3498db, #8e44ad);
             }
-
           }
-         .captcha-input {
+          .captcha-input {
             input {
               padding-right: 180px;
             }
@@ -140,7 +139,7 @@ watchEffect(()=>{
         }
       }
     }
-    .hidden{
+    .hidden {
       margin-left: -100%;
     }
   }

@@ -1,5 +1,5 @@
-import { createVNode, defineComponent } from 'vue'
-import '../assets/button.css'
+import { createVNode, defineComponent } from 'vue';
+import '../assets/button.css';
 
 export default defineComponent({
   setup() {
@@ -7,10 +7,10 @@ export default defineComponent({
       return createVNode(
         'div',
         {
-          class: 'btn'
+          class: 'btn',
         },
         'dynamicBtn'
-      )
-    }
-  }
-})
+      );
+    };
+  },
+});

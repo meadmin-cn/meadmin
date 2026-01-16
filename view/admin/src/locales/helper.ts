@@ -1,10 +1,10 @@
-import { LocaleMessages, VueMessageType, Composer } from 'vue-i18n';
 import { localeConfig as config } from '@/config';
 import { event, mitter } from '@/event';
-import { loading, closeLoading } from '@/utils/loading';
-import { Language } from 'element-plus/es/locale';
 import { useGlobalStore, useSettingStore } from '@/store';
+import { closeLoading, loading } from '@/utils/loading';
 import log from '@/utils/log';
+import { Language } from 'element-plus/es/locale';
+import { Composer, LocaleMessages, VueMessageType } from 'vue-i18n';
 type GlobaleI18n = Composer<Record<string, any>, Record<string, any>, Record<string, any>, any>;
 const messageMap: Map<string, Record<any, any>> = new Map();
 export type MessageImport = [(locale: string) => Promise<{ default: LocaleMessages<VueMessageType> }>, string?];
@@ -112,13 +112,7 @@ export const setI18nLanguage = async (locale: string, isLoading = true, i18n?: G
     useSettingStore().locale = locale;
     const messageArr = [
       setLocaleMessage(i18n, locale, [async (locale) => await import(`./lang/${locale}/index.ts`)]),
-      loadMessage<{ default: Language }>(
-        [
-          async (locale) => await import(`../../node_modules/element-plus/es/locale/lang/${locale}.mjs`),
-          'element-plus',
-        ],
-        locale,
-      ),
+      loadMessage<{ default: Language }>([async (locale) => await import(`../../node_modules/element-plus/es/locale/lang/${locale}.mjs`), 'element-plus'], locale),
       ...mitter.emit(event.BEFORE_LOCAL_CHANGE, { locale, i18n }),
     ];
     const res = await Promise.allSettled(messageArr);

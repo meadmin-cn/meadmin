@@ -1,9 +1,9 @@
-import type { NavigationFailure, Router } from 'vue-router';
 import { PageEnum } from '@/dict/pageEnum';
-import { useUserStore } from '@/store';
 import { event, mitter } from '@/event';
-import { remove, start } from '@/utils/nProgress';
+import { useUserStore } from '@/store';
 import { closeLoading, loading } from '@/utils/loading';
+import { remove, start } from '@/utils/nProgress';
+import type { NavigationFailure, Router } from 'vue-router';
 // Don't change the order of creation
 export function setupRouterGuard(router: Router) {
   createPermissionGuard(router);

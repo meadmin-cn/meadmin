@@ -2,27 +2,20 @@
   <el-space class="left">
     <div></div>
     <Expand></Expand>
-    <el-scrollbar
-      v-if="!globalStore.isMobile && themeConfig.breadcrumb"
-      :min-size="10"
-      wrap-style="display:flex;align-items:center"
-    >
+    <el-scrollbar v-if="!globalStore.isMobile && themeConfig.breadcrumb" :min-size="10" wrap-style="display:flex;align-items:center">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item
-          v-for="(item, index) in breadcrumbList"
-          :key="item.path"
-          :to="index === breadcrumbList.length - 1 || !item.redirect ? undefined : item"
-          >{{ $t(item.meta!.title!) }}</el-breadcrumb-item
-        >
+        <el-breadcrumb-item v-for="(item, index) in breadcrumbList" :key="item.path" :to="index === breadcrumbList.length - 1 || !item.redirect ? undefined : item">{{
+          $t(item.meta!.title!)
+        }}</el-breadcrumb-item>
       </el-breadcrumb>
     </el-scrollbar>
   </el-space>
 </template>
 <script setup lang="ts" name="Left">
-import { mitter, event } from '@/event';
-import { useSettingStore, useGlobalStore, useRouteStore } from '@/store';
-import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
+import { event, mitter } from '@/event';
 import Expand from '@/layout/components/expand.vue';
+import { useGlobalStore, useRouteStore, useSettingStore } from '@/store';
+import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
 const { themeConfig } = storeToRefs(useSettingStore());
 const globalStore = useGlobalStore();
 const breadcrumbList = ref([] as Pick<RouteRecordRaw, 'name' | 'path' | 'meta' | 'redirect'>[]);
@@ -33,11 +26,7 @@ const setBreadcrumbList = (route: RouteLocationNormalized) => {
   let temp = { children: routes.value } as unknown as RouteRecordRaw;
   route.meta.menuIndex!.forEach((item) => {
     temp = temp.children![item];
-    if (
-      temp.meta?.title &&
-      temp.meta.breadcrumb !== false &&
-      (temp.meta.breadcrumb || temp.children?.filter((v) => v.meta?.breadcrumb !== false).length !== 1)
-    ) {
+    if (temp.meta?.title && temp.meta.breadcrumb !== false && (temp.meta.breadcrumb || temp.children?.filter((v) => v.meta?.breadcrumb !== false).length !== 1)) {
       list.push({
         name: temp.name,
         path: temp.path,

@@ -1,22 +1,21 @@
-import { createRouter, createMemoryHistory, createWebHistory, RouteRecordRaw } from 'vue-router';
-import { PageEnum } from '@/dict/pageEnum';
-import { App } from 'vue';
-import { setupRouterGuard } from './guard';
 import { concatObjectValue } from '@/utils/helper';
-export const asyncRoutes = concatObjectValue<RouteRecordRaw>(import.meta.glob('./routes/*.ts', { eager: true, import: 'routes' }));
 import { isExternal } from '@/utils/validate';
 import path from 'path-browserify';
+import { App } from 'vue';
+import { createMemoryHistory, createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { setupRouterGuard } from './guard';
+export const asyncRoutes = concatObjectValue<RouteRecordRaw>(import.meta.glob('./routes/*.ts', { eager: true, import: 'routes' }));
 
 export const constantRoutes: RouteRecordRaw[] = [
   {
     path: '/page404',
     component: () => import('@/views/404.vue'),
-    meta: { hideMenu: true, title: '404页面'},
+    meta: { hideMenu: true, title: '404页面' },
   },
   {
     path: '/redirect/:path(.*)',
     component: async () => await import('@/views/redirect.vue'),
-    meta: { hideMenu: true, title:''},
+    meta: { hideMenu: true, title: '' },
   },
   {
     path: '/:pathMatch(.*)*',
@@ -33,9 +32,8 @@ export const resolvePath = (routePath: string, basePath = '') => {
   return path.resolve(basePath, routePath);
 };
 
-
 //格式化路由
-export const formatRoutes = (routes: RouteRecordRaw[], basePath ='', startIndex = 0) => {
+export const formatRoutes = (routes: RouteRecordRaw[], basePath = '', startIndex = 0) => {
   const newRoutes = [] as RouteRecordRaw[];
   routes.forEach((route, index) => {
     if (!route.meta) {

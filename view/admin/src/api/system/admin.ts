@@ -1,8 +1,8 @@
-import request, { RequestOptions } from '@/utils/request.js';
 import { PageParam, PageResult } from '@/api/api.model.js';
-import { SystemRoleInfo } from './role.js';
-import { SystemMenuInfo } from './menu.js';
+import request, { RequestOptions } from '@/utils/request.js';
 import { FileInfo } from '../file.js';
+import { SystemMenuInfo } from './menu.js';
+import { SystemRoleInfo } from './role.js';
 
 //管理员
 export class SystemAdmin {
@@ -16,17 +16,17 @@ export class SystemAdmin {
   roleIds = [] as string[]; //具有的角色
 }
 
-export type SystemAdminInfo = Omit<SystemAdmin,'roleIds'> & {
+export type SystemAdminInfo = Omit<SystemAdmin, 'roleIds'> & {
   id: string; //ID
   loginFailure: number | undefined; //登录失败次数
   lastLoginAt: string | null; //最后登录时间
   lastLoginIp: string; //最后登录ip
   roles: Array<Omit<SystemRoleInfo, 'menus'>>;
   roleMenus: NonNullable<SystemMenuInfo>;
-  createdAt: string;//创建时间
-  updatedAt: string;//最后更新时间
-  createdAdmin: Omit<SystemAdmin,'createdAdmin'|'updatedAdmin'> | null,
-  updatedAdmin: Omit<SystemAdmin,'createdAdmin'|'updatedAdmin'> | null,
+  createdAt: string; //创建时间
+  updatedAt: string; //最后更新时间
+  createdAdmin: Omit<SystemAdmin, 'createdAdmin' | 'updatedAdmin'> | null;
+  updatedAdmin: Omit<SystemAdmin, 'createdAdmin' | 'updatedAdmin'> | null;
 };
 //添加管理员信息
 export function addSystemAdminApi() {
@@ -84,7 +84,9 @@ export function systemAdminInfoApi(options?: RequestOptions<SystemAdminInfo, [st
   );
 }
 
-export type UpdateSystemAdminInfoParam = Omit<Partial<SystemAdminInfo>, 'id' | 'loginFailure' | 'lastLoginAt' | 'lastLoginIp' | 'createdAt' | 'updatedAt' | 'createdAdmin' | 'updatedAdmin'> & {roleIds:string[]};
+export type UpdateSystemAdminInfoParam = Omit<Partial<SystemAdminInfo>, 'id' | 'loginFailure' | 'lastLoginAt' | 'lastLoginIp' | 'createdAt' | 'updatedAt' | 'createdAdmin' | 'updatedAdmin'> & {
+  roleIds: string[];
+};
 //修改管理员信息
 export function updateSystemAdminApi(options?: RequestOptions<SystemAdminInfo, [string, UpdateSystemAdminInfoParam]>) {
   return request<SystemAdminInfo, [string, UpdateSystemAdminInfoParam]>(

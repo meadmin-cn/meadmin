@@ -3,7 +3,7 @@
     <div class="left">
       <div class="form">
         <div class="title">登 录</div>
-        <el-form ref="formRef" size="large" :rules="rules" :model="loginParams"  @keyup.enter="submit">
+        <el-form ref="formRef" size="large" :rules="rules" :model="loginParams" @keyup.enter="submit">
           <el-form-item prop="username">
             <el-input v-model="loginParams.username" autofocus placeholder="用户名" clearable />
           </el-form-item>
@@ -25,7 +25,7 @@
       <div class="explanation">
         <div class="title">没有账户？</div>
         <div class="desc">立即加入我们吧，点击下方按钮进行注册</div>
-        <me-button class="button go" @click="setGo()" >注册</me-button>
+        <me-button class="button go" @click="setGo()">注册</me-button>
       </div>
     </div>
   </div>
@@ -41,9 +41,9 @@ const { data: captchaObj, runAsync: getCaptchRun } = loginCaptchaApi();
 const getCaptch = async () => {
   await getCaptchRun();
   loginParams.captchaId = captchaObj.value!.id;
-}
+};
 await getCaptch();
-const rules ={
+const rules = {
   username: [
     {
       required: true,
@@ -96,15 +96,15 @@ const emit = defineEmits<{
   go: [id: 'login' | 'register'];
 }>();
 const setGo = () => {
-  emit('go', 'register')
-}
+  emit('go', 'register');
+};
 </script>
 <style lang="scss" scoped>
 .login {
   .left {
     background-color: #fff;
   }
-  :deep(.el-form-item__error){
+  :deep(.el-form-item__error) {
     padding-left: 20px;
   }
 }

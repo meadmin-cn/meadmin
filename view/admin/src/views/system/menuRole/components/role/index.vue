@@ -12,7 +12,7 @@
       :print="false"
       :export-menu="[]"
       :quick-search-placeholder="t('输入角色名称快捷查询')"
-      :onAdd="permission('system_role_add')?showAddOrUp:undefined"
+      :onAdd="permission('system_role_add') ? showAddOrUp : undefined"
       show-overflow
       height="auto"
       me-class="table-role"
@@ -48,11 +48,11 @@ import { delSystemRoleApi, SystemRoleInfo, SystemRoleTreeAll, systemRoleTreeAllA
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { searchTreeTable } from '@/utils/helper.js';
+import { permission } from '@/utils/permission.js';
 import { cloneDeep } from 'lodash-es';
 import { VxeTableEvents } from 'vxe-table';
 import AddOrUp from './components/addOrUp.vue';
 import Info from './components/info.vue';
-import { permission } from '@/utils/permission.js';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemRole']);
 const roleRef = ref<MeVxeTableInstance>();
 const emit = defineEmits<{

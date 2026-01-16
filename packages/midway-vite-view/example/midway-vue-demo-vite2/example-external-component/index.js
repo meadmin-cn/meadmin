@@ -1,3 +1,3 @@
-import ExampleExternalComponent from './ExampleExternalComponent.vue'
+import ExampleExternalComponent from './ExampleExternalComponent.vue';
 
-export default ExampleExternalComponent
+export default ExampleExternalComponent;

@@ -1,6 +1,6 @@
-import { PageEnum } from "@/dict/pageEnum.js";
-import { RouteRecordRaw } from "vue-router";
+import { PageEnum } from '@/dict/pageEnum.js';
 import Layout from '@/layout/default/index.vue';
+import { RouteRecordRaw } from 'vue-router';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -22,6 +22,6 @@ export const routes: RouteRecordRaw[] = [
           title: '用户中心',
         },
       },
-    ]
-  }
-]
+    ],
+  },
+];

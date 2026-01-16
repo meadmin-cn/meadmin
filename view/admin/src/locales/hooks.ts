@@ -6,10 +6,9 @@
  * @FilePath: \meadmin-template\src\locales\hooks.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
+import { event, mitter } from '@/event';
 import { useI18n, UseI18nOptions } from 'vue-i18n';
-import { loadMessage, MessageImport, setLocaleMessage } from './helper';
-import { mitter, event } from '@/event';
-import { camelize, capitalize, ComponentOptions, VNode } from 'vue';
+import { MessageImport, setLocaleMessage } from './helper';
 
 /**
  * useI18n 会自动加载locale语言包（语言包加载为异步执行，如果语言包被加载过则执行时效和同步一致）
@@ -19,7 +18,7 @@ import { camelize, capitalize, ComponentOptions, VNode } from 'vue';
  */
 export const useLocalesI18n = <Options extends UseI18nOptions = UseI18nOptions>(options?: Options, messageImport?: MessageImport) => {
   const res = useI18n<Options>(Object.assign({ useScope: 'local' }, options));
-  let loadRes = undefined;//加载语言包返回值，如需要等待加载完语言包后再渲染组件 可以在组件
+  let loadRes = undefined; //加载语言包返回值，如需要等待加载完语言包后再渲染组件 可以在组件
   if (messageImport) {
     loadRes = setLocaleMessage(res, res.locale.value!, messageImport);
     mitter.on(

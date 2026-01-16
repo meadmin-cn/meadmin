@@ -1,18 +1,10 @@
 <template>
-  <div
-    v-if="menus.length"
-    class="layout-menu"
-    :class="{ 'has-title': menuType !== 'top', collapse: !globalStore.isMobile && themeConfig.menuCollapse }"
-  >
+  <div v-if="menus.length" class="layout-menu" :class="{ 'has-title': menuType !== 'top', 'collapse': !globalStore.isMobile && themeConfig.menuCollapse }">
     <Expand v-if="menuType === 'top'" class="expand"></Expand>
     <Title v-else class="layout-title"></Title>
     <div class="menu-box">
       <el-scrollbar view-class="layout-menu-content">
-        <el-menu
-          class="el-menu-vertical-demo"
-          :default-active="activeMenu"
-          :collapse="!globalStore.isMobile && themeConfig.menuCollapse"
-        >
+        <el-menu class="el-menu-vertical-demo" :default-active="activeMenu" :collapse="!globalStore.isMobile && themeConfig.menuCollapse">
           <menu-item v-for="item in menus" :key="item.path" :item="item" :collapse="themeConfig.menuCollapse" />
         </el-menu>
       </el-scrollbar>
@@ -20,10 +12,10 @@
   </div>
 </template>
 <script setup lang="ts" name="layoutMenu">
-import { useSettingStore, useRouteStore, useGlobalStore } from '@/store';
-import { mixColor, getColorLuma } from '@/utils/helper';
-import Title from '../title.vue';
 import Expand from '@/layout/components/expand.vue';
+import { useGlobalStore, useRouteStore, useSettingStore } from '@/store';
+import { getColorLuma, mixColor } from '@/utils/helper';
+import Title from '../title.vue';
 import menuItem from './components/menuItem.vue';
 const { themeConfig, menuType } = storeToRefs(useSettingStore());
 const routeStore = useRouteStore();
@@ -45,9 +37,7 @@ watch(
   },
   { immediate: true },
 );
-const menuBg1 = computed(() =>
-  mixColor(themeConfig.value.menuBg, getColorLuma(themeConfig.value.menuBg) < 100 ? '#ffffff' : '#303133', 0.1),
-);
+const menuBg1 = computed(() => mixColor(themeConfig.value.menuBg, getColorLuma(themeConfig.value.menuBg) < 100 ? '#ffffff' : '#303133', 0.1));
 const menuActiveColor = computed(() => (getColorLuma(themeConfig.value.menuBg) < 100 ? '#ffffff' : '#303133'));
 const menuTextColor = computed(() => mixColor(themeConfig.value.menuBg, menuActiveColor.value, 0.8));
 const menus = computed(() => {

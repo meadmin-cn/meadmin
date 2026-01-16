@@ -1,9 +1,9 @@
-import '@/styles/index.scss';
 import '@/event/module';
-import { event, mitter } from './event';
-import { App } from 'vue';
-export let app: App;
 import layoutMenuItem from '@/layout/components/menu/components/menuItem.vue';
+import '@/styles/index.scss';
+import { App } from 'vue';
+import { event, mitter } from './event';
+export let app: App;
 export async function bootscrapt(appObj: App) {
   app = appObj;
   app.config.globalProperties.$start = true;

@@ -1,7 +1,7 @@
-import { default as XEUtils, SearchTreeOptions } from 'xe-utils';
-import { clone, cloneDeep } from 'lodash-es';
 import dayjs from 'dayjs';
+import { clone, cloneDeep } from 'lodash-es';
 import { VxeTableDefines } from 'vxe-table';
+import { SearchTreeOptions, default as XEUtils } from 'xe-utils';
 
 /**
  * 对象中的每个可便利元素按序执行一个由您提供的 reducer 函数，
@@ -246,19 +246,18 @@ export function clearEmptyParam<T extends Record<any, any> | any[]>(obj: T, empt
 }
 
 //格式化字符串数据执行
-export function formatterStrExec<T = string | null | undefined>(str:T){
+export function formatterStrExec<T = string | null | undefined>(str: T) {
   return [undefined, null, ''].includes(str as any) ? '--' : str!;
 }
 
 //格式化字典数据执行
-export function formatterDictExec<D extends Record<string, { value: string | number; label: string }[]>,T = string | null | undefined>(dict:D,field:string,value:T ){
-  return  formatterStrExec( dict[field]?.find((item) => item.value == value)?.label);
+export function formatterDictExec<D extends Record<string, { value: string | number; label: string }[]>, T = string | null | undefined>(dict: D, field: string, value: T) {
+  return formatterStrExec(dict[field]?.find((item) => item.value == value)?.label);
 }
 
 //格式化时间数据执行
-export function formatterAtExec(str:string | null | undefined | Date, formatStr = 'YYYY-MM-DD HH:mm:ss'){
-    return str ? dayjs(str).format(formatStr) : formatterStrExec(str);
-
+export function formatterAtExec(str: string | null | undefined | Date, formatStr = 'YYYY-MM-DD HH:mm:ss') {
+  return str ? dayjs(str).format(formatStr) : formatterStrExec(str);
 }
 
 //格式化表格数据
@@ -275,42 +274,41 @@ export function formatterAt({ cellValue }: { cellValue: string | null | undefine
 export function createformatterDictFn<T>(dict: Record<string, { value: string | number; label: string }[]>) {
   //因为ts类型判定不得不断言dict
   return (data: { cellValue: any; column: VxeTableDefines.ColumnInfo<T> }) => {
-    return formatterDictExec(dict,data.column.field,data.cellValue);
-  }
+    return formatterDictExec(dict, data.column.field, data.cellValue);
+  };
 }
 
 //创建格式化vxe表格对象函数
-export function formatterObjectFn(field:string | ((data:Record<string,any>)=>string)){
+export function formatterObjectFn(field: string | ((data: Record<string, any>) => string)) {
   return (data: { cellValue: any }) => {
-    return data.cellValue? formatterStrExec(typeof field === 'string' ? data.cellValue[field]:field(data.cellValue)) :formatterStrExec('');
-  }
+    return data.cellValue ? formatterStrExec(typeof field === 'string' ? data.cellValue[field] : field(data.cellValue)) : formatterStrExec('');
+  };
 }
 
 //创建格式化对象函数
-export function formatterObjectExecFn(field:string | ((data:Record<string,any>)=>string)){
-  return (data?:Record<string,any> | null) => {
-    return data ? formatterStrExec(typeof field === 'string' ? data?.[field]:field(data ?? {})) :formatterStrExec('');
-  }
+export function formatterObjectExecFn(field: string | ((data: Record<string, any>) => string)) {
+  return (data?: Record<string, any> | null) => {
+    return data ? formatterStrExec(typeof field === 'string' ? data?.[field] : field(data ?? {})) : formatterStrExec('');
+  };
 }
 
 //创建格式化数组函数
-export function formatterArrFn(field?:string | ((data:Record<string,any>)=>string), delimiter='、' ){
+export function formatterArrFn(field?: string | ((data: Record<string, any>) => string), delimiter = '、') {
   return (data: { cellValue: any }) => {
-    return data.cellValue.map((v: any)=>field?formatterStrExec(typeof field === 'string' ? v[field]:field(v)):v).join(delimiter);
-  }
+    return data.cellValue.map((v: any) => (field ? formatterStrExec(typeof field === 'string' ? v[field] : field(v)) : v)).join(delimiter);
+  };
 }
 
 //创建格式化数组函数
-export function formatterArrExecFn(field?:string | ((data:Record<string,any>)=>string), delimiter='、' ){
+export function formatterArrExecFn(field?: string | ((data: Record<string, any>) => string), delimiter = '、') {
   return (data?: any[]) => {
-    return (data ?? []).map((v: any)=>field?formatterStrExec(typeof field === 'string' ? v[field]:field(v)):v).join(delimiter);
-  }
+    return (data ?? []).map((v: any) => (field ? formatterStrExec(typeof field === 'string' ? v[field] : field(v)) : v)).join(delimiter);
+  };
 }
-
 
 //根据文件名判断是否是图片
 export function isImage(filename?: string) {
-  if(!filename) return false;
+  if (!filename) return false;
   const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
   const fileExtension = filename.split('.').pop()?.toLowerCase();
   return fileExtension ? imageExtensions.includes(fileExtension) : false;

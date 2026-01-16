@@ -7,7 +7,7 @@
         </Suspense>
       </template>
     </router-view>
-     <Teleport to="body">
+    <Teleport to="body">
       <Suspense>
         <component :is="item.component" v-for="item in globalComponents" :key="item.key" :ref="(vnode:any)=>item.vnode = vnode" v-bind="item.props"></component>
       </Suspense>

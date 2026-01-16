@@ -9,12 +9,7 @@
       <layout-menu-item v-for="child in menu.children" :key="child.path" :item="child"></layout-menu-item>
     </el-sub-menu>
     <template v-else>
-      <component
-        :is="truePathMenu!.meta?.isLink ? 'a' : 'routerLink'"
-        v-if="menu.meta && menu.meta.title"
-        :href="truePathMenu!.path"
-        :to="truePathMenu!.path"
-      >
+      <component :is="truePathMenu!.meta?.isLink ? 'a' : 'routerLink'" v-if="menu.meta && menu.meta.title" :href="truePathMenu!.path" :to="truePathMenu!.path">
         <el-menu-item :index="noChild ? item.meta?.menuIndex?.toString() : menu.path" :title="$t(menu.meta.title)">
           <component :is="menu.meta.icon" v-if="menu.meta.icon" />
           <div v-show="collapse" v-else class="icon-text">{{ $t(menu.meta.title).slice(0, 1) }}</div>
@@ -49,9 +44,7 @@ if (!props.item.meta?.hideMenu) {
   truePathMenu.value = menu.value = getMenu(props.item);
 }
 if (props.noChild) {
-  const firstChildrenMenu: (children: RouteRecordRaw[]) => RouteRecordRaw | undefined = (
-    children: RouteRecordRaw[],
-  ) => {
+  const firstChildrenMenu: (children: RouteRecordRaw[]) => RouteRecordRaw | undefined = (children: RouteRecordRaw[]) => {
     for (let i = 0; i < children.length; i++) {
       if (!children[i].meta?.hideMenu) {
         return children[i];

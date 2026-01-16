@@ -11,15 +11,15 @@
   </div>
 </template>
 <script lang="ts" setup name="RulePermissions">
-import Role from './components/role/index.vue';
 import Menu from './components/menu/index.vue';
+import Role from './components/role/index.vue';
 const role = ref<InstanceType<typeof Role>>();
 const checkedMenuIds = shallowRef([] as string[]);
-const roleIsSuper = ref<0|1>(0);
+const roleIsSuper = ref<0 | 1>(0);
 const setChecked = (menuIds: string[], isSuper: 0 | 1) => {
   checkedMenuIds.value = menuIds;
   roleIsSuper.value = isSuper;
-}
+};
 </script>
 <style lang="scss" scoped>
 .role-permissions {

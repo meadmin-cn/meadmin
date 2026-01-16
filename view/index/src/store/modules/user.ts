@@ -1,13 +1,13 @@
-import { event, mitter } from '@/event';
-import { Ref } from 'vue';
-import cookies from '@/utils/cookies.js';
-import { loginConfig as config } from '@/config';
-import { loading } from '@/utils/loading';
-import { PageEnum } from '@/dict/pageEnum';
 import { loginApi, LoginParams, userInfoApi } from '@/api/login';
-import useRouteStore from './route';
-import { router } from '@/router';
 import { UserInfo } from '@/api/user.js';
+import { loginConfig as config } from '@/config';
+import { PageEnum } from '@/dict/pageEnum';
+import { event, mitter } from '@/event';
+import { router } from '@/router';
+import cookies from '@/utils/cookies.js';
+import { loading } from '@/utils/loading';
+import { Ref } from 'vue';
+import useRouteStore from './route';
 interface UserState {
   user: UserInfo; // 用户信息
   token: Ref<string>; // 用户token
@@ -69,7 +69,7 @@ export default defineStore('user', {
       await router.replace({
         path: PageEnum.LOGIN,
       });
-      if(!import.meta.env.SSR){
+      if (!import.meta.env.SSR) {
         window.location.reload();
       }
     },

@@ -28,12 +28,8 @@ export default defineComponent({
   },
   setup(props) {
     const globalStore = useGlobalStore();
-    const pageLayout = computed(() =>
-      !props.options?.noAutoLayout && globalStore.isMobile ? 'prev, pager, next' : props.options?.layout,
-    );
-    const pagerCount = computed(() =>
-      !props.options?.noAutoLayout && globalStore.isMobile ? 5 : props.options?.pagerCount,
-    );
+    const pageLayout = computed(() => (!props.options?.noAutoLayout && globalStore.isMobile ? 'prev, pager, next' : props.options?.layout));
+    const pagerCount = computed(() => (!props.options?.noAutoLayout && globalStore.isMobile ? 5 : props.options?.pagerCount));
     const currentPage = ref(1);
     watch(
       () => props.options?.currentPage,

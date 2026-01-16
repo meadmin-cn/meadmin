@@ -1,9 +1,7 @@
 import { resolve } from 'path';
 import { ConfigEnv, UserConfigExport } from 'vite';
-import autoprefixer from 'autoprefixer';
 import plugins from './plugins/index.js';
 // @ts-ignore
-import px2rem from 'postcss-plugin-px2rem';
 
 function pathResolve(dir: string) {
   return resolve(import.meta.dirname, '.', dir);
@@ -11,7 +9,7 @@ function pathResolve(dir: string) {
 export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
   return {
     root: import.meta.dirname,
-    base:process.env.VIEW_INDEX_PATH_PRE,
+    base: process.env.VIEW_INDEX_PATH_PRE,
     envPrefix: 'VIEW_INDEX_',
     plugins: await plugins(configEnv),
     css: {
@@ -19,7 +17,7 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
         scss: {
           additionalData: `@use "@/styles/variables.scss" as *;`,
         },
-      }
+      },
     },
     resolve: {
       alias: [
@@ -39,15 +37,18 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
       __FEATURE_SUSPENSE__: `true`,
       __FEATURE_PROD_DEVTOOLS__: `false`,
     },
-    server:{
-      warmup:{//提前转换和缓存文件以进行预热。可以在服务器启动时提高初始页面加载速度，并防止转换瀑布
-        clientFiles:[//仅在客户端使用的文件,路径相对于root
+    server: {
+      warmup: {
+        //提前转换和缓存文件以进行预热。可以在服务器启动时提高初始页面加载速度，并防止转换瀑布
+        clientFiles: [
+          //仅在客户端使用的文件,路径相对于root
           './src/main.ts',
-          './src/utils/request.ts'
-        ]
-      }
+          './src/utils/request.ts',
+        ],
+      },
     },
-    experimental: {//ssr需求代码
+    experimental: {
+      //ssr需求代码
       renderBuiltUrl(filename, { hostType, type, ssr }) {
         if (ssr && type === 'asset' && hostType === 'js') {
           return {
@@ -62,15 +63,7 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
         output: {
           manualChunks: {
             // 打包优化
-            core: [
-              'vue',
-              'vue-router',
-              'pinia',
-              'vue-request',
-              'vue-i18n/dist/vue-i18n.esm-bundler.js',
-              'jquery',
-              'axios',
-            ],
+            core: ['vue', 'vue-router', 'pinia', 'vue-request', 'vue-i18n/dist/vue-i18n.esm-bundler.js', 'jquery', 'axios'],
             elIcon: ['@element-plus/icons-vue'],
             // mock: [pathResolve('./mock')],
           },
@@ -80,7 +73,7 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
     },
     optimizeDeps: {
       //因为项目中很多用到了自动引入和动态加载，所以vite首次扫描依赖项会扫描不全，这里强制扫描src下全局,并加载element-plus。
-      entries: ['src/**/*.{ts,tsx,vue}','./index.html'],
+      entries: ['src/**/*.{ts,tsx,vue}', './index.html'],
       include: [
         'element-plus/es/components/loading/style/css',
         'element-plus/es/components/message/style/css',
@@ -89,6 +82,5 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
         'node_modules/element-plus/es/index.mjs',
       ],
     },
-   
   };
 };

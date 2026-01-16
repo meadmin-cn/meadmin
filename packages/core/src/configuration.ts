@@ -22,6 +22,5 @@ export class MeadminConfiguration {
     setApp(this.app);
     this.routerService.initControllerOption();
     this.app.useMiddleware(GlobaleMiddleware);
-
   }
 }

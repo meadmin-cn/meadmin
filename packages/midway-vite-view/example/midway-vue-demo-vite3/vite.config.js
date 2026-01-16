@@ -28,10 +28,11 @@ export default defineConfig(({ command, ssrBuild }) => ({
         const ssrFromOptions = options?.ssr ?? false;
         if (id === '@foo') {
           // Force a mismatch error if ssrBuild is different from ssrFromOptions
-          return `export default { msg: '${command === 'build' && !!ssrBuild !== ssrFromOptions
-            ? 'defineConfig ssrBuild !== ssr from load options'
-            : 'hi'
-            }' }`;
+          return `export default { msg: '${
+            command === 'build' && !!ssrBuild !== ssrFromOptions
+              ? 'defineConfig ssrBuild !== ssr from load options'
+              : 'hi'
+          }' }`;
         }
       },
     },
@@ -101,8 +102,11 @@ export default defineConfig(({ command, ssrBuild }) => ({
   experimental: {
     renderBuiltUrl(filename, { hostType, type, ssr }) {
       if (ssr && type === 'asset' && hostType === 'js') {
-        return {//cjs必须加上entryServer. esm不需要加
-          runtime: `entryServer.__ssr_vue_processAssetPath(${JSON.stringify(filename)})`,
+        return {
+          //cjs必须加上entryServer. esm不需要加
+          runtime: `entryServer.__ssr_vue_processAssetPath(${JSON.stringify(
+            filename
+          )})`,
         };
       }
     },

@@ -3,18 +3,18 @@
 </template>
 
 <script>
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
 
 export default {
   async setup() {
     const store = createStore({
       state: {
-        foo: 'bar'
-      }
-    })
-    return store.state
-  }
-}
+        foo: 'bar',
+      },
+    });
+    return store.state;
+  },
+};
 </script>
 
 <style scoped>

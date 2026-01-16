@@ -13,11 +13,11 @@
 </template>
 
 <script setup lang="ts" name="Header">
-import { ref } from 'vue';
-import User from './components/user.vue';
 import { PageEnum } from '@/dict/pageEnum';
 import { useRouteStore } from '@/store';
+import { ref } from 'vue';
 import MenuItem from './components/menuItem.vue';
+import User from './components/user.vue';
 const route = useRoute();
 const routeStore = useRouteStore();
 let activeMenu = ref('');

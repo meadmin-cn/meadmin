@@ -1,5 +1,5 @@
 import { MidwayConfig } from '@midwayjs/core';
-import {join} from 'path';
+import { join } from 'path';
 
 export default {
   // use for cookie sign key, should change to your own and keep security

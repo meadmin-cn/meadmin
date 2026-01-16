@@ -1,18 +1,14 @@
 import { basename } from 'node:path';
+import serialize from 'serialize-javascript';
 import { renderToString } from 'vue/server-renderer';
 import { createApp } from './main';
-import serialize from 'serialize-javascript';
+import { setSterCookies } from './utils/cookies.js';
 import { getAllServerrCache } from './utils/server.js';
-import {setSterCookies} from './utils/cookies.js';
-export async function render(url: string, manifest: Record<string, string[]>, context:Record<string, string[]>) {
+export async function render(url: string, manifest: Record<string, string[]>, context: Record<string, string[]>) {
   setSterCookies(context.cookies);
   const { app, router, pinia } = await createApp();
-  // set the router to the desired URL before rendering 
-  await router.push(
-    url === router.options.history.base
-      ? '/'
-      : url
-  );
+  // set the router to the desired URL before rendering
+  await router.push(url === router.options.history.base ? '/' : url);
   await router.isReady();
   // passing SSR context object which will be available via useSSRContext()
   // @vitejs/plugin-vue injects code into a component's setup() that registers
@@ -24,25 +20,19 @@ export async function render(url: string, manifest: Record<string, string[]>, co
   // request.
   const __pinia = serialize(pinia.state.value);
   const __serverCache = serialize(getAllServerrCache());
-  const preloadLinks =
-    `<script>window.__pinia=${__pinia};</script>\n` +
-    `<script>window.__serverCache=${__serverCache};</script>\n` +
-    renderPreloadLinks(ctx.modules, manifest);
-  const teleports = renderTeleports(ctx.teleports)
+  const preloadLinks = `<script>window.__pinia=${__pinia};</script>\n` + `<script>window.__serverCache=${__serverCache};</script>\n` + renderPreloadLinks(ctx.modules, manifest);
+  const teleports = renderTeleports(ctx.teleports);
 
   return [html, preloadLinks, teleports];
 }
 
-function renderPreloadLinks(
-  modules: string[],
-  manifest: Record<string, string[]>
-) {
+function renderPreloadLinks(modules: string[], manifest: Record<string, string[]>) {
   let links = '';
   const seen = new Set();
-  modules.forEach(id => {
+  modules.forEach((id) => {
     const files = manifest[id];
     if (files) {
-      files.forEach(file => {
+      files.forEach((file) => {
         if (!seen.has(file)) {
           seen.add(file);
           const filename = basename(file);
@@ -81,12 +71,12 @@ function renderPreloadLink(file: string) {
   }
 }
 
-function renderTeleports(teleports?: Record<string,any>) {
-  if (!teleports) return ''
+function renderTeleports(teleports?: Record<string, any>) {
+  if (!teleports) return '';
   return Object.entries(teleports).reduce((all, [key, value]) => {
     if (key.startsWith('#el-popper-container-')) {
-      return `${all}<div id="${key.slice(1)}">${value}</div>`
+      return `${all}<div id="${key.slice(1)}">${value}</div>`;
     }
-    return all
-  }, teleports.body || '')
+    return all;
+  }, teleports.body || '');
 }

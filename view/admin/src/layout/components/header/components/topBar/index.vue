@@ -8,11 +8,11 @@
 </template>
 
 <script setup lang="ts" name="TopBar">
+import Title from '@/layout/components/title.vue';
 import { useSettingStore } from '@/store';
 import Left from './components/left.vue';
 import Right from './components/right/index.vue';
 import TopMenu from './components/topMenu.vue';
-import Title from '@/layout/components/title.vue';
 const { menuType } = storeToRefs(useSettingStore());
 </script>
 <style lang="scss" scoped>

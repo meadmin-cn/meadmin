@@ -1,12 +1,12 @@
-import { Body, Controller, Get, Post, Inject, Param } from '@midwayjs/core';
-import { BaseController } from '../base.controller.js';
+import { ApiOperationResponse } from '@/decorators/index.js';
+import { Body, Controller, Get, Inject, Param, Post } from '@midwayjs/core';
 import { SystemRole } from '../../../../entities/systemRole.entity.js';
 import { SystemRoleCreateDto } from '../../dto/system/roleCreate.dto.js';
 import { SystemRoleQueryDto } from '../../dto/system/roleQuery.dto.js';
+import { SystemRoleTreeAllResultDto } from '../../dto/system/roleTreeAllResult.dto.js';
 import { SystemRoleUpdateDto } from '../../dto/system/roleUpdate.dto.js';
 import { SystemRoleService } from '../../service/system/role.service.js';
-import { ApiOperationResponse } from '@/decorators/index.js';
-import { SystemRoleTreeAllResultDto } from '../../dto/system/roleTreeAllResult.dto.js';
+import { BaseController } from '../base.controller.js';
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
@@ -38,7 +38,7 @@ export class SystemRoleController extends BaseController {
     return this.success(await this.systemRoleService.list(queryDto));
   }
 
-  //接口方法必须加async 方法的接口装饰器值必须/开头 
+  //接口方法必须加async 方法的接口装饰器值必须/开头
   @Get('/treeAll')
   @ApiOperationResponse({
     responseList: SystemRoleTreeAllResultDto,

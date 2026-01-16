@@ -1,13 +1,4 @@
-import {
-  RendererNode,
-  RendererElement,
-  RendererOptions,
-  ComponentInternalInstance,
-  SuspenseBoundary,
-  VNode,
-  VNodeArrayChildren,
-  queuePostFlushCb,
-} from 'vue';
+import { ComponentInternalInstance, RendererElement, RendererNode, RendererOptions, SuspenseBoundary, VNode, VNodeArrayChildren, queuePostFlushCb } from 'vue';
 import { queueEffectWithSuspense } from './Suspense';
 
 // An object exposing the internals of a renderer, passed to tree-shakeable
@@ -41,23 +32,11 @@ type PatchFn = (
   optimized?: boolean,
 ) => void;
 
-type UnmountFn = (
-  vnode: VNode,
-  parentComponent: ComponentInternalInstance | null,
-  parentSuspense: SuspenseBoundary | null,
-  doRemove?: boolean,
-  optimized?: boolean,
-) => void;
+type UnmountFn = (vnode: VNode, parentComponent: ComponentInternalInstance | null, parentSuspense: SuspenseBoundary | null, doRemove?: boolean, optimized?: boolean) => void;
 
 type RemoveFn = (vnode: VNode) => void;
 
-type MoveFn = (
-  vnode: VNode,
-  container: RendererElement,
-  anchor: RendererNode | null,
-  type: MoveType,
-  parentSuspense?: SuspenseBoundary | null,
-) => void;
+type MoveFn = (vnode: VNode, container: RendererElement, anchor: RendererNode | null, type: MoveType, parentSuspense?: SuspenseBoundary | null) => void;
 
 export const enum MoveType {
   ENTER,

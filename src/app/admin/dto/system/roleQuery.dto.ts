@@ -1,9 +1,9 @@
-import { IntersectionType, PartialType } from '@/helper/dto.js';
-import { SystemRole } from '../../../../entities/systemRole.entity.js';
-import { InferAttributesLoose } from '@/types/entity.js';
-import { PageDto } from '@/dto/page.dto.js';
 import { ApiPropertyRule } from '@/decorators/index.js';
+import { PageDto } from '@/dto/page.dto.js';
+import { IntersectionType, PartialType } from '@/helper/dto.js';
 import { RuleType } from '@/ruleType/index.js';
+import { InferAttributesLoose } from '@/types/entity.js';
+import { SystemRole } from '../../../../entities/systemRole.entity.js';
 
 //dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效
 export class SystemRoleQueryDto extends IntersectionType(PageDto, PartialType(SystemRole as new () => InferAttributesLoose<SystemRole>)) {

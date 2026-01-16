@@ -1,10 +1,18 @@
 <template>
-  <el-select v-bind="omit(attrs, 'filterable', 'loading', 'filterMethod')" v-model="modelValue" :loading="loading" :filterable="true" :filter-method="filterMethod" :ref="changeRef"  class="me-sleect-list" >
+  <el-select
+    v-bind="omit(attrs, 'filterable', 'loading', 'filterMethod')"
+    v-model="modelValue"
+    :loading="loading"
+    :filterable="true"
+    :filter-method="filterMethod"
+    :ref="changeRef"
+    class="me-sleect-list"
+  >
     <template v-for="(_, name) in $slots" #[name]="data">
       <slot :name="name" v-bind="data || {}"></slot>
     </template>
     <template v-if="!$slots.default && !attrs.options">
-      <el-option v-for="item in options" :key="item.id"  :label="item[attrs.props?.label || 'label']" :value="attrs.valueKey? item :item[attrs.props?.value || 'value']"></el-option>
+      <el-option v-for="item in options" :key="item.id" :label="item[attrs.props?.label || 'label']" :value="attrs.valueKey ? item : item[attrs.props?.value || 'value']"></el-option>
     </template>
     <template v-if="!$slots.footer" #footer>
       <el-pagination :total="page.total" size="small" :current-page="page.currentPage" :page-size="page.pageSize" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
@@ -14,10 +22,10 @@
 
 <script setup lang="ts" name="MeSleectList">
 import { PageResult } from '@/api/api.model.js';
-import { SelectInstance, SelectProps } from 'element-plus';
 import { snakeToCamelCaseObj } from '@/utils/formatting.js';
+import { SelectInstance, SelectProps } from 'element-plus';
 import { omit } from 'lodash-es';
-const attrs = snakeToCamelCaseObj(useAttrs()) as Record<string,any> & SelectProps;
+const attrs = snakeToCamelCaseObj(useAttrs()) as Record<string, any> & SelectProps;
 const modelValue = defineModel<SelectProps['modelValue']>();
 defineOptions({ inheritAttrs: false });
 const loading = ref(false);

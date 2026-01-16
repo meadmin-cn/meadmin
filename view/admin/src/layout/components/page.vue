@@ -1,15 +1,6 @@
 <template>
   <router-view v-slot="{ Component, route }">
-    <me-component
-      :is="Component"
-      :transition="props.transition"
-      :keep-alive="keepAliveProps"
-      :component-key="route.fullPath"
-      done-progress
-      close-loading="layout"
-      :suspense="{}"
-    >
-    </me-component>
+    <me-component :is="Component" :transition="props.transition" :keep-alive="keepAliveProps" :component-key="route.fullPath" done-progress close-loading="layout" :suspense="{}"> </me-component>
   </router-view>
 </template>
 

@@ -1,6 +1,6 @@
 import { CodeEunm } from '@/dict/code.enum.js';
-import { ApiBaseRes } from './apiBase.res.js';
 import { ApiProperty } from '@midwayjs/swagger';
+import { ApiBaseRes } from './apiBase.res.js';
 
 export class EmptyClass {}
 

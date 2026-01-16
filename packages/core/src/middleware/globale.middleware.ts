@@ -9,6 +9,6 @@ export class GlobaleMiddleware implements IMiddleware<Context, NextFunction> {
       setCtx(ctx);
       await next();
       setCtx(null);
-    }
+    };
   }
 }

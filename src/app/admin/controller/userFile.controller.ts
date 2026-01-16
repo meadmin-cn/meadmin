@@ -1,14 +1,14 @@
 import { AdminPermission, ApiOperationResponse } from '@/decorators/index.js';
+import { uploadStorage } from '@/fileManage/index.js';
+import { UploadMiddleware, UploadStreamFileInfo } from '@midwayjs/busboy';
 import { Body, Controller, Fields, Files, Get, Inject, Param, Post } from '@midwayjs/core';
+import { ApiBody, BodyContentType } from '@midwayjs/swagger';
 import { UserFile } from '../../../entities/userFile.entity.js';
 import { UserFileQueryDto } from '../dto/userFileQuery.dto.js';
+import { UserFileUpDto } from '../dto/userFileUp.dto.js';
 import { UserFileUpdateDto } from '../dto/userFileUpdate.dto.js';
 import { UserFileService } from '../service/userFile.service.js';
 import { BaseController } from './base.controller.js';
-import { UploadMiddleware, UploadStreamFileInfo } from '@midwayjs/busboy';
-import { ApiBody, BodyContentType } from '@midwayjs/swagger';
-import { UserFileUpDto } from '../dto/userFileUp.dto.js';
-import { uploadStorage } from '@/fileManage/index.js';
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。
@@ -18,7 +18,6 @@ import { uploadStorage } from '@/fileManage/index.js';
 export class UserFileController extends BaseController {
   @Inject()
   userFileService: UserFileService;
-
 
   @Post('/upload', { middleware: [UploadMiddleware] })
   @ApiBody({
@@ -34,8 +33,8 @@ export class UserFileController extends BaseController {
   })
   async upload(@Files() files: Array<UploadStreamFileInfo>, @Fields() params: UserFileUpDto) {
     const file = files[0]; //只获取一个文件，不支持多文件数组
-    const res = await uploadStorage.localStorage('index').upload(file,params);
-    return this.success(res?(await this.userFileService.create(res)):{});
+    const res = await uploadStorage.localStorage('index').upload(file, params);
+    return this.success(res ? await this.userFileService.create(res) : {});
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头

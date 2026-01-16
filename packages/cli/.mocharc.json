@@ -3,5 +3,4 @@
   "spec": ["./test/**/*.test.ts"],
   "require": ["./test/setup.ts"],
   "import": "tsx"
-
 }

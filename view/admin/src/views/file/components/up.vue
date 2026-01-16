@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts" name="UpFile">
-import { FileInfo, updateFileApi, fileInfoApi } from '@/api/file';
+import { FileInfo, fileInfoApi, updateFileApi } from '@/api/file';
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
 import { FormInstance, FormRules } from 'element-plus';

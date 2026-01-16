@@ -1,18 +1,6 @@
 <template>
-  <el-popover
-    popper-class="me-contextmenu-tooltip el-dropdown__popper"
-    :visible="visible"
-    :virtual-ref="virtualRef"
-    virtual-triggering
-    pure
-  >
-    <ul
-      v-click-outside="closeMenu"
-      class="el-dropdown-menu el-dropdown-menu--default"
-      v-bind="$attrs"
-      style="outline: none"
-      role="menuitem"
-    >
+  <el-popover popper-class="me-contextmenu-tooltip el-dropdown__popper" :visible="visible" :virtual-ref="virtualRef" virtual-triggering pure>
+    <ul v-click-outside="closeMenu" class="el-dropdown-menu el-dropdown-menu--default" v-bind="$attrs" style="outline: none" role="menuitem">
       <li class="el-dropdown-menu__item" @click="reload"><mel-icon-refresh /> {{ $t('重新加载') }}</li>
       <li
         :class="{

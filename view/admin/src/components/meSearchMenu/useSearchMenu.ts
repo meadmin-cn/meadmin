@@ -1,6 +1,6 @@
+import { jump, resolvePath } from '@/router';
 import { useGlobalStore, useRouteStore } from '@/store';
 import { RouteRecordRaw } from 'vue-router';
-import { resolvePath, jump } from '@/router';
 
 import { debounce } from 'lodash-es';
 const menuList = [] as { path: string; isLink?: boolean; title: string[] }[];

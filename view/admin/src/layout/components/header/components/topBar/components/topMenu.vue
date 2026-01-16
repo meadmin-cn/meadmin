@@ -1,13 +1,7 @@
 <template>
   <div style="position: relative; height: 100%">
     <el-menu class="top-menu" :default-active="activeMenu" mode="horizontal">
-      <layout-menu-item
-        v-for="item in menus"
-        :key="item.path"
-        :no-child="true"
-        :item="item"
-        :collapse="themeConfig.menuCollapse"
-      />
+      <layout-menu-item v-for="item in menus" :key="item.path" :no-child="true" :item="item" :collapse="themeConfig.menuCollapse" />
     </el-menu>
   </div>
 </template>

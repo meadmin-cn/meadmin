@@ -2,7 +2,7 @@
   <me-dialog v-model="show" :title="t(id ? '编辑' : '新增')" :close-on-click-modal="false" @closed="$emit('closed')">
     <el-form v-loading="loading" ref="formEl" :model="info" :rules="rules" class="add" label-width="auto">
       <el-form-item :label="t('父级')" prop="parentId">
-        <el-tree-select v-model="info.parentId" :data="treeAllList || []" check-strictly node-key="id" :props="{label:'title'}" :render-after-expand="false" clearable filterable/>
+        <el-tree-select v-model="info.parentId" :data="treeAllList || []" check-strictly node-key="id" :props="{ label: 'title' }" :render-after-expand="false" clearable filterable />
       </el-form-item>
       <el-form-item :label="t('菜单名称')" prop="title">
         <el-input v-model="info.title"></el-input>
@@ -13,7 +13,7 @@
         </el-select>
       </el-form-item>
       <el-form-item :label="t('状态')" prop="status">
-        <el-select v-model="info.status" :value-on-clear="null" >
+        <el-select v-model="info.status" :value-on-clear="null">
           <el-option v-for="val in dict.status" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
       </el-form-item>
@@ -48,12 +48,12 @@
         <el-input v-model="info.icon"></el-input>
       </el-form-item>
       <el-form-item :label="t('固定tag')" prop="affix">
-        <el-select v-model="info.affix" :value-on-clear="null" >
+        <el-select v-model="info.affix" :value-on-clear="null">
           <el-option v-for="val in dict.affix" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
       </el-form-item>
       <el-form-item :label="t('恒定展示(只有一个子元素时不隐藏)')" prop="alwaysShow">
-        <el-select v-model="info.alwaysShow" :value-on-clear="null" >
+        <el-select v-model="info.alwaysShow" :value-on-clear="null">
           <el-option v-for="val in dict.alwaysShow" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
       </el-form-item>
@@ -71,14 +71,14 @@
 </template>
 
 <script setup lang="ts" name="AddOrUpSystemMenu">
-import { SystemMenu, addSystemMenuApi, updateSystemMenuApi, systemMenuInfoApi, systemMenuTreeAllApi } from '@/api/system/menu';
+import { SystemMenu, addSystemMenuApi, systemMenuInfoApi, systemMenuTreeAllApi, updateSystemMenuApi } from '@/api/system/menu';
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
 import { FormInstance, FormRules } from 'element-plus';
 import { getDict } from '../dict.js';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemMenu']);
-const { data:treeAllList,runAsync:getTreeAllAsync } = systemMenuTreeAllApi();
-const { runAsync: updateSystemMenuApiRunAsync} = updateSystemMenuApi();
+const { data: treeAllList, runAsync: getTreeAllAsync } = systemMenuTreeAllApi();
+const { runAsync: updateSystemMenuApiRunAsync } = updateSystemMenuApi();
 const { runAsync: addSystemMenuApiRunAsync } = addSystemMenuApi();
 const { runAsync: systemMenuInfoApiRunAsync } = systemMenuInfoApi();
 await Promise.all([loadRes, getTreeAllAsync()]);
@@ -137,8 +137,8 @@ const submit = async () => {
 };
 </script>
 <style lang="scss" scoped>
-.add{
-  :deep(.el-form-item__label){
+.add {
+  :deep(.el-form-item__label) {
     max-width: 130px;
   }
 }

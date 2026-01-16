@@ -1,10 +1,10 @@
+import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@midwayjs/validate';
 import { DataTypes, NonAttribute } from '@sequelize/core';
 import { Attribute, BelongsTo, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
-import { ApiPropertyRule } from '@/decorators/index.js';
-import { SystemRole } from './systemRole.entity.js';
 import { AdminTreeModel } from './abstract/adminTree.entity.js';
+import { SystemRole } from './systemRole.entity.js';
 
 //rule规则使用添加接口的校验规则
 @Table({ tableName: 'system_menu', comment: '菜单表' })
@@ -15,8 +15,8 @@ export class SystemMenu extends AdminTreeModel<SystemMenu> {
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
   id: string;
 
-  @BelongsTo(()=>SystemMenu,{ foreignKey:'parentId',foreignKeyConstraints:false})//不创建数据库外键约束
-  @ApiPropertyRule({ description: '父级', type: ()=>SystemMenu })
+  @BelongsTo(() => SystemMenu, { foreignKey: 'parentId', foreignKeyConstraints: false }) //不创建数据库外键约束
+  @ApiPropertyRule({ description: '父级', type: () => SystemMenu })
   declare parent?: NonAttribute<SystemMenu>;
 
   @Attribute({
@@ -70,7 +70,12 @@ export class SystemMenu extends AdminTreeModel<SystemMenu> {
     defaultValue: '',
     allowNull: false,
   })
-  @ApiPropertyRule({ description: '路径', rule: RuleType.string().max(500).when('menuType', { is: 2, then: RuleType.required().not(null) }) })
+  @ApiPropertyRule({
+    description: '路径',
+    rule: RuleType.string()
+      .max(500)
+      .when('menuType', { is: 2, then: RuleType.required().not(null) }),
+  })
   path: string;
 
   @Attribute({

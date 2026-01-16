@@ -25,4 +25,6 @@ dist
 template
 
 ## auto create files
-types/auto-imports.d.ts
+**/types/auto-imports.d.ts
+
+**/tmp/*

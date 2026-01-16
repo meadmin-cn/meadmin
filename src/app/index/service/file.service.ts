@@ -1,12 +1,12 @@
-import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { InjectRepository } from '@/decorators/index.js';
 import { Inject, Provide } from '@midwayjs/core';
+import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
+import { Context } from '@midwayjs/koa';
+import { Op } from '@sequelize/core';
+import { UserFile } from '../../../entities/userFile.entity.js';
 import { FileCreateDto } from '../dto/fileCreate.dto.js';
 import { FileQueryDto } from '../dto/fileQuery.dto.js';
 import { FileUpdateDto } from '../dto/fileUpdate.dto.js';
-import { UserFile } from '../../../entities/userFile.entity.js';
-import { Op } from '@sequelize/core';
-import { Context } from '@midwayjs/koa';
 
 //附件
 @Provide()
@@ -64,7 +64,7 @@ export class FileService {
       where[key] = queryDto[key];
     });
     const { count, rows } = await this.FileRepository.findAndCountAll({
-      include:['createdUser','updatedUser'],
+      include: ['createdUser', 'updatedUser'],
       where,
       offset: (queryDto.page - 1) * queryDto.pageSize,
       limit: queryDto.pageSize,
@@ -102,7 +102,7 @@ export class FileService {
     if (!entity) {
       throw new BadRequestError('没有对应的信息');
     }
-    if(entity.createdUserId !== this.ctx.userInfo.id){
+    if (entity.createdUserId !== this.ctx.userInfo.id) {
       throw new BadRequestError('只能更改自己的附件');
     }
     Object.assign(entity, updateDto);
@@ -119,7 +119,7 @@ export class FileService {
     if (!entity) {
       throw new BadRequestError('没有对应的信息');
     }
-    if(entity.createdUserId !== this.ctx.userInfo.id){
+    if (entity.createdUserId !== this.ctx.userInfo.id) {
       throw new BadRequestError('只能删除自己的附件');
     }
     await entity.destroy();

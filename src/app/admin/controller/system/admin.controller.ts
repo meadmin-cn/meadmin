@@ -1,13 +1,11 @@
-import { Body, Controller, Post, Inject, Param, Get } from '@midwayjs/core';
-import { BaseController } from '../base.controller.js';
+import { AdminPermission, ApiOperationResponse } from '@/decorators/index.js';
+import { Body, Controller, Get, Inject, Param, Post } from '@midwayjs/core';
 import { SystemAdmin } from '../../../../entities/systemAdmin.entity.js';
 import { SystemAdminCreateDto } from '../../dto/system/adminCreate.dto.js';
 import { SystemAdminQueryDto } from '../../dto/system/adminQuery.dto.js';
 import { SystemAdminUpdateDto } from '../../dto/system/adminUpdate.dto.js';
 import { SystemAdminService } from '../../service/system/admin.service.js';
-import { ApiOperationResponse } from '@/decorators/index.js';
-import { AdminPermission } from '@/decorators/index.js';;
-
+import { BaseController } from '../base.controller.js';
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
  * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址

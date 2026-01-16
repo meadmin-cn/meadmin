@@ -1,11 +1,5 @@
 <template>
-  <el-form
-    ref="elFormRef"
-    class="me-search-form"
-    :class="formClass"
-    :label-width="labelWidth!"
-    :label-position="labelPosition"
-  >
+  <el-form ref="elFormRef" class="me-search-form" :class="formClass" :label-width="labelWidth!" :label-position="labelPosition">
     <slot></slot>
     <el-form-item class="button-item">
       <slot name="button"></slot>
@@ -24,10 +18,10 @@
 </template>
 
 <script lang="ts">
-import { ElForm } from 'element-plus';
-import { PropType } from 'vue';
 import type { FormInstance } from 'element-plus';
+import { ElForm } from 'element-plus';
 import $ from 'jquery';
+import { PropType } from 'vue';
 const props = {
   forever: {
     // 收起后展示的筛选项数量0为不收起
@@ -59,8 +53,8 @@ const props = {
 };
 export default defineComponent({
   name: 'MeSearchForm',
-  props: props as unknown as ComponentObjectPropsOptionsFromData<InstanceType<typeof ElForm>['$props']> &  typeof props,
-    setup(props, { expose }) {
+  props: props as unknown as ComponentObjectPropsOptionsFromData<InstanceType<typeof ElForm>['$props']> & typeof props,
+  setup(props, { expose }) {
     const elFormRef = ref<FormInstance>();
     const showAll = ref(props.defaultAll);
     const formClass = ref('');

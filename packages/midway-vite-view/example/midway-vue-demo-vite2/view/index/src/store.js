@@ -1,22 +1,21 @@
 import { createStore as _createStore } from 'vuex';
 const moduleB = {
   state: () => ({
-    bb:11,
+    bb: 11,
   }),
-
-}
+};
 export function createStore() {
   return _createStore({
-    state () {
+    state() {
       return {
-        count: 0
-      }
+        count: 0,
+      };
     },
     mutations: {
-      increment (state) {
-        state.count++
-      }
+      increment(state) {
+        state.count++;
+      },
     },
-    modules:{moduleB}
-  })
+    modules: { moduleB },
+  });
 }

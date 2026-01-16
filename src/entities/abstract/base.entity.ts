@@ -15,13 +15,13 @@ export class BaseModel<M extends Model<any, any>> extends Model<InferAttributes<
   @Attribute({ comment: '最后更新时间' })
   @ApiPropertyRule({ description: '最后更新时间' })
   declare updatedAt: Date;
-  
+
   @BeforeCreate()
   static async setCreatedId(info: BaseModel<any>, options: InstanceUpdateOptions<BaseModel<any>>) {
-    if(ctx?.adminInfo && info.modelDefinition.attributes.has('createdAdminId')){
+    if (ctx?.adminInfo && info.modelDefinition.attributes.has('createdAdminId')) {
       //设置创建管理员Id
       (info as any).createdAdminId = ctx.adminInfo.id;
-      if(ctx?.adminInfo && info.modelDefinition.attributes.has('updatedAdminId')){
+      if (ctx?.adminInfo && info.modelDefinition.attributes.has('updatedAdminId')) {
         //设置更新管理员Id
         (info as any).updatedAdminId = ctx.adminInfo.id;
       }
@@ -29,40 +29,41 @@ export class BaseModel<M extends Model<any, any>> extends Model<InferAttributes<
   }
 
   @BeforeBulkCreate()
-  static async setCreatedIdBulk(instances: BaseModel<any>[], options: BulkCreateOptions<BaseModel<any>> & {model:ModelStatic<BaseModel<any>>}) {
-    if(ctx?.adminInfo && options.model.modelDefinition.attributes.has('createdAdminId')){
+  static async setCreatedIdBulk(instances: BaseModel<any>[], options: BulkCreateOptions<BaseModel<any>> & { model: ModelStatic<BaseModel<any>> }) {
+    if (ctx?.adminInfo && options.model.modelDefinition.attributes.has('createdAdminId')) {
       //设置创建管理员Id
-      instances.forEach(instance=>{
+      instances.forEach((instance) => {
         (instance as any).createdAdminId = ctx.adminInfo.id;
       });
-      if(options.model.modelDefinition.attributes.has('updatedAdminId')){
+      if (options.model.modelDefinition.attributes.has('updatedAdminId')) {
         //设置更新管理员Id
-        instances.forEach(instance=>{
+        instances.forEach((instance) => {
           (instance as any).updatedAdminId = ctx.adminInfo.id;
         });
       }
     }
   }
 
-
   @BeforeUpdate()
   static async setUpdatedId(info: BaseModel<any>, options: InstanceUpdateOptions<BaseModel<any>>) {
-    if(ctx?.adminInfo && info.modelDefinition.attributes.has('updatedAdminId')){
+    if (ctx?.adminInfo && info.modelDefinition.attributes.has('updatedAdminId')) {
       //设置更新管理员Id
       (info as any).updatedAdminId = ctx.adminInfo.id;
     }
   }
 
   @AfterBulkUpdate()
-  static async setUpdatedIdBulk(options: UpdateOptions<BaseModel<any>> & {model:ModelStatic<BaseModel<any>>}){
-    if(ctx?.adminInfo && options.model.modelDefinition.attributes.has('updatedAdminId')){
+  static async setUpdatedIdBulk(options: UpdateOptions<BaseModel<any>> & { model: ModelStatic<BaseModel<any>> }) {
+    if (ctx?.adminInfo && options.model.modelDefinition.attributes.has('updatedAdminId')) {
       //设置更新管理员Id
-      await options.model.update({updatedAdminId:ctx.adminInfo.id},
-      {
-        where:options.where,
-        transaction: options.transaction,
-        hooks:false
-      });
+      await options.model.update(
+        { updatedAdminId: ctx.adminInfo.id },
+        {
+          where: options.where,
+          transaction: options.transaction,
+          hooks: false,
+        },
+      );
     }
   }
 }

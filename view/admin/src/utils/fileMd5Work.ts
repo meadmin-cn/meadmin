@@ -1,5 +1,4 @@
 // file-md5-worker.ts
-import { UploadRawFile } from 'element-plus';
 import SparkMD5 from 'spark-md5';
 
 type MD5MessageType = {
@@ -69,7 +68,7 @@ const getProgress = (totalChunk: number, uid: number) => {
  * @param chunkSize // 分片大小 单位字节
  * @returns {Promise<unknown>}
  */
-const getFileMd5 = (file: File, uid:number, chunkSize = 1024 * 1024) => {
+const getFileMd5 = (file: File, uid: number, chunkSize = 1024 * 1024) => {
   const fileReader = new FileReader();
   const blobSlice = File.prototype.slice;
   const chunks = Math.ceil(file.size / chunkSize); // 总分片数

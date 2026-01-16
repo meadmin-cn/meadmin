@@ -17,8 +17,6 @@ export class UserFileService {
   @Inject()
   i18nService: MidwayI18nService;
 
-
-
   /**
    * 创建数据
    * @param createDto

@@ -1,6 +1,6 @@
-import { default as XEUtils, SearchTreeOptions } from 'xe-utils';
-import { clone, cloneDeep } from 'lodash-es';
 import dayjs from 'dayjs';
+import { clone, cloneDeep } from 'lodash-es';
+import { SearchTreeOptions, default as XEUtils } from 'xe-utils';
 
 /**
  * 对象中的每个可便利元素按序执行一个由您提供的 reducer 函数，
@@ -254,8 +254,8 @@ export function formatterAt<T>({ cellValue }: { cellValue: string | null | undef
 }
 
 //根据文件名判断是否是图片
-export function isImage(filename:string){
+export function isImage(filename: string) {
   const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
   const fileExtension = filename.split('.').pop()?.toLowerCase();
-  return fileExtension ? imageExtensions.includes(fileExtension) : false; 
+  return fileExtension ? imageExtensions.includes(fileExtension) : false;
 }

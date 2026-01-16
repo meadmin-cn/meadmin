@@ -3,12 +3,7 @@
     <a class="icon pointer" :class="{ 'is-disabled': scrollLeft <= 0 }" @click="back">
       <mel-icon-d-arrow-left></mel-icon-d-arrow-left>
     </a>
-    <el-scrollbar
-      ref="scrollbarRef"
-      view-class="list-parent"
-      style="flex-grow: 1"
-      @scroll="({ scrollLeft: left } : any) => (scrollLeft = left)"
-    >
+    <el-scrollbar ref="scrollbarRef" view-class="list-parent" style="flex-grow: 1" @scroll="({ scrollLeft: left } : any) => (scrollLeft = left)">
       <div ref="listRef" class="list">
         <div
           v-for="tag in tags"
@@ -34,11 +29,7 @@
       <div v-if="themeConfig.tagBarRefresh" class="icon pointer" @click="reload">
         <mel-icon-refresh :class="{ rotate: reoadUrl }"></mel-icon-refresh>
       </div>
-      <div
-        v-if="themeConfig.tagBarMenu"
-        class="icon pointer"
-        @click.stop="setContextmenu($event.currentTarget as any, currentTag)"
-      >
+      <div v-if="themeConfig.tagBarMenu" class="icon pointer" @click.stop="setContextmenu($event.currentTarget as any, currentTag)">
         <mel-icon-menu></mel-icon-menu>
       </div>
     </div>
@@ -59,14 +50,14 @@
   </contextmenu>
 </template>
 <script setup lang="ts" name="TagBar">
-import { mitter, event } from '@/event';
+import { event, mitter } from '@/event';
 import { useRouteStore, useSettingStore } from '@/store';
+import { isExternal } from '@/utils/validate';
 import { ElScrollbar } from 'element-plus';
+import $ from 'jquery';
+import { resolve } from 'path-browserify';
 import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
 import contextmenu from './components/contextmenu.vue';
-import { isExternal } from '@/utils/validate';
-import { resolve } from 'path-browserify';
-import $ from 'jquery';
 const { themeConfig } = storeToRefs(useSettingStore());
 // 初始化tags
 const tags = reactive([] as RouteLocationNormalized[]);

@@ -42,8 +42,7 @@ export const loadingObject = {
     () => loadingInstance.global?.close(),
   ),
   layout: new Loading(
-    (options?: LoadingOptions) =>
-      (loadingInstance.layout = ElLoading.service(Object.assign({ target: '#me-main-scroll' }, options))),
+    (options?: LoadingOptions) => (loadingInstance.layout = ElLoading.service(Object.assign({ target: '#me-main-scroll' }, options))),
     () => loadingInstance.layout?.close(),
   ),
 };

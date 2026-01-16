@@ -1,15 +1,15 @@
-import { closeLoading, loading } from '@/utils/loading';
+import { router } from '@/router/index.js';
 import { useUserStore } from '@/store';
+import { closeLoading, loading } from '@/utils/loading';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 import { ElMessage } from 'element-plus';
-import log from './log';
-import { useRequest, Options, setGlobalOptions } from 'vue-request';
 import qs from 'qs';
+import { Options, setGlobalOptions, useRequest } from 'vue-request';
 import { clearEmptyParam } from './helper.js';
+import log from './log';
 import { getServerCache, rmServerCache, setServerCache } from './server.js';
-import { router } from '@/router/index.js';
 const service = axios.create({
-  baseURL: import.meta.env.SSR? import.meta.env.VIEW_INDEX_API_SERVER_PREFIX:import.meta.env.VIEW_INDEX_API_CLIENT_PREFIX, // url = base url + request url
+  baseURL: import.meta.env.SSR ? import.meta.env.VIEW_INDEX_API_SERVER_PREFIX : import.meta.env.VIEW_INDEX_API_CLIENT_PREFIX, // url = base url + request url
   timeout: 10000, // request timeout
   paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat', skipNulls: true }), // 数组query参数转换为repeat a=1&a=2,null值会被删除
 });
@@ -52,7 +52,7 @@ export type RequestOptions<R, P extends unknown[]> = {
   noError?: boolean; // 不需要错误提示
   success?: boolean; //成功后提示
   clearEmpty?: any[]; //去除请求参数的空值数组
-  serverCacheKey?:string; //服务端接口缓存key
+  serverCacheKey?: string; //服务端接口缓存key
 } & Options<R, P>;
 
 setGlobalOptions({
@@ -61,8 +61,15 @@ setGlobalOptions({
 });
 
 // 请求函数，当请求失败时直接抛出异常;
-export function request<R, P extends unknown[] = []>(axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>, options?: RequestOptions<R, P>): ReturnType<typeof useRequest<R, P>>;
-export function request<R, P extends unknown[] = [], T extends boolean = boolean>(axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>, options: RequestOptions<R, P>, returnAxios: T): T extends true ? (...args: P) => Promise<R> : ReturnType<typeof useRequest<R, P>>;
+export function request<R, P extends unknown[] = []>(
+  axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>,
+  options?: RequestOptions<R, P>,
+): ReturnType<typeof useRequest<R, P>>;
+export function request<R, P extends unknown[] = [], T extends boolean = boolean>(
+  axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>,
+  options: RequestOptions<R, P>,
+  returnAxios: T,
+): T extends true ? (...args: P) => Promise<R> : ReturnType<typeof useRequest<R, P>>;
 
 /**
  * 请求函数
@@ -77,22 +84,22 @@ export function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (
       //loading放到微任务中去执行以确保在自动调用请求时等待所有的宏任务中的生命周期函数执行完再创建loading实例 以规避currentInstance的相关警告
       !options?.noLoading && Promise.resolve(undefined).then(loading);
       const config = await axiosConfig(...args);
-      if(options?.clearEmpty){
+      if (options?.clearEmpty) {
         if (config.params) config.params = clearEmptyParam(config.params, options?.clearEmpty);
-        if (config.data) config.data = clearEmptyParam(config.data , options?.clearEmpty);
+        if (config.data) config.data = clearEmptyParam(config.data, options?.clearEmpty);
       }
       let serverCacheKey = options?.serverCacheKey;
-      if(!serverCacheKey){
-        serverCacheKey = JSON.stringify(config)+'__';
+      if (!serverCacheKey) {
+        serverCacheKey = JSON.stringify(config) + '__';
       }
-      serverCacheKey = '__req__'+serverCacheKey;
-      let res:any;
-      if(import.meta.env.SSR){
+      serverCacheKey = '__req__' + serverCacheKey;
+      let res: any;
+      if (import.meta.env.SSR) {
         res = (await service(config)).data;
-        setServerCache(serverCacheKey,res);
-      }else{
+        setServerCache(serverCacheKey, res);
+      } else {
         res = getServerCache(serverCacheKey);
-        if(res === undefined){
+        if (res === undefined) {
           res = (await service(config)).data;
         }
       }
@@ -101,10 +108,10 @@ export function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (
       }
       // 401：认证失败
       if (res.code === '401') {
-        if(import.meta.env.SSR){
-          rmServerCache(serverCacheKey)
+        if (import.meta.env.SSR) {
+          rmServerCache(serverCacheKey);
         }
-        router.push('/redirect//promiseError/'+res.msg);
+        router.push('/redirect//promiseError/' + res.msg);
         throw Error(res.msg);
       }
       if (res.code !== '200') {

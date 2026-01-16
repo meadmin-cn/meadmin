@@ -1,18 +1,18 @@
-import { ViteViewConfig } from '../interface.js';
 import {
+  App,
   Config,
+  MidwayConfig,
   Provide,
   Scope,
   ScopeEnum,
-  App,
-  MidwayConfig,
 } from '@midwayjs/core';
-import { createServer, ViteDevServer, normalizePath, HmrOptions } from 'vite';
-import { getPort } from '../utils/index.js';
-import c2k from 'koa2-connect';
-import * as path from 'node:path';
 import * as koa from '@midwayjs/koa';
+import c2k from 'koa2-connect';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import * as path from 'node:path';
+import { createServer, HmrOptions, normalizePath, ViteDevServer } from 'vite';
+import { ViteViewConfig } from '../interface.js';
+import { getPort } from '../utils/index.js';
 
 let cachePostfix = '';
 const vitePlugin = (viewRoot: string, appDir: string) => ({
@@ -78,7 +78,7 @@ export class ViteService {
             usePolling: true,
             interval: 100,
           },
-          hmr:hmr
+          hmr: hmr,
         },
       });
     }
@@ -154,7 +154,7 @@ export class ViteService {
     Object.keys(this.vite).forEach(key => {
       json[key] = {
         time: new Date(),
-        hmr: this.vite[key].config.server.hmr
+        hmr: this.vite[key].config.server.hmr,
       };
     });
     writeFileSync(catchPath, JSON.stringify(json), 'utf8');
@@ -165,9 +165,10 @@ export class ViteService {
     const catchPath = this.getCatchFile();
     if (existsSync(catchPath)) {
       const json = JSON.parse(readFileSync(catchPath, 'utf8'));
-      json && Object.keys(json).forEach(key => {
-        this.createVite(key,json[key].hmr);
-      });
+      json &&
+        Object.keys(json).forEach(key => {
+          this.createVite(key, json[key].hmr);
+        });
     }
   }
 }

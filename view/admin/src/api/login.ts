@@ -4,17 +4,16 @@ import { SystemMenuInfo } from './system/menu.js';
 
 //获取登录验证码
 export function loginCaptchaApi<T extends boolean = false>(returnAxios: T = false as T, noLoading = true) {
-  return request<{id:string, imageBase64:string}, [number?,number?], T>(
-    (width=100,height=30) => ({
+  return request<{ id: string; imageBase64: string }, [number?, number?], T>(
+    (width = 100, height = 30) => ({
       url: 'login/captcha',
       method: 'get',
-      params: {width,height},
+      params: { width, height },
     }),
     { noLoading },
     returnAxios,
   );
 }
-
 
 // 登录
 export class LoginParams {

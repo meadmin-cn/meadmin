@@ -1,15 +1,15 @@
-import { event, mitter } from '@/event';
-import { Ref } from 'vue';
-import cookies from 'js-cookie';
-import { loginConfig as config } from '@/config';
-import { loading } from '@/utils/loading';
-import { PageEnum } from '@/dict/pageEnum';
 import { loginApi, LoginParams, userInfoApi, UserInfoResult } from '@/api/login';
-import useRouteStore from './route';
+import { loginConfig as config } from '@/config';
+import { PageEnum } from '@/dict/pageEnum';
+import { event, mitter } from '@/event';
 import { router } from '@/router';
+import { loading } from '@/utils/loading';
+import { initDynamicViewsModules, transitionComponent } from '@/utils/permission.js';
+import cookies from 'js-cookie';
+import { Ref } from 'vue';
 import { RouteRecordRaw } from 'vue-router';
 import { listToTree, statusToBoolean } from '../../utils/helper';
-import { initDynamicViewsModules, transitionComponent } from '@/utils/permission.js';
+import useRouteStore from './route';
 interface UserState {
   user: UserInfoResult['info']; // 用户信息
   rules: string[] | undefined; // 用户权限信息

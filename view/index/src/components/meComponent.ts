@@ -1,9 +1,8 @@
-import { PropType, Ref, SuspenseProps, Transition, TransitionProps } from 'vue';
-import { MeKeepAliveProps, default as MeKeepAlive } from './meKeepAlive';
-import { done } from '@/utils/nProgress';
 import { closeLoading, loadingObject } from '@/utils/loading';
-import { Suspense } from 'vue';
+import { done } from '@/utils/nProgress';
 import { omit } from 'lodash-es';
+import { PropType, Ref, Suspense, SuspenseProps, Transition, TransitionProps } from 'vue';
+import { default as MeKeepAlive, MeKeepAliveProps } from './meKeepAlive';
 export default defineComponent({
   name: 'MeComponent',
   props: {
@@ -28,7 +27,7 @@ export default defineComponent({
           key.value = props.componentKey;
           _attrs.value = attrs;
           componentIs.value = is;
-          if(!props.suspense && !slots.fallback){
+          if (!props.suspense && !slots.fallback) {
             props.doneProgress && done();
             props.closeLoading && closeLoading(false, 1, props.closeLoading);
           }
@@ -37,17 +36,28 @@ export default defineComponent({
       { immediate: true },
     );
     return () => {
-      let component = h(componentIs.value || 'div', {
-        key: key.value,
-        ..._attrs.value,
-      }, omit(slots,'fallback'));
+      let component = h(
+        componentIs.value || 'div',
+        {
+          key: key.value,
+          ..._attrs.value,
+        },
+        omit(slots, 'fallback'),
+      );
       if (props.suspense || slots.fallback) {
         const tmpComponent = component;
-        component = h(Suspense, {...(props.suspense || {}),onResolve:()=>{
-          props.doneProgress && done();
-          props.closeLoading && closeLoading(false, 1, props.closeLoading);
-          props.suspense?.onResolve?.();
-        }}, { default: () => tmpComponent, fallback: slots.fallback });
+        component = h(
+          Suspense,
+          {
+            ...(props.suspense || {}),
+            onResolve: () => {
+              props.doneProgress && done();
+              props.closeLoading && closeLoading(false, 1, props.closeLoading);
+              props.suspense?.onResolve?.();
+            },
+          },
+          { default: () => tmpComponent, fallback: slots.fallback },
+        );
       }
       if (props.keepAlive) {
         const tmpComponent = component;

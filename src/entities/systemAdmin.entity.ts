@@ -1,13 +1,13 @@
+import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
-import { DataTypes, NonAttribute, Op } from '@sequelize/core';
-import { Attribute, PrimaryKey, Default, Table, Index, DeletedAt, BelongsTo } from '@sequelize/core/decorators-legacy';
-import { ApiPropertyRule } from '@/decorators/index.js';
-import { SystemRole } from './systemRole.entity.js';
 import { BelongsManyModel, BelongsToModel } from '@/types/entity.js';
-import { SystemMenu } from './systemMenu.entity.js';
-import { File } from './file.entity.js';
 import { getSchemaPath } from '@midwayjs/swagger';
+import { DataTypes, NonAttribute, Op } from '@sequelize/core';
+import { Attribute, BelongsTo, Default, DeletedAt, Index, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
+import { File } from './file.entity.js';
+import { SystemMenu } from './systemMenu.entity.js';
+import { SystemRole } from './systemRole.entity.js';
 // import { BaseModel } from './abstract/base.entity.js';
 import { BaseModel } from './abstract/base.entity.js';
 
@@ -21,7 +21,7 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
   id: string;
 
-  @Index({unique:true, where:{'deleted_at': { [Op.isNot]: null }}}) //局部唯一索引设置只有不删除的数据加索引
+  @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引
   @Attribute({ type: DataTypes.STRING(50), comment: '用户名', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '用户名', rule: RuleType.string().max(50).min(1).required().empty('') })
   username: string;
@@ -37,19 +37,19 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
   @Attribute({ type: DataTypes.STRING(32), comment: '密码盐', allowNull: false, defaultValue: '' })
   salt: string;
 
-  @Attribute({ type: DataTypes.STRING(20), comment: '头像附件id',})
+  @Attribute({ type: DataTypes.STRING(20), comment: '头像附件id' })
   avatarFileId: string;
 
-  @ApiPropertyRule({ description: '头像', $ref: getSchemaPath('File'), rule: RuleType.object({id:RuleType.string().required()}) })
+  @ApiPropertyRule({ description: '头像', $ref: getSchemaPath('File'), rule: RuleType.object({ id: RuleType.string().required() }) })
   // @BelongsTo(() => File, /* foreign key */ 'avatarFileId')避免循环引用，将外键配置放在file表中
-  avatar?: NonAttribute<File>
+  avatar?: NonAttribute<File>;
 
-  @Index({unique:true, where:{'deleted_at': { [Op.isNot]: null }}}) //局部唯一索引设置只有不删除的数据加索引
-  @Attribute({ type: DataTypes.STRING(100), comment: '邮箱'})
+  @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引
+  @Attribute({ type: DataTypes.STRING(100), comment: '邮箱' })
   @ApiPropertyRule({ description: '邮箱', rule: RuleType.string().email().max(100) })
   email: string;
 
-  @Index({unique:true, where:{'deleted_at': { [Op.isNot]: null }}}) //局部唯一索引设置只有不删除的数据加索引
+  @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引
   @Attribute({ type: DataTypes.STRING(11), comment: '手机号' })
   @ApiPropertyRule({ description: '手机号', rule: RuleType.string().mobile().description('手机号').required() })
   mobile: string;
@@ -88,17 +88,16 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
   @ApiPropertyRule({ description: '状态:1=启用;0=禁用', rule: RuleType.number().equal(1, 0).required() })
   status: number;
 
-  @DeletedAt//设置为软删除
+  @DeletedAt //设置为软删除
   @Attribute({ comment: '删除时间' })
   declare deletedAt: Date | null;
-
 
   /** Declared by {@link SystemRole.admins} */
   @ApiPropertyRule({
     description: '具有的角色',
     type: 'array',
     items: {
-      $ref:()=>getSchemaPath('SystemRole'),
+      $ref: () => getSchemaPath('SystemRole'),
     },
   })
   declare roles?: NonAttribute<SystemRole[]>;
@@ -108,7 +107,7 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
     description: '具有权限的菜单',
     type: 'array',
     items: {
-      $ref: ()=>getSchemaPath('SystemMenu'),
+      $ref: () => getSchemaPath('SystemMenu'),
     },
   })
   get roleMenus(): NonAttribute<SystemMenu[]> {
@@ -134,7 +133,7 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
     description: '创建者(管理员)',
     type: () => SystemAdmin,
   })
-  @BelongsTo(() => SystemAdmin, {foreignKey:'createdAdminId',foreignKeyConstraints:false})
+  @BelongsTo(() => SystemAdmin, { foreignKey: 'createdAdminId', foreignKeyConstraints: false })
   declare createdAdmin?: NonAttribute<SystemAdmin | null>;
 
   @Attribute({
@@ -147,8 +146,8 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
     description: '最后更新者(管理员)',
     type: () => SystemAdmin,
   })
-  @BelongsTo(() => SystemAdmin, {foreignKey:'updatedAdminId',foreignKeyConstraints:false})
-  declare updatedAdmin?: NonAttribute<SystemAdmin  | null>;
+  @BelongsTo(() => SystemAdmin, { foreignKey: 'updatedAdminId', foreignKeyConstraints: false })
+  declare updatedAdmin?: NonAttribute<SystemAdmin | null>;
 
   //json转义时丢弃password
   toJSON() {

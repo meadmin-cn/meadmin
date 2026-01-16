@@ -7,6 +7,6 @@ declare module '@midwayjs/koa' {
     //管理员信息，只有没跳过登录校验的admin接口才能拿到
     adminInfo?: SystemAdmin;
     //用户信息，只有传token才能拿到
-    userInfo?: User
+    userInfo?: User;
   }
 }

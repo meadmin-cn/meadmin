@@ -1,24 +1,23 @@
 import { FileInfo, uploadFileApi } from '@/api/file.js';
-import { UploadProgressEvent, UploadRawFile, UploadRequestOptions, } from 'element-plus';
+import { UploadProgressEvent, UploadRawFile, UploadRequestOptions } from 'element-plus';
 import SparkMD5 from 'spark-md5';
 import md5WorkerURL from './fileMd5Work.js?url';
-let md5Worker:Worker;
-if(!import.meta.env.SSR){
+let md5Worker: Worker;
+if (!import.meta.env.SSR) {
   md5Worker = new Worker(md5WorkerURL, { type: 'module' });
 }
 
-
 export class UploadAjaxError extends Error {
-  name = 'UploadAjaxError'
-  status: number
-  method: string
-  url: string
+  name = 'UploadAjaxError';
+  status: number;
+  method: string;
+  url: string;
 
   constructor(message: string, status: number, method: string, url: string) {
-    super(message)
-    this.status = status
-    this.method = method
-    this.url = url
+    super(message);
+    this.status = status;
+    this.method = method;
+    this.url = url;
   }
 }
 
@@ -57,12 +56,12 @@ const getMd5 = (file: UploadRawFile, chunkSize = 1024 * 1024, progress?: (progre
 //执行分片上传
 const uploadChunksExecute = (file: UploadRawFile, currentChunk: number, chunkSize: number, data: UploadRequestOptions['data'] = {}) =>
   new Promise<Partial<FileInfo>>((resolve, reject) => {
-    try{
+    try {
       const start = currentChunk * chunkSize;
       const end = start + chunkSize >= file.size ? file.size : start + chunkSize;
       const fileReader = new FileReader();
       fileReader.onload = async (e) => {
-        try{
+        try {
           const formData = new FormData();
           const upFile = new File([e.target!.result || ''], file.name, { type: file.type });
           data.start = start + '';
@@ -72,8 +71,8 @@ const uploadChunksExecute = (file: UploadRawFile, currentChunk: number, chunkSiz
           });
           formData.append('file', upFile);
           //执行文件上传
-          return resolve( await uploadFileApi()(formData));
-        }catch(e){
+          return resolve(await uploadFileApi()(formData));
+        } catch (e) {
           reject(e);
         }
       };
@@ -81,7 +80,7 @@ const uploadChunksExecute = (file: UploadRawFile, currentChunk: number, chunkSiz
         reject(error);
       };
       fileReader.readAsArrayBuffer(File.prototype.slice.call(file, start, end));
-    }catch(e){
+    } catch (e) {
       reject(e);
     }
   });
@@ -100,7 +99,7 @@ const uploadChunks = (file: UploadRawFile, chunkSize: number, data: UploadReques
       const chunks = Math.ceil(file.size / chunkSize); // 总分片数
       if (chunks > 1) {
         //先上传一个分片确保校验和秒传
-        const res = await uploadChunksExecute(file, currentChunk, chunkSize, Object.assign(data, { chunkIndex: currentChunk + '', over: '0'  }));
+        const res = await uploadChunksExecute(file, currentChunk, chunkSize, Object.assign(data, { chunkIndex: currentChunk + '', over: '0' }));
         if (res.id) {
           progress?.('100');
           return resolve(res);
@@ -109,10 +108,10 @@ const uploadChunks = (file: UploadRawFile, chunkSize: number, data: UploadReques
         progress?.(((currentChunk / chunks) * 100).toFixed(2));
         //一次并发上传3个分片
         const parallelNum = 3;
-        for (; currentChunk < (chunks - 1); ) {
+        for (; currentChunk < chunks - 1; ) {
           const promiseArr = [];
           for (let i = 0; i < parallelNum; i++) {
-            if (currentChunk < (chunks - 1)) {
+            if (currentChunk < chunks - 1) {
               promiseArr.push(uploadChunksExecute(file, currentChunk, chunkSize, Object.assign(data, { chunkIndex: currentChunk + '', over: '0' })));
               currentChunk++;
             }
@@ -132,26 +131,26 @@ const uploadChunks = (file: UploadRawFile, chunkSize: number, data: UploadReques
 
 //上传请求兼容 element-plus上传事件
 export const fileUpload = async (options: UploadRequestOptions) => {
-    const chunkSize = 1024 * 1024;
-    const progressEvt = new ProgressEvent('uploadProgress', {
-      lengthComputable: true,
-      loaded: 0,
-      total: 100,
-    }) as UploadProgressEvent;
-    progressEvt.percent = 0;
-    // 将 MD5 值放到请求参数里
-    options.data.md5 = await getMd5(options.file, chunkSize, (process) => {
-      //md5进度占总进度5%
-      progressEvt.percent = (+process * 5) / 100;
-      options.onProgress(progressEvt);
-    });
-    options.data.chunk = '1';
-    options.data.name = options.file.name;
-    // 上传分片,第一个分片会查询文件是否存在
-    const res = await uploadChunks(options.file, chunkSize, options.data, (process) => {
-      //上传进度占总进度95%
-      progressEvt.percent = (+process * 95) / 100 + 5;
-      options.onProgress(progressEvt);
-    });
-    return res;//调用onSuccess和return后都会触发Success事件，这里只返回不调用，否则会触发两遍Success事件；
+  const chunkSize = 1024 * 1024;
+  const progressEvt = new ProgressEvent('uploadProgress', {
+    lengthComputable: true,
+    loaded: 0,
+    total: 100,
+  }) as UploadProgressEvent;
+  progressEvt.percent = 0;
+  // 将 MD5 值放到请求参数里
+  options.data.md5 = await getMd5(options.file, chunkSize, (process) => {
+    //md5进度占总进度5%
+    progressEvt.percent = (+process * 5) / 100;
+    options.onProgress(progressEvt);
+  });
+  options.data.chunk = '1';
+  options.data.name = options.file.name;
+  // 上传分片,第一个分片会查询文件是否存在
+  const res = await uploadChunks(options.file, chunkSize, options.data, (process) => {
+    //上传进度占总进度95%
+    progressEvt.percent = (+process * 95) / 100 + 5;
+    options.onProgress(progressEvt);
+  });
+  return res; //调用onSuccess和return后都会触发Success事件，这里只返回不调用，否则会触发两遍Success事件；
 };

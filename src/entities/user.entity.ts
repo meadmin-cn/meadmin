@@ -1,14 +1,13 @@
-import { Attribute, BelongsTo, Default, DeletedAt, Index, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
-import { DataTypes, NonAttribute, Op } from '@sequelize/core';
 import { ApiPropertyRule } from '@/decorators/index.js';
-import { RuleType } from '@/ruleType/index.js';
 import { uuid } from '@/helper/snowflake.js';
-import { UserFile } from './userFile.entity.js';
-import { getSchemaPath } from '@midwayjs/swagger';
-import { BaseModel } from './abstract/base.entity.js';
+import { RuleType } from '@/ruleType/index.js';
 import { BelongsToModel } from '@/types/entity.js';
+import { getSchemaPath } from '@midwayjs/swagger';
+import { DataTypes, NonAttribute, Op } from '@sequelize/core';
+import { Attribute, BelongsTo, Default, DeletedAt, Index, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
+import { BaseModel } from './abstract/base.entity.js';
 import { SystemAdmin } from './systemAdmin.entity.js';
-
+import { UserFile } from './userFile.entity.js';
 
 //rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
 @Table({ tableName: 'user', comment: '用户表' })
@@ -20,7 +19,7 @@ export class User extends BaseModel<User> {
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
   id: string;
 
-  @Index({unique:true, where:{'deleted_at': { [Op.isNot]: null }}}) //局部唯一索引设置只有不删除的数据加索引
+  @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引
   @Attribute({ type: DataTypes.STRING(50), comment: '用户名', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '用户名', rule: RuleType.string().max(50).min(1).required().empty('') })
   username: string;
@@ -39,16 +38,16 @@ export class User extends BaseModel<User> {
   @Attribute({ type: DataTypes.STRING(20), comment: '头像附件id' })
   avatarFileId: string;
 
-  @ApiPropertyRule({ description: '头像', $ref: getSchemaPath('UserFile'), rule: RuleType.object({id:RuleType.string().required()}) })
+  @ApiPropertyRule({ description: '头像', $ref: getSchemaPath('UserFile'), rule: RuleType.object({ id: RuleType.string().required() }) })
   // @BelongsTo(() => UserFile, /* foreign key */ 'avatarFileId')  避免循环引用，将外键配置放在userFile表中
   avatar?: NonAttribute<UserFile>;
 
-  @Index({unique:true, where:{'deleted_at': { [Op.isNot]: null }}}) //局部唯一索引设置只有不删除的数据加索引
+  @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引
   @Attribute({ type: DataTypes.STRING(100), comment: '邮箱', defaultValue: null })
   @ApiPropertyRule({ description: '邮箱', rule: RuleType.string().email().max(100) })
   email: string | null;
 
-  @Index({unique:true, where:{'deleted_at': { [Op.isNot]: null }}}) //局部唯一索引设置只有不删除的数据加索引
+  @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引
   @Attribute({ type: DataTypes.STRING(11), comment: '手机号', defaultValue: null })
   @ApiPropertyRule({ description: '手机号', rule: RuleType.string().mobile() })
   mobile: string | null;
@@ -87,11 +86,11 @@ export class User extends BaseModel<User> {
   @ApiPropertyRule({ description: '状态:1=启用;0=禁用', rule: RuleType.number().equal(1, 0).required() })
   status: number;
 
-  @DeletedAt//设置为软删除
+  @DeletedAt //设置为软删除
   @Attribute({ comment: '删除时间' })
   declare deletedAt: Date | null;
 
- @ApiPropertyRule({
+  @ApiPropertyRule({
     description: '创建者(用户)Id',
     type: 'string',
   })
@@ -105,7 +104,7 @@ export class User extends BaseModel<User> {
     description: '创建者(用户)',
     type: () => User,
   })
-  @BelongsTo(() => User, {foreignKey:'createdUserId',foreignKeyConstraints:false})
+  @BelongsTo(() => User, { foreignKey: 'createdUserId', foreignKeyConstraints: false })
   declare createdUser?: NonAttribute<User>;
 
   @Attribute({
@@ -118,9 +117,8 @@ export class User extends BaseModel<User> {
     description: '最后更新者(用户)',
     type: () => User,
   })
-  @BelongsTo(() => User, {foreignKey:'updatedUserId',foreignKeyConstraints:false})
+  @BelongsTo(() => User, { foreignKey: 'updatedUserId', foreignKeyConstraints: false })
   declare updatedUser?: NonAttribute<User>;
-
 
   @Attribute({
     comment: '创建者(管理员)Id',
@@ -132,7 +130,7 @@ export class User extends BaseModel<User> {
     description: '创建者(管理员)',
     type: () => SystemAdmin,
   })
-  @BelongsTo(() => SystemAdmin, {foreignKey:'createdAdminId',foreignKeyConstraints:false})
+  @BelongsTo(() => SystemAdmin, { foreignKey: 'createdAdminId', foreignKeyConstraints: false })
   declare createdAdmin?: NonAttribute<SystemAdmin | null>;
 
   @Attribute({
@@ -145,8 +143,8 @@ export class User extends BaseModel<User> {
     description: '最后更新者(管理员)',
     type: () => SystemAdmin,
   })
-  @BelongsTo(() => SystemAdmin, {foreignKey:'updatedAdminId',foreignKeyConstraints:false})
-  declare updatedAdmin?: NonAttribute<SystemAdmin  | null>;
+  @BelongsTo(() => SystemAdmin, { foreignKey: 'updatedAdminId', foreignKeyConstraints: false })
+  declare updatedAdmin?: NonAttribute<SystemAdmin | null>;
 
   //json转义时丢弃password
   toJSON() {

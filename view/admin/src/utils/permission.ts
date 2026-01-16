@@ -1,11 +1,11 @@
-import { Layout, LayoutPage } from '@/router/constant';
-import Page404 from '@/views/404.vue';
-import { useUserStore } from '@/store';
-import { RouteRecordRaw } from 'vue-router';
-import { DefineComponent } from 'vue';
-import log from './log';
-import { mitter } from '@/event';
 import EventEnum from '@/dict/eventEnmu';
+import { mitter } from '@/event';
+import { Layout, LayoutPage } from '@/router/constant';
+import { useUserStore } from '@/store';
+import Page404 from '@/views/404.vue';
+import { DefineComponent } from 'vue';
+import { RouteRecordRaw } from 'vue-router';
+import log from './log';
 
 /**
  * 用户是否具有权限

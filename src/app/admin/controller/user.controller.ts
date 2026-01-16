@@ -1,6 +1,6 @@
 import { AdminPermission, ApiOperationResponse } from '@/decorators/index.js';
-import { Body, Controller, Get, Inject, Param, Post } from '@midwayjs/core';
 import { User } from '@/entities/user.entity.js';
+import { Body, Controller, Get, Inject, Param, Post } from '@midwayjs/core';
 import { UserCreateDto } from '../dto/userCreate.dto.js';
 import { UserQueryDto } from '../dto/userQuery.dto.js';
 import { UserUpdateDto } from '../dto/userUpdate.dto.js';

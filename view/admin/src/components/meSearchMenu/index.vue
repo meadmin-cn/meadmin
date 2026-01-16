@@ -12,15 +12,7 @@
       "
     >
       <div class="search">
-        <el-input
-          v-model="searchText"
-          size="large"
-          :placeholder="$t('搜索') + $t(' ') + $t('菜单')"
-          :prefix-icon="Search"
-          clearable
-          @input="search(searchText)"
-        >
-        </el-input>
+        <el-input v-model="searchText" size="large" :placeholder="$t('搜索') + $t(' ') + $t('菜单')" :prefix-icon="Search" clearable @input="search(searchText)"> </el-input>
         <div v-if="filteredMenu.length" ref="listRef" class="list">
           <el-scrollbar max-height="300px">
             <a
@@ -44,9 +36,9 @@
   </div>
 </template>
 <script setup lang="ts" name="MeSearchMenu">
-import { useSearchMenu } from './useSearchMenu';
-import { Search } from '@element-plus/icons-vue';
 import { jump } from '@/router';
+import { Search } from '@element-plus/icons-vue';
+import { useSearchMenu } from './useSearchMenu';
 const showSearch = ref(false);
 const searchText = ref('');
 const listRef = ref<HTMLElement>();

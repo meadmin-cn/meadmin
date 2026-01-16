@@ -1,15 +1,15 @@
+import { Transaction } from '@/decorators/index.js';
 import { InjectRepository } from '@/decorators/sequelize.js';
 import { SystemAdmin } from '@/entities/systemAdmin.entity.js';
+import { SystemMenu } from '@/entities/systemMenu.entity.js';
+import { SystemRole } from '@/entities/systemRole.entity.js';
+import { CachingFactory, MidwayCache } from '@midwayjs/cache-manager';
 import { Config, Init, Inject, Singleton } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
-import { pbkdf2Sync, randomBytes } from 'node:crypto';
-import { CachingFactory, MidwayCache } from '@midwayjs/cache-manager';
-import dayjs from 'dayjs';
-import { SystemRole } from '@/entities/systemRole.entity.js';
-import { SystemMenu } from '@/entities/systemMenu.entity.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
-import { Transaction } from '@/decorators/index.js';
 import { Context } from '@midwayjs/koa';
+import dayjs from 'dayjs';
+import { pbkdf2Sync, randomBytes } from 'node:crypto';
 
 export const tokenPrefix = 'Admin:Token:';
 export const adminPrefix = 'Admin:Admin:';
@@ -160,21 +160,21 @@ export class LoginService {
   @Transaction()
   async login(username, password, ctx?: Context) {
     const entity = await this.adminRepository.findOne({ where: { username } });
-   
+
     let translate: MidwayI18nService['translate'];
     if (ctx) {
       const i18n = await ctx.requestContext.getAsync(MidwayI18nService);
-      translate = (...args)=>i18n.translate(...args);
+      translate = (...args) => i18n.translate(...args);
     }
     if (entity && this.checkPassword(password, entity.salt, entity.password)) {
       if (entity.status !== 1) {
         throw new BadRequestError(translate ? translate('用户已被禁用') : '用户已被禁用');
       }
       entity.lastLoginAt = new Date();
-      entity.lastLoginIp = ctx?.ip??'';
+      entity.lastLoginIp = ctx?.ip ?? '';
       entity.save();
       return await this.getToken(entity.id);
-    }else{
+    } else {
       await entity.increment('loginFailure', { by: 1 });
     }
     throw new BadRequestError(translate ? translate('错误的{key}', { args: { key: translate('用户名') + '/' + translate('密码') } }) : '错误的用户名/密码');

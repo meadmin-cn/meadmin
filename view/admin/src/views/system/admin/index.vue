@@ -57,7 +57,7 @@
         layout: 'sizes, prev, pager, next, jumper, ->, total',
         change: search,
       }"
-      :onAdd="permission('system_admin_add')?showAddOrUp:undefined"
+      :onAdd="permission('system_admin_add') ? showAddOrUp : undefined"
       @refresh="search(1)"
     >
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
@@ -74,13 +74,13 @@
       <vxe-column field="lastLoginAt" :title="t('最后登录时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="lastLoginIp" :title="t('最后登录ip')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="status" :title="t('状态')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="roles" :title="t('具有的角色')" :formatter="formatterArrFn(obj=>obj.roleName)"></vxe-column>
+      <vxe-column field="roles" :title="t('具有的角色')" :formatter="formatterArrFn((obj) => obj.roleName)"></vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column>
-      <vxe-column  v-if="permission(['system_admin_info','system_admin_edit','system_admin_del'])" :title="t('操作')" fixed="right">
+      <vxe-column v-if="permission(['system_admin_info', 'system_admin_edit', 'system_admin_del'])" :title="t('操作')" fixed="right">
         <template #default="{ row }: { row: SystemAdminInfo }">
           <span>
-            <me-button  @click="showInfo(row.id)" link :title="t('详情')">
+            <me-button @click="showInfo(row.id)" link :title="t('详情')">
               <mel-icon-memo />
             </me-button>
             <me-button v-if="permission('system_admin_edit')" @click="showAddOrUp(row.id)" link :title="t('编辑')">
@@ -101,19 +101,19 @@
 </template>
 
 <script setup lang="ts" name="SystemAdmin">
-import { systemAdminListApi, SystemAdminListParam, delSystemAdminApi, SystemAdminInfo } from '@/api/system/admin';
-import { useLocalesI18n } from '@/locales/i18n';
-import Info from './components/info.vue';
-import AddOrUp from './components/addOrUp.vue';
+import { delSystemAdminApi, SystemAdminInfo, systemAdminListApi, SystemAdminListParam } from '@/api/system/admin';
 import { useActionModel } from '@/hooks/index.js';
-import { formatterStr, formatterAt, formatterArrFn, createformatterDictFn } from '@/utils/helper.js';
+import { useLocalesI18n } from '@/locales/i18n';
+import { createformatterDictFn, formatterArrFn, formatterAt, formatterStr } from '@/utils/helper.js';
 import { permission } from '@/utils/permission.js';
+import AddOrUp from './components/addOrUp.vue';
+import Info from './components/info.vue';
 import { getDict } from './dict.js';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemAdmin']);
 const dict = getDict(t);
 const formatterDict = createformatterDictFn<SystemAdminInfo>(dict);
 const { open } = useActionModel(AddOrUp);
-const {open:openInfo} = useActionModel(Info);
+const { open: openInfo } = useActionModel(Info);
 const params = reactive(new SystemAdminListParam());
 const { loading, data, runAsync } = systemAdminListApi();
 const search = (page = params.page, pageSize = params.pageSize) => runAsync(Object.assign(params, { page, pageSize }));
@@ -133,13 +133,13 @@ const showAddOrUp = (id?: string) => {
   });
 };
 const showInfo = (id?: string) => {
-  openInfo({id});
+  openInfo({ id });
 };
 await Promise.all([loadRes, search(1)]);
 </script>
 <style lang="scss" scoped>
 .view-img {
-  width: 40px; 
+  width: 40px;
   height: 40px;
 }
 </style>

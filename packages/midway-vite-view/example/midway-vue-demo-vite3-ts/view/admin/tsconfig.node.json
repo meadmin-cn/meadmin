@@ -1,5 +1,5 @@
 {
-  "composite":true,
+  "composite": true,
   "compilerOptions": {
     "composite": true,
     "module": "ESNext",

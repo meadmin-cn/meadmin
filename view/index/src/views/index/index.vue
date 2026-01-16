@@ -2,13 +2,13 @@
   <div class="index">
     <div class="header-banner">
       <el-carousel :interval="4000" height="auto">
-        <el-carousel-item v-for="item in info.banner" :key="item.title" style="height: max-content;">
+        <el-carousel-item v-for="item in info.banner" :key="item.title" style="height: max-content">
           <div class="banner">
             <div class="content">
               <div class="title">{{ item.title }}</div>
               <div class="text">{{ item.content }}</div>
             </div>
-            <img :src="item.bgImg"></img>
+            <img :src="item.bgImg" />
           </div>
         </el-carousel-item>
       </el-carousel>

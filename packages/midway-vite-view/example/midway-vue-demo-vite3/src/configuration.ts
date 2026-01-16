@@ -7,8 +7,7 @@ import { join } from 'path';
 // import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from './middleware/report.middleware';
 
-import * as viteView from 'midway-vite-view';//引入view组件
-
+import * as viteView from 'midway-vite-view'; //引入view组件
 
 @Configuration({
   imports: [

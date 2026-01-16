@@ -1,9 +1,9 @@
-import { UploadOptions, UploadStreamFileInfo } from '@midwayjs/busboy';
-import { relative, resolve } from 'node:path';
-import { createWriteStream, mkdirSync, renameSync, statSync, appendFileSync, createReadStream, existsSync, rmSync } from 'node:fs';
-import { app } from '@meadmin/core';
-import { BaseStorage } from './base.js';
 import { UploadParam, UploadResult, UpStorageInterface } from '@/types/fileManage.js';
+import { app } from '@meadmin/core';
+import { UploadOptions, UploadStreamFileInfo } from '@midwayjs/busboy';
+import { appendFileSync, createReadStream, createWriteStream, existsSync, mkdirSync, renameSync, rmSync, statSync } from 'node:fs';
+import { relative, resolve } from 'node:path';
+import { BaseStorage } from './base.js';
 export class LocalStorage extends BaseStorage implements UpStorageInterface {
   get path() {
     return '/' + this.model + '/';

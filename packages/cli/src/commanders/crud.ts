@@ -1,20 +1,20 @@
-import { Model, NormalizedAttributeOptions, Sequelize } from '@sequelize/core';
-import { getKeyInfo, lowerFirstCase, normalizeToKebabOrSnakeCase, relativePath, resovePath, toHump, upFirstCase } from '../utils/formatting.js';
-import { Command } from 'commander';
-import { existsSync } from 'node:fs';
-import { join, resolve } from 'node:path';
-import { getConfig } from '../utils/db.js';
-import { delFileSync, recursionWriteFileSync } from '../utils/file.js';
-import { Log } from '../utils/log.js';
-import template from 'art-template';
 import { getClassMetadata } from '@midwayjs/core';
 import { DECORATORS, DECORATORS_CLASS_METADATA, MixDecoratorMetadata, ReferenceObject, SchemaObject, SwaggerExplorer } from '@midwayjs/swagger';
-import { pathToFileURL } from 'node:url';
 import { DocumentBuilder } from '@midwayjs/swagger/dist/documentBuilder.js';
+import { Model, NormalizedAttributeOptions, Sequelize } from '@sequelize/core';
 import { MapView } from '@sequelize/utils';
+import template from 'art-template';
+import { Command } from 'commander';
+import { omit } from 'lodash-es';
+import { existsSync } from 'node:fs';
+import { join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import * as prettier from 'prettier';
 import prettierrc from '../../.prettierrc.cjs';
-import { omit } from 'lodash-es';
+import { getConfig } from '../utils/db.js';
+import { delFileSync, recursionWriteFileSync } from '../utils/file.js';
+import { getKeyInfo, lowerFirstCase, normalizeToKebabOrSnakeCase, relativePath, resovePath, toHump, upFirstCase } from '../utils/formatting.js';
+import { Log } from '../utils/log.js';
 
 let swaggerSchemas = {} as Record<string, SchemaObject>;
 let sequelize: Sequelize; //数据库配置
@@ -73,13 +73,13 @@ const getSchemas = (documentBuilder: DocumentBuilder, entitySchemaName: string) 
     const setItem = (item: SchemaObject | ReferenceObject) => {
       if (item['$ref']) {
         let ref = item['$ref'];
-        if(typeof item['$ref'] === 'function'){
+        if (typeof item['$ref'] === 'function') {
           ref = ref();
         }
-        if(!['#/components/schemas/SystemAdmin','#/components/schemas/File'].includes(ref)){
+        if (!['#/components/schemas/SystemAdmin', '#/components/schemas/File'].includes(ref)) {
           setSchemas(ref);
-        }else{
-          item['$ref'] = item['$ref'].replace('SystemAdmin','SystemAdminInfo').replace('File','FileInfo')
+        } else {
+          item['$ref'] = item['$ref'].replace('SystemAdmin', 'SystemAdminInfo').replace('File', 'FileInfo');
         }
       }
       if ((item as SchemaObject).items) {
@@ -143,16 +143,16 @@ function tableInfo(entityName, noBelongs = false) {
         autoAttributes.push(attribute);
       }
     });
-    if(swaggerSchemas[entityName]?.properties?.['createdAdmin']){
+    if (swaggerSchemas[entityName]?.properties?.['createdAdmin']) {
       autoAttributes.push('createdAdmin');
     }
-    if(swaggerSchemas[entityName]?.properties?.['updatedAdmin']){
+    if (swaggerSchemas[entityName]?.properties?.['updatedAdmin']) {
       autoAttributes.push('updatedAdmin');
     }
-    if(swaggerSchemas[entityName]?.properties?.['createdUser']){
+    if (swaggerSchemas[entityName]?.properties?.['createdUser']) {
       autoAttributes.push('createdUser');
     }
-    if(swaggerSchemas[entityName]?.properties?.['updatedUser']){
+    if (swaggerSchemas[entityName]?.properties?.['updatedUser']) {
       autoAttributes.push('updatedUser');
     }
     const belongs = [];
@@ -160,36 +160,37 @@ function tableInfo(entityName, noBelongs = false) {
     const belongsToEntity = {};
     const belongsToMany = [];
     const belongsToManyEntity = {};
-    if(!noBelongs){
-      Object.keys(modelDefinition.associations).forEach(key=>{
-        if(['createdAdmin','updatedAdmin','createdUser','updatedUser'].includes(key)){
+    if (!noBelongs) {
+      Object.keys(modelDefinition.associations).forEach((key) => {
+        if (['createdAdmin', 'updatedAdmin', 'createdUser', 'updatedUser'].includes(key)) {
           belongs.push(key);
           return;
         }
-        if(modelDefinition.associations[key].isSelfAssociation){//TODO::自关联暂不支持
+        if (modelDefinition.associations[key].isSelfAssociation) {
+          //TODO::自关联暂不支持
           return;
         }
-        if('BelongsTo' === modelDefinition.associations[key].associationType){
+        if ('BelongsTo' === modelDefinition.associations[key].associationType) {
           belongs.push(key);
           belongsTo.push(key);
           belongsToEntity[key] = tableInfo(modelDefinition.associations[key].target.name, true);
         }
-        if('BelongsToMany' === modelDefinition.associations[key].associationType){
+        if ('BelongsToMany' === modelDefinition.associations[key].associationType) {
           belongs.push(key);
           belongsToMany.push(key);
           belongsToManyEntity[key] = tableInfo(modelDefinition.associations[key].target.name, true);
         }
-      })
+      });
     }
-    const nameKeys = [];//可快捷查询的name
+    const nameKeys = []; //可快捷查询的name
     for (const key of modelDefinition.attributes.keys()) {
-      if((key.endsWith('name') || key.endsWith('Name'))  && ['VARCHAR','CHAR','STRING'].some(v=>modelDefinition.attributes.get(key).type.toString().includes(v))){
+      if ((key.endsWith('name') || key.endsWith('Name')) && ['VARCHAR', 'CHAR', 'STRING'].some((v) => modelDefinition.attributes.get(key).type.toString().includes(v))) {
         nameKeys.push(key);
       }
-    }    
+    }
     tableInfos[entityName] = {
       entityName,
-      entityFileName:lowerFirstCase(entityName),
+      entityFileName: lowerFirstCase(entityName),
       tableComment,
       pk: Array.from(modelDefinition.primaryKeysAttributeNames) as string[],
       deletedAt: modelDefinition.options.deletedAt,
@@ -199,7 +200,7 @@ function tableInfo(entityName, noBelongs = false) {
       belongsToEntity,
       belongsToMany,
       belongsToManyEntity,
-      belongs:belongs,
+      belongs: belongs,
       nameKeys,
     };
   }
@@ -287,29 +288,25 @@ async function writeContent(templatePath, toPath, writeType: 'api' | 'view') {
   Object.keys(paths).forEach((key) => {
     paths[key] = relativePath(toPath, paths[key], []);
   });
-  const str =  template(resolve(import.meta.dirname, templatePath), {
-        adminPermission,
-        replaceNames,
-        paths,
-        swaggerSchemas,
-        entitySchema: swaggerSchemas[replaceNames.Name],
-        entity: tableInfo(replaceNames.Name),
+  const str = template(resolve(import.meta.dirname, templatePath), {
+    adminPermission,
+    replaceNames,
+    paths,
+    swaggerSchemas,
+    entitySchema: swaggerSchemas[replaceNames.Name],
+    entity: tableInfo(replaceNames.Name),
   });
-  if(str.trim()){
+  if (str.trim()) {
     recursionWriteFileSync(
-    toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath,
-      await prettier.format(
-      str,
-        {
-          ...prettierrc,
-          filepath: toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath,
-        },
-      ),
-      {flag:'w'}
+      toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath,
+      await prettier.format(str, {
+        ...prettierrc,
+        filepath: toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath,
+      }),
+      { flag: 'w' },
     );
     Log.success((toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath) + ' 写入完成');
   }
-  
 }
 
 //写入后端文件
@@ -344,55 +341,54 @@ function writeViews() {
  * @returns
  */
 async function setMenu(model: string, namePath: string, sequelize: Sequelize) {
-  let parentId:string |null = null;
+  let parentId: string | null = null;
   let paths = [];
   const langFilePath = resovePath(`view/${model}/src/locales/lang/en/menu`, ['.json']);
   const lang = await import(pathToFileURL(langFilePath).href, { with: { type: 'json' } });
   const comments = tableInfo(replaceNames.Name).tableComment.split('_');
-  const menuNames = namePath.split('/').filter(v=>v);
-  for(let i = 0 ; i<menuNames.length; i++){
-    const menu = menuNames[i]; 
+  const menuNames = namePath.split('/').filter((v) => v);
+  for (let i = 0; i < menuNames.length; i++) {
+    const menu = menuNames[i];
     paths.push(menu);
     let menuTitle = upFirstCase(toHump(menu));
-    if(comments.length === menuNames.length){
+    if (comments.length === menuNames.length) {
       lang.default[comments[i]] = menuTitle;
       menuTitle = comments[i];
-    }else{
-      if(i === (menuNames.length - 1)){
+    } else {
+      if (i === menuNames.length - 1) {
         lang.default[tableInfo(replaceNames.Name).tableComment] = menuTitle;
         menuTitle = tableInfo(replaceNames.Name).tableComment;
-      }else{
+      } else {
         lang.default[menuTitle] = menuTitle;
       }
     }
-    if(i < (menuNames.length - 1)){
+    if (i < menuNames.length - 1) {
       const [menuEntity] = await sequelize.models.get('SystemMenu').findOrCreate({
         where: { rule: paths.join('_') },
         defaults: {
           title: menuTitle,
           menuType: 1, //目录
           orderNum: 999,
-          path: '/'+paths.join('/'),
+          path: '/' + paths.join('/'),
           parentId,
           alwaysShow: 1,
         },
       });
       parentId = menuEntity.get('id') as string;
-    }else{
+    } else {
       const [menuEntity] = await sequelize.models.get('SystemMenu').findOrCreate({
         where: { rule: paths.join('_') },
         defaults: {
           title: menuTitle,
           menuType: 2, //菜单
           orderNum: 999,
-          path: '/'+paths.join('/'),
+          path: '/' + paths.join('/'),
           component: namePath + '/index',
           parentId,
         },
       });
       parentId = menuEntity.get('id') as string;
     }
-   
   }
   await sequelize.models.get('SystemMenu').findOrCreate({
     where: { rule: paths.join('_') + '_list' },
@@ -467,14 +463,17 @@ export const crudInit = async (program: Command) => {
       const noSuffixEntityPath = relativePath('', file, ['.entity', '.ts']);
       const entityFileName = lowerFirstCase(toHump(relativePath('', noSuffixEntityPath, []).split('/').pop()!));
       replaceNames.namePath = options.path ? options.path : normalizeToKebabOrSnakeCase(entityFileName, '/');
-      replaceNames.namePath = replaceNames.namePath.replaceAll('//','/');
+      replaceNames.namePath = replaceNames.namePath.replaceAll('//', '/');
       if (replaceNames.namePath.endsWith('/')) {
         replaceNames.namePath = replaceNames.namePath.slice(0, -1);
       }
       if (replaceNames.namePath.startsWith('/')) {
         replaceNames.namePath = replaceNames.namePath.slice(1);
       }
-      replaceNames.roleName = replaceNames.namePath.split('/').filter(v=>v).join('_');
+      replaceNames.roleName = replaceNames.namePath
+        .split('/')
+        .filter((v) => v)
+        .join('_');
       replaceNames.controllerPath = options.controllerPath ? options.controllerPath : replaceNames.namePath;
       //初始化需要创建的文件路径
       writeServerFiles.entityPath = resovePath(noSuffixEntityPath + '.entity.js', [], process.cwd() + '/src/entities');
@@ -537,9 +536,9 @@ export const crudInit = async (program: Command) => {
       const swaggerExplorer = new MeSwaggerExplorer();
       swaggerExplorer.parseApiExtraModel(entity[upFirstCase(entityFileName)]);
       swaggerExplorer.parseClzz(entity[upFirstCase(entityFileName)]);
-      for(let modelName of sequelize.models.getNames()){
-          swaggerExplorer.parseApiExtraModel(sequelize.models.get(modelName));
-          swaggerExplorer.parseClzz(sequelize.models.get(modelName));
+      for (let modelName of sequelize.models.getNames()) {
+        swaggerExplorer.parseApiExtraModel(sequelize.models.get(modelName));
+        swaggerExplorer.parseClzz(sequelize.models.get(modelName));
       }
       swaggerSchemas = getSchemas(swaggerExplorer.getDocumentBuilder(), replaceNames.Name);
       if (options.coverage.includes('p')) {
@@ -558,7 +557,7 @@ export const crudInit = async (program: Command) => {
       if (options.menu) {
         await setMenu(options.model, replaceNames.namePath, sequelize);
       }
-      sequelize.close()
+      sequelize.close();
       Log.success(entityFileName + ' crud创建完成');
     });
 };

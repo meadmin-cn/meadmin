@@ -1,8 +1,19 @@
 <template>
-  <el-upload list-type="picture-card" accept="image/*" class="me-up-avater" :class="{ upload: process > 0 }"
-    v-model:file-list="fileList" :limit="1" :http-request="handleHttpRequest" :before-upload="beforeAvatarUpload"
-    @success="handleSuccess" @remove="handleRemove" @exceed="handleExceed"
-    @preview="handlePictureCardPreview" @progress="setProcess">
+  <el-upload
+    list-type="picture-card"
+    accept="image/*"
+    class="me-up-avater"
+    :class="{ upload: process > 0 }"
+    v-model:file-list="fileList"
+    :limit="1"
+    :http-request="handleHttpRequest"
+    :before-upload="beforeAvatarUpload"
+    @success="handleSuccess"
+    @remove="handleRemove"
+    @exceed="handleExceed"
+    @preview="handlePictureCardPreview"
+    @progress="setProcess"
+  >
     <template v-if="!file">
       <mel-icon-upload-filled class="default-up-icon"></mel-icon-upload-filled>
       <div class="text">
@@ -10,28 +21,31 @@
         <div class="text-desc">上传头像</div>
       </div>
     </template>
-
   </el-upload>
 </template>
 
 <script setup lang="ts" name="MeUpAvatar">
 import { FileInfo } from '@/api/file';
-import { UploadFile, UploadFiles, UploadProgressEvent, UploadProps, UploadRequestOptions } from 'element-plus';
 import { fileUpload } from '@/utils/fileUpload';
+import { UploadFile, UploadFiles, UploadProgressEvent, UploadProps, UploadRequestOptions } from 'element-plus';
 import { createImageViewer } from './service/meImageViewer';
-const file = defineModel<(FileInfo & { uid?: number } | null)>(undefined);
+const file = defineModel<(FileInfo & { uid?: number }) | null>(undefined);
 const fileList = reactive([] as Array<FileInfo & { uid?: number }>);
-watch(() => file.value, (file) => {
-  fileList.splice(0);
-  file && fileList.push(file);
-})
+watch(
+  () => file.value,
+  (file) => {
+    fileList.splice(0);
+    file && fileList.push(file);
+  },
+);
 //预览图片
 const handlePictureCardPreview = () => {
-  file.value && createImageViewer({
-    urlList: [file.value.url],
-    initialIndex: 0,
-    showProgress: true,
-  });
+  file.value &&
+    createImageViewer({
+      urlList: [file.value.url],
+      initialIndex: 0,
+      showProgress: true,
+    });
 };
 //上传请求
 const handleHttpRequest = (options: UploadRequestOptions) => {
@@ -47,25 +61,25 @@ const handleRemove = () => {
 };
 const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   if (!/image*/.test(rawFile.type)) {
-    ElMessage.error('必须是正确的图片文件')
-    return false
+    ElMessage.error('必须是正确的图片文件');
+    return false;
   } else if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error('图片大小不能超过 2MB!')
-    return false
+    ElMessage.error('图片大小不能超过 2MB!');
+    return false;
   }
-  return true
-}
+  return true;
+};
 //超出时
 const handleExceed = () => {
   ElMessage({ type: 'error', message: `最多上传1个文件` });
 };
 const process = ref(0);
 const processDeg = computed(() => {
-  return (process.value / 100 * 360) + 'deg'
-})
+  return (process.value / 100) * 360 + 'deg';
+});
 const setProcess = (env: UploadProgressEvent) => {
   process.value = env.percent;
-}
+};
 </script>
 <style lang="scss" scoped>
 @use 'sass:math';
@@ -124,7 +138,6 @@ const setProcess = (env: UploadProgressEvent) => {
     i {
       font-size: 20px;
     }
-
   }
 
   @keyframes conicProcess {
@@ -148,7 +161,6 @@ const setProcess = (env: UploadProgressEvent) => {
         display: flex;
       }
     }
-
   }
 }
 </style>

@@ -1,10 +1,10 @@
-import { MidwayConfig } from '@midwayjs/core';
-import database from './database.js';
-import { resolve } from 'path';
-import { createRedisStore } from '@midwayjs/cache-manager';
 import { uploadWhiteList } from '@midwayjs/busboy';
+import { createRedisStore } from '@midwayjs/cache-manager';
+import { MidwayConfig } from '@midwayjs/core';
 import { TranslateOptions } from '@midwayjs/i18n';
+import { resolve } from 'path';
 import { formatText } from '../helper/utils.js';
+import database from './database.js';
 //配置文件避免出现@/等alisa，path引用
 export default {
   // use for cookie sign key, should change to your own and keep security
@@ -25,7 +25,7 @@ export default {
     defaultLocale: 'zh-cn',
     // used to alter the behaviour of missing keys
     missingKeyFn: function (locale, value) {
-      return value
+      return value;
     },
 
     // 把你的翻译文本放到这里
@@ -41,7 +41,7 @@ export default {
       },
     },
 
-    missingKeyHandler:(message: string, options?: TranslateOptions)=>options?.args? formatText(message,options.args) : message
+    missingKeyHandler: (message: string, options?: TranslateOptions) => (options?.args ? formatText(message, options.args) : message),
   },
   sequelize: await database(),
   view: {
@@ -55,7 +55,7 @@ export default {
         prefix: '/',
         dir: 'public',
       },
-    }
+    },
   },
   viteView: {
     //midway-vite-view 配置配置详细说明见下方
@@ -63,7 +63,7 @@ export default {
       'index/index.html': {
         entryServer: 'index/src/entry-server.ts',
         root: 'index',
-        viteConfigFile: resolve(import.meta.dirname, '../../view/index/vite.config.ts')
+        viteConfigFile: resolve(import.meta.dirname, '../../view/index/vite.config.ts'),
       },
       'admin/index.html': {
         // entryServer: 'admin/src/entry-server.ts',//admin暂未支持服务端渲染
@@ -105,7 +105,7 @@ export default {
       noLoginUrl: [`/api/admin/login/login`, `/api/admin/login/captcha`, new RegExp('/api/admin/file/get/.+')] as Array<string | RegExp>, //无需登录地址
     },
   },
-  index:{
+  index: {
     login: {
       secret: 'desndex=ase$&e1#edad#$%%', //token加密平台标识
       expiresIn: 3600000 * 6, //token过期时间ms
@@ -118,7 +118,7 @@ export default {
     // 扩展名白名单
     whitelist: uploadWhiteList,
     limits: {
-      fileSize: 500*1024*1024,//上传限制 单位为byte
+      fileSize: 500 * 1024 * 1024, //上传限制 单位为byte
     },
     tmpdir: resolve(import.meta.dirname, '../../uploadFile/tmp'),
     upDir: resolve(import.meta.dirname, '../../uploadFile/'),

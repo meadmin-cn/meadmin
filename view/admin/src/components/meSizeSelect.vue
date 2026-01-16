@@ -5,13 +5,7 @@
     </div>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item
-          v-for="item in SizeEnum"
-          :key="item"
-          :disabled="themeConfig.size === item"
-          @click="themeConfig.size = item"
-          >{{ $t(item) }}</el-dropdown-item
-        >
+        <el-dropdown-item v-for="item in SizeEnum" :key="item" :disabled="themeConfig.size === item" @click="themeConfig.size = item">{{ $t(item) }}</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>

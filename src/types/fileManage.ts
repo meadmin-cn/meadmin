@@ -1,5 +1,5 @@
-import { UploadStreamFileInfo } from "@midwayjs/busboy";
-import { ReadStream } from "node:fs";
+import { UploadStreamFileInfo } from '@midwayjs/busboy';
+import { ReadStream } from 'node:fs';
 
 export type UploadParam = {
   //文件名
@@ -24,7 +24,7 @@ export type UploadResult = {
   path: string;
 };
 export interface UpStorageInterface {
-  model: string;//用户的model一般为
+  model: string; //用户的model一般为
   /**
    * 上次文件函数，需支持断点续传
    * @param file 文件
@@ -45,4 +45,4 @@ export interface UpStorageInterface {
    */
   getFileReadSteam: (path: string) => Promise<ReadStream> | ReadStream;
 }
-export type UpStorageFunction = (model:string)=>UpStorageInterface;
+export type UpStorageFunction = (model: string) => UpStorageInterface;

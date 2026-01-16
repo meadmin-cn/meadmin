@@ -1,8 +1,8 @@
-import request, { RequestOptions } from '@/utils/request.js';
 import { PageParam, PageResult } from '@/api/api.model.js';
 import { TreeArrayItem } from '@/utils/helper.js';
-import { SystemMenuInfo } from './menu.js';
+import request, { RequestOptions } from '@/utils/request.js';
 import { SystemAdmin } from './admin.js';
+import { SystemMenuInfo } from './menu.js';
 
 //角色
 export class SystemRole {
@@ -20,9 +20,9 @@ export class SystemRole {
 
 export type SystemRoleInfo = SystemRole & {
   id: string; //ID
-  isSuper: 1 | 0 ; //超级管理员:1=是;0=不是
-  createdAdmin: Omit<SystemAdmin,'createdAdmin'|'updatedAdmin'> | null,
-  updatedAdmin: Omit<SystemAdmin,'createdAdmin'|'updatedAdmin'> | null,
+  isSuper: 1 | 0; //超级管理员:1=是;0=不是
+  createdAdmin: Omit<SystemAdmin, 'createdAdmin' | 'updatedAdmin'> | null;
+  updatedAdmin: Omit<SystemAdmin, 'createdAdmin' | 'updatedAdmin'> | null;
 };
 //添加角色信息
 export function addSystemRoleApi() {
@@ -77,7 +77,7 @@ export function systemRoleTreeAllApi(options?: RequestOptions<SystemRoleTreeAll,
 
 //根据id获取角色详情
 export function systemRoleInfoApi(options?: RequestOptions<SystemRoleInfo, [string]>) {
-  return request<SystemRoleInfo & {parent?:SystemRoleInfo | null}, [string]>(
+  return request<SystemRoleInfo & { parent?: SystemRoleInfo | null }, [string]>(
     (id) => ({
       url: `system/role/info/${id}`,
       method: 'get',
@@ -86,7 +86,7 @@ export function systemRoleInfoApi(options?: RequestOptions<SystemRoleInfo, [stri
   );
 }
 
-export type UpdateSystemRoleInfoParam = Partial<Omit<SystemRoleInfo, 'menus' | 'id'| 'createdAt' | 'updatedAt' | 'createdAdmin' | 'updatedAdmin'> & { menuIds: string[] }>;
+export type UpdateSystemRoleInfoParam = Partial<Omit<SystemRoleInfo, 'menus' | 'id' | 'createdAt' | 'updatedAt' | 'createdAdmin' | 'updatedAdmin'> & { menuIds: string[] }>;
 //修改角色信息
 export function updateSystemRoleApi(options?: RequestOptions<SystemRoleInfo, [string, UpdateSystemRoleInfoParam]>) {
   return request<SystemRoleInfo, [string, UpdateSystemRoleInfoParam]>(

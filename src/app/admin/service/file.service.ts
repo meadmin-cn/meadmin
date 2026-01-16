@@ -1,12 +1,12 @@
-import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { InjectRepository } from '@/decorators/index.js';
-import { Provide, Inject } from '@midwayjs/core';
+import { Inject, Provide } from '@midwayjs/core';
+import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
+import { MidwayI18nService } from '@midwayjs/i18n';
+import { Op } from '@sequelize/core';
+import { File } from '../../../entities/file.entity.js';
 import { FileCreateDto } from '../dto/fileCreate.dto.js';
 import { FileQueryDto } from '../dto/fileQuery.dto.js';
 import { FileUpdateDto } from '../dto/fileUpdate.dto.js';
-import { File } from '../../../entities/file.entity.js';
-import { MidwayI18nService } from '@midwayjs/i18n';
-import { Op } from '@sequelize/core';
 
 //附件
 @Provide()
@@ -16,7 +16,6 @@ export class FileService {
 
   @Inject()
   i18nService: MidwayI18nService;
-
 
   /**
    * 创建数据
@@ -65,7 +64,7 @@ export class FileService {
       where[key] = queryDto[key];
     });
     const { count, rows } = await this.FileRepository.findAndCountAll({
-      include:['createdAdmin','updatedAdmin'],
+      include: ['createdAdmin', 'updatedAdmin'],
       where,
       offset: (queryDto.page - 1) * queryDto.pageSize,
       limit: queryDto.pageSize,
@@ -85,8 +84,8 @@ export class FileService {
    * @returns
    */
   async findOne(id: string) {
-    const entity = await this.FileRepository.findByPk(id,{
-      include:['createdAdmin','updatedAdmin'],
+    const entity = await this.FileRepository.findByPk(id, {
+      include: ['createdAdmin', 'updatedAdmin'],
     });
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));

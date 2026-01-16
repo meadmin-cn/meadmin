@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import {useStore} from '../store';
-defineProps<{ msg: string }>()
+import { ref } from 'vue';
+import { useStore } from '../store';
+defineProps<{ msg: string }>();
 const store = useStore();
-store.counter ++ ;
+store.counter++;
 </script>
 
 <template>
   <h1>{{ msg }}</h1>
 
   <div class="card">
-    <button type="button" @click="store.counter++">count is {{ store.counter }}</button>
+    <button type="button" @click="store.counter++">
+      count is {{ store.counter }}
+    </button>
     <p>
       Edit
       <code>components/HelloWorld.vue</code> to test HMR

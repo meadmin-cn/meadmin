@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-export const setEnv = (node_env?:string)=>{
-  if(node_env){
+export const setEnv = (node_env?: string) => {
+  if (node_env) {
     process.env.NODE_ENV = node_env;
   }
   // 根据当前环境加载不同的 .env 文件
@@ -15,4 +15,4 @@ export const setEnv = (node_env?:string)=>{
       override: true,
     });
   }
-}
+};

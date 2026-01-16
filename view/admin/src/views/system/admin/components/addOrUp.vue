@@ -14,7 +14,7 @@
         <el-input v-model="info.password" clearable :placeholder="t('留空，代表不修改密码')"></el-input>
       </el-form-item>
       <el-form-item :label="t('头像')" prop="avatar">
-        <me-upload list-type="picture" :limit="1" :model-value="info.avatar?[info.avatar]:[]" @update:modelValue="(files)=>info.avatar =files.length? files[0]:null" ></me-upload>
+        <me-upload list-type="picture" :limit="1" :model-value="info.avatar ? [info.avatar] : []" @update:modelValue="(files) => (info.avatar = files.length ? files[0] : null)"></me-upload>
       </el-form-item>
       <el-form-item :label="t('邮箱')" prop="email">
         <el-input v-model="info.email" clearable></el-input>
@@ -36,12 +36,12 @@
 </template>
 
 <script setup lang="ts" name="AddOrUpSystemAdmin">
-import { SystemAdmin, addSystemAdminApi, updateSystemAdminApi, systemAdminInfoApi } from '@/api/system/admin';
+import { SystemAdmin, addSystemAdminApi, systemAdminInfoApi, updateSystemAdminApi } from '@/api/system/admin';
+import { systemRoleTreeAllApi } from '@/api/system/role';
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
-import { FormInstance, FormRules } from 'element-plus';
 import { isMobile } from '@/utils/validate.js';
-import { systemRoleTreeAllApi } from '@/api/system/role';
+import { FormInstance, FormRules } from 'element-plus';
 import { getDict } from '../dict.js';
 const { data: treeAllList, runAsync: getTreeAllAsync } = systemRoleTreeAllApi();
 const { runAsync: systemAdminInfoApiRunAsync } = systemAdminInfoApi();

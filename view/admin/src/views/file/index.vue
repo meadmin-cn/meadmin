@@ -21,35 +21,39 @@
           <el-input v-model="params.storage" clearable></el-input>
         </el-form-item>
         <el-form-item :label="t('创建时间')" prop="createdAt">
-          <el-date-picker v-model="params.startCreatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
-            clearable />&nbsp; - &nbsp;
+          <el-date-picker v-model="params.startCreatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" clearable />&nbsp; - &nbsp;
           <el-form-item prop="priceEnd">
-            <el-date-picker v-model="params.endCreatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
-              clearable />
+            <el-date-picker v-model="params.endCreatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" clearable />
           </el-form-item>
         </el-form-item>
         <el-form-item :label="t('最后更新时间')" prop="updatedAt">
-          <el-date-picker v-model="params.startUpdatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
-            clearable />&nbsp; - &nbsp;
+          <el-date-picker v-model="params.startUpdatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" clearable />&nbsp; - &nbsp;
           <el-form-item prop="priceEnd">
-            <el-date-picker v-model="params.endUpdatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
-              clearable />
+            <el-date-picker v-model="params.endUpdatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" clearable />
           </el-form-item>
         </el-form-item>
       </me-search-form>
     </template>
-    <me-vxe-table :loading="loading" :data="data?.list" :pagination-options="{
-      currentPage: params.page,
-      pageSize: params.pageSize,
-      total: data?.total ?? 0,
-      layout: 'sizes, prev, pager, next, jumper, ->, total',
-      change: search,
-    }" align="center" border  :onAdd="permission('file_add')?showAdd:undefined" @refresh="search(1)">
+    <me-vxe-table
+      :loading="loading"
+      :data="data?.list"
+      :pagination-options="{
+        currentPage: params.page,
+        pageSize: params.pageSize,
+        total: data?.total ?? 0,
+        layout: 'sizes, prev, pager, next, jumper, ->, total',
+        change: search,
+      }"
+      align="center"
+      border
+      :onAdd="permission('file_add') ? showAdd : undefined"
+      @refresh="search(1)"
+    >
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
       <vxe-column :title="t('预览')">
-         <template #default="{ row }: { row: FileInfo }">
-          <me-files-view :files=" [row]"></me-files-view>
-         </template>
+        <template #default="{ row }: { row: FileInfo }">
+          <me-files-view :files="[row]"></me-files-view>
+        </template>
       </vxe-column>
       <vxe-column field="name" :title="t('文件名')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="path" :title="t('路径')" :formatter="formatterStr"></vxe-column>
@@ -57,9 +61,7 @@
       <vxe-column field="size" :title="t('文件大小')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="storage" :title="t('存储引擎')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="createdAdmin" :title="t('创建者(管理员))')" :formatter="formatterStr">
-        <template #default="{ row }: { row: FileInfo }">
-          {{ row.createdAdmin.nickname }}({{ row.createdAdmin.username }})
-        </template>
+        <template #default="{ row }: { row: FileInfo }"> {{ row.createdAdmin.nickname }}({{ row.createdAdmin.username }}) </template>
       </vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column :title="t('操作')" v-if="permission(['file_info', 'file_edit', 'file_del'])" fixed="right" min-width="150px">
@@ -72,7 +74,7 @@
           </el-button>
           <el-popconfirm v-if="permission('file_del')" :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
             <template #reference>
-              <el-button :key="row.id" link :loading="delLoading && delId === row.id"  :title="t('删除')" type="danger">
+              <el-button :key="row.id" link :loading="delLoading && delId === row.id" :title="t('删除')" type="danger">
                 <mel-icon-delete />
               </el-button>
             </template>
@@ -84,14 +86,14 @@
 </template>
 
 <script setup lang="ts" name="File">
-import { fileListApi, FileListParam, delFileApi, FileInfo } from '@/api/file';
-import { useLocalesI18n } from '@/locales/i18n';
-import Up from './components/up.vue';
+import { delFileApi, FileInfo, fileListApi, FileListParam } from '@/api/file';
 import { useActionModel } from '@/hooks/index.js';
-import { formatterStr, formatterAt } from '@/utils/helper.js';
+import { useLocalesI18n } from '@/locales/i18n';
+import { formatterAt, formatterStr } from '@/utils/helper.js';
 import { permission } from '@/utils/permission.js';
 import Add from './components/add.vue';
 import Info from './components/info.vue';
+import Up from './components/up.vue';
 const { open: openUp } = useActionModel(Up);
 const { open: openAdd } = useActionModel(Add);
 const { open: openInfo } = useActionModel(Info);
@@ -110,9 +112,9 @@ const showAdd = () => {
   openAdd({
     onClosed: async () => {
       await search(1);
-    }
-  })
-}
+    },
+  });
+};
 const showUp = (id: string) => {
   openUp({
     id,
@@ -121,10 +123,10 @@ const showUp = (id: string) => {
     },
   });
 };
-const showInfo = (id: string)=>{
+const showInfo = (id: string) => {
   openInfo({
-    id
+    id,
   });
-} 
+};
 await Promise.all([loadRes, search(1)]);
 </script>

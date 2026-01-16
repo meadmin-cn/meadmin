@@ -1,8 +1,8 @@
-import { Attribute, Default, HasMany, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
+import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
-import { ApiPropertyRule } from '@/decorators/index.js';
 import { DataTypes, NonAttribute } from '@sequelize/core';
+import { Attribute, Default, HasMany, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
 import { AdminBaseModel } from './abstract/adminBase.entity.js';
 import { SystemAdmin } from './systemAdmin.entity.js';
 
@@ -45,14 +45,13 @@ export class File extends AdminBaseModel<File> {
     type: 'string',
   })
   get url(): string {
-    return ('/api/admin/file/get/'+this.id+'/'+this.name);
+    return '/api/admin/file/get/' + this.id + '/' + this.name;
   }
 
   //为了规避admin和file的循环引用问题，在file声明admin avatar的关联
-  @HasMany(() => SystemAdmin, 
-  {
+  @HasMany(() => SystemAdmin, {
     foreignKey: 'avatarFileId',
-    inverse:{as: 'avatar'},
+    inverse: { as: 'avatar' },
   })
   declare avatarAdmins?: NonAttribute<SystemAdmin[]>;
 

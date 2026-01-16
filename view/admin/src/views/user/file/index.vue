@@ -59,6 +59,11 @@
       @refresh="search(1)"
     >
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
+      <vxe-column :title="t('预览')">
+        <template #default="{ row }: { row: UserFileInfo }">
+          <me-files-view :files="[row]"></me-files-view>
+        </template>
+      </vxe-column>
       <vxe-column field="name" :title="t('文件名')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="path" :title="t('路径')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="mimeType" :title="t('mime类型')" :formatter="formatterStr"></vxe-column>
@@ -100,8 +105,8 @@ import { useLocalesI18n } from '@/locales/i18n';
 import { formatterAt, formatterObjectFn, formatterStr } from '@/utils/helper.js';
 import { permission } from '@/utils/permission.js';
 import Add from './components/add.vue';
-import Up from './components/up.vue';
 import Info from './components/info.vue';
+import Up from './components/up.vue';
 const { open: openInfo } = useActionModel(Info);
 const { open: openAdd } = useActionModel(Add);
 const { open: openUp } = useActionModel(Up);
@@ -122,9 +127,9 @@ const showAdd = () => {
   openAdd({
     onClosed: async () => {
       await search(1);
-    }
-  })
-}
+    },
+  });
+};
 const showUp = (id: string) => {
   openUp({
     id,
@@ -133,11 +138,11 @@ const showUp = (id: string) => {
     },
   });
 };
-const showInfo = (id: string)=>{
+const showInfo = (id: string) => {
   openInfo({
-    id
+    id,
   });
-} 
+};
 
 await Promise.all([loadRes, search(1)]);
 </script>

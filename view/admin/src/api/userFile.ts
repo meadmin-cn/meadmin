@@ -16,15 +16,10 @@ export class UserFile {
   md5 = '' as string; //文件MD5值
 }
 
-
-
-
-
-
-
 export type UserFileInfo = UserFile & {
   id: string; //ID
   url: string;
+  size: number;
   createdAt: string; //创建时间
   updatedAt: string; //最后更新时间
   createdAdmin: SystemAdminInfo | null; //创建者
@@ -54,7 +49,7 @@ export function uploadFileApi<T extends boolean = true>(returnAxios = true as T)
       },
     }),
     { success: false, noLoading: true },
-    returnAxios
+    returnAxios,
   );
 }
 

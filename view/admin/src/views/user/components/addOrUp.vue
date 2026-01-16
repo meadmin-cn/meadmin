@@ -11,7 +11,12 @@
         <el-input v-model="info.password"></el-input>
       </el-form-item>
       <el-form-item :label="t('头像')" prop="avatar">
-        <me-select-list v-model="info.avatar" :props="{ label: 'name', value: 'id' }" value-key="id" @search="serachUserFile" clearable></me-select-list>
+        <me-upload-user-file
+          list-type="picture"
+          :limit="1"
+          :model-value="info.avatar ? [info.avatar] : []"
+          @update:modelValue="(files) => (info.avatar = files.length ? files[0] : null)"
+        ></me-upload-user-file>
       </el-form-item>
       <el-form-item :label="t('邮箱')" prop="email">
         <el-input v-model="info.email"></el-input>
@@ -50,21 +55,11 @@ import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
 import { isMobile } from '@/utils/validate.js';
 import { FormInstance, FormRules } from 'element-plus';
+import { getDict } from '../dict.js';
 //接口需要现在setup顶层初始化（如果是异步setup需要在异步调用之前初始化），否则会有unMounted，非法调用警告，因为vueRequest使用了unMounted
 const { runAsync: updateRunAsync } = updateUserApi();
 const { runAsync: addRunAsync } = addUserApi();
 const { runAsync: infoRunAsync } = userInfoApi();
-
-import { getUserFileApi } from '@/api/user';
-import { getDict } from '../dict.js';
-const { runAsync: getUserFileRunAsync } = getUserFileApi();
-const serachUserFile = async (query: string, page: number, pageSize: number) => {
-  return await getUserFileRunAsync({
-    name: query,
-    page: page,
-    pageSize: pageSize,
-  });
-};
 
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'user']);
 await loadRes;
@@ -104,7 +99,7 @@ const rules: FormRules = {
     { type: 'string', max: 100, message: t('{label} 长度必须小于等于 {max}', { label: t('邮箱'), max: 100 }), trigger: 'blur' },
     { type: 'email', message: t('{label} 必须是正确的邮箱格式', { label: t('邮箱') }), trigger: 'blur' },
   ],
-  mobile: [{ validator: (rule, value: string | number) => isMobile(value), message: t('{label} 必须是正确的手机号', { label: t('手机号') }), trigger: 'blur' }],
+  mobile: [{ validator: (rule, value: string | number) => (value ? isMobile(value) : true), message: t('{label} 必须是正确的手机号', { label: t('手机号') }), trigger: 'blur' }],
   status: [{ required: true, message: t('{label} 必须填写', { label: t('状态') }), trigger: 'blur' }],
 };
 const formEl = ref<FormInstance>();

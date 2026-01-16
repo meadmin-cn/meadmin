@@ -1,3 +1,4 @@
+import { LoginService } from '@/app/index/service/login.serveice.js';
 import { InjectRepository, Transaction } from '@/decorators/index.js';
 import { Inject, Provide } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
@@ -17,6 +18,9 @@ export class UserService {
 
   @Inject()
   i18nService: MidwayI18nService;
+
+  @Inject()
+  userLoginService: LoginService;
 
   //查询belongsTo关联模型avatar用户附件表(前台)
   @InjectRepository(UserFile)
@@ -117,7 +121,13 @@ export class UserService {
       where,
       offset: (queryDto.page - 1) * queryDto.pageSize,
       limit: queryDto.pageSize,
-      include: ['createdUser', 'avatar'],
+      include: [
+        'createdUser',
+        {
+          association: 'avatar',
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+      ],
       order: [['createdAt', 'DESC']],
     });
     return {
@@ -135,7 +145,15 @@ export class UserService {
    */
   @Transaction()
   async findOne(id: string) {
-    const entity = await this.userRepository.findByPk(id, { include: ['createdUser', 'avatar'] });
+    const entity = await this.userRepository.findByPk(id, {
+      include: [
+        'createdUser',
+        {
+          association: 'avatar',
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+      ],
+    });
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
@@ -154,8 +172,15 @@ export class UserService {
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
+    const password = entity.password;
+    const salf = entity.salt;
     Object.assign(entity, updateDto);
-
+    if (updateDto.password) {
+      Object.assign(entity, this.userLoginService.entityPassword(updateDto.password));
+    } else {
+      entity.password = password;
+      entity.salt = salf;
+    }
     if (updateDto.avatar !== undefined) {
       //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
       await entity.setAvatar(updateDto.avatar?.id ?? null);

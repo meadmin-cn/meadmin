@@ -48,7 +48,9 @@
     "prettier": "2.8.8",
     "prettier-plugin-organize-imports": "^4.3.0",
     "release-it": "^17.11.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.3.0"
   },
   "engines": {
     "node": ">=20.13.1"
@@ -60,9 +62,12 @@
     "cov": "cross-env c8 --all --reporter=text --reporter=lcovonly npm run test",
     "lint": "mwts check",
     "lint:fix": "mwts fix",
+    "prettier": "prettier --cache  -l \"./**/*\"",
+    "prettier:fix": "prettier --write --cache  -l \"./**/*\"",
     "ci": "npm run cov",
     "build": "mwtsc --cleanOutDir",
-    "dev:pack": "cross-env NODE_ENV=local lerna run build &&  cross-env NODE_ENV=local npx me-watchBootstrap --watch --run @midwayjs/mock/app"
+    "dev:pack": "cross-env NODE_ENV=local lerna run build &&  cross-env NODE_ENV=local npx me-watchBootstrap --watch --run @midwayjs/mock/app",
+    "release": "release-it"
   },
   "repository": {
     "type": "git",
@@ -75,5 +80,8 @@
       "midway-vite-view": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/midway-vite-view",
       "core": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/core"
     }
+  },
+  "lint-staged": {
+    "**/*": "prettier --cache --write --ignore-unknown"
   }
 }

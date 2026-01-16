@@ -11,9 +11,6 @@
         <el-form-item :label="t('昵称')" prop="nickname">
           <el-input v-model="params.nickname" clearable></el-input>
         </el-form-item>
-        <el-form-item :label="t('密码')" prop="password">
-          <el-input v-model="params.password" clearable></el-input>
-        </el-form-item>
         <el-form-item :label="t('邮箱')" prop="email">
           <el-input v-model="params.email" clearable></el-input>
         </el-form-item>
@@ -72,17 +69,19 @@
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="username" :title="t('用户名')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="nickname" :title="t('昵称')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="password" :title="t('密码')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="avatar" :title="t('头像')" :formatter="formatterObjectFn('name')"></vxe-column>
+      <vxe-column field="avatar" :title="t('头像')">
+        <template #default="{ row }: { row: UserInfo }">
+          <me-files-view :files="row.avatar ? [row.avatar] : []"></me-files-view>
+        </template>
+      </vxe-column>
       <vxe-column field="email" :title="t('邮箱')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="mobile" :title="t('手机号')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="loginFailure" :title="t('登录失败次数')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="lastLoginAt" :title="t('最后登录时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="lastLoginIp" :title="t('最后登录ip')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="status" :title="t('状态')" :formatter="formatterDict"></vxe-column>
-      <vxe-column field="createdUserId" :title="t('创建者Id')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="createdUser" :title="t('创建者')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="updatedUser" :title="t('最后更新者')" :formatter="formatterStr"></vxe-column>
+      <vxe-column field="createdUser" :title="t('创建者(用户)')" :formatter="formatterObjectFn((obj) => `${obj.nickname}(${obj.username})`)"></vxe-column>
+      <vxe-column field="updatedUser" :title="t('最后更新者(用户)')" :formatter="formatterObjectFn((obj) => `${obj.nickname}(${obj.username})`)"></vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column
       ><vxe-column v-if="permission(['user_add', 'user_edit', 'user_del'])" :title="t('操作')" fixed="right" min-width="150px">

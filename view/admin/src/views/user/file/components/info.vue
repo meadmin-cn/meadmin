@@ -1,18 +1,14 @@
 <template>
   <me-dialog v-model="show" :title="t('详情')" :close-on-click-modal="false" @closed="emit('closed')">
     <el-descriptions class="info" :border="true" v-loading="loading">
-      <el-descriptions-item :label="t('创建者Id')"> {{ formatterStrExec(data?.createdUserId) }} </el-descriptions-item>
-      <el-descriptions-item :label="t('创建者')"> {{ formatterStrExec(data?.createdUser) }} </el-descriptions-item>
-      <el-descriptions-item :label="t('最后更新者')"> {{ formatterObjectExecFn('username')(data?.updatedUser) }} </el-descriptions-item>
       <el-descriptions-item :label="t('ID')"> {{ formatterStrExec(data?.id) }} </el-descriptions-item>
-      <el-descriptions-item :label="t('文件名')"> {{ formatterStrExec(data?.name) }} </el-descriptions-item>
-      <el-descriptions-item :label="t('路径')"> {{ formatterStrExec(data?.path) }} </el-descriptions-item>
+      <el-descriptions-item :label="t('文件名')" :span="2"> {{ formatterStrExec(data?.name) }} </el-descriptions-item>
       <el-descriptions-item :label="t('mime类型')"> {{ formatterStrExec(data?.mimeType) }} </el-descriptions-item>
+      <el-descriptions-item :label="t('路径')" :span="2"> {{ formatterStrExec(data?.path) }} </el-descriptions-item>
       <el-descriptions-item :label="t('文件大小')"> {{ formatterStrExec(data?.size) }} </el-descriptions-item>
       <el-descriptions-item :label="t('存储引擎')"> {{ formatterStrExec(data?.storage) }} </el-descriptions-item>
-      <el-descriptions-item :label="t('文件MD5值')"> {{ formatterStrExec(data?.md5) }} </el-descriptions-item>
       <el-descriptions-item :label="t('预览')" :span="2">
-        <me-files-view :files="data?[data]:[]"></me-files-view>
+        <me-files-view :files="data ? [data] : []"></me-files-view>
       </el-descriptions-item>
       <el-descriptions-item :label="t('创建时间')"> {{ formatterAtExec(data?.createdAt) }} </el-descriptions-item>
       <el-descriptions-item :label="t('最后更新时间')"> {{ formatterAtExec(data?.updatedAt) }} </el-descriptions-item>

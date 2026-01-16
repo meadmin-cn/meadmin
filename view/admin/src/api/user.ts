@@ -1,13 +1,13 @@
 import { PageParam, PageResult } from '@/api/api.model.js';
 import request, { RequestOptions } from '@/utils/request.js';
-import { UserFile } from './userFile.js';
+import { UserFileInfo } from './userFile.js';
 
 //前台用户
 export class User {
   username = '' as string; //用户名
   nickname = '' as string; //昵称
   password = '' as string; //密码
-  avatar = undefined as UserFile | null | undefined; //头像
+  avatar = undefined as UserFileInfo | null | undefined; //头像
   email = '' as string | null; //邮箱
   mobile = '' as string | null; //手机号
   loginFailure = undefined as number | undefined; //登录失败次数
@@ -18,7 +18,6 @@ export class User {
   createdUser = undefined as User | null | undefined; //创建者
   updatedUser = undefined as User | null | undefined; //最后更新者
 }
-
 
 export type UserInfo = User & {
   id: string; //ID
@@ -43,7 +42,7 @@ export class UserListParam extends PageParam {
   username?: string; //用户名
   nickname?: string; //昵称
   password?: string; //密码
-  avatar?: UserFile | null; //头像
+  avatar?: UserFileInfo | null; //头像
   email?: string | null; //邮箱
   mobile?: string | null; //手机号
   loginFailure?: number; //登录失败次数

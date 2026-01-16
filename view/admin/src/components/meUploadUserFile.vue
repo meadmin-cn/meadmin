@@ -2,7 +2,7 @@
   <el-upload
     class="me-upload-user-file"
     :file-list="fileList"
-    v-bind="omit(attrs, 'fileList', 'httpRequest', 'onPreview', 'onSuccess','onRemove')"
+    v-bind="omit(attrs, 'fileList', 'httpRequest', 'onPreview', 'onSuccess', 'onRemove')"
     :ref="changeRef"
     :http-request="handleHttpRequest"
     @preview="handlePictureCardPreview"
@@ -21,22 +21,22 @@
   </el-upload>
 </template>
 <script lang="ts" name="MeUpload" setup>
-import { FileInfo } from '@/api/file';
-import { UploadInstance, UploadFile, UploadFiles, UploadRequestHandler, UploadRequestOptions, UploadUserFile } from 'element-plus';
-import { createImageViewer } from './service/meImageViewer';
-import { omit } from 'lodash-es';
-import { fileUpload } from '@/utils/fileUpload';
-import { isImage } from '@/utils/helper';
+import { UserFileInfo } from '@/api/userFile.js';
 import { useMeSelectUserFile } from '@/components/meSelectUserFile/meSelectUserFile.js';
 import { useLocalesI18n } from '@/locales/hooks';
 import { snakeToCamelCaseObj } from '@/utils/formatting.js';
+import { isImage } from '@/utils/helper';
+import { fileUpload } from '@/utils/userFileUpload';
+import { UploadFile, UploadFiles, UploadInstance, UploadRequestHandler, UploadRequestOptions, UploadUserFile } from 'element-plus';
+import { omit } from 'lodash-es';
+import { createImageViewer } from './service/meImageViewer';
 let { t } = useLocalesI18n();
 const attrs = snakeToCamelCaseObj(useAttrs());
 defineOptions({ inheritAttrs: false });
 const { showSelect = true } = defineProps<{
   showSelect?: boolean;
 }>();
-const fileList = defineModel<(FileInfo & { uid?: number })[]>({ default: () => [] });
+const fileList = defineModel<(UserFileInfo & { uid?: number })[]>({ default: () => [] });
 //预览图片
 const handlePictureCardPreview = (uploadFile: UploadFile) => {
   const url = (uploadFile.url ?? fileList.value.find((item) => item.uid && item.uid === uploadFile.uid)?.url) || '';
@@ -59,7 +59,7 @@ const handlePictureCardPreview = (uploadFile: UploadFile) => {
 const handleHttpRequest = (options: UploadRequestOptions) => {
   return attrs.httpRequest ? (attrs.httpRequest as UploadRequestHandler)(options) : fileUpload(options);
 };
-const handleSuccess = (response: FileInfo  & { uid?: number }, uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+const handleSuccess = (response: UserFileInfo & { uid?: number }, uploadFile: UploadFile, uploadFiles: UploadFiles) => {
   response.uid = uploadFile.uid;
   fileList.value.push(response);
   fileList.value = [...fileList.value];
@@ -68,13 +68,13 @@ const handleSuccess = (response: FileInfo  & { uid?: number }, uploadFile: Uploa
   }
 };
 const handleRemove = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
-  fileList.value = [...uploadFiles as unknown as (FileInfo & { uid?: number })[]];
+  fileList.value = [...(uploadFiles as unknown as (UserFileInfo & { uid?: number })[])];
   if (attrs.onRemove) {
     (attrs as any).onRemove(uploadFile, uploadFiles);
   }
 };
 const vm = getCurrentInstance();
-const upload = ref<UploadInstance | null>()
+const upload = ref<UploadInstance | null>();
 function changeRef(ref: Element | ComponentPublicInstance | null) {
   if (vm) {
     //暴露elUpload属性
@@ -83,18 +83,18 @@ function changeRef(ref: Element | ComponentPublicInstance | null) {
   }
 }
 //超出时
-const handleExceed = (files: Array<File|FileInfo>, uploadFiles?: UploadUserFile[]) => {
+const handleExceed = (files: Array<File | UserFileInfo>, uploadFiles?: UploadUserFile[]) => {
   if (attrs.onExceed) {
     (attrs as any).onExceed(files, uploadFiles);
   }
-  ElMessage({type:'error',message: t('最多上传{num}个文件',{num:attrs.limit})})
-}
+  ElMessage({ type: 'error', message: t('最多上传{num}个文件', { num: attrs.limit }) });
+};
 const { open } = useMeSelectUserFile();
 const openSelectFile = () => {
   open({
     onSelected(file) {
-      if(attrs.limit && fileList.value.length >= (attrs.limit as number)){
-       return handleExceed([file]);
+      if (attrs.limit && fileList.value.length >= (attrs.limit as number)) {
+        return handleExceed([file]);
       }
       fileList.value.push(file);
       fileList.value = [...fileList.value];
@@ -106,7 +106,6 @@ const openSelectFile = () => {
 };
 //声明类型
 defineExpose({} as UploadInstance);
-
 </script>
 <style lang="scss" scoped>
 .me-upload-user-file {

@@ -1,8 +1,6 @@
 # midway-vite-view
 
-midway+vite 服务端渲染和客户端渲染组件,支持Vite2、Vite3,支持多vite项目并存。
-
-当前说明对应`^2.0.0`版本，`^1.0.0`(仅支持Vite2)文档请查看 [v1](https://github.com/yuntian001/midway-vite-view/tree/v1) 分支
+meadmin 的 midway+vite 服务端渲染和客户端渲染组件,支持Vite2、Vite3,支持多vite项目并存。
 
 
 ### github

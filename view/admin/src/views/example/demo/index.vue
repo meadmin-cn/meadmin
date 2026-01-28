@@ -42,7 +42,7 @@
         layout: 'sizes, prev, pager, next, jumper, ->, total',
         change: search,
       }"
-      :onAdd="permission('example_demo_add') ? showAddOrUp : undefined"
+      :on-add="permission('example_demo_add') ? showAddOrUp : undefined"
       @refresh="search(1)"
     >
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
@@ -67,10 +67,10 @@
       <vxe-column field="updatedAdmin" :title="t('最后更新者')" :formatter="formatterObjectFn((obj) => `${obj.nickname}(${obj.username})`)"></vxe-column>
       <vxe-column v-if="permission(['example_demo_add', 'example_demo_edit', 'exampleDemo_del'])" :title="t('操作')" fixed="right" min-width="150px">
         <template #default="{ row }: { row: ExampleDemoInfo }">
-          <me-button v-if="permission('example_demo_info')" @click="showInfo(row.id)" link :title="t('详情')">
+          <me-button v-if="permission('example_demo_info')" link :title="t('详情')" @click="showInfo(row.id)">
             <mel-icon-memo />
           </me-button>
-          <me-button v-if="permission('example_demo_edit')" @click="showAddOrUp(row.id)" link :title="t('编辑')">
+          <me-button v-if="permission('example_demo_edit')" link :title="t('编辑')" @click="showAddOrUp(row.id)">
             <mel-icon-edit />
           </me-button>
           <el-popconfirm v-if="permission('example_demo_del')" :title="t('确认删除？')" placement="left" @confirm="del(row.id)">

@@ -12,7 +12,7 @@
       :print="false"
       :export-menu="[]"
       :quick-search-placeholder="t('输入角色名称快捷查询')"
-      :onAdd="permission('system_role_add') ? showAddOrUp : undefined"
+      :on-add="permission('system_role_add') ? showAddOrUp : undefined"
       show-overflow
       height="auto"
       me-class="table-role"
@@ -29,12 +29,12 @@
               <el-tag v-else size="small" type="primary">{{ t('启用') }}</el-tag>
             </div>
             <div class="role-item-btn">
-              <me-button v-if="permission('system_role_info')" @click="showInfo(row.id)" link :title="t('详情')">
+              <me-button v-if="permission('system_role_info')" link :title="t('详情')" @click="showInfo(row.id)">
                 <mel-icon-memo />
               </me-button>
               <template v-if="row.isSuper === 0">
-                <me-button v-if="permission('system_role_edit')" type="primary" link @click="showAddOrUp(row.id)" :title="t('编辑')"><mel-icon-edit /></me-button>
-                <me-button v-if="permission('system_role_del')" type="danger" link style="margin-left: 5px" @click="del(row.id)" :title="t('删除')"><mel-icon-delete /></me-button>
+                <me-button v-if="permission('system_role_edit')" type="primary" link :title="t('编辑')" @click="showAddOrUp(row.id)"><mel-icon-edit /></me-button>
+                <me-button v-if="permission('system_role_del')" type="danger" link style="margin-left: 5px" :title="t('删除')" @click="del(row.id)"><mel-icon-delete /></me-button>
               </template>
             </div>
           </div>

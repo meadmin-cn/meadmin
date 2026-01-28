@@ -35,7 +35,7 @@ declare module 'vue' {
      */
     ssContent: VNode | null;
   }
-  /* eslint-disable */
+
   interface ComponentCustomProperties {
     $permission: (key: string | string[]) => boolean;
   }

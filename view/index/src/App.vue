@@ -1,11 +1,7 @@
 <template>
   <el-config-provider :value-on-clear="() => null">
     <router-view v-slot="{ Component }">
-      <template v-if="Component">
-        <Suspense @resolve="done()">
-          <component :is="Component"></component>
-        </Suspense>
-      </template>
+      <me-component :is="Component" done-progress close-loading="layout"></me-component>
     </router-view>
     <Teleport to="body">
       <Suspense>
@@ -14,9 +10,8 @@
     </Teleport>
   </el-config-provider>
 </template>
-<script setup lang="ts">
+<script setup lang="ts" name="APP">
 import { useGlobalStore } from '@/store';
-import { done } from '@/utils/nProgress';
 const { globalComponents } = toRefs(useGlobalStore());
 </script>
 <style lang="scss" scoped>

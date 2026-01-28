@@ -191,7 +191,7 @@ export const statusToBoolean = (status?: 0 | 1 | '0' | '1') => {
   if (status === undefined) {
     return undefined;
   }
-  // eslint-disable-next-line eqeqeq
+
   return status == '1';
 };
 
@@ -249,7 +249,7 @@ export function formatterStr<T>({ cellValue }: { cellValue: T }) {
   return [undefined, null, ''].includes(cellValue as any) ? '--' : (cellValue as T extends undefined | null ? string : T);
 }
 //格式化表格时间数据
-export function formatterAt<T>({ cellValue }: { cellValue: string | null | undefined | Date }, formatStr = 'YYYY-MM-DD HH:mm:ss') {
+export function formatterAt<T extends string | null | undefined | Date>({ cellValue }: { cellValue: T }, formatStr = 'YYYY-MM-DD HH:mm:ss') {
   return cellValue ? dayjs(cellValue).format(formatStr) : formatterStr({ cellValue });
 }
 

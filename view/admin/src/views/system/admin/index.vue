@@ -57,7 +57,7 @@
         layout: 'sizes, prev, pager, next, jumper, ->, total',
         change: search,
       }"
-      :onAdd="permission('system_admin_add') ? showAddOrUp : undefined"
+      :on-add="permission('system_admin_add') ? showAddOrUp : undefined"
       @refresh="search(1)"
     >
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
@@ -80,10 +80,10 @@
       <vxe-column v-if="permission(['system_admin_info', 'system_admin_edit', 'system_admin_del'])" :title="t('操作')" fixed="right">
         <template #default="{ row }: { row: SystemAdminInfo }">
           <span>
-            <me-button @click="showInfo(row.id)" link :title="t('详情')">
+            <me-button link :title="t('详情')" @click="showInfo(row.id)">
               <mel-icon-memo />
             </me-button>
-            <me-button v-if="permission('system_admin_edit')" @click="showAddOrUp(row.id)" link :title="t('编辑')">
+            <me-button v-if="permission('system_admin_edit')" link :title="t('编辑')" @click="showAddOrUp(row.id)">
               <mel-icon-edit />
             </me-button>
             <el-popconfirm v-if="permission('system_admin_del')" :title="t('确认删除？')" placement="left" @confirm="del(row.id)">

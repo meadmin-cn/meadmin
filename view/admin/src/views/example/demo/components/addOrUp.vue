@@ -1,6 +1,6 @@
 <template>
   <me-dialog v-model="show" :title="t(id ? '编辑' : '新增')" :close-on-click-modal="false" @closed="emit('closed')">
-    <el-form v-loading="loading" ref="formEl" :model="info" :rules="rules" class="add" label-width="auto">
+    <el-form ref="formEl" v-loading="loading" :model="info" :rules="rules" class="add" label-width="auto">
       <el-form-item :label="t('手机号')" prop="mobile">
         <el-input v-model="info.mobile"></el-input>
       </el-form-item>
@@ -13,13 +13,13 @@
         <el-input v-model="info.name"></el-input>
       </el-form-item>
       <el-form-item :label="t('书籍')" prop="books">
-        <me-select-list v-model="info.books" :props="{ label: 'name', value: 'id' }" value-key="id" @search="serachExampleBook" :multiple="true"></me-select-list>
+        <me-select-list v-model="info.books" :props="{ label: 'name', value: 'id' }" value-key="id" :multiple="true" @search="serachExampleBook"></me-select-list>
       </el-form-item>
       <el-form-item :label="t('用户')" prop="user">
-        <me-select-list v-model="info.user" :props="{ label: 'username', value: 'id' }" value-key="id" @search="serachUser" clearable></me-select-list>
+        <me-select-list v-model="info.user" :props="{ label: 'username', value: 'id' }" value-key="id" clearable @search="serachUser"></me-select-list>
       </el-form-item>
       <el-form-item :label="t('头像')" prop="avatar">
-        <me-upload :limit="1" :model-value="info.avatar ? [info.avatar] : []" @update:modelValue="(files) => (info.avatar = files.length ? files[0] : null)"></me-upload>
+        <me-upload :limit="1" :model-value="info.avatar ? [info.avatar] : []" @update:model-value="(files) => (info.avatar = files.length ? files[0] : null)"></me-upload>
       </el-form-item>
       <el-form-item :label="t('附件')" prop="files">
         <me-upload v-model="info.files"></me-upload>

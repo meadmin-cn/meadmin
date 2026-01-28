@@ -1,11 +1,11 @@
 <template>
   <el-select
     v-bind="omit(attrs, 'filterable', 'loading', 'filterMethod')"
+    :ref="changeRef"
     v-model="modelValue"
     :loading="loading"
     :filterable="true"
     :filter-method="filterMethod"
-    :ref="changeRef"
     class="me-sleect-list"
   >
     <template v-for="(_, name) in $slots" #[name]="data">
@@ -53,7 +53,6 @@ const filterMethod = async (query?: string, currentPage?: number, pageSize?: num
     loading.value = false;
   }
 };
-await filterMethod();
 //页数改变
 const handleCurrentChange = (val: number) => {
   filterMethod(undefined, val, undefined);
@@ -73,6 +72,7 @@ function changeRef(ref: Element | ComponentPublicInstance | null) {
   }
 }
 defineExpose({} as SelectInstance);
+await filterMethod();
 </script>
 <style lang="scss" scoped>
 .me-sleect-list {

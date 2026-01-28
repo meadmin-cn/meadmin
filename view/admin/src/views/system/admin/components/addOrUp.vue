@@ -1,6 +1,6 @@
 <template>
   <me-dialog v-model="show" :title="t(id ? '编辑' : '新增')" :close-on-click-modal="false" @closed="emit('closed')">
-    <el-form v-loading="loading" ref="formEl" :model="info" :rules="rules" class="add" label-width="auto">
+    <el-form ref="formEl" v-loading="loading" :model="info" :rules="rules" class="add" label-width="auto">
       <el-form-item :label="t('角色组')" prop="roleIds">
         <el-tree-select v-model="info.roleIds" :data="treeAllList || []" check-strictly node-key="id" multiple filterable :props="{ label: 'roleName' }" :render-after-expand="false" />
       </el-form-item>
@@ -14,7 +14,7 @@
         <el-input v-model="info.password" clearable :placeholder="t('留空，代表不修改密码')"></el-input>
       </el-form-item>
       <el-form-item :label="t('头像')" prop="avatar">
-        <me-upload list-type="picture" :limit="1" :model-value="info.avatar ? [info.avatar] : []" @update:modelValue="(files) => (info.avatar = files.length ? files[0] : null)"></me-upload>
+        <me-upload list-type="picture" :limit="1" :model-value="info.avatar ? [info.avatar] : []" @update:model-value="(files) => (info.avatar = files.length ? files[0] : null)"></me-upload>
       </el-form-item>
       <el-form-item :label="t('邮箱')" prop="email">
         <el-input v-model="info.email" clearable></el-input>

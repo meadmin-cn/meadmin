@@ -21,7 +21,7 @@ export function normalizeToKebabOrSnakeCase(str: string, replaceStr = '-') {
  * @return  {[string]}       [return description]
  */
 export function snakeToCamelCase<T extends string>(str: T) {
-  return str.replace(/[\-_]([A-Za-z])/g, function (all, letter) {
+  return str.replace(/[-_]([A-Za-z])/g, function (all, letter) {
     return letter.toUpperCase();
   }) as CamelCase<T>;
 }

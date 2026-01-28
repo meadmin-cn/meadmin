@@ -1,6 +1,6 @@
 <template>
   <me-dialog v-model="show" :title="t('详情')" :close-on-click-modal="false" @closed="emit('closed')">
-    <el-descriptions class="info" :border="true" v-loading="loading">
+    <el-descriptions v-loading="loading" class="info" :border="true">
       <el-descriptions-item :label="t('ID')"> {{ formatterStrExec(data?.id) }} </el-descriptions-item>
       <el-descriptions-item :label="t('文件名')" :span="2"> {{ formatterStrExec(data?.name) }} </el-descriptions-item>
       <el-descriptions-item :label="t('mime类型')"> {{ formatterStrExec(data?.mimeType) }} </el-descriptions-item>

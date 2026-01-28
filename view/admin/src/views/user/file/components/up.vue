@@ -1,6 +1,6 @@
 <template>
   <me-dialog v-model="show" :title="t('编辑')" :close-on-click-modal="false" @closed="emit('closed')">
-    <el-form v-loading="loading" ref="formEl" :model="info" :rules="rules" class="add" label-width="auto">
+    <el-form ref="formEl" v-loading="loading" :model="info" :rules="rules" class="add" label-width="auto">
       <el-form-item :label="t('文件名')" prop="name">
         <el-input v-model="info.name"></el-input>
       </el-form-item>

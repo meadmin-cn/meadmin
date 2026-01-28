@@ -1,6 +1,7 @@
 <template>
   <me-dialog v-model="show" class="me-select-file-da0344ese" :title="t('选择文件')" :close-on-click-modal="false" @closed="emit('closed')">
     <me-vxe-table
+      v-model:quick-search="params.name"
       :loading="loading"
       :data="data?.list"
       :pagination-options="{
@@ -12,10 +13,9 @@
       }"
       align="center"
       border
-      v-model:quick-search="params.name"
+      :on-add="undefined"
       @refresh="search(1)"
       @quick-search="search(1)"
-      :onAdd="undefined"
     >
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="name" :title="t('文件名')" :formatter="formatterStr"></vxe-column>
@@ -33,7 +33,7 @@
             preview-teleported
             fit="scale-down"
           />
-          <a class="el-link el-link--primary" v-else :href="row.url" target="_blank" :title="t('点击下载')">
+          <a v-else class="el-link el-link--primary" :href="row.url" target="_blank" :title="t('点击下载')">
             <mel-icon-download size="20px"></mel-icon-download>
           </a>
         </template>

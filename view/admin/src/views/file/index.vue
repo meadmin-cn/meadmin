@@ -46,7 +46,7 @@
       }"
       align="center"
       border
-      :onAdd="permission('file_add') ? showAdd : undefined"
+      :on-add="permission('file_add') ? showAdd : undefined"
       @refresh="search(1)"
     >
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
@@ -64,12 +64,12 @@
         <template #default="{ row }: { row: FileInfo }"> {{ row.createdAdmin.nickname }}({{ row.createdAdmin.username }}) </template>
       </vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
-      <vxe-column :title="t('操作')" v-if="permission(['file_info', 'file_edit', 'file_del'])" fixed="right" min-width="150px">
+      <vxe-column v-if="permission(['file_info', 'file_edit', 'file_del'])" :title="t('操作')" fixed="right" min-width="150px">
         <template #default="{ row }: { row: FileInfo }">
-          <me-button v-if="permission('file_info')" @click="showInfo(row.id)" link :title="t('详情')">
+          <me-button v-if="permission('file_info')" link :title="t('详情')" @click="showInfo(row.id)">
             <mel-icon-memo />
           </me-button>
-          <el-button v-if="permission('file_edit')" @click="showUp(row.id)" link :title="t('编辑')">
+          <el-button v-if="permission('file_edit')" link :title="t('编辑')" @click="showUp(row.id)">
             <mel-icon-edit />
           </el-button>
           <el-popconfirm v-if="permission('file_del')" :title="t('确认删除？')" placement="left" @confirm="del(row.id)">

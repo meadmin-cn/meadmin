@@ -48,7 +48,7 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
       ],
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     },
-    /* eslint-disable */
+
     define: {
       __SSR__: `true`,
       __DEV__: configEnv.mode === 'development' ? `true` : `false`,
@@ -76,7 +76,7 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
         }
       },
     },
-    /* eslint-disable */
+
     build: {
       rollupOptions: {
         output: {

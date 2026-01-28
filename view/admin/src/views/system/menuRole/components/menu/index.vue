@@ -11,7 +11,7 @@
       :row-config="{ keyField: 'id', useKey: true }"
       :column-config="{ useKey: true }"
       :quick-search-placeholder="t('输入菜单名称快捷查询')"
-      :onAdd="permission('system_menu') ? showAddOrUp : undefined"
+      :on-add="permission('system_menu') ? showAddOrUp : undefined"
       align="center"
       border
       me-class="table-menu"
@@ -29,12 +29,12 @@
       <vxe-column field="isLink" :title="t('外链')" :formatter="formatterDict"></vxe-column>
       <vxe-column field="component" :title="t('组件路径')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="orderNum" :title="t('排序(降序)')" :formatter="formatterStr"></vxe-column>
-      <vxe-column title="操作" v-if="permission(['system_menu_info', 'system_menu_edit', 'system_menu_del'])" fixed="right">
+      <vxe-column v-if="permission(['system_menu_info', 'system_menu_edit', 'system_menu_del'])" title="操作" fixed="right">
         <template #default="{ row }">
-          <me-button v-if="permission('system_menu_info')" @click="showInfo(row.id)" link :title="t('详情')">
+          <me-button v-if="permission('system_menu_info')" link :title="t('详情')" @click="showInfo(row.id)">
             <mel-icon-memo />
           </me-button>
-          <me-button v-if="permission('system_menu_edit')" @click="showAddOrUp(row.id)" link :title="t('编辑')"><mel-icon-edit /></me-button>
+          <me-button v-if="permission('system_menu_edit')" link :title="t('编辑')" @click="showAddOrUp(row.id)"><mel-icon-edit /></me-button>
           <el-popconfirm v-if="permission('system_menu_del')" :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
             <template #reference>
               <me-button :key="row.id" :loading="delLoading && delId === row.id" :title="t('删除')" link type="danger">

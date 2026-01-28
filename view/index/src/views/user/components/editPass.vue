@@ -2,13 +2,13 @@
   <div class="edit-pass">
     <el-form ref="formRef" size="large" label-width="auto" :rules="rules" :model="editPassParams" @keyup.enter="submit">
       <el-form-item prop="orgPassword" label="原始密码">
-        <el-input type="password" v-model="editPassParams.orgPassword" placeholder="原始密码" clearable show-password />
+        <el-input v-model="editPassParams.orgPassword" type="password" placeholder="原始密码" clearable show-password />
       </el-form-item>
       <el-form-item prop="password" label="新密码">
-        <el-input type="password" v-model="editPassParams.password" placeholder="新密码" clearable show-password />
+        <el-input v-model="editPassParams.password" type="password" placeholder="新密码" clearable show-password />
       </el-form-item>
       <el-form-item prop="reqPassword" label="确认密码">
-        <el-input type="password" v-model="editPassParams.reqPassword" placeholder="请重复输入新密码" clearable show-password />
+        <el-input v-model="editPassParams.reqPassword" type="password" placeholder="请重复输入新密码" clearable show-password />
       </el-form-item>
       <me-button @click="resetForm(formRef)">重置</me-button>
       <me-button type="primary" class="button submit" @click="submit">确定</me-button>

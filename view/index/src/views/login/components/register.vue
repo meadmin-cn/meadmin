@@ -36,7 +36,7 @@
 <script setup lang="ts" name="Register">
 import { RegisterParams, registerApi } from '@/api/login';
 import { FormInstance } from 'element-plus';
-let registerParams = reactive(new RegisterParams());
+const registerParams = reactive(new RegisterParams());
 const rules = {
   nickanem: [
     {

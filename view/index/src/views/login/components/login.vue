@@ -35,7 +35,7 @@
 import { LoginParams, loginCaptchaApi } from '@/api/login';
 import { useUserStore } from '@/store';
 import { FormInstance } from 'element-plus';
-let loginParams = reactive(new LoginParams());
+const loginParams = reactive(new LoginParams());
 //验证码
 const { data: captchaObj, runAsync: getCaptchRun } = loginCaptchaApi();
 const getCaptch = async () => {

@@ -6,7 +6,7 @@
         <template v-else> 会员中心<mel-icon-arrow-down class="icon"></mel-icon-arrow-down> </template>
       </span>
       <template #dropdown>
-        <el-dropdown-menu slot="dropdown">
+        <el-dropdown-menu>
           <template v-if="userStore.user.id">
             <el-dropdown-item>
               <router-link :to="PageEnum.USER">个人中心</router-link>

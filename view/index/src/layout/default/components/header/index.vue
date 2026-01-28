@@ -20,7 +20,7 @@ import MenuItem from './components/menuItem.vue';
 import User from './components/user.vue';
 const route = useRoute();
 const routeStore = useRouteStore();
-let activeMenu = ref('');
+const activeMenu = ref('');
 watch(
   route,
   (route) => {

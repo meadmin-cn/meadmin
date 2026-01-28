@@ -1,6 +1,7 @@
 <template>
   <me-dialog v-model="show" class="me-select-file-da0344ese" :title="t('选择文件')" :close-on-click-modal="false" @closed="emit('closed')">
     <me-vxe-table
+      v-model:quick-search="params.filename"
       :loading="loading"
       :data="data?.list"
       :pagination-options="{
@@ -12,7 +13,6 @@
       }"
       align="center"
       border
-      v-model:quick-search="params.filename"
       @refresh="search(1)"
       @quick-search="search(1)"
       @add="() => {}"
@@ -70,7 +70,7 @@ const emit = defineEmits<{
   closed: [];
   selected: [FileInfo];
 }>();
-let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`@/views/file/lang/${locale}.json`), 'file']);
+const { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`@/views/file/lang/${locale}.json`), 'file']);
 const params = reactive(new FileListParam());
 const { loading, data, runAsync } = fileMyListApi();
 const search = (page = params.pageSize, pageSize = params.pageSize) => runAsync(Object.assign(params, { page, pageSize }));

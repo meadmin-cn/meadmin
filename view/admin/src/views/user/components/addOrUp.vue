@@ -1,6 +1,6 @@
 <template>
   <me-dialog v-model="show" :title="t(id ? '编辑' : '新增')" :close-on-click-modal="false" @closed="emit('closed')">
-    <el-form v-loading="loading" ref="formEl" :model="info" :rules="rules" class="add" label-width="auto">
+    <el-form ref="formEl" v-loading="loading" :model="info" :rules="rules" class="add" label-width="auto">
       <el-form-item :label="t('用户名')" prop="username">
         <el-input v-model="info.username"></el-input>
       </el-form-item>
@@ -15,7 +15,7 @@
           list-type="picture"
           :limit="1"
           :model-value="info.avatar ? [info.avatar] : []"
-          @update:modelValue="(files) => (info.avatar = files.length ? files[0] : null)"
+          @update:model-value="(files) => (info.avatar = files.length ? files[0] : null)"
         ></me-upload-user-file>
       </el-form-item>
       <el-form-item :label="t('邮箱')" prop="email">

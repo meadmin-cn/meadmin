@@ -55,7 +55,7 @@
         layout: 'sizes, prev, pager, next, jumper, ->, total',
         change: search,
       }"
-      :onAdd="permission('user_file_add') ? showAdd : undefined"
+      :on-add="permission('user_file_add') ? showAdd : undefined"
       @refresh="search(1)"
     >
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
@@ -79,10 +79,10 @@
       <vxe-column field="updatedUser" :title="t('最后更新者(用户)')" :formatter="formatterObjectFn((obj) => `${obj.nickname}(${obj.username})`)"></vxe-column>
       <vxe-column v-if="permission(['user_file_add', 'user_file_edit', 'userFile_del'])" :title="t('操作')" fixed="right" min-width="150px">
         <template #default="{ row }: { row: UserFileInfo }">
-          <me-button v-if="permission('user_file_info')" @click="showInfo(row.id)" link :title="t('详情')">
+          <me-button v-if="permission('user_file_info')" link :title="t('详情')" @click="showInfo(row.id)">
             <mel-icon-memo />
           </me-button>
-          <me-button v-if="permission('user_file_edit')" @click="showUp(row.id)" link :title="t('编辑')">
+          <me-button v-if="permission('user_file_edit')" link :title="t('编辑')" @click="showUp(row.id)">
             <mel-icon-edit />
           </me-button>
           <el-popconfirm v-if="permission('user_file_del')" :title="t('确认删除？')" placement="left" @confirm="del(row.id)">

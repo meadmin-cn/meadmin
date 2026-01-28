@@ -192,7 +192,7 @@ export const statusToBoolean = (status?: 0 | 1 | '0' | '1') => {
   if (status === undefined) {
     return undefined;
   }
-  // eslint-disable-next-line eqeqeq
+
   return status == '1';
 };
 

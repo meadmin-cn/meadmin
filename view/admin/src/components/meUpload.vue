@@ -1,9 +1,9 @@
 <template>
   <el-upload
-    class="me-upload"
-    :file-list="fileList"
     v-bind="omit(attrs, 'fileList', 'httpRequest', 'onPreview', 'onSuccess', 'onRemove')"
     :ref="changeRef"
+    class="me-upload"
+    :file-list="fileList"
     :http-request="handleHttpRequest"
     @preview="handlePictureCardPreview"
     @success="handleSuccess"

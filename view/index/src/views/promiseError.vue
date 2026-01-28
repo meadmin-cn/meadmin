@@ -12,7 +12,7 @@
 import { useUserStore } from '@/store';
 const userStore = useUserStore();
 const router = useRouter();
-const props = defineProps<{ msg: string }>();
+defineProps<{ msg: string }>();
 </script>
 <style lang="scss" scoped>
 .promise-error {

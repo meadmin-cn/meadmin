@@ -63,7 +63,7 @@
         layout: 'sizes, prev, pager, next, jumper, ->, total',
         change: search,
       }"
-      :onAdd="permission('user_add') ? showAddOrUp : undefined"
+      :on-add="permission('user_add') ? showAddOrUp : undefined"
       @refresh="search(1)"
     >
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
@@ -86,10 +86,10 @@
       <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column
       ><vxe-column v-if="permission(['user_add', 'user_edit', 'user_del'])" :title="t('操作')" fixed="right" min-width="150px">
         <template #default="{ row }: { row: UserInfo }">
-          <me-button v-if="permission('user_info')" @click="showInfo(row.id)" link :title="t('详情')">
+          <me-button v-if="permission('user_info')" link :title="t('详情')" @click="showInfo(row.id)">
             <mel-icon-memo />
           </me-button>
-          <me-button v-if="permission('user_edit')" @click="showAddOrUp(row.id)" link :title="t('编辑')">
+          <me-button v-if="permission('user_edit')" link :title="t('编辑')" @click="showAddOrUp(row.id)">
             <mel-icon-edit />
           </me-button>
           <el-popconfirm v-if="permission('user_del')" :title="t('确认删除？')" placement="left" @confirm="del(row.id)">

@@ -3,6 +3,7 @@
   <div class="me-files-view">
     <el-image
       v-for="(item, index) in fileList?.imageArr ?? []"
+      :key="index"
       class="view-img"
       :src="item"
       :zoom-rate="1.2"
@@ -15,7 +16,9 @@
       preview-teleported
       fit="scale-down"
     />
-    <el-link class="view-link" v-for="(item, index) in fileList?.fileArr ?? []" type="primary" :href="item.url" target="_blank" :title="$t('点击下载')">{{ item.name ?? item.url }}</el-link>
+    <el-link v-for="(item, index) in fileList?.fileArr ?? []" :key="index" class="view-link" type="primary" :href="item.url" target="_blank" :title="$t('点击下载')">{{
+      item.name ?? item.url
+    }}</el-link>
   </div>
 </template>
 

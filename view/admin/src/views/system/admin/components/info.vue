@@ -1,6 +1,6 @@
 <template>
   <me-dialog v-model="show" :title="t('详情')" :close-on-click-modal="false" @closed="emit('closed')">
-    <el-descriptions class="info" :border="true" v-loading="loading">
+    <el-descriptions v-loading="loading" class="info" :border="true">
       <el-descriptions-item :label="t('ID')">{{ formatterStrExec(data?.id) }}</el-descriptions-item>
       <el-descriptions-item :label="t('用户名')">{{ formatterStrExec(data?.username) }}</el-descriptions-item>
       <el-descriptions-item :label="t('昵称')">{{ formatterStrExec(data?.nickname) }}</el-descriptions-item>
@@ -26,7 +26,7 @@
         {{ formatterDictExec(dict, 'status', data?.status) }}
       </el-descriptions-item>
       <el-descriptions-item :label="t('具有的角色')">
-        <el-tag v-for="item in data?.roles || []">{{ item.roleName }}</el-tag>
+        <el-tag v-for="item in data?.roles || []" :key="item.id">{{ item.roleName }}</el-tag>
       </el-descriptions-item>
       <el-descriptions-item :label="t('创建时间')">
         {{ formatterAtExec(data?.createdAt) }}

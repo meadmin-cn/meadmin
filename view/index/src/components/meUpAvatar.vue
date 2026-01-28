@@ -1,10 +1,10 @@
 <template>
   <el-upload
+    v-model:file-list="fileList"
     list-type="picture-card"
     accept="image/*"
     class="me-up-avater"
     :class="{ upload: process > 0 }"
-    v-model:file-list="fileList"
     :limit="1"
     :http-request="handleHttpRequest"
     :before-upload="beforeAvatarUpload"
@@ -27,7 +27,7 @@
 <script setup lang="ts" name="MeUpAvatar">
 import { FileInfo } from '@/api/file';
 import { fileUpload } from '@/utils/fileUpload';
-import { UploadFile, UploadFiles, UploadProgressEvent, UploadProps, UploadRequestOptions } from 'element-plus';
+import { UploadFile, UploadProgressEvent, UploadProps, UploadRequestOptions } from 'element-plus';
 import { createImageViewer } from './service/meImageViewer';
 const file = defineModel<(FileInfo & { uid?: number }) | null>(undefined);
 const fileList = reactive([] as Array<FileInfo & { uid?: number }>);
@@ -51,7 +51,7 @@ const handlePictureCardPreview = () => {
 const handleHttpRequest = (options: UploadRequestOptions) => {
   return fileUpload(options);
 };
-const handleSuccess = (response: FileInfo & { uid?: number }, uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+const handleSuccess = (response: FileInfo & { uid?: number }, uploadFile: UploadFile) => {
   response.uid = uploadFile.uid;
   file.value = response;
 };

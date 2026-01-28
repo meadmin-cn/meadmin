@@ -1,6 +1,6 @@
 <template>
   <me-dialog v-model="show" :title="t(id ? '编辑' : '新增')" :close-on-click-modal="false" @closed="$emit('closed')">
-    <el-form v-loading="loading" ref="formEl" :model="info" :rules="rules" class="add" label-width="auto">
+    <el-form ref="formEl" v-loading="loading" :model="info" :rules="rules" class="add" label-width="auto">
       <el-form-item :label="t('父级')" prop="parentId">
         <el-tree-select v-model="info.parentId" :data="treeAllList || []" check-strictly node-key="id" :props="{ label: 'title' }" :render-after-expand="false" clearable filterable />
       </el-form-item>

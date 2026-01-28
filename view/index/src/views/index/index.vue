@@ -14,11 +14,11 @@
       </el-carousel>
     </div>
     <div class="body">
-      <div class="item" v-for="item in info.info">
+      <div v-for="item in info.info" :key="item.title" class="item">
         <div class="title">{{ item.title }}</div>
         <div class="desc">{{ item.desc }}</div>
         <div class="content">
-          <div class="card" v-for="value in item.list">
+          <div v-for="value in item.list" :key="value.title" class="card">
             <div class="card-title">{{ value.title }}</div>
             <div class="card-content">{{ value.content }}</div>
           </div>

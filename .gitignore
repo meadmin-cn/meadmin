@@ -1,4 +1,4 @@
-logs/
+logs/*
 npm-debug.log
 yarn-error.log
 node_modules/
@@ -20,3 +20,4 @@ uploadFile/**
 !uploadFile/admin/
 !uploadFile/admin/.gitkeep
 .env.production
+.eslintcache

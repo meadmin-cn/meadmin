@@ -23,5 +23,6 @@
     }
   },
   "vue.suggest.componentNameCasing": "alwaysKebabCase",
-  "vue.suggest.propNameCasing": "alwaysKebabCase"
+  "vue.suggest.propNameCasing": "alwaysKebabCase",
+  "editor.wordWrap": "on"
 }

@@ -24,6 +24,7 @@
     "@sequelize/core": "7.0.0-alpha.47",
     "@sequelize/postgres": "7.0.0-alpha.47",
     "@sequelize/utils": "7.0.0-alpha.47",
+    "create-meadmin": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/packages/create-meadmin",
     "dayjs": "^1.11.19",
     "dotenv": "^16.6.1",
     "lodash-es": "^4.17.21",
@@ -41,16 +42,16 @@
     "@types/node": "^20.19.25",
     "c8": "^8.0.1",
     "cross-env": "^7.0.3",
+    "husky": "^8.0.3",
     "lerna": "^8.2.4",
+    "lint-staged": "^13.3.0",
     "mocha": "^10.8.2",
     "mwts": "^1.3.0",
     "mwtsc": "^1.15.2",
     "prettier": "2.8.8",
     "prettier-plugin-organize-imports": "^4.3.0",
     "release-it": "^17.11.0",
-    "typescript": "^5.9.3",
-    "husky": "^8.0.3",
-    "lint-staged": "^13.3.0"
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=20.13.1"
@@ -78,7 +79,8 @@
   "pnpm": {
     "overrides": {
       "midway-vite-view": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/midway-vite-view",
-      "core": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/core"
+      "core": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/core",
+      "create-meadmin": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/packages/create-meadmin"
     }
   },
   "lint-staged": {

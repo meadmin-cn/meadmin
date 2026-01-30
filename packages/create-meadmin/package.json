@@ -4,14 +4,31 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "license": "MIT",
+  "author": "Yuntian001",
+  "bin": {
+    "create-meadmin": "bin/index.js",
+    "cva": "bin/index.js",
+    "create-meadmin-cli": "bin/cli.js"
+  },
+  "files": [
+    "index.js",
+    "template",
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "typecheck": "tsc",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
   "packageManager": "pnpm@10.7.0",
   "dependencies": {
     "commander": "^14.0.0"
+  },
+  "devDependencies": {
+    "prettier": "2.8.8",
+    "tsdown": "^0.20.1"
   }
 }

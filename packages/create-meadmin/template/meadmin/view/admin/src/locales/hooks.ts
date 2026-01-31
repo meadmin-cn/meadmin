@@ -1,0 +1,50 @@
+/*
+ * @Author: yuntian001 479820787@qq.com
+ * @Date: 2022-08-07 00:35:28
+ * @LastEditors: yuntian001 479820787@qq.com
+ * @LastEditTime: 2022-08-07 08:11:32
+ * @FilePath: \meadmin-template\src\locales\hooks.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+import { event, mitter } from '@/event';
+import { useI18n, UseI18nOptions } from 'vue-i18n';
+import { MessageImport, setLocaleMessage } from './helper';
+
+/**
+ * useI18n 会自动加载locale语言包（语言包加载为异步执行，如果语言包被加载过则执行时效和同步一致）
+ * @param options  useScope的默认值改为了 local
+ * @param messageImport
+ * @returns
+ */
+export const useLocalesI18n = <Options extends UseI18nOptions = UseI18nOptions>(options?: Options, messageImport?: MessageImport) => {
+  const res = useI18n<Options>(Object.assign({ useScope: 'local' }, options));
+  let loadRes = undefined; //加载语言包返回值，如需要等待加载完语言包后再渲染组件 可以在组件
+  if (messageImport) {
+    loadRes = setLocaleMessage(res, res.locale.value!, messageImport);
+    mitter.on(
+      event.BEFORE_LOCAL_CHANGE,
+      (params) => {
+        setLocaleMessage(res, params.locale, messageImport);
+      },
+      true,
+    );
+  }
+  return { ...res, loadRes: loadRes };
+};
+
+/**
+ * useI18n 会自动加载locale语言包（语言包加载为异步执行，如果语言包被加载过则执行时效和同步一致）
+ * @param options
+ * @param messageImport
+ * @returns
+ */
+export const asyncUseLocalesI18n = async <Options extends UseI18nOptions = UseI18nOptions>(options?: Options, messageImport?: MessageImport) => {
+  const res = useI18n<Options>(Object.assign({ useScope: 'local' }, options));
+  if (messageImport) {
+    await setLocaleMessage(res, res.locale.value!, messageImport);
+    mitter.on(event.BEFORE_LOCAL_CHANGE, (params) => {
+      setLocaleMessage(res, params.locale, messageImport);
+    });
+  }
+  return res;
+};

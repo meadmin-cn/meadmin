@@ -1,0 +1,11 @@
+{
+  "ID": "Id",
+  "文件名": "name",
+  "路径": "Path",
+  "mime类型": "Mime type",
+  "文件大小": "Size",
+  "存储引擎": "Storage",
+  "创建者": "Created admin",
+  "创建时间": "Created time",
+  "最后更新时间": "Updated time"
+}

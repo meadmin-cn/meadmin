@@ -4,7 +4,7 @@ export default defineConfig({
   entry: ['src/index.ts', 'src/cli.ts'],
   dts: true,
   target: 'node20',
-  minify: true,
+  minify: false,
   inlineOnly: false as const,
   fixedExtension: false,
 });

@@ -1,0 +1,20 @@
+{
+  "父级": "Parent",
+  "ID": "Id",
+  "菜单名称": "Title",
+  "类型": "Menu type",
+  "状态": "Status",
+  "权限": "Rule",
+  "排序(降序)": "Order num",
+  "路径": "Path",
+  "外链": "Is link",
+  "组件路径(相对于views文件夹)": "Component",
+  "隐藏": "Hide menu",
+  "缓存": "Cache",
+  "图标": "Icon",
+  "固定tag": "Affix",
+  "恒定展示(只有一个子元素时不隐藏)": "Always show",
+  "面包屑": "Breadcrumb",
+  "创建时间": "Created time",
+  "最后更新时间": "Updated time"
+}

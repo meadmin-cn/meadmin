@@ -1,10 +1,10 @@
 //创建meadmin模板
 import { Command } from 'commander';
-import { mkdirSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { mkdirSync, readFileSync, rmSync } from 'node:fs';
+import { resolve } from 'node:path';
 import * as prettier from 'prettier';
-import { recursionWriteFileSync } from 'src/utils/file.js';
-
+import { copyFile, copyPath, recursionWriteFileSync } from '../utils/file.js';
+let fromPath = '';
 // 需要复制的文件，key为文件路径，文件夹以/结尾，{
 //   ignore:忽略文件支持正则或字符串数组
 //   fileSetFunction,//单个文件处理函数，key为文件相对于文件夹路径，值为对应函数，content=>str
@@ -28,7 +28,7 @@ const copyFiles = {
     ignore: ['node_modules', '.eslintcache'], //忽略的值
   },
   '.editorconfig': {},
-  '.env': (content: string) => {},
+  '.env': {},
   '.eslintrc.json': {},
   '.gitignore': {},
   '.mocharc.json': {},
@@ -37,14 +37,27 @@ const copyFiles = {
   '.prettierrc.cjs': {},
   'bootstrap.js': {},
   'nx.json': {},
-  'package.json': (content: string) => {
+  'package.json': async (content: string) => {
     const jsonObj = JSON.parse(content);
     delete jsonObj.devDependencies['release-it'];
     delete jsonObj.devDependencies['@release-it/conventional-changelog'];
-    return prettier(content);
+    Object.keys(jsonObj.devDependencies).forEach((key) => {
+      if (jsonObj.devDependencies[key] === 'workspace:^') {
+        const { version } = JSON.parse(readFileSync(resolve(fromPath, 'node_modules/', key + '/package.json')).toString());
+        jsonObj.devDependencies[key] = '^' + version;
+      }
+    });
+    Object.keys(jsonObj.dependencies).forEach((key) => {
+      if (jsonObj.dependencies[key] === 'workspace:^') {
+        const { version } = JSON.parse(readFileSync(resolve(fromPath, 'node_modules/', key + '/package.json')).toString());
+        jsonObj.dependencies[key] = '^' + version;
+      }
+    });
+    return await prettier.format(JSON.stringify(jsonObj), { parser: 'json' });
   },
   'README.md': {},
   'tsconfig.json': {},
+  'meadmin.sql': {},
 };
 //需要创建的文件/文件夹
 const makeFiles = {
@@ -55,56 +68,15 @@ const makeFiles = {
   'uploadFile/index/.gitkeep': {},
 };
 
-const copyFile = (fromFile: string, toFile: string, fileSetFunction?: (content: string) => string) => {
-  let content = readFileSync(fromFile, 'utf-8');
-  if (fileSetFunction) {
-    content = fileSetFunction(content);
-  }
-  return recursionWriteFileSync(toFile, content);
-};
-
-const copyPath = (pathFile, toPath, relativePath = '', ignoreFile = [] as Array<string | RegExp>, fileSetFunctions?: Record<string, (content: string) => string>) => {
-  const fileList = readdirSync(pathFile);
-  fileList.forEach((file) => {
-    const relativeFilePath = join(relativePath, file).replaceAll('\\', '/');
-    ignoreFile.forEach((key) => {
-      if (key instanceof RegExp) {
-        if (key.test(relativeFilePath)) {
-          return;
-        }
-      } else if (key === relativeFilePath) {
-        return;
-      }
-    });
-    const path = resolve(pathFile, file);
-    const toSetPath = resolve(toPath, file);
-    const stats = statSync(path);
-    if (stats.isDirectory()) {
-      mkdirSync(toSetPath, { recursive: true });
-      //文件夹递归处理
-      copyPath(path, toSetPath, relativeFilePath, ignoreFile, fileSetFunctions);
-    } else {
-      if (fileSetFunctions) {
-        const files = Object.keys(fileSetFunctions);
-        for (let i = 0; i < files.length; i++) {
-          if (files[i] === relativeFilePath) {
-            return copyFile(path, toSetPath, fileSetFunctions[files[i]]);
-          }
-        }
-      }
-      copyFile(path, toSetPath);
-    }
-  });
-};
-
 export const setMeadminTemplate = (program: Command) => {
   program
     .command('setMeadminTemplate')
     .description('生成meadmin模板')
-    .argument('<file>', '文件夹名称', 'meadmin')
+    .argument('<file>', '文件夹名称')
     .action(async (file: string) => {
-      const toPath = resolve(import.meta.dirname, '../', file + '/');
-      const fromPath = resolve(process.cwd());
+      const toPath = resolve(import.meta.dirname, '../template/', file + '/');
+      rmSync(toPath, { force: true, recursive: true });
+      fromPath = resolve(process.cwd());
       //创建文件夹或文件
       Object.keys(makeFiles).forEach((key) => {
         const path = resolve(toPath, key);
@@ -114,10 +86,14 @@ export const setMeadminTemplate = (program: Command) => {
           recursionWriteFileSync(path, '');
         }
       });
-      Object.keys(copyFiles).forEach((key) => {
-        if (key.endsWith('/')) {
-          copyPath(resolve(fromPath, key), resolve(toPath, key), copyFiles[key].ignoreFile || [], copyFiles[key].fileSetFunction);
-        }
-      });
+      await Promise.all(
+        Object.keys(copyFiles).map(async (key) => {
+          if (key.endsWith('/')) {
+            await copyPath(resolve(fromPath, key), resolve(toPath, key), '', copyFiles[key].ignore || [], copyFiles[key].fileSetFunction, true);
+          } else {
+            await copyFile(resolve(fromPath, key), resolve(toPath, key), typeof copyFiles[key] === 'function' ? copyFiles[key] : undefined, true);
+          }
+        }),
+      );
     });
 };

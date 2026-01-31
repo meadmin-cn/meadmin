@@ -12,7 +12,7 @@
     "create-meadmin-cli": "bin/cli.js"
   },
   "files": [
-    "index.js",
+    "bin",
     "template",
     "dist"
   ],
@@ -25,10 +25,13 @@
   "keywords": [],
   "packageManager": "pnpm@10.7.0",
   "dependencies": {
-    "commander": "^14.0.0"
+    "@sequelize/core": "7.0.0-alpha.47",
+    "@sequelize/postgres": "7.0.0-alpha.47",
+    "commander": "^14.0.0",
+    "cross-spawn": "^7.0.6",
+    "prettier": "2.8.8"
   },
   "devDependencies": {
-    "prettier": "2.8.8",
     "tsdown": "^0.20.1"
   }
 }

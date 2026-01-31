@@ -1,0 +1,12 @@
+{
+  "{label} 长度必须在 {min} 到 {max} 之间": "The {label} length should be {min} to {max}",
+  "{label} 长度必须为 {len}": "The {label} length should be {0}",
+  "{label} 长度必须小于等于 {max}": "The {label} length must be less than or equal to {max}",
+  "{label} 长度必须大于等于 {min}": "The {label} length must be greater than or equal to {min}",
+  "{label} 必须在 {min} 到 {max} 之间": "The {label} must be between {min} and {max}",
+  "{label} 必须小于等于 {max}": "The {label} must be less than or equal to {max}",
+  "{label} 必须大于等于 {min}": "The {label} must be greater than or equal to {min}",
+  "{label} 必须是正确的邮箱格式": "The {label} must be in the correct email format",
+  "{label} 必须是正确的手机号": "The {label} must be the correct mobile phone number",
+  "{label} 必须是正确的链接格式": "The {label} must be in the correct link format"
+}

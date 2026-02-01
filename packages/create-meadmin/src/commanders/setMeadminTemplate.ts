@@ -12,7 +12,7 @@ let fromPath = '';
 // key文件路径为单个文件时，允许值为文件处理函数：content=>str
 const copyFiles = {
   '.husky/': {
-    ignore: ['_'], //忽略的值
+    ignore: ['_', 'commit-msg'], //忽略的值
     fileSetFunction: {
       //单个文件处理函数，文件内容，content=>str
     },
@@ -54,6 +54,13 @@ const copyFiles = {
       }
     });
     return await prettier.format(JSON.stringify(jsonObj), { parser: 'json' });
+  },
+  'pnpm-workspace.yaml'(content) {
+    return content.replace(
+      `
+  - packages/*`,
+      '',
+    );
   },
   'README.md': {},
   'tsconfig.json': {},

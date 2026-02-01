@@ -1,0 +1,4 @@
+autoInstallPeers: false #当值为 fasle 时，不会自动安装任何缺少的非可选对等依赖(Peer Dependency )如果一个依赖项需要 react@^16.0.0，而另一个需要 react@^17.0.0，则会产生冲突，自动安装将不会进行。。
+dedupePeerDependents: true
+packages:
+  - view/* #pnpm 安装包时管理view前端包

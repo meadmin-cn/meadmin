@@ -29,6 +29,7 @@
     "@sequelize/postgres": "7.0.0-alpha.47",
     "commander": "^14.0.0",
     "cross-spawn": "^7.0.6",
+    "dotenv": "^16.6.1",
     "prettier": "2.8.8"
   },
   "devDependencies": {

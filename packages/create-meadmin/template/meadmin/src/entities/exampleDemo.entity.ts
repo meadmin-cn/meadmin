@@ -45,6 +45,7 @@ export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
   //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/
   @BelongsToMany(() => ExampleBook, {
     through: 'example_demo_books', //中间表名称 或者 对应的Model，
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
     // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: 'demos',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;
   })
   @ApiPropertyRule({
@@ -61,19 +62,26 @@ export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
   @Attribute({ type: DataTypes.STRING(20), comment: '关联前台用户id' })
   userId: string;
   @ApiPropertyRule({ description: '用户', type: () => User, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })
-  @BelongsTo(() => User, /* 外键名称 */ 'userId')
+  @BelongsTo(() => User, {
+    foreignKey: 'userId', //外键名称
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
   user?: NonAttribute<User>;
 
   //反向BelongsTo关联从属，File类型创建单文件
   @Attribute({ type: DataTypes.STRING(20), comment: '头像附件id' })
   avatarFileId: string;
   @ApiPropertyRule({ description: '头像', type: () => File, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })
-  @BelongsTo(() => File, /* 外键名称 */ 'avatarFileId')
+  @BelongsTo(() => File, {
+    foreignKey: 'avatarFileId', //外键名称
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
   avatar?: NonAttribute<File>;
 
   //BelongsTo多对多关联从属，File类型创建多文件选择
   @BelongsToMany(() => File, {
     through: 'example_demo_files', //中间表名称 或者 对应的Model，
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
   })
   @ApiPropertyRule({
     description: '附件',

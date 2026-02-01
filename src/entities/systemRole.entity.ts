@@ -57,6 +57,7 @@ export class SystemRole extends AdminTreeModel<SystemRole> {
     inverse: {
       as: 'roles',
     },
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
   })
   @ApiPropertyRule({
     description: '关联管理员',
@@ -73,6 +74,7 @@ export class SystemRole extends AdminTreeModel<SystemRole> {
       //对向模型的反向关联declare字段
       as: 'roles',
     },
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
   })
   @ApiPropertyRule({
     description: '具有权限菜单',

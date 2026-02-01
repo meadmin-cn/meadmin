@@ -52,6 +52,7 @@ export class UserFile extends IndexBaseModel<UserFile> {
   @HasMany(() => User, {
     foreignKey: 'avatarFileId',
     inverse: { as: 'avatar' },
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
   })
   declare avatarUsers?: NonAttribute<User[]>;
 

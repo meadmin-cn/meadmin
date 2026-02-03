@@ -1,5 +1,6 @@
-import { ID_INJECTION_KEY, ZINDEX_INJECTION_KEY } from 'element-plus';
+// organize-imports-ignore
 import { App as AppType, createApp as createClientApp, createSSRApp } from 'vue';
+import { ID_INJECTION_KEY, ZINDEX_INJECTION_KEY } from 'element-plus';
 import { bootscrapt } from './app';
 import App from './App.vue';
 import { router } from './router';

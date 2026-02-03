@@ -27,14 +27,14 @@ try {
   const DATABASE_HOST = envd ? process.env.DATABASE_HOST : await rl.question('请输入数据库连接host地址\n');
   const DATABASE_PORT = envd ? process.env.DATABASE_PORT : await rl.question('请输入数据库连接端口\n');
   const DATABASE_DB = envd ? process.env.DATABASE_DB : await rl.question('请输入数据库名称\n');
-  const DATABASE_SCHEMA = envd ? process.env.DATABASE_SCHEMA : await rl.question('请输入数据库实例(schema)名称\n');
+  const DATABASE_SCHEMA = envd ? process.env.DATABASE_SCHEMA : await rl.question('请输入数据库模式(schema)名称\n');
   const DATABASE_USER = envd ? process.env.DATABASE_USER : await rl.question('请输入数据库登录用户名\n');
   const DATABASE_PASSWORD = envd ? process.env.DATABASE_PASSWORD : await rl.question('请输入数据库登录密码\n');
   const REDIS_HOST = envd ? process.env.REDIS_HOST : await rl.question('请输入reidis连接host地址\n');
   const REDIS_PORT = envd ? process.env.REDIS_PORT : await rl.question('请输入reidis连接端口\n');
   const REDIS_PASS = envd ? process.env.REDIS_PASS : await rl.question('请输入reidis密码\n');
   rl.close();
-  console.log('正在同步数据库结构...\n');
+  console.log('正在同步数据库结构...');
   const sequelize = new Sequelize({
     dialect: PostgresDialect,
     database: DATABASE_DB,
@@ -54,7 +54,7 @@ try {
   sequelize.close();
   console.log('数据库同步完成');
   const fileList = readdirSync(fromPath);
-  console.log('\n正在创建项目文件...');
+  console.log('正在创建项目文件...');
   await Promise.all(
     fileList.map(async (file) => {
       const path = resolve(fromPath, file);

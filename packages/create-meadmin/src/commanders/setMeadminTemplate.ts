@@ -56,11 +56,7 @@ const copyFiles = {
     return await prettier.format(JSON.stringify(jsonObj), { parser: 'json' });
   },
   'pnpm-workspace.yaml'(content) {
-    return content.replace(
-      `
-  - packages/*`,
-      '',
-    );
+    return prettier.format(content.replace(`- packages/*`, ''), { parser: 'yaml' });
   },
   'README.md': {},
   'tsconfig.json': {},

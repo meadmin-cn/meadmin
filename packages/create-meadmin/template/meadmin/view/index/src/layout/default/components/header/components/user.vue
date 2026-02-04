@@ -12,7 +12,7 @@
               <router-link :to="PageEnum.USER">个人中心</router-link>
             </el-dropdown-item>
             <el-dropdown-item>
-              <span @click="userStore.logOut">退出登录</span>
+              <span @click="logOut()">退出登录</span>
             </el-dropdown-item>
           </template>
           <template v-else>
@@ -34,6 +34,10 @@ import avatar from '@/assets/images/avatar.jpg';
 import { PageEnum } from '@/dict/pageEnum';
 import { useUserStore } from '@/store';
 const userStore = useUserStore();
+const router = useRouter();
+const logOut = () => {
+  userStore.logOut(router);
+};
 </script>
 <style lang="scss" scoped>
 .user {

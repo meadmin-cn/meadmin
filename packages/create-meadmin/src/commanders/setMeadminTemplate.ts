@@ -21,6 +21,8 @@ const copyFiles = {
   'src/': {},
   'test/': {},
   'types/': {},
+  'public/admin/': {},
+  'public/index/': {},
   'view/admin/': {
     ignore: ['node_modules', '.eslintcache'], //忽略的值
   },
@@ -65,8 +67,6 @@ const copyFiles = {
 //需要创建的文件/文件夹
 const makeFiles = {
   'logs/.gitkeep': {},
-  'public/admin/': {},
-  'public/index/': {},
   'uploadFile/admin/.gitkeep': {},
   'uploadFile/index/.gitkeep': {},
 };

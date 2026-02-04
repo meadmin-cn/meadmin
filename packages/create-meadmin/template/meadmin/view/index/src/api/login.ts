@@ -1,4 +1,5 @@
 import request, { RequestOptions } from '@/utils/request';
+import { App } from 'vue';
 import { FileInfo } from './file.js';
 import { UserInfo } from './user.js';
 //获取登录验证码
@@ -24,7 +25,7 @@ export class LoginParams {
 export interface LoginResult {
   token: string;
 }
-export function loginApi<T extends boolean = true>(returnAxios: T = true as T) {
+export function loginApi<T extends boolean = true>(returnAxios: T = true as T, app?: App) {
   return request<LoginResult, [LoginParams], T>(
     (params) => ({
       url: 'login/login',
@@ -33,11 +34,12 @@ export function loginApi<T extends boolean = true>(returnAxios: T = true as T) {
     }),
     {},
     returnAxios,
+    app,
   );
 }
 
 //获取用户详情
-export function userInfoApi<T extends boolean = false>(returnAxios: T = false as T, noLoading = true) {
+export function userInfoApi<T extends boolean = false>(returnAxios: T = false as T, noLoading = true, app?: App) {
   return request<UserInfo, [], T>(
     () => ({
       url: 'login/info',
@@ -45,6 +47,7 @@ export function userInfoApi<T extends boolean = false>(returnAxios: T = false as
     }),
     { noLoading },
     returnAxios,
+    app,
   );
 }
 

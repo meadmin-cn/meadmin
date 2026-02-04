@@ -48,16 +48,24 @@ export const loadingObject = {
 };
 
 export function loading(options?: LoadingOptions, number = 1, mode: keyof typeof loadingObject = 'global') {
-  const loading = loadingObject[mode];
-  loading.loading(options, number);
-  return loading;
+  if (!import.meta.env.SSR) {
+    const loading = loadingObject[mode];
+    loading.loading(options, number);
+    return loading;
+  }
+  return new Loading(
+    () => {},
+    () => {},
+  );
 }
 
 export function closeLoading(force = false, number = 1, mode: keyof typeof loadingObject = 'global'): void {
-  const loading = loadingObject[mode];
-  if (force) {
-    loading.forceClose();
-    return;
+  if (!import.meta.env.SSR) {
+    const loading = loadingObject[mode];
+    if (force) {
+      loading.forceClose();
+      return;
+    }
+    loading.close(number);
   }
-  loading.close(number);
 }

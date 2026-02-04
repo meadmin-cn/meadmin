@@ -6,7 +6,7 @@ function pathResolve(dir: string) {
   return resolve(import.meta.dirname, '.', dir);
 }
 export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
-  return {
+  const config = {
     root: import.meta.dirname,
     base: process.env.VIEW_INDEX_PATH_PRE,
     envPrefix: 'VIEW_INDEX_',
@@ -56,16 +56,7 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
       },
     },
     build: {
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            // 打包优化
-            core: ['vue', 'vue-router', 'pinia', 'vue-request', 'vue-i18n/dist/vue-i18n.esm-bundler.js', 'jquery', 'axios'],
-            elIcon: ['@element-plus/icons-vue'],
-            // mock: [pathResolve('./mock')],
-          },
-        },
-      },
+      rollupOptions: {},
       emptyOutDir: true,
     },
     optimizeDeps: {
@@ -80,4 +71,22 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
       ],
     },
   };
+  if (!configEnv.isSsrBuild) {
+    config.build.rollupOptions = {
+      experimentalLogSideEffects: false,
+      output: {
+        experimentalMinChunkSize: 20 * 1024,
+        manualChunks(id: string) {
+          if (['vue', 'vue-router', 'pinia', 'vue-request', 'jquery', 'axios'].some((v) => new RegExp(`.*node_modules/.*${v}.*`).test(id))) {
+            return 'core';
+          }
+          if (['@element-plus/icons-vue'].some((v) => new RegExp(`.*node_modules/.*${v}.*`).test(id))) {
+            return 'elIcon';
+          }
+          return null;
+        },
+      },
+    };
+  }
+  return config;
 };

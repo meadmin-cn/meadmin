@@ -7,7 +7,7 @@
   "dependencies": {
     "@meadmin/cli": "^1.0.0",
     "@meadmin/core": "^1.0.0",
-    "@meadmin/midway-vite-view": "^1.0.0",
+    "@meadmin/midway-vite-view": "^1.0.1",
     "@midwayjs/bootstrap": "^3.20.11",
     "@midwayjs/busboy": "3.20.19",
     "@midwayjs/cache-manager": "^3.20.11",
@@ -52,7 +52,7 @@
   },
   "engines": { "node": ">=20.13.1" },
   "scripts": {
-    "start": "cross-env NODE_ENV=production node ./bootstrap.js",
+    "start": "cross-env NODE_ENV=prod node ./bootstrap.js",
     "dev": "cross-env NODE_ENV=local  npx me-devBootstrap --cleanOutDir --watch --run @midwayjs/mock/app",
     "test": "cross-env NODE_ENV=unittest TSX_TSCONFIG_PATH=./test/tsconfig.json mocha",
     "cov": "cross-env c8 --all --reporter=text --reporter=lcovonly npm run test",
@@ -61,7 +61,7 @@
     "prettier": "prettier --cache  -l \"./**/*.{js,ts,vue,json}\"",
     "prettier:fix": "prettier --write --cache  -l \"./**/*.{js,ts,vue,json}\"",
     "ci": "npm run cov",
-    "build": "mwtsc --cleanOutDir",
+    "build": "mwtsc --cleanOutDir && vite-view build",
     "dev:pack": "cross-env NODE_ENV=local lerna run build &&  cross-env NODE_ENV=local npx me-watchBootstrap --watch --run @midwayjs/mock/app",
     "release": "release-it"
   },

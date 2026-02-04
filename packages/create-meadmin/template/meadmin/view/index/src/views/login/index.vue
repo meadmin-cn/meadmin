@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script setup lang="ts" name="Login">
+<script setup lang="ts" name="LoginIndex">
 import Login from './components/login.vue';
 import Register from './components/register.vue';
 const { type = 'login' } = defineProps<{ type: 'login' | 'register' }>();

@@ -1,13 +1,11 @@
 <template>
   <router-view v-slot="{ Component }">
-    <template v-if="Component">
-      <Suspense @resolve="done()">
-        <component :is="Component"></component>
-      </Suspense>
-    </template>
+    <Suspense @resolve="done()" @pending="set(1)">
+      <component :is="Component"></component>
+    </Suspense>
   </router-view>
 </template>
 
 <script setup lang="ts" name="LayoutDefaultPage">
-import { done } from '@/utils/nProgress';
+import { done, set } from '@/utils/nProgress';
 </script>

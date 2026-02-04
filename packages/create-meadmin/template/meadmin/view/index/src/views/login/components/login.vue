@@ -82,13 +82,19 @@ const userStore = useUserStore();
 const formRef = ref<FormInstance>();
 const route = useRoute();
 const router = useRouter();
+const _this = getCurrentInstance();
 const submit = async () => {
   formRef.value?.validate(async (valid, fields) => {
     if (valid) {
-      await userStore.login(loginParams);
-      await router.replace((route.query.redirect as string) || '/');
+      try {
+        await userStore.login(_this!.appContext.app, loginParams);
+        await router.replace((route.query.redirect as string) || '/');
+      } catch {
+        getCaptch();
+      }
     } else {
       console.log('提交错误', fields);
+      getCaptch();
     }
   });
 };

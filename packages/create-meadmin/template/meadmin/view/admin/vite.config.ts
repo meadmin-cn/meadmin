@@ -79,12 +79,17 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
 
     build: {
       rollupOptions: {
+        experimentalLogSideEffects: false,
         output: {
-          manualChunks: {
-            // 打包优化
-            core: ['vue', 'vue-router', 'pinia', 'vue-request', 'vue-i18n/dist/vue-i18n.esm-bundler.js', 'jquery', 'axios'],
-            elIcon: ['@element-plus/icons-vue'],
-            // mock: [pathResolve('./mock')],
+          experimentalMinChunkSize: 20 * 1024,
+          manualChunks(id: string) {
+            if (['vue', 'vue-router', 'pinia', 'vue-request', 'jquery', 'axios'].some((v) => new RegExp(`.*node_modules/.*${v}.*`).test(id))) {
+              return 'core';
+            }
+            if (['@element-plus/icons-vue'].some((v) => new RegExp(`.*node_modules/.*${v}.*`).test(id))) {
+              return 'elIcon';
+            }
+            return null;
           },
         },
       },

@@ -13,7 +13,7 @@
         </el-menu-item>
         <el-menu-item index="logout">
           <mel-icon-arrow-right></mel-icon-arrow-right>
-          <span @click="userStore.logOut">退出</span>
+          <span @click="logOut()">退出</span>
         </el-menu-item>
       </el-menu>
     </div>
@@ -33,6 +33,10 @@ const userStore = useUserStore();
 const { active } = defineProps<{
   active: 'userInfo' | 'editPass';
 }>();
+const router = useRouter();
+const logOut = () => {
+  userStore.logOut(router);
+};
 </script>
 <style lang="scss" scoped>
 .index {

@@ -1,11 +1,12 @@
 import { PageEnum } from '@/dict/pageEnum';
 import { event, mitter } from '@/event';
 import { useUserStore } from '@/store';
-import { remove, start } from '@/utils/nProgress';
+import { done, remove, start } from '@/utils/nProgress';
+import { Pinia } from 'pinia';
 import type { NavigationFailure, Router } from 'vue-router';
 // Don't change the order of creation
-export function setupRouterGuard(router: Router) {
-  createPermissionGuard(router);
+export function setupRouterGuard(router: Router, store: Pinia) {
+  createPermissionGuard(router, store);
   createProgressGuard(router);
   triggerRouteChange(router);
 }
@@ -14,8 +15,8 @@ export function setupRouterGuard(router: Router) {
  * 处理页面权限验证
  * @param router
  */
-function createPermissionGuard(router: Router) {
-  const userStore = useUserStore();
+function createPermissionGuard(router: Router, store: Pinia) {
+  const userStore = useUserStore(store);
   router.beforeEach(async (to) => {
     if (to.meta.needLogin === true && to.path !== PageEnum.LOGIN && !userStore.token) {
       await router.replace({ path: PageEnum.LOGIN, query: { redirect: to.fullPath } });
@@ -29,10 +30,13 @@ function createPermissionGuard(router: Router) {
 
 // 处理页面加载进度条和loading
 function createProgressGuard(router: Router) {
-  router.beforeEach(async (to) => {
+  router.beforeEach(() => {
     remove();
-    start(to.matched.length);
+    start();
     return true;
+  });
+  router.afterEach(() => {
+    done();
   });
 }
 

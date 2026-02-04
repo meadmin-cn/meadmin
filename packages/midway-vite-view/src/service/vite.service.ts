@@ -1,11 +1,4 @@
-import {
-  App,
-  Config,
-  MidwayConfig,
-  Provide,
-  Scope,
-  ScopeEnum,
-} from '@midwayjs/core';
+import { App, Config, Provide, Scope, ScopeEnum } from '@midwayjs/core';
 import * as koa from '@midwayjs/koa';
 import c2k from 'koa2-connect';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -15,11 +8,16 @@ import { ViteViewConfig } from '../interface.js';
 import { getPort } from '../utils/index.js';
 
 let cachePostfix = '';
-const vitePlugin = (viewRoot: string, appDir: string) => ({
+const vitePlugin = (
+  name: string,
+  viewRoot: string,
+  appDir: string,
+  hmrPort: number
+) => ({
   name: 'vite-plugin-midway-vite-view',
   async config(config: any) {
     if (!config.server.hmr) {
-      const port = await getPort(24678);
+      const port = await getPort(hmrPort);
       config.server.hmr = {
         clientPort: port,
         port: port,
@@ -28,7 +26,7 @@ const vitePlugin = (viewRoot: string, appDir: string) => ({
     if (!config.cacheDir) {
       config.cacheDir = path.resolve(
         appDir,
-        `node_modules/.vite${cachePostfix}`
+        `node_modules/.vite${cachePostfix}${name}`
       );
       cachePostfix = cachePostfix + '_';
     }
@@ -53,22 +51,31 @@ export class ViteService {
   @Config('viteView')
   viteViewConfig: ViteViewConfig;
 
-  @Config('view')
-  viewConfig: MidwayConfig['view'];
-
   @App()
   koaApp: koa.Application;
 
   private vite = {} as { [key: string]: ViteDevServer };
   private middlewareArr = [] as MiddlewareArr;
   //生成vite server
-  async createVite(configFile: string, hmr?: HmrOptions | boolean) {
-    if (!this.vite[configFile]) {
-      this.vite[configFile] = await createServer({
+  async createVite(name: string, hmr?: HmrOptions | boolean) {
+    if (!this.vite[name]) {
+      let configFile = path.resolve(
+        this.koaApp.getAppDir(),
+        this.viteViewConfig.rootDir,
+        name,
+        this.viteViewConfig.views[name].viteConfigFile
+      );
+      const hmrPort = this.viteViewConfig.views[name].hmrPort;
+      this.vite[name] = await createServer({
         configFile,
         appType: 'custom',
         plugins: [
-          vitePlugin(this.viewConfig.rootDir.default, this.koaApp.getAppDir()),
+          vitePlugin(
+            name,
+            this.viteViewConfig.rootDir,
+            this.koaApp.getAppDir(),
+            hmrPort
+          ),
         ],
         server: {
           middlewareMode: true,
@@ -82,7 +89,7 @@ export class ViteService {
         },
       });
     }
-    return this.vite[configFile];
+    return this.vite[name];
   }
 
   getMiddlewareIndex(prefix: string) {
@@ -100,32 +107,17 @@ export class ViteService {
       return this.middlewareArr;
     }
     const configSet = new Set<string | undefined>();
-    for (const [, view] of Object.entries(this.viteViewConfig.views)) {
-      if (typeof view === 'object' && !configSet.has(view.viteConfigFile)) {
-        const viteServer = await this.createVite(view.viteConfigFile);
-        this.middlewareArr.splice(
-          this.getMiddlewareIndex(viteServer.config.base),
-          0,
-          {
-            middleware: c2k(viteServer.middlewares),
-            prefix: viteServer.config.base,
-          }
-        );
-        configSet.add(view.viteConfigFile);
-      } else if (!configSet.has(undefined)) {
-        const viteServer = await this.createVite(
-          this.viteViewConfig.viteConfigFile
-        );
-        this.middlewareArr.splice(
-          this.getMiddlewareIndex(viteServer.config.base),
-          0,
-          {
-            middleware: c2k(viteServer.middlewares),
-            prefix: viteServer.config.base,
-          }
-        );
-        configSet.add(undefined);
-      }
+    for (const [name, view] of Object.entries(this.viteViewConfig.views)) {
+      const viteServer = await this.createVite(name);
+      this.middlewareArr.splice(
+        this.getMiddlewareIndex(viteServer.config.base),
+        0,
+        {
+          middleware: c2k(viteServer.middlewares),
+          prefix: viteServer.config.base,
+        }
+      );
+      configSet.add(view.viteConfigFile);
     }
     return this.middlewareArr;
   }

@@ -1,18 +1,16 @@
 export interface ViteViewConfig {
   prod?: boolean;
+  rootDir: string;
   views: Record<
     string,
-    | string
-    | {
-        entryServer?: string;
-        viteConfigFile?: string; //vite config的文件地址
-        root?: string; //vite config的root地址(相对于view文件夹)
-      }
+    {
+      entryServer?: string;
+      viteConfigFile: string; //vite config的文件地址 相对于前端项目文件夹
+      staticFileKey: string; //staticFile的key默认为default
+      entry: string; //相对于前端项目文件夹的html 路径
+      hmrPort: number; //热更新监听端口，会自动查找可用端口
+    }
   >;
-  outPrefix: string; //打包文件夹前缀 默认为html
-  viteConfigFile?: string; //vite config的文件地址
-  staticFileKey: string; //staticFile的key默认为default
-  root?: string; //vite config的root地址(相对于view文件夹)
 }
 
 export interface CommandOptions {

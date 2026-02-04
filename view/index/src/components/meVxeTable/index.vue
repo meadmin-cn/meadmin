@@ -77,7 +77,6 @@ import { ComponentCustomProperties, PropType, useTemplateRef } from 'vue';
 import { VxeTableDefines, VxeTableInstance, VxeTableListeners, VxeTableProps, VxeTablePropTypes } from 'vxe-table';
 import pagination from './components/pagination.vue';
 import resize from './directives/resize';
-import './install';
 import { getFullHight } from './util';
 const props = {
   meClass: [String, Array] as PropType<string[] | string>,

@@ -1,18 +1,24 @@
 import type { Context } from '@midwayjs/koa';
 import cookies, { CookieAttributes } from 'js-cookie';
 
-let serverCookies: Context['Cookies'];
-export const setSterCookies = (cookies: Context['Cookies']) => {
-  serverCookies = cookies;
+const serverCookies = {} as Record<string, Context['Cookies']>;
+export const setServerCookies = (ssrVersion: string, cookies: Context['Cookies']) => {
+  if (!cookies) {
+    if (serverCookies[ssrVersion]) {
+      delete serverCookies[ssrVersion];
+    }
+  } else {
+    serverCookies[ssrVersion] = cookies;
+  }
 };
 //cookie设置兼容服务端和客户端
 export default {
   /**
    * Create a cookie
    */
-  set(name: string, value: string, options?: CookieAttributes) {
+  set(ssrVersion: string, name: string, value: string, options?: CookieAttributes) {
     if (import.meta.env.SSR) {
-      return serverCookies.set(
+      return serverCookies[ssrVersion].set(
         name,
         value,
         Object.assign(
@@ -32,9 +38,9 @@ export default {
   /**
    * Read cookie
    */
-  get(name: string) {
+  get(ssrVersion: string, name: string) {
     if (import.meta.env.SSR) {
-      return serverCookies.get(name, { signed: false });
+      return serverCookies[ssrVersion].get(name, { signed: false });
     } else {
       return cookies.get(name);
     }
@@ -43,9 +49,9 @@ export default {
   /**
    * Delete cookie
    */
-  remove(name: string, options?: CookieAttributes) {
+  remove(ssrVersion: string, name: string, options?: CookieAttributes) {
     if (import.meta.env.SSR) {
-      serverCookies.set(name, options);
+      serverCookies[ssrVersion].set(name, options);
     } else {
       return cookies.remove(name, options);
     }

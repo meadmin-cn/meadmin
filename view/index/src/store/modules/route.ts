@@ -1,5 +1,5 @@
-import { asyncRoutes, constantRoutes, formatRoutes, router } from '@/router';
-import { RouteRecordRaw } from 'vue-router';
+import { asyncRoutes, constantRoutes, formatRoutes } from '@/router';
+import { Router, RouteRecordRaw } from 'vue-router';
 export default defineStore('route', {
   state: () => ({
     addRoutes: [] as RouteRecordRaw[],
@@ -13,7 +13,7 @@ export default defineStore('route', {
       return (this.addRoutes = asyncRoutes);
     },
     //初始化路由
-    initRoutes() {
+    initRoutes(router: Router) {
       formatRoutes(this.generateRoutes()).forEach((route) => router.addRoute(route));
     },
   },

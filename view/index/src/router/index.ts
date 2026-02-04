@@ -1,9 +1,7 @@
 import { concatObjectValue } from '@/utils/helper';
 import { isExternal } from '@/utils/validate';
 import path from 'path-browserify';
-import { App } from 'vue';
-import { createMemoryHistory, createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import { setupRouterGuard } from './guard';
+import { createMemoryHistory, createRouter, createWebHistory, Router, RouteRecordRaw } from 'vue-router';
 export const asyncRoutes = concatObjectValue<RouteRecordRaw>(import.meta.glob('./routes/*.ts', { eager: true, import: 'routes' }));
 
 export const constantRoutes: RouteRecordRaw[] = [
@@ -53,11 +51,7 @@ export const formatRoutes = (routes: RouteRecordRaw[], basePath = '', startIndex
   return newRoutes;
 };
 
-export const router = createRouter({
-  history: import.meta.env.SSR ? createMemoryHistory(import.meta.env.VIEW_ADMIN_PATH_PRE) : createWebHistory(import.meta.env.VIEW_ADMIN_PATH_PRE),
-  routes: formatRoutes(constantRoutes),
-});
-export const jump = (route: Pick<RouteRecordRaw, 'path' | 'meta'>) => {
+export const jump = (route: Pick<RouteRecordRaw, 'path' | 'meta'>, router: Router) => {
   if (route.meta?.isLink) {
     window.open(route.path, '_blank');
   } else {
@@ -70,7 +64,10 @@ export const jump = (route: Pick<RouteRecordRaw, 'path' | 'meta'>) => {
  * @param app
  * @param addRoutes
  */
-export function installRoute(app: App) {
-  setupRouterGuard(router);
-  app.use(router);
+export function installRoute() {
+  const router = createRouter({
+    history: import.meta.env.SSR ? createMemoryHistory(import.meta.env.VIEW_ADMIN_PATH_PRE) : createWebHistory(import.meta.env.VIEW_ADMIN_PATH_PRE),
+    routes: formatRoutes(constantRoutes),
+  });
+  return router;
 }

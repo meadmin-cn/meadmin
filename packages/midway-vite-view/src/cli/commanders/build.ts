@@ -1,12 +1,12 @@
 import { setEnv } from '@/utils/env.js';
 import { Command } from 'commander';
-import extend from 'extend2';
 import fsPromises from 'fs/promises';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { resolve } from 'path';
 import { build as buildVite, loadConfigFromFile, normalizePath } from 'vite';
-import { ViteViewConfig } from '../../interface.js';
+import extend from 'extend2';
+
 //递归遍历文件并执行callback
 const fileDisplay = async function (
   filePath: string,
@@ -62,10 +62,12 @@ export class Build {
   private pages = {} as Record<
     string,
     {
-      clientIndex: string[];
-      entryServers: string[];
+      name: string;
+      clientIndex: string;
+      entryServers?: string;
       viteConfigFile?: string;
-      prefix?: string;
+      prefix: string;
+      outDir: string; //staticFile的key默认为default
     }
   >;
   private env = 'prod';
@@ -81,17 +83,11 @@ export class Build {
   }
   async getConfig() {
     this.midwayConfig = {
-      view: {
+      viteView: {
         rootDir: {
           default: path.join(this.rootDir, './view'),
         },
       },
-      viteView: {
-        views: {},
-        outPrefix: 'html',
-        staticFileKey: 'default',
-        root: '',
-      } as ViteViewConfig,
       staticFile: {
         dirs: {
           default: {
@@ -101,33 +97,45 @@ export class Build {
         },
       },
     };
-    if (+this.options.type === 1) {
-      try {
-        let configFiles;
-        const stat = await fs.statSync(this.options.config);
-        if (stat.isFile()) {
-          configFiles = [this.options.config];
-        } else {
-          configFiles = [
-            this.options.config + '/config.default.ts',
-            this.options.config + `/config.${this.env}.ts`,
-          ].filter(file => fs.existsSync(file));
-        }
-        await Promise.all(
-          configFiles.map(file => {
-            return (async () => {
-              const { config } = await loadConfigFromFile(undefined, file);
-              this.midwayConfig = extend(true, this.midwayConfig, config);
-            })();
-          })
-        );
-      } catch (e) {
-        console.error(
-          '解析midway配置失败你可以使用-t 2 用文件名匹配模式进行构建'
-        );
-        throw e;
+    try {
+      let configFiles;
+      const stat = await fs.statSync(this.options.config);
+      if (stat.isFile()) {
+        configFiles = [this.options.config];
+      } else {
+        configFiles = [
+          this.options.config + '/config.default.ts',
+          this.options.config + `/config.${this.env}.ts`,
+        ].filter(file => fs.existsSync(file));
       }
+      await Promise.all(
+        configFiles.map(file => {
+          return (async () => {
+            const { config } = await loadConfigFromFile(undefined, file);
+            this.midwayConfig = extend(true, this.midwayConfig, config);
+          })();
+        })
+      );
+    } catch (e) {
+      console.error(
+        '解析midway配置失败你可以使用-t 2 用文件名匹配模式进行构建'
+      );
+      throw e;
     }
+  }
+  async formatOptions() {
+    this.initEnv();
+    if (!this.options.config) {
+      this.options.config = 'src/config';
+    }
+    await this.getConfig();
+    this.options.viewDir = this.midwayConfig.viteView.rootDir;
+    // set absolute path
+    Object.keys(this.options).forEach(key => {
+      if (['viewDir'].includes(key)) {
+        this.options[key] = this.getDiskPath(this.options[key]);
+      }
+    });
   }
   getViteFilePath(filePath?: string) {
     if (filePath) {
@@ -164,78 +172,66 @@ export class Build {
     }
     return this.viteCofigs[path ?? 'default'];
   }
-  async formatOptions() {
-    this.initEnv();
-    if (!this.options.config) {
-      this.options.config = 'src/config';
-    }
-    await this.getConfig();
-    this.options.staticFileKey =
-      this.options.staticFileKey ?? this.midwayConfig.viteView.staticFileKey;
-    this.options.outDir =
-      this.options.outDir ??
-      this.midwayConfig.staticFile.dirs[this.options.staticFileKey].dir;
-    this.options.prefix =
-      this.options.prefix ??
-      this.midwayConfig.staticFile.dirs[this.options.staticFileKey].prefix;
-    this.options.viteConfigFile =
-      this.options.viteConfigFile ?? this.midwayConfig.viteView.viteConfigFile;
-    this.options.outPrefix =
-      this.options.outPrefix ?? this.midwayConfig.viteView.outPrefix;
-    if (!this.options.viewDir) {
-      this.options.viewDir = 'view';
-    }
-    this.options.root =
-      this.options.root ?? normalizePath(this.midwayConfig.viteView.root);
-    // set absolute path
-    Object.keys(this.options).forEach(key => {
-      if (['config', 'outDir', 'viteConfigFile', 'viewDir'].includes(key)) {
-        this.options[key] = this.getDiskPath(this.options[key]);
-      }
-    });
-    this.options.outDir = path.resolve(
-      this.options.outDir,
-      this.options.outPrefix
-    );
-    this.options.prefix = normalizePath(
-      this.options.prefix + `/${this.options.outPrefix}/`
-    );
-  }
 
-  async setFile() {
-    if (+this.options.type === 1) {
-      await this.setFileByConfig();
-    } else {
-      await this.setFileByFileName();
+  async setFileByConfig() {
+    for (const [index, ssr] of Object.entries<any>(
+      this.midwayConfig.viteView.views
+    )) {
+      this.pages[index] = {
+        name: index,
+        clientIndex: path.resolve(this.options.viewDir, index, ssr.entry),
+        entryServers: ssr.entryServer
+          ? path.resolve(this.options.viewDir, index, ssr.entryServer)
+          : undefined,
+        viteConfigFile: path.resolve(
+          this.options.viewDir,
+          index,
+          ssr.viteConfigFile
+        ),
+        prefix: normalizePath(
+          '/' +
+            this.midwayConfig.staticFile.dirs[ssr.staticFileKey].prefix +
+            '/'
+        ),
+        outDir: this.getDiskPath(
+          this.midwayConfig.staticFile.dirs[ssr.staticFileKey].dir
+        ),
+      };
     }
   }
-
   async run() {
     for (const [, info] of Object.entries(this.pages)) {
       console.log('[vite view] build ' + (info.viteConfigFile ?? '') + '\n');
       await this.buildClient(
         info.clientIndex,
-        normalizePath(this.options.prefix + `/${info.prefix}/`),
-        path.resolve(this.options.outDir, info.prefix),
+        info.prefix,
+        info.outDir,
         info.viteConfigFile
       );
-      info.entryServers.length &&
+      info.entryServers &&
         (await this.buildSSR(
           info.entryServers,
-          normalizePath(this.options.prefix + `/${info.prefix}/`),
-          this.options.outDir,
+          info.prefix,
+          path.parse(
+            info.outDir +
+              '/ssr/' +
+              path.relative(
+                `${this.options.viewDir}/${info.name}`,
+                info.entryServers
+              )
+          ).dir,
           info.viteConfigFile
         ));
     }
   }
 
   async buildClient(
-    input: string[],
+    input: string,
     prefix: string,
     outDir: string,
     viteConfigFile: string
   ) {
-    console.log('[vite view] build client\n');
+    console.log(`[vite view] build client ${input}\n`);
     await buildVite({
       base: prefix,
       configFile: viteConfigFile,
@@ -244,6 +240,7 @@ export class Build {
         ssrManifest: 'ssr-manifest.json',
         rollupOptions: { input },
         ssr: false,
+        emptyOutDir: true,
       },
     });
     const content = fs.readFileSync(
@@ -261,120 +258,44 @@ export class Build {
   }
 
   async buildSSR(
-    entryServers: string[],
+    entryServers: string,
     prefix: string,
     outDir: string,
     viteConfigFile: string
   ) {
-    console.log('[vite view] build ssr\n');
-    await Promise.all(
-      entryServers.map((file: string) =>
-        (async () => {
-          const viteConfig = await this.getViteConfig(viteConfigFile);
-          let packagePath = '';
-          let packageStr = '';
-          if (viteConfig.ssr && viteConfig.ssr.format === 'cjs') {
-            packagePath = lookupFile(viteConfig.root, ['package.json'], {
-              pathOnly: true,
-            });
-            if (packagePath) {
-              packageStr = fs.readFileSync(packagePath, 'utf-8');
-              const packageInfo = JSON.parse(packageStr);
-              if (packageInfo.type && packageInfo.type === 'module') {
-                packageInfo.type = 'commonjs';
-                fs.writeFileSync(
-                  packagePath,
-                  JSON.stringify(packageInfo),
-                  'utf-8'
-                );
-              } else {
-                packagePath = '';
-              }
-            }
+    console.log(`[vite view] build ssr ${entryServers}\n`);
+    await (async () => {
+      const viteConfig = await this.getViteConfig(viteConfigFile);
+      let packagePath = '';
+      let packageStr = '';
+      if (viteConfig.ssr && viteConfig.ssr.format === 'cjs') {
+        packagePath = lookupFile(viteConfig.root, ['package.json'], {
+          pathOnly: true,
+        });
+        if (packagePath) {
+          packageStr = fs.readFileSync(packagePath, 'utf-8');
+          const packageInfo = JSON.parse(packageStr);
+          if (packageInfo.type && packageInfo.type === 'module') {
+            packageInfo.type = 'commonjs';
+            fs.writeFileSync(packagePath, JSON.stringify(packageInfo), 'utf-8');
+          } else {
+            packagePath = '';
           }
-          await buildVite({
-            base: prefix,
-            publicDir: false,
-            configFile: viteConfigFile,
-            build: {
-              emptyOutDir: false,
-              outDir: path.resolve(
-                outDir,
-                path.relative(
-                  this.options.viewDir,
-                  file.slice(0, -path.basename(file).length)
-                )
-              ),
-              ssrManifest: false,
-              ssr: file,
-            },
-          });
-          packagePath && fs.writeFileSync(packagePath, packageStr, 'utf-8');
-        })()
-      )
-    );
-  }
-
-  async setFileByConfig() {
-    for (const [index, ssr] of Object.entries<any>(
-      this.midwayConfig.viteView.views
-    )) {
-      if (typeof ssr === 'string') {
-        if (!this.pages['default']) {
-          this.pages['default'] = {
-            clientIndex: [],
-            entryServers: [],
-            prefix: this.options.root,
-            viteConfigFile: this.options.viteConfigFile,
-          };
-        }
-        this.pages['default'].clientIndex.push(
-          path.resolve(this.options.viewDir, index)
-        );
-        if (ssr) {
-          this.pages['default'].entryServers.push(
-            path.resolve(this.options.viewDir, ssr)
-          );
-        }
-      } else {
-        if (!this.pages[ssr.viteConfigFile ?? 'default']) {
-          this.pages[ssr.viteConfigFile ?? 'default'] = {
-            clientIndex: [],
-            entryServers: [],
-            viteConfigFile: ssr.viteConfigFile ?? this.options.viteConfigFile,
-            prefix: ssr.root ?? this.options.root,
-          };
-        }
-        this.pages[ssr.viteConfigFile ?? 'default'].clientIndex.push(
-          path.resolve(this.options.viewDir, index)
-        );
-        if (ssr.entryServer) {
-          this.pages[ssr.viteConfigFile ?? 'default'].entryServers.push(
-            path.resolve(this.options.viewDir, ssr.entryServer)
-          );
         }
       }
-    }
-  }
-
-  async setFileByFileName() {
-    this.pages['default'] = {
-      clientIndex: [],
-      entryServers: [],
-      viteConfigFile: this.options.viteConfigFile,
-      prefix: '',
-    };
-    await fileDisplay(this.options.viewDir, (fileName, filePath) => {
-      if (fileName === 'index.html') {
-        this.pages['default'].clientIndex.push(filePath);
-      } else if (
-        ['entry-server.js', 'entry-server.jsx', 'entry-server.tsx'].includes(
-          fileName
-        )
-      ) {
-        this.pages['default'].entryServers.push(fileName);
-      }
-    });
+      await buildVite({
+        base: prefix,
+        publicDir: false,
+        configFile: viteConfigFile,
+        build: {
+          emptyOutDir: true,
+          outDir: outDir,
+          ssrManifest: false,
+          ssr: entryServers,
+        },
+      });
+      packagePath && fs.writeFileSync(packagePath, packageStr, 'utf-8');
+    })();
   }
 
   private getDiskPath(path?: string) {
@@ -393,41 +314,14 @@ export const buildInit = (program: Command) => {
   program
     .command('build')
     .description('build vite文件')
-    .option(
-      '-t, --type <char>',
-      '构建方式:1=根据配置文件自动构建，2=自动寻找viewDir文件夹下的index.html和entry-server.js进行构建',
-      '1'
-    )
     .option('--config <char>', '配置文件夹/配置文件', 'src/config')
-    .option(
-      '--outDir <char>',
-      '编译输出目录默认为，默认为staticFile.dirs[staticFileKey].dir或public'
-    )
-    .option(
-      '--viteConfigFile <char>',
-      'views dir 默认 viteView.viteConfigFile或view'
-    )
-    .option('--viewDir <char>', 'views dir 默认 view')
-    .option(
-      '--prefix <char>',
-      '静态缓存前缀 默认为staticFile.dirs[staticFileKey].prefix或/public'
-    )
-    .option('--outPrefix <char>', '编译输出前缀 默认为viteView.outPrefix或html')
-    .option(
-      '--staticFileKey <char>',
-      '使用的staticFile.dirs的key  默认为viteView.staticFileKey或default'
-    )
-    .option(
-      '-r --root <char>',
-      'vite config 的rootdir 必须是相对于viewDir的相对路径'
-    )
     .option('-m, --module <char>', 'env环境变量', 'production')
     .action(async options => {
       setEnv(options.module);
       const build = new Build();
       build.options = options;
       await build.formatOptions();
-      await build.setFile();
+      await build.setFileByConfig();
       await build.run();
     });
 };

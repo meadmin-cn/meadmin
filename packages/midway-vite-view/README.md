@@ -53,10 +53,39 @@ import * as viteView from 'midway-vite-view';//引入view组件
     defaultViewEngine: 'viteView',
   },
   viteView: { //midway-vite-view 配置配置详细说明见下方
-    views:{
-     'index/index.html':'index/src/entry-server.js',
-     'admin/index.html':'admin/src/entry-server.js',
-    }
+    rootDir:'view',
+    views: {
+      'admin': {//相对于rootDir的前端包路径
+        // entryServer: 'admin/src/entry-server.ts',//admin暂未支持服务端渲染
+        entry: 'index.html',//html入库文件，相对于当前包路径
+        viteConfigFile: resolve(import.meta.dirname, '../../view/admin/vite.config.ts'),
+        staticFileKey:'viewAdmin',
+        hmrPort:23679,
+      },
+      'index': {//相对于rootDir的前端包路径
+        entryServer: 'src/entry-server.ts',
+        entry: 'index.html',//html入库文件，相对于当前包路径
+        viteConfigFile: resolve(import.meta.dirname, '../../view/index/vite.config.ts'),
+        staticFileKey:'viewIndex',
+        hmrPort:23680,
+      },
+    },
+  },
+  staticFile: {
+    dirs: {
+      default: {
+        prefix: '/',
+        dir: 'public',
+      },
+      viewAdmin:{
+        prefix: '/html/admin/',
+        dir: 'view/admin/dist',
+      },
+      viewIndex:{
+        prefix: '/html/index/',
+        dir: 'view/index/dist',
+      },
+    },
   },
 
 ```
@@ -66,12 +95,12 @@ import * as viteView from 'midway-vite-view';//引入view组件
 - 控制器中调用
 ```
     //服务端渲染 
-    return this.ctx.render('admin/index.html', {
+    return this.ctx.render('admin', {
       assign:{keyWords:'vite midway'},//html中{{keyWords}}的会被替换为vite midway
     });
 
     //客户端渲染
-    return this.ctx.render('index/index.html',{
+    return this.ctx.render('index',{
       ssr:false, //false代表强制客户端渲染,默认会根据配置自动匹配
       assign:{keyWords:'vite midway'},//html中{{keyWords}}的会被替换为vite midway
     });
@@ -87,31 +116,24 @@ import * as viteView from 'midway-vite-view';//引入view组件
 | 配置项      |类型|是否必须 | 说明 |
 | -----------| ----------- | ----------- |----------- |
 | prod      | boolean| 否 |是否是发布环境 如果不传用运行环境是否为prod/production以区分|
-| views | `{[key:string]:string\|object}`  | 是 | key为index.html路径(相对于view文件夹)，value为服务端渲染entry-server路径(相对于view文件夹,如果没有entry-server，填'')|
-| outPrefix | string | 否 | 打包前缀目录，会在static-file文件夹下创建子文件夹进行打包,默认为html |
-| viteConfigFile | string | 否 | vite配置文件地址，默认按vite规则选择vite.config.js/vite.config.ts | 
-| staticFileKey | string | 否 | 对应的staticFile.dirs的key 默认为default |
-| root | string | 否 | vite.coinfig的root根目录相对于view文件夹的相对路径 默认为`''`|
+| rootDir | string | 否 | view根路径默认为`'view'`|
+| views | `{[key:string]:string\|object}`  | 是 | key为前端项目根路径(相对于rootDir文件夹)，|
 
 | views      |类型|是否必须 | 说明 |
 | -----------| ----------- | ----------- |----------- |
-| entryServer | string | 否 | 服务端渲染entry-server路径(相对于view文件夹,如果没有entry-server，填'') |
-| viteConfigFile | string | 否 | vite config的文件地址，多vite项目时需要分别设置此参数，默认使用外层配置的viteConfigFile |
-| root | string | 否 | vite.coinfig的root根目录相对于view文件夹的相对路径 默认使用外层配置的`root`|
+| entryServer | string | 否 | 服务端渲染entry-server路径(相对于前端项目根路径) |
+| viteConfigFile | string | 是 | vite config的文件地址，相对于前端项目根路径 |
+| entry | string | 是 | 相对于前端项目文件夹的html文件路径|
+| staticFileKey | string | 是 | 对应的staticFile.dirs的key |
+| hmrPort | number | 是 | 热更新监听端口，会自动向上查找可用端口|
 
 ## 打包命令 vite-view build 参数说明
-传参方式为 vite-view build --type 1
+传参方式为 vite-view build
 
 | 参数项      | 默认值 | 说明 |
 | ---------- | ----------- |----------- |
-|type | 1 | 构建方式:1=根据配置文件自动构建，2=自动寻找viewDir文件夹下的index.html和entry-server.js进行构建|
 | config | src/config |midway配置文件夹/配置文件|
-| staticFileKey |viteView.staticFileKey 或 default|使用的staticFile.dirs的key|
-| outDir | staticFile.dirs[staticFileKey].dir 或 public |编译输出目录|
-| viteConfigFile |命令根目录 vite.config.js、vite.config.ts|vite 配置文件 |
-| viewDir | view | 视图文件夹 |
-| prefix | staticFile.dirs[staticFileKey].prefix 或 /public | 静态缓存前缀 |
-| outPrefix | viteView.outPrefix 或 html | 编译输出前缀,会在static-file文件夹下创建子文件夹进行打包 |
+
 
 
 ## 规则说明

@@ -1,12 +1,13 @@
 import { App, Config, Inject, Provide } from '@midwayjs/core';
 import { Application, Context } from '@midwayjs/koa';
 import { StaticFileOptions } from '@midwayjs/static-file';
-import { IViewEngine, RenderOptions } from '@midwayjs/view';
+import { IViewEngine } from '@midwayjs/view';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ViteViewConfig } from '../interface.js';
 import { ViteService } from '../service/vite.service.js';
-
+import { pathToFileURL } from 'url';
+let ssrVersion = 0;
 @Provide()
 export class ViteView implements IViewEngine {
   @Config('staticFile')
@@ -26,35 +27,39 @@ export class ViteView implements IViewEngine {
 
   private prodPath: string;
   private prod: boolean;
-  private root = '';
 
   async getSsrHtml(
     indexName: string,
     entryServerUrl: string,
     url: string,
     assign: object | undefined,
-    viteConfigFile: string
+    name: string
   ) {
-    const vite = await this.vite.createVite(viteConfigFile);
     try {
       let template,
         render,
         manifest = {};
       template = fs.readFileSync(indexName, 'utf-8');
-
       if (!this.prod) {
         // always read fresh template in dev
+        const vite = await this.vite.createVite(name);
         template = await vite.transformIndexHtml(url, template);
-        render = (await vite.ssrLoadModule(entryServerUrl)).render;
+        render = (
+          await vite.ssrLoadModule(entryServerUrl, { fixStacktrace: true })
+        ).render;
       } else {
-        manifest = require(path.resolve(
-          this.prodPath,
-          this.root,
-          'ssr-manifest.json'
-        ));
-        render = require(entryServerUrl).render;
+        manifest = await import(
+          pathToFileURL(path.resolve(this.prodPath, 'ssr-manifest.json')).href,
+          { with: { type: 'json' } }
+        );
+        render = (await import(pathToFileURL(entryServerUrl).href)).render;
       }
-      const context = { cookies: this.ctx.cookies, request: this.ctx.request };
+      ssrVersion++;
+      const context = {
+        cookies: this.ctx.cookies,
+        request: this.ctx.request,
+        ssrVersion: '' + ssrVersion,
+      };
       const [appHtml, preloadLinks, teleports] = await render(
         url,
         manifest,
@@ -80,9 +85,8 @@ export class ViteView implements IViewEngine {
       }
       return html;
     } catch (e) {
-      vite.ssrFixStacktrace(e);
       this.ctx.logger.error('服务端渲染失败，执行客户端渲染逻辑', e);
-      return await this.getClientHtml(indexName, assign, url, viteConfigFile);
+      return await this.getClientHtml(indexName, assign, url, name);
     }
   }
 
@@ -90,7 +94,7 @@ export class ViteView implements IViewEngine {
     indexName,
     assign: object | undefined,
     url: string,
-    viteConfigFile: string
+    name: string
   ) {
     let html = fs
       .readFileSync(indexName, 'utf-8')
@@ -103,23 +107,25 @@ export class ViteView implements IViewEngine {
     }
     return this.prod
       ? html
-      : await (
-          await this.vite.createVite(viteConfigFile)
-        ).transformIndexHtml(url, html);
+      : await (await this.vite.createVite(name)).transformIndexHtml(url, html);
   }
 
   async render(
-    name: string,
-    locals?: Record<string, any>,
-    options?: RenderOptions
+    namePath: string,
+    locals: Record<string, any>,
+    options: Record<string, any>
   ) {
-    return (locals.ctx.body = await this.renderString(name, locals, options));
+    return (locals.ctx.body = await this.renderString(
+      namePath,
+      locals,
+      options
+    ));
   }
 
   async renderString(
-    name: string,
-    locals?: Record<string, any>,
-    options?: RenderOptions
+    namePath: string,
+    locals: Record<string, any>,
+    options: Record<string, any>
   ) {
     let tpl = options.name;
     if (this.viteViewConfig.prod !== undefined) {
@@ -127,47 +133,39 @@ export class ViteView implements IViewEngine {
     } else {
       this.prod = ['prod', 'production'].includes(this.app.getEnv());
     }
-    let entry = '' as undefined | string;
     const entryInfo = this.viteViewConfig.views[options.name];
-    let viteConfigFile = this.viteViewConfig.viteConfigFile;
-    if (typeof entryInfo === 'object') {
-      entry = entryInfo.entryServer;
-      viteConfigFile = entryInfo.viteConfigFile ?? viteConfigFile;
-      this.root = entryInfo.root ?? '';
-    } else {
-      entry = entryInfo;
-    }
+    let entrySsr = entryInfo.entryServer;
     if (this.prod) {
       this.prodPath =
-        this.staticFileConfig.dirs[this.viteViewConfig.staticFileKey].dir +
-        `/${this.viteViewConfig.outPrefix}`;
-      tpl = path.resolve(this.prodPath, tpl);
-      entry =
-        locals.ssr !== false && entry
+        this.staticFileConfig.dirs[entryInfo.staticFileKey].dir + '/';
+      tpl = path.resolve(this.prodPath, entryInfo.entry);
+      entrySsr =
+        locals.ssr !== false && entrySsr
           ? path
-              .resolve(this.prodPath, entry)
+              .resolve(this.prodPath, 'ssr', entrySsr)
               .replace(/(\.[jt]sx)|(\.ts)$/, '.js')
           : '';
     } else {
-      tpl = path.resolve(options.root, tpl);
-      entry =
-        locals.ssr !== false && entry ? path.resolve(options.root, entry) : '';
+      entrySsr =
+        locals.ssr !== false && entrySsr
+          ? path.resolve(namePath, entrySsr)
+          : '';
+      tpl = path.resolve(namePath, entryInfo.entry);
     }
-
-    if (entry) {
+    if (entrySsr) {
       return await this.getSsrHtml(
         tpl,
-        entry,
+        entrySsr,
         locals.ctx.originalUrl,
         locals['assign'],
-        viteConfigFile
+        options.name
       );
     }
     return await this.getClientHtml(
       tpl,
       locals['assign'],
       locals.ctx.originalUrl,
-      viteConfigFile
+      options.name
     );
   }
 }

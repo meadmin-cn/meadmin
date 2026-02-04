@@ -55,23 +55,37 @@ export default {
         prefix: '/',
         dir: 'public',
       },
+      viewAdmin: {
+        prefix: '/html/admin/',
+        dir: 'view/admin/dist',
+      },
+      viewIndex: {
+        prefix: '/html/index/',
+        dir: 'view/index/dist',
+      },
     },
   },
   viteView: {
     //midway-vite-view 配置配置详细说明见下方
+    rootDir: 'view',
     views: {
-      'index/index.html': {
-        entryServer: 'index/src/entry-server.ts',
-        root: 'index',
-        viteConfigFile: resolve(import.meta.dirname, '../../view/index/vite.config.ts'),
-      },
-      'admin/index.html': {
+      admin: {
+        //相对于rootDir的前端包路径
         // entryServer: 'admin/src/entry-server.ts',//admin暂未支持服务端渲染
-        root: 'admin',
+        entry: 'index.html', //html入库文件，相对于当前包路径
         viteConfigFile: resolve(import.meta.dirname, '../../view/admin/vite.config.ts'),
+        staticFileKey: 'viewAdmin',
+        hmrPort: 23679,
+      },
+      index: {
+        //相对于rootDir的前端包路径
+        entryServer: 'src/entry-server.ts',
+        entry: 'index.html', //html入库文件，相对于当前包路径
+        viteConfigFile: resolve(import.meta.dirname, '../../view/index/vite.config.ts'),
+        staticFileKey: 'viewIndex',
+        hmrPort: 23680,
       },
     },
-    root: '',
   },
   redis: {
     clients: {
@@ -123,5 +137,18 @@ export default {
     tmpdir: resolve(import.meta.dirname, '../../uploadFile/tmp'),
     upDir: resolve(import.meta.dirname, '../../uploadFile/'),
     cleanTimeout: 5 * 60 * 1000,
+  },
+  midwayLogger: {
+    default: {
+      transports: {
+        file: {
+          dir: resolve(import.meta.dirname, '../../logs'),
+        },
+        error: {
+          dir: resolve(import.meta.dirname, '../../logs'),
+        },
+      },
+    },
+    // ...
   },
 } as MidwayConfig;

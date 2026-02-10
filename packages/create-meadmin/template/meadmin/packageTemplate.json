@@ -50,7 +50,7 @@
     "prettier-plugin-organize-imports": "^4.3.0",
     "typescript": "^5.9.3"
   },
-  "engines": { "node": ">=20.13.1" },
+  "engines": { "node": ">=22.14.0" },
   "scripts": {
     "start": "cross-env NODE_ENV=prod node ./bootstrap.js",
     "dev": "cross-env NODE_ENV=local  npx me-devBootstrap --cleanOutDir --watch --run @midwayjs/mock/app",

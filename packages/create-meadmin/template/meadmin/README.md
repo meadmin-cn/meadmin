@@ -28,7 +28,7 @@ Me-admin 是一个免费开源的后台解决方案,后端基于medwayjs ,前台
 - pnpm
 ### 初始化项目
 
-执行命令 `pnpm init meadmin` 根据提示数据配置选项即可！
+执行命令 `pnpm create meadminjs` 根据提示数据配置选项即可！
 
 ### 调试项目
 

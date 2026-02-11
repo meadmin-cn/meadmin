@@ -14,7 +14,7 @@ import App from './App.vue';
  */
 export async function createApp(ssrVersion = '') {
   let app: AppType<Element>;
-  if (import.meta.env.SSR || window?.document.querySelector('html')!.dataset.ssr === 'true') {
+  if (import.meta.env.SSR || window?.document?.querySelector('html')!.dataset.ssr === 'true') {
     app = createSSRApp(App);
   } else {
     app = createClientApp(App);

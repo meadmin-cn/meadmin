@@ -32,7 +32,7 @@ export class ViteMiddleware implements IMiddleware<Context, NextFunction> {
           return await this.viteMiddlewareArr[i].middleware(ctx, next);
         }
       }
-      return await next();
+      await next();
     };
   }
 

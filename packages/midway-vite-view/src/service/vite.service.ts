@@ -7,7 +7,7 @@ import { createServer, HmrOptions, normalizePath, ViteDevServer } from 'vite';
 import { ViteViewConfig } from '../interface.js';
 import { getPort } from '../utils/index.js';
 
-let cachePostfix = '';
+const cachePostfix = '_';
 const vitePlugin = (
   name: string,
   viewRoot: string,
@@ -28,7 +28,7 @@ const vitePlugin = (
         appDir,
         `node_modules/.vite${cachePostfix}${name}`
       );
-      cachePostfix = cachePostfix + '_';
+      // cachePostfix = cachePostfix + '_';
     }
     if (!config.base) {
       if (!config.root) {
@@ -65,6 +65,9 @@ export class ViteService {
         name,
         this.viteViewConfig.views[name].viteConfigFile
       );
+      if (typeof hmr === 'object') {
+        hmr.port = await getPort(hmr.port);
+      }
       const hmrPort = this.viteViewConfig.views[name].hmrPort;
       this.vite[name] = await createServer({
         configFile,

@@ -17,7 +17,9 @@ export function get(object: any, path: string): any {
 //获取可用端口号
 export function getPort(port: number) {
   return new Promise<number>(resolve => {
-    const server = net.createServer().on('error', () => {
+    const server = net.createServer();
+    server.unref();
+    server.on('error', () => {
       getPort(++port).then(resolve);
     });
     server.listen(port, () => {

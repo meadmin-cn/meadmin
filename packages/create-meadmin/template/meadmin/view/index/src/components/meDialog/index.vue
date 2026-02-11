@@ -34,7 +34,9 @@ export default defineComponent({
       async () => {
         if (elDialogRef.value?.dialogContentRef && props.full) {
           await nextTick();
-          resetWH = minMax(elDialogRef.value!.dialogContentRef.$el)?.resetWH;
+          if (!import.meta.env.SSR) {
+            resetWH = minMax(elDialogRef.value!.dialogContentRef.$el)?.resetWH;
+          }
         }
       },
       { immediate: true },

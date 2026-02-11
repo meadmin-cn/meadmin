@@ -9,7 +9,7 @@
           <el-button v-if="vnodeProps?.onRefresh" @click="$emit('refresh')">
             <mel-icon-refresh />
           </el-button>
-          <el-button v-if="vnodeProps?.onAdd" type="primary" @click="$emit('add')">
+          <el-button v-if="onAdd" type="primary" @click="onAdd()">
             <mel-icon-plus />
           </el-button>
           <slot name="buttons"></slot>
@@ -125,11 +125,11 @@ const props = {
     type: Boolean,
     default: true,
   },
+  onAdd: Function as PropType<() => void>,
 };
 const emits = ['quickSearch', 'refresh', 'add', 'update:quickSearch'] as unknown as {
   quickSearch: (searchText: string) => void;
   refresh: () => void;
-  add: () => void;
   ['update:quickSearch']: (searchText: string) => void;
 } & Required<VxeTableListeners>;
 export default defineComponent({

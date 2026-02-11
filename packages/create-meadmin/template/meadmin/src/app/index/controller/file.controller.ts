@@ -1,14 +1,12 @@
-import { ApiOperationResponse } from '@/decorators/index.js';
+import { ApiOperationResponse, IndexPermission } from '@/decorators/index.js';
 import { uploadStorage } from '@/fileManage/index.js';
 import { UploadMiddleware, UploadOptions, UploadStreamFileInfo } from '@midwayjs/busboy';
 import { Body, Config, Controller, Fields, Files, Get, Inject, Param, Post } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { ApiBody, BodyContentType } from '@midwayjs/swagger';
 import { File } from '../../../entities/file.entity.js';
-import { FileCreateDto } from '../dto/fileCreate.dto.js';
 import { FileQueryDto } from '../dto/fileQuery.dto.js';
 import { FileUpDto } from '../dto/fileUp.dto.js';
-import { FileUpdateDto } from '../dto/fileUpdate.dto.js';
 import { FileService } from '../service/file.service.js';
 import { BaseController } from './base.controller.js';
 
@@ -53,64 +51,14 @@ export class FileController extends BaseController {
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/add')
-  @ApiOperationResponse({
-    responseType: File,
-    summary: '添加附件信息',
-  })
-  async add(@Body() createDto: FileCreateDto) {
-    return this.success(await this.fileService.create(createDto));
-  }
-
-  //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/')
-  @ApiOperationResponse({
-    responsePage: File,
-    summary: '获取附件列表',
-  })
-  async list(@Body() queryDto: FileQueryDto) {
-    return this.success(await this.fileService.list(queryDto));
-  }
-
-  //接口方法必须加async 方法的接口装饰器值必须/开头
   @Post('/my')
   @ApiOperationResponse({
     responsePage: File,
     summary: '获取我的附件列表',
   })
+  @IndexPermission()
   async my(@Body() queryDto: FileQueryDto) {
     queryDto.createdUserId = this.ctx.userInfo.id;
     return this.success(await this.fileService.list(queryDto));
-  }
-
-  //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Get('/info/:id')
-  @ApiOperationResponse({
-    responseType: File,
-    summary: '根据id获取附件详情',
-  })
-  async findOne(@Param('id') id: string) {
-    const entity = await this.fileService.findOne(id);
-    return this.success(entity);
-  }
-
-  //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/up/:id')
-  @ApiOperationResponse({
-    responseType: File,
-    summary: '根据id更新附件详情',
-  })
-  async update(@Param('id') id: string, @Body() updateDto: FileUpdateDto) {
-    return this.success(await this.fileService.update(id, updateDto));
-  }
-
-  //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/del/:id')
-  @ApiOperationResponse({
-    summary: '根据id删除附件信息',
-  })
-  async delete(@Param('id') id: string) {
-    await this.fileService.remove(id);
-    return this.success();
   }
 }

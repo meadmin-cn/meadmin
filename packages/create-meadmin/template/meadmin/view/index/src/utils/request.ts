@@ -148,14 +148,14 @@ export function request<R, P extends unknown[] = [], T = boolean>(
         }
       }
       if (!res || res.code === undefined) {
-        throw Error('返回值解析失败');
+        throw Error('返回值解析失败', res);
       }
       // 401：认证失败
       if (res.code === '401') {
         if (import.meta.env.SSR) {
           rmServerCache(serverCacheKey);
         }
-        router.push('/redirect//promiseError/' + res.msg);
+        useUserStore(store).logOut(router);
         throw Error(res.msg);
       }
       if (res.code !== '200') {

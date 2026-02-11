@@ -1,13 +1,13 @@
 {
   "name": "my-midway-esm-project",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
   "private": true,
   "type": "module",
   "dependencies": {
-    "@meadmin/cli": "^1.0.0",
-    "@meadmin/core": "^1.0.1",
-    "@meadmin/midway-vite-view": "^1.0.1",
+    "@meadmin/cli": "^1.0.2",
+    "@meadmin/core": "^1.0.2",
+    "@meadmin/midway-vite-view": "^1.0.2",
     "@midwayjs/bootstrap": "^3.20.11",
     "@midwayjs/busboy": "3.20.19",
     "@midwayjs/cache-manager": "^3.20.11",

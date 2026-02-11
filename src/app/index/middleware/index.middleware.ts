@@ -22,7 +22,7 @@ export class IndexMiddleware implements IMiddleware<Context, NextFunction> {
         }
         ctx.userInfo = userInfo;
       }
-      await next();
+      return await next();
     };
   }
 }

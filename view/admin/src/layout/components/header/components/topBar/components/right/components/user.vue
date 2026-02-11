@@ -11,17 +11,12 @@
             {{ $t('首页') }}
           </el-dropdown-item>
         </router-link>
-        <a href="https://github.com/meadmin-cn/meadmin-template">
+        <a target="_blank" href="https://github.com/meadmin-cn/meadmin">
           <el-dropdown-item>
             {{ $t('Github') }}
           </el-dropdown-item>
         </a>
-        <a href="https://gitee.com/meadmin-cn/meadmin-template">
-          <el-dropdown-item>
-            {{ $t('Gitee') }}
-          </el-dropdown-item>
-        </a>
-        <a href="https://meadmin-cn.github.io/meadmin-template-doc/">
+        <a target="_blank" href="https://www.meadmin.cn/">
           <el-dropdown-item>
             {{ $t('文档') }}
           </el-dropdown-item>

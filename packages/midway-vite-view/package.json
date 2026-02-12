@@ -1,6 +1,6 @@
 {
   "name": "@meadmin/midway-vite-view",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "midway 的 vite 服务端渲染和客户端渲染组件，",
   "main": "dist/index.js",
   "typings": "index.d.ts",
@@ -14,7 +14,8 @@
     "cov": "mwtsc cov --ts",
     "lint": "mwts check",
     "lint:fix": "mwts fix",
-    "vueBuild": "vite bind"
+    "vueBuild": "vite bind",
+    "prepublishOnly": "pnpm build"
   },
   "keywords": [
     "midway view",

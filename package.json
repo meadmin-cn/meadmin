@@ -1,6 +1,6 @@
 {
   "name": "meadmin",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "",
   "private": true,
   "type": "module",
@@ -73,8 +73,11 @@
     "type": "git",
     "url": ""
   },
-  "author": "anonymous",
+  "author": "yuntian001",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/meadmin-cn/meadmin"
+  },
   "pnpm": {
     "overrides": {
       "midway-vite-view": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/midway-vite-view",

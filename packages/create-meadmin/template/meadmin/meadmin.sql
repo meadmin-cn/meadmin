@@ -1,14 +1,14 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : meadmin
  Source Server Type    : PostgreSQL
  Source Server Version : 160001
+
  Target Server Type    : PostgreSQL
  Target Server Version : 160001
  File Encoding         : 65001
 
- Date: 01/02/2026 15:29:48
+ Date: 12/02/2026 15:43:10
 */
 
 
@@ -108,9 +108,6 @@ CREATE TABLE "example_demo_books" (
 -- ----------------------------
 -- Records of example_demo_books
 -- ----------------------------
-INSERT INTO "example_demo_books" VALUES ('1', '664043217833951232');
-INSERT INTO "example_demo_books" VALUES ('2', '664043217833951232');
-INSERT INTO "example_demo_books" VALUES ('3', '664043217833951232');
 
 -- ----------------------------
 -- Table structure for example_demo_files
@@ -163,7 +160,11 @@ COMMENT ON COLUMN "file"."path" IS '路径';
 COMMENT ON COLUMN "file"."md5" IS '文件MD5值';
 COMMENT ON TABLE "file" IS '附件表';
 
-
+-- ----------------------------
+-- Records of file
+-- ----------------------------
+INSERT INTO "file" VALUES ('677056935534526464', 'Krma0Tzl8b.jpg', 'image/jpeg', 27667, 'local', '2026-02-12 15:42:32.541+08', '2026-02-12 15:42:32.541+08', '604612615536115712', '604612615536115712', 'a8aa632b76c334a6c6094b3818bb68a9.jpg', 'a8aa632b76c334a6c6094b3818bb68a9');
+INSERT INTO "file" VALUES ('677056968040382464', 'OIP-C.webp', 'image/webp', 1768, 'local', '2026-02-12 15:42:40.292+08', '2026-02-12 15:42:40.292+08', '604612615536115712', '604612615536115712', 'c43cc289054dd01147070f8223c9cfa1.webp', 'c43cc289054dd01147070f8223c9cfa1');
 
 -- ----------------------------
 -- Table structure for role_menu
@@ -228,8 +229,8 @@ COMMENT ON TABLE "system_admin" IS '管理员表';
 -- ----------------------------
 -- Records of system_admin
 -- ----------------------------
-INSERT INTO "system_admin" VALUES ('632899190933946368', 'Test', 'test', 'ec7cb37e4c73af64cd2fd5b7e844ae1b8931acb4b1ebe555f2f2eefe33c831fe', 'de80c6206e17adf184a36c7e0840f01f', NULL, '15555555555', 0, NULL, '', 1, '604612615536115712', '604612615536115712', NULL, '2025-10-13 19:15:25.818+08', '2026-01-09 18:20:28.746+08', '646269352819032064');
-INSERT INTO "system_admin" VALUES ('604612615536115712', 'admin', 'Admin', 'e8e51c59da6333bce7a443efc3e8e2e792ac6b5592a70523a16b074ba1dcc3c0', 'd06d09e00fbb3ed98f6ce1f004be912c', 'admin@outlock.com', '13333333333', 0, '2026-01-16 18:04:20.681+08', '::ffff:127.0.0.1', 1, '604612615536115712', '604612615536115712', NULL, '2025-07-27 17:54:40.704+08', '2026-01-16 18:04:20.681+08', '646270698863460352');
+INSERT INTO "system_admin" VALUES ('632899190933946368', 'Test', 'test', 'ec7cb37e4c73af64cd2fd5b7e844ae1b8931acb4b1ebe555f2f2eefe33c831fe', 'de80c6206e17adf184a36c7e0840f01f', NULL, '15555555555', 0, NULL, '', 1, '604612615536115712', '604612615536115712', NULL, '2025-10-13 19:15:25.818+08', '2026-02-12 15:42:33.751+08', '677056935534526464');
+INSERT INTO "system_admin" VALUES ('604612615536115712', 'admin', 'Admin', 'e8e51c59da6333bce7a443efc3e8e2e792ac6b5592a70523a16b074ba1dcc3c0', 'd06d09e00fbb3ed98f6ce1f004be912c', 'admin@outlock.com', '13333333333', 0, '2026-02-12 15:42:11.717+08', '::ffff:127.0.0.1', 1, '604612615536115712', '604612615536115712', NULL, '2025-07-27 17:54:40.704+08', '2026-02-12 15:42:42.173+08', '677056968040382464');
 
 -- ----------------------------
 -- Table structure for system_menu
@@ -432,8 +433,7 @@ COMMENT ON TABLE "user" IS '用户表';
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO "user" VALUES ('657558079876890624', 'test', '测试账户', '0872954db1998fff1a92b4ff42f8f9aeb2932e67d0c7fb96e31dfa3db3504ec5', 'c10ebfb00d8075bb9045d74b3affc81e', '657559929984385024', '1111@qq.com', NULL, 0, NULL, '', 1, NULL, '2025-12-20 20:21:03.082+08', '2026-01-02 17:23:59.702+08', NULL, NULL, NULL, NULL);
-INSERT INTO "user" VALUES ('657559945822076928', 'test1', '测试账户', '2716e588736572a6bf2d9cbb06067b52805ccd80557ff03715d4eda151467903', '7ddb011fdb2406e9b57c963aa0737d92', '667311085061144576', NULL, NULL, 0, NULL, '', 1, NULL, '2025-12-20 20:28:27.957+08', '2026-01-16 18:29:07.6+08', NULL, NULL, NULL, '604612615536115712');
+INSERT INTO "user" VALUES ('657558079876890624', 'test', '测试账户', '0872954db1998fff1a92b4ff42f8f9aeb2932e67d0c7fb96e31dfa3db3504ec5', 'c10ebfb00d8075bb9045d74b3affc81e', '676746940855091200', '1111@qq.com', NULL, 0, NULL, '', 1, NULL, '2025-12-20 20:21:03.082+08', '2026-01-02 17:23:59.702+08', NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for user_file
@@ -469,6 +469,15 @@ COMMENT ON COLUMN "user_file"."created_admin_id" IS '创建者(管理员)Id';
 COMMENT ON COLUMN "user_file"."updated_admin_id" IS '最后更新者(管理员)Id';
 COMMENT ON TABLE "user_file" IS '用户附件表(前台)';
 
+-- ----------------------------
+-- Records of user_file
+-- ----------------------------
+INSERT INTO "user_file" VALUES ('676746940855091200', 'Krma0Tzl8b.jpg', 'a8aa632b76c334a6c6094b3818bb68a9.jpg', 'image/jpeg', 27667, 'local', 'a8aa632b76c334a6c6094b3818bb68a9', NULL, NULL, '2026-02-11 19:10:44.05+08', '2026-02-11 19:10:44.05+08', '604612615536115712', '604612615536115712');
+
+-- ----------------------------
+-- Primary Key structure for table example_book
+-- ----------------------------
+ALTER TABLE "example_book" ADD CONSTRAINT "example_book_pkey" PRIMARY KEY ("id");
 
 -- ----------------------------
 -- Indexes structure for table example_demo
@@ -569,3 +578,8 @@ ALTER TABLE "user" ADD CONSTRAINT "user_pkey" PRIMARY KEY ("id");
 -- Primary Key structure for table user_file
 -- ----------------------------
 ALTER TABLE "user_file" ADD CONSTRAINT "user_file_pkey" PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Foreign Keys structure for table example_demo_books
+-- ----------------------------
+ALTER TABLE "example_demo_books" ADD CONSTRAINT "example_demo_books_example_book_id_fkey" FOREIGN KEY ("example_book_id") REFERENCES "example_book" ("id") ON DELETE CASCADE ON UPDATE CASCADE;

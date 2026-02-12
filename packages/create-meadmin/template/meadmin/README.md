@@ -7,10 +7,18 @@ Me-admin 是一个免费开源的后台解决方案,后端基于medwayjs ,前台
 [https://www.meadmin.cn/](https://www.meadmin.cn/)
 
 ## 主要特性
-
-- 一键生成CRUD与菜单
-- 开箱即用的前台服务端渲染
-- 强大的权限管理
+- 基于typescript 应用级JavaScript 的语言
+- 基于sequelize7 、midwayjs3.x、vue3、vite7、pinia、elment-plus、vue-request@next
+- 提供一键生成CRUD与菜单的自动化能力，大幅简化开发流程，显著提升项目构建效率
+- 搭载完善的Auth权限控制，支持无限父子级分组与自由授权，管理员可跨组别，权限配置既灵活又严密。
+- 提供开箱即用的前台服务端渲染能力
+- 可配置主题 可配置主题色及主题模式
+- 友好的国际化方案 前端支持按组件异步加载语言包。
+- 自定义keepAlive缓存 可根据key进行vue keep-alive,解决不同路由统一组件不能独立刷新缓存问题
+- 权限 内置完善的动态路由权限生成方案，按钮级权限。支持前端菜单和接口动态获取菜单两种模式
+- 组件自动按需引入 自动按需引入components下的组件定义,支持自定义引入位置和模式，真正的按需引入。
+- 便捷的类型自动生成 自动生成ts type 最大程度减少工作量
+- 集成vxeTable 功能最完善的国人开源vue table组件
 
 ## 技术栈
 - typescript

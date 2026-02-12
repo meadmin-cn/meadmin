@@ -5,7 +5,7 @@
   "commentTranslate.targetLanguage": "zh-CN",
   "commentTranslate.source": "DarkCWK.youdao-youdao",
   "files.eol": "\n",
-  "conventionalCommits.scopes": ["meadmin", "midway-vite-view", "meadmin-view-admin", "core", "index", "create-meadmin"],
+  "conventionalCommits.scopes": ["meadmin", "midway-vite-view", "meadmin-view-admin", "core", "index", "create-meadmin", "cli"],
   "editor.codeActionsOnSave": {
     "source.organizeImports": "never",
     "source.removeUnusedImports": "explicit"

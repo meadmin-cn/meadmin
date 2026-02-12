@@ -1,5 +1,25 @@
 
 
+## [1.1.0](https://github.com/meadmin-cn/midway-meamdin/compare/main-1.0.2...main-1.1.0) (2026-02-12)
+
+
+### Bug 修复[fix]
+
+* **cli:** 修复sync命令 解析多文件间隔符错误 ([3460111](https://github.com/meadmin-cn/midway-meamdin/commit/3460111ebf22f7c0a3c80939baf43934dfe847ce))
+* **create-meadmin:** 修复模板文件缺少.npmrc文件错误 ([9d8a853](https://github.com/meadmin-cn/midway-meamdin/commit/9d8a853aac2e6ea59707c991386a58d92bcdca2b))
+* **meadmin:** 更新meadmin.sql文件，修复types文件位置错误 ([b180c1c](https://github.com/meadmin-cn/midway-meamdin/commit/b180c1c78d6dd2db6c08fcc53543cef476bf8c95))
+* **midway-vite-view:** 修复缺少dist文件夹导致启动失败问题 ([52151b0](https://github.com/meadmin-cn/midway-meamdin/commit/52151b0326d51c5074907286c82274c943379f34))
+
+
+### 其他[chore]
+
+* 版本号改为1.1.0 ([4f24492](https://github.com/meadmin-cn/midway-meamdin/commit/4f24492ae991d091fce15a5e223c9f68536c465d))
+
+
+### CI发版[ci]
+
+* **create-meadmin:** 重新生成模板文件 ([0ce1320](https://github.com/meadmin-cn/midway-meamdin/commit/0ce132045f277c74811d9a1fbdc3b4abee16cdb8))
+
 ## 1.0.2 (2026-02-11)
 
 

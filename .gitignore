@@ -3,7 +3,7 @@ npm-debug.log
 yarn-error.log
 node_modules/
 coverage/
-dist/
+dist
 .idea/
 run/
 .DS_Store
@@ -15,9 +15,8 @@ run/
 .env.local
 public/html/
 uploadFile/**
-!uploadFile/index
 !uploadFile/index/.gitkeep
-!uploadFile/admin/
 !uploadFile/admin/.gitkeep
 .env.production
+.env.prod
 .eslintcache

@@ -20,20 +20,20 @@ const copyFiles = {
   '.vscode/': {},
   'src/': {},
   'test/': {},
-  'types/': {},
   'public/admin/': {},
   'public/index/': {},
   'view/admin/': {
-    ignore: ['node_modules', '.eslintcache'], //忽略的值
+    ignore: ['node_modules', '.eslintcache', 'dist'], //忽略的值
   },
   'view/index/': {
-    ignore: ['node_modules', '.eslintcache'], //忽略的值
+    ignore: ['node_modules', '.eslintcache', 'dist'], //忽略的值
   },
   '.editorconfig': {},
   '.env': {},
   '.eslintrc.json': {},
   '.gitignore': {},
   '.mocharc.json': {},
+  '.npmignore': {},
   '.npmrc': {},
   '.prettierignore': {},
   '.prettierrc.cjs': {},
@@ -69,6 +69,8 @@ const makeFiles = {
   'logs/.gitkeep': {},
   'uploadFile/admin/.gitkeep': {},
   'uploadFile/index/.gitkeep': {},
+  'view/admin/dist/.gitkeep': {},
+  'view/index/dist/.gitkeep': {},
 };
 
 export const setMeadminTemplate = (program: Command) => {

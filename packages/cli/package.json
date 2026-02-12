@@ -1,6 +1,6 @@
 {
   "name": "@meadmin/cli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "meadmin cli",
   "type": "module",
   "main": "dist/index.js",
@@ -14,7 +14,8 @@
   "files": [
     "dist/**/*.js",
     "dist/**/*.d.ts",
-    "template"
+    "template",
+    ".prettierrc.cjs"
   ],
   "bugs": {
     "url": "https://github.com/meadmin-cn/meadmin"
@@ -33,8 +34,6 @@
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "mocha": "^10.8.2",
-    "prettier": "2.8.8",
-    "prettier-plugin-organize-imports": "^4.3.0",
     "rimraf": "^6.0.1",
     "typescript": "^5.9.2"
   },
@@ -42,7 +41,9 @@
     "art-template": "4.13.2",
     "commander": "^14.0.0",
     "dotenv": "^16.6.1",
-    "swagger-client": "^3.35.6"
+    "swagger-client": "^3.35.6",
+    "prettier": "2.8.8",
+    "prettier-plugin-organize-imports": "^4.3.0"
   },
   "peerDependencies": {
     "@sequelize/cli": "7.x || >=7.0.0-alpha.46",

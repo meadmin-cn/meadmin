@@ -2,7 +2,7 @@
 
 ## 简介
 
-Me-admin 是一个免费开源的后台解决方案,后端基于medwayjs ,前台基于vue3构建，开箱即用。本项目采用最宽松的MIT协议，最新技术栈，助力你快速创建企业级web中后台项目。
+Me-admin 是一个免费开源的nodejs + vue 全栈一站式中后台解决方案,后端基于medwayjs ,前台基于vue3构建，开箱即用。本项目采用最宽松的MIT协议，最新技术栈，助力你快速创建企业级web中后台项目。
 ## 相关文档
 [https://www.meadmin.cn/](https://www.meadmin.cn/)
 

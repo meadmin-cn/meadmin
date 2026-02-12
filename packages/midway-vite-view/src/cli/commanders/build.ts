@@ -208,6 +208,7 @@ export class Build {
         info.outDir,
         info.viteConfigFile
       );
+      fs.writeFileSync(info.outDir + '/.gitkeep', '');
       info.entryServers &&
         (await this.buildSSR(
           info.entryServers,

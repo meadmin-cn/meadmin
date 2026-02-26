@@ -1,1 +1,11 @@
-{ "管理员": "SystemAdmin", "菜单": "SystemMenu", "角色": "SystemRole", "附件": "File", "示例": "Example", "Demo": "Demo", "用户": "User", "User": "User", "用户附件表(前台)": "File" }
+{
+  "管理员": "SystemAdmin",
+  "菜单": "SystemMenu",
+  "角色": "SystemRole",
+  "附件": "File",
+  "示例": "Example",
+  "Demo": "Demo",
+  "用户": "User",
+  "用户附件表(前台)": "File",
+  "文档": "AonDoc"
+}

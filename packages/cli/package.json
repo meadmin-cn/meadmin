@@ -15,8 +15,7 @@
   "files": [
     "dist/**/*.js",
     "dist/**/*.d.ts",
-    "template",
-    ".prettierrc.cjs"
+    "template"
   ],
   "bugs": {
     "url": "https://github.com/meadmin-cn/meadmin"

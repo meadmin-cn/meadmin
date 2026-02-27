@@ -35,8 +35,14 @@ const require = createRequire(import.meta.url);
 let prettierrc = {} as Record<string, any>;
 try {
   prettierrc = require(process.cwd() + "/.prettierrc.cjs") ?? {};
-} catch (e) {
-  Log.warn("prettier配置加载失败", e);
+} catch (eCjs) {
+  try {
+    prettierrc =
+      (await import(pathToFileURL(process.cwd() + "/.prettierrc.js").href))
+        ?.default ?? {};
+  } catch (eJs) {
+    Log.warn("prettier配置加载失败", [eJs, eCjs]);
+  }
 }
 if (!prettierrc.plugins) {
   prettierrc.plugins = ["prettier-plugin-organize-imports"]; //让 Prettier 可以整理你的导入语句（例如排序、合并和移除未使用的导入语句）organizeImports。这与在 VS Code 中使用“Organize Imports”操作的效果相同。
@@ -476,12 +482,16 @@ function writeViews() {
 async function setMenu(model: string, namePath: string, sequelize: Sequelize) {
   let parentId: string | null = null;
   let paths = [];
-  const langFilePath = resovePath(`view/${model}/src/locales/lang/en/menu`, [
-    ".json",
-  ]);
-  const lang = await import(pathToFileURL(langFilePath).href, {
-    with: { type: "json" },
-  });
+  const langFilePath = resovePath(
+    `view/${model}/src/${replaceNames.addonsPath}locales/lang/en/menu`,
+    [".json"]
+  );
+  let lang = { default: {} };
+  if (existsSync(langFilePath)) {
+    lang = await import(pathToFileURL(langFilePath).href, {
+      with: { type: "json" },
+    });
+  }
   const comments = tableInfo(replaceNames.Name).tableComment.split("_");
   const menuNames = namePath.split("/").filter((v) => v);
   if (replaceNames.addonsPath) {
@@ -502,6 +512,7 @@ async function setMenu(model: string, namePath: string, sequelize: Sequelize) {
       },
     });
     parentId = menuEntity.get("id") as string;
+    lang.default[upFirstCase(addonsName)] = upFirstCase(addonsName);
   }
   for (let i = 0; i < menuNames.length; i++) {
     const menu = menuNames[i];

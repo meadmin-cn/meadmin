@@ -11,12 +11,7 @@
         <el-input v-model="info.password"></el-input>
       </el-form-item>
       <el-form-item :label="t('头像')" prop="avatar">
-        <me-upload-user-file
-          list-type="picture"
-          :limit="1"
-          :model-value="info.avatar ? [info.avatar] : []"
-          @update:model-value="(files) => (info.avatar = files.length ? files[0] : null)"
-        ></me-upload-user-file>
+        <me-upload-user-file list-type="picture" :limit="1" :model-value="info.avatar ? [info.avatar] : []" @update:model-value="(files) => (info.avatar = files.length ? files[0] : null)"></me-upload-user-file>
       </el-form-item>
       <el-form-item :label="t('邮箱')" prop="email">
         <el-input v-model="info.email"></el-input>

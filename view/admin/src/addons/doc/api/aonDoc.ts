@@ -1,21 +1,21 @@
-import { PageParam, PageResult } from "@/api/api.model.js";
-import { FileInfo } from "@/api/file.js";
-import { SystemAdminInfo } from "@/api/system/admin.js";
-import { TreeArrayItem } from "@/utils/helper.js";
-import request, { RequestOptions } from "@/utils/request.js";
+import { PageParam, PageResult } from '@/api/api.model.js';
+import { FileInfo } from '@/api/file.js';
+import { SystemAdminInfo } from '@/api/system/admin.js';
+import { TreeArrayItem } from '@/utils/helper.js';
+import request, { RequestOptions } from '@/utils/request.js';
 
 //文档
 export class AonDoc {
-  parentId = "" as string | null; //父级id
-  title = "" as string; //名称
+  parentId = '' as string | null; //父级id
+  title = '' as string; //名称
   icon = undefined as FileInfo | null | undefined; //图标(200*200)
   parent = undefined as AonDoc | null | undefined; //父级
   type = undefined as 1 | 2 | undefined; //类型:1=目录;2=菜单
   status = 1 as 1 | 0; //状态:1=启用;0=禁用
   orderNum = 99 as number | undefined; //排序(降序)
   constentType = 0 as 0 | 1; //内容类型:0=markdown;1=外链
-  mdContent = "" as string; //内容
-  link = "" as string | null; //外链地址
+  mdContent = '' as string; //内容
+  link = '' as string | null; //外链地址
 }
 
 export type AonDocInfo = AonDoc & {
@@ -29,11 +29,11 @@ export type AonDocInfo = AonDoc & {
 export function addAonDocApi() {
   return request<AonDocInfo, [AonDoc]>(
     (data) => ({
-      url: "aonDoc/add",
-      method: "post",
+      url: 'aonDoc/add',
+      method: 'post',
       data: data,
     }),
-    { success: true }
+    { success: true },
   );
 }
 
@@ -58,19 +58,14 @@ export class AonDocListParam extends PageParam {
   endUpdatedAt?: string; //最后更新时间(止)
 }
 //获取文档列表
-export function aonDocListApi(
-  options?: RequestOptions<AonDocListResult, [AonDocListParam]>
-) {
+export function aonDocListApi(options?: RequestOptions<AonDocListResult, [AonDocListParam]>) {
   return request<AonDocListResult, [AonDocListParam]>(
     (data) => ({
-      url: "aonDoc/",
-      method: "post",
+      url: 'aonDoc/',
+      method: 'post',
       data: data,
     }),
-    Object.assign(
-      { noLoading: true, clearEmpty: ["", undefined, null] },
-      options
-    )
+    Object.assign({ noLoading: true, clearEmpty: ['', undefined, null] }, options),
   );
 }
 
@@ -79,27 +74,22 @@ export function aonDocInfoApi(options?: RequestOptions<AonDocInfo, [string]>) {
   return request<AonDocInfo, [string]>(
     (id) => ({
       url: `aonDoc/info/${id}`,
-      method: "get",
+      method: 'get',
     }),
-    Object.assign({ noLoading: true }, options)
+    Object.assign({ noLoading: true }, options),
   );
 }
 
-export type UpdateAonDocInfoParam = Omit<
-  Partial<AonDocInfo>,
-  "id" | "createdAt" | "updatedAt" | "createdAdmin" | "updatedAdmin"
->;
+export type UpdateAonDocInfoParam = Omit<Partial<AonDocInfo>, 'id' | 'createdAt' | 'updatedAt' | 'createdAdmin' | 'updatedAdmin'>;
 //修改文档信息
-export function updateAonDocApi(
-  options?: RequestOptions<AonDocInfo, [string, UpdateAonDocInfoParam]>
-) {
+export function updateAonDocApi(options?: RequestOptions<AonDocInfo, [string, UpdateAonDocInfoParam]>) {
   return request<AonDocInfo, [string, UpdateAonDocInfoParam]>(
     (id, data) => ({
       url: `aonDoc/up/${id}`,
-      method: "post",
+      method: 'post',
       data: data,
     }),
-    Object.assign({ success: true, noLoading: true }, options)
+    Object.assign({ success: true, noLoading: true }, options),
   );
 }
 
@@ -108,22 +98,20 @@ export function delAonDocApi(options?: RequestOptions<null, [string]>) {
   return request<null, [string]>(
     (id) => ({
       url: `aonDoc/del/${id}`,
-      method: "post",
+      method: 'post',
     }),
-    Object.assign({ noLoading: true }, options)
+    Object.assign({ noLoading: true }, options),
   );
 }
 
-export type AonDocInfoTreeAll = TreeArrayItem<AonDocInfo, "children">[];
+export type AonDocInfoTreeAll = TreeArrayItem<AonDocInfo, 'children'>[];
 //获取树形结构
-export function aonDocTreeAllApi(
-  options?: RequestOptions<AonDocInfoTreeAll, []>
-) {
+export function aonDocTreeAllApi(options?: RequestOptions<AonDocInfoTreeAll, []>) {
   return request<AonDocInfoTreeAll, []>(
     () => ({
-      url: "aonDoc/treeAll",
-      method: "get",
+      url: 'aonDoc/treeAll',
+      method: 'get',
     }),
-    Object.assign({ noLoading: true }, options)
+    Object.assign({ noLoading: true }, options),
   );
 }

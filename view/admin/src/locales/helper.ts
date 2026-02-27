@@ -16,11 +16,7 @@ export type MessageImport = [(locale: string) => Promise<{ default: LocaleMessag
  * @param isLoading 是否loading(仅会在异步加载时进行loading)
  * @returns
  */
-export const loadMessage = <P extends Record<any, any> = { default: LocaleMessages<VueMessageType> }>(
-  messageImport: [(locale: string) => Promise<P>, string?],
-  locale?: string,
-  isLoading?: boolean,
-) => {
+export const loadMessage = <P extends Record<any, any> = { default: LocaleMessages<VueMessageType> }>(messageImport: [(locale: string) => Promise<P>, string?], locale?: string, isLoading?: boolean) => {
   if (!locale) {
     locale = useGlobalStore().i18n.locale.value;
   }
@@ -110,11 +106,7 @@ export const setI18nLanguage = async (locale: string, isLoading = true, i18n?: G
   isLoading && loading();
   if (i18n === useGlobalStore().i18n) {
     useSettingStore().locale = locale;
-    const messageArr = [
-      setLocaleMessage(i18n, locale, [async (locale) => await import(`./lang/${locale}/index.ts`)]),
-      loadMessage<{ default: Language }>([async (locale) => await import(`../../node_modules/element-plus/es/locale/lang/${locale}.mjs`), 'element-plus'], locale),
-      ...mitter.emit(event.BEFORE_LOCAL_CHANGE, { locale, i18n }),
-    ];
+    const messageArr = [setLocaleMessage(i18n, locale, [async (locale) => await import(`./lang/${locale}/index.ts`)]), loadMessage<{ default: Language }>([async (locale) => await import(`../../node_modules/element-plus/es/locale/lang/${locale}.mjs`), 'element-plus'], locale), ...mitter.emit(event.BEFORE_LOCAL_CHANGE, { locale, i18n })];
     const res = await Promise.allSettled(messageArr);
     if (res[1].status === 'fulfilled' && res[1].value) {
       useSettingStore().elLocale = res[1].value.default;

@@ -36,7 +36,7 @@ export default () =>
       codeTemplates: [
         {
           key: '//code',
-          template: "{{name}}: typeof import('{{path}}')['default'];\n    ",
+          template: "{{name}}: (typeof import('{{path}}'))['default'];\n    ",
         },
       ],
       name: 'V_{{name}}',
@@ -50,11 +50,11 @@ export default () =>
       codeTemplates: [
         {
           key: '//code',
-          template: "{{name}}: typeof import('{{path}}')['default'];\n    ",
+          template: "{{name}}: (typeof import('{{path}}'))['default'];\n    ",
         },
         {
           key: '//typeCode',
-          template: "type {{name}}Instance = InstanceType<typeof import('{{path}}')['default']>;\n  ",
+          template: "type {{name}}Instance = InstanceType<(typeof import('{{path}}'))['default']>;\n  ",
         },
       ],
       name: '_{{name}}',

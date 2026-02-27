@@ -4,9 +4,7 @@
     <Expand></Expand>
     <el-scrollbar v-if="!globalStore.isMobile && themeConfig.breadcrumb" :min-size="10" wrap-style="display:flex;align-items:center">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item v-for="(item, index) in breadcrumbList" :key="item.path" :to="index === breadcrumbList.length - 1 || !item.redirect ? undefined : item">{{
-          $t(item.meta!.title!)
-        }}</el-breadcrumb-item>
+        <el-breadcrumb-item v-for="(item, index) in breadcrumbList" :key="item.path" :to="index === breadcrumbList.length - 1 || !item.redirect ? undefined : item">{{ $t(item.meta!.title!) }}</el-breadcrumb-item>
       </el-breadcrumb>
     </el-scrollbar>
   </el-space>

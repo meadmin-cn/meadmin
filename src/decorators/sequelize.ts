@@ -34,9 +34,7 @@ export class SequelizeRegistreDecorators implements RegistreDecorator {
           connectionName?: string;
         },
       ) => {
-        return this.dataSourceManager
-          .getDataSource(meta.connectionName || this.dataSourceManager.getDataSourceNameByModel(meta.modelKey) || this.dataSourceManager.getDefaultDataSourceName())
-          .models.get(meta.modelKey.name);
+        return this.dataSourceManager.getDataSource(meta.connectionName || this.dataSourceManager.getDataSourceNameByModel(meta.modelKey) || this.dataSourceManager.getDefaultDataSourceName()).models.get(meta.modelKey.name);
       },
     );
 

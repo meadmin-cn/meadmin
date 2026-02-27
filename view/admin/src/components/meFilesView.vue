@@ -1,24 +1,8 @@
 <!-- table中展示文件item组件 -->
 <template>
   <div class="me-files-view">
-    <el-image
-      v-for="(item, index) in fileList?.imageArr ?? []"
-      :key="index"
-      class="view-img"
-      :src="item"
-      :zoom-rate="1.2"
-      :max-scale="7"
-      :min-scale="0.2"
-      :preview-src-list="fileList.imageArr"
-      :initial-index="index"
-      :title="$t('点击预览')"
-      show-progress
-      preview-teleported
-      fit="scale-down"
-    />
-    <el-link v-for="(item, index) in fileList?.fileArr ?? []" :key="index" class="view-link" type="primary" :href="item.url" target="_blank" :title="$t('点击下载')">{{
-      item.name ?? item.url
-    }}</el-link>
+    <el-image v-for="(item, index) in fileList?.imageArr ?? []" :key="index" class="view-img" :src="item" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :preview-src-list="fileList.imageArr" :initial-index="index" :title="$t('点击预览')" show-progress preview-teleported fit="scale-down" />
+    <el-link v-for="(item, index) in fileList?.fileArr ?? []" :key="index" class="view-link" type="primary" :href="item.url" target="_blank" :title="$t('点击下载')">{{ item.name ?? item.url }}</el-link>
   </div>
 </template>
 

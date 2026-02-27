@@ -1,8 +1,8 @@
 import { App, Configuration, Inject } from '@midwayjs/core';
-import { RouterService } from './service/router.service.js';
 import * as koa from '@midwayjs/koa';
-import { GlobaleMiddleware } from './middleware/globale.middleware.js';
 import { setApp } from './index.js';
+import { GlobaleMiddleware } from './middleware/globale.middleware.js';
+import { RouterService } from './service/router.service.js';
 
 @Configuration({
   namespace: 'meadmin',

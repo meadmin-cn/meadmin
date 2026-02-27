@@ -44,60 +44,16 @@ export const enum MoveType {
   REORDER,
 }
 
-export type MountComponentFn = (
-  initialVNode: VNode,
-  container: RendererElement,
-  anchor: RendererNode | null,
-  parentComponent: ComponentInternalInstance | null,
-  parentSuspense: SuspenseBoundary | null,
-  isSVG: boolean,
-  optimized: boolean,
-) => void;
+export type MountComponentFn = (initialVNode: VNode, container: RendererElement, anchor: RendererNode | null, parentComponent: ComponentInternalInstance | null, parentSuspense: SuspenseBoundary | null, isSVG: boolean, optimized: boolean) => void;
 
-type MountChildrenFn = (
-  children: VNodeArrayChildren,
-  container: RendererElement,
-  anchor: RendererNode | null,
-  parentComponent: ComponentInternalInstance | null,
-  parentSuspense: SuspenseBoundary | null,
-  isSVG: boolean,
-  slotScopeIds: string[] | null,
-  optimized: boolean,
-  start?: number,
-) => void;
+type MountChildrenFn = (children: VNodeArrayChildren, container: RendererElement, anchor: RendererNode | null, parentComponent: ComponentInternalInstance | null, parentSuspense: SuspenseBoundary | null, isSVG: boolean, slotScopeIds: string[] | null, optimized: boolean, start?: number) => void;
 
-type PatchChildrenFn = (
-  n1: VNode | null,
-  n2: VNode,
-  container: RendererElement,
-  anchor: RendererNode | null,
-  parentComponent: ComponentInternalInstance | null,
-  parentSuspense: SuspenseBoundary | null,
-  isSVG: boolean,
-  slotScopeIds: string[] | null,
-  optimized: boolean,
-) => void;
+type PatchChildrenFn = (n1: VNode | null, n2: VNode, container: RendererElement, anchor: RendererNode | null, parentComponent: ComponentInternalInstance | null, parentSuspense: SuspenseBoundary | null, isSVG: boolean, slotScopeIds: string[] | null, optimized: boolean) => void;
 
-type PatchBlockChildrenFn = (
-  oldChildren: VNode[],
-  newChildren: VNode[],
-  fallbackContainer: RendererElement,
-  parentComponent: ComponentInternalInstance | null,
-  parentSuspense: SuspenseBoundary | null,
-  isSVG: boolean,
-  slotScopeIds: string[] | null,
-) => void;
+type PatchBlockChildrenFn = (oldChildren: VNode[], newChildren: VNode[], fallbackContainer: RendererElement, parentComponent: ComponentInternalInstance | null, parentSuspense: SuspenseBoundary | null, isSVG: boolean, slotScopeIds: string[] | null) => void;
 
 type NextFn = (vnode: VNode) => RendererNode | null;
 
 export const queuePostRenderEffect = __FEATURE_SUSPENSE__ ? queueEffectWithSuspense : queuePostFlushCb;
 
-export type SetupRenderEffectFn = (
-  instance: ComponentInternalInstance,
-  initialVNode: VNode,
-  container: RendererElement,
-  anchor: RendererNode | null,
-  parentSuspense: SuspenseBoundary | null,
-  isSVG: boolean,
-  optimized: boolean,
-) => void;
+export type SetupRenderEffectFn = (instance: ComponentInternalInstance, initialVNode: VNode, container: RendererElement, anchor: RendererNode | null, parentSuspense: SuspenseBoundary | null, isSVG: boolean, optimized: boolean) => void;

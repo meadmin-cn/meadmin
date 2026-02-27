@@ -16,11 +16,7 @@ import { SearchTreeOptions, default as XEUtils } from 'xe-utils';
  * @param initialValue  作为第一次调用 callback 函数时参数 previousValue 的值
  * @returns
  */
-export function objectRreduce<T, P extends Record<string, any> = Record<string, any>>(
-  object: P,
-  callbackfn: (previousValue: T, currentValue: P[keyof P], currentKey: string, object: P) => T,
-  initialValue: T,
-): T {
+export function objectRreduce<T, P extends Record<string, any> = Record<string, any>>(object: P, callbackfn: (previousValue: T, currentValue: P[keyof P], currentKey: string, object: P) => T, initialValue: T): T {
   for (const i in object) {
     if (Object.hasOwn(object, i)) {
       initialValue = callbackfn(initialValue, object[i], i, object);
@@ -106,13 +102,7 @@ export const getColorLuma = function (color: string) {
 type TreeData<Key extends string[]> = {
   [k in Key[number]]: string | number;
 } & { [k: string]: any };
-export const searchTreeTable = function <Key extends string[], T extends TreeData<Key>>(
-  searchText: number | string,
-  searchProps: Key,
-  data: T[],
-  options: SearchTreeOptions = { children: 'children' },
-  formatStr = (str: string, filterRE: RegExp) => str.replace(filterRE, (match) => `<span class="keyword-lighten">${match}</span>`),
-) {
+export const searchTreeTable = function <Key extends string[], T extends TreeData<Key>>(searchText: number | string, searchProps: Key, data: T[], options: SearchTreeOptions = { children: 'children' }, formatStr = (str: string, filterRE: RegExp) => str.replace(filterRE, (match) => `<span class="keyword-lighten">${match}</span>`)) {
   const search = XEUtils.toValueString(searchText).trim().toLowerCase();
   if (search) {
     const filterRE = new RegExp(search, 'gi');

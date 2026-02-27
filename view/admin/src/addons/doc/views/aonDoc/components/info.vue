@@ -1,10 +1,5 @@
 <template>
-  <me-dialog
-    v-model="show"
-    :title="t('详情')"
-    :close-on-click-modal="false"
-    @closed="emit('closed')"
-  >
+  <me-dialog v-model="show" :title="t('详情')" :close-on-click-modal="false" @closed="emit('closed')">
     <el-descriptions v-loading="loading" class="info" :border="true">
       <el-descriptions-item :label="t('父级id')">
         {{ formatterStrExec(data?.parentId) }}
@@ -22,16 +17,16 @@
         {{ formatterStrExec(data?.parent) }}
       </el-descriptions-item>
       <el-descriptions-item :label="t('类型')">
-        {{ formatterDictExec(dict, "type", data?.type) }}
+        {{ formatterDictExec(dict, 'type', data?.type) }}
       </el-descriptions-item>
       <el-descriptions-item :label="t('状态')">
-        {{ formatterDictExec(dict, "status", data?.status) }}
+        {{ formatterDictExec(dict, 'status', data?.status) }}
       </el-descriptions-item>
       <el-descriptions-item :label="t('排序(降序)')">
         {{ formatterStrExec(data?.orderNum) }}
       </el-descriptions-item>
       <el-descriptions-item :label="t('内容类型')">
-        {{ formatterDictExec(dict, "constentType", data?.constentType) }}
+        {{ formatterDictExec(dict, 'constentType', data?.constentType) }}
       </el-descriptions-item>
       <el-descriptions-item :label="t('内容')">
         {{ formatterStrExec(data?.mdContent) }}
@@ -46,40 +41,24 @@
         {{ formatterAtExec(data?.updatedAt) }}
       </el-descriptions-item>
       <el-descriptions-item :label="t('创建者(管理员)')">
-        {{
-          formatterObjectExecFn((obj) => `${obj.nickname}(${obj.username})`)(
-            data?.createdAdmin
-          )
-        }}
+        {{ formatterObjectExecFn((obj) => `${obj.nickname}(${obj.username})`)(data?.createdAdmin) }}
       </el-descriptions-item>
       <el-descriptions-item :label="t('最后更新者(管理员)')">
-        {{
-          formatterObjectExecFn((obj) => `${obj.nickname}(${obj.username})`)(
-            data?.updatedAdmin
-          )
-        }}
+        {{ formatterObjectExecFn((obj) => `${obj.nickname}(${obj.username})`)(data?.updatedAdmin) }}
       </el-descriptions-item>
     </el-descriptions>
     <template #footer>
-      <me-button @click="() => (show = false)">{{ t("关闭") }}</me-button>
+      <me-button @click="() => (show = false)">{{ t('关闭') }}</me-button>
     </template>
   </me-dialog>
 </template>
 
 <script setup lang="ts" name="Info">
-import { aonDocInfoApi } from "@/addons/doc/api/aonDoc";
-import { useLocalesI18n } from "@/locales/hooks.js";
-import {
-  formatterAtExec,
-  formatterDictExec,
-  formatterObjectExecFn,
-  formatterStrExec,
-} from "@/utils/helper.js";
-import { getDict } from "../dict.js";
-let { t, loadRes } = useLocalesI18n({}, [
-  (locale: string) => import(`../lang/${locale}.json`),
-  "aonDoc",
-]);
+import { aonDocInfoApi } from '@/addons/doc/api/aonDoc';
+import { useLocalesI18n } from '@/locales/hooks.js';
+import { formatterAtExec, formatterDictExec, formatterObjectExecFn, formatterStrExec } from '@/utils/helper.js';
+import { getDict } from '../dict.js';
+let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'aonDoc']);
 await loadRes;
 const dict = getDict(t);
 const show = defineModel<boolean>();
@@ -87,7 +66,7 @@ const props = defineProps<{
   id?: string;
 }>();
 const emit = defineEmits<{
-  (e: "closed"): void;
+  (e: 'closed'): void;
 }>();
 const { data, loading, runAsync } = aonDocInfoApi();
 watch(
@@ -97,7 +76,7 @@ watch(
       runAsync(id);
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 <style lang="scss" scoped>

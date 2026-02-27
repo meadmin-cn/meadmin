@@ -1,13 +1,5 @@
 <template>
-  <el-pagination
-    v-bind="options"
-    :current-page="currentPage"
-    :page-size="pageSize"
-    :layout="pageLayout"
-    :pager-count="pagerCount"
-    @update:current-page="setPage"
-    @update:page-size="setSize"
-  ></el-pagination>
+  <el-pagination v-bind="options" :current-page="currentPage" :page-size="pageSize" :layout="pageLayout" :pager-count="pagerCount" @update:current-page="setPage" @update:page-size="setSize"></el-pagination>
 </template>
 <script lang="ts">
 import { useGlobalStore } from '@/store';

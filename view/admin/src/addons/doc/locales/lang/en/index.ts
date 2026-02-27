@@ -1,7 +1,7 @@
-import { forOwn } from "lodash-es";
-const modules = import.meta.glob("./**/*.{json,ts}", {
+import { forOwn } from 'lodash-es';
+const modules = import.meta.glob('./**/*.{json,ts}', {
   eager: true,
-  import: "default",
+  import: 'default',
 });
 const langs = {} as Record<string, string>;
 forOwn(modules, (value) => {

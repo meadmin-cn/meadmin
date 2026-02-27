@@ -26,18 +26,7 @@
       <vxe-column field="name" :title="t('文件名')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="url" :title="t('预览')">
         <template #default="{ row }: { row: FileInfo }">
-          <el-image
-            v-if="isImage(row.url)"
-            class="view-img"
-            :src="row.url"
-            :zoom-rate="1.2"
-            :max-scale="7"
-            :min-scale="0.2"
-            :preview-src-list="[row.url]"
-            show-progress
-            preview-teleported
-            fit="scale-down"
-          />
+          <el-image v-if="isImage(row.url)" class="view-img" :src="row.url" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :preview-src-list="[row.url]" show-progress preview-teleported fit="scale-down" />
           <a v-else :href="row.url" target="_blank" :title="t('点击下载')">
             <mel-icon-download size="20px"></mel-icon-download>
           </a>

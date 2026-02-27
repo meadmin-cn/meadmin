@@ -16,8 +16,8 @@
       @on-max-length="emit('onMaxLength', $event)"
       @on-focus="emit('onFocus', $event)"
       @on-blur="emit('onBlur', $event)"
-      @custom-alert="(...args:[string,string]) => emit('customAlert', ...args)"
-      @custom-paste="(...args:[IDomEditor,ClipboardEvent]) => emit('customPaste', ...args)"
+      @custom-alert="(...args: [string, string]) => emit('customAlert', ...args)"
+      @custom-paste="(...args: [IDomEditor, ClipboardEvent]) => emit('customPaste', ...args)"
     />
   </div>
 </template>

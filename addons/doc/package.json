@@ -1,0 +1,33 @@
+{
+  "name": "meadmin-addons-doc",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/index.js",
+  "export": {
+    ".": "./dist/index.js",
+    "./*": "./*.js"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "keywords": [],
+  "author": "meadmin",
+  "license": "MIT",
+  "packageManager": "pnpm@10.24.0",
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "dependencies": {
+    "md-editor-v3": "^6.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "tsdown": "^0.20.1",
+    "typescript": "^5.9.3"
+  }
+}

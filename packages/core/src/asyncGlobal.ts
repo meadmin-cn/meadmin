@@ -1,5 +1,5 @@
-import { Context } from '@midwayjs/koa';
-import { AsyncLocalStorage } from 'node:async_hooks';
+import { Context } from "@midwayjs/koa";
+import { AsyncLocalStorage } from "node:async_hooks";
 
 export type Global = Record<
   string,
@@ -24,7 +24,7 @@ export const getAsyncGlobal = <K extends keyof Global[string]>(
   if (!id) {
     id = globalAsyncLocalStorage.getStore() as string | undefined;
     if (!id) {
-      throw Error('必须传入上下文id');
+      throw Error("必须传入上下文id");
     }
   }
   const info = global[id] || {};
@@ -46,7 +46,7 @@ export const setAsyncGloabel = <K extends keyof Global[string]>(
   if (!id) {
     id = globalAsyncLocalStorage.getStore() as string | undefined;
     if (!id) {
-      throw Error('必须传入上下文id');
+      throw Error("上下文外执行，必须传入上下文id");
     }
   }
   if (!global[id]) {
@@ -69,7 +69,7 @@ export const removeAsyncGlobal = <K extends keyof Global[string]>(
   if (!id) {
     id = globalAsyncLocalStorage.getStore() as string | undefined;
     if (!id) {
-      throw Error('上下文外执行，必须传入上下文id');
+      throw Error("上下文外执行，必须传入上下文id");
     }
   }
   if (key) {
@@ -87,5 +87,5 @@ export const removeAsyncGlobal = <K extends keyof Global[string]>(
  * @returns
  */
 export const getContext = () => {
-  return getAsyncGlobal('ctx');
+  return getAsyncGlobal("ctx");
 };

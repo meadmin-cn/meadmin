@@ -28,7 +28,7 @@ formatterAtExec(
 </template>
 
 <script setup lang="ts" name="Info">
-import { {{@ replaceNames.name}}InfoApi } from '@/api/{{@ replaceNames.namePath}}';
+import { {{@ replaceNames.name}}InfoApi } from '@/{{@ replaceNames.addonsPath}}api/{{@ replaceNames.namePath}}';
 import { useLocalesI18n } from '@/locales/hooks.js';
 import { formatterAtExec,  formatterStrExec,formatterObjectExecFn,formatterArrExecFn } from '@/utils/helper.js';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), '{{@ replaceNames.name}}']);

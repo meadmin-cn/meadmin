@@ -71,7 +71,6 @@ export default defineComponent({
     overflow-y: auto;
     flex: 1;
     margin-top: 10px;
-    flex-shrink: 0;
     padding: 0 10px;
   }
   .el-dialog__footer {

@@ -1,80 +1,89 @@
-import { ApiOperationResponse } from '@/decorators/index.js';
-import { Body, Controller, Get, Inject, Param, Post } from '@midwayjs/core';
-import { SystemRole } from '../../../../entities/systemRole.entity.js';
-import { SystemRoleCreateDto } from '../../dto/system/roleCreate.dto.js';
-import { SystemRoleQueryDto } from '../../dto/system/roleQuery.dto.js';
-import { SystemRoleTreeAllResultDto } from '../../dto/system/roleTreeAllResult.dto.js';
-import { SystemRoleUpdateDto } from '../../dto/system/roleUpdate.dto.js';
-import { SystemRoleService } from '../../service/system/role.service.js';
-import { BaseController } from '../base.controller.js';
+import { AdminPermission, ApiOperationResponse } from "@/decorators/index.js";
+import { Body, Controller, Get, Inject, Param, Post } from "@midwayjs/core";
+import { SystemRole } from "../../../../entities/systemRole.entity.js";
+import { SystemRoleCreateDto } from "../../dto/system/roleCreate.dto.js";
+import { SystemRoleQueryDto } from "../../dto/system/roleQuery.dto.js";
+import { SystemRoleTreeAllResultDto } from "../../dto/system/roleTreeAllResult.dto.js";
+import { SystemRoleUpdateDto } from "../../dto/system/roleUpdate.dto.js";
+import { SystemRoleService } from "../../service/system/role.service.js";
+import { BaseController } from "../base.controller.js";
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
  * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址
  */
-@Controller('system/role')
+@Controller("system/role")
 export class SystemRoleController extends BaseController {
   @Inject()
   systemRoleService: SystemRoleService;
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/add')
+  @Post("/add")
   @ApiOperationResponse({
     responseType: SystemRole,
-    summary: '添加角色信息',
+    summary: "添加角色信息",
   })
+  @AdminPermission("system_role_add")
   async add(@Body() createDto: SystemRoleCreateDto) {
     createDto.isSuper = 0;
     return this.success(await this.systemRoleService.create(createDto));
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/')
+  @Post("/")
   @ApiOperationResponse({
     responsePage: SystemRole,
-    summary: '获取角色列表',
+    summary: "获取角色列表",
   })
+  @AdminPermission("system_menu_role")
   async list(@Body() queryDto: SystemRoleQueryDto) {
     return this.success(await this.systemRoleService.list(queryDto));
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Get('/treeAll')
+  @Get("/treeAll")
   @ApiOperationResponse({
     responseList: SystemRoleTreeAllResultDto,
-    summary: '获取所有角色(按父子级返回)',
+    summary: "获取所有角色(按父子级返回)",
   })
+  @AdminPermission("system_menu_role")
   async treeAll() {
     return this.success(await this.systemRoleService.treeAll());
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Get('/info/:id')
+  @Get("/info/:id")
   @ApiOperationResponse({
     responseType: SystemRole,
-    summary: '根据id获取角色详情',
+    summary: "根据id获取角色详情",
   })
-  async findOne(@Param('id') id: string) {
+  @AdminPermission("system_role_info")
+  async findOne(@Param("id") id: string) {
     const entity = await this.systemRoleService.findOne(id);
     return this.success(entity);
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/up/:id')
+  @Post("/up/:id")
   @ApiOperationResponse({
     responseType: SystemRole,
-    summary: '根据id更新角色详情',
+    summary: "根据id更新角色信息",
   })
-  async update(@Param('id') id: string, @Body() updateDto: SystemRoleUpdateDto) {
+  @AdminPermission("system_role_edit")
+  async update(
+    @Param("id") id: string,
+    @Body() updateDto: SystemRoleUpdateDto
+  ) {
     return this.success(await this.systemRoleService.update(id, updateDto));
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Post('/del/:id')
+  @Post("/del/:id")
   @ApiOperationResponse({
-    summary: '根据id删除角色信息',
+    summary: "根据id删除角色信息",
   })
-  async delete(@Param('id') id: string) {
+  @AdminPermission("system_role_del")
+  async delete(@Param("id") id: string) {
     await this.systemRoleService.remove(id);
     return this.success();
   }

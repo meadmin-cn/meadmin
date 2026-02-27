@@ -1,116 +1,23 @@
 <template>
   <page>
-    <template #searchForm>
-      <me-search-form
-        :model="params"
-        :default-all="true"
-        class="search-form"
-        @search="search(1)"
-      >
-        <el-form-item :label="t('父级id')" prop="parentId">
-          <el-input v-model="params.parentId" clearable></el-input>
-        </el-form-item>
-        <el-form-item :label="t('ID')" prop="id">
-          <el-input v-model="params.id" clearable></el-input>
-        </el-form-item>
-        <el-form-item :label="t('名称')" prop="title">
-          <el-input v-model="params.title" clearable></el-input>
-        </el-form-item>
-        <el-form-item :label="t('类型')" prop="type">
-          <el-select v-model="params.type" clearable>
-            <el-option
-              v-for="val in dict.type"
-              :key="val.value"
-              :value="val.value"
-              :label="val.label"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="t('状态')" prop="status">
-          <el-select v-model="params.status" clearable>
-            <el-option
-              v-for="val in dict.status"
-              :key="val.value"
-              :value="val.value"
-              :label="val.label"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="t('排序(降序)')" prop="orderNum">
-          <el-input-number
-            v-model="params.orderNum"
-            clearable
-          ></el-input-number>
-        </el-form-item>
-        <el-form-item :label="t('内容类型')" prop="constentType">
-          <el-select v-model="params.constentType" clearable>
-            <el-option
-              v-for="val in dict.constentType"
-              :key="val.value"
-              :value="val.value"
-              :label="val.label"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="t('内容')" prop="mdContent">
-          <el-input v-model="params.mdContent" clearable></el-input>
-        </el-form-item>
-        <el-form-item :label="t('外链地址')" prop="link">
-          <el-input v-model="params.link" clearable></el-input>
-        </el-form-item>
-        <el-form-item :label="t('创建时间')" prop="createdAt">
-          <el-date-picker
-            v-model="params.startCreatedAt"
-            type="datetime"
-            value-format="YYYY-MM-DD HH:mm:ss"
-            clearable
-          />&nbsp; - &nbsp;
-          <el-form-item prop="priceEnd">
-            <el-date-picker
-              v-model="params.endCreatedAt"
-              type="datetime"
-              value-format="YYYY-MM-DD HH:mm:ss"
-              clearable
-            />
-          </el-form-item>
-        </el-form-item>
-        <el-form-item :label="t('最后更新时间')" prop="updatedAt">
-          <el-date-picker
-            v-model="params.startUpdatedAt"
-            type="datetime"
-            value-format="YYYY-MM-DD HH:mm:ss"
-            clearable
-          />&nbsp; - &nbsp;
-          <el-form-item prop="priceEnd">
-            <el-date-picker
-              v-model="params.endUpdatedAt"
-              type="datetime"
-              value-format="YYYY-MM-DD HH:mm:ss"
-              clearable
-            />
-          </el-form-item>
-        </el-form-item>
-      </me-search-form>
-    </template>
     <me-vxe-table
       align="center"
       border
-      :loading="loading"
-      :data="data?.list"
-      :pagination-options="{
-        currentPage: params.page,
-        pageSize: params.pageSize,
-        total: data?.total ?? 0,
-        layout: 'sizes, prev, pager, next, jumper, ->, total',
-        change: search,
+      :tree-config="{
+        expandAll: true,
+        rowField: 'id',
+        childrenField: 'children',
       }"
+      :loading="loading"
+      :data="data ?? []"
       :on-add="permission('aon_doc_add') ? showAddOrUp : undefined"
-      @refresh="search(1)"
+      @refresh="search()"
     >
       <vxe-column
-        field="parentId"
-        :title="t('父级id')"
-        :formatter="formatterStr"
+        type="seq"
+        align="left"
+        :title="t('序号')"
+        tree-node
       ></vxe-column>
       <vxe-column
         field="id"
@@ -130,7 +37,7 @@
       <vxe-column
         field="parent"
         :title="t('父级')"
-        :formatter="formatterStr"
+        :formatter="formatterObjectFn('title')"
       ></vxe-column>
       <vxe-column
         field="type"
@@ -151,11 +58,6 @@
         field="constentType"
         :title="t('内容类型')"
         :formatter="formatterDict"
-      ></vxe-column>
-      <vxe-column
-        field="mdContent"
-        :title="t('内容')"
-        :formatter="formatterStr"
       ></vxe-column>
       <vxe-column
         field="link"
@@ -236,8 +138,7 @@
 <script setup lang="ts" name="AonDoc">
 import {
   AonDocInfo,
-  aonDocListApi,
-  AonDocListParam,
+  aonDocTreeAllApi,
   delAonDocApi,
 } from "@/addons/doc/api/aonDoc";
 import { useActionModel } from "@/hooks/index.js";
@@ -260,16 +161,14 @@ let { t, loadRes } = useLocalesI18n({}, [
 ]);
 const dict = getDict(t);
 const formatterDict = createformatterDictFn<AonDocInfo>(dict);
-const params = reactive(new AonDocListParam());
-const { loading, data, runAsync } = aonDocListApi();
-const search = (page = params.page, pageSize = params.pageSize) =>
-  runAsync(Object.assign(params, { page, pageSize }));
+const { loading, data, runAsync } = aonDocTreeAllApi();
+const search = () => runAsync();
 const { runAsync: delRun, loading: delLoading } = delAonDocApi();
 const delId = ref<string>();
 const del = async (id: string) => {
   delId.value = id;
   await delRun(id);
-  await search(1);
+  await search();
 };
 const showInfo = (id?: string) => {
   openInfo({ id });
@@ -278,10 +177,10 @@ const showAddOrUp = (id?: string) => {
   openAddOrUp({
     id,
     onSuccess: async () => {
-      await search(1);
+      await search();
     },
   });
 };
 
-await Promise.all([loadRes, search(1)]);
+await Promise.all([loadRes, search()]);
 </script>

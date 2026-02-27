@@ -89,7 +89,30 @@ export default () =>
             "type {{name}}Instance = InstanceType<typeof import('{{path}}')['default']>;\n  ",
         },
       ],
-      name: "_{{name}}",
+      name(fileName: string) {
+        const index = fileName.lastIndexOf(".");
+        if (index > 0) {
+          fileName = fileName.slice(0, index);
+        }
+        const fileNameArr = fileName
+          .replace(/\\/g, "/")
+          .replace(/[/-]/g, "_")
+          .split("_");
+        fileNameArr.shift(); //移除多余的插件文件夹
+        fileNameArr.shift();
+        fileNameArr.unshift("");
+        if (
+          fileNameArr[fileNameArr.length - 1] == "index" ||
+          fileNameArr[fileNameArr.length - 1] == "Index"
+        ) {
+          fileNameArr.pop();
+        }
+        for (let i = 1, len = fileNameArr.length; i < len; i++) {
+          fileNameArr[i] =
+            fileNameArr[i].slice(0, 1).toUpperCase() + fileNameArr[i].slice(1);
+        }
+        return fileNameArr.join("");
+      },
     },
   ]);
 

@@ -1,7 +1,9 @@
 const config = {
   // ...require('mwts/.prettierrc.json'),
-  // 一行最多 200 字符 建议配合 vscode 的自动换行使用
-  printWidth: 200,
+  // 一行最多 500 字符 建议配合 vscode 的自动换行使用
+  printWidth: 500,
+  vueWrapAttributes: true,
+  singleAttributePerLine: false,
   // 超出不换行
   proseWrap: "never",
   // 使用 2 个空格缩进

@@ -5,7 +5,9 @@
     "rootDir": "src",
     "outDir": "dist",
     "baseUrl": ".",
-    "paths": {}
+    "paths": {},
+    "module": "es6",
+    "moduleResolution": "bundler"
   },
   "exclude": ["*.js", "*.ts", "dist", "node_modules", "test", "rescources"]
 }

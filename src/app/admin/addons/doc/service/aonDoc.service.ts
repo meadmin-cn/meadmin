@@ -18,6 +18,24 @@ export class AonDocService {
   i18nService: MidwayI18nService;
 
   /**
+   * 获取角色树形结构
+   * @returns
+   */
+  async treeAll() {
+    return await this.aonDocRepository.getTree({
+      include: [
+        "createdAdmin",
+        "updatedAdmin",
+        {
+          association: "icon",
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+      ],
+      order: [["orderNum", "DESC"]],
+    });
+  }
+
+  /**
    * 创建数据
    * @param createDto
    * @returns
@@ -78,12 +96,13 @@ export class AonDocService {
       include: [
         "createdAdmin",
         "updatedAdmin",
+        "parent",
         {
           association: "icon",
           attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
         },
       ],
-      order: [["createdAt", "DESC"]],
+      order: [["orderNum", "DESC"]],
     });
     return {
       list: rows,
@@ -104,6 +123,7 @@ export class AonDocService {
       include: [
         "createdAdmin",
         "updatedAdmin",
+        "parent",
         {
           association: "icon",
           attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)

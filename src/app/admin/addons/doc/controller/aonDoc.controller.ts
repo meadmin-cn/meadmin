@@ -6,6 +6,7 @@ import { AonDocCreateDto } from "../dto/aonDocCreate.dto.js";
 import { AonDocQueryDto } from "../dto/aonDocQuery.dto.js";
 import { AonDocUpdateDto } from "../dto/aonDocUpdate.dto.js";
 import { AonDocService } from "../service/aonDoc.service.js";
+import { AonDocTreeAllResultDto } from "../dto/aonDocTreeAllResult.dto.js";
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。
@@ -15,6 +16,22 @@ import { AonDocService } from "../service/aonDoc.service.js";
 export class AonDocController extends BaseController {
   @Inject()
   aonDocService: AonDocService;
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Get("/treeAll")
+  @ApiOperationResponse({
+    responseList: AonDocTreeAllResultDto,
+    summary: "获取所有文档(按父子级返回)",
+  })
+  @AdminPermission([
+    "aon_doc_list",
+    "aon_doc_add",
+    "aon_doc_edit",
+    "aon_doc_info",
+  ])
+  async treeAll() {
+    return this.success(await this.aonDocService.treeAll());
+  }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
   @Post("/add")

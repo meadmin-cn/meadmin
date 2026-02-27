@@ -13,30 +13,31 @@
       class="add"
       label-width="auto"
     >
-      <el-form-item :label="t('父级id')" prop="parentId">
-        <el-input v-model="info.parentId"></el-input>
+      <el-form-item :label="t('父级')" prop="parentId">
+        <el-tree-select
+          v-model="info.parentId"
+          :data="treeAllList || []"
+          check-strictly
+          node-key="id"
+          :props="{ label: 'title' }"
+          :render-after-expand="false"
+          clearable
+          filterable
+        />
       </el-form-item>
       <el-form-item :label="t('名称')" prop="title">
         <el-input v-model="info.title"></el-input>
       </el-form-item>
       <el-form-item :label="t('图标(200*200)')" prop="icon">
         <me-upload
+          list-type="picture"
+          accept=".png,.jpg,.jpeg,.gif"
           :limit="1"
           :model-value="info.icon ? [info.icon] : []"
           @update:model-value="
             (files) => (info.icon = files.length ? files[0] : null)
           "
         ></me-upload>
-      </el-form-item>
-      <el-form-item :label="t('类型')" prop="type">
-        <el-select v-model="info.type">
-          <el-option
-            v-for="val in dict.type"
-            :key="val.value"
-            :value="val.value"
-            :label="val.label"
-          />
-        </el-select>
       </el-form-item>
       <el-form-item :label="t('状态')" prop="status">
         <el-select v-model="info.status" :value-on-clear="null" clearable>
@@ -54,22 +55,46 @@
           :value-on-clear="null"
         ></el-input-number>
       </el-form-item>
-      <el-form-item :label="t('内容类型')" prop="constentType">
-        <el-select v-model="info.constentType" :value-on-clear="null" clearable>
+      <el-form-item :label="t('类型')" prop="type">
+        <el-select v-model="info.type">
           <el-option
-            v-for="val in dict.constentType"
+            v-for="val in dict.type"
             :key="val.value"
             :value="val.value"
             :label="val.label"
           />
         </el-select>
       </el-form-item>
-      <el-form-item :label="t('内容')" prop="mdContent">
-        <el-input v-model="info.mdContent"></el-input>
-      </el-form-item>
-      <el-form-item :label="t('外链地址')" prop="link">
-        <el-input v-model="info.link"></el-input>
-      </el-form-item>
+      <template v-if="info.type == 2">
+        <el-form-item :label="t('内容类型')" prop="constentType">
+          <el-select
+            v-model="info.constentType"
+            :value-on-clear="null"
+            clearable
+          >
+            <el-option
+              v-for="val in dict.constentType"
+              :key="val.value"
+              :value="val.value"
+              :label="val.label"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          v-if="info.constentType == 0"
+          :label="t('内容')"
+          prop="mdContent"
+        >
+          <aon-doc-md-editor v-model="info.mdContent"></aon-doc-md-editor>
+        </el-form-item>
+        <el-form-item
+          v-if="info.constentType == 1"
+          :label="t('外链地址')"
+          prop="link"
+        >
+          <el-input v-model="info.link"></el-input>
+        </el-form-item>
+      </template>
     </el-form>
     <template #footer>
       <me-button @click="() => (show = false)">{{ t("取消") }}</me-button>
@@ -83,6 +108,7 @@ import {
   AonDoc,
   addAonDocApi,
   aonDocInfoApi,
+  aonDocTreeAllApi,
   updateAonDocApi,
 } from "@/addons/doc/api/aonDoc";
 import { useLocalesI18n } from "@/locales/i18n";
@@ -94,12 +120,13 @@ import { getDict } from "../dict.js";
 const { runAsync: updateRunAsync } = updateAonDocApi();
 const { runAsync: addRunAsync } = addAonDocApi();
 const { runAsync: infoRunAsync } = aonDocInfoApi();
+const { data: treeAllList, runAsync: getTreeAllAsync } = aonDocTreeAllApi();
 
 let { t, loadRes } = useLocalesI18n({}, [
   (locale: string) => import(`../lang/${locale}.json`),
   "aonDoc",
 ]);
-await loadRes;
+await Promise.all([loadRes, getTreeAllAsync()]);
 const dict = getDict(t);
 const show = defineModel<boolean>();
 const props = defineProps<{
@@ -124,17 +151,6 @@ watch(
   { immediate: true }
 );
 const rules: FormRules = {
-  parentId: [
-    {
-      type: "string",
-      max: 100,
-      message: t("{label} 长度必须小于等于 {max}", {
-        label: t("父级id"),
-        max: 100,
-      }),
-      trigger: "blur",
-    },
-  ],
   title: [
     {
       required: true,

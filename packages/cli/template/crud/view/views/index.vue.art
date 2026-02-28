@@ -17,7 +17,7 @@
       layout: 'sizes, prev, pager, next, jumper, ->, total',
       change: search,
     }"
-    {{if adminPermission}}:onAdd="permission('{{replaceNames.roleName}}_add')?showAddOrUp:undefined"{{else}}:onAdd="showAddOrUp"{{/if}}
+    {{if adminPermission}}:on-add="permission('{{replaceNames.roleName}}_add')?showAddOrUp:undefined"{{else}}:on-add="showAddOrUp"{{/if}}
     @refresh="search(1)"
   >
     <% include('./tableColum.vue.art', {...entitySchema, replaceNames, entity:entity,  belongsToEntity:entity.belongsToEntity, belongsToManyEntity:entity.belongsToManyEntity}) %>{{if entitySchema.properties.createdAdmin}}

@@ -1,6 +1,6 @@
 declare module 'vue' {
   export interface GlobalComponents {
-    LayoutMenuItem: typeof import('../src/layout/components/menu/components/menuItem.vue')['default'];
+    LayoutMenuItem: (typeof import('../src/layout/components/menu/components/menuItem.vue'))['default'];
   }
 }
 import { StateTree } from 'pinia';

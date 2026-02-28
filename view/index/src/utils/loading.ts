@@ -2,7 +2,10 @@ import { LoadingOptions } from 'element-plus';
 import { throttle } from 'lodash-es';
 const loadingInstance: Record<string, ReturnType<typeof ElLoading.service>> = {};
 class Loading {
-  constructor(private execLoading: (options?: LoadingOptions) => void, private execClose: () => void) {
+  constructor(
+    private execLoading: (options?: LoadingOptions) => void,
+    private execClose: () => void,
+  ) {
     this.execLoading = execLoading;
     this.execClose = execClose;
   }

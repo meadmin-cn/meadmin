@@ -1,6 +1,6 @@
 <template>
-  <me-dialog v-model="show" :title="t('详情')" :close-on-click-modal="false" @closed="emit('closed')">
-    <el-descriptions class="info" :border="true" v-loading="loading">
+  <me-dialog v-model="show" :title="t('详情')" v-loading="loading" :close-on-click-modal="false" @closed="emit('closed')">
+    <el-descriptions class="info" :border="true">
       {{each entitySchema.properties}} {{if ['createdAdmin','updatedAdmin'].includes($index)}} <% return; %>{{/if}} <% const keyInfo = $imports.getKeyInfo($value.description); %>
       <el-descriptions-item :label="t('{{@ keyInfo.name}}')">{{if $value.$ref === '#/components/schemas/FileInfo'}}
   <me-files-view :files="data?.{{$index}}?[data.{{$index}}]:[]"></me-files-view>

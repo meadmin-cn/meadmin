@@ -87,7 +87,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.3.0",
     "postcss-plugin-px2rem": "^0.8.1",
-    "prettier": "2.8.8",
+    "prettier": "3.8.1",
     "rollup-plugin-visualizer": "^5.14.0",
     "sass": "^1.93.2",
     "terser": "^5.44.0",

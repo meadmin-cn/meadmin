@@ -6,7 +6,7 @@
     <set-el-globel v-if="showSetElGlobel"></set-el-globel>
     <Teleport to="body">
       <Suspense>
-        <component :is="item.component" v-for="item in globalComponents" :key="item.key" :ref="(vnode:any)=>item.vnode = vnode" v-bind="item.props"></component>
+        <component :is="item.component" v-for="item in globalComponents" :key="item.key" :ref="(vnode: any) => (item.vnode = vnode)" v-bind="item.props"></component>
       </Suspense>
     </Teleport>
   </el-config-provider>

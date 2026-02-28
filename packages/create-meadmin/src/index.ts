@@ -70,16 +70,7 @@ try {
           toSetPath,
           file === '.env'
             ? (content: string) => {
-                return content
-                  .replace('{DATABASE_HOST}', DATABASE_HOST)
-                  .replace('{DATABASE_PORT}', DATABASE_PORT)
-                  .replace('{DATABASE_DB}', DATABASE_DB)
-                  .replace('{DATABASE_SCHEMA}', DATABASE_SCHEMA)
-                  .replace('{DATABASE_USER}', DATABASE_USER)
-                  .replace('{DATABASE_PASSWORD}', DATABASE_PASSWORD)
-                  .replace('{REDIS_HOST}', REDIS_HOST)
-                  .replace('{REDIS_PORT}', REDIS_PORT)
-                  .replace('{REDIS_PASS}', REDIS_PASS);
+                return content.replace('{DATABASE_HOST}', DATABASE_HOST).replace('{DATABASE_PORT}', DATABASE_PORT).replace('{DATABASE_DB}', DATABASE_DB).replace('{DATABASE_SCHEMA}', DATABASE_SCHEMA).replace('{DATABASE_USER}', DATABASE_USER).replace('{DATABASE_PASSWORD}', DATABASE_PASSWORD).replace('{REDIS_HOST}', REDIS_HOST).replace('{REDIS_PORT}', REDIS_PORT).replace('{REDIS_PASS}', REDIS_PASS);
               }
             : undefined,
           false,

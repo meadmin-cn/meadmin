@@ -147,17 +147,17 @@ type InternalInferAttributeKeysFromFieldsLoose<M extends Model, Key extends keyo
   Key extends keyof Model
     ? never
     : // functions are always excluded
-    M[Key] extends AnyFunction
-    ? never
-    : // : // fields branded with NonAttribute are excluded
-    //   IsBranded<M[Key], typeof NonAttributeBrand> extends true
-    //   ? never
-    // check 'omit' option is provided & exclude those listed in it
-    Options['omit'] extends string
-    ? Key extends Options['omit']
+      M[Key] extends AnyFunction
       ? never
-      : Key
-    : Key;
+      : // : // fields branded with NonAttribute are excluded
+        //   IsBranded<M[Key], typeof NonAttributeBrand> extends true
+        //   ? never
+        // check 'omit' option is provided & exclude those listed in it
+        Options['omit'] extends string
+        ? Key extends Options['omit']
+          ? never
+          : Key
+        : Key;
 /**
  * 用于提取给定模型类属性的实用类型(宽松的不会排除{@link NonAttribute}标记的属性)。
  *

@@ -1,8 +1,4 @@
-import {
-  globalAsyncLocalStorage,
-  removeAsyncGlobal,
-  setAsyncGloabel,
-} from '@/asyncGlobal.js';
+import { globalAsyncLocalStorage, removeAsyncGlobal, setAsyncGloabel } from '@/asyncGlobal.js';
 import { IMiddleware, Middleware, NextFunction } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 let idSeq = 0;

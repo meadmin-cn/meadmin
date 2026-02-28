@@ -1,13 +1,5 @@
 <template>
-  <el-select
-    v-bind="omit(attrs, 'filterable', 'loading', 'filterMethod')"
-    :ref="changeRef"
-    v-model="modelValue"
-    :loading="loading"
-    :filterable="true"
-    :filter-method="filterMethod"
-    class="me-sleect-list"
-  >
+  <el-select v-bind="omit(attrs, 'filterable', 'loading', 'filterMethod')" :ref="changeRef" v-model="modelValue" :loading="loading" :filterable="true" :filter-method="filterMethod" class="me-sleect-list">
     <template v-for="(_, name) in $slots" #[name]="data">
       <slot :name="name" v-bind="data || {}"></slot>
     </template>

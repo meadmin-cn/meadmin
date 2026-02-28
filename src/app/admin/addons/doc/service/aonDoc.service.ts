@@ -1,12 +1,12 @@
-import { InjectRepository, Transaction } from "@/decorators/index.js";
-import { Inject, Provide } from "@midwayjs/core";
-import { BadRequestError } from "@midwayjs/core/dist/error/http.js";
-import { MidwayI18nService } from "@midwayjs/i18n";
-import { Op } from "@sequelize/core";
-import { AonDoc } from "../../../../../entities/aonDoc.entity.js";
-import { AonDocCreateDto } from "../dto/aonDocCreate.dto.js";
-import { AonDocQueryDto } from "../dto/aonDocQuery.dto.js";
-import { AonDocUpdateDto } from "../dto/aonDocUpdate.dto.js";
+import { InjectRepository, Transaction } from '@/decorators/index.js';
+import { Inject, Provide } from '@midwayjs/core';
+import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
+import { MidwayI18nService } from '@midwayjs/i18n';
+import { Op } from '@sequelize/core';
+import { AonDoc } from '../../../../../entities/aonDoc.entity.js';
+import { AonDocCreateDto } from '../dto/aonDocCreate.dto.js';
+import { AonDocQueryDto } from '../dto/aonDocQuery.dto.js';
+import { AonDocUpdateDto } from '../dto/aonDocUpdate.dto.js';
 
 //文档
 @Provide()
@@ -24,14 +24,14 @@ export class AonDocService {
   async treeAll() {
     return await this.aonDocRepository.getTree({
       include: [
-        "createdAdmin",
-        "updatedAdmin",
+        'createdAdmin',
+        'updatedAdmin',
         {
-          association: "icon",
+          association: 'icon',
           attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
         },
       ],
-      order: [["orderNum", "DESC"]],
+      order: [['orderNum', 'DESC']],
     });
   }
 
@@ -61,30 +61,30 @@ export class AonDocService {
   async list(queryDto: AonDocQueryDto) {
     const where = {};
     Object.keys(queryDto).forEach((key) => {
-      if (["page", "pageSize"].includes(key)) {
+      if (['page', 'pageSize'].includes(key)) {
         return;
       }
-      if ([null, undefined, ""].includes(queryDto[key])) {
+      if ([null, undefined, ''].includes(queryDto[key])) {
         return;
       }
-      if (key === "startCreatedAt") {
-        where["createdAt"] = where["createdAt"] ?? {};
-        where["createdAt"][Op.gte] = queryDto[key];
+      if (key === 'startCreatedAt') {
+        where['createdAt'] = where['createdAt'] ?? {};
+        where['createdAt'][Op.gte] = queryDto[key];
         return;
       }
-      if (key === "endCreatedAt") {
-        where["createdAt"] = where["createdAt"] ?? {};
-        where["createdAt"][Op.lte] = queryDto[key];
+      if (key === 'endCreatedAt') {
+        where['createdAt'] = where['createdAt'] ?? {};
+        where['createdAt'][Op.lte] = queryDto[key];
         return;
       }
-      if (key === "startUpdatedAt") {
-        where["updatedAt"] = where["updatedAt"] ?? {};
-        where["updatedAt"][Op.gte] = queryDto[key];
+      if (key === 'startUpdatedAt') {
+        where['updatedAt'] = where['updatedAt'] ?? {};
+        where['updatedAt'][Op.gte] = queryDto[key];
         return;
       }
-      if (key === "endUpdatedAt") {
-        where["updatedAt"] = where["updatedAt"] ?? {};
-        where["updatedAt"][Op.lte] = queryDto[key];
+      if (key === 'endUpdatedAt') {
+        where['updatedAt'] = where['updatedAt'] ?? {};
+        where['updatedAt'][Op.lte] = queryDto[key];
         return;
       }
       where[key] = queryDto[key];
@@ -94,15 +94,15 @@ export class AonDocService {
       offset: (queryDto.page - 1) * queryDto.pageSize,
       limit: queryDto.pageSize,
       include: [
-        "createdAdmin",
-        "updatedAdmin",
-        "parent",
+        'createdAdmin',
+        'updatedAdmin',
+        'parent',
         {
-          association: "icon",
+          association: 'icon',
           attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
         },
       ],
-      order: [["orderNum", "DESC"]],
+      order: [['orderNum', 'DESC']],
     });
     return {
       list: rows,
@@ -121,17 +121,17 @@ export class AonDocService {
   async findOne(id: string) {
     const entity = await this.aonDocRepository.findByPk(id, {
       include: [
-        "createdAdmin",
-        "updatedAdmin",
-        "parent",
+        'createdAdmin',
+        'updatedAdmin',
+        'parent',
         {
-          association: "icon",
+          association: 'icon',
           attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
         },
       ],
     });
     if (!entity) {
-      throw new BadRequestError(this.i18nService.translate("没有对应的信息"));
+      throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
     return entity;
   }
@@ -146,7 +146,7 @@ export class AonDocService {
   async update(id: string, updateDto: AonDocUpdateDto) {
     const entity = await this.aonDocRepository.findByPk(id);
     if (!entity) {
-      throw new BadRequestError(this.i18nService.translate("没有对应的信息"));
+      throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
     Object.assign(entity, updateDto);
 
@@ -167,7 +167,7 @@ export class AonDocService {
   async remove(id: string) {
     const entity = await this.aonDocRepository.findByPk(id);
     if (!entity) {
-      throw new BadRequestError(this.i18nService.translate("没有对应的信息"));
+      throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
     await entity.destroy();
   }

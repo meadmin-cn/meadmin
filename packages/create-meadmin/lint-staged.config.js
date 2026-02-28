@@ -1,3 +1,3 @@
 export default {
-  "!(*template*).ts": "prettier --cache --write --ignore-unknown"
-}
+  '!(*template*).ts': 'prettier --cache --write --ignore-unknown',
+};

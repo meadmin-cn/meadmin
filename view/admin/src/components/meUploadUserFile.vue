@@ -1,15 +1,5 @@
 <template>
-  <el-upload
-    v-bind="omit(attrs, 'fileList', 'httpRequest', 'onPreview', 'onSuccess', 'onRemove')"
-    :ref="changeRef"
-    class="me-upload-user-file"
-    :file-list="fileList"
-    :http-request="handleHttpRequest"
-    @preview="handlePictureCardPreview"
-    @success="handleSuccess"
-    @remove="handleRemove"
-    @exceed="handleExceed"
-  >
+  <el-upload v-bind="omit(attrs, 'fileList', 'httpRequest', 'onPreview', 'onSuccess', 'onRemove')" :ref="changeRef" class="me-upload-user-file" :file-list="fileList" :http-request="handleHttpRequest" @preview="handlePictureCardPreview" @success="handleSuccess" @remove="handleRemove" @exceed="handleExceed">
     <template v-for="(_, name) in $slots" #[name]="data">
       <slot :name="name" v-bind="data || {}"></slot>
     </template>

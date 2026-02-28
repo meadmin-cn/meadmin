@@ -1,1 +1,1 @@
-export { MdPreview, MdEditor, MdCatalog } from "md-editor-v3";
+export { MdCatalog, MdEditor, MdPreview } from 'md-editor-v3';

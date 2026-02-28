@@ -25,14 +25,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "exclude": [
-    "*.js",
-    "*.ts",
-    "dist",
-    "node_modules",
-    "test",
-    "packages",
-    "view",
-    "addons"
-  ]
+  "exclude": ["*.js", "*.ts", "dist", "node_modules", "test", "packages", "view", "addons"]
 }

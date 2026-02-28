@@ -1,53 +1,36 @@
-import { getClassMetadata } from "@midwayjs/core";
-import {
-  DECORATORS,
-  DECORATORS_CLASS_METADATA,
-  MixDecoratorMetadata,
-  ReferenceObject,
-  SchemaObject,
-  SwaggerExplorer,
-} from "@midwayjs/swagger";
-import { DocumentBuilder } from "@midwayjs/swagger/dist/documentBuilder.js";
-import { Model, NormalizedAttributeOptions, Sequelize } from "@sequelize/core";
-import { MapView } from "@sequelize/utils";
-import template from "art-template";
-import { Command } from "commander";
-import { omit } from "lodash-es";
-import { existsSync } from "node:fs";
-import { join, resolve } from "node:path";
-import { pathToFileURL } from "node:url";
-import * as prettier from "prettier";
-import { getConfig } from "../utils/db.js";
-import { delFileSync, recursionWriteFileSync } from "../utils/file.js";
-import {
-  getKeyInfo,
-  lowerFirstCase,
-  normalizeToKebabOrSnakeCase,
-  relativePath,
-  resovePath,
-  toHump,
-  upFirstCase,
-} from "../utils/formatting.js";
-import { Log } from "../utils/log.js";
-import { createRequire } from "node:module";
+import { getClassMetadata } from '@midwayjs/core';
+import { DECORATORS, DECORATORS_CLASS_METADATA, MixDecoratorMetadata, ReferenceObject, SchemaObject, SwaggerExplorer } from '@midwayjs/swagger';
+import { DocumentBuilder } from '@midwayjs/swagger/dist/documentBuilder.js';
+import { Model, NormalizedAttributeOptions, Sequelize } from '@sequelize/core';
+import { MapView } from '@sequelize/utils';
+import template from 'art-template';
+import { Command } from 'commander';
+import { omit } from 'lodash-es';
+import { existsSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import * as prettier from 'prettier';
+import { getConfig } from '../utils/db.js';
+import { delFileSync, recursionWriteFileSync } from '../utils/file.js';
+import { getKeyInfo, lowerFirstCase, normalizeToKebabOrSnakeCase, relativePath, resovePath, toHump, upFirstCase } from '../utils/formatting.js';
+import { Log } from '../utils/log.js';
 const require = createRequire(import.meta.url);
 //加载运行项目的配置
 let prettierrc = {} as Record<string, any>;
 try {
-  prettierrc = require(process.cwd() + "/.prettierrc.cjs") ?? {};
+  prettierrc = require(process.cwd() + '/.prettierrc.cjs') ?? {};
 } catch (eCjs) {
   try {
-    prettierrc =
-      (await import(pathToFileURL(process.cwd() + "/.prettierrc.js").href))
-        ?.default ?? {};
+    prettierrc = (await import(pathToFileURL(process.cwd() + '/.prettierrc.js').href))?.default ?? {};
   } catch (eJs) {
-    Log.warn("prettier配置加载失败", [eJs, eCjs]);
+    Log.warn('prettier配置加载失败', [eJs, eCjs]);
   }
 }
 if (!prettierrc.plugins) {
-  prettierrc.plugins = ["prettier-plugin-organize-imports"]; //让 Prettier 可以整理你的导入语句（例如排序、合并和移除未使用的导入语句）organizeImports。这与在 VS Code 中使用“Organize Imports”操作的效果相同。
-} else if (!prettierrc.plugins.includes("prettier-plugin-organize-imports")) {
-  prettierrc.plugins.push("prettier-plugin-organize-imports");
+  prettierrc.plugins = ['prettier-plugin-organize-imports']; //让 Prettier 可以整理你的导入语句（例如排序、合并和移除未使用的导入语句）organizeImports。这与在 VS Code 中使用“Organize Imports”操作的效果相同。
+} else if (!prettierrc.plugins.includes('prettier-plugin-organize-imports')) {
+  prettierrc.plugins.push('prettier-plugin-organize-imports');
 }
 
 let swaggerSchemas = {} as Record<string, SchemaObject>;
@@ -69,14 +52,8 @@ class MeSwaggerExplorer extends SwaggerExplorer {
    * @param clzz
    */
   public parseApiExtraModel(clzz: any) {
-    const metaForClass =
-      getClassMetadata<MixDecoratorMetadata[]>(
-        DECORATORS_CLASS_METADATA,
-        clzz
-      ) || [];
-    const extraModels = metaForClass.filter(
-      (item) => item.key === DECORATORS.API_EXTRA_MODEL
-    );
+    const metaForClass = getClassMetadata<MixDecoratorMetadata[]>(DECORATORS_CLASS_METADATA, clzz) || [];
+    const extraModels = metaForClass.filter((item) => item.key === DECORATORS.API_EXTRA_MODEL);
     for (const m of extraModels) {
       if (Array.isArray(m.metadata)) {
         for (const sclz of m.metadata) {
@@ -102,36 +79,24 @@ class MeSwaggerExplorer extends SwaggerExplorer {
  * @param entitySchemaName
  * @returns
  */
-const getSchemas = (
-  documentBuilder: DocumentBuilder,
-  entitySchemaName: string
-) => {
+const getSchemas = (documentBuilder: DocumentBuilder, entitySchemaName: string) => {
   const swaggerSchemas = {} as Record<string, SchemaObject>;
   const setSchemas = (schemaName: string | (() => string)) => {
-    const name = (
-      typeof schemaName === "function" ? schemaName() : schemaName
-    ).replace("#/components/schemas/", "");
+    const name = (typeof schemaName === 'function' ? schemaName() : schemaName).replace('#/components/schemas/', '');
     if (swaggerSchemas[name]) {
       return;
     }
     swaggerSchemas[name] = documentBuilder.getSchema(name);
     const setItem = (item: SchemaObject | ReferenceObject) => {
-      if (item["$ref"]) {
-        let ref = item["$ref"];
-        if (typeof item["$ref"] === "function") {
+      if (item['$ref']) {
+        let ref = item['$ref'];
+        if (typeof item['$ref'] === 'function') {
           ref = ref();
         }
-        if (
-          ![
-            "#/components/schemas/SystemAdmin",
-            "#/components/schemas/File",
-          ].includes(ref)
-        ) {
+        if (!['#/components/schemas/SystemAdmin', '#/components/schemas/File'].includes(ref)) {
           setSchemas(ref);
         } else {
-          item["$ref"] = item["$ref"]
-            .replace("SystemAdmin", "SystemAdminInfo")
-            .replace("File", "FileInfo");
+          item['$ref'] = item['$ref'].replace('SystemAdmin', 'SystemAdminInfo').replace('File', 'FileInfo');
         }
       }
       if ((item as SchemaObject).items) {
@@ -141,11 +106,9 @@ const getSchemas = (
         setProperties((item as SchemaObject).properties);
       }
     };
-    const setProperties = (
-      properties: Record<string, SchemaObject | ReferenceObject>
-    ) => {
+    const setProperties = (properties: Record<string, SchemaObject | ReferenceObject>) => {
       //设置变量顺序，放到到末尾
-      ["createdAt", "updatedAt"].forEach((key) => {
+      ['createdAt', 'updatedAt'].forEach((key) => {
         if (properties[key]) {
           const temp = properties[key];
           delete properties[key];
@@ -180,7 +143,7 @@ function tableInfo(entityName, noBelongs = false) {
   const modelDefinition = sequelize.models.get(entityName)?.modelDefinition;
   if (!modelDefinition) {
     tableInfos[entityName] = {
-      tableComment: "",
+      tableComment: '',
       pk: [],
       deletedAt: null,
       attributes: {},
@@ -188,35 +151,26 @@ function tableInfo(entityName, noBelongs = false) {
     };
   } else {
     let tableComment = modelDefinition.options.comment;
-    if (tableComment.endsWith("表")) {
+    if (tableComment.endsWith('表')) {
       tableComment = tableComment.slice(0, -1);
     }
-    const autoAttributes = [
-      ...modelDefinition.primaryKeysAttributeNames,
-      ...modelDefinition.readOnlyAttributeNames,
-    ];
-    [
-      "deletedVersion",
-      "createdAdminId",
-      "updatedAdminId",
-      "createdUserId",
-      "updatedUserId",
-    ].forEach((attribute) => {
+    const autoAttributes = [...modelDefinition.primaryKeysAttributeNames, ...modelDefinition.readOnlyAttributeNames];
+    ['deletedVersion', 'createdAdminId', 'updatedAdminId', 'createdUserId', 'updatedUserId'].forEach((attribute) => {
       if (modelDefinition.attributes.has(attribute)) {
         autoAttributes.push(attribute);
       }
     });
-    if (swaggerSchemas[entityName]?.properties?.["createdAdmin"]) {
-      autoAttributes.push("createdAdmin");
+    if (swaggerSchemas[entityName]?.properties?.['createdAdmin']) {
+      autoAttributes.push('createdAdmin');
     }
-    if (swaggerSchemas[entityName]?.properties?.["updatedAdmin"]) {
-      autoAttributes.push("updatedAdmin");
+    if (swaggerSchemas[entityName]?.properties?.['updatedAdmin']) {
+      autoAttributes.push('updatedAdmin');
     }
-    if (swaggerSchemas[entityName]?.properties?.["createdUser"]) {
-      autoAttributes.push("createdUser");
+    if (swaggerSchemas[entityName]?.properties?.['createdUser']) {
+      autoAttributes.push('createdUser');
     }
-    if (swaggerSchemas[entityName]?.properties?.["updatedUser"]) {
-      autoAttributes.push("updatedUser");
+    if (swaggerSchemas[entityName]?.properties?.['updatedUser']) {
+      autoAttributes.push('updatedUser');
     }
     const belongs = [];
     const belongsTo = [];
@@ -225,14 +179,7 @@ function tableInfo(entityName, noBelongs = false) {
     const belongsToManyEntity = {};
     if (!noBelongs) {
       Object.keys(modelDefinition.associations).forEach((key) => {
-        if (
-          [
-            "createdAdmin",
-            "updatedAdmin",
-            "createdUser",
-            "updatedUser",
-          ].includes(key)
-        ) {
+        if (['createdAdmin', 'updatedAdmin', 'createdUser', 'updatedUser'].includes(key)) {
           belongs.push(key);
           return;
         }
@@ -240,34 +187,21 @@ function tableInfo(entityName, noBelongs = false) {
           //TODO::自关联暂不支持
           return;
         }
-        if ("BelongsTo" === modelDefinition.associations[key].associationType) {
+        if ('BelongsTo' === modelDefinition.associations[key].associationType) {
           belongs.push(key);
           belongsTo.push(key);
-          belongsToEntity[key] = tableInfo(
-            modelDefinition.associations[key].target.name,
-            true
-          );
+          belongsToEntity[key] = tableInfo(modelDefinition.associations[key].target.name, true);
         }
-        if (
-          "BelongsToMany" === modelDefinition.associations[key].associationType
-        ) {
+        if ('BelongsToMany' === modelDefinition.associations[key].associationType) {
           belongs.push(key);
           belongsToMany.push(key);
-          belongsToManyEntity[key] = tableInfo(
-            modelDefinition.associations[key].target.name,
-            true
-          );
+          belongsToManyEntity[key] = tableInfo(modelDefinition.associations[key].target.name, true);
         }
       });
     }
     const nameKeys = []; //可快捷查询的name
     for (const key of modelDefinition.attributes.keys()) {
-      if (
-        (key.endsWith("name") || key.endsWith("Name")) &&
-        ["VARCHAR", "CHAR", "STRING"].some((v) =>
-          modelDefinition.attributes.get(key).type.toString().includes(v)
-        )
-      ) {
+      if ((key.endsWith('name') || key.endsWith('Name')) && ['VARCHAR', 'CHAR', 'STRING'].some((v) => modelDefinition.attributes.get(key).type.toString().includes(v))) {
         nameKeys.push(key);
       }
     }
@@ -295,49 +229,48 @@ template.defaults.imports.upFirstCase = upFirstCase;
 template.defaults.imports.lowerFirstCase = lowerFirstCase;
 template.defaults.imports.objectKeys = Object.keys;
 template.defaults.imports.objectValues = Object.values;
-template.defaults.imports.leftTag = () => "{{";
-template.defaults.imports.rightTag = () => "}}";
+template.defaults.imports.leftTag = () => '{{';
+template.defaults.imports.rightTag = () => '}}';
 template.defaults.imports.getKeyInfo = getKeyInfo;
-template.defaults.imports.langName = (name: string) =>
-  upFirstCase(normalizeToKebabOrSnakeCase(name, " ").replace(" at", " time")); //字段名转义为语言
+template.defaults.imports.langName = (name: string) => upFirstCase(normalizeToKebabOrSnakeCase(name, ' ').replace(' at', ' time')); //字段名转义为语言
 // template.defaults.imports.log = console.log;//调试打印时放开
 //需要写入的文件地址集(以.js结尾)
 const writeServerFiles = {
-  entityPath: "",
-  createDtoPath: "",
-  updateDtoPath: "",
-  queryDtoPath: "",
-  servicePath: "",
-  controllerPath: "",
-  baseControllerPath: "",
+  entityPath: '',
+  createDtoPath: '',
+  updateDtoPath: '',
+  queryDtoPath: '',
+  servicePath: '',
+  controllerPath: '',
+  baseControllerPath: '',
 };
-const noWriteKey = ["entityPath", "baseControllerPath"];
+const noWriteKey = ['entityPath', 'baseControllerPath'];
 //需要写入的前端文件地址集
 const writeViewFiles = {
-  apiPath: "",
-  listPath: "",
-  dictPath: "",
-  langEnPath: "",
-  info: "",
-  addOrUp: "",
+  apiPath: '',
+  listPath: '',
+  dictPath: '',
+  langEnPath: '',
+  info: '',
+  addOrUp: '',
 };
 const replaceNames = {
-  name: "",
-  Name: "",
-  createDto: "",
-  CreateDto: "",
-  updateDto: "",
-  UpdateDto: "",
-  queryDto: "",
-  QueryDto: "",
-  service: "",
-  Service: "",
-  controller: "",
-  Controller: "",
-  controllerPath: "",
-  namePath: "",
-  roleName: "",
-  addonsPath: "", //插件目录
+  name: '',
+  Name: '',
+  createDto: '',
+  CreateDto: '',
+  updateDto: '',
+  UpdateDto: '',
+  queryDto: '',
+  QueryDto: '',
+  service: '',
+  Service: '',
+  controller: '',
+  Controller: '',
+  controllerPath: '',
+  namePath: '',
+  roleName: '',
+  addonsPath: '', //插件目录
 };
 //是否添加权限校验
 let adminPermission = false;
@@ -348,17 +281,13 @@ let adminPermission = false;
 function checkPaths() {
   const existsFiles = [];
   Object.keys(writeServerFiles).forEach((key) => {
-    const path = writeServerFiles[key].endsWith(".js")
-      ? writeServerFiles[key].replace(".js", ".ts")
-      : writeServerFiles[key];
+    const path = writeServerFiles[key].endsWith('.js') ? writeServerFiles[key].replace('.js', '.ts') : writeServerFiles[key];
     if (!noWriteKey.includes(key) && existsSync(path)) {
       existsFiles.push(path);
     }
   });
   Object.keys(writeViewFiles).forEach((key) => {
-    const path = writeViewFiles[key].endsWith(".js")
-      ? writeViewFiles[key].replace(".js", ".ts")
-      : writeViewFiles[key];
+    const path = writeViewFiles[key].endsWith('.js') ? writeViewFiles[key].replace('.js', '.ts') : writeViewFiles[key];
     if (!noWriteKey.includes(key) && existsSync(path)) {
       existsFiles.push(path);
     }
@@ -372,9 +301,8 @@ function checkPaths() {
  * @param toPath 写入文件路径
  * @returns
  */
-async function writeContent(templatePath, toPath, writeType: "api" | "view") {
-  const paths =
-    writeType === "api" ? { ...writeServerFiles } : { ...writeViewFiles };
+async function writeContent(templatePath, toPath, writeType: 'api' | 'view') {
+  const paths = writeType === 'api' ? { ...writeServerFiles } : { ...writeViewFiles };
   Object.keys(paths).forEach((key) => {
     paths[key] = relativePath(toPath, paths[key], []);
   });
@@ -388,19 +316,14 @@ async function writeContent(templatePath, toPath, writeType: "api" | "view") {
   });
   if (str.trim()) {
     recursionWriteFileSync(
-      toPath.endsWith(".js") ? toPath.replace(".js", ".ts") : toPath,
+      toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath,
       await prettier.format(str, {
         ...prettierrc,
-        filepath: toPath.endsWith(".js")
-          ? toPath.replace(".js", ".ts")
-          : toPath,
+        filepath: toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath,
       }),
-      { flag: "w" }
+      { flag: 'w' },
     );
-    Log.success(
-      (toPath.endsWith(".js") ? toPath.replace(".js", ".ts") : toPath) +
-        " 写入完成"
-    );
+    Log.success((toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath) + ' 写入完成');
   }
 }
 
@@ -408,70 +331,26 @@ async function writeContent(templatePath, toPath, writeType: "api" | "view") {
 function writeServer() {
   //写入后端文件
   return Promise.all([
-    writeContent(
-      "../../template/crud/server/dto/create.dto.ts.art",
-      writeServerFiles.createDtoPath,
-      "api"
-    ),
-    writeContent(
-      "../../template/crud/server/dto/update.dto.ts.art",
-      writeServerFiles.updateDtoPath,
-      "api"
-    ),
-    writeContent(
-      "../../template/crud/server/dto/query.dto.ts.art",
-      writeServerFiles.queryDtoPath,
-      "api"
-    ),
-    writeContent(
-      "../../template/crud/server/service/service.ts.art",
-      writeServerFiles.servicePath,
-      "api"
-    ),
-    writeContent(
-      "../../template/crud/server/controller/controller.ts.art",
-      writeServerFiles.controllerPath,
-      "api"
-    ),
+    writeContent('../../template/crud/server/dto/create.dto.ts.art', writeServerFiles.createDtoPath, 'api'),
+    writeContent('../../template/crud/server/dto/update.dto.ts.art', writeServerFiles.updateDtoPath, 'api'),
+    writeContent('../../template/crud/server/dto/query.dto.ts.art', writeServerFiles.queryDtoPath, 'api'),
+    writeContent('../../template/crud/server/service/service.ts.art', writeServerFiles.servicePath, 'api'),
+    writeContent('../../template/crud/server/controller/controller.ts.art', writeServerFiles.controllerPath, 'api'),
   ]);
 }
 
 //写入前端接口文件
 function writeViewApi() {
-  return writeContent(
-    "../../template/crud/view/api/api.ts.art",
-    writeViewFiles.apiPath,
-    "view"
-  );
+  return writeContent('../../template/crud/view/api/api.ts.art', writeViewFiles.apiPath, 'view');
 }
 //写入前端view文件
 function writeViews() {
   return Promise.all([
-    writeContent(
-      "../../template/crud/view/views/lang/en.json.art",
-      writeViewFiles.langEnPath,
-      "view"
-    ),
-    writeContent(
-      "../../template/crud/view/views/dict.ts.art",
-      writeViewFiles.dictPath,
-      "view"
-    ),
-    writeContent(
-      "../../template/crud/view/views/index.vue.art",
-      writeViewFiles.listPath,
-      "view"
-    ),
-    writeContent(
-      "../../template/crud/view/views/components/info.vue.art",
-      writeViewFiles.info,
-      "view"
-    ),
-    writeContent(
-      "../../template/crud/view/views/components/addOrUp.vue.art",
-      writeViewFiles.addOrUp,
-      "view"
-    ),
+    writeContent('../../template/crud/view/views/lang/en.json.art', writeViewFiles.langEnPath, 'view'),
+    writeContent('../../template/crud/view/views/dict.ts.art', writeViewFiles.dictPath, 'view'),
+    writeContent('../../template/crud/view/views/index.vue.art', writeViewFiles.listPath, 'view'),
+    writeContent('../../template/crud/view/views/components/info.vue.art', writeViewFiles.info, 'view'),
+    writeContent('../../template/crud/view/views/components/addOrUp.vue.art', writeViewFiles.addOrUp, 'view'),
   ]);
 }
 /**
@@ -482,36 +361,31 @@ function writeViews() {
 async function setMenu(model: string, namePath: string, sequelize: Sequelize) {
   let parentId: string | null = null;
   let paths = [];
-  const langFilePath = resovePath(
-    `view/${model}/src/${replaceNames.addonsPath}locales/lang/en/menu`,
-    [".json"]
-  );
+  const langFilePath = resovePath(`view/${model}/src/${replaceNames.addonsPath}locales/lang/en/menu`, ['.json']);
   let lang = { default: {} };
   if (existsSync(langFilePath)) {
     lang = await import(pathToFileURL(langFilePath).href, {
-      with: { type: "json" },
+      with: { type: 'json' },
     });
   }
-  const comments = tableInfo(replaceNames.Name).tableComment.split("_");
-  const menuNames = namePath.split("/").filter((v) => v);
+  const comments = tableInfo(replaceNames.Name).tableComment.split('_');
+  const menuNames = namePath.split('/').filter((v) => v);
   if (replaceNames.addonsPath) {
-    const addonsName = replaceNames.addonsPath
-      .replace("addons/", "")
-      .replace("/", "");
-    paths.push("addons");
+    const addonsName = replaceNames.addonsPath.replace('addons/', '').replace('/', '');
+    paths.push('addons');
     paths.push(addonsName);
-    const [menuEntity] = await sequelize.models.get("SystemMenu").findOrCreate({
-      where: { rule: paths.join("_") },
+    const [menuEntity] = await sequelize.models.get('SystemMenu').findOrCreate({
+      where: { rule: paths.join('_') },
       defaults: {
         title: upFirstCase(addonsName),
         menuType: 1, //目录
         orderNum: 99,
-        path: "/" + paths.join("/"),
+        path: '/' + paths.join('/'),
         parentId,
         alwaysShow: 1,
       },
     });
-    parentId = menuEntity.get("id") as string;
+    parentId = menuEntity.get('id') as string;
     lang.default[upFirstCase(addonsName)] = upFirstCase(addonsName);
   }
   for (let i = 0; i < menuNames.length; i++) {
@@ -530,81 +404,74 @@ async function setMenu(model: string, namePath: string, sequelize: Sequelize) {
       }
     }
     if (i < menuNames.length - 1) {
-      const [menuEntity] = await sequelize.models
-        .get("SystemMenu")
-        .findOrCreate({
-          where: { rule: paths.join("_") },
-          defaults: {
-            title: menuTitle,
-            menuType: 1, //目录
-            orderNum: 99,
-            path: "/" + paths.join("/"),
-            parentId,
-            alwaysShow: 1,
-          },
-        });
-      parentId = menuEntity.get("id") as string;
+      const [menuEntity] = await sequelize.models.get('SystemMenu').findOrCreate({
+        where: { rule: paths.join('_') },
+        defaults: {
+          title: menuTitle,
+          menuType: 1, //目录
+          orderNum: 99,
+          path: '/' + paths.join('/'),
+          parentId,
+          alwaysShow: 1,
+        },
+      });
+      parentId = menuEntity.get('id') as string;
     } else {
-      const [menuEntity] = await sequelize.models
-        .get("SystemMenu")
-        .findOrCreate({
-          where: { rule: replaceNames.roleName },
-          defaults: {
-            title: menuTitle,
-            menuType: 2, //菜单
-            orderNum: 99,
-            path: "/" + paths.join("/"),
-            component:
-              (replaceNames.addonsPath
-                ? replaceNames.addonsPath + "views/" + namePath
-                : namePath) + "/index",
-            parentId,
-          },
-        });
-      parentId = menuEntity.get("id") as string;
+      const [menuEntity] = await sequelize.models.get('SystemMenu').findOrCreate({
+        where: { rule: replaceNames.roleName },
+        defaults: {
+          title: menuTitle,
+          menuType: 2, //菜单
+          orderNum: 99,
+          path: '/' + paths.join('/'),
+          component: (replaceNames.addonsPath ? replaceNames.addonsPath + 'views/' + namePath : namePath) + '/index',
+          parentId,
+        },
+      });
+      parentId = menuEntity.get('id') as string;
     }
   }
-  await sequelize.models.get("SystemMenu").findOrCreate({
-    where: { rule: replaceNames.roleName + "_list" },
+  await sequelize.models.get('SystemMenu').findOrCreate({
+    where: { rule: replaceNames.roleName + '_list' },
     defaults: {
       parentId,
-      title: "列表",
+      title: '列表',
       menuType: 3, //按钮
       orderNum: 99,
     },
   });
-  await sequelize.models.get("SystemMenu").findOrCreate({
-    where: { rule: replaceNames.roleName + "_info" },
+  await sequelize.models.get('SystemMenu').findOrCreate({
+    where: { rule: replaceNames.roleName + '_info' },
     defaults: {
       parentId,
-      title: "详情",
+      title: '详情',
       menuType: 3, //按钮
       orderNum: 98,
     },
   });
-  await sequelize.models.get("SystemMenu").findOrCreate({
-    where: { rule: replaceNames.roleName + "_add" },
+  await sequelize.models.get('SystemMenu').findOrCreate({
+    where: { rule: replaceNames.roleName + '_add' },
     defaults: {
       parentId,
-      title: "新增",
+      title: '新增',
       menuType: 3, //按钮
       orderNum: 97,
     },
   });
-  await sequelize.models.get("SystemMenu").findOrCreate({
-    where: { rule: replaceNames.roleName + "_edit" },
+  await sequelize.models.get('SystemMenu').findOrCreate({
+    where: { rule: replaceNames.roleName + '_edit' },
     defaults: {
       parentId,
-      title: "编辑",
+      title: '编辑',
       menuType: 3, //按钮
       orderNum: 96,
     },
   });
-  await sequelize.models.get("SystemMenu").findOrCreate({
-    where: { rule: replaceNames.roleName + "_del" },
+  await sequelize.models.get('SystemMenu').findOrCreate({
+    where: { rule: replaceNames.roleName + '_del' },
     defaults: {
       parentId,
-      title: "删除",
+      title: '删除',
       menuType: 3, //按钮
       orderNum: 95,
     },
@@ -614,177 +481,94 @@ async function setMenu(model: string, namePath: string, sequelize: Sequelize) {
     await prettier.format(JSON.stringify(lang.default), {
       ...prettierrc,
       filepath: langFilePath,
-    })
+    }),
   );
   return;
 }
 export const crudInit = async (program: Command) => {
   program
-    .command("crud")
-    .description("创建crud")
-    .argument(
-      "<file>",
-      "基于的entity文件地址,如果是相对路径会基于src/entities查找"
-    )
-    .requiredOption(
-      "--model <char>",
-      "model名称会放到app/{model}下对应的文件夹",
-      "admin"
-    )
-    .option("-f, --force", "强制覆盖")
-    .option("-n, --name <char>", "使用的数据库配置defaultDataSourceName")
-    .option(
-      "-d, --dbConfig <char>",
-      "数据库配置文件地址默认为当前目录下dist/config/database.js",
-      join(process.cwd(), "dist/config/database.js")
-    )
-    .option("--del", "删除crud创建的文件")
-    .option("--path <char>", "生成的路径，默认根据驼峰转多级路径")
-    .option("-c, --controller <char>", "生成的controller路径，默认使用path")
-    .option("--menu", "生成菜单")
-    .option(
-      "--cov, --coverage <char>",
-      "生成代码发覆盖范围：b后端代码、a前端api接口代码、v前端view 代码、p后台权限校验，默认值bavp",
-      "bavp"
-    )
-    .option("-a --addons <char>", "插件名称，相关文件会被放到插件对应文件夹下")
+    .command('crud')
+    .description('创建crud')
+    .argument('<file>', '基于的entity文件地址,如果是相对路径会基于src/entities查找')
+    .requiredOption('--model <char>', 'model名称会放到app/{model}下对应的文件夹', 'admin')
+    .option('-f, --force', '强制覆盖')
+    .option('-n, --name <char>', '使用的数据库配置defaultDataSourceName')
+    .option('-d, --dbConfig <char>', '数据库配置文件地址默认为当前目录下dist/config/database.js', join(process.cwd(), 'dist/config/database.js'))
+    .option('--del', '删除crud创建的文件')
+    .option('--path <char>', '生成的路径，默认根据驼峰转多级路径')
+    .option('-c, --controller <char>', '生成的controller路径，默认使用path')
+    .option('--menu', '生成菜单')
+    .option('--cov, --coverage <char>', '生成代码发覆盖范围：b后端代码、a前端api接口代码、v前端view 代码、p后台权限校验，默认值bavp', 'bavp')
+    .option('-a --addons <char>', '插件名称，相关文件会被放到插件对应文件夹下')
     .action(async (file: string, options) => {
-      sequelize = new Sequelize(
-        await getConfig(options.dbConfig, options.name)
-      );
-      const noSuffixEntityPath = relativePath("", file, [".entity", ".ts"]);
-      const entityFileName = lowerFirstCase(
-        toHump(relativePath("", noSuffixEntityPath, []).split("/").pop()!)
-      );
-      replaceNames.namePath = options.path
-        ? options.path
-        : normalizeToKebabOrSnakeCase(entityFileName, "/");
-      replaceNames.namePath = replaceNames.namePath.replaceAll("//", "/");
-      if (replaceNames.namePath.endsWith("/")) {
+      sequelize = new Sequelize(await getConfig(options.dbConfig, options.name));
+      const noSuffixEntityPath = relativePath('', file, ['.entity', '.ts']);
+      const entityFileName = lowerFirstCase(toHump(relativePath('', noSuffixEntityPath, []).split('/').pop()!));
+      replaceNames.namePath = options.path ? options.path : normalizeToKebabOrSnakeCase(entityFileName, '/');
+      replaceNames.namePath = replaceNames.namePath.replaceAll('//', '/');
+      if (replaceNames.namePath.endsWith('/')) {
         replaceNames.namePath = replaceNames.namePath.slice(0, -1);
       }
-      if (replaceNames.namePath.startsWith("/")) {
+      if (replaceNames.namePath.startsWith('/')) {
         replaceNames.namePath = replaceNames.namePath.slice(1);
       }
-      replaceNames.controllerPath = options.controllerPath
-        ? options.controllerPath
-        : replaceNames.namePath;
+      replaceNames.controllerPath = options.controllerPath ? options.controllerPath : replaceNames.namePath;
       if (options.addons) {
         options.addons = `addons/${options.addons}/`;
         replaceNames.addonsPath = options.addons;
       } else {
-        options.addons = "";
+        options.addons = '';
         replaceNames.addonsPath = options.addons;
       }
       //初始化需要创建的文件路径
-      writeServerFiles.entityPath = resovePath(
-        noSuffixEntityPath + ".entity.js",
-        [],
-        process.cwd() + "/src/entities"
-      );
-      writeServerFiles.baseControllerPath = resovePath(
-        `src/app/${options.model}/controller/base`,
-        [".controller", ".js"]
-      );
-      const entity = await import(
-        pathToFileURL(writeServerFiles.entityPath.replace("/src/", "/dist/"))
-          .href
-      );
-      writeServerFiles.createDtoPath = resovePath(
-        `src/app/${options.model}/${options.addons}dto/${replaceNames.namePath}Create`,
-        [".dto", ".js"]
-      );
-      writeServerFiles.updateDtoPath = resovePath(
-        `src/app/${options.model}/${options.addons}dto/${replaceNames.namePath}Update`,
-        [".dto", ".js"]
-      );
-      writeServerFiles.queryDtoPath = resovePath(
-        `src/app/${options.model}/${options.addons}dto/${replaceNames.namePath}Query`,
-        [".dto", ".js"]
-      );
-      writeServerFiles.servicePath = resovePath(
-        `src/app/${options.model}/${options.addons}service/${replaceNames.namePath}`,
-        [".service", ".js"]
-      );
-      writeServerFiles.controllerPath = resovePath(
-        `src/app/${options.model}/${options.addons}controller/${replaceNames.namePath}`,
-        [".controller", ".js"]
-      );
-      writeViewFiles.apiPath = resovePath(
-        `view/${options.model}/src/${options.addons}api/${replaceNames.namePath}`,
-        [".js"]
-      );
-      writeViewFiles.langEnPath = resovePath(
-        `view/${options.model}/src/${options.addons}views/${replaceNames.namePath}/lang/en`,
-        [".json"]
-      );
-      writeViewFiles.dictPath = resovePath(
-        `view/${options.model}/src/${options.addons}views/${replaceNames.namePath}/dict`,
-        [".js"]
-      );
-      writeViewFiles.listPath = resovePath(
-        `view/${options.model}/src/${options.addons}views/${replaceNames.namePath}/index`,
-        [".vue"]
-      );
-      writeViewFiles.info = resovePath(
-        `view/${options.model}/src/${options.addons}views/${replaceNames.namePath}/components/info`,
-        [".vue"]
-      );
-      writeViewFiles.addOrUp = resovePath(
-        `view/${options.model}/src/${options.addons}views/${replaceNames.namePath}/components/addOrUp`,
-        [".vue"]
-      );
+      writeServerFiles.entityPath = resovePath(noSuffixEntityPath + '.entity.js', [], process.cwd() + '/src/entities');
+      writeServerFiles.baseControllerPath = resovePath(`src/app/${options.model}/controller/base`, ['.controller', '.js']);
+      const entity = await import(pathToFileURL(writeServerFiles.entityPath.replace('/src/', '/dist/')).href);
+      writeServerFiles.createDtoPath = resovePath(`src/app/${options.model}/${options.addons}dto/${replaceNames.namePath}Create`, ['.dto', '.js']);
+      writeServerFiles.updateDtoPath = resovePath(`src/app/${options.model}/${options.addons}dto/${replaceNames.namePath}Update`, ['.dto', '.js']);
+      writeServerFiles.queryDtoPath = resovePath(`src/app/${options.model}/${options.addons}dto/${replaceNames.namePath}Query`, ['.dto', '.js']);
+      writeServerFiles.servicePath = resovePath(`src/app/${options.model}/${options.addons}service/${replaceNames.namePath}`, ['.service', '.js']);
+      writeServerFiles.controllerPath = resovePath(`src/app/${options.model}/${options.addons}controller/${replaceNames.namePath}`, ['.controller', '.js']);
+      writeViewFiles.apiPath = resovePath(`view/${options.model}/src/${options.addons}api/${replaceNames.namePath}`, ['.js']);
+      writeViewFiles.langEnPath = resovePath(`view/${options.model}/src/${options.addons}views/${replaceNames.namePath}/lang/en`, ['.json']);
+      writeViewFiles.dictPath = resovePath(`view/${options.model}/src/${options.addons}views/${replaceNames.namePath}/dict`, ['.js']);
+      writeViewFiles.listPath = resovePath(`view/${options.model}/src/${options.addons}views/${replaceNames.namePath}/index`, ['.vue']);
+      writeViewFiles.info = resovePath(`view/${options.model}/src/${options.addons}views/${replaceNames.namePath}/components/info`, ['.vue']);
+      writeViewFiles.addOrUp = resovePath(`view/${options.model}/src/${options.addons}views/${replaceNames.namePath}/components/addOrUp`, ['.vue']);
       if (options.del) {
         const delPath = [] as string[];
-        if (options.coverage.includes("b")) {
+        if (options.coverage.includes('b')) {
           delPath.push(...Object.values(omit(writeServerFiles, noWriteKey)));
         }
-        if (options.coverage.includes("a") && !noWriteKey.includes("apiPath")) {
+        if (options.coverage.includes('a') && !noWriteKey.includes('apiPath')) {
           delPath.push(writeViewFiles.apiPath);
         }
-        if (options.coverage.includes("v")) {
-          delPath.push(
-            ...Object.values(omit(writeViewFiles, ["apiPath", ...noWriteKey]))
-          );
+        if (options.coverage.includes('v')) {
+          delPath.push(...Object.values(omit(writeViewFiles, ['apiPath', ...noWriteKey])));
         }
         delPath.forEach((toPath: string) => {
-          delFileSync(
-            toPath.endsWith(".js") ? toPath.replace(".js", ".ts") : toPath
-          );
-          Log.warn(
-            (toPath.endsWith(".js") ? toPath.replace(".js", ".ts") : toPath) +
-              " 已删除"
-          );
+          delFileSync(toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath);
+          Log.warn((toPath.endsWith('.js') ? toPath.replace('.js', '.ts') : toPath) + ' 已删除');
         });
-        if (options.coverage.includes("v")) {
-          delFileSync(
-            `view/${options.model}/src/views/${replaceNames.namePath}`
-          );
-          Log.warn(
-            `view/${options.model}/src/views/${replaceNames.namePath}` +
-              " 已删除"
-          );
+        if (options.coverage.includes('v')) {
+          delFileSync(`view/${options.model}/src/views/${replaceNames.namePath}`);
+          Log.warn(`view/${options.model}/src/views/${replaceNames.namePath}` + ' 已删除');
         }
-        Log.success(entityFileName + " 清除成功");
+        Log.success(entityFileName + ' 清除成功');
         return;
       }
 
       if (!options.force) {
         let res = checkPaths();
         if (res !== true) {
-          Log.error(
-            "文件已存在,如果想要强制覆盖请使用-f参数\n" + res.join("\n")
-          );
+          Log.error('文件已存在,如果想要强制覆盖请使用-f参数\n' + res.join('\n'));
           return;
         }
       }
       //初始化变量名称
       replaceNames.name = entityFileName;
       replaceNames.Name = upFirstCase(replaceNames.name);
-      replaceNames.roleName = normalizeToKebabOrSnakeCase(
-        replaceNames.name,
-        "_"
-      );
+      replaceNames.roleName = normalizeToKebabOrSnakeCase(replaceNames.name, '_');
       replaceNames.createDto = `${entityFileName}CreateDto`;
       replaceNames.CreateDto = upFirstCase(replaceNames.createDto);
       replaceNames.updateDto = `${entityFileName}UpdateDto`;
@@ -802,27 +586,24 @@ export const crudInit = async (program: Command) => {
         swaggerExplorer.parseApiExtraModel(sequelize.models.get(modelName));
         swaggerExplorer.parseClzz(sequelize.models.get(modelName));
       }
-      swaggerSchemas = getSchemas(
-        swaggerExplorer.getDocumentBuilder(),
-        replaceNames.Name
-      );
-      if (options.coverage.includes("p")) {
+      swaggerSchemas = getSchemas(swaggerExplorer.getDocumentBuilder(), replaceNames.Name);
+      if (options.coverage.includes('p')) {
         adminPermission = true;
       }
       //写入文件
-      if (options.coverage.includes("b")) {
+      if (options.coverage.includes('b')) {
         await writeServer();
       }
-      if (options.coverage.includes("a")) {
+      if (options.coverage.includes('a')) {
         await writeViewApi();
       }
-      if (options.coverage.includes("v")) {
+      if (options.coverage.includes('v')) {
         await writeViews();
       }
       if (options.menu) {
         await setMenu(options.model, replaceNames.namePath, sequelize);
       }
       sequelize.close();
-      Log.success(entityFileName + " crud创建完成");
+      Log.success(entityFileName + ' crud创建完成');
     });
 };

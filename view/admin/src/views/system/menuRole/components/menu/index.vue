@@ -50,10 +50,10 @@
           :disabled="isSuper !== 0"
           @click="
             isSuper === 0 &&
-              emit(
-                'subMenus',
-                menuRef!.vxeTableRef!.getCheckboxRecords(true).map((item) => item.id),
-              )
+            emit(
+              'subMenus',
+              menuRef!.vxeTableRef!.getCheckboxRecords(true).map((item) => item.id),
+            )
           "
           >保存</me-button
         >

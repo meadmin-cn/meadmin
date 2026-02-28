@@ -27,16 +27,8 @@ setGlobalOptions({
 });
 
 // 请求函数，当请求失败时直接抛出异常;
-export function request<R, P extends unknown[] = []>(
-  axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>,
-  options?: RequestOptions<R, P>,
-): ReturnType<typeof useRequest<R, P>>;
-export function request<R, P extends unknown[] = [], T extends boolean = boolean>(
-  axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>,
-  options: RequestOptions<R, P>,
-  returnAxios: T,
-  app?: App,
-): T extends true ? (...args: P) => Promise<R> : ReturnType<typeof useRequest<R, P>>;
+export function request<R, P extends unknown[] = []>(axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>, options?: RequestOptions<R, P>): ReturnType<typeof useRequest<R, P>>;
+export function request<R, P extends unknown[] = [], T extends boolean = boolean>(axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>, options: RequestOptions<R, P>, returnAxios: T, app?: App): T extends true ? (...args: P) => Promise<R> : ReturnType<typeof useRequest<R, P>>;
 
 /**
  * 请求函数
@@ -46,12 +38,7 @@ export function request<R, P extends unknown[] = [], T extends boolean = boolean
  * @param app app示例，当非setup顶层调用时必填
  * @returns
  */
-export function request<R, P extends unknown[] = [], T = boolean>(
-  axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>,
-  options?: RequestOptions<R, P>,
-  returnAxios?: T,
-  app?: App,
-) {
+export function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>, options?: RequestOptions<R, P>, returnAxios?: T, app?: App) {
   let ssrVersion = '';
   let store: Pinia | undefined;
   let router: Router | undefined;

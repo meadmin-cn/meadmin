@@ -1,6 +1,6 @@
-import { Pinia } from "pinia";
-import { App } from "vue";
-import { Router } from "vue-router";
+import { Pinia } from 'pinia';
+import { App } from 'vue';
+import { Router } from 'vue-router';
 //如需注册START 、READY事件回调，可在此文件直接注册
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const init = (app: App, router: Router, pinia: Pinia) => {

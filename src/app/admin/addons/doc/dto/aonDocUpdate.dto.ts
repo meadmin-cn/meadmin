@@ -1,19 +1,11 @@
-import { OmitDtoType, PartialType } from "@/helper/dto.js";
-import { InferAttributesLoose } from "@/types/entity.js";
-import { AonDoc } from "../../../../../entities/aonDoc.entity.js";
+import { OmitDtoType, PartialType } from '@/helper/dto.js';
+import { InferAttributesLoose } from '@/types/entity.js';
+import { AonDoc } from '../../../../../entities/aonDoc.entity.js';
 
 //dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效
 export class AonDocUpdateDto extends PartialType(
   OmitDtoType(
     AonDoc as new () => InferAttributesLoose<AonDoc>, //只保留声明属性
-    [
-      "id",
-      "createdAt",
-      "updatedAt",
-      "createdAdminId",
-      "updatedAdminId",
-      "createdAdmin",
-      "updatedAdmin",
-    ] //排除自动创建的字段
-  )
+    ['id', 'createdAt', 'updatedAt', 'createdAdminId', 'updatedAdminId', 'createdAdmin', 'updatedAdmin'], //排除自动创建的字段
+  ),
 ) {}

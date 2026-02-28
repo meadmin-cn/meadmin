@@ -16,11 +16,11 @@
   <me-upload v-model="info.{{@ $index}}" ></me-upload>
 </el-form-item>{{else if $value?.items.$ref}}<% const entityName = $value.items.$ref.replace('#/components/schemas/',''); %><% const valueEntity = belongsToManyEntity[$index] || belongsToEntity[$index]; %>{{if !valueEntity}}<% return;%>{{/if}}
 <el-form-item :label="t('{{@ keyInfo.name}}')" prop="{{@ $index}}">
-  <me-select-list v-model="info.{{@ $index}}" :props="{label:'{{@ valueEntity.nameKeys?.[0] || valueEntity.pk[0]}}',value:'{{@ valueEntity.pk[0] }}'}" value-key="{{@ valueEntity.pk[0] }}"  @search="serach{{@ valueEntity.entityName}}"  :multiple="true"></me-select-list>
+  <me-select-list v-model="info.{{@ $index}}" :props="{label:'{{@ valueEntity.nameKeys?.[0] || valueEntity.pk[0]}}',value:'{{@ valueEntity.pk[0] }}'}" value-key="{{@ valueEntity.pk[0] }}"  :multiple="true"  @search="serach{{@ valueEntity.entityName}}"></me-select-list>
 </el-form-item>{{/if}}{{else if $value.$ref === '#/components/schemas/FileInfo'}}  
 <el-form-item :label="t('{{@ keyInfo.name}}')" prop="{{@ $index}}">
   <me-upload :limit="1" :model-value="info.{{@ $index}}?[info.{{@ $index}}]:[]" @update:model-value="(files)=>info.{{@ $index}} =files.length? files[0]:null" ></me-upload>
 </el-form-item>{{else if  $value.$ref}}<% const entityName =  $value.$ref.replace('#/components/schemas/',''); %><% const valueEntity = belongsToManyEntity[$index] || belongsToEntity[$index]; %>{{if !valueEntity}}<% return;%>{{/if}}
 <el-form-item :label="t('{{@ keyInfo.name}}')" prop="{{@ $index}}">
-  <me-select-list v-model="info.{{@ $index}}" :props="{label:'{{@ valueEntity.nameKeys?.[0] || valueEntity.pk[0]}}',value:'{{@ valueEntity.pk[0] }}'}" value-key="{{@ valueEntity.pk[0] }}"  @search="serach{{@ valueEntity.entityName}}" clearable></me-select-list>
+  <me-select-list v-model="info.{{@ $index}}" :props="{label:'{{@ valueEntity.nameKeys?.[0] || valueEntity.pk[0]}}',value:'{{@ valueEntity.pk[0] }}'}" value-key="{{@ valueEntity.pk[0] }}" clearable  @search="serach{{@ valueEntity.entityName}}"></me-select-list>
 </el-form-item>{{/if}}{{/if}}{{/each}}

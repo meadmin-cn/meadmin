@@ -1,19 +1,5 @@
 <template>
-  <el-upload
-    v-model:file-list="fileList"
-    list-type="picture-card"
-    accept="image/*"
-    class="me-up-avater"
-    :class="{ upload: process > 0 }"
-    :limit="1"
-    :http-request="handleHttpRequest"
-    :before-upload="beforeAvatarUpload"
-    @success="handleSuccess"
-    @remove="handleRemove"
-    @exceed="handleExceed"
-    @preview="handlePictureCardPreview"
-    @progress="setProcess"
-  >
+  <el-upload v-model:file-list="fileList" list-type="picture-card" accept="image/*" class="me-up-avater" :class="{ upload: process > 0 }" :limit="1" :http-request="handleHttpRequest" :before-upload="beforeAvatarUpload" @success="handleSuccess" @remove="handleRemove" @exceed="handleExceed" @preview="handlePictureCardPreview" @progress="setProcess">
     <template v-if="!file">
       <mel-icon-upload-filled class="default-up-icon"></mel-icon-upload-filled>
       <div class="text">

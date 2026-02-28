@@ -15,14 +15,7 @@
           <slot name="buttons"></slot>
         </div>
         <div class="me-vxe-toolbar-tools">
-          <el-input
-            v-if="quickSearch !== undefined"
-            :model-value="quickSearch"
-            :placeholder="typeof quickSearchPlaceholder === 'function' ? quickSearchPlaceholder($t) : quickSearchPlaceholder"
-            prefix-icon="mel-icon-search"
-            @update:model-value="$emit('update:quickSearch', $event)"
-            @change="$emit('quickSearch', $event)"
-          />
+          <el-input v-if="quickSearch !== undefined" :model-value="quickSearch" :placeholder="typeof quickSearchPlaceholder === 'function' ? quickSearchPlaceholder($t) : quickSearchPlaceholder" prefix-icon="mel-icon-search" @update:model-value="$emit('update:quickSearch', $event)" @change="$emit('quickSearch', $event)" />
           <el-button-group v-if="customColumn || exportMenu?.length || print">
             <el-popover v-if="customColumn" :teleported="false" placement="bottom" trigger="click" width="auto">
               <template #reference>

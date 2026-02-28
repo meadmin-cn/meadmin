@@ -30,7 +30,7 @@
     "commander": "^14.0.0",
     "cross-spawn": "^7.0.6",
     "dotenv": "^16.6.1",
-    "prettier": "2.8.8"
+    "prettier": "3.8.1"
   },
   "devDependencies": {
     "tsdown": "^0.20.1"

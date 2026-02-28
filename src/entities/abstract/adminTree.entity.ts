@@ -2,20 +2,7 @@ import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { listToTree } from '@/helper/utils.js';
 import { RuleType } from '@midwayjs/validate';
-import {
-  Attributes,
-  CreateOptions,
-  DataTypes,
-  FindOptions,
-  InferAttributes,
-  InferCreationAttributes,
-  InstanceDestroyOptions,
-  InstanceUpdateOptions,
-  Model,
-  ModelStatic,
-  Op,
-  sql,
-} from '@sequelize/core';
+import { Attributes, CreateOptions, DataTypes, FindOptions, InferAttributes, InferCreationAttributes, InstanceDestroyOptions, InstanceUpdateOptions, Model, ModelStatic, Op, sql } from '@sequelize/core';
 import { AfterDestroy, AfterUpdate, Attribute, BeforeCreate, Table } from '@sequelize/core/decorators-legacy';
 import { AdminBaseModel } from './adminBase.entity.js';
 
@@ -220,15 +207,9 @@ export class AdminTreeModel<M extends AdminTreeModel<any> = any> extends AdminBa
       },
     );
     if (oldLeft > info.left) {
-      await model.update<MInfo>(
-        { left: sql`${sql.attribute('left')} - ${oldLeft - info.left}`, right: sql`${sql.attribute('right')} - ${oldLeft - info.left}`, lockVersion: '' },
-        { where: { lockVersion: version }, transaction: options.transaction },
-      );
+      await model.update<MInfo>({ left: sql`${sql.attribute('left')} - ${oldLeft - info.left}`, right: sql`${sql.attribute('right')} - ${oldLeft - info.left}`, lockVersion: '' }, { where: { lockVersion: version }, transaction: options.transaction });
     } else {
-      await model.update<MInfo>(
-        { left: sql`${sql.attribute('left')} + ${info.left - oldLeft}`, right: sql`${sql.attribute('right')} + ${info.left - oldLeft}`, lockVersion: '' },
-        { where: { lockVersion: version }, transaction: options.transaction },
-      );
+      await model.update<MInfo>({ left: sql`${sql.attribute('left')} + ${info.left - oldLeft}`, right: sql`${sql.attribute('right')} + ${info.left - oldLeft}`, lockVersion: '' }, { where: { lockVersion: version }, transaction: options.transaction });
     }
   }
 

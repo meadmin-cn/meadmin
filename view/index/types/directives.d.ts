@@ -1,6 +1,6 @@
 declare module 'vue' {
   export interface ComponentCustomProperties {
-    VClickOutside: typeof import('../src/directives/clickOutside')['default'];
+    VClickOutside: (typeof import('../src/directives/clickOutside'))['default'];
     //code
   }
 }

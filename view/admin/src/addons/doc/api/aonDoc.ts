@@ -13,7 +13,7 @@ export class AonDoc {
   type = undefined as 1 | 2 | undefined; //类型:1=目录;2=菜单
   status = 1 as 1 | 0; //状态:1=启用;0=禁用
   orderNum = 99 as number | undefined; //排序(降序)
-  constentType = 0 as 0 | 1; //内容类型:0=markdown;1=外链
+  contentType = 0 as 0 | 1; //内容类型:0=markdown;1=外链
   mdContent = '' as string; //内容
   link = '' as string | null; //外链地址
 }
@@ -49,7 +49,7 @@ export class AonDocListParam extends PageParam {
   type?: 1 | 2; //类型:1=目录;2=菜单
   status?: 1 | 0; //状态:1=启用;0=禁用
   orderNum?: number; //排序(降序)
-  constentType?: 0 | 1; //内容类型:0=markdown;1=外链
+  contentType?: 0 | 1; //内容类型:0=markdown;1=外链
   mdContent?: string | null; //内容
   link?: string | null; //外链地址
   startCreatedAt?: string; //创建时间(起)

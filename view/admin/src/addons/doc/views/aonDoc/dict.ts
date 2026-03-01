@@ -8,7 +8,7 @@ export const getDict = (t = (str: string) => str) =>
       { value: 1, label: t('启用') },
       { value: 0, label: t('禁用') },
     ],
-    constentType: [
+    contentType: [
       { value: 0, label: t('markdown') },
       { value: 1, label: t('外链') },
     ],

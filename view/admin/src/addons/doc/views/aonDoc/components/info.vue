@@ -26,7 +26,7 @@
         {{ formatterStrExec(data?.orderNum) }}
       </el-descriptions-item>
       <el-descriptions-item :label="t('内容类型')">
-        {{ formatterDictExec(dict, 'constentType', data?.constentType) }}
+        {{ formatterDictExec(dict, 'contentType', data?.contentType) }}
       </el-descriptions-item>
       <el-descriptions-item :label="t('内容')">
         {{ formatterStrExec(data?.mdContent) }}

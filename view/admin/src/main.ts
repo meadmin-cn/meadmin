@@ -26,7 +26,7 @@ export async function createApp() {
   }
   //遍历插件的初始化函数
   for (const key in addonsModules) {
-    await addonsModules[key](app, router, store); // 只会打印 'name' 和 'like'
+    await addonsModules[key](app, router, store);
   }
   return { app, router, pinia: store };
 }

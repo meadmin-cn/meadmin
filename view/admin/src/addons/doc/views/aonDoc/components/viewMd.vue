@@ -1,40 +1,25 @@
 <template>
-  <me-dialog
-    v-model="show"
-    :loading="loading"
-    style="height: calc(80vh - 300px)"
-    :title="t('预览')"
-    :close-on-click-modal="false"
-    body-class=" md-view-body"
-    @closed="emit('closed')"
-  >
+  <me-dialog v-model="show" :loading="loading" style="height: calc(80vh - 300px)" :title="t('预览')" :close-on-click-modal="false" body-class=" md-view-body" @closed="emit('closed')">
     <div :id="viewId" class="view-md">
       <MdPreview :id="mdviewId" class="view" :model-value="data?.mdContent" />
-      <MdCatalog
-        class="catalog"
-        :editor-id="mdviewId"
-        :scroll-element="'#' + viewId"
-      />
+      <MdCatalog class="catalog" :editor-id="mdviewId" :scroll-element="'#' + viewId" />
     </div>
   </me-dialog>
 </template>
 
 <script setup lang="ts" name="ViewMd">
 // preview.css相比style.css少了编辑器那部分样式
-import { aonDocInfoApi } from "@/addons/doc/api/aonDoc.js";
-import { useLocalesI18n } from "@/locales/i18n.js";
-import { MdPreview, MdCatalog } from "meadmin-addons-doc";
-import "meadmin-addons-doc/dist/preview.js";
-const viewId = "view-md_" + useId();
-const mdviewId = "mdp_" + useId();
+import { aonDocInfoApi } from '@/addons/doc/api/aonDoc.js';
+import { useLocalesI18n } from '@/locales/i18n.js';
+import { MdCatalog, MdPreview } from 'meadmin-addons-doc';
+import 'meadmin-addons-doc/dist/preview.js';
+const viewId = 'view-md_' + useId();
+const mdviewId = 'mdp_' + useId();
 const show = defineModel<boolean>();
 const emit = defineEmits<{
-  (e: "closed"): void;
+  (e: 'closed'): void;
 }>();
-let { t, loadRes } = useLocalesI18n({}, [
-  (locale: string) => import(`../lang/${locale}.json`),
-  "aonDoc",
-]);
+let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'aonDoc']);
 await Promise.all([loadRes]);
 const props = defineProps<{ id: string }>();
 const { data, loading, runAsync } = aonDocInfoApi();
@@ -45,7 +30,7 @@ watch(
       runAsync(id);
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 <style lang="scss" scoped>

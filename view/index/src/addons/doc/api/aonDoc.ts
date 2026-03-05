@@ -5,8 +5,8 @@ import request, { RequestOptions } from '@/utils/request.js';
 export type AonDocContentInfo = {
   title: string; //名称
   type: string; //类型:1=目录;2=菜单
-  contentType: string; //内容类型:0=markdown;1=外链
-  mdContent: string; //内容
+  contentType: 0 | 1; //内容类型:0=markdown;1=外链
+  mdContent: string | null; //内容
 };
 //获取文档内容
 export function aonDocGetContentApi(options?: RequestOptions<AonDocContentInfo, [string]>) {
@@ -19,17 +19,15 @@ export function aonDocGetContentApi(options?: RequestOptions<AonDocContentInfo, 
   );
 }
 
-export type AonDocMenuTree = TreeArrayItem<
-  {
-    id: string; //ID
-    parentId: string; //父级id
-    title: string; //名称
-    contentType: string; //内容类型:0=markdown;1=外链
-    link: string; //外链地址
-    icon: FileResult | null | undefined; //图标(200*200)
-  },
-  'children'
->[];
+export type AonDocMenu = {
+  id: string; //ID
+  parentId: string; //父级id
+  title: string; //名称
+  contentType: 0 | 1; //内容类型:0=markdown;1=外链
+  link: string | null; //外链地址
+  icon: FileResult | null | undefined; //图标(200*200)
+};
+export type AonDocMenuTree = TreeArrayItem<AonDocMenu, 'children'>[];
 //获取树形菜单
 export function aonDocmenuTreeApi(options?: RequestOptions<AonDocMenuTree, []>) {
   return request<AonDocMenuTree, []>(

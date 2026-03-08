@@ -13,7 +13,7 @@ export function aonDocGetContentApi(options?: RequestOptions<AonDocContentInfo, 
   return request<AonDocContentInfo, [string]>(
     (id) => ({
       url: 'aonDoc/getContent/' + id,
-      method: 'string',
+      method: 'get',
     }),
     Object.assign({ noLoading: true }, options),
   );

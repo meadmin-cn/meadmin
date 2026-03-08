@@ -4,7 +4,9 @@
       <Header></Header>
     </div>
     <div class="layout-page">
-      <Page></Page>
+      <Page>
+        <slot></slot>
+      </Page>
     </div>
     <div class="layout-footer">
       <Footer></Footer>

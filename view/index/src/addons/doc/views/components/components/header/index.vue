@@ -4,7 +4,7 @@
       <router-link :to="PageEnum.HOME">Me - Admin</router-link>
     </div>
     <el-menu :default-active="activeMenu" class="menu" mode="horizontal">
-      <menu-item v-for="item in menus" :key="item.id" :item="item" :no-child="item.children.length === 0" />
+      <menu-item v-for="item in menus" :key="item.id" :item="item" />
     </el-menu>
     <div class="right">测试</div>
   </div>

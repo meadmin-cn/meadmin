@@ -1,9 +1,7 @@
 <template>
-  <router-view v-slot="{ Component }">
-    <Suspense @resolve="done()" @pending="set(1)">
-      <component :is="Component"></component>
-    </Suspense>
-  </router-view>
+  <Suspense @resolve="done()" @pending="set(1)">
+      <slot></slot>
+  </Suspense>
 </template>
 
 <script setup lang="ts" name="LayoutDefaultPage">

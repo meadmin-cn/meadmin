@@ -18,8 +18,9 @@ export async function render(url: string, manifest: Record<string, string[]>, co
   const html = await renderToString(app, ctx);
   // which we can then use to determine what files need to be preloaded for this
   // request.
-  const __pinia = serialize(store.state.value);
-  const __serverCache = serialize(getAllServerCache(context.ssrVersion));
+  const __pinia = serialize(store.state.value, { ignoreFunction: true });
+  const serverCache = getAllServerCache(context.ssrVersion);
+  const __serverCache = serialize(serverCache, { ignoreFunction: true });
   const preloadLinks = `<script>window.__pinia=${__pinia};</script>\n` + `<script>window.__serverCache=${__serverCache};</script>\n` + renderPreloadLinks(ctx.modules, manifest);
   const teleports = renderTeleports(ctx.teleports);
   setServerCookies(context.ssrVersion, null);

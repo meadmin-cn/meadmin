@@ -9,15 +9,13 @@
       <menu-item v-for="child in menu.children" :key="getMenuPath(child)" :item="child"></menu-item>
     </el-sub-menu>
     <template v-else>
-      <component :is="menu!.contentType ? 'a' : 'routerLink'" v-if="menu.title" :href="getMenuPath(menu!)" :to="getMenuPath(menu!)">
-        <el-menu-item :index="menu.id" :title="menu.title">
-          <img v-if="menu.icon" :src="menu.icon.url" />
-          <div v-show="collapse" v-else class="icon-text">{{ menu.title.slice(0, 1) }}</div>
-          <template #title>
-            <span class="menu">{{ menu.title }}</span>
-          </template>
-        </el-menu-item>
-      </component>
+      <el-menu-item :index="menu.id" :title="menu.title" @click="toMenu(menu)">
+        <img v-if="menu.icon" :src="menu.icon.url" />
+        <div v-show="collapse" v-else class="icon-text">{{ menu.title.slice(0, 1) }}</div>
+        <template #title>
+          <span class="menu">{{ menu.title }}</span>
+        </template>
+      </el-menu-item>
     </template>
   </template>
 </template>
@@ -41,10 +39,22 @@ menu.value = getMenu(props.item);
 const getMenuPath = (item: AonDocMenuTree[0]) => {
   return item.contentType === 1 ? `/aon/doc/meamdin/${item.id}` : item.link!;
 };
+const router = useRouter();
+const toMenu = (menu: AonDocMenuTree[0]) => {
+  if (menu.contentType === 1) {
+    window.open(menu.link!, '_blank');
+  } else {
+    router.push(getMenuPath(menu));
+  }
+};
 </script>
 <style lang="scss" scoped>
 .icon-text {
   width: 1em;
   text-align: center;
+}
+a {
+  display: block;
+  height: 100%;
 }
 </style>

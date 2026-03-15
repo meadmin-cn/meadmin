@@ -4,9 +4,11 @@
       <Header></Header>
     </div>
     <div class="layout-page">
-      <Page>
-        <slot></slot>
-      </Page>
+      <div class="content">
+        <Page>
+          <slot></slot>
+        </Page>
+      </div>
     </div>
     <div class="layout-footer">
       <Footer></Footer>
@@ -44,9 +46,13 @@ import Page from './page.vue';
   .layout-page {
     flex: 1;
     overflow: auto;
-    > div {
+    position: relative;
+    .content {
+      position: absolute;
+      height: 100%;
       width: $content-width;
-      margin: 0 auto;
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
   .layout-footer {

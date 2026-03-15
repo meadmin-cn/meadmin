@@ -585,6 +585,9 @@ importers:
       md-editor-v3:
         specifier: ^2.11.3
         version: 2.11.3(vue@3.5.25(typescript@5.9.3))
+      meadmin-addons-doc:
+        specifier: workspace:*
+        version: link:../../addons/doc
       mockjs:
         specifier: ^1.1.0
         version: 1.1.0

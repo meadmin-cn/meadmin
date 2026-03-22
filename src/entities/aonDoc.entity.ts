@@ -2,7 +2,7 @@ import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
 import { DataTypes, NonAttribute } from '@sequelize/core';
-import { Attribute, BelongsTo, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
+import { Attribute, BelongsTo, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
 // import { BaseModel } from './abstract/base.entity.js';
 import { BelongsToModel } from '@/types/entity.js';
 import { AdminTreeModel } from './abstract/adminTree.entity.js';
@@ -18,6 +18,14 @@ export class AonDoc extends AdminTreeModel<AonDoc> {
   id: string;
 
   @Attribute({
+    comment: '版本',
+    type: DataTypes.STRING(100),
+    defaultValue: '',
+  })
+  @ApiPropertyRule({ description: '版本', rule: RuleType.string().required() })
+  vsersion:string;
+
+  @Attribute({
     comment: '名称',
     type: DataTypes.STRING(100),
     defaultValue: '',
@@ -28,6 +36,19 @@ export class AonDoc extends AdminTreeModel<AonDoc> {
     rule: RuleType.string().max(100).required(),
   })
   title: string;
+
+  @Attribute({
+    comment: '标识',
+    type: DataTypes.STRING(100),
+    defaultValue: null,
+  })
+  @Unique()
+  @ApiPropertyRule({
+    description: '标识',
+    rule: RuleType.string().max(100),
+  })
+  label:string;
+
 
   @Attribute({ type: DataTypes.STRING(20), comment: '图标附件id' })
   iconFileId: string;

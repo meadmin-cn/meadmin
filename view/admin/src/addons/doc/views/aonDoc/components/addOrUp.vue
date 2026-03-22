@@ -4,6 +4,12 @@
       <el-form-item :label="t('父级')" prop="parentId">
         <el-tree-select v-model="info.parentId" :data="treeAllList || []" check-strictly node-key="id" :props="{ label: 'title' }" :render-after-expand="false" clearable filterable />
       </el-form-item>
+      <el-form-item :label="t('版本')" prop="version">
+        <el-input v-model="info.version"></el-input>
+      </el-form-item>
+      <el-form-item :label="t('标识')" prop="label">
+        <el-input v-model="info.label"></el-input>
+      </el-form-item>
       <el-form-item :label="t('名称')" prop="title">
         <el-input v-model="info.title"></el-input>
       </el-form-item>
@@ -83,6 +89,13 @@ watch(
   { immediate: true },
 );
 const rules: FormRules = {
+  version: [
+    {
+      type: 'string',
+      required: true,
+      message: t('{label} 必须填写', { label: t('版本') }),
+    },
+  ],
   title: [
     {
       required: true,

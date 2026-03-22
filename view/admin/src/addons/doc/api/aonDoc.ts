@@ -16,6 +16,8 @@ export class AonDoc {
   contentType = 0 as 0 | 1; //内容类型:0=markdown;1=外链
   mdContent = '' as string; //内容
   link = '' as string | null; //外链地址
+  version='';//版本
+  label = null as string|null;//标识
 }
 
 export type AonDocInfo = AonDoc & {

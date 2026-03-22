@@ -37,7 +37,7 @@
             <mel-icon-memo />
           </me-button>
           <me-button v-if="permission('aon_doc_info') && row.contentType == 0" link :title="t('预览')" @click="openViewMd({ id: row.id })">
-            {{ t('预览') }}
+            <mel-icon-view/>
           </me-button>
           <me-button v-if="permission('aon_doc_edit')" link :title="t('编辑')" @click="showAddOrUp(row.id)">
             <mel-icon-edit />

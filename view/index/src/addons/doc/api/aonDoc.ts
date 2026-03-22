@@ -26,6 +26,9 @@ export type AonDocMenu = {
   contentType: 0 | 1; //内容类型:0=markdown;1=外链
   link: string | null; //外链地址
   icon: FileResult | null | undefined; //图标(200*200)
+  label: string|null;//唯一标识
+  version: string;//版本
+  trueLabel?: string;//自动生成的真实跳转菜单
 };
 export type AonDocMenuTree = TreeArrayItem<AonDocMenu, 'children'>[];
 //获取树形菜单

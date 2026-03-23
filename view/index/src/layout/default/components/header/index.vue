@@ -5,7 +5,7 @@
     </div>
     <el-menu :default-active="activeMenu" class="menu" mode="horizontal">
       <template v-for="item in menus" :key="item.path">
-        <menu-item  :item="item" v-if="canMenu(item)" />
+        <menu-item v-if="canMenu(item)" :item="item" />
       </template>
     </el-menu>
     <div class="right">
@@ -14,13 +14,13 @@
   </div>
 </template>
 
-<script setup lang="ts" name="Header">
+<script setup lang="ts" name="LayoutHeader">
 import { PageEnum } from '@/dict/pageEnum';
 import { useRouteStore } from '@/store';
 import { ref } from 'vue';
+import { RouteRecordRaw } from 'vue-router';
 import MenuItem from './components/menuItem.vue';
 import User from './components/user.vue';
-import { RouteRecordRaw } from 'vue-router';
 const route = useRoute();
 const routeStore = useRouteStore();
 const activeMenu = ref('');
@@ -37,15 +37,15 @@ const menus = computed(() => {
   return routeStore.routes;
 });
 //是否作为菜单
-const canMenu = (menu:RouteRecordRaw):boolean=>{
-  if(!menu.meta?.hideMenu){
+const canMenu = (menu: RouteRecordRaw): boolean => {
+  if (!menu.meta?.hideMenu) {
     return true;
   }
-  if(menu.children?.length){
-    return menu.children.some(v=>canMenu(v));
+  if (menu.children?.length) {
+    return menu.children.some((v) => canMenu(v));
   }
   return false;
-}
+};
 </script>
 <style lang="scss" scoped>
 .header {

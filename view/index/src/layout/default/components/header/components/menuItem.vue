@@ -20,7 +20,7 @@
   </template>
 </template>
 
-<script setup lang="ts" name="MenuItem">
+<script setup lang="ts" name="LayoutMenuItem">
 import { RouteRecordRaw } from 'vue-router';
 const props = defineProps<{ item: RouteRecordRaw; noChild?: boolean; collapse?: boolean }>();
 const menu = ref<RouteRecordRaw>();

@@ -10,7 +10,7 @@
     </div>
   </div>
 </template>
-
+<script setup name="404"></script>
 <style lang="scss" scoped>
 .no-page {
   display: flex;

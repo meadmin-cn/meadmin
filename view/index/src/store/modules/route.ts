@@ -1,4 +1,5 @@
 import { asyncRoutes, constantRoutes, formatRoutes } from '@/router';
+import { cloneDeep } from 'lodash-es';
 import { Router, RouteRecordRaw } from 'vue-router';
 export default defineStore('route', {
   state: () => ({
@@ -10,7 +11,7 @@ export default defineStore('route', {
   actions: {
     //生成动态路由
     generateRoutes() {
-      return (this.addRoutes = asyncRoutes);
+      return (this.addRoutes = cloneDeep(asyncRoutes));
     },
     //初始化路由
     initRoutes(router: Router) {

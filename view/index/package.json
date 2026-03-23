@@ -51,7 +51,7 @@
     "vue": "^3.5.22",
     "vue-form-create": "^1.2.12",
     "vue-request": "^2.0.4",
-    "vue-router": "^4.5.1",
+    "vue-router": "^4.6.1",
     "vxe-pc-ui": "^4.10.12",
     "vxe-table": "^4.17.2",
     "vxe-table-plugin-element": "^4.0.4",

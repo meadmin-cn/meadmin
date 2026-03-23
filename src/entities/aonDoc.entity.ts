@@ -23,7 +23,7 @@ export class AonDoc extends AdminTreeModel<AonDoc> {
     defaultValue: '',
   })
   @ApiPropertyRule({ description: '版本', rule: RuleType.string().required() })
-  vsersion:string;
+  version: string;
 
   @Attribute({
     comment: '名称',
@@ -47,8 +47,7 @@ export class AonDoc extends AdminTreeModel<AonDoc> {
     description: '标识',
     rule: RuleType.string().max(100),
   })
-  label:string;
-
+  label: string;
 
   @Attribute({ type: DataTypes.STRING(20), comment: '图标附件id' })
   iconFileId: string;

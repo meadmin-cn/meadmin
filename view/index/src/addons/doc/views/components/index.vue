@@ -1,13 +1,13 @@
 <template>
   <div class="layout">
     <div class="layout-header">
-      <Header :active="topActiveMenu" :menus="topMenus"></Header>
+      <Header :active="topActiveMenu" :menus="topMenus" :version="version"></Header>
     </div>
     <div class="layout-page">
       <div class="content">
         <div class="left-menu">
           <el-menu :default-active="activeMenu" class="menu">
-            <menu-item v-for="item in letMenus" :key="item.id" :menu="item" />
+            <menu-item v-for="item in leftMenus" :key="item.id" :menu="item" />
           </el-menu>
         </div>
         <Page>
@@ -29,8 +29,9 @@ import MenuItem from './components/menuItem.vue';
 import Page from './page.vue';
 const { runAsync } = aonDocmenuTreeApi();
 const menus = await runAsync();
-const letMenus = ref<AonDocMenuTree>([]);
+const leftMenus = ref<AonDocMenuTree>([]);
 const topMenus = reactive<AonDocMenuTree>([]);
+const version = ref('');
 //是否全是外链
 const onlyLink = (menu: AonDocMenuTree) => {
   for (let i = 0; i < menu.length; i++) {
@@ -89,10 +90,11 @@ watch(
   (route) => {
     if (route.params) {
       activeMenu.value = route.params.aonDocLabel as string;
+      version.value = route.params.version as string;
       for (let i = 0; i < markdownMenus.length; i++) {
         if (isActive(markdownMenus[i].menus, activeMenu.value)) {
           topActiveMenu.value = markdownMenus[i].firtstId;
-          letMenus.value = markdownMenus[i].menus;
+          leftMenus.value = markdownMenus[i].menus;
           break;
         }
       }

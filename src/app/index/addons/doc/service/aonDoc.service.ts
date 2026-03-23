@@ -14,12 +14,13 @@ export class AonDocService {
   i18nService: MidwayI18nService;
 
   /**
-   * 获取角色树形结构
+   * 获取菜单树形结构
+   * @param version string //版本标识
    * @returns
    */
-  async menuTree() {
+  async menuTree(version: string) {
     return await this.aonDocRepository.getTree({
-      attributes: ['id', 'title', 'parentId', 'type', 'contentType', 'link'],
+      attributes: ['id', 'title', 'parentId', 'type', 'contentType', 'link', 'version', 'label'],
       include: [
         {
           association: 'icon',
@@ -27,6 +28,7 @@ export class AonDocService {
         },
       ],
       order: [['orderNum', 'DESC']],
+      where: { version },
     });
   }
 
@@ -38,7 +40,7 @@ export class AonDocService {
   async getContent(id: string) {
     const entity = await this.aonDocRepository.findByPk(id, {
       where: { contentType: 0 },
-      attributes: ['type', 'contentType', 'mdContent', 'title'],
+      attributes: ['type', 'contentType', 'mdContent', 'title', 'version', 'label'],
     });
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));

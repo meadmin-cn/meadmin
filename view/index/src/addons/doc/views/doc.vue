@@ -8,13 +8,12 @@
 </template>
 
 <script setup lang="ts" name="Doc">
-import { vLoading } from 'element-plus';
 import { MdCatalog, MdPreview } from 'meadmin-addons-doc';
 import 'meadmin-addons-doc/dist/preview.js';
 import { aonDocGetContentApi, AonDocMenuTree, aonDocmenuTreeApi } from '../api/aonDoc';
 import Layout from './components/index.vue';
 const props = defineProps<{
-  aonDocType?: string;
+  version?: string;
   aonDocLabel?: string; //文档标识（文档id）
 }>();
 const router = useRouter();
@@ -22,40 +21,36 @@ const { runAsync: menuApiRun } = aonDocmenuTreeApi();
 const { runAsync, data, loading } = aonDocGetContentApi();
 const viewId = 'view-md_' + useId();
 const mdviewId = 'mdp_' + useId();
-if (!props.aonDocLabel) {
-  const menus = await menuApiRun();
-  const getFirstMenu = (menus: AonDocMenuTree) => {
-    let menu = '/';
-    for (let i = 0; i < menus.length; i++) {
-      if (menus[i].children?.length) {
-        menu = getFirstMenu(menus[i].children);
-      } else if (menus[i].contentType === 0) {
-        return `/aon/doc/main/${menus[i].id}`;
+const init = async () => {
+  if (!props.aonDocLabel) {
+    const menus = await menuApiRun(props.version);
+    const getFirstMenu = (menus: AonDocMenuTree) => {
+      let menu = '/';
+      for (let i = 0; i < menus.length; i++) {
+        if (menus[i].children?.length) {
+          menu = getFirstMenu(menus[i].children);
+        } else if (menus[i].contentType === 0) {
+          return `/aon/doc/${menus[i].version}/${menus[i].id}`;
+        }
       }
-    }
-    return menu;
-  };
-  router.replace(getFirstMenu(menus));
-  onMounted(() => {
-    watch(
-      () => props.aonDocLabel,
-      async () => {
-        await runAsync(props.aonDocLabel!);
-      },
-      { immediate: true },
-    );
-  });
-} else {
-  await runAsync(props.aonDocLabel!);
-  onMounted(() => {
-    watch(
-      () => props.aonDocLabel,
-      async () => {
-        await runAsync(props.aonDocLabel!);
-      },
-    );
-  });
-}
+      return menu;
+    };
+    router.replace(getFirstMenu(menus));
+  } else {
+    await runAsync(props.aonDocLabel!);
+  }
+};
+await init();
+const immediate = !props.aonDocLabel;
+onMounted(() => {
+  watch(
+    () => [props.aonDocLabel, props.version],
+    async () => {
+      await init();
+    },
+    { immediate },
+  );
+});
 </script>
 <style lang="scss" scoped>
 .view-md {

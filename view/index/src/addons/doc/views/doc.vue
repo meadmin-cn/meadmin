@@ -8,6 +8,7 @@
 </template>
 
 <script setup lang="ts" name="Doc">
+import { vLoading } from 'element-plus';
 import { MdCatalog, MdPreview } from 'meadmin-addons-doc';
 import 'meadmin-addons-doc/dist/preview.js';
 import { aonDocGetContentApi, AonDocMenuTree, aonDocmenuTreeApi } from '../api/aonDoc';
@@ -35,15 +36,26 @@ if (!props.aonDocLabel) {
     return menu;
   };
   router.replace(getFirstMenu(menus));
+  onMounted(() => {
+    watch(
+      () => props.aonDocLabel,
+      async () => {
+        await runAsync(props.aonDocLabel!);
+      },
+      { immediate: true },
+    );
+  });
 } else {
   await runAsync(props.aonDocLabel!);
+  onMounted(() => {
+    watch(
+      () => props.aonDocLabel,
+      async () => {
+        await runAsync(props.aonDocLabel!);
+      },
+    );
+  });
 }
-watch(
-  () => props.aonDocLabel,
-  async () => {
-    await runAsync(props.aonDocLabel!);
-  },
-);
 </script>
 <style lang="scss" scoped>
 .view-md {

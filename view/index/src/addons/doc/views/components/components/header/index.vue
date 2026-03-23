@@ -11,12 +11,10 @@
 </template>
 
 <script setup lang="ts" name="Header">
-import { aonDocmenuTreeApi } from '@/addons/doc/api/aonDoc';
+import { AonDocMenuTree } from '@/addons/doc/api/aonDoc';
 import { PageEnum } from '@/dict/pageEnum';
 import MenuItem from './components/menuItem.vue';
-const { runAsync } = aonDocmenuTreeApi();
-const menus = await runAsync();
-defineProps<{active:string}>();
+defineProps<{ active: string; menus: AonDocMenuTree }>();
 </script>
 <style lang="scss" scoped>
 .header {

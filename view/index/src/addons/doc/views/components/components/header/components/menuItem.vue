@@ -1,6 +1,6 @@
 <template>
   <template v-if="menu">
-    <el-sub-menu v-if="menu.children?.length" :index="menu.trueLabel || menu.label || menu.id">
+    <el-sub-menu v-if="menu.children?.length" :index="menu.id">
       <template #title>
         <img v-if="menu.icon" :src="menu.icon.url" />
         <div v-show="collapse" v-else class="icon-text">{{ menu.title.slice(0, 1) }}</div>
@@ -9,7 +9,7 @@
       <menu-item v-for="child in menu.children" :key="child.id" :menu="child"></menu-item>
     </el-sub-menu>
     <template v-else>
-      <el-menu-item :index="menu.trueLabel || menu.label || menu.id" :title="menu.title" @click="toMenu(menu)">
+      <el-menu-item :index="menu.id" :title="menu.title" @click="toMenu(menu)">
         <img v-if="menu.icon" :src="menu.icon.url" />
         <div v-show="collapse" v-else class="icon-text">{{ menu.title.slice(0, 1) }}</div>
         <template #title>
@@ -23,7 +23,7 @@
 <script setup lang="ts" name="MenuItem">
 import { AonDocMenuTree } from '@/addons/doc/api/aonDoc';
 defineProps<{ menu: AonDocMenuTree[0]; collapse?: boolean }>();
-const getMenuPath = (version : string,label: string) => {
+const getMenuPath = (version: string, label: string) => {
   return `/aon/doc/${version}/${label}`;
 };
 const router = useRouter();
@@ -31,7 +31,7 @@ const toMenu = (menu: AonDocMenuTree[0]) => {
   if (menu.contentType === 1) {
     window.open(menu.link!, '_blank');
   } else {
-    router.push(getMenuPath(menu.version,menu.trueLabel || menu.label || menu.id));
+    router.push(getMenuPath(menu.version, menu.trueLabel || menu.label || menu.id));
   }
 };
 </script>

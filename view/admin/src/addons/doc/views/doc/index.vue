@@ -37,7 +37,7 @@
             <mel-icon-memo />
           </me-button>
           <me-button v-if="permission('aon_doc_info') && row.contentType == 0" link :title="t('预览')" @click="openViewMd({ id: row.id })">
-            <mel-icon-view/>
+            <mel-icon-view />
           </me-button>
           <me-button v-if="permission('aon_doc_edit')" link :title="t('编辑')" @click="showAddOrUp(row.id)">
             <mel-icon-edit />
@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts" name="AonDoc">
-import { AonDocInfo, aonDocTreeAllApi, delAonDocApi } from '@/addons/doc/api/aonDoc';
+import { AonDocInfo, aonDocTreeAllApi, delAonDocApi } from '@/addons/doc/api/doc';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { createformatterDictFn, formatterAt, formatterObjectFn, formatterStr } from '@/utils/helper.js';

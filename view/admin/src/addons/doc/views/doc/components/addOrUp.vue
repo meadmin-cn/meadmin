@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts" name="AddOrUpAonDoc">
-import { AonDoc, addAonDocApi, aonDocInfoApi, aonDocTreeAllApi, updateAonDocApi } from '@/addons/doc/api/aonDoc';
+import { AonDoc, addAonDocApi, aonDocInfoApi, aonDocTreeAllApi, updateAonDocApi } from '@/addons/doc/api/doc.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
 import { FormInstance, FormRules } from 'element-plus';

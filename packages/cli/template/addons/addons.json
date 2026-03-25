@@ -1,0 +1,10 @@
+{
+  "name":"{addonsName}",
+  "chineseName":"中文名称",
+  "version": "1.0.0",
+  "description": "说明",
+  "keywords": [],
+  "author": "作者",
+  "installShell":"",
+  "uninstallShell":""
+}

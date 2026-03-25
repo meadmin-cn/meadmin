@@ -9,5 +9,5 @@
     "module": "es6",
     "moduleResolution": "bundler"
   },
-  "exclude": ["*.js", "*.ts", "dist", "node_modules", "test", "rescources"]
+  "exclude": ["*.js", "*.ts", "dist", "node_modules", "test", "rescources", "template"]
 }

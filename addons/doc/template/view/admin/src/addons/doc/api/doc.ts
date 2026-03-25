@@ -63,7 +63,7 @@ export class AonDocListParam extends PageParam {
 export function aonDocListApi(options?: RequestOptions<AonDocListResult, [AonDocListParam]>) {
   return request<AonDocListResult, [AonDocListParam]>(
     (data) => ({
-      url: 'aonDoc/',
+      url: 'addons/doc/doc/',
       method: 'post',
       data: data,
     }),
@@ -75,7 +75,7 @@ export function aonDocListApi(options?: RequestOptions<AonDocListResult, [AonDoc
 export function aonDocInfoApi(options?: RequestOptions<AonDocInfo, [string]>) {
   return request<AonDocInfo, [string]>(
     (id) => ({
-      url: `aonDoc/info/${id}`,
+      url: `addons/doc/doc/info/${id}`,
       method: 'get',
     }),
     Object.assign({ noLoading: true }, options),
@@ -87,7 +87,7 @@ export type UpdateAonDocInfoParam = Omit<Partial<AonDocInfo>, 'id' | 'createdAt'
 export function updateAonDocApi(options?: RequestOptions<AonDocInfo, [string, UpdateAonDocInfoParam]>) {
   return request<AonDocInfo, [string, UpdateAonDocInfoParam]>(
     (id, data) => ({
-      url: `aonDoc/up/${id}`,
+      url: `addons/doc/doc/up/${id}`,
       method: 'post',
       data: data,
     }),
@@ -99,7 +99,7 @@ export function updateAonDocApi(options?: RequestOptions<AonDocInfo, [string, Up
 export function delAonDocApi(options?: RequestOptions<null, [string]>) {
   return request<null, [string]>(
     (id) => ({
-      url: `aonDoc/del/${id}`,
+      url: `addons/doc/doc/del/${id}`,
       method: 'post',
     }),
     Object.assign({ noLoading: true }, options),
@@ -111,7 +111,7 @@ export type AonDocInfoTreeAll = TreeArrayItem<AonDocInfo, 'children'>[];
 export function aonDocTreeAllApi(options?: RequestOptions<AonDocInfoTreeAll, []>) {
   return request<AonDocInfoTreeAll, []>(
     () => ({
-      url: 'aonDoc/treeAll',
+      url: 'addons/doc/doc/treeAll',
       method: 'get',
     }),
     Object.assign({ noLoading: true }, options),

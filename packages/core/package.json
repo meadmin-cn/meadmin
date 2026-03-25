@@ -49,7 +49,7 @@
     "mwtsc": ">=1.15.2 1.x"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.14.0"
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./bootstrap.js",

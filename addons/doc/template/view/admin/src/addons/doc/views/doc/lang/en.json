@@ -1,0 +1,20 @@
+{
+  "创建者(管理员)": "Created admin",
+  "最后更新者(管理员)": "Updated admin",
+  "父级id": "Parent id",
+  "ID": "Id",
+  "名称": "Title",
+  "图标(200*200)": "Icon",
+  "父级": "Parent",
+  "类型": "Type",
+  "状态": "Status",
+  "排序(降序)": "Order num",
+  "内容类型": "Constent type",
+  "内容": "Md content",
+  "外链地址": "Link",
+  "创建时间": "Created time",
+  "最后更新时间": "Updated time",
+  "预览": "Preview",
+  "版本": "Version",
+  "标识": "Label"
+}

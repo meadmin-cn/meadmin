@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts" name="Info">
-import { aonDocInfoApi } from '@/addons/doc/api/aonDoc';
+import { aonDocInfoApi } from '@/addons/doc/api/doc.js';
 import { useLocalesI18n } from '@/locales/hooks.js';
 import { formatterAtExec, formatterDictExec, formatterObjectExecFn, formatterStrExec } from '@/utils/helper.js';
 import { getDict } from '../dict.js';

@@ -40,7 +40,6 @@ const init = async () => {
     await runAsync(props.aonDocLabel!);
   }
 };
-await init();
 const immediate = !props.aonDocLabel;
 onMounted(() => {
   watch(
@@ -51,6 +50,7 @@ onMounted(() => {
     { immediate },
   );
 });
+await init();
 </script>
 <style lang="scss" scoped>
 .view-md {

@@ -9,7 +9,7 @@
 
 <script setup lang="ts" name="ViewMd">
 // preview.css相比style.css少了编辑器那部分样式
-import { aonDocInfoApi } from '@/addons/doc/api/aonDoc.js';
+import { aonDocInfoApi } from '@/addons/doc/api/doc.js';
 import { useLocalesI18n } from '@/locales/i18n.js';
 import { MdCatalog, MdPreview } from 'meadmin-addons-doc';
 import 'meadmin-addons-doc/dist/preview.js';

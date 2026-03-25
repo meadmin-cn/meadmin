@@ -1,0 +1,10 @@
+{
+  "name": "doc",
+  "chineseName": "文档插件",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": ["文档"],
+  "author": "",
+  "installShell": "",
+  "uninstallShell": ""
+}

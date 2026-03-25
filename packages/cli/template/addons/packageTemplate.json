@@ -1,0 +1,32 @@
+{
+  "name": "meadmin-addons-{addonsName}",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/index.js",
+  "export": {
+    ".": "./dist/index.js",
+    "./*": "./*.js"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch"
+  },
+  "files": [
+    "dist/**/*",
+    "template/"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "tsdown": "^0.20.1",
+    "typescript": "^5.9.3"
+  }
+}

@@ -26,7 +26,7 @@ export function get{{@ valueEnitty.entityName}}Api() {
     pageSize:number,
   }]>(
     (data) => ({
-      url: '{{@ replaceNames.controllerPath}}/get{{@ valueEnitty.entityName}}',
+      url: '{{@ replaceNames.addonsPath+replaceNames.controllerPath}}/get{{@ valueEnitty.entityName}}',
       method: 'post',
       data: data,
     }),
@@ -44,7 +44,7 @@ export function get{{@ valueEnitty.entityName}}Api() {
     pageSize:number,
   }]>(
     (data) => ({
-      url: '{{@ replaceNames.controllerPath}}/get{{@ valueEnitty.entityName}}',
+      url: '{{@ replaceNames.addonsPath+replaceNames.controllerPath}}/get{{@ valueEnitty.entityName}}',
       method: 'post',
       data: data,
     }),
@@ -60,7 +60,7 @@ export type {{@ replaceNames.Name}}Info = {{@ replaceNames.Name}} & {
 export function add{{@ replaceNames.Name}}Api() {
   return request<{{@ replaceNames.Name}}Info, [{{@ replaceNames.Name}}]>(
     (data) => ({
-      url: '{{@ replaceNames.controllerPath}}/add',
+      url: '{{@ replaceNames.addonsPath+replaceNames.controllerPath}}/add',
       method: 'post',
       data: data,
     }),
@@ -76,7 +76,7 @@ export class {{@ replaceNames.Name}}ListParam extends PageParam {
 export function {{@ replaceNames.name}}ListApi(options?: RequestOptions<{{@ replaceNames.Name}}ListResult, [{{replaceNames.Name}}ListParam]>) {
   return request<{{@ replaceNames.Name}}ListResult, [{{@ replaceNames.Name}}ListParam]>(
     (data) => ({
-      url: '{{@ replaceNames.controllerPath}}/',
+      url: '{{@ replaceNames.addonsPath+replaceNames.controllerPath}}/',
       method: 'post',
       data: data,
     }),
@@ -88,7 +88,7 @@ export function {{@ replaceNames.name}}ListApi(options?: RequestOptions<{{@ repl
 export function {{@ replaceNames.name}}InfoApi(options?: RequestOptions<{{@ replaceNames.Name}}Info, [{{@ entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>) {
   return request<{{@ replaceNames.Name}}Info, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>(
     ({{@ entity.pk.join(', ')}}) => ({
-      url: `{{@ replaceNames.controllerPath}}/info/${<%- entity.pk.join('/${') %>}`,
+      url: `{{@ replaceNames.addonsPath+replaceNames.controllerPath}}/info/${<%- entity.pk.join('/${') %>}`,
       method: 'get',
     }),
     Object.assign({ noLoading: true }, options),
@@ -100,7 +100,7 @@ export type Update{{replaceNames.Name}}InfoParam = Omit<Partial<{{@ replaceNames
 export function update{{@ replaceNames.Name}}Api(options?: RequestOptions<{{@ replaceNames.Name}}Info, [{{each entity.pk}}{{entitySchema.properties[$value].type}}, {{/each}}Update{{replaceNames.Name}}InfoParam]>) {
   return request<{{@ replaceNames.Name}}Info, [{{each entity.pk}}{{entitySchema.properties[$value].type}}, {{/each}}Update{{replaceNames.Name}}InfoParam]>(
     ({{@ entity.pk.join(', ')}}, data) => ({
-      url: `{{@ replaceNames.controllerPath}}/up/${<%- entity.pk.join('/${') %>}`,
+      url: `{{@ replaceNames.addonsPath+replaceNames.controllerPath}}/up/${<%- entity.pk.join('/${') %>}`,
       method: 'post',
       data: data,
     }),
@@ -112,7 +112,7 @@ export function update{{@ replaceNames.Name}}Api(options?: RequestOptions<{{@ re
 export function del{{@ replaceNames.Name}}Api(options?: RequestOptions<null, [{{@ entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>) {
   return request<null, [{{entity.pk.map(v=>entitySchema.properties[v].type).join(', ')}}]>(
     ({{@ entity.pk.join(', ')}}) => ({
-      url: `{{@ replaceNames.controllerPath}}/del/${<%- entity.pk.join('/${') %>}`,
+      url: `{{@ replaceNames.addonsPath+replaceNames.controllerPath}}/del/${<%- entity.pk.join('/${') %>}`,
       method: 'post',
     }),
     Object.assign({ noLoading: true }, options),

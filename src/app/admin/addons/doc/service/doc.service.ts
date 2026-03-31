@@ -2,7 +2,7 @@ import { InjectRepository, Transaction } from '@/decorators/index.js';
 import { Inject, Provide } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
-import { Op } from '@sequelize/core';
+import { Attributes, Op, WhereOptions } from '@sequelize/core';
 import { AonDoc } from '../../../../../entities/aonDoc.entity.js';
 import { AonDocCreateDto } from '../dto/docCreate.dto.js';
 import { AonDocQueryDto } from '../dto/docQuery.dto.js';
@@ -19,9 +19,14 @@ export class AonDocService {
 
   /**
    * 获取角色树形结构
+   * @param version
    * @returns
    */
-  async treeAll() {
+  async treeAll(version?: string) {
+    const where: WhereOptions<Attributes<AonDoc>> = {};
+    if (version) {
+      where.version = version;
+    }
     return await this.aonDocRepository.getTree({
       include: [
         'createdAdmin',
@@ -31,6 +36,7 @@ export class AonDocService {
           attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
         },
       ],
+      where,
       order: [['orderNum', 'DESC']],
     });
   }

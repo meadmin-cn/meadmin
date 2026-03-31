@@ -1,5 +1,5 @@
 import { AdminPermission, ApiOperationResponse } from '@/decorators/index.js';
-import { Body, Controller, Get, Inject, Param, Post } from '@midwayjs/core';
+import { Body, Controller, Get, Inject, Param, Post, Query } from '@midwayjs/core';
 import { AonDoc } from '../../../../../entities/aonDoc.entity.js';
 import { BaseController } from '../../../controller/base.controller.js';
 import { AonDocCreateDto } from '../dto/docCreate.dto.js';
@@ -24,8 +24,8 @@ export class AonDocController extends BaseController {
     summary: '获取所有文档(按父子级返回)',
   })
   @AdminPermission(['aon_doc_list', 'aon_doc_add', 'aon_doc_edit', 'aon_doc_info'])
-  async treeAll() {
-    return this.success(await this.aonDocService.treeAll());
+  async treeAll(@Query('version') version?: string) {
+    return this.success(await this.aonDocService.treeAll(version));
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头

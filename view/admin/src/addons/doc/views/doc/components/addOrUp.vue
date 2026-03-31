@@ -1,13 +1,13 @@
 <template>
   <me-dialog v-model="show" :title="t(id ? '编辑' : '新增')" :close-on-click-modal="false" @closed="emit('closed')">
     <el-form ref="formEl" v-loading="loading" :model="info" :rules="rules" class="add" label-width="auto">
-      <el-form-item :label="t('父级')" prop="parentId">
-        <el-tree-select v-model="info.parentId" :data="treeAllList || []" check-strictly node-key="id" :props="{ label: 'title' }" :render-after-expand="false" clearable filterable />
-      </el-form-item>
       <el-form-item :label="t('版本')" prop="version">
         <el-select v-model="info.version">
           <el-option v-for="val in dict.version" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
+      </el-form-item>
+      <el-form-item :label="t('父级')" prop="parentId">
+        <el-tree-select v-model="info.parentId" :data="treeAllList || []" check-strictly node-key="id" :props="{ label: 'title' }" :render-after-expand="false" default-expand-all clearable filterable />
       </el-form-item>
       <el-form-item :label="t('标识')" prop="label">
         <el-input v-model="info.label"></el-input>
@@ -66,11 +66,12 @@ const { runAsync: infoRunAsync } = aonDocInfoApi();
 const { data: treeAllList, runAsync: getTreeAllAsync } = aonDocTreeAllApi();
 
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'aonDoc']);
-await Promise.all([loadRes, getTreeAllAsync()]);
+await Promise.all([loadRes]);
 const dict = await getDict(t);
 const show = defineModel<boolean>();
 const props = defineProps<{
   id?: string;
+  version?: string;
 }>();
 const emit = defineEmits<{
   (e: 'success'): void;
@@ -80,16 +81,28 @@ const emit = defineEmits<{
 const info = reactive(new AonDoc());
 const loading = ref(false);
 watch(
+  () => info.version,
+  (version, oldVersion) => {
+    getTreeAllAsync(info.version);
+    if (oldVersion) {
+      info.parentId = null;
+    }
+  },
+);
+watch(
   () => props.id,
   async (id?: string) => {
     if (id) {
       loading.value = true;
       resetObj(info, await infoRunAsync(id));
       loading.value = false;
+    } else if (props.version) {
+      info.version = props.version;
     }
   },
   { immediate: true },
 );
+
 const rules: FormRules = {
   version: [
     {

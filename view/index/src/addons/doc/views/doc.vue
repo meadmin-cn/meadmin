@@ -11,7 +11,7 @@
 import { MdCatalog, MdPreview } from 'meadmin-addons-doc';
 import 'meadmin-addons-doc/dist/preview.js';
 import { aonDocGetContentApi, AonDocMenuTree, aonDocmenuTreeApi } from '../api/aonDoc';
-import Layout from './components/index.vue';
+import Layout from './components/layout.vue';
 const props = defineProps<{
   version?: string;
   aonDocLabel?: string; //文档标识（文档id）
@@ -30,14 +30,18 @@ const init = async () => {
         if (menus[i].children?.length) {
           menu = getFirstMenu(menus[i].children);
         } else if (menus[i].contentType === 0) {
-          return `/aon/doc/${menus[i].version}/${menus[i].id}`;
+          return `/aon/doc/${menus[i].version}/${menus[i]?.label || menus[i].id}`;
+        }
+        if (menu !== '/') {
+          return menu;
         }
       }
       return menu;
     };
+    console.log('--menus--', menus);
     router.replace(getFirstMenu(menus));
   } else {
-    await runAsync(props.aonDocLabel!);
+    await runAsync(props.version!, props.aonDocLabel!);
   }
 };
 const immediate = !props.aonDocLabel;

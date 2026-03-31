@@ -16,6 +16,6 @@ export const getDict = async (t = (str: string) => str) => {
       { value: 0, label: t('markdown') },
       { value: 1, label: t('外链') },
     ],
-    version: config.version.map((item) => ({ value: item.code, label: item.title })),
+    version: config.version.map((item) => ({ value: item.code, label: item.title + '【' + (item.status === 1 ? '启用' : '禁用') + '】' })),
   });
 };

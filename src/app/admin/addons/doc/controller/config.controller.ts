@@ -20,7 +20,7 @@ export class AonDocConfigController extends BaseController {
     responseType: AonDocConfig,
     summary: '获取配置详情',
   })
-  @AdminPermission('aon_doc_config_info')
+  @AdminPermission(['aon_doc_config_info', 'aon_doc_list', 'aon_doc_add', 'aon_doc_edit', 'aon_doc_info'])
   async findOne() {
     const entity = await this.aonDocConfigService.findOne('1');
     return this.success(entity);

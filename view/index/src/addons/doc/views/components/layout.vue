@@ -21,17 +21,18 @@
   </div>
 </template>
 
-<script setup lang="ts" name="Index">
+<script setup lang="ts" name="docLayout">
 import { AonDocMenuTree, aonDocmenuTreeApi } from '../../api/aonDoc';
 import Footer from './components/footer.vue';
 import Header from './components/header/index.vue';
 import MenuItem from './components/menuItem.vue';
 import Page from './page.vue';
 const { runAsync } = aonDocmenuTreeApi();
-const menus = await runAsync();
+const route = useRoute();
 const leftMenus = ref<AonDocMenuTree>([]);
 const topMenus = reactive<AonDocMenuTree>([]);
 const version = ref('');
+version.value = route.params.version as string;
 //是否全是外链
 const onlyLink = (menu: AonDocMenuTree) => {
   for (let i = 0; i < menu.length; i++) {
@@ -47,28 +48,34 @@ const onlyLink = (menu: AonDocMenuTree) => {
   }
   return true;
 };
-const getFisrtMenu = (item: AonDocMenuTree[0]): AonDocMenuTree[0] => {
+const getFirstMenu = (item: AonDocMenuTree[0]): AonDocMenuTree[0] => {
   if (!item.children?.length) {
     return item;
   }
   const children = [...item.children];
   const res = { ...item, children: children };
-  if (children.length === 1) {
-    return getFisrtMenu(children[0]);
+  if (children.length !== 0) {
+    return getFirstMenu(children[0]);
   }
   return res;
 };
-const markdownMenus = [] as { firtstId: string; menus: AonDocMenuTree }[];
-menus.forEach((menu) => {
-  if (onlyLink(menu.children)) {
-    topMenus.push(menu);
-  } else {
-    const firstMenu = getFisrtMenu(menu);
-    topMenus.push(Object.assign({}, menu, { children: [], trueLabel: firstMenu.label || firstMenu.id }));
-    markdownMenus.push({ firtstId: menu.id, menus: [menu] });
-  }
-});
-const route = useRoute();
+let markdownMenus = [] as { firtstId: string; menus: AonDocMenuTree }[];
+const getMenus = async () => {
+  markdownMenus = [];
+  topMenus.splice(0, topMenus.length);
+  leftMenus.value = [];
+  const menus = await runAsync(version.value);
+  menus.forEach((menu) => {
+    if (onlyLink(menu.children)) {
+      topMenus.push(menu);
+    } else {
+      const firstMenu = getFirstMenu(menu);
+      topMenus.push(Object.assign({}, menu, { children: [], trueLabel: firstMenu.label || firstMenu.id }));
+      markdownMenus.push({ firtstId: menu.id, menus: [menu] });
+    }
+  });
+};
+await getMenus();
 const activeMenu = ref('');
 const topActiveMenu = ref('');
 const isActive = (menu: AonDocMenuTree, activeLabel: string) => {
@@ -87,10 +94,13 @@ const isActive = (menu: AonDocMenuTree, activeLabel: string) => {
 };
 watch(
   route,
-  (route) => {
+  async (route) => {
     if (route.params) {
       activeMenu.value = route.params.aonDocLabel as string;
-      version.value = route.params.version as string;
+      if (route.params.version && version.value != route.params.version) {
+        version.value = route.params.version as string;
+        await getMenus();
+      }
       for (let i = 0; i < markdownMenus.length; i++) {
         if (isActive(markdownMenus[i].menus, activeMenu.value)) {
           topActiveMenu.value = markdownMenus[i].firtstId;
@@ -138,7 +148,8 @@ watch(
       transform: translateX(-50%);
       display: flex;
       .left-menu {
-        width: 300px;
+        width: $left-width;
+        flex-shrink: 0;
         height: 100%;
         .menu {
           min-height: 100%;

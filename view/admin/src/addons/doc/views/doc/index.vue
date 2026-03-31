@@ -13,6 +13,11 @@
       :on-add="permission('aon_doc_add') ? showAddOrUp : undefined"
       @refresh="search()"
     >
+      <template #buttons>
+        <el-select v-model="selectedVersion" style="width: 150px; margin-left: 12px">
+          <el-option v-for="val in dict.version" :key="val.value" :value="val.value" :label="val.label" />
+        </el-select>
+      </template>
       <vxe-column type="seq" align="left" :title="t('序号')" tree-node></vxe-column>
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="title" :title="t('名称')" :formatter="formatterStr"></vxe-column>
@@ -71,9 +76,11 @@ const { open: openAddOrUp } = useActionModel(AddOrUp);
 const { open: openViewMd } = useActionModel(ViewMd);
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'aonDoc']);
 const dict = await getDict(t);
+const selectedVersion = defineModel<string>();
+selectedVersion.value = dict?.version[0].label;
 const formatterDict = createformatterDictFn<AonDocInfo>(dict);
 const { loading, data, runAsync } = aonDocTreeAllApi();
-const search = () => runAsync();
+const search = () => runAsync(selectedVersion.value);
 const { runAsync: delRun, loading: delLoading } = delAonDocApi();
 const delId = ref<string>();
 const del = async (id: string) => {
@@ -81,12 +88,13 @@ const del = async (id: string) => {
   await delRun(id);
   await search();
 };
-const showInfo = (id?: string) => {
+const showInfo = (id: string) => {
   openInfo({ id });
 };
 const showAddOrUp = (id?: string) => {
   openAddOrUp({
     id,
+    version: selectedVersion.value,
     onSuccess: async () => {
       await search();
     },
@@ -94,4 +102,5 @@ const showAddOrUp = (id?: string) => {
 };
 
 await Promise.all([loadRes, search()]);
+watch(selectedVersion, () => search());
 </script>

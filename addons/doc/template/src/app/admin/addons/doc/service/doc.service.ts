@@ -1,8 +1,9 @@
 import { InjectRepository, Transaction } from '@/decorators/index.js';
+import { TreeArrayItem } from '@/helper/utils.js';
 import { Inject, Provide } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
-import { Op } from '@sequelize/core';
+import { Attributes, Op, WhereOptions } from '@sequelize/core';
 import { AonDoc } from '../../../../../entities/aonDoc.entity.js';
 import { AonDocCreateDto } from '../dto/docCreate.dto.js';
 import { AonDocQueryDto } from '../dto/docQuery.dto.js';
@@ -19,9 +20,14 @@ export class AonDocService {
 
   /**
    * 获取角色树形结构
+   * @param version
    * @returns
    */
-  async treeAll() {
+  async treeAll(version?: string) {
+    const where: WhereOptions<Attributes<AonDoc>> = {};
+    if (version) {
+      where.version = version;
+    }
     return await this.aonDocRepository.getTree({
       include: [
         'createdAdmin',
@@ -31,6 +37,7 @@ export class AonDocService {
           attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
         },
       ],
+      where,
       order: [['orderNum', 'DESC']],
     });
   }
@@ -184,5 +191,31 @@ export class AonDocService {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
     await entity.destroy();
+  }
+
+  /**
+   * 复制文档
+   * @param fromVersion
+   * @param toVersion
+   */
+  @Transaction()
+  async copy(fromVersion: string, toVersion: string) {
+    if (fromVersion === toVersion) {
+      throw new BadRequestError(this.i18nService.translate('来源Version和目标Version不能相同'));
+    }
+    const fromDoc = await this.aonDocRepository.getTree({
+      where: { version: fromVersion },
+      order: [['orderNum', 'DESC']],
+    });
+    const deepCopyDoc = async (parentId: string | null, docs: TreeArrayItem<AonDoc, 'children'>[]) => {
+      for (let i = 0; i < docs.length; i++) {
+        const entity = await this.aonDocRepository.create(Object.assign({}, docs[i], { id: undefined, parentId, version: toVersion, creareAdminId: undefined, updatedAdminId: undefined, left: undefined, right: undefined }));
+        if (docs[i].children.length) {
+          await deepCopyDoc(entity.id, docs[i].children);
+        }
+      }
+    };
+    await deepCopyDoc(null, fromDoc);
+    return true;
   }
 }

@@ -2,6 +2,7 @@ import { InjectRepository } from '@/decorators/index.js';
 import { Inject, Provide } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
+import { Op } from '@sequelize/core';
 import { AonDoc } from '../../../../../entities/aonDoc.entity.js';
 
 //文档
@@ -37,9 +38,16 @@ export class AonDocService {
    * @param id id
    * @returns
    */
-  async getContent(id: string) {
-    const entity = await this.aonDocRepository.findByPk(id, {
-      where: { contentType: 0 },
+  async getContent(version: string, labelOrId: string) {
+    const entity = await this.aonDocRepository.findOne({
+      where: {
+        contentType: 0,
+        version,
+        [Op.or]: {
+          id: labelOrId,
+          label: labelOrId,
+        },
+      },
       attributes: ['type', 'contentType', 'mdContent', 'title', 'version', 'label'],
     });
     if (!entity) {

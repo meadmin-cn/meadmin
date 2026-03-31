@@ -9,7 +9,7 @@
       <menu-item v-for="child in menu.children" :key="getMenuPath(child)" :menu="child"></menu-item>
     </el-sub-menu>
     <template v-else>
-      <el-menu-item :index="menu.id" :title="menu.title" @click="toMenu(menu)">
+      <el-menu-item :index="menu.label || menu.id" :title="menu.title" @click="toMenu(menu)">
         <img v-if="menu.icon" :src="menu.icon.url" />
         <div v-show="collapse" v-else class="icon-text">{{ menu.title.slice(0, 1) }}</div>
         <template #title>
@@ -24,7 +24,7 @@
 import { AonDocMenuTree } from '@/addons/doc/api/aonDoc';
 defineProps<{ menu: AonDocMenuTree[0]; collapse?: boolean }>();
 const getMenuPath = (item: AonDocMenuTree[0]) => {
-  return item.contentType === 1 ? `/aon/doc/${item.version}/${item.label||item.id}` : item.link!;
+  return item.contentType === 0 ? `/aon/doc/${item.version}/${item.label || item.id}` : item.link!;
 };
 const router = useRouter();
 const toMenu = (menu: AonDocMenuTree[0]) => {

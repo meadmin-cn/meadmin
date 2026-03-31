@@ -10,11 +10,17 @@
       <el-descriptions-item :label="t('名称')">
         {{ formatterStrExec(data?.title) }}
       </el-descriptions-item>
+      <el-descriptions-item :label="t('标识')">
+        {{ formatterStrExec(data?.label) }}
+      </el-descriptions-item>
       <el-descriptions-item :label="t('图标(200*200)')">
         <me-files-view :files="data?.icon ? [data.icon] : []"></me-files-view>
       </el-descriptions-item>
       <el-descriptions-item :label="t('父级')">
-        {{ formatterStrExec(data?.parent) }}
+        {{ formatterStrExec(data?.parent?.title) }}
+      </el-descriptions-item>
+      <el-descriptions-item :label="t('版本')">
+        {{ formatterDictExec(dict, 'version', data?.version) }}
       </el-descriptions-item>
       <el-descriptions-item :label="t('类型')">
         {{ formatterDictExec(dict, 'type', data?.type) }}
@@ -29,7 +35,7 @@
         {{ formatterDictExec(dict, 'contentType', data?.contentType) }}
       </el-descriptions-item>
       <el-descriptions-item :label="t('内容')">
-        {{ formatterStrExec(data?.mdContent) }}
+        <el-link type="primary" @click="openViewMd({ id })">{{ t('预览') }}</el-link>
       </el-descriptions-item>
       <el-descriptions-item :label="t('外链地址')">
         {{ formatterStrExec(data?.link) }}
@@ -55,15 +61,17 @@
 
 <script setup lang="ts" name="Info">
 import { aonDocInfoApi } from '@/addons/doc/api/doc.js';
+import useActionModel from '@/hooks/actionModel.js';
 import { useLocalesI18n } from '@/locales/hooks.js';
 import { formatterAtExec, formatterDictExec, formatterObjectExecFn, formatterStrExec } from '@/utils/helper.js';
 import { getDict } from '../dict.js';
+import ViewMd from './viewMd.vue';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'aonDoc']);
 await loadRes;
-const dict = getDict(t);
+const dict = await getDict(t);
 const show = defineModel<boolean>();
 const props = defineProps<{
-  id?: string;
+  id: string;
 }>();
 const emit = defineEmits<{
   (e: 'closed'): void;
@@ -78,6 +86,7 @@ watch(
   },
   { immediate: true },
 );
+const { open: openViewMd } = useActionModel(ViewMd);
 </script>
 <style lang="scss" scoped>
 .info {

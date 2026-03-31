@@ -31,7 +31,7 @@ export type AonDocInfo = AonDoc & {
 export function addAonDocApi() {
   return request<AonDocInfo, [AonDoc]>(
     (data) => ({
-      url: 'aonDoc/add',
+      url: 'addons/doc/doc/add',
       method: 'post',
       data: data,
     }),
@@ -108,11 +108,28 @@ export function delAonDocApi(options?: RequestOptions<null, [string]>) {
 
 export type AonDocInfoTreeAll = TreeArrayItem<AonDocInfo, 'children'>[];
 //获取树形结构
-export function aonDocTreeAllApi(options?: RequestOptions<AonDocInfoTreeAll, []>) {
-  return request<AonDocInfoTreeAll, []>(
-    () => ({
+export function aonDocTreeAllApi(options?: RequestOptions<AonDocInfoTreeAll, [string?]>) {
+  return request<AonDocInfoTreeAll, [string?]>(
+    (version?: string) => ({
       url: 'addons/doc/doc/treeAll',
       method: 'get',
+      params: { version },
+    }),
+    Object.assign({ noLoading: true }, options),
+  );
+}
+
+export class CopyAonDocParams {
+  fromVersion = ''; //原始版本
+  toVersion = ''; //目标版本
+}
+//复制文档
+export function copyAonDocApi(options?: RequestOptions<AonDocInfoTreeAll, [CopyAonDocParams]>) {
+  return request<AonDocInfoTreeAll, [CopyAonDocParams]>(
+    (data?: CopyAonDocParams) => ({
+      url: 'addons/doc/doc/copy',
+      method: 'post',
+      data: data,
     }),
     Object.assign({ noLoading: true }, options),
   );

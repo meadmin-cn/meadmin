@@ -1,5 +1,9 @@
-export const getDict = (t = (str: string) => str) =>
-  reactive({
+import { aonDocConfigInfoApi } from '../../api/config.js';
+
+export const getDict = async (t = (str: string) => str) => {
+  const config = await aonDocConfigInfoApi({}, true)();
+
+  return reactive({
     type: [
       { value: 1, label: t('目录') },
       { value: 2, label: t('菜单') },
@@ -12,4 +16,6 @@ export const getDict = (t = (str: string) => str) =>
       { value: 0, label: t('markdown') },
       { value: 1, label: t('外链') },
     ],
+    version: config.version.map((item) => ({ value: item.code, label: item.title + '【' + (item.status === 1 ? '启用' : '禁用') + '】' })),
   });
+};

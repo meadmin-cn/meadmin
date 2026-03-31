@@ -15,7 +15,7 @@
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item v-for="item in config?.version" :key="item.code" @click="toVersion(item.code)">{{ item.title }}</el-dropdown-item>
+              <el-dropdown-item v-for="item in config?.version.filter((item) => item.status === 1)" :key="item.code" @click="toVersion(item.code)">{{ item.title }}</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -43,6 +43,7 @@ const toVersion = (version: string) => {
 };
 </script>
 <style lang="scss" scoped>
+@use '../../layout.scss' as *;
 .header {
   display: flex;
   .left {
@@ -50,6 +51,7 @@ const toVersion = (version: string) => {
     font-size: 20px;
     display: flex;
     align-items: center;
+    width: $left-width;
   }
   .right {
     display: flex;
@@ -59,6 +61,7 @@ const toVersion = (version: string) => {
       padding: 0 10px;
       display: flex;
       align-items: center;
+      flex-shrink: 0;
       &::before {
         content: '';
         position: absolute;

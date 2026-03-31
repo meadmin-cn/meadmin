@@ -37,13 +37,13 @@ export class AonDocController extends BaseController {
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
-  @Get('/getContent/:id')
+  @Get('/getContent/:version/:labelOrId')
   @ApiOperationResponse({
     responseList: AonDocContentResultDto,
     summary: '获取详情',
   })
-  async getContent(@Param('id') id: string) {
-    return this.success(await this.aonDocService.getContent(id));
+  async getContent(@Param('version') version: string, @Param('labelOrId') labelOrId: string) {
+    return this.success(await this.aonDocService.getContent(version, labelOrId));
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头

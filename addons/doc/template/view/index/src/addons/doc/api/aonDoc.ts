@@ -13,10 +13,10 @@ export type AonDocContentInfo = {
   label: string | null; //标识
 };
 //获取文档内容
-export function aonDocGetContentApi(options?: RequestOptions<AonDocContentInfo, [string]>) {
-  return request<AonDocContentInfo, [string]>(
-    (id) => ({
-      url: 'aonDoc/getContent/' + id,
+export function aonDocGetContentApi(options?: RequestOptions<AonDocContentInfo, [string, string]>) {
+  return request<AonDocContentInfo, [string, string]>(
+    (version, labelOrId) => ({
+      url: `aonDoc/getContent/${version}/${labelOrId}`,
       method: 'get',
     }),
     Object.assign({ noLoading: true }, options),

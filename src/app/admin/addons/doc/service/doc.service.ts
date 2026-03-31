@@ -1,4 +1,5 @@
 import { InjectRepository, Transaction } from '@/decorators/index.js';
+import { TreeArrayItem } from '@/helper/utils.js';
 import { Inject, Provide } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
@@ -190,5 +191,31 @@ export class AonDocService {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
     await entity.destroy();
+  }
+
+  /**
+   * 复制文档
+   * @param fromVersion
+   * @param toVersion
+   */
+  @Transaction()
+  async copy(fromVersion: string, toVersion: string) {
+    if (fromVersion === toVersion) {
+      throw new BadRequestError(this.i18nService.translate('来源Version和目标Version不能相同'));
+    }
+    const fromDoc = await this.aonDocRepository.getTree({
+      where: { version: fromVersion },
+      order: [['orderNum', 'DESC']],
+    });
+    const deepCopyDoc = async (parentId: string | null, docs: TreeArrayItem<AonDoc, 'children'>[]) => {
+      for (let i = 0; i < docs.length; i++) {
+        const entity = await this.aonDocRepository.create(Object.assign({}, docs[i], { id: undefined, parentId, version: toVersion, creareAdminId: undefined, updatedAdminId: undefined, left: undefined, right: undefined }));
+        if (docs[i].children.length) {
+          await deepCopyDoc(entity.id, docs[i].children);
+        }
+      }
+    };
+    await deepCopyDoc(null, fromDoc);
+    return true;
   }
 }

@@ -5,6 +5,6 @@
   "description": "说明",
   "keywords": [],
   "author": "作者",
-  "installShell":"",
-  "uninstallShell":""
+  "installShells":[],
+  "uninstallShells":[]
 }

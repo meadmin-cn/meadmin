@@ -37,8 +37,8 @@ export class IndexController extends BaseController {
               content: '基于Vue3、Vite、TypeScript、Pinia、Vue-request、Element-plus等最新技术栈开发',
             },
             {
-              title: '国际化',
-              content: '独创的组件国际化语言包，开发便捷、按需加载',
+              title: 'CRUD',
+              content: '命令行一键生成控制器、模型、视图和JS文件,同时可一键生成后台菜单权限',
             },
             {
               title: '按需引入',
@@ -47,20 +47,20 @@ export class IndexController extends BaseController {
           ],
         },
         {
-          title: '我们的优势',
-          desc: 'Me-Admin是你不错的选择',
+          title: '为什么选择我们',
+          desc: '全栈项目的推荐方案',
           list: [
             {
-              title: '最新技术栈',
-              content: '基于Vue3、Vite、TypeScript、Pinia、Vue-request、Element-plus等最新技术栈开发',
+              title: '开源免费无加密',
+              content: 'Me-Admin快速开发框架无需授权即可商业使用，代码全部开源免费且无任何加密。',
             },
             {
-              title: '国际化',
-              content: '独创的组件国际化语言包，开发便捷、按需加载',
+              title: '灵活的插件机制',
+              content: '灵活的插件机制,拥有丰富的插件和扩展,可快速安装卸载，目前正在积极完善插件资源中',
             },
             {
-              title: '按需引入',
-              content: '便捷的组件自动按需引入，真正的按需引入，type自动生成，极大方便开发',
+              title: '社区氛围良好',
+              content: '开放的社区氛围，大家一起共同进步',
             },
           ],
         },

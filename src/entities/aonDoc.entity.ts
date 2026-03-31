@@ -23,7 +23,7 @@ export class AonDoc extends AdminTreeModel<AonDoc> {
     defaultValue: '',
   })
   @ApiPropertyRule({ description: '版本', rule: RuleType.string().required() })
-  @Unique('version_label')
+  @Unique('aon_doc_version_label')
   version: string;
 
   @Attribute({
@@ -43,7 +43,7 @@ export class AonDoc extends AdminTreeModel<AonDoc> {
     type: DataTypes.STRING(100),
     defaultValue: null,
   })
-  @Unique('version_label')
+  @Unique('aon_doc_version_label')
   @ApiPropertyRule({
     description: '标识',
     rule: RuleType.string().max(100),

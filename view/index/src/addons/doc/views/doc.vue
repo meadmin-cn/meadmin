@@ -38,7 +38,6 @@ const init = async () => {
       }
       return menu;
     };
-    console.log('--menus--', menus);
     router.replace(getFirstMenu(menus));
   } else {
     await runAsync(props.version!, props.aonDocLabel!);

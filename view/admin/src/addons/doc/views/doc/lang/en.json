@@ -16,5 +16,10 @@
   "最后更新时间": "Updated time",
   "预览": "Preview",
   "版本": "Version",
-  "标识": "Label"
+  "标识": "Label",
+  "复制": "Copy",
+  "来源版本不能为空": "Source version cannot be empty",
+  "目标版本不能为空": "The target version cannot be empty",
+  "从": "From",
+  "复制到": "To"
 }

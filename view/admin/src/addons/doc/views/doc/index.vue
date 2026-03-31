@@ -14,6 +14,9 @@
       @refresh="search()"
     >
       <template #buttons>
+        <el-button v-if="permission('aon_doc_copy')" :title="t('复制文档')" @click="openCopy()" @success="search()">
+          <mel-icon-copy-document></mel-icon-copy-document>
+        </el-button>
         <el-select v-model="selectedVersion" style="width: 150px; margin-left: 12px">
           <el-option v-for="val in dict.version" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
@@ -68,16 +71,18 @@ import { useLocalesI18n } from '@/locales/i18n';
 import { createformatterDictFn, formatterAt, formatterObjectFn, formatterStr } from '@/utils/helper.js';
 import { permission } from '@/utils/permission.js';
 import AddOrUp from './components/addOrUp.vue';
+import Copy from './components/copy.vue';
 import Info from './components/info.vue';
 import ViewMd from './components/viewMd.vue';
 import { getDict } from './dict.js';
 const { open: openInfo } = useActionModel(Info);
 const { open: openAddOrUp } = useActionModel(AddOrUp);
 const { open: openViewMd } = useActionModel(ViewMd);
+const { open: openCopy } = useActionModel(Copy);
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'aonDoc']);
 const dict = await getDict(t);
 const selectedVersion = defineModel<string>();
-selectedVersion.value = dict?.version[0].label;
+selectedVersion.value = dict?.version[0].value;
 const formatterDict = createformatterDictFn<AonDocInfo>(dict);
 const { loading, data, runAsync } = aonDocTreeAllApi();
 const search = () => runAsync(selectedVersion.value);

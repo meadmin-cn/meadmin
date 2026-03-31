@@ -51,6 +51,18 @@ const rmAddon = async (file: string, dbConfig: string, name: string) => {
     const sequelize = new Sequelize(config);
     await sequelize.queryRaw(readFileSync(uninstallSqlPath, 'utf-8'));
   }
+  const info = readFileSync(resolve(process.cwd(), `addons/${file}/`, 'addons.json'), 'utf-8');
+  if (info) {
+    const infoContent = JSON.parse(info);
+    if (infoContent.uninstallShells?.length) {
+      Log.log('正在执行卸载脚本...');
+      infoContent.uninstallShells.forEach((command) => {
+        const execRes = execSync(command, { encoding: 'utf-8' });
+        Log.log(`卸载脚本 ${command} 执行完成:` + execRes);
+      });
+      Log.log('卸载脚本全部执行完成');
+    }
+  }
 };
 export const addoonInit = (program: Command) => {
   program
@@ -140,10 +152,13 @@ export const addoonInit = (program: Command) => {
         const info = readFileSync(resolve(process.cwd(), `addons/${file}/`, 'addons.json'), 'utf-8');
         if (info) {
           const infoContent = JSON.parse(info);
-          if (infoContent.installShell) {
+          if (infoContent.installShells?.length) {
             Log.log('正在执行安装脚本...');
-            const execRes = execSync(infoContent.installShell, { encoding: 'utf-8' });
-            Log.log('安装脚本执行完成:' + execRes);
+            infoContent.installShells.forEach((command) => {
+              const execRes = execSync(command, { encoding: 'utf-8' });
+              Log.log(`安装脚本 ${command} 执行完成:` + execRes);
+            });
+            Log.log('安装脚本全部执行完成');
           }
         }
         Log.success(file + '插件安装成功');

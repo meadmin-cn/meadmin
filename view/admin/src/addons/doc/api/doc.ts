@@ -118,3 +118,19 @@ export function aonDocTreeAllApi(options?: RequestOptions<AonDocInfoTreeAll, [st
     Object.assign({ noLoading: true }, options),
   );
 }
+
+export class CopyAonDocParams {
+  fromVersion = ''; //原始版本
+  toVersion = ''; //目标版本
+}
+//复制文档
+export function copyAonDocApi(options?: RequestOptions<AonDocInfoTreeAll, [CopyAonDocParams]>) {
+  return request<AonDocInfoTreeAll, [CopyAonDocParams]>(
+    (data?: CopyAonDocParams) => ({
+      url: 'addons/doc/doc/copy',
+      method: 'post',
+      data: data,
+    }),
+    Object.assign({ noLoading: true }, options),
+  );
+}

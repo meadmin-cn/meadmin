@@ -137,9 +137,7 @@ watch(
   }
   .layout-page {
     flex: 1;
-    overflow: auto;
     position: relative;
-
     .content {
       position: absolute;
       height: 100%;
@@ -151,8 +149,17 @@ watch(
         width: $left-width;
         flex-shrink: 0;
         height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
         .menu {
           min-height: 100%;
+
+          :deep(.el-menu-item) {
+            width: $left-width;
+            align-items: center;
+            line-height: 1.2em;
+            white-space: normal;
+          }
         }
       }
     }

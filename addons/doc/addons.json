@@ -5,6 +5,6 @@
   "description": "",
   "keywords": ["文档"],
   "author": "",
-  "installShell": "",
-  "uninstallShell": ""
+  "installShell": ["pnpm -F meadmin-template add meadmin-addons-doc@workspace:*", "pnpm -F index-template add meadmin-addons-doc@workspace:*"],
+  "uninstallShell": ["pnpm -F meadmin-template rm meadmin-addons-doc", "pnpm -F index-template rm meadmin-addons-doc"]
 }

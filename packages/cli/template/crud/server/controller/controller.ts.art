@@ -12,7 +12,7 @@ import { ApiOperationResponse } from '@/decorators/index.js';
  * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。
  * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址
  */
-@Controller('{{@ replaceNames.controllerPath}}')
+@Controller('{{@ replaceNames.addonsPath+replaceNames.controllerPath}}')
 export class {{@ replaceNames.Controller}} extends BaseController {
   @Inject()
   {{@ replaceNames.service}}: {{@ replaceNames.Service}};

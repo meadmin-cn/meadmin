@@ -33,7 +33,7 @@ export function toHump(str: string) {
  * @return  {[type]}       [return description]
  */
 export function lowerFirstCase(str: string) {
-  return str[0].toLowerCase() + str.slice(1);
+  return str ? str[0].toLowerCase() + str.slice(1) : str;
 }
 
 /**
@@ -44,7 +44,7 @@ export function lowerFirstCase(str: string) {
  * @return  {[type]}       [return description]
  */
 export function upFirstCase(str: string) {
-  return str[0].toUpperCase() + str.slice(1);
+  return str ? str[0].toUpperCase() + str.slice(1) : str;
 }
 
 /**

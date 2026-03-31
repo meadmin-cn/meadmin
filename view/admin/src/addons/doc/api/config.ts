@@ -33,7 +33,7 @@ export type AonDocConfigInfo = AonDocConfig & {
 export function aonDocConfigInfoApi<T extends boolean = true>(options?: RequestOptions<AonDocConfigInfo, []>, returnAxios: T = true as T) {
   return request<AonDocConfigInfo, [], T>(
     () => ({
-      url: `aonDocConfig/info`,
+      url: `addons/doc/config/info`,
       method: 'get',
     }),
     Object.assign({ noLoading: true }, options),
@@ -47,7 +47,7 @@ export type UpdateAonDocConfigInfoParam = Omit<Partial<AonDocConfigInfo>, 'id' |
 export function updateAonDocConfigApi(options?: RequestOptions<AonDocConfigInfo, [UpdateAonDocConfigInfoParam]>) {
   return request<AonDocConfigInfo, [UpdateAonDocConfigInfoParam]>(
     (data) => ({
-      url: `aonDocConfig/up`,
+      url: `addons/doc/config/up`,
       method: 'post',
       data: data,
     }),

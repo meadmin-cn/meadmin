@@ -504,7 +504,14 @@ export const crudInit = async (program: Command) => {
       sequelize = new Sequelize(await getConfig(options.dbConfig, options.name));
       const noSuffixEntityPath = relativePath('', file, ['.entity', '.ts']);
       const entityFileName = lowerFirstCase(toHump(relativePath('', noSuffixEntityPath, []).split('/').pop()!));
-      replaceNames.namePath = options.path ? options.path : normalizeToKebabOrSnakeCase(entityFileName, '/');
+      let name = entityFileName;
+      if (options.addons) {
+        name = lowerFirstCase(name.replace('aon' + upFirstCase(options.addons), ''));
+        if (!name) {
+          name = options.addons;
+        }
+      }
+      replaceNames.namePath = options.path ? options.path : normalizeToKebabOrSnakeCase(name, '/');
       replaceNames.namePath = replaceNames.namePath.replaceAll('//', '/');
       if (replaceNames.namePath.endsWith('/')) {
         replaceNames.namePath = replaceNames.namePath.slice(0, -1);

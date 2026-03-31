@@ -9,7 +9,7 @@ import { AonDocConfigService } from '../service/config.service.js';
  * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。
  * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址
  */
-@Controller('aonDocConfig')
+@Controller('addons/doc/config')
 export class AonDocConfigController extends BaseController {
   @Inject()
   aonDocConfigService: AonDocConfigService;
@@ -33,8 +33,7 @@ export class AonDocConfigController extends BaseController {
     summary: '更新配置信息',
   })
   @AdminPermission('aon_doc_config_edit')
-  async update( @Body() updateDto: AonDocConfigUpdateDto) {
+  async update(@Body() updateDto: AonDocConfigUpdateDto) {
     return this.success(await this.aonDocConfigService.update('1', updateDto));
   }
-
 }

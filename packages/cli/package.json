@@ -51,6 +51,6 @@
     "@sequelize/postgres": "7.x || >=7.0.0-alpha.46"
   },
   "engines": {
-    "node": ">=20.13.1"
+    "node": ">=22.14.0"
   }
 }

@@ -4,9 +4,9 @@ import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { Op } from '@sequelize/core';
 import { AonDoc } from '../../../../../entities/aonDoc.entity.js';
-import { AonDocCreateDto } from '../dto/aonDocCreate.dto.js';
-import { AonDocQueryDto } from '../dto/aonDocQuery.dto.js';
-import { AonDocUpdateDto } from '../dto/aonDocUpdate.dto.js';
+import { AonDocCreateDto } from '../dto/docCreate.dto.js';
+import { AonDocQueryDto } from '../dto/docQuery.dto.js';
+import { AonDocUpdateDto } from '../dto/docUpdate.dto.js';
 
 //文档
 @Provide()

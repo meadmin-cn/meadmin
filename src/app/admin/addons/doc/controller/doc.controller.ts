@@ -2,17 +2,17 @@ import { AdminPermission, ApiOperationResponse } from '@/decorators/index.js';
 import { Body, Controller, Get, Inject, Param, Post } from '@midwayjs/core';
 import { AonDoc } from '../../../../../entities/aonDoc.entity.js';
 import { BaseController } from '../../../controller/base.controller.js';
-import { AonDocCreateDto } from '../dto/aonDocCreate.dto.js';
-import { AonDocQueryDto } from '../dto/aonDocQuery.dto.js';
-import { AonDocTreeAllResultDto } from '../dto/aonDocTreeAllResult.dto.js';
-import { AonDocUpdateDto } from '../dto/aonDocUpdate.dto.js';
-import { AonDocService } from '../service/aonDoc.service.js';
+import { AonDocCreateDto } from '../dto/docCreate.dto.js';
+import { AonDocQueryDto } from '../dto/docQuery.dto.js';
+import { AonDocTreeAllResultDto } from '../dto/docTreeAllResult.dto.js';
+import { AonDocUpdateDto } from '../dto/docUpdate.dto.js';
+import { AonDocService } from '../service/doc.service.js';
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。
  * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址
  */
-@Controller('aonDoc')
+@Controller('addons/doc/doc')
 export class AonDocController extends BaseController {
   @Inject()
   aonDocService: AonDocService;

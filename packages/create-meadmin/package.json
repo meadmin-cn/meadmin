@@ -34,5 +34,8 @@
   },
   "devDependencies": {
     "tsdown": "^0.20.1"
+  },
+  "engines": {
+    "node": ">=22.14.0"
   }
 }

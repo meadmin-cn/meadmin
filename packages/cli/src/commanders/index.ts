@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { setEnv } from '../utils/env.js';
+import { addoonInit } from './addon.js';
 import { crudInit } from './crud.js';
 import { syncInit } from './sync.js';
 export const init = (program: Command) => {
@@ -8,4 +9,5 @@ export const init = (program: Command) => {
   });
   syncInit(program);
   crudInit(program);
+  addoonInit(program);
 };

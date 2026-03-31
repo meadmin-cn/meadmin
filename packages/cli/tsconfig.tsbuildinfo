@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/commanders/crud.ts","./src/commanders/index.ts","./src/commanders/sync.ts","./src/utils/app.ts","./src/utils/db.ts","./src/utils/env.ts","./src/utils/file.ts","./src/utils/formatting.ts","./src/utils/log.ts"],"version":"5.9.3"}
+{"root":["./src/index.ts","./src/commanders/addon.ts","./src/commanders/crud.ts","./src/commanders/index.ts","./src/commanders/sync.ts","./src/utils/app.ts","./src/utils/db.ts","./src/utils/env.ts","./src/utils/file.ts","./src/utils/formatting.ts","./src/utils/log.ts"],"version":"5.9.3"}

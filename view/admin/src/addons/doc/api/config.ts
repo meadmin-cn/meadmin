@@ -30,7 +30,7 @@ export type AonDocConfigInfo = AonDocConfig & {
 };
 
 //获取配置详情
-export function aonDocConfigInfoApi<T extends boolean = true>(options?: RequestOptions<AonDocConfigInfo, []>, returnAxios: T = true as T) {
+export function aonDocConfigInfoApi<T extends boolean = false>(options?: RequestOptions<AonDocConfigInfo, []>, returnAxios: T = false as T) {
   return request<AonDocConfigInfo, [], T>(
     () => ({
       url: `addons/doc/config/info`,

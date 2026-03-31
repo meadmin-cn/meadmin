@@ -9,15 +9,13 @@
       <layout-menu-item v-for="child in menu.children" :key="child.path" :item="child"></layout-menu-item>
     </el-sub-menu>
     <template v-else>
-      <component :is="truePathMenu!.meta?.isLink ? 'a' : 'routerLink'" v-if="menu.meta && menu.meta.title" :href="truePathMenu!.path" :to="truePathMenu!.path">
-        <el-menu-item :index="noChild ? item.meta?.menuIndex?.toString() : menu.path" :title="$t(menu.meta.title)">
-          <component :is="menu.meta.icon" v-if="menu.meta.icon" />
-          <div v-show="collapse" v-else class="icon-text">{{ $t(menu.meta.title).slice(0, 1) }}</div>
-          <template #title>
-            <span class="menu">{{ $t(menu.meta.title) }}</span>
-          </template>
-        </el-menu-item>
-      </component>
+      <el-menu-item v-if="menu.meta && menu.meta.title" :index="noChild ? item.meta?.menuIndex?.toString() : menu.path" :title="$t(menu.meta.title)" @click="toMenu(truePathMenu || menu)">
+        <component :is="menu.meta.icon" v-if="menu.meta.icon" />
+        <div v-show="collapse" v-else class="icon-text">{{ $t(menu.meta.title).slice(0, 1) }}</div>
+        <template #title>
+          <span class="menu">{{ $t(menu.meta.title) }}</span>
+        </template>
+      </el-menu-item>
     </template>
   </template>
 </template>
@@ -63,6 +61,14 @@ if (props.noChild) {
   }
   routeStore.childsRoutes[props.item!.meta!.menuIndex![0]] = menu.value?.children ?? [];
 }
+const router = useRouter();
+const toMenu = (menu: RouteRecordRaw) => {
+  if (menu.meta?.isLink) {
+    window.open(menu.path, '_blank');
+  } else {
+    router.push(menu.path);
+  }
+};
 </script>
 <style lang="scss" scoped>
 .icon-text {

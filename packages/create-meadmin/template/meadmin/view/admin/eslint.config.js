@@ -4,7 +4,6 @@ import eslintPluginVue from 'eslint-plugin-vue';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-
 export default defineConfig(
   eslint.configs.recommended,
   tseslint.configs.recommended,
@@ -88,4 +87,17 @@ export default defineConfig(
   },
   { ignores: ['**/*.d.ts', '**/coverage', '**/dist'] },
   eslintConfigPrettier,
+  {
+    files: ['**/*.js'],
+    languageOptions: {
+      parserOptions: {
+        projectService: {
+          allowDefaultProject: ['*.js'], //包含不在tsconfig中的文件
+        },
+        tsconfigRootDir: import.meta.dirname,
+        parser: tseslint.parser,
+        // or, in CommonJS, __dirname
+      },
+    },
+  },
 );

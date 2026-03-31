@@ -1,4 +1,4 @@
-import { ApiOperationResponse } from '@/decorators/index.js';
+import { AdminPermission, ApiOperationResponse } from '@/decorators/index.js';
 import { Body, Controller, Get, Inject, Param, Post } from '@midwayjs/core';
 import { SystemMenu } from '../../../../entities/systemMenu.entity.js';
 import { SystemMenuCreateDto } from '../../dto/system/menuCreate.dto.js';
@@ -23,6 +23,7 @@ export class SystemMenuController extends BaseController {
     responseType: SystemMenu,
     summary: '添加菜单信息',
   })
+  @AdminPermission('system_role_add')
   async add(@Body() createDto: SystemMenuCreateDto) {
     return this.success(await this.systemMenuService.create(createDto));
   }
@@ -33,6 +34,7 @@ export class SystemMenuController extends BaseController {
     responsePage: SystemMenu,
     summary: '获取菜单列表',
   })
+  @AdminPermission('system_menu_role')
   async list(@Body() queryDto: SystemMenuQueryDto) {
     return this.success(await this.systemMenuService.list(queryDto));
   }
@@ -43,6 +45,7 @@ export class SystemMenuController extends BaseController {
     responseList: SystemMenuTreeAllResultDto,
     summary: '获取所有菜单(按父子级返回)',
   })
+  @AdminPermission('system_menu_role')
   async treeAll() {
     return this.success(await this.systemMenuService.treeAll());
   }
@@ -53,6 +56,7 @@ export class SystemMenuController extends BaseController {
     responseType: SystemMenu,
     summary: '根据id获取菜单详情',
   })
+  @AdminPermission('system_role_info')
   async findOne(@Param('id') id: string) {
     const entity = await this.systemMenuService.findOne(id);
     return this.success(entity);
@@ -62,8 +66,9 @@ export class SystemMenuController extends BaseController {
   @Post('/up/:id')
   @ApiOperationResponse({
     responseType: SystemMenu,
-    summary: '根据id更新菜单详情',
+    summary: '根据id更新菜单信息',
   })
+  @AdminPermission('system_menu_edit')
   async update(@Param('id') id: string, @Body() updateDto: SystemMenuUpdateDto) {
     return this.success(await this.systemMenuService.update(id, updateDto));
   }
@@ -73,6 +78,7 @@ export class SystemMenuController extends BaseController {
   @ApiOperationResponse({
     summary: '根据id删除菜单信息',
   })
+  @AdminPermission('system_menu_del')
   async delete(@Param('id') id: string) {
     await this.systemMenuService.remove(id);
     return this.success();

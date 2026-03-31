@@ -3,17 +3,9 @@
     <a class="icon pointer" :class="{ 'is-disabled': scrollLeft <= 0 }" @click="back">
       <mel-icon-d-arrow-left></mel-icon-d-arrow-left>
     </a>
-    <el-scrollbar ref="scrollbarRef" view-class="list-parent" style="flex-grow: 1" @scroll="({ scrollLeft: left } : any) => (scrollLeft = left)">
+    <el-scrollbar ref="scrollbarRef" view-class="list-parent" style="flex-grow: 1" @scroll="({ scrollLeft: left }: any) => (scrollLeft = left)">
       <div ref="listRef" class="list">
-        <div
-          v-for="tag in tags"
-          :key="tag.fullPath"
-          ref="tagsRef"
-          class="item pointer"
-          :class="{ active: tag.fullPath === currentTag?.fullPath }"
-          @click="push(tag)"
-          @contextmenu.prevent="setContextmenu($event.currentTarget as any, tag)"
-        >
+        <div v-for="tag in tags" :key="tag.fullPath" ref="tagsRef" class="item pointer" :class="{ active: tag.fullPath === currentTag?.fullPath }" @click="push(tag)" @contextmenu.prevent="setContextmenu($event.currentTarget as any, tag)">
           {{ $t(tag.meta.title!) }}
           <div v-if="!tag.meta.affix" class="del-icon" @click.stop="close($event.currentTarget as any, tag)">
             <mel-icon-close />
@@ -42,7 +34,7 @@
     :current="contextmenuCurrent"
     :model-value="tags"
     @update:model-value="
-      ($event:any) => {
+      ($event: any) => {
         tags.splice(0, tags.length, ...$event);
       }
     "

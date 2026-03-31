@@ -23,7 +23,7 @@ export class ExampleDemoController extends BaseController {
     responseType: ExampleDemo,
     summary: '查询用户信息',
   })
-  @AdminPermission('ExampleDemoList')
+  @AdminPermission('example_demo_list')
   async getUser(@Body('id') id: string, @Body('username') username: string, @Body('page') page = 1, @Body('pageSize') pageSize = 10) {
     return this.success(await this.exampleDemoService.getUser(page, pageSize, id, username));
   }
@@ -35,7 +35,7 @@ export class ExampleDemoController extends BaseController {
     responseType: ExampleDemo,
     summary: '查询示例_书籍信息',
   })
-  @AdminPermission('ExampleDemoList')
+  @AdminPermission('example_demo_list')
   async getExampleBook(@Body('id') id: string, @Body('name') name: string, @Body('page') page = 1, @Body('pageSize') pageSize = 10) {
     return this.success(await this.exampleDemoService.getExampleBook(page, pageSize, id, name));
   }
@@ -46,7 +46,7 @@ export class ExampleDemoController extends BaseController {
     responseType: ExampleDemo,
     summary: '添加示例_Demo信息',
   })
-  @AdminPermission('ExampleDemoAdd')
+  @AdminPermission('example_demo_add')
   async add(@Body() createDto: ExampleDemoCreateDto) {
     return this.success(await this.exampleDemoService.create(createDto));
   }
@@ -57,7 +57,7 @@ export class ExampleDemoController extends BaseController {
     responsePage: ExampleDemo,
     summary: '获取示例_Demo列表',
   })
-  @AdminPermission('ExampleDemoList')
+  @AdminPermission('example_demo_list')
   async list(@Body() queryDto: ExampleDemoQueryDto) {
     return this.success(await this.exampleDemoService.list(queryDto));
   }
@@ -68,7 +68,7 @@ export class ExampleDemoController extends BaseController {
     responseType: ExampleDemo,
     summary: '根据id获取示例_Demo详情',
   })
-  @AdminPermission('ExampleDemoEdit')
+  @AdminPermission('example_demo_edit')
   async findOne(@Param('id') id: string) {
     const entity = await this.exampleDemoService.findOne(id);
     return this.success(entity);
@@ -78,9 +78,9 @@ export class ExampleDemoController extends BaseController {
   @Post('/up/:id')
   @ApiOperationResponse({
     responseType: ExampleDemo,
-    summary: '根据id更新示例_Demo详情',
+    summary: '根据id更新示例_Demo信息',
   })
-  @AdminPermission('ExampleDemoEdit')
+  @AdminPermission('example_demo_info')
   async update(@Param('id') id: string, @Body() updateDto: ExampleDemoUpdateDto) {
     return this.success(await this.exampleDemoService.update(id, updateDto));
   }
@@ -90,7 +90,7 @@ export class ExampleDemoController extends BaseController {
   @ApiOperationResponse({
     summary: '根据id删除示例_Demo信息',
   })
-  @AdminPermission('ExampleDemoDel')
+  @AdminPermission('example_demo_del')
   async delete(@Param('id') id: string) {
     await this.exampleDemoService.remove(id);
     return this.success();

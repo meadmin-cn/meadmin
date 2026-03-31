@@ -6,6 +6,7 @@
     "module": "NodeNext",
     "moduleResolution": "nodenext",
     "esModuleInterop": true,
+    "allowArbitraryExtensions": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "inlineSourceMap": true,
@@ -24,5 +25,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "exclude": ["*.js", "*.ts", "dist", "node_modules", "test", "packages", "view"]
+  "exclude": ["*.js", "*.ts", "dist", "node_modules", "test", "packages", "view", "addons"]
 }

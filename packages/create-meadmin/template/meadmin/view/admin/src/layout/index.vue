@@ -23,15 +23,7 @@
       </el-main>
     </el-container>
   </el-container>
-  <el-drawer
-    v-if="globalStore.isMobile"
-    class="me-sidebar-drawer"
-    :model-value="!themeConfig.menuCollapse"
-    :with-header="false"
-    :size="themeConfig.menuWidth"
-    direction="ltr"
-    @close="() => (themeConfig.menuCollapse = true)"
-  >
+  <el-drawer v-if="globalStore.isMobile" class="me-sidebar-drawer" :model-value="!themeConfig.menuCollapse" :with-header="false" :size="themeConfig.menuWidth" direction="ltr" @close="() => (themeConfig.menuCollapse = true)">
     <layout-menu></layout-menu>
   </el-drawer>
   <me-setting v-if="themeConfig.showSetting && !themeConfig.topBar" class="fixed-setting"></me-setting>

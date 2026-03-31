@@ -43,7 +43,7 @@ export class UserFileController extends BaseController {
     responsePage: UserFile,
     summary: '获取用户附件表(前台)列表',
   })
-  @AdminPermission('UserFileList')
+  @AdminPermission('user_file_list')
   async list(@Body() queryDto: UserFileQueryDto) {
     return this.success(await this.userFileService.list(queryDto));
   }
@@ -54,7 +54,7 @@ export class UserFileController extends BaseController {
     responseType: UserFile,
     summary: '根据id获取用户附件表(前台)详情',
   })
-  @AdminPermission('UserFileEdit')
+  @AdminPermission('user_file_info')
   async findOne(@Param('id') id: string) {
     const entity = await this.userFileService.findOne(id);
     return this.success(entity);
@@ -66,7 +66,7 @@ export class UserFileController extends BaseController {
     responseType: UserFile,
     summary: '根据id更新用户附件表(前台)详情',
   })
-  @AdminPermission('UserFileEdit')
+  @AdminPermission('user_file_edit')
   async update(@Param('id') id: string, @Body() updateDto: UserFileUpdateDto) {
     return this.success(await this.userFileService.update(id, updateDto));
   }
@@ -76,7 +76,7 @@ export class UserFileController extends BaseController {
   @ApiOperationResponse({
     summary: '根据id删除用户附件表(前台)信息',
   })
-  @AdminPermission('UserFileDel')
+  @AdminPermission('user_file_del')
   async delete(@Param('id') id: string) {
     await this.userFileService.remove(id);
     return this.success();

@@ -12,7 +12,7 @@
   </div>
 </template>
 
-<script setup lang="ts" name="Index">
+<script setup lang="ts" name="Layout">
 import Footer from './components/footer.vue';
 import Header from './components/header/index.vue';
 import Page from './page.vue';

@@ -1,20 +1,10 @@
 <template>
-  <el-upload
-    v-bind="omit(attrs, 'fileList', 'httpRequest', 'onPreview', 'onSuccess', 'onRemove')"
-    :ref="changeRef"
-    class="me-upload-user-file"
-    :file-list="fileList"
-    :http-request="handleHttpRequest"
-    @preview="handlePictureCardPreview"
-    @success="handleSuccess"
-    @remove="handleRemove"
-    @exceed="handleExceed"
-  >
+  <el-upload v-bind="omit($attrs, 'fileList', 'httpRequest', 'onPreview', 'onSuccess', 'onRemove')" :ref="changeRef" class="me-upload-user-file" :file-list="fileList" :http-request="handleHttpRequest" @preview="handlePictureCardPreview" @success="handleSuccess" @remove="handleRemove" @exceed="handleExceed">
     <template v-for="(_, name) in $slots" #[name]="data">
       <slot :name="name" v-bind="data || {}"></slot>
     </template>
     <template v-if="!$slots.default && !$slots.trigger">
-      <el-icon v-if="(attrs['list-type'] || attrs.listType) === 'picture-card'"><mel-icon-plus /></el-icon>
+      <el-icon v-if="($attrs['list-type'] || $attrs.listType) === 'picture-card'"><mel-icon-plus /></el-icon>
       <el-button v-else type="primary">{{ $t('上传') }}</el-button>
     </template>
     <el-button v-if="showSelect" @click.stop="openSelectFile()">{{ $t('选择') }}</el-button>

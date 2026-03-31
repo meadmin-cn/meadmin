@@ -1,9 +1,11 @@
 <template>
-  <div class="title">M<span>e - Admin</span></div>
+  <div class="title">{{ settingConfig.websiteName }}</div>
 </template>
 
 <script setup lang="ts" name="Title">
+import { settingConfig } from '@/config';
 import { useSettingStore } from '@/store';
+
 const { themeConfig } = storeToRefs(useSettingStore());
 </script>
 <style lang="scss" scoped>

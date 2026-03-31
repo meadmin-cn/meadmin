@@ -77,7 +77,7 @@
       <vxe-column field="updatedAdmin" :title="t('最后更新者(管理员)')" :formatter="formatterObjectFn((obj) => `${obj.nickname}(${obj.username})`)"></vxe-column>
       <vxe-column field="createdUser" :title="t('创建者(用户)')" :formatter="formatterObjectFn((obj) => `${obj.nickname}(${obj.username})`)"></vxe-column>
       <vxe-column field="updatedUser" :title="t('最后更新者(用户)')" :formatter="formatterObjectFn((obj) => `${obj.nickname}(${obj.username})`)"></vxe-column>
-      <vxe-column v-if="permission(['user_file_add', 'user_file_edit', 'userFile_del'])" :title="t('操作')" fixed="right" min-width="150px">
+      <vxe-column v-if="permission(['user_file_add', 'user_file_edit', 'user_file_del'])" :title="t('操作')" fixed="right" min-width="150px">
         <template #default="{ row }: { row: UserFileInfo }">
           <me-button v-if="permission('user_file_info')" link :title="t('详情')" @click="showInfo(row.id)">
             <mel-icon-memo />

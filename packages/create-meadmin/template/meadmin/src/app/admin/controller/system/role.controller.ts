@@ -1,4 +1,4 @@
-import { ApiOperationResponse } from '@/decorators/index.js';
+import { AdminPermission, ApiOperationResponse } from '@/decorators/index.js';
 import { Body, Controller, Get, Inject, Param, Post } from '@midwayjs/core';
 import { SystemRole } from '../../../../entities/systemRole.entity.js';
 import { SystemRoleCreateDto } from '../../dto/system/roleCreate.dto.js';
@@ -23,6 +23,7 @@ export class SystemRoleController extends BaseController {
     responseType: SystemRole,
     summary: '添加角色信息',
   })
+  @AdminPermission('system_role_add')
   async add(@Body() createDto: SystemRoleCreateDto) {
     createDto.isSuper = 0;
     return this.success(await this.systemRoleService.create(createDto));
@@ -34,6 +35,7 @@ export class SystemRoleController extends BaseController {
     responsePage: SystemRole,
     summary: '获取角色列表',
   })
+  @AdminPermission('system_menu_role')
   async list(@Body() queryDto: SystemRoleQueryDto) {
     return this.success(await this.systemRoleService.list(queryDto));
   }
@@ -44,6 +46,7 @@ export class SystemRoleController extends BaseController {
     responseList: SystemRoleTreeAllResultDto,
     summary: '获取所有角色(按父子级返回)',
   })
+  @AdminPermission('system_menu_role')
   async treeAll() {
     return this.success(await this.systemRoleService.treeAll());
   }
@@ -54,6 +57,7 @@ export class SystemRoleController extends BaseController {
     responseType: SystemRole,
     summary: '根据id获取角色详情',
   })
+  @AdminPermission('system_role_info')
   async findOne(@Param('id') id: string) {
     const entity = await this.systemRoleService.findOne(id);
     return this.success(entity);
@@ -63,8 +67,9 @@ export class SystemRoleController extends BaseController {
   @Post('/up/:id')
   @ApiOperationResponse({
     responseType: SystemRole,
-    summary: '根据id更新角色详情',
+    summary: '根据id更新角色信息',
   })
+  @AdminPermission('system_role_edit')
   async update(@Param('id') id: string, @Body() updateDto: SystemRoleUpdateDto) {
     return this.success(await this.systemRoleService.update(id, updateDto));
   }
@@ -74,6 +79,7 @@ export class SystemRoleController extends BaseController {
   @ApiOperationResponse({
     summary: '根据id删除角色信息',
   })
+  @AdminPermission('system_role_del')
   async delete(@Param('id') id: string) {
     await this.systemRoleService.remove(id);
     return this.success();

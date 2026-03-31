@@ -5,9 +5,7 @@
     </div>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item v-for="(item, index) in localeConfig.localeList" :key="index" :disabled="$i18n.locale === item.locale" @click="setLanguage(item.locale)">{{
-          $t(item.text)
-        }}</el-dropdown-item>
+        <el-dropdown-item v-for="(item, index) in localeConfig.localeList" :key="index" :disabled="$i18n.locale === item.locale" @click="setLanguage(item.locale)">{{ $t(item.text) }}</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>

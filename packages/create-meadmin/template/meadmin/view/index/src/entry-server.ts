@@ -2,11 +2,14 @@ import { basename } from 'node:path';
 import serialize from 'serialize-javascript';
 import { renderToString } from 'vue/server-renderer';
 import { createApp } from './main';
+import { useGlobalStore } from './store/index.js';
 import { setServerCookies } from './utils/cookies.js';
 import { cleanServerCache, getAllServerCache } from './utils/server.js';
 export async function render(url: string, manifest: Record<string, string[]>, context: Record<string, any>) {
   setServerCookies(context.ssrVersion, context.cookies);
   const { app, router, store } = await createApp(context.ssrVersion);
+  const globalStore = useGlobalStore(store);
+  globalStore.websiteName = context.assign.websiteName;
   // set the router to the desired URL before rendering
   await router.push(url === router.options.history.base ? '/' : url);
   await router.isReady();
@@ -18,8 +21,9 @@ export async function render(url: string, manifest: Record<string, string[]>, co
   const html = await renderToString(app, ctx);
   // which we can then use to determine what files need to be preloaded for this
   // request.
-  const __pinia = serialize(store.state.value);
-  const __serverCache = serialize(getAllServerCache(context.ssrVersion));
+  const __pinia = serialize(store.state.value, { ignoreFunction: true });
+  const serverCache = getAllServerCache(context.ssrVersion);
+  const __serverCache = serialize(serverCache, { ignoreFunction: true });
   const preloadLinks = `<script>window.__pinia=${__pinia};</script>\n` + `<script>window.__serverCache=${__serverCache};</script>\n` + renderPreloadLinks(ctx.modules, manifest);
   const teleports = renderTeleports(ctx.teleports);
   setServerCookies(context.ssrVersion, null);

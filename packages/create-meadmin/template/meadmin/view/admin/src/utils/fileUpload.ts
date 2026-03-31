@@ -61,7 +61,9 @@ const uploadChunksExecute = (file: UploadRawFile, currentChunk: number, chunkSiz
       fileReader.onload = async (e) => {
         try {
           const formData = new FormData();
-          const upFile = new File([e.target!.result || ''], file.name, { type: file.type });
+          const upFile = new File([e.target!.result || ''], file.name, {
+            type: file.type,
+          });
           data.start = start + '';
           data.chunkMd5 = SparkMD5.ArrayBuffer.hash(e.target!.result as ArrayBuffer);
           Object.keys(data).forEach((key) => {
@@ -91,7 +93,7 @@ const uploadChunksExecute = (file: UploadRawFile, currentChunk: number, chunkSiz
  * @returns
  */
 const uploadChunks = (file: UploadRawFile, chunkSize: number, data: UploadRequestOptions['data'] = {}, progress?: (progress: string) => void) =>
-  new Promise(async (resolve, reject) => {
+  new Promise<Partial<FileInfo>>(async (resolve, reject) => {
     try {
       let currentChunk = 0;
       const chunks = Math.ceil(file.size / chunkSize); // 总分片数
@@ -110,7 +112,17 @@ const uploadChunks = (file: UploadRawFile, chunkSize: number, data: UploadReques
           const promiseArr = [];
           for (let i = 0; i < parallelNum; i++) {
             if (currentChunk < chunks - 1) {
-              promiseArr.push(uploadChunksExecute(file, currentChunk, chunkSize, Object.assign(data, { chunkIndex: currentChunk + '', over: '0' })));
+              promiseArr.push(
+                uploadChunksExecute(
+                  file,
+                  currentChunk,
+                  chunkSize,
+                  Object.assign(data, {
+                    chunkIndex: currentChunk + '',
+                    over: '0',
+                  }),
+                ),
+              );
               currentChunk++;
             }
           }

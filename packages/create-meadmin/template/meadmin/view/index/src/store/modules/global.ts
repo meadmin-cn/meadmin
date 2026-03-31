@@ -19,6 +19,7 @@ export default defineStore('global', {
         props?: Record<string, any>;
         vnode?: Component;
       }>, //全局组件会渲染到app下
+      websiteName: '', //网站名称
     };
   },
   actions: {

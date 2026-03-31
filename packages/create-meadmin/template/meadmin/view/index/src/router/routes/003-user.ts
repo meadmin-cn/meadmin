@@ -11,7 +11,6 @@ export const routes: RouteRecordRaw[] = [
       hideMenu: true,
       title: '用户中心',
     },
-
     children: [
       {
         path: ':active',

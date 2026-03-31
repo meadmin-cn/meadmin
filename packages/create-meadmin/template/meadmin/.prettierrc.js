@@ -1,8 +1,8 @@
-module.exports = {
+const config = {
   // ...require('mwts/.prettierrc.json'),
-  // 一行最多 200 字符 建议配合 vscode 的自动换行使用
-  printWidth: 200,
-  // 超出不换行
+  // 一行最多 500 字符 建议配合 vscode 的自动换行使用
+  printWidth: 500,
+  // always 超出打印宽度，则将其换行。 never 保持一行
   proseWrap: 'never',
   // 使用 2 个空格缩进
   tabWidth: 2,
@@ -31,8 +31,6 @@ module.exports = {
   requirePragma: false,
   // 不需要自动在文件开头插入 @prettier
   insertPragma: false,
-  // 使用默认的折行标准
-  proseWrap: 'preserve',
   // 根据显示样式决定 html 要不要折行
   htmlWhitespaceSensitivity: 'css',
   // vue 文件中的 script 和 style 内不用缩进
@@ -45,3 +43,4 @@ module.exports = {
   singleAttributePerLine: false,
   plugins: ['prettier-plugin-organize-imports'], //让 Prettier 可以整理你的导入语句（例如排序、合并和移除未使用的导入语句）organizeImports。这与在 VS Code 中使用“Organize Imports”操作的效果相同。
 };
+export default config;

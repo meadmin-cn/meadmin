@@ -36,7 +36,7 @@ export default () =>
       codeTemplates: [
         {
           key: '//code',
-          template: "{{name}}: typeof import('{{path}}')['default'];\n    ",
+          template: "{{name}}: (typeof import('{{path}}'))['default'];\n    ",
         },
       ],
       name: 'V_{{name}}',
@@ -50,14 +50,48 @@ export default () =>
       codeTemplates: [
         {
           key: '//code',
-          template: "{{name}}: typeof import('{{path}}')['default'];\n    ",
+          template: "{{name}}: (typeof import('{{path}}'))['default'];\n    ",
         },
         {
           key: '//typeCode',
-          template: "type {{name}}Instance = InstanceType<typeof import('{{path}}')['default']>;\n  ",
+          template: "type {{name}}Instance = InstanceType<(typeof import('{{path}}'))['default']>;\n  ",
         },
       ],
       name: '_{{name}}',
+    },
+    {
+      // auto import addons components
+      pattern: ['*/components/*.{vue,ts}', '*/components/**/index.{vue,ts}'],
+      dir: pathResolve('src/addons'),
+      toFile: pathResolve('types/addonsComponents.d.ts'),
+      template: fs.readFileSync(pathResolve('./template/components.d.ts'), 'utf-8'),
+      codeTemplates: [
+        {
+          key: '//code',
+          template: "{{name}}: (typeof import('{{path}}'))['default'];\n    ",
+        },
+        {
+          key: '//typeCode',
+          template: "type {{name}}Instance = InstanceType<(typeof import('{{path}}'))['default']>;\n  ",
+        },
+      ],
+      name(fileName: string) {
+        const index = fileName.lastIndexOf('.');
+        if (index > 0) {
+          fileName = fileName.slice(0, index);
+        }
+        const fileNameArr = fileName.replace(/\\/g, '/').replace(/[/-]/g, '_').split('_');
+        fileNameArr.shift(); //移除多余的插件文件夹
+        fileNameArr.shift();
+        fileNameArr.unshift('');
+        if (fileNameArr[fileNameArr.length - 1] == 'index' || fileNameArr[fileNameArr.length - 1] == 'Index') {
+          fileNameArr.pop();
+        }
+        for (let i = 1, len = fileNameArr.length; i < len; i++) {
+          fileNameArr[i] = fileNameArr[i].slice(0, 1).toUpperCase() + fileNameArr[i].slice(1);
+        }
+        return fileNameArr.join('');
+      },
     },
   ]);
 

@@ -2,3 +2,5 @@ autoInstallPeers: false #当值为 fasle 时，不会自动安装任何缺少的
 dedupePeerDependents: true
 packages:
   - view/* #pnpm 安装包时管理view前端包
+  - addons/* #pnpm 安装包时管理插件包
+

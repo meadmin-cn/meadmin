@@ -113,7 +113,7 @@ export function ApiOperationResponse<TModel extends Type<any>>(
 }
 
 /**
- * swagger和rule校验结合，会自动根据rule规则生成对应配置
+ * swagger和rule校验结合，会自动根据rule规则生成对应配置,rule存在时才会传入入参
  * @param options
  * @returns
  */

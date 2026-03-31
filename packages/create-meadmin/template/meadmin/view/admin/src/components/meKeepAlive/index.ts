@@ -1,22 +1,5 @@
 import { invokeArrayFns, isArray, isString } from '@vue/shared';
-import {
-  ComponentOptions,
-  ConcreteComponent,
-  RendererElement,
-  RendererNode,
-  SetupContext,
-  VNode,
-  VNodeProps,
-  cloneVNode,
-  getCurrentInstance,
-  isVNode,
-  onBeforeUnmount,
-  onMounted,
-  onUpdated,
-  setTransitionHooks,
-  warn,
-  watch,
-} from 'vue';
+import { ComponentOptions, ConcreteComponent, RendererElement, RendererNode, SetupContext, VNode, VNodeProps, cloneVNode, getCurrentInstance, isVNode, onBeforeUnmount, onMounted, onUpdated, setTransitionHooks, warn, watch } from 'vue';
 import { isAsyncWrapper } from './core/apiAsyncComponent';
 import { getComponentName } from './core/component';
 import { ComponentRenderContext } from './core/componentPublicInstance';
@@ -252,12 +235,7 @@ const KeepAliveImpl: ComponentOptions = {
       const name = getComponentName(isAsyncWrapper(vnode) ? (vnode.type as ComponentOptions).__asyncResolved || {} : comp);
       const key = vnode.key == null ? comp : vnode.key;
       const { include, exclude, includeKey, excludeKey, max } = props;
-      if (
-        (include && (!name || !matches(include, name))) ||
-        (exclude && name && matches(exclude, name)) ||
-        (includeKey && (typeof key !== 'string' || !matches(includeKey, key))) ||
-        (excludeKey && typeof key === 'string' && matches(excludeKey, key))
-      ) {
+      if ((include && (!name || !matches(include, name))) || (exclude && name && matches(exclude, name)) || (includeKey && (typeof key !== 'string' || !matches(includeKey, key))) || (excludeKey && typeof key === 'string' && matches(excludeKey, key))) {
         current = vnode;
         return rawVNode;
       }

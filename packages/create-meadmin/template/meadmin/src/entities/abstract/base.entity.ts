@@ -1,5 +1,6 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { getContext } from '@meadmin/core';
+import { Context } from '@midwayjs/koa';
 import { BulkCreateOptions, InferAttributes, InferCreationAttributes, InstanceUpdateOptions, Model, ModelStatic, UpdateOptions } from '@sequelize/core';
 import { AfterBulkUpdate, Attribute, BeforeBulkCreate, BeforeCreate, BeforeUpdate, CreatedAt, Table, UpdatedAt } from '@sequelize/core/decorators-legacy';
 
@@ -18,7 +19,10 @@ export class BaseModel<M extends Model<any, any>> extends Model<InferAttributes<
 
   @BeforeCreate()
   static async setCreatedId(info: BaseModel<any>, options: InstanceUpdateOptions<BaseModel<any>>) {
-    const ctx = getContext();
+    let ctx: Context;
+    try {
+      ctx = getContext();
+    } catch {}
     if (ctx?.adminInfo && info.modelDefinition.attributes.has('createdAdminId')) {
       //设置创建管理员Id
       (info as any).createdAdminId = ctx.adminInfo.id;
@@ -38,8 +42,16 @@ export class BaseModel<M extends Model<any, any>> extends Model<InferAttributes<
   }
 
   @BeforeBulkCreate()
-  static async setCreatedIdBulk(instances: BaseModel<any>[], options: BulkCreateOptions<BaseModel<any>> & { model: ModelStatic<BaseModel<any>> }) {
-    const ctx = getContext();
+  static async setCreatedIdBulk(
+    instances: BaseModel<any>[],
+    options: BulkCreateOptions<BaseModel<any>> & {
+      model: ModelStatic<BaseModel<any>>;
+    },
+  ) {
+    let ctx: Context;
+    try {
+      ctx = getContext();
+    } catch {}
     if (ctx?.adminInfo && options.model.modelDefinition.attributes.has('createdAdminId')) {
       //设置创建管理员Id
       instances.forEach((instance) => {
@@ -68,7 +80,10 @@ export class BaseModel<M extends Model<any, any>> extends Model<InferAttributes<
 
   @BeforeUpdate()
   static async setUpdatedId(info: BaseModel<any>, options: InstanceUpdateOptions<BaseModel<any>>) {
-    const ctx = getContext();
+    let ctx: Context;
+    try {
+      ctx = getContext();
+    } catch {}
     if (ctx?.adminInfo && info.modelDefinition.attributes.has('updatedAdminId')) {
       //设置更新管理员Id
       (info as any).updatedAdminId = ctx.adminInfo.id;
@@ -80,8 +95,15 @@ export class BaseModel<M extends Model<any, any>> extends Model<InferAttributes<
   }
 
   @AfterBulkUpdate()
-  static async setUpdatedIdBulk(options: UpdateOptions<BaseModel<any>> & { model: ModelStatic<BaseModel<any>> }) {
-    const ctx = getContext();
+  static async setUpdatedIdBulk(
+    options: UpdateOptions<BaseModel<any>> & {
+      model: ModelStatic<BaseModel<any>>;
+    },
+  ) {
+    let ctx: Context;
+    try {
+      ctx = getContext();
+    } catch {}
     if (ctx?.adminInfo && options.model.modelDefinition.attributes.has('updatedAdminId')) {
       //设置更新管理员Id
       await options.model.update(

@@ -14,9 +14,10 @@ run/
 .nx/
 .env.local
 public/html/
-uploadFile/**
+uploadFile/*/**
 !uploadFile/index/.gitkeep
 !uploadFile/admin/.gitkeep
+!uploadFile/tmp/.gitkeep
 .env.production
 .env.prod
 .eslintcache

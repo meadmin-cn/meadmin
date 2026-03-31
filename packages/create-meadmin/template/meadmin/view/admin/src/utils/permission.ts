@@ -24,9 +24,12 @@ export function permission(rules?: string | string[]) {
 
 export type DynamicViewsModules = Record<string, () => Promise<DefineComponent>>;
 let dynamicViewsModules: DynamicViewsModules;
+let dynamicAddonsViewsModules: DynamicViewsModules;
+
 export function initDynamicViewsModules() {
   if (!dynamicViewsModules) {
     dynamicViewsModules = import.meta.glob('../views/**/*.{vue,tsx}') as Record<string, () => Promise<DefineComponent>>;
+    dynamicAddonsViewsModules = import.meta.glob('../addons/*/views/**/*.{vue,tsx}') as Record<string, () => Promise<DefineComponent>>;
     mitter.emit(EventEnum.INIT_DYNAMIC_VIEWS_MODULES, dynamicViewsModules);
   }
 }
@@ -38,7 +41,12 @@ export function transitionComponent(component: string) {
   if (component === 'LayoutPage') {
     return LayoutPage;
   }
-  const res = dynamicViewsModules['../views/' + component + '.vue'] || dynamicViewsModules['../views/' + component + '.tsx'];
+  let res: () => Promise<DefineComponent>;
+  if (component.startsWith('addons')) {
+    res = dynamicAddonsViewsModules['../' + component + '.vue'] || dynamicAddonsViewsModules['../' + component + '.tsx'];
+  } else {
+    res = dynamicViewsModules['../views/' + component + '.vue'] || dynamicViewsModules['../views/' + component + '.tsx'];
+  }
   if (res) {
     return res;
   } else {

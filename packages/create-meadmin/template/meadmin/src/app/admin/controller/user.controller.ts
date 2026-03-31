@@ -23,7 +23,7 @@ export class UserController extends BaseController {
     responseType: User,
     summary: '查询用户附件表(前台)信息',
   })
-  @AdminPermission('UserList')
+  @AdminPermission('user_list')
   async getUserFile(@Body('id') id: string, @Body('name') name: string, @Body('page') page = 1, @Body('pageSize') pageSize = 10) {
     return this.success(await this.userService.getUserFile(page, pageSize, id, name));
   }
@@ -34,7 +34,7 @@ export class UserController extends BaseController {
     responseType: User,
     summary: '添加用户信息',
   })
-  @AdminPermission('UserAdd')
+  @AdminPermission('user_add')
   async add(@Body() createDto: UserCreateDto) {
     return this.success(await this.userService.create(createDto));
   }
@@ -45,7 +45,7 @@ export class UserController extends BaseController {
     responsePage: User,
     summary: '获取用户列表',
   })
-  @AdminPermission('UserList')
+  @AdminPermission('user_list')
   async list(@Body() queryDto: UserQueryDto) {
     return this.success(await this.userService.list(queryDto));
   }
@@ -56,7 +56,7 @@ export class UserController extends BaseController {
     responseType: User,
     summary: '根据id获取用户详情',
   })
-  @AdminPermission('UserEdit')
+  @AdminPermission('user_info')
   async findOne(@Param('id') id: string) {
     const entity = await this.userService.findOne(id);
     return this.success(entity);
@@ -66,9 +66,9 @@ export class UserController extends BaseController {
   @Post('/up/:id')
   @ApiOperationResponse({
     responseType: User,
-    summary: '根据id更新用户详情',
+    summary: '根据id更新用户信息',
   })
-  @AdminPermission('UserEdit')
+  @AdminPermission('user_edit')
   async update(@Param('id') id: string, @Body() updateDto: UserUpdateDto) {
     return this.success(await this.userService.update(id, updateDto));
   }
@@ -78,7 +78,7 @@ export class UserController extends BaseController {
   @ApiOperationResponse({
     summary: '根据id删除用户信息',
   })
-  @AdminPermission('UserDel')
+  @AdminPermission('user_del')
   async delete(@Param('id') id: string) {
     await this.userService.remove(id);
     return this.success();

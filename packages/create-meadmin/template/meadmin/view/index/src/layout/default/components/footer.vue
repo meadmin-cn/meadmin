@@ -2,7 +2,7 @@
   <div class="footer">© 2025 - {{ year }}. All Rights Reserved. Power by &nbsp;<a href="http://www.meadmin.cn"> MeAdmin </a></div>
 </template>
 
-<script setup lang="ts" name="Footer">
+<script setup lang="ts" name="LayoutFooter">
 import dayjs from 'dayjs';
 const year = dayjs().year();
 </script>

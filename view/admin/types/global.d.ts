@@ -45,6 +45,13 @@ declare global {
   type KeyOfMap<T extends Map> = Parameters<T['get']>[0];
 
   type ValueOfMap<T extends Map> = ReturnType<T['get']>;
+  // global.d.ts
+  declare interface Window {
+    customConfig: {
+      websiteName: string;
+      websiteShortName: string;
+    };
+  }
 }
 
 //_或-间隔转换为驼峰

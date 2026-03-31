@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="left">
-      <router-link :to="PageEnum.HOME">Me - Admin</router-link>
+      <router-link :to="PageEnum.HOME">{{ globalStore.websiteName }}</router-link>
     </div>
     <el-menu :default-active="activeMenu" class="menu" mode="horizontal">
       <template v-for="item in menus" :key="item.path">
@@ -16,7 +16,7 @@
 
 <script setup lang="ts" name="LayoutHeader">
 import { PageEnum } from '@/dict/pageEnum';
-import { useRouteStore } from '@/store';
+import { useGlobalStore, useRouteStore } from '@/store';
 import { ref } from 'vue';
 import { RouteRecordRaw } from 'vue-router';
 import MenuItem from './components/menuItem.vue';
@@ -24,6 +24,8 @@ import User from './components/user.vue';
 const route = useRoute();
 const routeStore = useRouteStore();
 const activeMenu = ref('');
+const globalStore = useGlobalStore();
+
 watch(
   route,
   (route) => {

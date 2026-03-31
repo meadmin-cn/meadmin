@@ -59,6 +59,7 @@ export class ViteView implements IViewEngine {
         cookies: this.ctx.cookies,
         request: this.ctx.request,
         ssrVersion: '' + ssrVersion,
+        assign: assign || {},
       };
       const [appHtml, preloadLinks, teleports] = await render(
         url,

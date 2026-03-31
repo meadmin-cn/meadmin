@@ -2,11 +2,14 @@ import { basename } from 'node:path';
 import serialize from 'serialize-javascript';
 import { renderToString } from 'vue/server-renderer';
 import { createApp } from './main';
+import { useGlobalStore } from './store/index.js';
 import { setServerCookies } from './utils/cookies.js';
 import { cleanServerCache, getAllServerCache } from './utils/server.js';
 export async function render(url: string, manifest: Record<string, string[]>, context: Record<string, any>) {
   setServerCookies(context.ssrVersion, context.cookies);
   const { app, router, store } = await createApp(context.ssrVersion);
+  const globalStore = useGlobalStore(store);
+  globalStore.websiteName = context.assign.websiteName;
   // set the router to the desired URL before rendering
   await router.push(url === router.options.history.base ? '/' : url);
   await router.isReady();

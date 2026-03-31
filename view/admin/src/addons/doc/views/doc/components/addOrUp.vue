@@ -5,7 +5,9 @@
         <el-tree-select v-model="info.parentId" :data="treeAllList || []" check-strictly node-key="id" :props="{ label: 'title' }" :render-after-expand="false" clearable filterable />
       </el-form-item>
       <el-form-item :label="t('版本')" prop="version">
-        <el-input v-model="info.version"></el-input>
+        <el-select v-model="info.version">
+          <el-option v-for="val in dict.version" :key="val.value" :value="val.value" :label="val.label" />
+        </el-select>
       </el-form-item>
       <el-form-item :label="t('标识')" prop="label">
         <el-input v-model="info.label"></el-input>
@@ -51,7 +53,7 @@
 </template>
 
 <script setup lang="ts" name="AddOrUpAonDoc">
-import { AonDoc, addAonDocApi, aonDocInfoApi, aonDocTreeAllApi, updateAonDocApi } from '@/addons/doc/api/aonDoc';
+import { AonDoc, addAonDocApi, aonDocInfoApi, aonDocTreeAllApi, updateAonDocApi } from '@/addons/doc/api/doc.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
 import { FormInstance, FormRules } from 'element-plus';
@@ -65,7 +67,7 @@ const { data: treeAllList, runAsync: getTreeAllAsync } = aonDocTreeAllApi();
 
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'aonDoc']);
 await Promise.all([loadRes, getTreeAllAsync()]);
-const dict = getDict(t);
+const dict = await getDict(t);
 const show = defineModel<boolean>();
 const props = defineProps<{
   id?: string;

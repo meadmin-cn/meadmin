@@ -13,13 +13,13 @@ export class AonConfigVersion {
   title = ''; //标题
   code = ''; //标识
   status = 1 as 1 | 0; //状态:1=启用;0=禁用
-};
+}
 
 export class AonDocConfiglinks {
   icon = null as FileInfo | null; //图片(200*200)
-  title =''; //标识
-  url =''; //地址
-};
+  title = ''; //标识
+  url = ''; //地址
+}
 
 export type AonDocConfigInfo = AonDocConfig & {
   id: string; //ID
@@ -29,23 +29,22 @@ export type AonDocConfigInfo = AonDocConfig & {
   updatedAdmin: SystemAdminInfo | null; //最后更新者(管理员)
 };
 
-
-
 //获取配置详情
-export function aonDocConfigInfoApi(options?: RequestOptions<AonDocConfigInfo, []>) {
-  return request<AonDocConfigInfo, []>(
+export function aonDocConfigInfoApi<T extends boolean = true>(options?: RequestOptions<AonDocConfigInfo, []>, returnAxios: T = true as T) {
+  return request<AonDocConfigInfo, [], T>(
     () => ({
       url: `aonDocConfig/info`,
       method: 'get',
     }),
     Object.assign({ noLoading: true }, options),
+    returnAxios,
   );
 }
 
 export type UpdateAonDocConfigInfoParam = Omit<Partial<AonDocConfigInfo>, 'id' | 'createdAt' | 'updatedAt' | 'createdAdmin' | 'updatedAdmin'>;
 
 //修改配置信息
-export function updateAonDocConfigApi(options?: RequestOptions<AonDocConfigInfo, [ UpdateAonDocConfigInfoParam]>) {
+export function updateAonDocConfigApi(options?: RequestOptions<AonDocConfigInfo, [UpdateAonDocConfigInfoParam]>) {
   return request<AonDocConfigInfo, [UpdateAonDocConfigInfoParam]>(
     (data) => ({
       url: `aonDocConfig/up`,
@@ -55,4 +54,3 @@ export function updateAonDocConfigApi(options?: RequestOptions<AonDocConfigInfo,
     Object.assign({ success: true, noLoading: true }, options),
   );
 }
-

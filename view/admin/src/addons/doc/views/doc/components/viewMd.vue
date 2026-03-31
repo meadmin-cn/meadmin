@@ -1,5 +1,5 @@
 <template>
-  <me-dialog v-model="show" :loading="loading" style="height: calc(80vh - 300px)" :title="t('预览')" :close-on-click-modal="false" body-class=" md-view-body" @closed="emit('closed')">
+  <me-dialog v-model="show" :loading="loading" style="height: calc(95vh - 300px)" :title="t('预览')" :close-on-click-modal="false" body-class=" md-view-body" @closed="emit('closed')">
     <div :id="viewId" class="view-md">
       <MdPreview :id="mdviewId" class="view" :model-value="data?.mdContent" />
       <MdCatalog class="catalog" :editor-id="mdviewId" :scroll-element="'#' + viewId" />
@@ -9,7 +9,7 @@
 
 <script setup lang="ts" name="ViewMd">
 // preview.css相比style.css少了编辑器那部分样式
-import { aonDocInfoApi } from '@/addons/doc/api/aonDoc.js';
+import { aonDocInfoApi } from '@/addons/doc/api/doc.js';
 import { useLocalesI18n } from '@/locales/i18n.js';
 import { MdCatalog, MdPreview } from 'meadmin-addons-doc';
 import 'meadmin-addons-doc/dist/preview.js';

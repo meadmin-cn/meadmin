@@ -22,6 +22,7 @@
         </template>
       </vxe-column>
       <vxe-column field="parent" :title="t('父级')" :formatter="formatterObjectFn('title')"></vxe-column>
+      <vxe-column field="version" :title="t('版本')" :formatter="formatterDict"></vxe-column>
       <vxe-column field="type" :title="t('类型')" :formatter="formatterDict"></vxe-column>
       <vxe-column field="status" :title="t('状态')" :formatter="formatterDict"></vxe-column>
       <vxe-column field="orderNum" :title="t('排序(降序)')" :formatter="formatterStr"></vxe-column>
@@ -37,7 +38,7 @@
             <mel-icon-memo />
           </me-button>
           <me-button v-if="permission('aon_doc_info') && row.contentType == 0" link :title="t('预览')" @click="openViewMd({ id: row.id })">
-            <mel-icon-view/>
+            <mel-icon-view />
           </me-button>
           <me-button v-if="permission('aon_doc_edit')" link :title="t('编辑')" @click="showAddOrUp(row.id)">
             <mel-icon-edit />
@@ -56,7 +57,7 @@
 </template>
 
 <script setup lang="ts" name="AonDoc">
-import { AonDocInfo, aonDocTreeAllApi, delAonDocApi } from '@/addons/doc/api/aonDoc';
+import { AonDocInfo, aonDocTreeAllApi, delAonDocApi } from '@/addons/doc/api/doc';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { createformatterDictFn, formatterAt, formatterObjectFn, formatterStr } from '@/utils/helper.js';
@@ -69,7 +70,7 @@ const { open: openInfo } = useActionModel(Info);
 const { open: openAddOrUp } = useActionModel(AddOrUp);
 const { open: openViewMd } = useActionModel(ViewMd);
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'aonDoc']);
-const dict = getDict(t);
+const dict = await getDict(t);
 const formatterDict = createformatterDictFn<AonDocInfo>(dict);
 const { loading, data, runAsync } = aonDocTreeAllApi();
 const search = () => runAsync();

@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="left">
-      <router-link :to="PageEnum.HOME">Me - Admin</router-link>
+      <router-link :to="PageEnum.HOME">{{ globalStore.websiteName }}</router-link>
     </div>
     <el-menu :default-active="active" class="menu" mode="horizontal">
       <menu-item v-for="item in menus" :key="item.id" :menu="item" />
@@ -33,8 +33,10 @@
 <script setup lang="ts" name="Header">
 import { aonDocConfigApi, AonDocMenuTree } from '@/addons/doc/api/aonDoc';
 import { PageEnum } from '@/dict/pageEnum';
+import { useGlobalStore } from '@/store';
 import MenuItem from './components/menuItem.vue';
 const router = useRouter();
+const globalStore = useGlobalStore();
 const { runAsync: getConfig, data: config } = await aonDocConfigApi();
 await getConfig();
 defineProps<{ active: string; menus: AonDocMenuTree; version: string }>();

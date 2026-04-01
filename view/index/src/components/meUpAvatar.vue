@@ -23,6 +23,7 @@ watch(
     fileList.splice(0);
     file && fileList.push(file);
   },
+  { immediate: true },
 );
 //预览图片
 const handlePictureCardPreview = () => {

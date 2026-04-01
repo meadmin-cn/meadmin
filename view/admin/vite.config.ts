@@ -42,7 +42,7 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
       alias: [
         // /@/xxxx => src/xxxx
         {
-          find: /@\//,
+          find: '@/',
           replacement: pathResolve('src') + '/',
         },
       ],

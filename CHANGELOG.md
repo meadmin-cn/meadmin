@@ -1,5 +1,19 @@
 
 
+## [1.2.2](https://github.com/meadmin-cn/midway-meamdin/compare/main-1.2.1...main-1.2.2) (2026-04-01)
+
+
+### Bug 修复[fix]
+
+* 修复前台linux下打包报错bug ([1bc42cd](https://github.com/meadmin-cn/midway-meamdin/commit/1bc42cd8945ea769e8c674d2c4fa046dbb4399ec))
+* 移除多余的包，修复ssr渲染错误 ([ca624a5](https://github.com/meadmin-cn/midway-meamdin/commit/ca624a514933340f80e213e3ac8b5f5d960079fd))
+
+
+### CI发版[ci]
+
+* 版本设置为1.2.2 ([2455baf](https://github.com/meadmin-cn/midway-meamdin/commit/2455bafee92c83fe7dc71d213ca8fbe0dc65ae23))
+* **create-meadmin:** 更新1.2.2模板 ([64d0906](https://github.com/meadmin-cn/midway-meamdin/commit/64d09063a274993ed3f37d485626957b4ac31d05))
+
 ## 1.2.1 (2026-04-01)
 
 

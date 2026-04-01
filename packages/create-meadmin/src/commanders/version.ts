@@ -20,5 +20,10 @@ export const version = (program: Command) => {
         writeFileSync(resolve(path, file, 'package.json'), JSON.stringify(content, null, 2), 'utf-8');
         console.log(`设置${content.name}版本成功`);
       });
+      const contentStr = readFileSync(resolve(process.cwd(), 'package.json'), 'utf-8');
+      const content = JSON.parse(contentStr);
+      content.version = version;
+      writeFileSync(resolve(process.cwd(), 'package.json'), JSON.stringify(content, null, 2), 'utf-8');
+      console.log(`设置${content.name}版本成功`);
     });
 };

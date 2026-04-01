@@ -1,6 +1,6 @@
 {
   "name": "@meadmin/midway-vite-view",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "midway 的 vite 服务端渲染和客户端渲染组件，",
   "main": "dist/index.js",
   "typings": "index.d.ts",

@@ -1,6 +1,6 @@
 {
   "name": "@meadmin/cli",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "meadmin cli",
   "type": "module",
   "main": "dist/index.js",

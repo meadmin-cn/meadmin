@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts" name="LayoutUser">
-import avatar from '@/assets/images/avatar.jpg';
+import avatar from '@/assets/images/avatar.png';
 import { PageEnum } from '@/dict/pageEnum';
 import { useUserStore } from '@/store';
 const userStore = useUserStore();

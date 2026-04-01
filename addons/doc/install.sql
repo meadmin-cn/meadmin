@@ -5,27 +5,12 @@
 -- Dumped from database version 16.1
 -- Dumped by pg_dump version 17.0
 
--- Started on 2026-03-31 21:11:57
+-- Started on 2026-04-01 15:52:55
 
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
-SET default_tablespace = '';
-
-SET default_table_access_method = heap;
 
 --
 -- TOC entry 242 (class 1259 OID 29518)
--- Name: aon_doc; Type: TABLE; Schema: meadmin; Owner: meadmin
+-- Name: aon_doc; Type: TABLE; Schema: meadmin; Owner: -
 --
 
 CREATE TABLE aon_doc (
@@ -51,173 +36,172 @@ CREATE TABLE aon_doc (
 );
 
 
-
 --
--- TOC entry 3374 (class 0 OID 0)
+-- TOC entry 3366 (class 0 OID 0)
 -- Dependencies: 242
--- Name: TABLE aon_doc; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: TABLE aon_doc; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON TABLE aon_doc IS '文档表';
 
 
 --
--- TOC entry 3375 (class 0 OID 0)
+-- TOC entry 3367 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.title; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.title; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.title IS '名称';
 
 
 --
--- TOC entry 3376 (class 0 OID 0)
+-- TOC entry 3368 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.icon_file_id; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.icon_file_id; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.icon_file_id IS '图标附件id';
 
 
 --
--- TOC entry 3377 (class 0 OID 0)
+-- TOC entry 3369 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.type; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.type; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.type IS '类型:1=目录;2=菜单';
 
 
 --
--- TOC entry 3378 (class 0 OID 0)
+-- TOC entry 3370 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.status; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.status; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.status IS '状态:1=启用;0=禁用';
 
 
 --
--- TOC entry 3379 (class 0 OID 0)
+-- TOC entry 3371 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.order_num; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.order_num; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.order_num IS '排序(降序)';
 
 
 --
--- TOC entry 3380 (class 0 OID 0)
+-- TOC entry 3372 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.md_content; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.md_content; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.md_content IS '内容';
 
 
 --
--- TOC entry 3381 (class 0 OID 0)
+-- TOC entry 3373 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.link; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.link; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.link IS '外链地址';
 
 
 --
--- TOC entry 3382 (class 0 OID 0)
+-- TOC entry 3374 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.parent_id; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.parent_id; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.parent_id IS '父级id';
 
 
 --
--- TOC entry 3383 (class 0 OID 0)
+-- TOC entry 3375 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc."left"; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc."left"; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc."left" IS '左树边界';
 
 
 --
--- TOC entry 3384 (class 0 OID 0)
+-- TOC entry 3376 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc."right"; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc."right"; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc."right" IS '右树边界';
 
 
 --
--- TOC entry 3385 (class 0 OID 0)
+-- TOC entry 3377 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.lock_version; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.lock_version; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.lock_version IS '锁版本号';
 
 
 --
--- TOC entry 3386 (class 0 OID 0)
+-- TOC entry 3378 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.created_admin_id; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.created_admin_id; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.created_admin_id IS '创建者(管理员)Id';
 
 
 --
--- TOC entry 3387 (class 0 OID 0)
+-- TOC entry 3379 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.updated_admin_id; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.updated_admin_id; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.updated_admin_id IS '最后更新者(管理员)Id';
 
 
 --
--- TOC entry 3388 (class 0 OID 0)
+-- TOC entry 3380 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.created_at; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.created_at; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.created_at IS '创建时间';
 
 
 --
--- TOC entry 3389 (class 0 OID 0)
+-- TOC entry 3381 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.updated_at; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.updated_at; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.updated_at IS '最后更新时间';
 
 
 --
--- TOC entry 3390 (class 0 OID 0)
+-- TOC entry 3382 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.content_type; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.content_type; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.content_type IS '内容类型:0=markdown;1=外链';
 
 
 --
--- TOC entry 3391 (class 0 OID 0)
+-- TOC entry 3383 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.version; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.version; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.version IS '版本';
 
 
 --
--- TOC entry 3392 (class 0 OID 0)
+-- TOC entry 3384 (class 0 OID 0)
 -- Dependencies: 242
--- Name: COLUMN aon_doc.label; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc.label; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc.label IS '标识';
@@ -225,7 +209,7 @@ COMMENT ON COLUMN aon_doc.label IS '标识';
 
 --
 -- TOC entry 243 (class 1259 OID 29667)
--- Name: aon_doc_config; Type: TABLE; Schema: meadmin; Owner: meadmin
+-- Name: aon_doc_config; Type: TABLE; Schema: meadmin; Owner: -
 --
 
 CREATE TABLE aon_doc_config (
@@ -240,216 +224,8984 @@ CREATE TABLE aon_doc_config (
 );
 
 
-ALTER TABLE aon_doc_config OWNER TO meadmin;
-
 --
--- TOC entry 3393 (class 0 OID 0)
+-- TOC entry 3385 (class 0 OID 0)
 -- Dependencies: 243
--- Name: TABLE aon_doc_config; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: TABLE aon_doc_config; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON TABLE aon_doc_config IS '配置表';
 
 
 --
--- TOC entry 3394 (class 0 OID 0)
+-- TOC entry 3386 (class 0 OID 0)
 -- Dependencies: 243
--- Name: COLUMN aon_doc_config.icon_file_id; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc_config.icon_file_id; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc_config.icon_file_id IS '图标附件id';
 
 
 --
--- TOC entry 3395 (class 0 OID 0)
+-- TOC entry 3387 (class 0 OID 0)
 -- Dependencies: 243
--- Name: COLUMN aon_doc_config.version; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc_config.version; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc_config.version IS '版本';
 
 
 --
--- TOC entry 3396 (class 0 OID 0)
+-- TOC entry 3388 (class 0 OID 0)
 -- Dependencies: 243
--- Name: COLUMN aon_doc_config.links; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc_config.links; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc_config.links IS '外链';
 
 
 --
--- TOC entry 3397 (class 0 OID 0)
+-- TOC entry 3389 (class 0 OID 0)
 -- Dependencies: 243
--- Name: COLUMN aon_doc_config.created_admin_id; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc_config.created_admin_id; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc_config.created_admin_id IS '创建者(管理员)Id';
 
 
 --
--- TOC entry 3398 (class 0 OID 0)
+-- TOC entry 3390 (class 0 OID 0)
 -- Dependencies: 243
--- Name: COLUMN aon_doc_config.updated_admin_id; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc_config.updated_admin_id; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc_config.updated_admin_id IS '最后更新者(管理员)Id';
 
 
 --
--- TOC entry 3399 (class 0 OID 0)
+-- TOC entry 3391 (class 0 OID 0)
 -- Dependencies: 243
--- Name: COLUMN aon_doc_config.created_at; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc_config.created_at; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc_config.created_at IS '创建时间';
 
 
 --
--- TOC entry 3400 (class 0 OID 0)
+-- TOC entry 3392 (class 0 OID 0)
 -- Dependencies: 243
--- Name: COLUMN aon_doc_config.updated_at; Type: COMMENT; Schema: meadmin; Owner: meadmin
+-- Name: COLUMN aon_doc_config.updated_at; Type: COMMENT; Schema: meadmin; Owner: -
 --
 
 COMMENT ON COLUMN aon_doc_config.updated_at IS '最后更新时间';
 
 
-
 --
--- TOC entry 3367 (class 0 OID 29518)
+-- TOC entry 3359 (class 0 OID 29518)
 -- Dependencies: 242
--- Data for Name: aon_doc; Type: TABLE DATA; Schema: meadmin; Owner: meadmin
+-- Data for Name: aon_doc; Type: TABLE DATA; Schema: meadmin; Owner: -
 --
 
-COPY aon_doc (id, title, icon_file_id, type, status, order_num, md_content, link, parent_id, "left", "right", lock_version, created_admin_id, updated_admin_id, created_at, updated_at, content_type, version, label) FROM stdin;
-694102382237188096	setup标签语法设置自定义属性	\N	2	1	95	# ```setup```标签语法设置自定义属性\n\n!!! warning 注意 \n当代码中存在```<script lang="ts"> ```标签时，插件不会执行 \n!!!\n\n```\n <script lang="ts" setup name="App" auth="{{'type'+(3+4)}}" >\n  const test = 1\n</script>\n```\n会生成\n```\n<script lang="ts">\n import { defineComponent } from 'vue';\n export default defineComponent({name:'App',auth:'type'+(3+4)});\n</script>\n<script lang="ts" setup>\n const test = 1\n</script>\n```		694102380874039296	154	155		604612615536115712	604612615536115712	2026-03-31 12:20:45.903+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102384783130624	弹窗	\N	2	1	93	# Dialog 对话框\n组件名`MeDialog`，对[elment-plus dialog](https://element-plus.org/zh-CN/component/dialog.html)组件的封装，在保留原有功能的情况下，扩展了最大化/还原、拖动大小、样式调整自动滚动条、可移动功能，并且保留`elment-plus dialog`的 `props` 和 `emit` `type`提示。\n\n!!! warning 注意\n- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。\n- 当前组件位置`@/components/meDialog`。\n!!!\n\n## 组件props\n\n| props      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| full | boolean | 名称默认值为`true`,是否启用最大化/还原、拖动大小、可移动功能 | 否 |\n| maxHeight | boolean | 名称默认值为`60vh`,弹窗最大高度 | 否 |\n| elDialog的属性 | - | 支持element-plus  Dialog组件 的所有属性，请参考[elDialog文档](https://element-plus.org/zh-CN/component/dialog.html#%E5%B1%9E%E6%80%A7)| - | \n\n## 组件事件\n| emit      | 格式 |说明|\n| ----------- | ----------- | ----------- |\n| elDialog的事件 | - | 支持element-plus  Dialog组件 的所有事件，请参考[elDialog文档](https://element-plus.org/zh-CN/component/dialog.html#%E4%BA%8B%E4%BB%B6)| - |\n\n## 组件插槽\n\n| 插槽名  |\t说明  |\t子标签 |\n| ----------- | ----------- | ----------- |\n| - | Dialog 的内容,和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。| - |\n| header | 对话框标题的内容；会替换标题部分，但不会移除关闭按钮。和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。|\t— |\n| title\t| 与 header 作用相同 请使用 header,和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。|\t— |\n| footer | Dialog 按钮操作区的内容,和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。| — |\n\n![](/api/admin/file/get/694058854975012864/image.png)\n		694102382786641920	172	173		604612615536115712	604612615536115712	2026-03-31 13:42:12.766+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102385051566080	图片预览	\N	2	1	92	# 预览图片\n将 `element-plus` 的 `ElImageViewer` 组件函数化，可通过服务方式调用。\n\n!!! warning 注意\n- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。\n- 当前组件位置`@/components/service/meImageViewer.ts`\n- 服务式组件只能通过服务方式调用\n!!!\n\n## 组件props\n\n| props      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| urlList\t  | string[] | 用于预览的图片链接列表，默认为[]|否|\n| zIndex      | number \\| string | 预览时遮罩层的 z-index |否|\n| initialIndex | number | 初始预览图像索引，小于 urlList 的长度,默认为0 |否|\n| infinite | boolean | 是否可以无限循环预览，默认为true |否|\n| hideOnClickModal\t | boolean | 是否可以通过点击遮罩层关闭预览,默认为false | 否|\n|teleported| boolean | image 自身是否插入至 body 元素上。嵌套的父元素属性会发生修改时应该将此属性设置为 true，默认为fale| 否 |\n|onClose | ()=>void| 当点击 X 按钮或者在hideOnClickModal为 true 时点击遮罩层时触发 | 否|\n|onSwitch | (index: number) => void| 切换图像时触发。 | 否 |\n\n## 使用示例\n\n```ts\nimport { createImageViewer } from '@/components/service/meImageViewer';\n\ncreateImageViewer({\nurlList: [\n    'https://scpic.chinaz.net/Files/pic/pic6/pic1281.jpg',\n    'https://scpic.chinaz.net/files/pic/pic9/202009/apic27858.jpg',\n    'https://tse3-mm.cn.bing.net/th/id/OIP-C.n0_p3rYRuofABd3XudbZnAHaEo?pid=ImgDet&rs=1',\n],\n});\n```		694102382786641920	174	175		604612615536115712	604612615536115712	2026-03-31 13:43:31.866+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694027573885140992	Pinia使用	\N	2	1	98	# Pinia使用\n\nPinia 是 下一代 Vue 的存储库，相关使用说明请参考[Pinia](https://pinia.web3doc.top/introduction.html)文档\n\n## 新建store文件\nstore存放文件夹为`@/store/modules`，在store文件夹下新建对应store文件，按[Pinia](https://pinia.web3doc.top/introduction.html)规则声明`defineStore`函数并导出为`default`即可\n\n示例：\n```\nimport { filterAsyncRoutes } from '@/utils/permission';\nimport useUserStore from './user';\nimport { constantRoutes, asyncRoutes } from '@/router';\nimport { RouteRecordRaw } from 'vue-router';\n\nexport default defineStore('route', {\n  state: () => ({\n    addRoutes: [] as RouteRecordRaw[],\n    noCacheFullPath: [] as Array<string | RegExp>,\n  }),\n  getters: {\n    routes: (state) => constantRoutes.concat(state.addRoutes),\n  },\n  actions: {\n    generateRoutes() {\n      if (useUserStore().rules) {\n        this.addRoutes = markRaw(filterAsyncRoutes(asyncRoutes));\n      }\n      return this.addRoutes;\n    },\n    setNoCache(fullPath: string) {\n      if (!this.noCacheFullPath.includes(fullPath)) {\n        this.noCacheFullPath.push(fullPath);\n      }\n    },\n    removeNoCache(fullPath: string) {\n      const index = this.noCacheFullPath.indexOf(fullPath);\n      if (index > -1) {\n        this.noCacheFullPath.splice(index, 1);\n      }\n    },\n  },\n});\n\n```\n## 导出语句自动生成\n- 在`@/store/modules`文件夹下符合`['**/*.{ts,js}', '*.{ts,js}']` `glob`规则的文件会在`@/store/module.ts`文件中自动创建对应导出语句\n\n!!! tip 说明\n此功能基于[unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)插件实现,对应配置位于`vite.config.ts`中\n!!!\n```\n//当前文件由vite-plugin-autogeneration-import-file自动生成\nexport { default as useGlobalStore } from "./modules/global"\nexport { default as useRouteStore } from "./modules/route"\nexport { default as useSettingStore } from "./modules/setting"\nexport { default as useUserStore } from "./modules/user"\n//code\n```\n- `@/store/index.ts`文件对`@/store/module.ts`文件进行了二次导出\n```\nexport * from './module';\n```\n## 使用store\n直接导入后使用即可,具体规则请参考[Pinia](https://pinia.web3doc.top/introduction.html)文档\n```\nimport { useUserStore } from '@/store';\nconst userStore = useUserStore();\n```		694026784546488320	50	51		604612615536115712	604612615536115712	2026-03-31 11:37:48.023+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694039633108926464	数字动画	\N	2	1	90	\n# 数字动画\n\n组件名`MeNumber`，数字动画组件，基于[vueuse usetransition](https://vueuse.org/core/usetransition/#usetransition)实现。\n\n!!! warning 注意\n- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。\n- 当前组件位置`@/components/meNumber.vue`\n!!!\n\n## 组件props\n\n| props      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| start      | number | 数字动画起始值 默认为0|否|\n| end      | number \\| [number(结束数字),string(前缀),string(后缀)] | 数字动画结束值 |是|\n| delay    | number | 开始动画等待的毫秒数默认为0 |否|\n| disabled | boolean | 禁用动画(默认为false) |否|\n| duration | number | 动画持续时间毫秒数默认为1000 | 否|\n| transition|  EasingFunction \\| keyof typeof TransitionPresets  | 动画类型默认为`'easeOutExpo'`，详细说明请参考[vueuse文档](https://vueuse.org/core/usetransition/#type-declarations) | 否 |\n|format| (number: number, decimals: number) => string | number |数字格式化函数,number为当前展示数字，decimals为end的小数位数 默认值`(number: number, decimals: number) => formatNumber({ truncate: decimals, padRight: decimals })(number)`，每千分位一个`,`隔开  参考[format-number文档](https://www.npmjs.com/package/format-number)|否|\n\n## 组件事件\n\n| emit      | 格式 |说明|\n| ----------- | ----------- | ----------- |\n| onFinished | () => void | 转换完成后执行。|\n| onStarted | () => void | 转换开始后执行。|\n\n## 示例\n\n```vue\n<me-number :end="103256.25"></me-number>\n```\n		694038800321478656	76	77		604612615536115712	604612615536115712	2026-03-31 12:25:43.166+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-693986599695810560	快速开始	\N	2	1	98	# 快速开始\n\n## 依赖环境\n\n- 存储数据库：PostgreSQL\n- 缓存数据库：Redis\n- 语言：nodejs>= 22.14.0\n- 工具：pnpm \n\n!!! warning\n开始本项目前，请务必准备好相关环境，服务器推荐使用[宝塔服务器面板]( https://www.bt.cn/u/M6tROn)，一键全能部署及管理安装PostgreSQL、Redis\n!!!\n\n## 快速启动\n\n### 安装项目\n执行命令 下面命令 根据提示数据配置选项即可！\n```\npnpm create meadminjs\n```\n\n### 调试项目\n\n- 在项目根目录执行 `pnpm dev`\n- 后台访问 [http://127.0.0.1:7001/admin](http://127.0.0.1:7001/admin)\n- 前台访问 [http://127.0.0.1:7001/](http://127.0.0.1:7001/)\n\n### 默认账户\n\n#### 后台\n默认账户 admin\n默认密码 meAdmin#202507!P\n\n#### 前台\n默认账户 test\n默认密码 123456789\n\n\n## 编写数据库实体文件\n\n```\n//src/entities/exampleDemo.entity.ts\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { BelongsManyModel, BelongsToModel } from '@/types/entity.js';\nimport { DataTypes, NonAttribute, Op } from '@sequelize/core';\nimport { Attribute, BelongsTo, BelongsToMany, Default, DeletedAt, Index, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\nimport { ExampleBook } from './exampleBook.entity.js';\nimport { File } from './file.entity.js';\nimport { User } from './user.entity.js';\n\n//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null\n@Table({ tableName: 'example_demo', comment: '示例_Demo' })\n//继承自DelParanoidModel则使用软删除。\nexport class ExampleDemo extends AdminBaseModel<ExampleDemo> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })\n  id: string;\n\n  //唯一索引名称必须全库唯一，当两个null值时唯一索引会认为不是同一个值\n  @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引\n  @Attribute({ type: DataTypes.STRING(11), comment: '手机号' })\n  @ApiPropertyRule({ description: '手机号', rule: RuleType.string().mobile().description('手机号').required() })\n  mobile: string;\n\n  //以“名称:值1=说明1;值2=说明2”，格式声明的备注会自动创建字典和下拉列表，并且支持number、string两种类型\n  @Attribute({\n    comment: '类型:0=书籍;1=电子产品;2=卡片',\n    defaultValue: 0,\n    allowNull: false,\n    type: DataTypes.TINYINT.UNSIGNED,\n  })\n  @ApiPropertyRule({ description: '类型:0=书籍;1=电子产品;2=卡片', rule: RuleType.number().equal(0, 1, 2).required() })\n  type: number;\n\n  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)\n  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。\n  @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })\n  @ApiPropertyRule({ description: '名称', rule: RuleType.string().max(20).min(1).required() })\n  name: string;\n\n  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/\n  @BelongsToMany(() => ExampleBook, {\n    through: 'example_demo_books', //中间表名称 或者 对应的Model，\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: 'demos',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;\n  })\n  @ApiPropertyRule({\n    description: '书籍',\n    type: 'array',\n    items: {\n      type: () => ExampleBook,\n    },\n    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),\n  })\n  books?: NonAttribute<ExampleBook[]>;\n\n  //反向BelongsTo关联从属， 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to/\n  @Attribute({ type: DataTypes.STRING(20), comment: '关联前台用户id' })\n  userId: string;\n  @ApiPropertyRule({ description: '用户', type: () => User, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })\n  @BelongsTo(() => User, {\n    foreignKey: 'userId', //外键名称\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n  })\n  user?: NonAttribute<User>;\n\n  //反向BelongsTo关联从属，File类型创建单文件\n  @Attribute({ type: DataTypes.STRING(20), comment: '头像附件id' })\n  avatarFileId: string;\n  @ApiPropertyRule({ description: '头像', type: () => File, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })\n  @BelongsTo(() => File, {\n    foreignKey: 'avatarFileId', //外键名称\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n  })\n  avatar?: NonAttribute<File>;\n\n  //BelongsTo多对多关联从属，File类型创建多文件选择\n  @BelongsToMany(() => File, {\n    through: 'example_demo_files', //中间表名称 或者 对应的Model，\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n  })\n  @ApiPropertyRule({\n    description: '附件',\n    type: 'array',\n    items: {\n      type: () => File,\n    },\n    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),\n  })\n  files?: NonAttribute<File[]>;\n\n  @DeletedAt //设置为软删除\n  @Attribute({ comment: '删除时间' })\n  declare deletedAt: Date | null;\n}\n//声明自动关联方法\nexport declare interface ExampleDemo extends BelongsManyModel<'books', 'book', 'books', ExampleBook> {}\nexport declare interface ExampleDemo extends BelongsToModel<'user', User> {}\nexport declare interface ExampleDemo extends BelongsToModel<'avatar', File> {}\nexport declare interface ExampleDemo extends BelongsManyModel<'files', 'file', 'files', File> {}\n\n```\n!!! danger\n以下 meadmin 命令会读取数据库实体对应的 JS 文件，这些文件位于 dist/entities 目录中。\n请注意：\n\n- 在调试模式下`pnpm dev` 新增实体(会监听文件改动自动生成 JS 文件)；\n- 或新增实体后已执行了 `pnpm dev`。\n\n再运行下列命令。\n!!!\n\n\n## 同步数据库结构\n\n- `pnpm exec meadmin sync *`\n- 或 `pnpm meadmin sync exampleDemo,systemAdmin,exampleBook,user,file` 定向同步exampleDemo文件（定向同步文件时，需将关联依赖全部罗列出来，一起同步）\n\n\n## 一键生成crud\n\n- `pnpm meadmin crud exampleDemo --menu`  --menu 参数代表数据库同步生成后台菜单\n\n运行后会生成以下文件\n```\nsrc/app/admin/dto/example/demoCreate.dto.ts 后端新增dto校验文件\nsrc/app/admin/dto/example/demoUpdate.dto.ts 后端更新dto校验文件\nsrc/app/admin/dto/example/demoQuery.dto.ts 后端查询入参dto校验文件\nsrc/app/admin/service/example/demo.service.ts 后端service\nsrc/app/admin/controller/example/demo.controller.ts 后端 controller\nview/admin/src/api/example/demo.ts  前端 api接口定义 \nview/admin/src/views/example/demo/lang/en.json 前端组件语言包 \nview/admin/src/views/example/demo/dict.ts 前端字典\nview/admin/src/views/example/demo/index.vue 前端字典列表组件\nview/admin/src/views/example/demo/components/info.vue 前端字典详情组件\nview/admin/src/views/example/demo/components/addOrUp.vue 前端字典新增/修改组件\n```		682458162829197312	2	3		604612615536115712	604612615536115712	2026-03-31 08:54:59.015+08	2026-03-31 12:17:36.667+08	0	1.0.0	start
-694102374855213056	开发规范	\N	2	1	96	# 开发规范\n## git提交规范[conventionalcommits](https://www.conventionalcommits.org/en/v1.0.0/)\n - 本项目的git提交规范遵循[conventionalcommits](https://www.conventionalcommits.org/en/v1.0.0/)并进行了自定义配置，具体配置规则如下\n```\n"types": [\n    {\n    "type": "feat",\n    "section": "新功能[feat]"\n    },\n    {\n    "type": "fix",\n    "section": "Bug 修复[fix]"\n    },\n    {\n    "type": "chore",\n    "section": "其他[chore]"\n    },\n    {\n    "type": "docs",\n    "section": "文档更改[docs]"\n    },\n    {\n    "type": "style",\n    "section": "样式更改[style]"\n    },\n    {\n    "type": "refactor",\n    "section": "重构[refactor]"\n    },\n    {\n    "type": "perf",\n    "section": "性能改进[perf]"\n    },\n    {\n    "type": "test",\n    "section": "测试添加/更正[test]"\n    },\n    {\n    "type": "revert",\n    "section": "还原提交[revert]"\n    },\n    {\n    "type": "ignore",\n    "section": "需要忽略[ignore]",\n    "hidden": true\n    },\n    {\n    "type": "ci",\n    "section": "CI发版[ci]"\n    }\n]\n```\n- 如果使用`vscode`编辑器，建议安装[Conventional Commits](https://marketplace.visualstudio.com/items?itemName=vivaxy.vscode-conventional-commits)插件,此插件会自动生成对应格式提交日志\n\n## husky自动化\n1. 安装时不使用`npm install`直接使用`npm run i `,或者初始化后在当前目录下运行`npx husky install`\n2. 或者在 package.json加入以下`scripts`再install ([husky对应文档](https://typicode.github.io/husky/#/?id=install))\n   ```\n   //npm/pnpm\n   {\n        "scripts": {\n            "prepare": "husky install"\n        }\n    }\n   ```\n   ```\n   //yarn\n    {\n    "private": true, // ← your package is private, you only need postinstall\n    "scripts": {\n        "postinstall": "husky install"\n    }\n    }\n   ```\n会自动生成生成`husky`对应的git hook`husky`会在git提交时进行以下操作:\n- 自动运行`prettier --write`进行代码格式化\n- 自动运行`eslint --cache --fix`进行`eslint`校验和修复,如果无法修复会报错并停止提交\n- 自动校验提交`message`是否符合`conventionalcommits`规范，如果不符合会报错并停止提交\n ### husky 在linux/mac下不生效\n husky目前有一个bug, windows下创建的hooks 当在linux/macos下拉取后即使执行了`husky install`也不能成功调用，需要单独执行下`chmod ug+x .husky/*` 赋予脚本执行权限。对应的[issue](https://github.com/typicode/husky/issues/1177)		694102373970214912	100	101		604612615536115712	604612615536115712	2026-03-31 13:47:20.642+08	2026-03-31 19:37:00.995+08	0	1.1.0	\N
-682458787847602176	介绍	\N	2	1	99	## 介绍\n后端使用Midway框架，Midway 是阿里巴巴 - 淘宝前端架构团队，基于渐进式理念研发的 Node.js 框架，通过自研的依赖注入容器，搭配各种上层模块，组合出适用于不同场景的解决方案。\n如需对后端进行更多了解，可阅读[midway文档](https://midwayjs.org/docs/intro)\n\n## 目录结构\n```\n├──.husky git hooks钩子文件夹\n├──.vscode vscode推荐配置文件夹\n├── dist 后端打包文件夹\n├──logs 日志文件夹\n├──public 静态资源文件\n│   ├── admin 后台静态资源\n│   ├── index 前台静态资源\n├── src  后端主目录\n│   ├── app 后端模块根目录\n│   │   ├──admin 后台接口模块\n│   │   │   ├── controller 模块控制器文件夹\n│   │   │   ├── dto 模块出入参dto类文件夹\n│   │   │   ├── middleware 模块中间件夹\n│   │   │   └── service 模块service文件夹\n│   │   ├──index 前台接口模块\n│   │   │   ├── controller 模块控制器文件夹\n│   │   │   ├── dto 模块出入参dto类文件夹\n│   │   │   ├── middleware 模块中间件夹\n│   │   │   └── service 模块service文件夹\n│   │   └──home.controller.ts 页面渲染控制器\n│   ├── config 配置文件夹\n│   ├── controller 公共控制器文件夹\n│   ├── decorators 装饰器文件夹\n│   ├── dict 字典文件夹\n│   ├── dto 出入参dto基类文件夹\n│   ├── entities 数据库实体类文件夹\n│   ├── fileManage 文件夹管理助手类\n│   ├── filter 异常类文件夹\n│   ├── helper 助手函数文件夹\n│   ├── locales 后端多语言文件包\n│   ├── response 反参基类\n|   ├── ruleType 后端自定义校验规则\n|   ├── service 全局公共service\n|   ├── types 类型扩展\n|   ├── configuration.ts 启动文件\n│   └── logger.ts logger初始化文件\n├── uploadFile 本地上传目录\n├── view 前端文件夹\n├── .env env环境变量，VIEW_ADMIN_开头的可被 前端admin项目获取到，VIEW_INDEX_开头的可被前端 index项目获取到\n├── .env.prod 启动后env环境变量\n├── .eslintrc.json eslint配置文件\n├── .gitignore git 忽略文件\n├── .npmrc pnpm配置文件\n├── .prettierignore prettier忽略文件\n├── .prettierrc.cjs prettier配置文件\n├── bootstrap.js 部署后bootstrap启动文件\n├── sql 初始化sql文件\n├── pnpm-workspace.yaml pnpm workspace 配置\n└── tsconfig.json typescript配置文件\n```\n\n\n## 基本概念\n\n后端基于 Node.js 监听端口，对外主要提供 API 接口及页面访问。\n\n后端架构主要划分为以下几层：router、controller、service、dto、entity。\n\n- router：定义路由映射，将不同请求指向对应 controller 类中的方法。访问相应地址时会自动触发对应的 controller 逻辑。\n\n- controller：作为请求入口，负责入参校验、调用 service、返回响应，并集成 Swagger 生成接口文档。其中可能封装少量控制逻辑，但核心业务处理一般交由 service。\n\n- service：封装核心业务逻辑，根据场景组织代码。通过 entity 数据模型进行数据库操作，并实现复杂业务处理。\n\n- entity：对应数据库表的模型实体，所有数据库操作均通过 entity 完成。\n\n- dto：定义接口的请求参数与响应结果格式。每个接口都有对应的 DTO 类，controller 在接收到请求时会自动基于 DTO 完成参数校验。\n\n\n## 改动及封装\n本项目对midway做了以下封装，详情请参考相关章节。\n\n### controller装饰器会继承prefix和routerOptions。\n 根据 controller 继承关系 递归合成Controller装饰器的参数\n 从第一个prefix以/开头的祖级开始合并controller的prefix和routerOptions，如果prefix 以/开头，则不合并prefix和routerOptions\n### 强制文件目录结构\nMidway 对目录没有特别的限制，但当前项目，将一部分常用的文件进行归类，放到一些默认的文件夹中。文件夹详情请参考[目录结构](#目录结构)。日常开发需要关注的主要有：`src/app/*/controller`文件、`src/app/*/service`文件、`src/app/*/dto`文件、`src/app/*/middleware`中间件文件、`src/entities`数据库实体类文件。\n### 模块\n本项目增加了模块的概念，在`src/app/`下每一个文件夹代表一个模块，将相关逻辑归类存放。\n### 应用\n应用基于koa 使用`@midwayjs/koa`组件\n### 参数校验\n已集成，源于`joi`的`@midwayjs/validate@3`参数校验组件，并自定义了`mobile`等校验规则\n### 多语言\n已集成`@midwayjs/i18n@3`多语言组件，多语言文件夹为`locales/en.json`，并且翻译失败使用当前key做为返回值\n### 数据库访问\n已集成sequelize7，自定义封装的sequelize访问service，相关源码在`src/service/dataSourceManager.service.ts`,对应配置文件在`src/config/database.ts`\n### 静态文件映射\n集成 `@midwayjs/static-file@3`组件，`public`文件夹下的资源都可以使用`/文件名`直接访问\n### 模板引擎\n集成 `@medamin/midway-vite-view`组件，实现vite+vue模板渲染支持\n### 缓存\n集成`@midwayjs/redis@3`和`@midwayjs/cache-manager@3`组件，实现基于redis的缓存支持\n### 日志\n调试模式及部署模式，都将日志目录改为本地的 ${app.appDir}/logs/ 目录下\n\n		682458162829197312	4	5		604612615536115712	604612615536115712	2026-02-27 13:27:34.494+08	2026-03-31 12:18:25.708+08	0	1.0.0	\N
-694102374540640256	快速开始	\N	2	1	98	# 快速开始\n\n## 依赖环境\n\n- 存储数据库：PostgreSQL\n- 缓存数据库：Redis\n- 语言：nodejs>= 22.14.0\n- 工具：pnpm \n\n!!! warning\n开始本项目前，请务必准备好相关环境，服务器推荐使用[宝塔服务器面板]( https://www.bt.cn/u/M6tROn)，一键全能部署及管理安装PostgreSQL、Redis\n!!!\n\n## 快速启动\n\n### 安装项目\n执行命令 下面命令 根据提示数据配置选项即可！\n```\npnpm create meadminjs\n```\n\n### 调试项目\n\n- 在项目根目录执行 `pnpm dev`\n- 后台访问 [http://127.0.0.1:7001/admin](http://127.0.0.1:7001/admin)\n- 前台访问 [http://127.0.0.1:7001/](http://127.0.0.1:7001/)\n\n### 默认账户\n\n#### 后台\n默认账户 admin\n默认密码 meAdmin#202507!P\n\n#### 前台\n默认账户 test\n默认密码 123456789\n\n\n## 编写数据库实体文件\n\n```\n//src/entities/exampleDemo.entity.ts\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { BelongsManyModel, BelongsToModel } from '@/types/entity.js';\nimport { DataTypes, NonAttribute, Op } from '@sequelize/core';\nimport { Attribute, BelongsTo, BelongsToMany, Default, DeletedAt, Index, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\nimport { ExampleBook } from './exampleBook.entity.js';\nimport { File } from './file.entity.js';\nimport { User } from './user.entity.js';\n\n//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null\n@Table({ tableName: 'example_demo', comment: '示例_Demo' })\n//继承自DelParanoidModel则使用软删除。\nexport class ExampleDemo extends AdminBaseModel<ExampleDemo> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })\n  id: string;\n\n  //唯一索引名称必须全库唯一，当两个null值时唯一索引会认为不是同一个值\n  @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引\n  @Attribute({ type: DataTypes.STRING(11), comment: '手机号' })\n  @ApiPropertyRule({ description: '手机号', rule: RuleType.string().mobile().description('手机号').required() })\n  mobile: string;\n\n  //以“名称:值1=说明1;值2=说明2”，格式声明的备注会自动创建字典和下拉列表，并且支持number、string两种类型\n  @Attribute({\n    comment: '类型:0=书籍;1=电子产品;2=卡片',\n    defaultValue: 0,\n    allowNull: false,\n    type: DataTypes.TINYINT.UNSIGNED,\n  })\n  @ApiPropertyRule({ description: '类型:0=书籍;1=电子产品;2=卡片', rule: RuleType.number().equal(0, 1, 2).required() })\n  type: number;\n\n  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)\n  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。\n  @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })\n  @ApiPropertyRule({ description: '名称', rule: RuleType.string().max(20).min(1).required() })\n  name: string;\n\n  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/\n  @BelongsToMany(() => ExampleBook, {\n    through: 'example_demo_books', //中间表名称 或者 对应的Model，\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: 'demos',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;\n  })\n  @ApiPropertyRule({\n    description: '书籍',\n    type: 'array',\n    items: {\n      type: () => ExampleBook,\n    },\n    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),\n  })\n  books?: NonAttribute<ExampleBook[]>;\n\n  //反向BelongsTo关联从属， 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to/\n  @Attribute({ type: DataTypes.STRING(20), comment: '关联前台用户id' })\n  userId: string;\n  @ApiPropertyRule({ description: '用户', type: () => User, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })\n  @BelongsTo(() => User, {\n    foreignKey: 'userId', //外键名称\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n  })\n  user?: NonAttribute<User>;\n\n  //反向BelongsTo关联从属，File类型创建单文件\n  @Attribute({ type: DataTypes.STRING(20), comment: '头像附件id' })\n  avatarFileId: string;\n  @ApiPropertyRule({ description: '头像', type: () => File, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })\n  @BelongsTo(() => File, {\n    foreignKey: 'avatarFileId', //外键名称\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n  })\n  avatar?: NonAttribute<File>;\n\n  //BelongsTo多对多关联从属，File类型创建多文件选择\n  @BelongsToMany(() => File, {\n    through: 'example_demo_files', //中间表名称 或者 对应的Model，\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n  })\n  @ApiPropertyRule({\n    description: '附件',\n    type: 'array',\n    items: {\n      type: () => File,\n    },\n    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),\n  })\n  files?: NonAttribute<File[]>;\n\n  @DeletedAt //设置为软删除\n  @Attribute({ comment: '删除时间' })\n  declare deletedAt: Date | null;\n}\n//声明自动关联方法\nexport declare interface ExampleDemo extends BelongsManyModel<'books', 'book', 'books', ExampleBook> {}\nexport declare interface ExampleDemo extends BelongsToModel<'user', User> {}\nexport declare interface ExampleDemo extends BelongsToModel<'avatar', File> {}\nexport declare interface ExampleDemo extends BelongsManyModel<'files', 'file', 'files', File> {}\n\n```\n!!! danger\n以下 meadmin 命令会读取数据库实体对应的 JS 文件，这些文件位于 dist/entities 目录中。\n请注意：\n\n- 在调试模式下`pnpm dev` 新增实体(会监听文件改动自动生成 JS 文件)；\n- 或新增实体后已执行了 `pnpm dev`。\n\n再运行下列命令。\n!!!\n\n\n## 同步数据库结构\n\n- `pnpm exec meadmin sync *`\n- 或 `pnpm meadmin sync exampleDemo,systemAdmin,exampleBook,user,file` 定向同步exampleDemo文件（定向同步文件时，需将关联依赖全部罗列出来，一起同步）\n\n\n## 一键生成crud\n\n- `pnpm meadmin crud exampleDemo --menu`  --menu 参数代表数据库同步生成后台菜单\n\n运行后会生成以下文件\n```\nsrc/app/admin/dto/example/demoCreate.dto.ts 后端新增dto校验文件\nsrc/app/admin/dto/example/demoUpdate.dto.ts 后端更新dto校验文件\nsrc/app/admin/dto/example/demoQuery.dto.ts 后端查询入参dto校验文件\nsrc/app/admin/service/example/demo.service.ts 后端service\nsrc/app/admin/controller/example/demo.controller.ts 后端 controller\nview/admin/src/api/example/demo.ts  前端 api接口定义 \nview/admin/src/views/example/demo/lang/en.json 前端组件语言包 \nview/admin/src/views/example/demo/dict.ts 前端字典\nview/admin/src/views/example/demo/index.vue 前端字典列表组件\nview/admin/src/views/example/demo/components/info.vue 前端字典详情组件\nview/admin/src/views/example/demo/components/addOrUp.vue 前端字典新增/修改组件\n```		694102373970214912	98	99		604612615536115712	604612615536115712	2026-03-31 08:54:59.015+08	2026-03-31 19:37:00.995+08	0	1.1.0	start
-694102374251233280	介绍	\N	2	1	99	# 介绍\n后端使用Midway框架，Midway 是阿里巴巴 - 淘宝前端架构团队，基于渐进式理念研发的 Node.js 框架，通过自研的依赖注入容器，搭配各种上层模块，组合出适用于不同场景的解决方案。\n如需对后端进行更多了解，可阅读[midway文档](https://midwayjs.org/docs/intro)\n\n## 目录结构\n```\n├──.husky git hooks钩子文件夹\n├──.vscode vscode推荐配置文件夹\n├── dist 后端打包文件夹\n├──logs 日志文件夹\n├──public 静态资源文件\n│   ├── admin 后台静态资源\n│   ├── index 前台静态资源\n├── src  后端主目录\n│   ├── app 后端模块根目录\n│   │   ├──admin 后台接口模块\n│   │   │   ├── controller 模块控制器文件夹\n│   │   │   ├── dto 模块出入参dto类文件夹\n│   │   │   ├── middleware 模块中间件夹\n│   │   │   └── service 模块service文件夹\n│   │   ├──index 前台接口模块\n│   │   │   ├── controller 模块控制器文件夹\n│   │   │   ├── dto 模块出入参dto类文件夹\n│   │   │   ├── middleware 模块中间件夹\n│   │   │   └── service 模块service文件夹\n│   │   └──home.controller.ts 页面渲染控制器\n│   ├── config 配置文件夹\n│   ├── controller 公共控制器文件夹\n│   ├── decorators 装饰器文件夹\n│   ├── dict 字典文件夹\n│   ├── dto 出入参dto基类文件夹\n│   ├── entities 数据库实体类文件夹\n│   ├── fileManage 文件夹管理助手类\n│   ├── filter 异常类文件夹\n│   ├── helper 助手函数文件夹\n│   ├── locales 后端多语言文件包\n│   ├── response 反参基类\n|   ├── ruleType 后端自定义校验规则\n|   ├── service 全局公共service\n|   ├── types 类型扩展\n|   ├── configuration.ts 启动文件\n│   └── logger.ts logger初始化文件\n├── uploadFile 本地上传目录\n├── view 前端文件夹\n├── .env env环境变量，VIEW_ADMIN_开头的可被 前端admin项目获取到，VIEW_INDEX_开头的可被前端 index项目获取到\n├── .env.prod 启动后env环境变量\n├── .eslintrc.json eslint配置文件\n├── .gitignore git 忽略文件\n├── .npmrc pnpm配置文件\n├── .prettierignore prettier忽略文件\n├── .prettierrc.cjs prettier配置文件\n├── bootstrap.js 部署后bootstrap启动文件\n├── sql 初始化sql文件\n├── pnpm-workspace.yaml pnpm workspace 配置\n└── tsconfig.json typescript配置文件\n```\n\n\n## 基本概念\n\n后端基于 Node.js 监听端口，对外主要提供 API 接口及页面访问。\n\n后端架构主要划分为以下几层：router、controller、service、dto、entity。\n\n- router：定义路由映射，将不同请求指向对应 controller 类中的方法。访问相应地址时会自动触发对应的 controller 逻辑。\n\n- controller：作为请求入口，负责入参校验、调用 service、返回响应，并集成 Swagger 生成接口文档。其中可能封装少量控制逻辑，但核心业务处理一般交由 service。\n\n- service：封装核心业务逻辑，根据场景组织代码。通过 entity 数据模型进行数据库操作，并实现复杂业务处理。\n\n- entity：对应数据库表的模型实体，所有数据库操作均通过 entity 完成。\n\n- dto：定义接口的请求参数与响应结果格式。每个接口都有对应的 DTO 类，controller 在接收到请求时会自动基于 DTO 完成参数校验。\n\n\n## 改动及封装\n本项目对midway做了以下封装，详情请参考相关章节。\n\n### controller装饰器会继承prefix和routerOptions。\n 根据 controller 继承关系 递归合成Controller装饰器的参数\n 从第一个prefix以/开头的祖级开始合并controller的prefix和routerOptions，如果prefix 以/开头，则不合并prefix和routerOptions\n### 强制文件目录结构\nMidway 对目录没有特别的限制，但当前项目，将一部分常用的文件进行归类，放到一些默认的文件夹中。文件夹详情请参考[目录结构](#目录结构)。日常开发需要关注的主要有：`src/app/*/controller`文件、`src/app/*/service`文件、`src/app/*/dto`文件、`src/app/*/middleware`中间件文件、`src/entities`数据库实体类文件。\n### 模块\n本项目增加了模块的概念，在`src/app/`下每一个文件夹代表一个模块，将相关逻辑归类存放。\n### 应用\n应用基于koa 使用`@midwayjs/koa`组件\n### 参数校验\n已集成，源于`joi`的`@midwayjs/validate@3`参数校验组件，并自定义了`mobile`等校验规则\n### 多语言\n已集成`@midwayjs/i18n@3`多语言组件，多语言文件夹为`locales/en.json`，并且翻译失败使用当前key做为返回值\n### 数据库访问\n已集成sequelize7，自定义封装的sequelize访问service，相关源码在`src/service/dataSourceManager.service.ts`,对应配置文件在`src/config/database.ts`\n### 静态文件映射\n集成 `@midwayjs/static-file@3`组件，`public`文件夹下的资源都可以使用`/文件名`直接访问\n### 模板引擎\n集成 `@medamin/midway-vite-view`组件，实现vite+vue模板渲染支持\n### 缓存\n集成`@midwayjs/redis@3`和`@midwayjs/cache-manager@3`组件，实现基于redis的缓存支持\n### 日志\n调试模式及部署模式，都将日志目录改为本地的 ${app.appDir}/logs/ 目录下\n\n		694102373970214912	102	103		604612615536115712	604612615536115712	2026-02-27 13:27:34.494+08	2026-03-31 19:37:40+08	0	1.1.0	\N
-694102384485335040	表格	\N	2	1	94	# vxeTable表格\n组件名`MeVxeTable`，对[vxe table](https://vxetable.cn/)组件的封装，在保留原有功能的情况下，扩展了顶部工具栏、分页功能，并且保留`VxeTable`的 `props` 和 `emit` `type`提示。\n\n!!! warning 注意\n- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。\n- 当前组件位置`@/components/meVxeTable`。\n- 组件对应的全局语言包文件为`src/locales/lang/en/meVxeTable.ts` `src/locales/lang/zh-cn/meVxeTable.ts`。\n- 所有的非`props` `attr`不会设置到根元素,都会透传到 `VxeTable`上。\n!!!\n\n## 组件props\n\n| props      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| name | string | 名称默认值为meVxeTable,会做为打印的表头和导出的文件名 | 否|\n| meClass|string | string[]| 根元素上的class | 否 |\n| exportMenu | `{label: string;filename?: string;handle: (vxeTable: VxeTableInstance, filename: string) => void \\| 'csv' \\| 'html' \\| 'xml' \\| 'txt'}[]` | 导出菜单默认值为 `[{ label: 'csv', handle: 'csv' },{ label: 'html', handle: 'html' },{ label: 'xml', handle: 'xml' },{ label: 'txt', handle: 'txt' }]` | 否|\n| print | boolean\\|VxeTablePropTypes.PrintConfig | 打印配置，默认为{}，如果不想展示传入false | 否 |\n| customColumn | boolean |自定义列，默认为true | 否 |\n| defaultShowSearch | boolean | 默认是否展示 筛选 默认值为false | 否 | \n| toolbar | boolean | 是否展示工具栏 默认为true,这里的工具栏是自行封装的工具栏非vxeToolbar | 否 |\n| quickSearch | string | 快捷搜索关键词 需要v-model绑定 | 否 |\n| quickSearchPlaceholder | string | 快捷搜索框placeholder,默认为快捷搜索 | 否 |\n| paginationOptions | object  | 分页配置,详情见下文`props.paginationOptions` | 否 |\n| autoHeight | boolean  | 根据父级自适应高度（默认为true，如果父级高度不固定请设置为false） | 否 |\n| vxeTable的属性 | - | 支持vxeTable的所有属性，请参考[vxeTable文档](https://vxetable.cn/#/table/api)| - | \n\n| props.exportMenu      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| label | string | 导出选项名称| 是 |\n| filename | string | 导出文件名，为空时使用`props.name` | 否 |\n| handle | (vxeTable: VxeTableInstance, filename: string) => void \\| 'csv' \\| 'html' \\| 'xml' \\| 'txt' | 导出执行函数/受支持的导出code | 是 |\n\n|props.paginationOptions| 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| noAutoLayout | boolean | 默认为手机模式时使用最小layout,设置为true关闭此配置 | 否 |\n| change | (page: number, size: number) => void | page或size改变时触发 | 是 |\n| pagination的属性 | - | 支持element-plus  Pagination组件 的所有属性，请参考[pagination文档](https://element-plus.gitee.io/zh-CN/component/pagination.html#%E5%B1%9E%E6%80%A7) | - |\n| pagination的事件 | function |  支持element-plus  Pagination组件 的所有事件，请参考[pagination文档](https://element-plus.gitee.io/zh-CN/component/pagination.html#%E4%BA%8B%E4%BB%B6)(需要在事件名前面加上on前缀并使用驼峰写法如`prev-click`事件属性名为`onPrevClick`)  | - | \n\n## 组件事件\n\n| emit      | 格式 |说明|\n| ----------- | ----------- | ----------- |\n| quickSearch | (searchText:string) => void | 快捷搜索|\n| refresh | () => void | 刷新按钮被点击时触发 |\n| add | () => void | 新增按钮被点击时触发 |\n| vxeTable的事件 | - | 支持vxeTable的所有事件，请参考[vxeTable文档](https://vxetable.cn/#/table/api)| - |\n\n## 组件插槽\n\n| 插槽名  |\t说明  |\t子标签 |\n| ----------- | ----------- | ----------- |\n| - | 和[vxeTable](https://vxetable.cn/#/table/base/basic)对应插槽功能一致。自定义默认内容 | vxe-column |\n| empty\t| 和[vxeTable](https://vxetable.cn/#/table/api)对应插槽功能一致。当数据为空时自定义的内容|\t— |\n| search | 筛选项，当点击工具栏筛选按钮时会控制其显隐 | — |\n| buttons | 工具栏左侧扩展操作按钮 | — |\n| tools | 工具栏右侧扩展菜单 | — |\n| toolsButton|  工具栏右侧扩展按钮 | — |\n\n## 组件属性/方法\n| 名称  |\t类型  |\t说明 |\n| ----------- | ----------- | ----------- |\n| vxeTableRef | VxeTableInstance | vxeTable的ref对象 |\n|searchText |string | 快捷搜索关键字 |\n\n## 示例\n\n```vue\n<template>\n  <el-card shadow="never" class="vxe-table-demo">\n    <me-vxe-table\n      ref="meVxeTableRef"\n      v-model:quick-search="searchForm.search"\n      :loading="loading"\n      :data="data?.list"\n      :footer-method="footerMethod"\n      :edit-config="{ trigger: 'click', mode: 'row', showStatus: true }"\n      :print="print"\n      :pagination-options="paginationOptions"\n      stripe\n      height="600px"\n      me-class="table"\n      border\n      show-overflow\n      show-footer\n      keep-source\n      class="my-xtable-element"\n      @refresh="getData"\n      @quick-search="getData(1)"\n    >\n      <template #search>\n        <el-form ref="searchRef" :model="searchForm" inline label-width="100px" class="search">\n          <el-form-item label="名称" prop="name">\n            <el-input v-model="searchForm.name" />\n          </el-form-item>\n          <el-form-item label="类型" prop="type">\n            <el-select v-model="searchForm.type" clearable>\n              <el-option label="类型1" value="1" />\n              <el-option label="类型2" value="2" />\n            </el-select>\n          </el-form-item>\n          <el-form-item label="日期" prop="date">\n            <el-date-picker v-model="searchForm.date" type="date" />\n          </el-form-item>\n          <el-form-item label="地址" prop="address">\n            <el-input v-model="searchForm.address" />\n          </el-form-item>\n          <el-form-item label="邮政编码" prop="zip">\n            <el-input v-model="searchForm.zip" />\n          </el-form-item>\n          <el-form-item label=" ">\n            <el-button type="primary" @click="getData(1)">查询</el-button>\n            <el-button @click="()=>($refs.searchRef as FormInstance).resetFields()">重置</el-button>\n          </el-form-item>\n        </el-form>\n      </template>\n      <template #buttons>\n        <el-button @click="() => (print = print ? false : {})">打印显/隐</el-button>\n        <el-button @click="xTable!.clearCheckboxRow()">全选清空</el-button>\n      </template>\n      <vxe-column type="checkbox" width="60"></vxe-column>\n      <vxe-column type="seq" width="80">\n        <template #header>\n          <span>序号</span>\n          <i class="el-icon-question"></i>\n        </template>\n      </vxe-column>\n      <vxe-colgroup title="Group1">\n        <vxe-column field="name" title="ElInput" min-width="140" :edit-render="{}">\n          <template #edit="scope">\n            <el-input v-model="scope.row.name" @input="xTable!.updateStatus(scope)"></el-input>\n          </template>\n        </vxe-column>\n        <vxe-column field="role" title="ElAutocomplete" min-width="160" :edit-render="{}">\n          <template #edit="{ row }">\n            <el-autocomplete v-model="row.role" :fetch-suggestions="roleSearchEvent"></el-autocomplete>\n          </template>\n        </vxe-column>\n        <vxe-column field="age" title="ElInputNumber" width="160" :edit-render="{}">\n          <template #header="{ column }">\n            <span>{{ column.title }}</span>\n            <i class="el-icon-warning"></i>\n          </template>\n          <template #edit="{ row }">\n            <el-input-number v-model="row.age" :max="99" :min="18"></el-input-number>\n          </template>\n        </vxe-column>\n        <vxe-colgroup title="Group2">\n          <vxe-column field="sex" title="ElSelect" width="140" :edit-render="{}">\n            <template #edit="scope">\n              <el-select v-model="scope.row.sex" @change="xTable!.updateStatus(scope)">\n                <el-option\n                  v-for="item in demo1.sexList"\n                  :key="item.value"\n                  :label="item.label"\n                  :value="item.value"\n                ></el-option>\n              </el-select>\n            </template>\n            <template #default="{ row }">{{ getSelectLabel(row.sex, demo1.sexList) }}</template>\n          </vxe-column>\n          <vxe-column field="sex1" title="ElSelect" width="180" :edit-render="{}">\n            <template #edit="scope">\n              <el-select v-model="scope.row.sex1" multiple>\n                <el-option\n                  v-for="item in demo1.sexList"\n                  :key="item.value"\n                  :label="item.label"\n                  :value="item.value"\n                ></el-option>\n              </el-select>\n            </template>\n            <template #default="{ row }">{{ getSelectMultipleLabel(row.sex1, demo1.sexList) }}</template>\n          </vxe-column>\n          <vxe-column field="region" title="ElCascader" width="200" :edit-render="{}">\n            <template #edit="{ row }">\n              <el-cascader v-model="row.region" :options="demo1.regionList"></el-cascader>\n            </template>\n            <template #default="{ row }">{{ getCascaderLabel(row.region, demo1.regionList) }}</template>\n          </vxe-column>\n        </vxe-colgroup>\n      </vxe-colgroup>\n      <vxe-colgroup title="Group1">\n        <vxe-column field="date" title="ElDatePicker" width="200" :edit-render="{}">\n          <template #edit="{ row }">\n            <el-date-picker v-model="row.date" type="date" format="YYYY/MM/DD"></el-date-picker>\n          </template>\n          <template #default="{ row }">{{ formatDate(row.date, 'YYYY/MM/DD') }}</template>\n        </vxe-column>\n        <vxe-column field="date1" title="ElDatePicker" width="220" :edit-render="{}">\n          <template #edit="{ row }">\n            <el-date-picker v-model="row.date1" type="datetime" format="YYYY-MM-DD HH:mm:ss"></el-date-picker>\n          </template>\n          <template #default="{ row }">{{ formatDate(row.date1, 'YYYY-MM-DD HH:mm:ss') }}</template>\n        </vxe-column>\n        <vxe-column field="date2" title="ElTimePicker" width="200" :edit-render="{}">\n          <template #edit="{ row }">\n            <el-time-select\n              v-model="row.date2"\n              :picker-options="{ start: '08:30', step: '00:15', end: '18:30' }"\n            ></el-time-select>\n          </template>\n        </vxe-column>\n        <vxe-column field="color1" title="ElColorPicker" width="140" :edit-render="{}">\n          <template #edit="{ row }">\n            <el-color-picker v-model="row.color1"></el-color-picker>\n          </template>\n        </vxe-column>\n        <vxe-column field="rate" title="ElRate" width="200">\n          <template #default="{ row }">\n            <el-rate v-model="row.rate"></el-rate>\n          </template>\n        </vxe-column>\n        <vxe-column field="flag" title="ElSwitch" width="100">\n          <template #default="{ row }">\n            <el-switch v-model="row.flag"></el-switch>\n          </template>\n        </vxe-column>\n      </vxe-colgroup>\n    </me-vxe-table>\n  </el-card>\n</template>\n<script setup lang="ts" name="VxeTableDemo">\nimport { VxeTablePropTypes } from 'vxe-table';\nimport XEUtils from 'xe-utils';\nimport { FormInstance } from 'element-plus';\nimport { listApi } from '@/api/vxeTable';\nconst meVxeTableRef = ref<MeVxeTableInstance>();\nconst xTable = computed(() => meVxeTableRef.value?.vxeTableRef);\nconst restaurants = [\n  { value: 'Designer', name: 'Designer' },\n  { value: 'Develop', name: 'Develop' },\n  { value: 'Test', name: 'Test' },\n  { value: 'PM', name: 'PM' },\n];\n\nconst demo1 = {\n  sexList: [\n    { value: '1', label: '男' },\n    { value: '0', label: '女' },\n  ],\n  regionList: [\n    {\n      label: '北京',\n      value: 1,\n      children: [\n        { value: 3, label: '东城区' },\n        { value: 4, label: '西城区' },\n      ],\n    },\n    {\n      label: '上海',\n      value: 21,\n      children: [\n        { value: 23, label: '黄浦区' },\n        { value: 24, label: '卢湾区' },\n      ],\n    },\n    {\n      label: '广东',\n      value: 42,\n      children: [\n        { value: 43, label: '广州市' },\n        { value: 67, label: '深圳市' },\n      ],\n    },\n  ],\n};\n\nconst formatDate = (value: any, format: string) => {\n  return XEUtils.toDateString(value, format);\n};\n\nconst getSelectLabel = (value: any, list: any[], valueProp = 'value', labelField = 'label') => {\n  const item = list.find((item) => item[valueProp] === value);\n  return item ? item[labelField] : null;\n};\n\nconst getSelectMultipleLabel = (value: any[], list: any[], valueProp = 'value', labelField = 'label') => {\n  return value\n    .map((val) => {\n      const item = list.find((item) => item[valueProp] === val);\n      return item ? item[labelField] : null;\n    })\n    .join(', ');\n};\n\nconst getCascaderLabel = (value: any, list: any[]) => {\n  const values: any[] = value || [];\n  const labels: any[] = [];\n  const matchCascaderData = function (index: any, list: any[]) {\n    const val = values[ index ];\n    if (list && values.length > index) {\n      list.forEach((item) => {\n        if (item.value === val) {\n          labels.push(item.label);\n          matchCascaderData(++index, item.children);\n        }\n      });\n    }\n  };\n  matchCascaderData(0, list);\n  return labels.join(' / ');\n};\n\nconst roleSearchEvent = (queryString: string, cb: (params: any) => void) => {\n  const results = queryString\n    ? restaurants.filter((item) => item.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0)\n    : restaurants;\n  setTimeout(() => {\n    cb(results);\n  }, 500 * Math.random());\n};\n\nconst meanNum = (list: any[], field: string) => {\n  let count = 0;\n  list.forEach((item) => {\n    count += Number(item[field]);\n  });\n  return count / list.length;\n};\n\nconst sumNum = (list: any[], field: string) => {\n  let count = 0;\n  list.forEach((item) => {\n    count += Number(item[field]);\n  });\n  return count;\n};\n\nconst footerMethod: VxeTablePropTypes.FooterMethod = ({ columns, data }) => {\n  return [\n    columns.map((column, columnIndex) => {\n      if (columnIndex === 0) {\n        return '平均';\n      }\n      if (['age', 'rate'].includes(column.property)) {\n        return meanNum(data, column.property);\n      }\n      return null;\n    }),\n    columns.map((column: any, columnIndex: number) => {\n      if (columnIndex === 0) {\n        return '和值';\n      }\n      if (['age', 'rate'].includes(column.property)) {\n        return sumNum(data, column.property);\n      }\n      return null;\n    }),\n  ];\n};\n\nconst searchForm = reactive({\n  name: '',\n  search: '',\n  type: undefined,\n  date: '',\n  address: '',\n  zip: '',\n  page: 1,\n  size: 10,\n});\nconst { loading, run, data } = listApi({ defaultParams: [searchForm], manual: false });\nconst getData = (page = searchForm.page, size = searchForm.size) => {\n  run(Object.assign(searchForm, { page, size }));\n};\nconst paginationOptions = reactive({\n  currentPage: computed(() => searchForm.page),\n  pageSize: computed(() => searchForm.size),\n  total: computed(() => data.value?.count ?? 0),\n  change: getData,\n});\nconst print = ref({} as object | boolean);\n</script>\n<style lang="scss" scoped>\n.vxe-table-demo {\n  .search {\n    :deep(.el-form-item) {\n      width: 319px;\n    }\n  }\n}\n</style>\n```		694102382786641920	170	171		604612615536115712	604612615536115712	2026-03-31 12:26:45.213+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102378021912576	前端文档	\N	1	1	97			\N	127	184		604612615536115712	604612615536115712	2026-03-31 10:55:05.824+08	2026-03-31 19:37:41.701+08	\N	1.1.0	\N
-694102381167640576	组件自动按需引入	\N	2	1	99	# 组件自动按需引入\n组件自动引入功能基于[vite-plugin-autogeneration-import-file](https://github.com/yuntian001/vite-plugin-autogeneration-import-file)、[unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)插件实现，相关配置说明请参考对应文档\n\n## elment-plus组件自动引入\n直接在vue文件中使用elment-plus组件，编译时会自动按需引入。\n使用示例：\n```\n<template>\n  <el-dropdown class="me-size-select" trigger="click" max-height="500px">\n    <div class="flex-center pointer">\n      <me-icon-size class="icon"></me-icon-size>\n    </div>\n    <template #dropdown>\n      <el-dropdown-menu>\n        <el-dropdown-item\n          v-for="item in SizeEnum"\n          :key="item"\n          :disabled="themeConfig.size === item"\n          @click="themeConfig.size = item"\n          >{{ $t(item) }}</el-dropdown-item\n        >\n      </el-dropdown-menu>\n    </template>\n  </el-dropdown>\n</template>\n<script setup lang="ts" name="meSize">\nimport { SizeEnum } from '@/enums/configEnum';\nimport { useSettingStore } from '@/store';\nconst { themeConfig } = useSettingStore();\n</script>\n<style lang="scss" scoped>\n.me-size-select {\n  .flex-center {\n    padding: 0 10px;\n\n    .icon {\n      font-size: 1.2em;\n    }\n  }\n}\n</style>\n```\n## 公共组件自动按需引入\n- 在`@/components`文件夹下符合`['*.vue', '**/index.{vue,ts}']` `glob`规则的文件会被自动识别为公共组件，在使用时可直接使用，编译时会自动引入，组件名规则为相对于`@/components`并去除结尾的(index、Index)的大驼峰名称，最终名称可去类型声明文件中确认。\n- 公共组件会自动创建类型声明，类型声明文件位于`types/components.d.ts`。\n\n使用示例\n```\n<template>\n  <div class="header">\n    <me-dark-switch v-if="themeConfig.showDark"></me-dark-switch>\n    <me-size-select v-if="themeConfig.showSize"></me-size-select>\n    <me-locale-select v-if="localeConfig.localeList.length > 1"></me-locale-select>\n  </div>\n</template>\n<script setup lang="ts" name="Header">\nimport { localeConfig } from '@/config';\nimport { useSettingStore } from '@/store';\nconst { themeConfig } = useSettingStore();\n</script>\n<style lang="scss" scoped>\n.header {\n  display: flex;\n  justify-content: right;\n  align-items: center;\n  padding: 12px;\n}\n</style>\n```\n## 自定义引入规则\n自动引入规则可在`plugins/autoImport.ts`中可自行配置更改，详细说明请参考[vite-plugin-autogeneration-import-file文档](https://github.com/yuntian001/vite-plugin-autogeneration-import-file/blob/main/README-zh-cn.md) 核心代码如下\n\n### 规则核心代码\n`plugins/autoImport.ts`\n```ts\nimport { dirname, resolve } from 'path';\nimport * as fs from 'fs';\nimport { createPlugin } from 'vite-plugin-autogeneration-import-file';\nimport { fileURLToPath } from 'url';\nconst { autoImport, resolver: resolverFn } = createPlugin();\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = dirname(__filename);\nfunction pathResolve(dir: string) {\n  return resolve(__dirname, '../', dir);\n}\nexport default () =>\n  autoImport([\n    // 自动生成\n    {\n      // svg icon type\n      pattern: ['*.svg'],\n      dir: pathResolve('src/icons/svg'),\n      toFile: pathResolve('types/meIconComments.d.ts'),\n      name: 'MeIcon_{{name}}',\n      template: fs.readFileSync(pathResolve('./template/meIconComments.d.ts'), 'utf-8'),\n      codeTemplates: [{ key: '//code', template: '{{name}}: Icon;\\n    ' }],\n    },\n    {\n      // pinia module\n      pattern: ['**/*.{ts,js}', '*.{ts,js}'],\n      dir: pathResolve('src/store/modules'),\n      toFile: pathResolve('src/store/module.ts'),\n      name: 'use_{{name}}_store',\n    },\n    {\n      // auto import directives\n      pattern: ['*.ts', '**/index.ts'],\n      dir: pathResolve('src/directives'),\n      toFile: pathResolve('types/directives.d.ts'),\n      template: fs.readFileSync(pathResolve('./template/directives.d.ts'), 'utf-8'),\n      codeTemplates: [\n        {\n          key: '//code',\n          template: '{{name}}: typeof import("{{path}}")["default"];\\n    ',\n        },\n      ],\n      name: 'V_{{name}}',\n    },\n    {\n      // auto import components\n      pattern: ['*.{vue,ts}', '**/index.{vue,ts}'],//具体文件规则，当前规则为 dir文件夹下的.vue或.ts 或者dir子文件夹下的index.vue或index.ts文件\n      dir: pathResolve('src/components'),//扫描的文件夹\n      toFile: pathResolve('types/components.d.ts'),//生成的type文件位置\n      template: fs.readFileSync(pathResolve('./template/components.d.ts'), 'utf-8'),//生成文件模板\n      codeTemplates: [ //生成代码替换模板\n        {\n          key: '//code',\n          template: '{{name}}: typeof import("{{path}}")["default"];\\n    ',\n        },\n        {\n          key: '//typeCode',\n          template: 'type {{name}}Instance = InstanceType<typeof import("{{path}}")["default"]>;\\n  ',\n        },\n      ],\n      name: '_{{name}}',//组件名称命名模板\n    },\n  ]);\n\nexport const resolver = resolverFn;\n\n```\n\n### 自动引入核心代码\n`plugins/autoComponents.ts`\n```ts\nimport { ElementPlusResolver } from 'unplugin-vue-components/resolvers';\nimport Components from 'unplugin-vue-components/vite';\nimport { resolver } from './autoImport';\nexport default () =>\n  // 组件自动注册核心代码\n  Components({\n    include: [],\n    dts: false,\n    //resolver函数的第一个数组参数代表组件自动引入的规则index,第二个数组参数代表指令自动引入的规则index\n    resolvers: [ElementPlusResolver({ importStyle: false }), resolver([3], [2])],\n  });\n\n```		694102380874039296	146	147		604612615536115712	604612615536115712	2026-03-31 11:35:32.472+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102386800590848	相关外链	\N	1	1	95			\N	189	194		604612615536115712	604612615536115712	2026-03-31 13:50:31.607+08	2026-03-31 19:37:41.701+08	\N	1.1.0	\N
-694102381972946944	配置vscode模板片段	\N	2	1	96	# 配置vscode模板片段\n\n## vue模板\n- 点击vscode 左下角设置图标\n- 选中配置用户代码片段\n- 选中新建全局代码片段\n- 输入名称`v3`\n- 粘贴入以下代码\n```\n{\n\t// Place your snippets for vue here. Each snippet is defined under a snippet name and has a prefix, body and \n\t// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:\n\t// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the \n\t// same ids are connected.\n\t// Example:\n\t"Print to console": {\n\t\t"prefix": "<v3",\n\t\t"body": [\n\t\t\t"<template>",\n                "<div class=\\"${TM_FILENAME_BASE/([A-Z])/-${1:/downcase}/g}\\">",\n\t\t\t\t"${1}",\n\t\t\t\t"</div>",\n                "</template>",\n                "",\n                "<script setup lang=\\"ts\\" name=\\"${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}\\">",\n\t\t\t\t"",\n                "</script>",\n                "<style lang=\\"scss\\" scoped>",\n                ".${TM_FILENAME_BASE/([A-Z])/-${1:/downcase}/g}{",\n\t\t\t\t"",\n\t\t\t\t"}",\n                "</style>"\n\t\t],\n\t\t"description": "A vue file template"\n\t}\n}\n```\n - 新建`.vue`文件后 输入`<v3`会出现对应模板选项，选中后会自动生成vue文件模板\n\n ## pinia 模板\n ```\n {\n\t// Place your 全局 snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and \n\t// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope \n\t// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is \n\t// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: \n\t// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. \n\t// Placeholders with the same ids are connected.\n\t// Example:\n\t"Print to console": {\n\t\t"scope": "typescript",\n\t\t"prefix": "<s",\n\t\t"body": [\n\t\t\t"const use${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}Store =  defineStore('global', {",\n\t\t\t"  state:()=>({",\n\t\t\t"    $0",\n\t\t\t"  }),",\n\t\t\t"});",\n\t\t\t"",\n\t\t\t"if (import.meta.hot) {",\n\t\t\t"  import.meta.hot.accept(acceptHMRUpdate(use${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}Store, import.meta.hot))",\n\t\t\t"}",\n\t\t\t"",\n\t\t\t"export default use${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}Store",\n\t\t\t""\n\t\t],\n\t\t"description": "vue pinia store"\n\t}\n}\n ```		694102380874039296	152	153		604612615536115712	604612615536115712	2026-03-31 12:20:00.135+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-682458162829197312	指南	\N	1	1	99				1	8		604612615536115712	604612615536115712	2026-02-27 13:25:05.479+08	2026-03-31 13:52:23.393+08	\N	1.0.0	\N
-694102376260304896	Application 和 Context	\N	2	1	97	# Application 和 Context\nMidway 的应用会同时对外暴露不同协议，比如 Http，WebSocket 等等，这里每个协议对 Midway 来说都是由独立的组件提供的。\n\n本项目应用的是 `@midwayjs/koa`，基于`koa`一个提供 Http 服务的组件。\n\n每个使用的 Web 框架会提供自己独特的能力，这些独特的能力都会体现在各自的 上下文（Context）和 应用（Application）之上。\n\n本项目封装了全局方法/属性便于获取`Context` `Application`\n\n## Application\nApplication 是某一个组件中的应用对象，在不同的组件中，可能有着不同的实现。Application 对象上会包含一些统一的方法，这些方法统一来自于 IMidwayApplication 定义。\n### 获取方式\n本项目为了方便获取，为Application封装了全局变量，在`onReady`生命周期后可以调用到。示例：\n```\nimport {app} from '@meadmin/core';\nexport function getConfig(){\n   return  app.getConfig()\n\n}\n```\nApplication 具有以下方法\n|方法名|说明|使用方法|\n|  --  | -- |  --    |\n|getAppDir| 用于获取项目根目录路径| app.getAppDir()|\n|getBaseDir|用于获取项目 TypeScript 基础路径，默认开发中为 src 目录，编译后为 dist 目录。|app.getBaseDir()|\n|getEnv|获取当前项目环境。|app.getEnv()|\n|getApplicationContext|获取当前全局依赖注入容器。|app.getApplicationContext()|\n|getConfig|获取配置。|app.getConfig()|\n|getLogger|获取某个 Logger，不传参数，默认返回 appLogger。|app.getLogger()|\n|getCoreLogger|获取 Core Logger。|app.getCoreLogger()|\n|getProjectName|获取项目名，一般从 package.json 中获取。|app.getProjectName()|\n|setAttr & getAttr|临时的全局数据存储|app.setAttr('abc', {a: 1,b: 2,});app.getAttr('abc');|\n|getNamespace|通过 getNamespace API ，可以获取到当前 app 归属的组件的 框架的类型（即组件的 namespace）。|app.getNamespace();|\n\n更多说明请参考[midway Application 和 Context文档](https://midwayjs.org/docs/req_res_app)\n!!! info\n- '@meadmin/core'的app返回的是项目的` Main Application`(src/configuration.ts 中第一个引入的 Application 即为主要的 Application) `@midwayjs/koa`\n- '@meadmin/core'的app是在`onReady`生命周期赋值的，使用时请确保`onReady`生命周期已执行\n- `Midway`具有如下生命周期：\n1. 配置文件加载，我们可以在这里去修改配置（onConfigLoad）\n2. 依赖注入容器准备完毕，可以在这个阶段做大部分的事情（onReady）\n3. 服务启动完成，可以拿到 server（onServerReady）\n4. 应用即将关闭，在这里清理资源（onStop）\n更多生命周期说明请参考文档：[midway 生命周期](https://midwayjs.org/docs/lifecycle)\n!!!\n\n## Context\nContext 是一个请求级别的对象，在每一次收到用户请求时，框架会实例化一个 Context 对象，\n\n在 Http 场景中，这个对象封装了这次用户请求的信息，或者其他获取请求参数，设置响应信息的方法，在 WebSocket，Rabbitmq 等场景中，Context 也有各自的属性，以框架的定义为准。\n\n下面的 API 是每个上下文实现通用的属性或者接口。\n### 获取方式\n本项目为了方便获取，为context封装了全局获取方法，在任何请求上下文中都可以可以调用到。获取到的context 为 项目的主请求组件`@midwayjs/koa`组件 的`content`。获取示例：\n```\nimport { getContext } from '@meadmin/core';\nexport function getConfig(){\n   ctx = getContext();\n   //返回上下文的开始实际\n   return ctx.startTime;\n}\n```\n下面的 API 是每个上下文实现通用的属性或者接口。\n|方法名|说明|使用方法|\n|  --  | -- |  --    |\n| requestContext | Midway 会为每个 Context 挂载一个 requestContext 属性，即请求作用域下的依赖注入容器，用来创建请求作用域下的对象。|const userService = await ctx.requestContext.getAsync(UserService); |\n| logger | 请求作用域下的默认 logger 对象，包含上下文数据。| ctx.logger.info('xxxx');|\n| startTime | 上下文执行开始的时间。| ctx.startTime |\n| setAttr & getAttr | 和 app 上的方法相同，这些方法的数据是保存在请求链路中，随着请求销毁，你可以在其中放一些请求的临时数据。 |ctx.setAttr('abc', {a: 1,  b: 2,});ctx.getAttr('abc'); |\n| ctx.getLogger('custom'); | 获取某个自定义 Logger 对应的上下文日志。| ctx.getLogger('custom') |\n| getApp | 从 ctx 上获取当前框架类型的 app 对象。| ctx.getApp(); |  \n\n更多说明请参考[midway Application 和 Context文档](https://midwayjs.org/docs/req_res_app)\n\n!!! info\n`Context` 利用的`AsyncLocalStorage`在全局中间件绑定在了请求上下文中\n!!!		694102375132037120	114	115		604612615536115712	604612615536115712	2026-03-31 09:00:06.561+08	2026-03-31 19:37:41.701+08	0	1.1.0	applicationContext
-694102385315807232	查询表单	\N	2	1	91	# 查询表单\n组件名`meSearchForm`，对[elment-plus from](https://element-plus.org/zh-CN/component/form.html)组件的封装，在保留原有功能的情况下，扩展了收起展开、查询、重置功能，并且保留`elment-plus table`的 `props` 和 `emit` `type`提示。\n\n!!! warning 注意\n- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。\n- 当前组件位置`@/components/meSearchForm`。\n!!!\n\n## 组件props\n\n| props      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| forever| number | 收起后展示的筛选项数量,为0表示不收起，默认为1| 否 |\n| defaultAll | boolean | 默认值为`false` ，默认展开所有筛选  | 否 |\n| searchText | string | 默认值为'查询' 查询按钮文案，当值为`undefined`时不展示查询按钮 | 否 |\n| resetText |  string | 默认值为'重置' 重置按钮文案，当值为`undefined`时不展示重置按钮 | 否 |\n| labelWidth |  string| label宽度默认80px | 否 |\n| labelPosition| `left`\\|`right`| label展示位置 默认right | 否 |\n| elForm的属性 | - | 支持element-plus  Form组件 的所有属性，请参考[elForm文档](https://element-plus.org/zh-CN/component/form.html#form-%E5%B1%9E%E6%80%A7)| - | \n\n## 组件事件\n\n| emit      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| search | `() => void` | 查询事件 | - |\n| reset | `() => void` | 重置事件,不绑定重置事件时，点击重置按钮会调用 `elFormRef.resetFields()`| - |\n| elForm的事件 | - | 支持element-plus  Form组件的所有事件，请参考[elForm文档](https://element-plus.org/zh-CN/component/form.html#form-%E4%BA%8B%E4%BB%B6)| - | \n\n## 插槽\n| 插槽名  |\t说明  |\t子标签 |\n| ----------- | ----------- | ----------- |\n| - | 自定义默认内容。和[elForm](https://element-plus.org/zh-CN/component/form.html#form-%E6%8F%92%E6%A7%BD)对应插槽功能一致。 | FormItem |\n| button | 尾部按钮 | - |\n\n\n## 组件属性/方法\n| 名称 | 类型 | 说明 |\n| ----------- | ----------- | ----------- |\n| elFormRef | FormInstance | `elForm` 的 `ref`引用，可通过其访问`elForm`的属性和方法 |		694102382786641920	176	177		604612615536115712	604612615536115712	2026-03-31 13:42:56.083+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102386515378176	QQ群：752939100	\N	2	1	99		https://jq.qq.com/?_wv=1027&k=zSjWSant	694102386230165504	186	187		604612615536115712	604612615536115712	2026-03-31 13:50:01.909+08	2026-03-31 19:37:41.701+08	1	1.1.0	\N
-694102387064832000	预览	\N	2	1	99		https://meadmin-cn.github.io/meadmin-template/	694102386800590848	190	191		604612615536115712	604612615536115712	2026-03-31 13:51:11.703+08	2026-03-31 19:37:41.701+08	1	1.1.0	\N
-694102380597215232	样式	\N	2	1	93	# 样式\n本系统样式采用的 [sass](https://www.sass.hk/)，建议全局样式和变量放在 公共样式文件夹 中，组件样式写在各自组件的`<style lang="scss" scoped>`标签中，请提前了解\n[sass](https://www.sass.hk/) 和 [vue css](https://cn.vuejs.org/api/sfc-css-features.html)文档\n\n## 公共样式文件夹\n```\n├── src  \n|   ├── styles 公共样式文件\n│   │   ├── element-plus.scss element-plus覆盖样式\n│   │   ├── index.scss 全局样式\n│   │   ├── transition.scss 动画样式\n│   │   └── variables.scss  sass变量\n```\n\n## sass变量\nsass 变量位于 `src/styles/variables.scss`文件中，已用`vite`的`css.preprocessorOptions.scss.additionalData`配置项自动引入，`vue`的模板中可直接使用\n\n### 使用示例\n\n```\n<style lang="scss" scoped>\n.main {\n  padding: $page-padding;\n}\n</style>\n```\n\n## size切换\n\n为了实现size 的切换功能，做了以下更改\n\n- 修改large、small下的--el-font-size-base，代码位置位于`src/styles/element-plus.scss`\n\n``` scss\n.me-large:root {\n  //这里强制将font-size-base设置为large\n  --el-font-size-base: var(--el-font-size-large);\n}\n.me-small:root {\n  //这里强制将font-size-base设置为small\n  --el-font-size-base: var(--el-font-size-small);\n}\n```\n\n- 不同size下 html基础`font-size`不同,代码位置位于`src/styles/index.scss`\n\n``` scss\n.me-large {\n  font-size: var(--el-font-size-base);\n}\n\n.me-default {\n  font-size: var(--el-font-size-base);\n}\n\n.me-small {\n  font-size: var(--el-font-size-small);\n}\n```\n- 将`font-size`的值由`px`自动转化为`rem`,实现代码位于`vite.config.ts`\n``` ts\npostcss: {\n    plugins: [\n        autoprefixer,\n        px2rem({\n        rootValue: 14, //换算基数，将 px 替换为 1/rootValue rem (即设计图下的fontSize)\n        // unitPrecision: 5, //允许REM单位增长到的十进制数字。\n        propWhiteList: ['font-size'], //默认值是一个空数组，这意味着禁用白名单并启用所有属性。\n        // propBlackList: ['font-size', 'border'], //不应从 px 更改为 rem 的属性\n        exclude: /(node_module)/, //默认false，可以（reg）利用正则表达式排除某些文件夹的方法，例如/(node_module)\\/如果想把前端UI框架内的px也转换成rem，请把此属性设为默认值\n        // selectorBlackList: [], //要忽略并保留为px的选择器\n        // ignoreIdentifier: false,  //（boolean/string）忽略单个属性的方法，启用ignoreidentifier后，replace将自动设置为true。\n        // replace: true, // （布尔值）替换包含REM的规则，而不是添加回退。\n        mediaQuery: false, //（布尔值）允许在媒体查询中转换px。\n        minPixelValue: 2, //设置要替换的最小像素值(包含)。 默认 0\n        }),\n    ],\n},\n```\n## 全局样式类\n- `page-100` 设置页面组件高度为100%，因当前页面布局用的flex自动撑开，设置view组件'height:100%'是无效的，想设置高度为100%只需要给view组件根元素加上`page-100` 类即可\n- `ellipsis-1` 超出一行展示省略号...\n- `ellipsis-2`、`ellipsis-3`超出2/3行展示省略号...\n- `pointer` 鼠标移入变小手\n- `flex-center` 使用flex使子元素居中		694102378554589184	142	143		604612615536115712	604612615536115712	2026-03-31 11:33:45.12+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102380874039296	深入	\N	1	1	98			694102378286153728	145	158		604612615536115712	604612615536115712	2026-03-31 11:34:39.83+08	2026-03-31 19:37:41.701+08	\N	1.1.0	\N
-694102375132037120	后端文档	\N	1	1	98			\N	107	126		604612615536115712	604612615536115712	2026-03-31 08:55:50.96+08	2026-03-31 19:37:41.701+08	\N	1.1.0	\N
-694102375656325120	Service服务	\N	2	1	99	# Service服务\n\n在业务中，只有控制器（Controller）的代码是不够的，一般来说会有一些业务逻辑被抽象到一个特定的逻辑单元中，我们一般称为服务（Service）。\n![](/api/admin/file/get/693988309440921600/image.png)\n提供这个抽象有以下几个好处：\n\n- 保持 Controller 中的逻辑更加简洁。\n- 保持业务逻辑的独立性，抽象出来的 Service 可以被多个 Controller 重复调用。\n- 将逻辑和展现分离，更容易编写测试用例。\n\n本项目对service没有做特别封装，除了文件命名及目录位置外规则和midway一致，更多内容请阅读[midway 服务和注入](https://midwayjs.org/docs/service)文档。\n\n## 创建服务\n普通的服务就是一个 Class，比如我们之前创建了一个接受 user 请求的 Controller，我们来新增一个处理这些数据的服务。\n对于服务的文件，我们一般会存放到 对应模块的`service` 目录中。我们来添加一个 user 服务。\n```\n├── src\n│   ├── app\n│   │   ├──admin\n│   │   │   ├── controller\n│   │   │   │   ├── user.controller.ts\n│   │   │   └── service\n│   │   │       └── user.service.ts\n├── package.json\n└── tsconfig.json\n```\n内容为：\n```\n// src/app/admin/service/user.service.ts\nimport { Provide } from '@midwayjs/core';\n\n@Provide()\nexport class UserService {\n  async getUser(id: string) {\n    return {\n      id,\n      name: 'Harry',\n      age: 18,\n    };\n  }\n}\n```\n除了一个 @Provide 装饰器外，整个服务的结构和普通的 Class 一模一样，这样就行了。\n\n## 使用服务\n在 Controller 处，我们需要来调用这个服务。传统的代码写法，我们需要初始化这个 Class（new），然后将实例放在需要调用的地方。在 Midway 中，你不需要这么做，只需要编写我们提供的 **"依赖注入"** 的代码写法。\n\n```\n//src/app/admin/controller/user.controller.ts\nimport { Inject, Controller, Get, Provide, Query } from '@midwayjs/core';\nimport { BaseController } from './base.controller.js';\nimport { UserService } from '../service/user.service.js';\n\n@Controller('user')\nexport class UserController extends BaseController {\n\n  @Inject()\n  userService: UserService;\n\n  @Get('/info/:id')\n  async getUser(@Param('id') id: string) {\n    const user = await this.userService.getUser(uid);\n   return this.success(user);\n  }\n}\n```\n使用服务的过程分为几部分：\n\n- 使用 @Provide 装饰器暴露你的服务\n- 在调用的代码处，使用 @Inject 装饰器注入你的服务\n- 调用注入服务，执行对应的方法\n\n## 注入行为描述\nMidway 的核心 “依赖注入” 容器会自动关联你的控制器（Controller） 和服务（Service），在运行过程中会自动初始化所有的代码，你无需手动初始化这些 Class。\n\n@Provide 装饰器的作用：\n\n- 这个 Class，被依赖注入容器托管，会自动被实例化（new）\n- 这个 Class，可以被其他在容器中的 Class 注入\n而对应的 @Inject 装饰器，作用为：\n- 在依赖注入容器中，找到对应的属性名，并赋值为对应的实例化对象\n\n@Provide 和 @Inject 装饰器是成对出现的，两者通过冒号后的类名进行关联。\n\n事实上，控制器（Controller） 上也有这个装饰器，只是在Midway中，Controller 包含了 Provide 的功能。如果你不确定什么时候可以隐藏，可以都写上。\n上边的controller代码等价于\n```\n@Provide()\n@Controller('user')\nexport class UserController extends BaseController {\n```\n\n## 在其余地方使用service\n根据上边的介绍，我们可以知道在任何`@Provide`修饰的地方都可以用`@Inject`调用服务，下边我们举个`service`服务互相调用的例子\n```\n//src/app/admin/service/login.service.ts\nimport { Inject, Controller, Get, Provide, Query } from '@midwayjs/core';\nimport { UserService } from '../service/user.service.js';\n\n@Provide()\nexport class LoginService {\n\n  @Inject()\n  userService: UserService;\n\n  async hasUser(id: string) {\n    return (await this.userService.getUser(uid))?true:false;\n  }\n}\n```\n依赖注入 是 Midway 的核心特性，通过装饰器的轻量特性，让依赖注入变的优雅，从而让开发过程变的便捷有趣。如果想更深一步了解，可以阅读[midway 依赖注入](https://midwayjs.org/docs/container)文档。		694102375132037120	110	111		604612615536115712	604612615536115712	2026-03-31 09:02:09.858+08	2026-03-31 19:37:41.701+08	0	1.1.0	service
-694102386230165504	社区	\N	1	1	96			\N	185	188		604612615536115712	604612615536115712	2026-03-31 13:49:33.091+08	2026-03-31 19:37:41.701+08	\N	1.1.0	\N
-694102375387889664	介绍	\N	2	1	99	# 介绍\n后端使用Midway框架，Midway 是阿里巴巴 - 淘宝前端架构团队，基于渐进式理念研发的 Node.js 框架，通过自研的依赖注入容器，搭配各种上层模块，组合出适用于不同场景的解决方案。\n如需对后端进行更多了解，可阅读[midway文档](https://midwayjs.org/docs/intro)\n\n## 目录结构\n```\n├──.husky git hooks钩子文件夹\n├──.vscode vscode推荐配置文件夹\n├── dist 后端打包文件夹\n├──logs 日志文件夹\n├──public 静态资源文件\n│   ├── admin 后台静态资源\n│   ├── index 前台静态资源\n├── src  后端主目录\n│   ├── app 后端模块根目录\n│   │   ├──admin 后台接口模块\n│   │   │   ├── controller 模块控制器文件夹\n│   │   │   ├── dto 模块出入参dto类文件夹\n│   │   │   ├── middleware 模块中间件夹\n│   │   │   └── service 模块service文件夹\n│   │   ├──index 前台接口模块\n│   │   │   ├── controller 模块控制器文件夹\n│   │   │   ├── dto 模块出入参dto类文件夹\n│   │   │   ├── middleware 模块中间件夹\n│   │   │   └── service 模块service文件夹\n│   │   └──home.controller.ts 页面渲染控制器\n│   ├── config 配置文件夹\n│   ├── controller 公共控制器文件夹\n│   ├── decorators 装饰器文件夹\n│   ├── dict 字典文件夹\n│   ├── dto 出入参dto基类文件夹\n│   ├── entities 数据库实体类文件夹\n│   ├── fileManage 文件夹管理助手类\n│   ├── filter 异常类文件夹\n│   ├── helper 助手函数文件夹\n│   ├── locales 后端多语言文件包\n│   ├── response 反参基类\n|   ├── ruleType 后端自定义校验规则\n|   ├── service 全局公共service\n|   ├── types 类型扩展\n|   ├── configuration.ts 启动文件\n│   └── logger.ts logger初始化文件\n├── uploadFile 本地上传目录\n├── view 前端文件夹\n├── .env env环境变量，VIEW_ADMIN_开头的可被 前端admin项目获取到，VIEW_INDEX_开头的可被前端 index项目获取到\n├── .env.prod 启动后env环境变量\n├── .eslintrc.json eslint配置文件\n├── .gitignore git 忽略文件\n├── .npmrc pnpm配置文件\n├── .prettierignore prettier忽略文件\n├── .prettierrc.cjs prettier配置文件\n├── bootstrap.js 部署后bootstrap启动文件\n├── sql 初始化sql文件\n├── pnpm-workspace.yaml pnpm workspace 配置\n└── tsconfig.json typescript配置文件\n```\n\n\n## 基本概念\n\n后端基于 Node.js 监听端口，对外主要提供 API 接口及页面访问。\n\n后端架构主要划分为以下几层：router、controller、service、dto、entity。\n\n- router：定义路由映射，将不同请求指向对应 controller 类中的方法。访问相应地址时会自动触发对应的 controller 逻辑。\n\n- controller：作为请求入口，负责入参校验、调用 service、返回响应，并集成 Swagger 生成接口文档。其中可能封装少量控制逻辑，但核心业务处理一般交由 service。\n\n- service：封装核心业务逻辑，根据场景组织代码。通过 entity 数据模型进行数据库操作，并实现复杂业务处理。\n\n- entity：对应数据库表的模型实体，所有数据库操作均通过 entity 完成。\n\n- dto：定义接口的请求参数与响应结果格式。每个接口都有对应的 DTO 类，controller 在接收到请求时会自动基于 DTO 完成参数校验。\n\n\n## 改动及封装\n本项目对midway做了以下封装，详情请参考相关章节。\n\n### controller装饰器会继承prefix和routerOptions。\n 根据 controller 继承关系 递归合成Controller装饰器的参数\n 从第一个prefix以/开头的祖级开始合并controller的prefix和routerOptions，如果prefix 以/开头，则不合并prefix和routerOptions\n### 强制文件目录结构\nMidway 对目录没有特别的限制，但当前项目，将一部分常用的文件进行归类，放到一些默认的文件夹中。文件夹详情请参考[目录结构](#目录结构)。日常开发需要关注的主要有：`src/app/*/controller`文件、`src/app/*/service`文件、`src/app/*/dto`文件、`src/app/*/middleware`中间件文件、`src/entities`数据库实体类文件。\n### 模块\n本项目增加了模块的概念，在`src/app/`下每一个文件夹代表一个模块，将相关逻辑归类存放。\n### 应用\n应用基于koa 使用`@midwayjs/koa`组件\n### 参数校验\n已集成，源于`joi`的`@midwayjs/validate@3`参数校验组件，并自定义了`mobile`等校验规则\n### 多语言\n已集成`@midwayjs/i18n@3`多语言组件，多语言文件夹为`locales/en.json`，并且翻译失败使用当前key做为返回值\n### 数据库访问\n已集成sequelize7，自定义封装的sequelize访问service，相关源码在`src/service/dataSourceManager.service.ts`,对应配置文件在`src/config/database.ts`\n### 静态文件映射\n集成 `@midwayjs/static-file@3`组件，`public`文件夹下的资源都可以使用`/文件名`直接访问\n### 模板引擎\n集成 `@medamin/midway-vite-view`组件，实现vite+vue模板渲染支持\n### 缓存\n集成`@midwayjs/redis@3`和`@midwayjs/cache-manager@3`组件，实现基于redis的缓存支持\n### 日志\n调试模式及部署模式，都将日志目录改为本地的 ${app.appDir}/logs/ 目录下		694102375132037120	108	109		604612615536115712	604612615536115712	2026-03-31 08:57:32.634+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102383369650176	MeComponent	\N	2	1	98	# MeComponent\nMeComponent基于 `component` 结合`keepAlive``transition``doneProgress``suspense`，而封装自定义组件。\n\n## 组件props\n\n| props      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| is       | 当 is 是字符串，它既可以是 HTML 标签名也可以是组件的注册名。或者，is 也可以直接绑定到组件的定义 | 会透传给`compnent`组件 |是|\n| keepAlive      | `MeKeepAlive` `props` Object | 传给`MeKeepAlive` 的props对象，不传此值代表不开启KeepAlive缓存 |否|\n| componentKey    | string | 自定义组件的`key` |否|\n| transition |`TransitionProps` `props` Object| 传给`Transition` 的props对象，不传此值代表不开启Transition动画 |否|\n| doneProgress| boolean | 是否需要执行nProgress.done() | 否|\n| suspense| SuspenseProps| 异步组件 | 否|\n## 示例\n\n```vue\n<router-view v-slot="{ Component }">\n      <me-component :is="Component" done-progress></me-component>\n</router-view>\n```		694102382786641920	162	163		604612615536115712	604612615536115712	2026-03-31 12:23:51.939+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102382514012160	服务方式调用组件	\N	2	1	94	# 服务方式调用组件\n\n本系统支持服务方式调用任意组件，主要方便以函数方式打开新增、编辑弹窗等组件。所有服务方式调用的组件都会被渲染到body下。\n\n## 调用示例\n\n### 声明组件\n\n示例文件位置：`src/views/example/service/components/add.vue`\n\n```vue\n<template>\n  <el-dialog v-model="show" @closed="$emit('closed')">\n    <div>这是测试弹窗 <el-button @click="add()"> 再次打开弹窗 </el-button></div>\n  </el-dialog>\n</template>\n\n<script setup lang="ts" name="Add">\nimport add from './add';\nconst show = defineModel<boolean>('show');\ndefineEmits<{ closed: [] }>();\n</script>\n```\n\n### 声明调用函数\n\n示例文件位置: `src/views/example/service/components/add.ts`\n\n```vue\nimport { useGlobalStore } from '@/store';\nimport Add from './add.vue';\nexport default async (props: Omit<ComponentProps<typeof Add>, 'show'> = {}) => {\n  const show = ref(true);\n  const globalStore = useGlobalStore();\n  const key = globalStore.addGlobalComponents(\n    Add,\n    computed(() => ({\n      show: show.value,\n      ...props,\n      ['onUpdate:show']: (value: boolean) => {\n        show.value = value;\n      },\n      onClosed: () => {\n        globalStore.removeGlobalComponents(key); //关闭时移除当前组件\n        props.onClosed && props.onClosed();\n      },\n    })),\n  );\n  await nextTick();\n  return key;\n};\n```\n\n### 以函数方式调用\n```ts\nimport add from './add';\nadd();\n```\n\n## 注意事项\n- 在合适的时机(如弹窗关闭时)调用`globalStore.removeGlobalComponents(key)`移除组件。\n\n## 原理说明\n\n服务调用方式采用将被调用组件放入全局store中，在`app.vue`中动态获取渲染的方式实现。\n未使用类似于`meImageViewer`这种服务式组件由`h`函数动态创建然后绑定到当前vue示例的原因，是`h`函数动态创建的组件使用`vue-devtools`调试时无法追寻父级，不方便调试，调试模式下不容易被选取。		694102380874039296	156	157		604612615536115712	604612615536115712	2026-03-31 12:21:51.001+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102383080243200	MeKeepAlive	\N	2	1	99	# MeKeepAlive\n\nvue 官方的KeepAlive缓存只支持按组件名筛选过滤，这里自定义了MeKeepAlive组件,在KeepAlive的前提下增加了组件key过滤条件,其余规范和功能和KeepAlive组件一致，KeepAlive官方说明[KeepAlive](https://cn.vuejs.org/guide/built-ins/keep-alive.html)\n\n## 组件props\n\n| props      | 类型 |说明|\n| ----------- | ----------- | ----------- |\n| max       | number | 限制最大缓存实例数 |\n| include      | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组 | 过滤组件名白名单 |\n| exclude    | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组     | 过滤组件名黑名单 |\n| includeKey      | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组 | 过滤组件key白名单 |\n| excludeKey    | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组     | 过滤组件key黑名单 |\n\n## 使用演示\n\n这里只样式includeKey、excludeKey其余说明参考[KeepAlive](https://cn.vuejs.org/guide/built-ins/keep-alive.html)\n```vue\n<me-keep-alive includeKey="a,b">\n  <component :is="view" key="a" />\n  <component :is="view" key="b" />\n  <component :is="view" key="c" />\n</me-keep-alive>\n```\n```vue\n<me-keep-alive excludeKey="c">\n  <component :is="view" key="a" />\n  <component :is="view" key="b" />\n  <component :is="view" key="c" />\n</me-keep-alive>\n```\n\n## 局限性\n\n因为vue编译模板时对`KeepAlive` `tagName`做了特殊处理,当`MeKeepAlive`和`Transition`组件、`TransitionGroup`配合使用使用时，只能用渲染函数的方式使用，在`Vue 的单文件组件 (即 *.vue 文件)`中请使用`KeepAlive`组件。\n\n### `Transition`+渲染函数使用示例\n\n```\nimport { Transition } from 'vue';\nconst transitionProps={};\nconst meKeepAliveProps={};\nh(Transition, transitionProps, { \n  default: () => h(MeKeepAlive, meKeepAliveProps, [componentOptions])\n})\n```		694102382786641920	160	161		604612615536115712	604612615536115712	2026-03-31 12:23:08.825+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102381696122880	api自动引入	\N	2	1	97	# api自动引入\n\n基于[unplugin-auto-import](https://github.com/antfu/unplugin-auto-import)的api自动引入，支持`vue` `vue-router` `pinia` `@vueuse/core`更多说明参考[unplugin-auto-import](https://github.com/antfu/unplugin-auto-import)文档\n\n配置代码位置`vite.config.ts` \n``` ts\nAutoImport({\n    // 自动加载API\n    imports: ['vue', 'vue-router', 'pinia', '@vueuse/core'],\n    // 可以选择auto-imports.d.ts生成的位置，使用ts建议设置为'src/auto-imports.d.ts'\n    dts: 'types/auto-imports.d.ts',\n    resolvers: [ElementPlusResolver()],\n}),\n```\n\n**无需**\n\n``` ts\nimport { computed, ref } from 'vue'\nconst count = ref(0)\nconst doubled = computed(() => count.value * 2)\n```\n\n**直接**\n\n``` ts\nconst count = ref(0)\nconst doubled = computed(() => count.value * 2)\n```		694102380874039296	150	151		604612615536115712	604612615536115712	2026-03-31 12:19:25.363+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102379959681024	请求	\N	2	1	95	\n# 接口请求\n\n接口请求函数`request`位于文件`@/utils/request.ts`中，基于[axios](https://www.axios-http.cn/)和[vue-request v2.x](https://next.cn.attojs.org/guide/introduction.html)二次封装,使用前请先阅读[axios](https://www.axios-http.cn/)和[vue-request v2.x](https://next.cn.attojs.org/guide/introduction.html)文档\n\n核心代码如下：\n``` ts\n/**\n * 请求函数\n * @param axiosConfig  axios的配置项\n * @param options vue request配置项+自定义配置项参考 RequestOptions\n * @param returnAxios\n * @returns\n */\nexport function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>, options?: RequestOptions<R, P>, returnAxios?: T) {\n  const axiosService = async (...args: P): Promise<R> => {\n    try {\n      //loading放到微任务中去执行以确保在自动调用请求时等待所有的宏任务中的生命周期函数执行完再创建loading实例 以规避currentInstance的相关警告\n      !options?.noLoading && Promise.resolve(undefined).then(loading);\n      const config = await axiosConfig(...args);\n      if (options?.clearEmpty) {\n        if (config.params) config.params = clearEmptyParam(config.params, options?.clearEmpty);\n        if (config.data) config.data = clearEmptyParam(config.data, options?.clearEmpty);\n      }\n      const locale = useSettingStore().locale;\n      if (locale) {\n        config.params = Object.assign({ locale }, config.params);\n      }\n      const { data: res } = await service(config);\n      if (!res || res.code === undefined) {\n        throw Error(t('返回值解析失败'));\n      }\n      // 401：认证失败\n      if (res.code === '401') {\n        ElMessageBox.confirm(res.msg, '请登录', {\n          confirmButtonText: '去 登 陆',\n          cancelButtonText: '取消',\n          type: 'warning',\n          showClose: false,\n          closeOnClickModal: false,\n          closeOnPressEscape: false,\n          closeOnHashChange: false,\n        })\n          .then(async () => {\n            await useUserStore().logOut();\n          })\n          .catch(() => {});\n        throw Error(res.msg);\n      }\n      // 没有权限\n      if (res.code === '403') {\n        ElMessageBox.confirm(res.msg, '无权限访问', {\n          confirmButtonText: '切换账户',\n          cancelButtonText: '取消',\n          type: 'warning',\n          showClose: false,\n          closeOnClickModal: false,\n          closeOnPressEscape: false,\n          closeOnHashChange: false,\n        })\n          .then(async () => {\n            await useUserStore().logOut();\n          })\n          .catch(() => {});\n        throw Error(res.msg);\n      }\n      if (res.code !== '200') {\n        throw Error(res.msg);\n      }\n      if (options?.success) {\n        ElMessage.success({ message: res.msg });\n      }\n      !options?.noLoading && closeLoading();\n      return options?.needAll ? res : res.data;\n    } catch (e) {\n      !options?.noLoading && closeLoading();\n      !options?.noError &&\n        ElMessage.error({\n          message: e instanceof Error ? e.message : String(e),\n        });\n      throw e;\n    }\n  };\n\n  return returnAxios ? axiosService : useRequest<R, P>(axiosService, options);\n}\n```\n\n## 自定义返回值格式\n`request`函数主要是封装`vue-request`使其发起请求使用`axios`，并且请求时加上了loading、对接口返回值进行了校验处理、出错时自动报错提示\n\n接口处理格式已和后端api格式同步，如需要更改可自行修改以下代码\n``` ts\n  if (!res || res.code === undefined) {\n    throw Error(t('返回值解析失败'));\n  }\n  // 401：认证失败\n  if (res.code === '401') {\n    ElMessageBox.confirm(res.msg, '请登录', {\n      confirmButtonText: '去 登 陆',\n      cancelButtonText: '取消',\n      type: 'warning',\n      showClose: false,\n      closeOnClickModal: false,\n      closeOnPressEscape: false,\n      closeOnHashChange: false,\n    })\n      .then(async () => {\n        await useUserStore().logOut();\n      })\n      .catch(() => {});\n    throw Error(res.msg);\n  }\n  // 没有权限\n  if (res.code === '403') {\n    ElMessageBox.confirm(res.msg, '无权限访问', {\n      confirmButtonText: '切换账户',\n      cancelButtonText: '取消',\n      type: 'warning',\n      showClose: false,\n      closeOnClickModal: false,\n      closeOnPressEscape: false,\n      closeOnHashChange: false,\n    })\n      .then(async () => {\n        await useUserStore().logOut();\n      })\n      .catch(() => {});\n    throw Error(res.msg);\n  }\n  if (res.code !== '200') {\n    throw Error(res.msg);\n  }\n  if (options?.success) {\n    ElMessage.success({ message: res.msg });\n  }\n  !options?.noLoading && closeLoading();\n  return options?.needAll ? res : res.data;\n```\n\n## 入参说明\n| 参数      | 类型 | 说明 | 是否必填 |\n| ----------- | ----------- | ----------- | ----------- |\n| axiosConfig | AxiosRequestConfig | 接口请求数据，完全遵循 [axios config](https://www.axios-http.cn/docs/req_config) 的规则 |是|\n| options   | RequestOptions    | 基于[vue-request options](https://next.cn.attojs.org/api/#options)配置扩展了个别配置，下面会详细说名 |否|\n| returnAxios | boolean | 返回axios，当传入true是返回axios不传或false时返回vue-reques对象 | 否 |\n\n| RequestOptions | 类型 | 说明 | 是否必填 |\n| ----------- | ----------- | ----------- | ----------- |\n| needAll | boolean | 返回完整的返回值忽略格式化返回值（默认返回的是data字段） | 否 |\n| noLoading | boolean | 不需要lodaing | 否 |\n| noError | boolean | 不需要报错 | 否 |\n| ... vue-request options | [vue-request options](https://next.cn.attojs.org/api/#options) | 更多字段参考[vue-request options](https://next.cn.attojs.org/api/#options) 文档| 否 |\n\n## 使用示例\n\n- 在接口文件夹`@/api`文件夹中新建接口文件`@/api/example.ts`\n\n- 在`@/api/example.ts`加入接口声明代码\n``` ts\nimport { PageParam, PageResult } from '@/api/api.model.js';\nimport { SystemAdminInfo } from '@/api/system/admin.js';\nimport request from '@/utils/request.js';\n\n//示例_书籍\nexport type ExampleBook = {\n  createdAdmin: SystemAdminInfo | null; //创建者\n  updatedAdmin: SystemAdminInfo | null; //最后更新者\n  id: string; //ID\n  name: string; //名称\n  createdAt: string; //创建时间\n  updatedAt: string; //最后更新时间\n};\n\n//获取示例_书籍信息\nexport function getExampleBookApi() {\n  return request<\n    PageResult<ExampleBook>,\n    [\n      PageParam & {\n        id?: string;\n        name?: string;\n      },\n    ]\n  >(\n    (data) => ({\n      url: 'example/demo/getExampleBook',\n      method: 'post',\n      data: data,\n    }),\n    { noLoading: true },\n  );\n}\n\n```\n\n- 在`vue`文件中使用\n``` vue\n<template>\n  <div class="list" v-loading="loading">\n    <template v-if="data">\n      <div v-for="(item, index) in data" :key="index">\n        {{ item }}\n      </div>\n    </template>\n\n  </div>\n</template>\n<script setup lang="ts" name="request">\nimport { getExampleBookApi } from '@/api/example';\nconst { runAsync, loading, error, data } = getExampleBookApi();\nrunAsync({page:1,pageSize:10});//请求接口 建议使用runAsync请求而不是run,区别请参考文档https://next.cn.attojs.org/api/#runasync\n</script>\n```\n\n## 自动请求示例\n\n- 在`vue`文件中使用\n``` vue\n<template>\n  <div class="list" v-loading="loading">\n    <template v-if="data">\n      <div v-for="(item, index) in data" :key="index">\n        {{ item }}\n      </div>\n    </template>\n\n  </div>\n</template>\n<script setup lang="ts" name="request">\nimport { listApi } from '@/api/example';\nconst { runAsync, loading, error, data } = listApi({ defaultParams: [{ page: 1, pageSize: 10 }], manual: false });//manual: false代表组件加载后自动请求接口\n</script>\n```\n## `setup`外请求示例\n\n`vue-request` 是专门为`setup`使用的一个类库，详情请参考[issues:149](https://github.com/AttoJS/vue-request/issues/149)。\n在`setup`外使用时应该直接使用`axios`,`request`函数允许接收一个参数直接返回`axios`实例\n\n- 在`@/api/routeMenu.ts`加入接口声明代码\n  \n```ts\nimport { request } from '@/utils/request';\nimport { RouteRecordRaw } from 'vue-router';\n\nexport function menuApi<T extends boolean = true>(\n  options: RequestOptions<RouteRecordRaw[], []> = {},\n  returnAxios: T = true as T,\n) {\n  return request(\n    () => ({\n      url: '/api/menu/list',\n      method: 'get',\n    }),\n    options,\n    returnAxios,\n  );\n}\n\n```\n\n- 在setup外使用\n\n```ts\nconsole.log(await menuApi()());\n```\n		694102378554589184	138	139		604612615536115712	604612615536115712	2026-03-31 11:32:15.025+08	2026-03-31 19:37:41.701+08	0	1.1.0	request
-694102377434710016	一键crud	\N	2	1	93	# 一键crud\n本项目支持根据数据库实体文件 一键生成crud\n## 示例\n- `pnpm meadmin crud exampleDemo --menu`  --menu 参数代表数据库同步生成后台菜单\n\n运行后会生成以下文件\n```\nsrc/app/admin/dto/example/demoCreate.dto.ts 后端新增dto校验文件\nsrc/app/admin/dto/example/demoUpdate.dto.ts 后端更新dto校验文件\nsrc/app/admin/dto/example/demoQuery.dto.ts 后端查询入参dto校验文件\nsrc/app/admin/service/example/demo.service.ts 后端service\nsrc/app/admin/controller/example/demo.controller.ts 后端 controller\nview/admin/src/api/example/demo.ts  前端 api接口定义 \nview/admin/src/views/example/demo/lang/en.json 前端组件语言包 \nview/admin/src/views/example/demo/dict.ts 前端字典\nview/admin/src/views/example/demo/index.vue 前端字典列表组件\nview/admin/src/views/example/demo/components/info.vue 前端字典详情组件\nview/admin/src/views/example/demo/components/addOrUp.vue 前端字典新增/修改组件\n```\n## 参数说明\n`pnpm meadmin [-m <char> 环境变量] crud entity实体文件 参数`\n\n```\n  --model <char>            model名称会放到app/{model}下对应的文件夹 (default: "admin")\n  -f, --force               强制覆盖\n  -n, --name <char>         使用的数据库配置defaultDataSourceName\n  -d, --dbConfig <char>     数据库配置文件地址默认为当前目录下dist/config/database.js (default: "G:\\\\my\\\\meadmin\\\\dist\\\\config\\\\database.js")        \n  --del                     删除crud创建的文件\n  --path <char>             生成的路径，默认根据驼峰转多级路径\n  -c, --controller <char>   生成的controller路径，默认使用path\n  --menu                    生成菜单\n  --cov, --coverage <char>  生成代码发覆盖范围：b后端代码、a前端api接口代码、v前端view 代码、p后台权限校验，默认值bavp (default: "bavp")\n```\n例如 `pnpm meadmin -m dev crud exampleDemo --menu` 加载`dev`环境变量根据`dist/entities/exampleDemo.entity.js`生成对应的文件并创建菜单。\n\n## 规则\n自动生成具有以下规则\n- 根据`swagger`规则自动创建 必填、min、max、mobile、email校验规则\n- 以“名称:值1=说明1;值2=说明2”，格式声明的备注会自动创建字典和下拉列表，并且支持number、string两种类型\n- 根据枚举值自动创建 select下拉选项\n- `BelongsToMany`及 `BelongsTo`关联自动创建远程下拉搜索\n- 以`At`结尾自动创建时间范围筛选\n- 关联`File`实体自动应用文件上传组件		694102375132037120	122	123		604612615536115712	604612615536115712	2026-03-31 09:06:53.3+08	2026-03-31 19:37:41.701+08	0	1.1.0	crud
-694102379682856960	权限	\N	2	1	96	# 权限\n\n## 初始化权限\n\n当登录成功或刷新页面后，会请求`userInfoApi`接口获取权限，相关代码在`@/store/modules/user.ts`中。\n``` ts\n// 初始化\n init: async function (tokenValue?: string) {\n  const token = tokenValue ?? cookies.get(config.tokenName);\n  if (token) {\n    this.token = token;\n    const res = await userInfoApi(true, !tokenValue)();\n    this.user = res.info;\n    initDynamicViewsModules();\n    this.rules = res.btnRules;\n    this.menus = listToTree(\n      res.menus.map((item) => ({\n        id: item.id,\n        path: item.path,\n        parentId: item.parentId,\n        component: transitionComponent(item.component),\n        meta: {\n          // 标题设置该路由在侧边栏和面包屑中展示的名字\n          title: item.title,\n          // 对应权限 多个之间为或的关系\n          rule: [item.rule],\n          // 是否是固定的tag\n          affix: statusToBoolean(item.affix),\n          // 图标\n          icon: item.icon,\n          // 外链\n          isLink: statusToBoolean(item.isLink),\n          // 如果设置为true，则不会被 <keep-alive> 缓存\n          noCache: !statusToBoolean(item.cache),\n          // 在菜单中隐藏\n          hideMenu: statusToBoolean(item.hideMenu),\n          // 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式\n          // 只有一个时，会将那个子路由当做根路由显示在侧边栏\n          // 若你想不管路由下面的 children 声明的个数都显示你的根路由\n          // 你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由\n          alwaysShow: statusToBoolean(item.alwaysShow),\n          // 是否需要面包屑 false不展示在面包屑,ture一直展示在面包屑,undefined当只有一个子元素面包屑时跳过展示\n          breadcrumb: statusToBoolean(item.breadcrumb),\n        },\n      })),\n    );\n    await useRouteStore().initRoutes(); //初始化路由\n  } else {\n    this.token = '';\n  }\n},\n```\n\n## 路由权限校验\n\n初始化完权限后，注册有权限的路由，过滤规则参考[路由权限](../guide/route.md#路由权限)\n\n## 按钮权限校验\n\n权限校验函数为permission(rules?: string | string[])，当入参为数组时，匹配成功数组中的任意一个权限则返回true。\n\n通过v-if指令和permission函数配合进行按钮权限校验(未进行封装指令的原因是，指令方式对服务端渲染不友好，建议使用v-if判断)。\n\n- 通过全局函数$permission()校验权限\n``` vue\n    <el-button v-if="$permission('edit')">{{ $t('编辑') }}</el-button>\n\n```\n- 引入 permission()函数校验\n  \n``` vue\n<template>\n  <div class="permission">\n    <el-button v-if="permission('show')">{{ $t('查看') }}</el-button>\n  </div>\n</template>\n<script setup lang="ts" name="permission">\nimport { permission } from '@/utils/permission';\n</script>\n```\n\n## 超管权限\n\n当初始化权限时拿到的`rules`数组包含'*'时，代表具有所有权限，权限permission函数会必定返回`true`		694102378554589184	136	137		604612615536115712	604612615536115712	2026-03-31 11:29:22.062+08	2026-03-31 19:37:41.701+08	0	1.1.0	permission
-694102384191733760	富文本	\N	2	1	95	# 富文本(WangEditor)\n组件名`MeWangEditor`，集成了[WangEditor](https://www.wangeditor.com/v5/getting-started.html),编辑器默认高度为`500px`可通过样式直接覆盖更改,详细说明请参考[WangEditor 文档](https://www.wangeditor.com/v5/getting-started.html)和[用于Vue3](https://www.wangeditor.com/v5/for-frame.html#vue3)。\n\n!!! warning 注意\n- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。\n- 当前组件位置`@/components/meWangEditor`\n!!!\n\n## 组件props\n\n| props      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| mode      | 'simple' \\| 'default' | 模式，默认值为`default`。 'default'默认模式，集成了 wangEditor 所有功能。 'simple'简洁模式，仅有部分常见功能，但更加简洁易用|否|\n| config      | `{ toolbar?: Partial<IToolbarConfig>; editor?: Partial<IEditorConfig> }` | wangeditor配置，默认值为`{}`。toolbar为[工具栏配置](https://www.wangeditor.com/v5/toolbar-config.html)对象， editor为[编辑器配置](https://www.wangeditor.com/v5/editor-config.html)和[菜单配置](https://www.wangeditor.com/v5/menu-config.html)对象。|否|\n| modelValue(v-model) | string | 非格式化的 html内容 |是|\n| defaultContent | SlateDescendant[](editor.children 获取的内容) | 编辑器默认内容,默认值为`[]`,参考[设置-json](https://www.wangeditor.com/v5/content.html#%E8%AE%BE%E7%BD%AE-json) |否|\n| defaultHtml | string | 默认html内容，默认值为`''`,为空时编辑器会使用`v-model`绑定的值。参考[设置-html](https://www.wangeditor.com/v5/content.html#%E8%AE%BE%E7%BD%AE-html) | 否|\n\n\n## 组件事件\n\n| emit      | 格式 |说明|\n| ----------- | ----------- | ----------- |\n| onCreated | (editor: IDomEditor) =>void | 编辑器创建完毕时的回调函数。参考[onCreated](https://www.wangeditor.com/v5/editor-config.html#oncreated) |\n| onChange | (editor: IDomEditor) =>void | 编辑器内容、选区变化时的回调函数。参考[onChange](https://www.wangeditor.com/v5/editor-config.html#onchange) |\n| onDestroyed | (editor: IDomEditor) =>void | 编辑器销毁时的回调函数。参考[onDestroyed](https://www.wangeditor.com/v5/editor-config.html#ondestroyed) |\n| onMaxLength | (editor: IDomEditor) =>void | 配置编辑器的 maxlength。参考[maxLength onMaxLength](https://www.wangeditor.com/v5/editor-config.html#maxlength-onmaxlength) |\n| onFocus | (editor: IDomEditor) =>void | 编辑器 focus 时的回调函数。参考[onFocus](https://www.wangeditor.com/v5/editor-config.html#onfocus) |\n| onBlur | (editor: IDomEditor) =>void | 编辑器 blur 时的回调函数。参考[onBlur](https://www.wangeditor.com/v5/editor-config.html#onblur) |\n| customAlert | (s: string, t: string) =>void | 自定义编辑器 alert 。如想用 antd 的 message 功能。参考[customAlert](https://www.wangeditor.com/v5/editor-config.html#customalert) |\n| customPaste | (editor: IDomEditor, event: ClipboardEvent,(val: boolean) => { res = val})=>void | 自定义粘贴。可阻止编辑器的默认粘贴，实现自己的粘贴逻辑。参考[customPaste](https://www.wangeditor.com/v5/editor-config.html#custompaste)和[wangEditor-for-vue3](https://github.com/wangeditor-team/wangEditor-for-vue3/blob/main/src/components/Editor.vue) |\n\n!!! warning 注意\n注意上述组件事件，必须通过 Vue 事件来传递，不可以放在 `config.editor` 中\n!!!\n\n## 示例\n\n```vue\n<template>\n  <div>\n    <me-wang-editor v-model="html" :config="config"></me-wang-editor>\n  </div>\n</template>\n<script setup lang="ts" name="WangEditor">\nconst html = ref('<p>hello word!</p>');\nconst config = {\n  editor: {\n    maxLength: 1000,\n    ['MENU_CONF']: {\n      uploadImage: {\n        // 小于该值就插入 base64 格式（而不上传），默认为 0\n        base64LimitSize: 2 * 1024 * 1024, // 5mb\n      },\n    },\n  },\n};\n</script>\n```		694102382786641920	168	169		604612615536115712	604612615536115712	2026-03-31 12:26:13.217+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102381431881728	Pinia使用	\N	2	1	98	# Pinia使用\n\nPinia 是 下一代 Vue 的存储库，相关使用说明请参考[Pinia](https://pinia.web3doc.top/introduction.html)文档\n\n## 新建store文件\nstore存放文件夹为`@/store/modules`，在store文件夹下新建对应store文件，按[Pinia](https://pinia.web3doc.top/introduction.html)规则声明`defineStore`函数并导出为`default`即可\n\n示例：\n```\nimport { filterAsyncRoutes } from '@/utils/permission';\nimport useUserStore from './user';\nimport { constantRoutes, asyncRoutes } from '@/router';\nimport { RouteRecordRaw } from 'vue-router';\n\nexport default defineStore('route', {\n  state: () => ({\n    addRoutes: [] as RouteRecordRaw[],\n    noCacheFullPath: [] as Array<string | RegExp>,\n  }),\n  getters: {\n    routes: (state) => constantRoutes.concat(state.addRoutes),\n  },\n  actions: {\n    generateRoutes() {\n      if (useUserStore().rules) {\n        this.addRoutes = markRaw(filterAsyncRoutes(asyncRoutes));\n      }\n      return this.addRoutes;\n    },\n    setNoCache(fullPath: string) {\n      if (!this.noCacheFullPath.includes(fullPath)) {\n        this.noCacheFullPath.push(fullPath);\n      }\n    },\n    removeNoCache(fullPath: string) {\n      const index = this.noCacheFullPath.indexOf(fullPath);\n      if (index > -1) {\n        this.noCacheFullPath.splice(index, 1);\n      }\n    },\n  },\n});\n\n```\n## 导出语句自动生成\n- 在`@/store/modules`文件夹下符合`['**/*.{ts,js}', '*.{ts,js}']` `glob`规则的文件会在`@/store/module.ts`文件中自动创建对应导出语句\n\n::: tip 说明\n此功能基于[unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)插件实现,对应配置位于`vite.config.ts`中\n:::\n```\n//当前文件由vite-plugin-autogeneration-import-file自动生成\nexport { default as useGlobalStore } from "./modules/global"\nexport { default as useRouteStore } from "./modules/route"\nexport { default as useSettingStore } from "./modules/setting"\nexport { default as useUserStore } from "./modules/user"\n//code\n```\n- `@/store/index.ts`文件对`@/store/module.ts`文件进行了二次导出\n```\nexport * from './module';\n```\n## 使用store\n直接导入后使用即可,具体规则请参考[Pinia](https://pinia.web3doc.top/introduction.html)文档\n```\nimport { useUserStore } from '@/store';\nconst userStore = useUserStore();\n```		694102380874039296	148	149		604612615536115712	604612615536115712	2026-03-31 11:37:48.023+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102385882038272	前台文档	\N	2	1	98	# 前台文档\n前台前端模板，与后台模板规则一致，只是去除了多语言和权限校验，增加了服务端渲染支持。\n详细说明请参考[后台文档](/client/admin/guide/)\n## 目录结构\n根目录为`view/index`\n```\n├── dist 打包文件夹\n│   ├── mock mock文件夹\n│   ├── plugins vite插件\n│   ├── public 公共静态资源目录\n│   ├── src  主目录\n│   │   ├── api 接口文件\n│   │   ├── assets 资源文件\n│   │   │   └── images 项目存放图片的文件夹\n│   │   ├── components 公共组件（里面的组件会自动引入）\n│   │   ├── config 配置文件夹\n│   │   │   ├── index.ts 配置入口文件\n│   │   │   └── login.ts  登录配置\n│   │   ├── dict  字典\n│   │   ├── directives 指令（里面的指令会自动引入）\n│   │   ├── event 事件\n│   |   ├── hooks 公共hooks\n│   │   ├── icons 图标\n│   │   │   ├── svg  svg图标文件夹（放入此文件夹的svg会被自动注册图标组件）\n│   │   │   └── index.ts 图标自动注册入口文件\n│   │   ├── layout 布局文件\n│   │   ├── router  路由配置\n│   │   │   ├── guard 路由全局守卫\n│   │   │   └── routes 动态路由文件夹\n│   │   ├── store  pinia文件夹\n│   |   ├── styles 样式文件 \n│   │   ├── utils  工具类\n│   │   ├── views  页面\n│   │   ├── entry-client.ts 客户端渲染入口文件\n│   │   ├── entry-server.ts 服务端渲染入口文件\n│   │   └── main.ts 入口文件\n│   ├── template自动生成模板\n│   ├── types  类型文件\n└── └── vite.config.ts vite配置文件\n```\n## 注意事项\n开发需寻遵循以下事项，以兼容服务端渲染特性\n\n- 如需使用window对象需增加服务端渲染判断\n```\nif (!import.meta.env.SSR) {\n  //下面代码仅在客户端执行\n  window.addEventListener('resize', () => mitter.emit(event.RESIZE));\n}\n\n```\n\n- request请求需在setup顶层创建，以规避服务端渲染“跨请求状态污染”\n```\n//login.vue\n<script setup lang="ts" name="Login">\n//...\nimport {  loginCaptchaApi } from '@/api/login';\nconst { data: captchaObj, runAsync: getCaptchRun } = loginCaptchaApi();\nconst getCaptch = async () => {\n  await getCaptchRun();\n  //...\n};\nawait getCaptch();\n//...\n</script>\n\n```\n- 如在组件外发送请求需透传app给request方法，\n```\n//login.ts\nexport function loginApi<T extends boolean = true>(returnAxios: T = true as T, app?:App) {\n  return request<LoginResult, [LoginParams], T>(\n    (params) => ({\n      url: 'login/login',\n      method: 'post',\n      data: params,\n    }),\n    {},\n    returnAxios,\n    app,\n  );\n}\n```\n```\n // userStore\n  login: async function (app:App, params: LoginParams) {\n    //...\n    const res = await loginApi(true,app)(params);\n    //...\n  },\n```\n```\n//login.vue\nconst _this = getCurrentInstance();\nconst submit = async () => {\n  //...\n  await userStore.login(_this!.appContext.app,loginParams);\n};\n//...\n```\n- 请求直接，在setp 顶层await否则服务端渲染期间无法获取到数据。\n\n- 如需在组件外创建store，需传入pinia\n```\n//request.ts\n\nexport function request<R, P extends unknown[] = [], T = boolean>(\n  axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>,\n  options?: RequestOptions<R, P>,\n  returnAxios?: T,\n  app?: App,\n) {\n//...\n store = app?.config.globalProperties.$pinia;\n const userStore = useUserStore(store);\n//...\n}\n\n```\n## 路由声明\n\n前台项目路由声明在`src/routes`文件夹下，src/routes文件夹下的`.ts`会自动引入加载，不经过权限校验。\n```\n//src/router/routes/002-demo.ts\nimport Layout from '@/layout/default/index.vue';\nimport { concatObjectValue } from '@/utils/helper';\nimport { RouteRecordRaw } from 'vue-router';\nexport const routes: RouteRecordRaw[] = [\n  {\n    path: '/demo',\n    redirect: '/demo/1',\n    component: Layout,\n    children: concatObjectValue<RouteRecordRaw>(import.meta.glob('./demo/*.ts', { eager: true, import: 'routes' })),\n    meta: { title: '演示菜单' },\n  },\n];\n\n```		694102378021912576	182	183		604612615536115712	604612615536115712	2026-03-31 13:44:11.597+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102379116625920	介绍	\N	2	1	98	# 后台文档\n\n## 简介 \n后台前端模板，基于vue3、vite、 pinia、 elment-plus构建，如需仅使用纯前端模板可以去[Me-admin template](https://github.com/meadmin-cn/meadmin-template) clone，纯前端模板文档[https://www.cn/meadmin-template-doc/](https://www.cn/meadmin-template-doc/)。\n\n\n## 前端特性\n - **基于vue3、vite、pinia、elment-plus、vue-request@next**\n - **基于typescript** 应用级JavaScript 的语言\n - **可配置主题** 可配置主题色及主题模式\n - **友好的国际化方案** 基于vue-i18n 支持按组件异步加载语言包。\n - **自定义keepAlive缓存** 可根据key进行vue keep-alive,解决不同路由统一组件不能独立刷新缓存问题\n - **权限** 内置完善的动态路由权限生成方案，按钮级权限。支持前端菜单和接口动态获取菜单两种模式\n - **组件自动按需引入** 自动按需引入components下的组件定义,支持自定义引入位置和模式，真正的按需引入。\n - **便捷的类型自动生成** 自动生成ts type 最大程度减少工作量\n - **集成vxeTable** 功能最完善的国人开源vue table组件\n\n## vite插件推荐\n 本项目中用到的vite插件，非常好用，如果能帮到您，请点个star\n- [vite-plugin-autogeneration-import-file](https://github.com/yuntian001/vite-plugin-autogeneration-import-file) 自动生成文件，用于type文件和引入文件的自动生成\n- [@yuntian001/vue-setup-extend](https://github.com/yuntian001/vue-setup-extend) 方便给vue `<script setup>` 标签语法设置自定义属性。\n- [unplugin-auto-import](https://github.com/antfu/unplugin-auto-import) 按需自动导入Vue、Vue Router、pinia等官方Api\n- [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components) 按需自动导入组件\n- [vite-svg-loader](https://github.com/jpkleemans/vite-svg-loader) Vite插件加载SVG文件作为Vue组件，使用SVGO进行优化\n\n\n## 浏览器兼容性\n- 由于 Vue 3 不再支持 IE11，本项目不支持 IE 浏览器。\n- 如果需要配置兼容性可参考[如何配置浏览器兼容性](/client/admin/other/question.md#如何配置浏览器兼容性)\n\n| ![](https://cdn.jsdelivr.net/npm/@browser-logos/edge/edge_32x32.png) |![](https://cdn.jsdelivr.net/npm/@browser-logos/firefox/firefox_32x32.png) | ![](https://cdn.jsdelivr.net/npm/@browser-logos/chrome/chrome_32x32.png) | ![](https://cdn.jsdelivr.net/npm/@browser-logos/safari/safari_32x32.png)|\n| --- | --- | --- | --- |\n| 88 | 78 | 87 | 13 |		694102378554589184	132	133		604612615536115712	604612615536115712	2026-03-31 11:22:42.963+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102378554589184	指南	\N	1	1	99			694102378286153728	129	144		604612615536115712	604612615536115712	2026-03-31 11:30:05.588+08	2026-03-31 19:37:41.701+08	\N	1.1.0	\N
-694102385609408512	数字动画	\N	2	1	90	\n# 数字动画\n\n组件名`MeNumber`，数字动画组件，基于[vueuse usetransition](https://vueuse.org/core/usetransition/#usetransition)实现。\n\n!!! warning 注意\n- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。\n- 当前组件位置`@/components/meNumber.vue`\n!!!\n\n## 组件props\n\n| props      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| start      | number | 数字动画起始值 默认为0|否|\n| end      | number \\| [number(结束数字),string(前缀),string(后缀)] | 数字动画结束值 |是|\n| delay    | number | 开始动画等待的毫秒数默认为0 |否|\n| disabled | boolean | 禁用动画(默认为false) |否|\n| duration | number | 动画持续时间毫秒数默认为1000 | 否|\n| transition|  EasingFunction \\| keyof typeof TransitionPresets  | 动画类型默认为`'easeOutExpo'`，详细说明请参考[vueuse文档](https://vueuse.org/core/usetransition/#type-declarations) | 否 |\n|format| (number: number, decimals: number) => string | number |数字格式化函数,number为当前展示数字，decimals为end的小数位数 默认值`(number: number, decimals: number) => formatNumber({ truncate: decimals, padRight: decimals })(number)`，每千分位一个`,`隔开  参考[format-number文档](https://www.npmjs.com/package/format-number)|否|\n\n## 组件事件\n\n| emit      | 格式 |说明|\n| ----------- | ----------- | ----------- |\n| onFinished | () => void | 转换完成后执行。|\n| onStarted | () => void | 转换开始后执行。|\n\n## 示例\n\n```vue\n<me-number :end="103256.25"></me-number>\n```\n		694102382786641920	178	179		604612615536115712	604612615536115712	2026-03-31 12:25:43.166+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694039893348712448	表格	\N	2	1	94	# vxeTable表格\n组件名`MeVxeTable`，对[vxe table](https://vxetable.cn/)组件的封装，在保留原有功能的情况下，扩展了顶部工具栏、分页功能，并且保留`VxeTable`的 `props` 和 `emit` `type`提示。\n\n!!! warning 注意\n- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。\n- 当前组件位置`@/components/meVxeTable`。\n- 组件对应的全局语言包文件为`src/locales/lang/en/meVxeTable.ts` `src/locales/lang/zh-cn/meVxeTable.ts`。\n- 所有的非`props` `attr`不会设置到根元素,都会透传到 `VxeTable`上。\n!!!\n\n## 组件props\n\n| props      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| name | string | 名称默认值为meVxeTable,会做为打印的表头和导出的文件名 | 否|\n| meClass|string | string[]| 根元素上的class | 否 |\n| exportMenu | `{label: string;filename?: string;handle: (vxeTable: VxeTableInstance, filename: string) => void \\| 'csv' \\| 'html' \\| 'xml' \\| 'txt'}[]` | 导出菜单默认值为 `[{ label: 'csv', handle: 'csv' },{ label: 'html', handle: 'html' },{ label: 'xml', handle: 'xml' },{ label: 'txt', handle: 'txt' }]` | 否|\n| print | boolean\\|VxeTablePropTypes.PrintConfig | 打印配置，默认为{}，如果不想展示传入false | 否 |\n| customColumn | boolean |自定义列，默认为true | 否 |\n| defaultShowSearch | boolean | 默认是否展示 筛选 默认值为false | 否 | \n| toolbar | boolean | 是否展示工具栏 默认为true,这里的工具栏是自行封装的工具栏非vxeToolbar | 否 |\n| quickSearch | string | 快捷搜索关键词 需要v-model绑定 | 否 |\n| quickSearchPlaceholder | string | 快捷搜索框placeholder,默认为快捷搜索 | 否 |\n| paginationOptions | object  | 分页配置,详情见下文`props.paginationOptions` | 否 |\n| autoHeight | boolean  | 根据父级自适应高度（默认为true，如果父级高度不固定请设置为false） | 否 |\n| vxeTable的属性 | - | 支持vxeTable的所有属性，请参考[vxeTable文档](https://vxetable.cn/#/table/api)| - | \n\n| props.exportMenu      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| label | string | 导出选项名称| 是 |\n| filename | string | 导出文件名，为空时使用`props.name` | 否 |\n| handle | (vxeTable: VxeTableInstance, filename: string) => void \\| 'csv' \\| 'html' \\| 'xml' \\| 'txt' | 导出执行函数/受支持的导出code | 是 |\n\n|props.paginationOptions| 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| noAutoLayout | boolean | 默认为手机模式时使用最小layout,设置为true关闭此配置 | 否 |\n| change | (page: number, size: number) => void | page或size改变时触发 | 是 |\n| pagination的属性 | - | 支持element-plus  Pagination组件 的所有属性，请参考[pagination文档](https://element-plus.gitee.io/zh-CN/component/pagination.html#%E5%B1%9E%E6%80%A7) | - |\n| pagination的事件 | function |  支持element-plus  Pagination组件 的所有事件，请参考[pagination文档](https://element-plus.gitee.io/zh-CN/component/pagination.html#%E4%BA%8B%E4%BB%B6)(需要在事件名前面加上on前缀并使用驼峰写法如`prev-click`事件属性名为`onPrevClick`)  | - | \n\n## 组件事件\n\n| emit      | 格式 |说明|\n| ----------- | ----------- | ----------- |\n| quickSearch | (searchText:string) => void | 快捷搜索|\n| refresh | () => void | 刷新按钮被点击时触发 |\n| add | () => void | 新增按钮被点击时触发 |\n| vxeTable的事件 | - | 支持vxeTable的所有事件，请参考[vxeTable文档](https://vxetable.cn/#/table/api)| - |\n\n## 组件插槽\n\n| 插槽名  |\t说明  |\t子标签 |\n| ----------- | ----------- | ----------- |\n| - | 和[vxeTable](https://vxetable.cn/#/table/base/basic)对应插槽功能一致。自定义默认内容 | vxe-column |\n| empty\t| 和[vxeTable](https://vxetable.cn/#/table/api)对应插槽功能一致。当数据为空时自定义的内容|\t— |\n| search | 筛选项，当点击工具栏筛选按钮时会控制其显隐 | — |\n| buttons | 工具栏左侧扩展操作按钮 | — |\n| tools | 工具栏右侧扩展菜单 | — |\n| toolsButton|  工具栏右侧扩展按钮 | — |\n\n## 组件属性/方法\n| 名称  |\t类型  |\t说明 |\n| ----------- | ----------- | ----------- |\n| vxeTableRef | VxeTableInstance | vxeTable的ref对象 |\n|searchText |string | 快捷搜索关键字 |\n\n## 示例\n\n```vue\n<template>\n  <el-card shadow="never" class="vxe-table-demo">\n    <me-vxe-table\n      ref="meVxeTableRef"\n      v-model:quick-search="searchForm.search"\n      :loading="loading"\n      :data="data?.list"\n      :footer-method="footerMethod"\n      :edit-config="{ trigger: 'click', mode: 'row', showStatus: true }"\n      :print="print"\n      :pagination-options="paginationOptions"\n      stripe\n      height="600px"\n      me-class="table"\n      border\n      show-overflow\n      show-footer\n      keep-source\n      class="my-xtable-element"\n      @refresh="getData"\n      @quick-search="getData(1)"\n    >\n      <template #search>\n        <el-form ref="searchRef" :model="searchForm" inline label-width="100px" class="search">\n          <el-form-item label="名称" prop="name">\n            <el-input v-model="searchForm.name" />\n          </el-form-item>\n          <el-form-item label="类型" prop="type">\n            <el-select v-model="searchForm.type" clearable>\n              <el-option label="类型1" value="1" />\n              <el-option label="类型2" value="2" />\n            </el-select>\n          </el-form-item>\n          <el-form-item label="日期" prop="date">\n            <el-date-picker v-model="searchForm.date" type="date" />\n          </el-form-item>\n          <el-form-item label="地址" prop="address">\n            <el-input v-model="searchForm.address" />\n          </el-form-item>\n          <el-form-item label="邮政编码" prop="zip">\n            <el-input v-model="searchForm.zip" />\n          </el-form-item>\n          <el-form-item label=" ">\n            <el-button type="primary" @click="getData(1)">查询</el-button>\n            <el-button @click="()=>($refs.searchRef as FormInstance).resetFields()">重置</el-button>\n          </el-form-item>\n        </el-form>\n      </template>\n      <template #buttons>\n        <el-button @click="() => (print = print ? false : {})">打印显/隐</el-button>\n        <el-button @click="xTable!.clearCheckboxRow()">全选清空</el-button>\n      </template>\n      <vxe-column type="checkbox" width="60"></vxe-column>\n      <vxe-column type="seq" width="80">\n        <template #header>\n          <span>序号</span>\n          <i class="el-icon-question"></i>\n        </template>\n      </vxe-column>\n      <vxe-colgroup title="Group1">\n        <vxe-column field="name" title="ElInput" min-width="140" :edit-render="{}">\n          <template #edit="scope">\n            <el-input v-model="scope.row.name" @input="xTable!.updateStatus(scope)"></el-input>\n          </template>\n        </vxe-column>\n        <vxe-column field="role" title="ElAutocomplete" min-width="160" :edit-render="{}">\n          <template #edit="{ row }">\n            <el-autocomplete v-model="row.role" :fetch-suggestions="roleSearchEvent"></el-autocomplete>\n          </template>\n        </vxe-column>\n        <vxe-column field="age" title="ElInputNumber" width="160" :edit-render="{}">\n          <template #header="{ column }">\n            <span>{{ column.title }}</span>\n            <i class="el-icon-warning"></i>\n          </template>\n          <template #edit="{ row }">\n            <el-input-number v-model="row.age" :max="99" :min="18"></el-input-number>\n          </template>\n        </vxe-column>\n        <vxe-colgroup title="Group2">\n          <vxe-column field="sex" title="ElSelect" width="140" :edit-render="{}">\n            <template #edit="scope">\n              <el-select v-model="scope.row.sex" @change="xTable!.updateStatus(scope)">\n                <el-option\n                  v-for="item in demo1.sexList"\n                  :key="item.value"\n                  :label="item.label"\n                  :value="item.value"\n                ></el-option>\n              </el-select>\n            </template>\n            <template #default="{ row }">{{ getSelectLabel(row.sex, demo1.sexList) }}</template>\n          </vxe-column>\n          <vxe-column field="sex1" title="ElSelect" width="180" :edit-render="{}">\n            <template #edit="scope">\n              <el-select v-model="scope.row.sex1" multiple>\n                <el-option\n                  v-for="item in demo1.sexList"\n                  :key="item.value"\n                  :label="item.label"\n                  :value="item.value"\n                ></el-option>\n              </el-select>\n            </template>\n            <template #default="{ row }">{{ getSelectMultipleLabel(row.sex1, demo1.sexList) }}</template>\n          </vxe-column>\n          <vxe-column field="region" title="ElCascader" width="200" :edit-render="{}">\n            <template #edit="{ row }">\n              <el-cascader v-model="row.region" :options="demo1.regionList"></el-cascader>\n            </template>\n            <template #default="{ row }">{{ getCascaderLabel(row.region, demo1.regionList) }}</template>\n          </vxe-column>\n        </vxe-colgroup>\n      </vxe-colgroup>\n      <vxe-colgroup title="Group1">\n        <vxe-column field="date" title="ElDatePicker" width="200" :edit-render="{}">\n          <template #edit="{ row }">\n            <el-date-picker v-model="row.date" type="date" format="YYYY/MM/DD"></el-date-picker>\n          </template>\n          <template #default="{ row }">{{ formatDate(row.date, 'YYYY/MM/DD') }}</template>\n        </vxe-column>\n        <vxe-column field="date1" title="ElDatePicker" width="220" :edit-render="{}">\n          <template #edit="{ row }">\n            <el-date-picker v-model="row.date1" type="datetime" format="YYYY-MM-DD HH:mm:ss"></el-date-picker>\n          </template>\n          <template #default="{ row }">{{ formatDate(row.date1, 'YYYY-MM-DD HH:mm:ss') }}</template>\n        </vxe-column>\n        <vxe-column field="date2" title="ElTimePicker" width="200" :edit-render="{}">\n          <template #edit="{ row }">\n            <el-time-select\n              v-model="row.date2"\n              :picker-options="{ start: '08:30', step: '00:15', end: '18:30' }"\n            ></el-time-select>\n          </template>\n        </vxe-column>\n        <vxe-column field="color1" title="ElColorPicker" width="140" :edit-render="{}">\n          <template #edit="{ row }">\n            <el-color-picker v-model="row.color1"></el-color-picker>\n          </template>\n        </vxe-column>\n        <vxe-column field="rate" title="ElRate" width="200">\n          <template #default="{ row }">\n            <el-rate v-model="row.rate"></el-rate>\n          </template>\n        </vxe-column>\n        <vxe-column field="flag" title="ElSwitch" width="100">\n          <template #default="{ row }">\n            <el-switch v-model="row.flag"></el-switch>\n          </template>\n        </vxe-column>\n      </vxe-colgroup>\n    </me-vxe-table>\n  </el-card>\n</template>\n<script setup lang="ts" name="VxeTableDemo">\nimport { VxeTablePropTypes } from 'vxe-table';\nimport XEUtils from 'xe-utils';\nimport { FormInstance } from 'element-plus';\nimport { listApi } from '@/api/vxeTable';\nconst meVxeTableRef = ref<MeVxeTableInstance>();\nconst xTable = computed(() => meVxeTableRef.value?.vxeTableRef);\nconst restaurants = [\n  { value: 'Designer', name: 'Designer' },\n  { value: 'Develop', name: 'Develop' },\n  { value: 'Test', name: 'Test' },\n  { value: 'PM', name: 'PM' },\n];\n\nconst demo1 = {\n  sexList: [\n    { value: '1', label: '男' },\n    { value: '0', label: '女' },\n  ],\n  regionList: [\n    {\n      label: '北京',\n      value: 1,\n      children: [\n        { value: 3, label: '东城区' },\n        { value: 4, label: '西城区' },\n      ],\n    },\n    {\n      label: '上海',\n      value: 21,\n      children: [\n        { value: 23, label: '黄浦区' },\n        { value: 24, label: '卢湾区' },\n      ],\n    },\n    {\n      label: '广东',\n      value: 42,\n      children: [\n        { value: 43, label: '广州市' },\n        { value: 67, label: '深圳市' },\n      ],\n    },\n  ],\n};\n\nconst formatDate = (value: any, format: string) => {\n  return XEUtils.toDateString(value, format);\n};\n\nconst getSelectLabel = (value: any, list: any[], valueProp = 'value', labelField = 'label') => {\n  const item = list.find((item) => item[valueProp] === value);\n  return item ? item[labelField] : null;\n};\n\nconst getSelectMultipleLabel = (value: any[], list: any[], valueProp = 'value', labelField = 'label') => {\n  return value\n    .map((val) => {\n      const item = list.find((item) => item[valueProp] === val);\n      return item ? item[labelField] : null;\n    })\n    .join(', ');\n};\n\nconst getCascaderLabel = (value: any, list: any[]) => {\n  const values: any[] = value || [];\n  const labels: any[] = [];\n  const matchCascaderData = function (index: any, list: any[]) {\n    const val = values[ index ];\n    if (list && values.length > index) {\n      list.forEach((item) => {\n        if (item.value === val) {\n          labels.push(item.label);\n          matchCascaderData(++index, item.children);\n        }\n      });\n    }\n  };\n  matchCascaderData(0, list);\n  return labels.join(' / ');\n};\n\nconst roleSearchEvent = (queryString: string, cb: (params: any) => void) => {\n  const results = queryString\n    ? restaurants.filter((item) => item.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0)\n    : restaurants;\n  setTimeout(() => {\n    cb(results);\n  }, 500 * Math.random());\n};\n\nconst meanNum = (list: any[], field: string) => {\n  let count = 0;\n  list.forEach((item) => {\n    count += Number(item[field]);\n  });\n  return count / list.length;\n};\n\nconst sumNum = (list: any[], field: string) => {\n  let count = 0;\n  list.forEach((item) => {\n    count += Number(item[field]);\n  });\n  return count;\n};\n\nconst footerMethod: VxeTablePropTypes.FooterMethod = ({ columns, data }) => {\n  return [\n    columns.map((column, columnIndex) => {\n      if (columnIndex === 0) {\n        return '平均';\n      }\n      if (['age', 'rate'].includes(column.property)) {\n        return meanNum(data, column.property);\n      }\n      return null;\n    }),\n    columns.map((column: any, columnIndex: number) => {\n      if (columnIndex === 0) {\n        return '和值';\n      }\n      if (['age', 'rate'].includes(column.property)) {\n        return sumNum(data, column.property);\n      }\n      return null;\n    }),\n  ];\n};\n\nconst searchForm = reactive({\n  name: '',\n  search: '',\n  type: undefined,\n  date: '',\n  address: '',\n  zip: '',\n  page: 1,\n  size: 10,\n});\nconst { loading, run, data } = listApi({ defaultParams: [searchForm], manual: false });\nconst getData = (page = searchForm.page, size = searchForm.size) => {\n  run(Object.assign(searchForm, { page, size }));\n};\nconst paginationOptions = reactive({\n  currentPage: computed(() => searchForm.page),\n  pageSize: computed(() => searchForm.size),\n  total: computed(() => data.value?.count ?? 0),\n  change: getData,\n});\nconst print = ref({} as object | boolean);\n</script>\n<style lang="scss" scoped>\n.vxe-table-demo {\n  .search {\n    :deep(.el-form-item) {\n      width: 319px;\n    }\n  }\n}\n</style>\n```		694038800321478656	72	73		604612615536115712	604612615536115712	2026-03-31 12:26:45.213+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694025634292170752	指南	\N	1	1	99			694017222984597504	31	46		604612615536115712	604612615536115712	2026-03-31 11:30:05.588+08	2026-03-31 13:52:23.732+08	\N	1.0.0	\N
-694038800321478656	组件	\N	1	1	97			694017222984597504	61	82		604612615536115712	604612615536115712	2026-03-31 12:22:24.614+08	2026-03-31 13:52:23.732+08	\N	1.0.0	\N
-694102387345850368	Github	\N	2	1	98		https://github.com/meadmin-cn/meadmin	694102386800590848	192	193		604612615536115712	604612615536115712	2026-03-31 13:51:36.442+08	2026-03-31 19:37:41.701+08	1	1.1.0	\N
-694102376818147328	校验和swagger	\N	2	1	95	# 校验和Swagger文档\n## 校验\n我们经常要在方法调用时执行一些类型检查，参数转换的操作，本项目利用dto文件结合`Midway`的`@midwayjs/validate@3`组件，提供了一种简单的能力来快速检查参数的类型，这个能力来源于 `joi` 。\n\n### 背景\n最常用参数校验的地方是 控制器（Controller），同时你也可以在任意的 Class 中使用这个能力。\n\n我们以控制器（Controller）中使用为例，还是那个 user。\n普通情况下，我们从 body 上拿到所有 Post 结果，并进行一些校验。\n```\n// src/interface.ts\nexport interface User {\n  id: number;\n  firstName: string;\n  lastName: string;\n  age: number;\n}\n\n// src/controller/home.ts\nimport { Controller, Get, Provide } from '@midwayjs/core';\n\n@Controller('/api/user')\nexport class HomeController {\n  @Post('/')\n  async updateUser(@Body() user: User) {\n    if (!user.id || typeof user.id !== 'number') {\n      throw new Error('id error');\n    }\n\n    if (user.age <= 30) {\n      throw new Error('age not match');\n    }\n    // xxx\n  }\n}\n```\n如果每个方法都需要这么校验，会非常的繁琐。\n\n针对这种情况， 配合 `@Validate` 和 `@Rule` 装饰器，用来 快速定义校验的规则，帮助用户 减少这些重复的代码。\n### 创建校验文件\n本项目校验文件为dto 类,统一放在模块的`dto`文件夹\n```\n//src/app/admin/dto/loginParam.dto.ts\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { RuleType } from '@midwayjs/validate';\n\nexport class LoginParamDto {\n  @ApiPropertyRule({ description: '用户名', rule: RuleType.string().max(10).min(1).required() })\n  username: string;\n  @ApiPropertyRule({ description: '密码', rule: RuleType.string().required() })\n  password: string;\n  @ApiPropertyRule({ description: '验证码标识', rule: RuleType.string().required()})\n  captchaId: string;\n  @ApiPropertyRule({ description: '验证码', rule: RuleType.string().required() })\n  captcha: string;\n}\n\n```\n由于这个类属于一个 PlainObject ，也不需要被依赖注入管理，我们不需要提供 @Provide 装饰器。\n\n这个 `LoginParamDto` Class 提供了三个属性和他们对应的校验规则。\n\n- username 一个必填的字符串类型,长度在1-10之间\n\n- password 一个必填的字符串类型\n\n- captchaId 一个必填的字符串类型\n\n- captcha 一个必填的字符串类型\n\n不同于`midway`用`@Rule`装饰器修饰需要被校验的属性，本项目声明了`@ApiPropertyRule`装饰器，它封装了`swagger`的`@ApiProperty`装饰器和`validate`的`Rule`装饰器，它的参数为rule,接受一个 RuleType 对象提供的校验规则的链式方法。\n`@ApiPropertyRule` 针对日常应用还做了以下处理\n- 将 空串视为空而不是无效值,否则空串会被 stripUnknown 配置 视为无效值处理掉\n- 如果不是必填值，允许null\n- 自动将 `RuleType` 的 required规则赋值给`@ApiProperty`装饰器\n- 自动将maximum、minimum、minLength、maxLength、enmu赋值给`RuleType`\n- 自动将`description`添加为 `RuleType`的`label`用于多语言\n\n### 使用校验文件\n定义完类型之后，就可以直接在业务代码中使用了。\n\n```\nimport { ApiOperationResponse } from '@/decorators/swagger.js';\nimport { Body, Controller, Inject, Post } from '@midwayjs/core';\nimport { Context } from '@midwayjs/koa';\nimport { LoginParamDto } from '../dto/loginParam.dto.js';\nimport { LoginResultDto } from '../dto/loginResult.dto.js';\nimport { LoginService } from '../service/login.serveice.js';\nimport { BaseController } from './base.controller.js';\n\n@Controller('login')\nexport class LoginController extends BaseController {\n  @Inject()\n  loginService: LoginService;\n\n  @Inject()\n  ctx: Context;\n\n  @Post('/login')\n  @ApiOperationResponse({\n    responseType: LoginResultDto,\n    summary: '登录',\n  })\n  async login(@Body() param: LoginParamDto) {\n    return this.success(await this.loginService.login(param.username, param.password, this.ctx));\n  }\n}\n```\n### 从原有 DTO 创建新 DTO\n有时候，我们会希望从某个 DTO 中获取一部分属性，变成一个新的 DTO 类。\n\n本项目 提供了 `PickDtoType` `OmitDtoType` `PartialType` `RequiredType` `IntersectionType` 五个方法根据现有的的 DTO 类型创建新的 DTO。请注意这些函数从`@/helper/dto.js`导出。\n\nPickDto 用于从现有的 DTO 中获取一些属性，变成新的 DTO，而 OmitDto 用于将其中某些属性剔除，PartialType  将属性设置为可选，RequiredType 将属性设置为必填， IntersectionType 将两种类型合并为一种新类型,结合了两种类型的所有属性。比如：\n```typescript\nimport { OmitDtoType } from '@/helper/dto.js';\nimport { InferAttributesLoose } from '@/types/entity.js';\nimport { File } from '../../../entities/file.entity.js';\n\n//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效\nexport class FileCreateDto extends OmitDtoType(\n  File as new () => InferAttributesLoose<File>, //只保留声明属性\n  ['id', 'createdAt', 'updatedAt', 'url', 'createdAdminId', 'updatedAdminId'], //排除自动创建的属性\n) {}\n```\n### 配置\n配置文件在src/config/config.default.ts中，默认开启了以下配置\n```\n  validate: {\n    validationOptions: {\n      allowUnknown: false, // 全局生效 允许未定义的字段\n      convert: true, // 当为true时，尝试将值转换为所需的类型（例如，将字符串转换为数字.\n      stripUnknown: true, // 全局生效,移除多余的字段\n    },\n  },\n```\n更多说明请参考[midway](https://midwayjs.org/docs/extensions/validate)和[joi](https://joi.dev/api/)文档\n## swagger文档\nswagger 基于`@midwayjs/swagger@3 `只做了`@ApiPropertyRule`的封装，`@ApiPropertyRule`可接受`@ApiProperty`的全部参数\n\n### 开启组件\n在 configuration.ts 中增加组件。\n```\nimport { Configuration } from '@midwayjs/core';\nimport * as swagger from '@midwayjs/swagger';\n\n@Configuration({\n  imports: [\n    // ...\n    swagger\n  ]\n})\nexport class MainConfiguration {\n\n}\n```\n可以配置启用的环境，比如下面的代码指的是 只在 local 环境下启用。本项目已默认在local和dev环境下开启\n```\nimport { Configuration } from '@midwayjs/core';\nimport * as swagger from '@midwayjs/swagger';\n\n@Configuration({\n  imports: [\n    // ...\n    {\n      component: swagger,\n      enabledEnvironment: ['local']\n    }\n  ]\n})\nexport class MainConfiguration {\n\n}\n```\n然后启动项目，访问地址：\n\nUI: [http://127.0.0.1:7001/swagger-ui/index.html](http://127.0.0.1:7001/swagger-ui/index.html)\n\nJSON: [http://127.0.0.1:7001/swagger-ui/index.json](http://127.0.0.1:7001/swagger-ui/index.json)\n路径可以通过 swaggerPath 参数配置。\n\n### 数据类型\n自动类型提取\nSwagger 组件会识别各个 @Controller 中每个路由方法的 @Body()、@Query()、@Param() 装饰器，提取路由方法参数和类型。\n\n比如下面的代码：\n```typescript\n@Get('/')\nasync home(\n  @Query('uid') uid: number,\n  @Query('tid') tid: string,\n  @Query('isBoolean') isBoolean: boolean,\n) {\n    // ...\n}\n```\n会自动提取相关参数生成文档。\n### Schema\n本项目推荐使用dto文件参数使用对象，并使用定义好的类作为类型，这个时候 swagger 组件也能自动识别，同时也能和普通的类型进行组合识别。\n\n比如下面的代码：\n```\n@Post('/:id', { summary: 'test'})\nasync create(@Body() LoginParamDto: LoginParamDto, @Param('id') id: number) {\n  // ...\n}\n```\nCreateCatDto 类型的定义如下，我们使用 ApiPropertyRule 将其中的每个属性都进行了定义。\n```\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { RuleType } from '@midwayjs/validate';\n\nexport class LoginParamDto {\n  @ApiPropertyRule({ description: '用户名', rule: RuleType.string().max(10).min(1).required().empty('') })\n  username: string;\n  @ApiPropertyRule({ description: '密码', rule: RuleType.string().required().empty('') })\n  password: string;\n  @ApiPropertyRule({ description: '验证码标识', rule: RuleType.string().required().empty('') })\n  captchaId: string;\n  @ApiPropertyRule({ description: '验证码', rule: RuleType.string().required().empty('') })\n  captcha: string;\n}\n\n```\n详细的类型参考请查阅 [midway文档](https://midwayjs.org/docs/extensions/swagger)\n\n### 循环依赖\n当类之间具有循环依赖关系时，请使用惰性函数提供类型信息。\n\n比如 type 字段的循环。\n```\nclass Photo {\n  // ...\n  @ApiProperty({\n    type: () => Album\n  })\n  album: Album;\n}\nclass Album {\n  // ...\n  @ApiProperty({\n    type: () => Photo\n  })\n  photo: Photo;\n}\n```\n\ngetSchemaPath 也可以使用。\n```\nexport class CreateCatDto {\n  // ...\n\n  @ApiProperty({\n    type: 'array',\n    items: {\n      $ref: () => getSchemaPath(Cat)\n    }\n  })\n  relatedList: Cat[];\n}\n```\n### 请求 Response\n本项目封装了`@ApiOperationResponse({...})` 来自定义请求 Response,单条数据获取传入`responseType`参数，分页列表获取传入`responsePage`参数。\n```\n@Get('/:id')\n@ApiOperationResponse({\n  responseType: User,\n  summary: '用户信息',\n})\nfindOne(@Param('id') id: string, @Query('test') test: any): Cat {\n  return this.catsService.findOne(+id);\n}\n```\n```\n//接口方法必须加async 方法的接口装饰器值必须/开头\n@Post('/')\n@ApiOperationResponse({\n  responsePage: User,\n  summary: '获取用户列表',\n})\n@AdminPermission('UserList')\nasync list(@Body() queryDto: UserQueryDto) {\n  return this.success(await this.userService.list(queryDto));\n}\n```		694102375132037120	118	119		604612615536115712	604612615536115712	2026-03-31 09:04:25.19+08	2026-03-31 19:37:41.701+08	0	1.1.0	validateSwagger
-694102377707339776	其他	\N	2	1	92	# 其他\n\n## 权限校验\n后台`admin`接口权限校验，在`controller`使用`@AdminPermission`装饰器。\n```\nimport { AdminPermission, ApiOperationResponse } from '@/decorators/index.js';\nimport { User } from '@/entities/user.entity.js';\nimport { Body, Controller, Inject, Post } from '@midwayjs/core';\nimport { UserCreateDto } from '../dto/userCreate.dto.js';\nimport { UserService } from '../service/user.service.js';\nimport { BaseController } from './base.controller.js';\n\n/**\n * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。\n * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址\n */\n@Controller('user')\nexport class UserController extends BaseController {\n  @Inject()\n  userService: UserService;\n\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Post('/add')\n  @ApiOperationResponse({\n    responseType: User,\n    summary: '添加用户信息',\n  })\n  @AdminPermission('UserAdd')\n  async add(@Body() createDto: UserCreateDto) {\n    return this.success(await this.userService.create(createDto));\n  }\n}\n```\n\n前台`index`接口权限校验，在`controller`使用`@IndexPermission`装饰器。前台登录仅校验是否登录，未做过多的权限封装。\n```\nimport { ApiOperationResponse, IndexPermission } from '@/decorators/index.js';\nimport { Controller, Get, Inject } from '@midwayjs/core';\nimport { User } from '../../../entities/user.entity.js';\nimport { UserService } from '../service/user.service.js';\nimport { BaseController } from './base.controller.js';\n\n/**\n * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。\n * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址\n */\n@Controller('user')\nexport class UserController extends BaseController {\n  @Inject()\n  userService: UserService;\n\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Get('/info')\n  @ApiOperationResponse({\n    responseType: User,\n    summary: '获取当前用户的信息',\n  })\n  @IndexPermission()\n  async info() {\n    const entity = await this.userService.findOne(this.ctx.userInfo.id);\n    return this.success(entity);\n  }\n}\n\n```\n\n## 登录校验\n后台`admin`接口放开登录校验可在`src/config/config.default.ts`中配置。\n```\nadmin: {\n    login: {\n      secret: 'desec2ec3=ase$&e1#edad#$%%', //token加密平台标识\n      expiresIn: 3600000 * 6, //token过期时间ms\n      renewal: 60000 * 10, //续期时间ms\n      cacheKey: 'admin', //token使用的缓存key对应cacheManager.clients\n    },\n    auth: {\n      noLoginUrl: [`/api/admin/login/login`, `/api/admin/login/captcha`, new RegExp('/api/admin/file/get/.+')] as Array<string | RegExp>, //无需登录地址，支持字符串或正则\n    },\n  },\n```\n## 配置和环境变量\n本项目配置文件在`src/config/config.default.ts`中，并根据运行环境加载对应的.env文件。\n\n如`dev`命令`cross-env NODE_ENV=local  npx me-devBootstrap --cleanOutDir --watch --run @midwayjs/mock/app`会依次加载 `.env``.env.local`文件\n\n`start` 命令`cross-env NODE_ENV=prod node ./bootstrap.js`会依次加载 `.env``.env.prod`文件\n更多说明请参考[midway 文档](https://midwayjs.org/docs/env_config)。\n\n`.env`环境变量中以`VIEW_ADMIN_`开头和以`VIEW_INDEX_`开头的环境变量可分别被 `admin`及`index`前台项目读取到。\n\n## 多语言\n本项目的多语言目录在`src/locales`中,配置方式如下：\n```\n//src/config/config.default.ts\ni18n: {\n  // 默认语言  "zh-cn"\n  defaultLocale: 'zh-cn',\n  // used to alter the behaviour of missing keys\n  missingKeyFn: function (locale, value) {\n    return value;\n  },\n\n  // 把你的翻译文本放到这里\n  localeTable: {\n    'zh-cn': {\n      validate: {\n        'string.mobile': '{{#label}} 必须是一个正确的手机号',\n      },\n    },\n    'en': {\n      default: await import('../locales/en.json', { with: { type: 'json' } }),\n      validate: await import('@midwayjs/validate/locales/en_US.json', { with: { type: 'json' } }),\n    },\n  },\n\n  missingKeyHandler: (message: string, options?: TranslateOptions) => (options?.args ? formatText(message, options.args) : message),\n},\n```\n更多说明请参考[midway文档](https://midwayjs.org/docs/extensions/i18n)\n## 日志\n调试模式及部署模式，都将日志目录改为本地的 ${app.appDir}/logs/ 目录下\n```\n//src/config/config.default.ts\nmidwayLogger: {\n    default: {\n      transports: {\n        file: {\n          dir: resolve(import.meta.dirname, '../../logs'),\n        },\n        error: {\n          dir: resolve(import.meta.dirname, '../../logs'),\n        },\n      },\n    },\n    // ...\n  },\n```\n## 缓存\n集成@midwayjs/redis@3和@midwayjs/cache-manager@3组件，实现基于redis的缓存支持\n```\n//src/config/config.default.ts\n  redis: {\n    clients: {\n      cache: {\n        host: process.env.REDIS_HOST,\n        port: process.env.REDIS_PORT,\n        password: process.env.REDIS_PASS,\n        db: 0,\n      },\n    },\n  },\n  cacheManager: {\n    //缓存配置\n    clients: {\n      admin: {\n        store: createRedisStore('cache'),\n      },\n      index: {\n        store: createRedisStore('cache'),\n      },\n    },\n  },\n```\n## 静态文件映射\n集成 @midwayjs/static-file@3组件，public文件夹下的资源都可以使用/文件名直接访问\n```\n//src/config/config.default.ts\n  staticFile: {\n    dirs: {\n      default: {\n        prefix: '/',\n        dir: 'public',\n      },\n      viewAdmin: {\n        prefix: '/html/admin/',\n        dir: 'view/admin/dist',\n      },\n      viewIndex: {\n        prefix: '/html/index/',\n        dir: 'view/index/dist',\n      },\n    },\n  },\n```\n\n## 更多\n依赖注入、生命周期、Cookies 和 Session、内置服务、Web 路由表、现有装饰器索引、框架错误码、设计模式等更多特性请参考[midway文档](https://midwayjs.org/docs/container)		694102375132037120	124	125		604612615536115712	604612615536115712	2026-03-31 09:07:37.313+08	2026-03-31 19:37:41.701+08	0	1.1.0	other
-694026784546488320	深入	\N	1	1	98			694017222984597504	47	60		604612615536115712	604612615536115712	2026-03-31 11:34:39.83+08	2026-03-31 13:52:23.732+08	\N	1.0.0	\N
-694060851014926336	QQ群：752939100	\N	2	1	99		https://jq.qq.com/?_wv=1027&k=zSjWSant	694060730139279360	88	89		604612615536115712	604612615536115712	2026-03-31 13:50:01.909+08	2026-03-31 13:52:23.732+08	1	1.0.0	\N
-694060975577366528	相关外链	\N	1	1	95				91	96		604612615536115712	604612615536115712	2026-03-31 13:50:31.607+08	2026-03-31 13:52:23.732+08	\N	1.0.0	\N
-694025451730894848	权限	\N	2	1	96	# 权限\n\n## 初始化权限\n\n当登录成功或刷新页面后，会请求`userInfoApi`接口获取权限，相关代码在`@/store/modules/user.ts`中。\n``` ts\n// 初始化\n init: async function (tokenValue?: string) {\n  const token = tokenValue ?? cookies.get(config.tokenName);\n  if (token) {\n    this.token = token;\n    const res = await userInfoApi(true, !tokenValue)();\n    this.user = res.info;\n    initDynamicViewsModules();\n    this.rules = res.btnRules;\n    this.menus = listToTree(\n      res.menus.map((item) => ({\n        id: item.id,\n        path: item.path,\n        parentId: item.parentId,\n        component: transitionComponent(item.component),\n        meta: {\n          // 标题设置该路由在侧边栏和面包屑中展示的名字\n          title: item.title,\n          // 对应权限 多个之间为或的关系\n          rule: [item.rule],\n          // 是否是固定的tag\n          affix: statusToBoolean(item.affix),\n          // 图标\n          icon: item.icon,\n          // 外链\n          isLink: statusToBoolean(item.isLink),\n          // 如果设置为true，则不会被 <keep-alive> 缓存\n          noCache: !statusToBoolean(item.cache),\n          // 在菜单中隐藏\n          hideMenu: statusToBoolean(item.hideMenu),\n          // 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式\n          // 只有一个时，会将那个子路由当做根路由显示在侧边栏\n          // 若你想不管路由下面的 children 声明的个数都显示你的根路由\n          // 你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由\n          alwaysShow: statusToBoolean(item.alwaysShow),\n          // 是否需要面包屑 false不展示在面包屑,ture一直展示在面包屑,undefined当只有一个子元素面包屑时跳过展示\n          breadcrumb: statusToBoolean(item.breadcrumb),\n        },\n      })),\n    );\n    await useRouteStore().initRoutes(); //初始化路由\n  } else {\n    this.token = '';\n  }\n},\n```\n\n## 路由权限校验\n\n初始化完权限后，注册有权限的路由，过滤规则参考[路由权限](../guide/route.md#路由权限)\n\n## 按钮权限校验\n\n权限校验函数为permission(rules?: string | string[])，当入参为数组时，匹配成功数组中的任意一个权限则返回true。\n\n通过v-if指令和permission函数配合进行按钮权限校验(未进行封装指令的原因是，指令方式对服务端渲染不友好，建议使用v-if判断)。\n\n- 通过全局函数$permission()校验权限\n``` vue\n    <el-button v-if="$permission('edit')">{{ $t('编辑') }}</el-button>\n\n```\n- 引入 permission()函数校验\n  \n``` vue\n<template>\n  <div class="permission">\n    <el-button v-if="permission('show')">{{ $t('查看') }}</el-button>\n  </div>\n</template>\n<script setup lang="ts" name="permission">\nimport { permission } from '@/utils/permission';\n</script>\n```\n\n## 超管权限\n\n当初始化权限时拿到的`rules`数组包含'*'时，代表具有所有权限，权限permission函数会必定返回`true`		694025634292170752	38	39		604612615536115712	604612615536115712	2026-03-31 11:29:22.062+08	2026-03-31 13:52:23.732+08	0	1.0.0	permission
-694102379418615808	路由	\N	2	1	97	# 路由菜单\n\n这里的路由分为两种，constantRoutes 和 asyncRoutes。\n\nconstantRoutes： 代表那些不需要动态判断权限的路由，如登录页、404、等通用页面。\n\nasyncRoutes： 代表那些需求动态判断权限并通过 addRoutes 动态添加的页面。\n## 静态路由(constantRoutes)\n\n静态路由定义位于`@/router/routes/index.ts`文件下,主要包含一些无需登录的公共路由。\n\n```\nexport const constantRoutes: RouteRecordRaw[] = [\n  {\n    path: PageEnum.LOGIN,\n    component: async () => await import('@/views/login/index.vue'),\n    meta: {\n      hideMenu: true,\n      title: '登录',\n    },\n  },\n  {\n    path: PageEnum.HOME,\n    meta: {\n      hideMenu: true,\n      title: '首页',\n    },\n    redirect: () => useRouteStore().firstMenu(),//重定向到第一个路由\n  },\n  {\n    path: '/redirect',\n    component: Layout,\n    children: [\n      {\n        name: 'redirect',\n        path: '/redirect/:path(.*)',\n        component: async () => await import('@/views/redirect.vue'),\n      },\n    ],\n    meta: {\n      hideMenu: true,\n      title: '',\n      noCache: true,\n    },\n  },\n  {\n    path: '/:pathMatch(.*)*',\n    component: async () => await import('@/views/404.vue'),\n    meta: { hideMenu: true, title: '404' },\n  },\n];\n```\n\n\n## 动态路由(asyncRoutes)\n\n- **动态定义通过api接口获取**\n- **动态路由获取成功后会动态注册到vue-router中。**\n- **动态路由注册时会自动注册到一级路由`/`的children下,这样菜单路由只有一级也可以渲染出layout框架**\n\n\n路由功能基于[vue-router](https://router.vuejs.org/zh/introduction.html)开发,自定义配置放在了[meta](#meta配置说明)中,其余定义规则参考[vue-router#routerecordraw](https://router.vuejs.org/zh/api/#routerecordraw)。\n\n将`settingConfig.menuMode`(位于`@/config/index.ts`文件中)设置为`MenuModeEnum.API`，将使用前端定义模式。\n\n### 动态路由api获取模式\n\n将`settingConfig.menuMode`(位于`@/config/index.ts`文件中)设置为`MenuModeEnum.API`，将使用api模式，此值已自动设置，请勿更改。\n\n在api模式下，登录成功后或者已登录首次访问时，会通过调用接口获取菜单数组，动态注册到vue-router中。\n\n### 创建菜单\n\n在 菜单权限页面 直接创建 类型为 菜单， 组件路径为 相对于`src/views`文件夹无后缀的相对路径即可\n![alt text](image.png)\n\n\n### 配置说明\n```\nexport interface RouteMeta extends Record<string | number | symbol, unknown> {\n    // 标题设置该路由在侧边栏和面包屑中展示的名字\n    title: string;\n    // 对应权限 多个之间为或的关系\n    rule?: string[];\n    // 是否是固定的tag\n    affix?: boolean;\n    // 图标\n    icon?: string;\n    // 在tag中隐藏\n    hideTag?: boolean;\n    // 外链\n    isLink?: boolean;\n    // 当路由设置了该属性，则会高亮相对应的侧边栏。\n    // 这在某些场景非常有用，比如：一个文章的列表页路由为：/article/list\n    // 点击文章进入文章详情页，这时候路由为/article/1，但你想在侧边栏高亮文章列表的路由，就可以进行如下设置\n    // asyncRoutes如果不设置会自动计算展示不隐藏的祖级（包括当前）\n    activeMenu?: string;\n    // 如果设置为true，则不会被 <keep-alive> 缓存\n    noCache?: boolean;\n    // 在菜单中隐藏\n    hideMenu?: boolean;\n    // 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式\n    // 只有一个时，会将那个子路由当做根路由显示在侧边栏\n    // 若你想不管路由下面的 children 声明的个数都显示你的根路由\n    // 你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由\n    alwaysShow?: boolean;\n    // 是否需要面包屑 false不展示在面包屑,ture一直展示在面包屑,undefined当只有一个子元素面包屑时跳过展示\n    breadcrumb?: boolean;\n  }\n```\n\n### 外链\n\n当为外链 时，路径 需填写外链地址。\n\n### 菜单图标\n\n菜单图标定义值为图标组件的name,自定义svg图标和使用elment-plus图标请参考[图标](./icon.md)\n\n### keepAlive缓存\n\n页面缓存通过 组件[me-keep-alive](../components/core/meKeepAlive.md)实现,通过路由的fullPath进行缓存过滤，所以无需对页面组件设置name,即可进行缓存，并且多路由共用同一页面组件时，可以进行独立刷新，互不影响。\n\n\n - 如果想全局禁用keppAlive，去`@/config/index.ts`配置`settingConfig.openKeepAlive`为`false`即可，配置详情参见[config](./config.md#基础配置)。\n - 如需设置某个路由不缓存设置缓存值为`否`即可。		694102378554589184	134	135		604612615536115712	604612615536115712	2026-03-31 11:28:15.589+08	2026-03-31 19:37:41.701+08	0	1.1.0	route
-694102383633891328	icon	\N	2	1	97	# 图标\n\n## 自定义svg图标\n\nsvg图标的存放目录为`@/src/icons/svg`，该文件夹下.svg结尾的文件会被自动注册为图标组件，组件名为`me-icon-{name}`\n\n## 使用elment-plus图标\nelment-plus图标默认已全局注册，注册组件名为`mel-icon-{name}`,elment-plus图标完整列表请参考[elment-plus文档](https://element-plus.org/zh-CN/component/icon.html#%E5%9B%BE%E6%A0%87%E9%9B%86%E5%90%88)\n\n## 组件props\n\n图标组件接受两个props：size、color\n| props      | 类型 |说明|\n| ----------- | ----------- | ----------- |\n| size      | string/number | 图标的fontSize |\n| color   | string        | 图标的color属性 |		694102382786641920	164	165		604612615536115712	604612615536115712	2026-03-31 12:24:21.567+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102382786641920	组件	\N	1	1	97			694102378286153728	159	180		604612615536115712	604612615536115712	2026-03-31 12:22:24.614+08	2026-03-31 19:37:41.701+08	\N	1.1.0	\N
-694102383906521088	文件上传	\N	2	1	96	## 文件上传\n\n本项目封装了文件上传组件，支持分片上传、秒传，直接使用即可。\n\n多文件上传\n```\n  <me-upload v-model="files"></me-upload>\n```\n\n单文件上传\n```\n   <me-upload :limit="1" :model-value="info.avatar ? [info.avatar] : []" @update:model-value="(files) => (info.avatar = files.length ? files[0] : null)"></me-upload>\n```\n支持的props\n```\nshowSelect:boolean 是否展示文件选择按钮，默认true\n//其余 element-plus upload组件的所有属性\n\n```\n[ element-plus upload组件 文档](https://element-plus.org/zh-CN/component/upload#%E5%B1%9E%E6%80%A7)		694102382786641920	166	167		604612615536115712	604612615536115712	2026-03-31 12:25:01.748+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102868671594496	插件	\N	2	1	97	# 插件\n\nMe-Admin有灵活的插件系统，可快速扩展应用\n\n## 安装插件\n\n### 复制插件\n\n将插件包复制到 `addons`文件夹下\n\n### 安装插件\n\n执行`npx meadmin addon 【插件包文件夹名】 `安装插件，以 `doc`插件为例，执行`npx meadmin addon doc`, 执行命令后会执行以下操作：\n\n- copy插件目录下的`template` 文件到项目对应目录\n- 执行插件的`install.sql`文件生成数据库表\n- 执行插件`addons.json`的`installShell`的命令列表\n\n!!! warning\n- 如果插件已经安装完成， 请先卸载插件或使用-f参数（-f会先卸载再安装）`npx meadmin -m local addon doc -f`\n- meadmin 命令 支持-m传入 env环境变量， 以读取对应的数据库配置，例如 `npx meadmin -m local addon doc`\n!!!\n\n### 二次开发\n插件安装完毕后，后端文件会在`src/app/admin/addons/插件文件夹`和`src/app/index/addons/插件文件夹`，前端文件会分别在`view/admin/src/addons/插件文件夹`和`view/index/src/addons/插件文件夹`下。具体目录规则请参考 后端文档 和 前端文档\n\n## 卸载插件\n执行 `npx meadmin addon 【插件包文件夹名】 --rm`卸载插件，以 `doc`插件为例，执行`npx meadmin addon doc --rm`, 执行命令后会执行以下操作：\n\n- 删除下列文件夹：`src/app/admin/addons/插件包文件夹名/`、`src/app/index/addons/插件包文件夹名/`、`view/admin/src/addons/插件包文件夹名/`、`view/index/src/addons/插件包文件夹名/`\n- 执行插件的`uninstall.sql`文件删除数据库表\n- 执行插件`addons.json`的`uninstallShell`的命令列表\n\n\n!!! warning\nmeadmin 命令 支持 -m 传入 env环境变量， 以读取对应的数据库配置，例如 `npx meadmin -m local addon doc --rm`\n!!!\n\n## 开发插件\n正在完善文档中...		694102373970214912	104	105		604612615536115712	604612615536115712	2026-03-31 16:36:59.7+08	2026-03-31 19:37:42.051+08	0	1.1.0	\N
-694102375941537792	路由和控制器	\N	2	1	98	# 路由和控制器\n在常见的 MVC 架构中，C 即代表控制器，控制器用于负责 解析用户的输入，处理后返回相应的结果。\n\n更多内容请阅读[midway 路由和控制器](https://midwayjs.org/docs/controller)文档。\n\n## 定义路由可控制器\n用@Controller装饰器声明控制器类，@Get 、 @Post 、 @Put() 、 @Del() 、 @Patch() 、 @Options() 、 @Head() 和 @All()，表示各自的 HTTP 请求方法，声明路由方法。@All 装饰器比较特殊，表示能接受以上所有类型的 HTTP Method。midway 会自动扫描项目目录下的所有@Controller类进行路由注册。\n```\nimport { Controller, Get } from '@midwayjs/core';\n\n@Controller('/api/')\nexport class UserController {\n\n  @Get('/home')\n  async home(@Query('uid') uid: string) {\n    return {content:"Hello Meadmin! "+uid};\n  }\n\n  @Post('/up')\n  async update(@Body() user: User) {\n    return {content:"Hello Meadmin! "+user.uid};\n  }\n\n  @Get('/:uid')\n  async getUser(@Param('uid') uid: string): Promise<User> {\n    return {content:"Hello Meadmin! "+uid};\n  }  \n}\n```\n@Controller装饰器有一个可选参数，用于进行路由前缀（分组），这样这个控制器下面的所有路由都会带上这个前缀,如上述所示例允许的请求为：\n```\nGET '/api/home?uid=123' //返回json对象{"content":"Hello Midwayjs! 123"}\nPOST '/api/home'   {"uid": "1", "name": "harry"}  //返回json对象{"content":"Hello Midwayjs! 1"}\nGET '/api/1'    //返回json对象{"content":"Hello Midwayjs! 1"}\n```\n!!! warning\n所有的控制器方法必须为异步函数\n!!!\n## 控制器继承\n本项目对路由和控制器做了单独封装会根据Controller继承关系 递归合成@Controller装饰器的参数\n从第一个prefix以/开头的祖级开始合并@Controller的第一个参数prefix和第二个参数routerOptions，如果prefix 以/开头，则重新计算，不合并父级的prefix和routerOptions\n例如有以下基类：\n```\nimport { CodeEunm } from '@/dict/code.enum.js';\nimport { ResponseService } from '@/service/response.service.js';\nimport { Controller, Inject } from '@midwayjs/core';\n\n@Controller('/api')\nexport abstract class ApiController {\n  @Inject()\n  protected readonly responseService: ResponseService;\n\n  success<T extends Record<string, any>>(data: T = {} as T, message = '操作成功') {\n    return this.responseService.success(data, message);\n  }\n\n  error(message: string, code: Exclude<CodeEunm, CodeEunm.Success> = CodeEunm.Fail) {\n    return this.responseService.error(message, code);\n  }\n\n  successPage<T = any>(list: T[], total = 0, page = 1, size = 10, message = '列表数据获取成功') {\n    return this.responseService.successPage(list, total, page, size, message);\n  }\n}\n\n```\n```\n//src/app/admin/controller/base.controller.ts\nimport { ApiController } from '@/controller/api.controller.js';\nimport { Controller } from '@midwayjs/core';\nimport { AdminMiddleware } from '../middleware/admin.middleware.js';\n\n@Controller('admin', { middleware: [AdminMiddleware] })\nexport abstract class BaseController extends ApiController {}\n\n```\n自定义controller\n```\n//src/app/admin/controller/user.controller.ts\nimport { BaseController } from './base.controller.js';\n@Controller('user')\nexport class UserController extends BaseController {\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Post('/add')\n  async add() {\n    return this.success({aa:1});\n  }\n}\n```\n当前@Controller 地址参数会被递归合并`/api/admin/user`,最终请求地址为`POST /api/admin/user/add`。并且userController会具有`AdminMiddleware`中间件。\n\n## 特别约定\n- 所有的文件以小驼峰命名，所有的装饰器文件命名以`小驼峰名称.controller.ts`命名，类名以`大驼峰名称Controller`命名，\n- 所有的装饰器放在对应模块的controller文件夹下，允许使用子文件夹自由组合嵌套。\n- 个别防火墙，默认只放行GET、POST请求，而GET请求传参受浏览器URL限制，如果需要传递的参数过多就会无法传递。服务端经常会将访问的完整 URL 记录到日志文件中，有一些敏感数据通过 URL 传递会不安全。CRUD自动生成的请求除详情接口外都为POST。推荐尽量使用POST请求。\n- 所有接口的Controller 需继承当前模块的`BaseController`\n- 所有接口的Controller返回值，需调用`return this.success(data:Object)`进行返回，以遵循特定格式，方便前端识别。如接口返回错误，直接`throw new BadRequestError('error')`抛出对应异常即可，项目已做统一封装处理，详情请参考[响应及异常封装]		694102375132037120	112	113		604612615536115712	604612615536115712	2026-03-31 08:59:09.958+08	2026-03-31 19:37:41.701+08	0	1.1.0	controller
-694102378806247424	配置	\N	2	1	99	# 配置\n## 目录结构\n前端项目`admin`根目录位于 `view/admin`，下边的目录相对于`view/admin`文件夹。\n```\n.\n├── dist 打包文件夹\n├── plugins vite插件\n├── public 公共静态资源目录\n├── src  主目录\n│   ├── api 接口文件\n│   ├── assets 资源文件\n│   │   └── images 项目存放图片的文件夹\n│   ├── components 公共组件（里面的组件会自动引入）\n│   ├── config 配置文件夹\n│   │   ├── index.ts 配置入口文件\n│   │   ├── locale.ts 国际化配置\n│   │   ├── login.ts  登录配置\n│   │   └── theme.ts  主题配置\n│   ├── directives 指令（里面的指令会自动引入）\n│   ├── dict  字典\n│   ├── event 事件\n|   ├── hooks 公共hooks\n│   ├── icons 图标\n│   │   ├── svg  svg图标文件夹（放入此文件夹的svg会被自动注册图标组件）\n│   │   └── index.ts 图标自动注册入口文件\n│   ├── layout 布局文件\n│   ├── locales  国际化\n│   │   └── lang 全局语言包\n│   ├── router  路由配置\n│   │   ├── guard 路由全局守卫\n│   │   └── routes 动态路由存放目录\n|   ├── styles 样式文件 \n│   ├── store  pinia文件夹\n│   ├── utils  工具类\n│   ├── views  页面\n│   └── main.ts 入口文件\n├── template自动生成模板\n├── types  类型文件\n└── vite.config.ts vite配置文件\n```\n## 基础配置\n\n配置文件地址 `@/config/index.ts`\n```ts\nconst settingConfig = {\n  version: '1.0.3', //版本当版本改变时会清空localStorage和sessionStorage\n  openKeepAlive: true, // 是否开启KeepAlive缓存\n  menuMode: MenuModeEnum.STATIC, // 动态路由模式 MenuModeEnum.STATIC/MenuModeEnum.API\n};\n```\n\n## 登录配置\n\n登录后token会储存在在cookie中，可以在配置文件中配置token相关cookie设置\n\n配置文件地址 `@/config/login.ts`\n``` ts\nexport default {\n  tokenName: 'auth-token', // cookie中存储的token key\n  tokenExpires: 7, // token 过期时间\n  tokenDomain: typeof window === 'undefined' ? '' : window.location.hostname, // token 存储cookie域名\n};\n```\n\n## 主题配置\n\n配置文件地址`@/config/theme.ts`\n``` ts\nimport { SizeEnum } from '@/enums/configEnum';\nexport default {\n  primaryColor: '#409eff', // 主题颜色\n  menuBg: '#1d1e1f', // 菜单背景颜色\n  menuWidth: '200px', // 菜单展开宽度\n  menuCollapse: true, // 菜单是否折叠\n  size: SizeEnum.DEFAULT, // 默认大小\n  fixedHeader: true, // 固定header\n  topBar: true, // 是否显示顶栏\n  breadcrumb: true, // 面包屑\n  showDark: true, // 开启暗黑模式切换\n  showSize: true, // 开启大小切换\n  tagBar: true, // 标签栏\n  tagBarMenu: true, // 标签栏快捷菜单\n  tagBarRefresh: true, // 标签栏刷新按钮\n  showSetting: true, // 展示设置按钮\n};\n```\n\n## 国际化配置\n\n配置文件地址`@/config/locale.ts`\n\n- 语言包异步导入配置\n  \n``` ts\nexport const loadMessageConfig = {\n// 导入语言包配置\ntimeOut: 10000, // 导入语言包超时时间ms(对于单次导入而不是整体导入)0代表不超时\nerrorWarning: false, // 导入失败的警告（生产环境会被屏蔽）\ncomponentLoad: true, // 组件语言包导入 不需要多语言或只使用全局语言包时设置为false以提升性能\n};\n```\n- 语言列表\n  \n!!! warning 注意\nlocale命名时需要和[element-plus](https://element-plus.gitee.io/zh-CN/guide/i18n.html#cdn-%E7%94%A8%E6%B3%95)的local命名一致，否则无法加载element-plus对应的语言包 \n!!!\n\n``` ts\nexport const localeList = [\n  {\n    text: '简体中文',\n    locale: 'zh-cn',\n  },\n  {\n    text: '美国英语',\n    locale: 'en',\n  },\n]\n```\n\n- 全局[VueI18n](https://vue-i18n.intlify.dev/api/general.html#i18noptions)初始参数(VueI18n版本基于v9.x)\n\n!!! warning 注意\nlegacy和globalInjection无需设置\n程序内部强制把legacy设置为了false、globalInjection设置为了true。\n!!!\n\n``` ts\nconst localeSetting: I18nOptions = {\n  // Locale\n  locale: localeList[0].locale,\n  // Default locale\n  fallbackLocale: localeList[0].locale,\n  missingWarn: false, // 当本地化失败时，压制输出的警告\n  fallbackWarn: false, // 抑制回落警告\n  fallbackFormat: true, // 跳过为你的"base"语言编写模板;key是您的模板\n};\n```		694102378554589184	130	131		604612615536115712	604612615536115712	2026-03-31 11:27:28.582+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694102380303613952	多语言	\N	2	1	94	# 国际化\n- 详细配置说明请参考[国际化配置](../guide/config.md#国际化配置)\n- 国际化基于[vue-i18n v9.x](https://kazupon.github.io/vue-i18n/zh/introduction.html)开发。具体翻译规则请参考[vue-i18n v9.x 文档](https://kazupon.github.io/vue-i18n/zh/introduction.html)\n## 设置语言列表\n在配置文件`@/config/locale.ts`设置语言选项，新增成功后`localeList`里面的`text`会展示在语言切换的下拉列表中,如果`localeList`只有一个元素则不会展示切换语言按钮\n  \n!!! warning 注意\nlocale命名时需要和[element-plus](https://element-plus.gitee.io/zh-CN/guide/i18n.html#cdn-%E7%94%A8%E6%B3%95)的local命名一致，否则无法加载element-plus对应的语言包 \n!!!\n\n``` ts\nexport const localeList = [\n  {\n    text: '简体中文',\n    locale: 'zh-cn',\n  },\n  {\n    text: '美国英语',\n    locale: 'en',\n  },\n]\n```\n## 设置默认语言\n修改配置文件`@/config/locale.ts`中的`localeSetting.locale`的值为`localeList`任一元素的`locale`来配置初始语言\n\n## 全局语言包\n### 添加全局语言包\n全局语言包位于`@/locales/lang`文件夹下，下面以新建en对应语言包为例：\n- 在`@/locales/lang`文件夹下新建文件夹`en`(文件夹名要和`locale`名称一致)\n``` sh\n  cd ./locales/lang\n  mkdir en\n```\n- 在`@/locales/lang/en`文件夹中新建`index.ts`文件并写入以下代码\n``` ts\nimport { forOwn } from 'lodash-es';\nconst modules = import.meta.glob('./**/*.{json,ts}', { eager: true, import: 'default' });\nconst langs = {} as Record<string, string>;\nforOwn(modules, (value) => {\n  Object.assign(langs, value);\n});\nexport default langs;\n```\n- 在`@/locales/lang/en`文件夹下新建任意`json/ts`语言包文件,语言系统会自动加载\n!!! warning 注意\n- 非必要优先使用json格式语言包(有利于自行修改为VueI18nPlugin生成预加载包)。\n!!!\n`//@/locales/lang/en/menu.json`\n``` json\n{\n  "首页": "Index",\n  "示例": "Example",\n  "权限": "Permission",\n  "组件语言包": "Component Language Pack",\n  "请求示例": "Request Example",\n  "页面权限": "Page Permission",\n  "多级菜单": "Multilevel Menu",\n  "多级菜单1": "Multilevel Menu 1",\n  "多级菜单1-1": "Multilevel Menu 1-1",\n  "多级菜单1-1-1": "Multilevel Menu 1-1-1",\n  "多级菜单1-2": "Multilevel Menu 1-2"\n}\n```\n### `template`中按[vue-i18n v9.x](https://kazupon.github.io/vue-i18n/zh/introduction.html)规范使用\n``` vue\n<template>\n  <div>\n    {{ $t('多级菜单1') }}\n    <br />\n    {{ $t('权限') }}\n  </div>\n</template>\n```\n## 组件语言包\n### 添加组件语言包\n假设组件目录结构如下\n```\n├── componentLang 组件文件夹\n│   └── index.vue 组件vue文件\n```\n- 在`componentLang`文件夹下新建组件语言包文件夹`lang`(组件语言包文件夹名必须为`lang`)\n``` sh\n mkdir lang\n```\n- 在`componentLang/lang`文件夹下建立对应语言`json/ts`文件，文件名和`localeList`里面的`local`值相同,以`en`语言举例\n::: warning 注意\n- 非必要优先使用json格式语言包(有利于自行修改为VueI18nPlugin生成预加载包)。\n:::\n```\n  touch en.json\n```\n- 在语言文件中写入翻译内容\n``` json\n{\n  "切换语言查看效果": "Switch languages to see the effect",\n  "打开Network可以看到语言包请求": "Open Network to see the language pack request"\n}\n```\n\n### 使用组件语言包\n- 引入\n\n  直接利用顶层setup异步能力，`await loadRes`即可。\n  ::: warning 注意\n  - `[(locale: string) => import(`./lang/${locale}.json`), 'compnentLang']` 中的 `compnentLang`为组件语言包的缓存名称，确保同一语言(locale)下每个组件语言包一一对应，compnentLang 参数可忽略。\n  :::\n\n  ``` vue\n  <script setup lang="ts">\n  import { useLocalesI18n } from '@/locales/i18n';\n  const { t, loadRes }  = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'compnentLang']);\n  await loadRes;//顶层异步加载语言包\n  </script>\n  ```\n  \n- `template`中按[vue-i18n v9.x](https://kazupon.github.io/vue-i18n/zh/introduction.html)规范使用即可\n``` vue\n<template>\n  <div class="component-lang">\n    {{ t('切换语言查看效果') }}\n    <br />\n    {{ t('打开Network可以看到语言包请求') }}\n  </div>\n</template>\n```\n\n### 优化建议\n\n- 建议翻译key值为初始化语言的值，这样能节省对应语言包的编写。\n- 如果您的语言包数据不大或用不到多语言建议将翻译全部放在全局语言包中，在配置文件`@/config/locale.ts`中设置`loadMessageConfig.componentLoad`的值为`false`,以避免切换路由时的语言包请求，优化性能。		694102378554589184	140	141		604612615536115712	604612615536115712	2026-03-31 11:33:08.298+08	2026-03-31 19:37:41.701+08	0	1.1.0	\N
-694039166589075456	MeComponent	\N	2	1	98	# MeComponent\nMeComponent基于 `component` 结合`keepAlive``transition``doneProgress``suspense`，而封装自定义组件。\n\n## 组件props\n\n| props      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| is       | 当 is 是字符串，它既可以是 HTML 标签名也可以是组件的注册名。或者，is 也可以直接绑定到组件的定义 | 会透传给`compnent`组件 |是|\n| keepAlive      | `MeKeepAlive` `props` Object | 传给`MeKeepAlive` 的props对象，不传此值代表不开启KeepAlive缓存 |否|\n| componentKey    | string | 自定义组件的`key` |否|\n| transition |`TransitionProps` `props` Object| 传给`Transition` 的props对象，不传此值代表不开启Transition动画 |否|\n| doneProgress| boolean | 是否需要执行nProgress.done() | 否|\n| suspense| SuspenseProps| 异步组件 | 否|\n## 示例\n\n```vue\n<router-view v-slot="{ Component }">\n      <me-component :is="Component" done-progress></me-component>\n</router-view>\n```		694038800321478656	64	65		604612615536115712	604612615536115712	2026-03-31 12:23:51.939+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-693987889637228544	Application 和 Context	\N	2	1	97	# Application 和 Context\nMidway 的应用会同时对外暴露不同协议，比如 Http，WebSocket 等等，这里每个协议对 Midway 来说都是由独立的组件提供的。\n\n本项目应用的是 `@midwayjs/koa`，基于`koa`一个提供 Http 服务的组件。\n\n每个使用的 Web 框架会提供自己独特的能力，这些独特的能力都会体现在各自的 上下文（Context）和 应用（Application）之上。\n\n本项目封装了全局方法/属性便于获取`Context` `Application`\n\n## Application\nApplication 是某一个组件中的应用对象，在不同的组件中，可能有着不同的实现。Application 对象上会包含一些统一的方法，这些方法统一来自于 IMidwayApplication 定义。\n### 获取方式\n本项目为了方便获取，为Application封装了全局变量，在`onReady`生命周期后可以调用到。示例：\n```\nimport {app} from '@meadmin/core';\nexport function getConfig(){\n   return  app.getConfig()\n\n}\n```\nApplication 具有以下方法\n|方法名|说明|使用方法|\n|  --  | -- |  --    |\n|getAppDir| 用于获取项目根目录路径| app.getAppDir()|\n|getBaseDir|用于获取项目 TypeScript 基础路径，默认开发中为 src 目录，编译后为 dist 目录。|app.getBaseDir()|\n|getEnv|获取当前项目环境。|app.getEnv()|\n|getApplicationContext|获取当前全局依赖注入容器。|app.getApplicationContext()|\n|getConfig|获取配置。|app.getConfig()|\n|getLogger|获取某个 Logger，不传参数，默认返回 appLogger。|app.getLogger()|\n|getCoreLogger|获取 Core Logger。|app.getCoreLogger()|\n|getProjectName|获取项目名，一般从 package.json 中获取。|app.getProjectName()|\n|setAttr & getAttr|临时的全局数据存储|app.setAttr('abc', {a: 1,b: 2,});app.getAttr('abc');|\n|getNamespace|通过 getNamespace API ，可以获取到当前 app 归属的组件的 框架的类型（即组件的 namespace）。|app.getNamespace();|\n\n更多说明请参考[midway Application 和 Context文档](https://midwayjs.org/docs/req_res_app)\n!!! info\n- '@meadmin/core'的app返回的是项目的` Main Application`(src/configuration.ts 中第一个引入的 Application 即为主要的 Application) `@midwayjs/koa`\n- '@meadmin/core'的app是在`onReady`生命周期赋值的，使用时请确保`onReady`生命周期已执行\n- `Midway`具有如下生命周期：\n1. 配置文件加载，我们可以在这里去修改配置（onConfigLoad）\n2. 依赖注入容器准备完毕，可以在这个阶段做大部分的事情（onReady）\n3. 服务启动完成，可以拿到 server（onServerReady）\n4. 应用即将关闭，在这里清理资源（onStop）\n更多生命周期说明请参考文档：[midway 生命周期](https://midwayjs.org/docs/lifecycle)\n!!!\n\n## Context\nContext 是一个请求级别的对象，在每一次收到用户请求时，框架会实例化一个 Context 对象，\n\n在 Http 场景中，这个对象封装了这次用户请求的信息，或者其他获取请求参数，设置响应信息的方法，在 WebSocket，Rabbitmq 等场景中，Context 也有各自的属性，以框架的定义为准。\n\n下面的 API 是每个上下文实现通用的属性或者接口。\n### 获取方式\n本项目为了方便获取，为context封装了全局获取方法，在任何请求上下文中都可以可以调用到。获取到的context 为 项目的主请求组件`@midwayjs/koa`组件 的`content`。获取示例：\n```\nimport { getContext } from '@meadmin/core';\nexport function getConfig(){\n   ctx = getContext();\n   //返回上下文的开始实际\n   return ctx.startTime;\n}\n```\n下面的 API 是每个上下文实现通用的属性或者接口。\n|方法名|说明|使用方法|\n|  --  | -- |  --    |\n| requestContext | Midway 会为每个 Context 挂载一个 requestContext 属性，即请求作用域下的依赖注入容器，用来创建请求作用域下的对象。|const userService = await ctx.requestContext.getAsync(UserService); |\n| logger | 请求作用域下的默认 logger 对象，包含上下文数据。| ctx.logger.info('xxxx');|\n| startTime | 上下文执行开始的时间。| ctx.startTime |\n| setAttr & getAttr | 和 app 上的方法相同，这些方法的数据是保存在请求链路中，随着请求销毁，你可以在其中放一些请求的临时数据。 |ctx.setAttr('abc', {a: 1,  b: 2,});ctx.getAttr('abc'); |\n| ctx.getLogger('custom'); | 获取某个自定义 Logger 对应的上下文日志。| ctx.getLogger('custom') |\n| getApp | 从 ctx 上获取当前框架类型的 app 对象。| ctx.getApp(); |  \n\n更多说明请参考[midway Application 和 Context文档](https://midwayjs.org/docs/req_res_app)\n\n!!! info\n`Context` 利用的`AsyncLocalStorage`在全局中间件绑定在了请求上下文中\n!!!		693986817568931840	14	15		604612615536115712	604612615536115712	2026-03-31 09:00:06.561+08	2026-03-31 13:52:23.732+08	0	1.0.0	applicationContext
-694038386293342208	setup标签语法设置自定义属性	\N	2	1	95	# ```setup```标签语法设置自定义属性\n\n!!! warning 注意 \n当代码中存在```<script lang="ts"> ```标签时，插件不会执行 \n!!!\n\n```\n <script lang="ts" setup name="App" auth="{{'type'+(3+4)}}" >\n  const test = 1\n</script>\n```\n会生成\n```\n<script lang="ts">\n import { defineComponent } from 'vue';\n export default defineComponent({name:'App',auth:'type'+(3+4)});\n</script>\n<script lang="ts" setup>\n const test = 1\n</script>\n```		694026784546488320	56	57		604612615536115712	604612615536115712	2026-03-31 12:20:45.903+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-693987652227039232	路由和控制器	\N	2	1	98	# 路由和控制器\n在常见的 MVC 架构中，C 即代表控制器，控制器用于负责 解析用户的输入，处理后返回相应的结果。\n\n更多内容请阅读[midway 路由和控制器](https://midwayjs.org/docs/controller)文档。\n\n## 定义路由可控制器\n用@Controller装饰器声明控制器类，@Get 、 @Post 、 @Put() 、 @Del() 、 @Patch() 、 @Options() 、 @Head() 和 @All()，表示各自的 HTTP 请求方法，声明路由方法。@All 装饰器比较特殊，表示能接受以上所有类型的 HTTP Method。midway 会自动扫描项目目录下的所有@Controller类进行路由注册。\n```\nimport { Controller, Get } from '@midwayjs/core';\n\n@Controller('/api/')\nexport class UserController {\n\n  @Get('/home')\n  async home(@Query('uid') uid: string) {\n    return {content:"Hello Meadmin! "+uid};\n  }\n\n  @Post('/up')\n  async update(@Body() user: User) {\n    return {content:"Hello Meadmin! "+user.uid};\n  }\n\n  @Get('/:uid')\n  async getUser(@Param('uid') uid: string): Promise<User> {\n    return {content:"Hello Meadmin! "+uid};\n  }  \n}\n```\n@Controller装饰器有一个可选参数，用于进行路由前缀（分组），这样这个控制器下面的所有路由都会带上这个前缀,如上述所示例允许的请求为：\n```\nGET '/api/home?uid=123' //返回json对象{"content":"Hello Midwayjs! 123"}\nPOST '/api/home'   {"uid": "1", "name": "harry"}  //返回json对象{"content":"Hello Midwayjs! 1"}\nGET '/api/1'    //返回json对象{"content":"Hello Midwayjs! 1"}\n```\n!!! warning\n所有的控制器方法必须为异步函数\n!!!\n## 控制器继承\n本项目对路由和控制器做了单独封装会根据Controller继承关系 递归合成@Controller装饰器的参数\n从第一个prefix以/开头的祖级开始合并@Controller的第一个参数prefix和第二个参数routerOptions，如果prefix 以/开头，则重新计算，不合并父级的prefix和routerOptions\n例如有以下基类：\n```\nimport { CodeEunm } from '@/dict/code.enum.js';\nimport { ResponseService } from '@/service/response.service.js';\nimport { Controller, Inject } from '@midwayjs/core';\n\n@Controller('/api')\nexport abstract class ApiController {\n  @Inject()\n  protected readonly responseService: ResponseService;\n\n  success<T extends Record<string, any>>(data: T = {} as T, message = '操作成功') {\n    return this.responseService.success(data, message);\n  }\n\n  error(message: string, code: Exclude<CodeEunm, CodeEunm.Success> = CodeEunm.Fail) {\n    return this.responseService.error(message, code);\n  }\n\n  successPage<T = any>(list: T[], total = 0, page = 1, size = 10, message = '列表数据获取成功') {\n    return this.responseService.successPage(list, total, page, size, message);\n  }\n}\n\n```\n```\n//src/app/admin/controller/base.controller.ts\nimport { ApiController } from '@/controller/api.controller.js';\nimport { Controller } from '@midwayjs/core';\nimport { AdminMiddleware } from '../middleware/admin.middleware.js';\n\n@Controller('admin', { middleware: [AdminMiddleware] })\nexport abstract class BaseController extends ApiController {}\n\n```\n自定义controller\n```\n//src/app/admin/controller/user.controller.ts\nimport { BaseController } from './base.controller.js';\n@Controller('user')\nexport class UserController extends BaseController {\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Post('/add')\n  async add() {\n    return this.success({aa:1});\n  }\n}\n```\n当前@Controller 地址参数会被递归合并`/api/admin/user`,最终请求地址为`POST /api/admin/user/add`。并且userController会具有`AdminMiddleware`中间件。\n\n## 特别约定\n- 所有的文件以小驼峰命名，所有的装饰器文件命名以`小驼峰名称.controller.ts`命名，类名以`大驼峰名称Controller`命名，\n- 所有的装饰器放在对应模块的controller文件夹下，允许使用子文件夹自由组合嵌套。\n- 个别防火墙，默认只放行GET、POST请求，而GET请求传参受浏览器URL限制，如果需要传递的参数过多就会无法传递。服务端经常会将访问的完整 URL 记录到日志文件中，有一些敏感数据通过 URL 传递会不安全。CRUD自动生成的请求除详情接口外都为POST。推荐尽量使用POST请求。\n- 所有接口的Controller 需继承当前模块的`BaseController`\n- 所有接口的Controller返回值，需调用`return this.success(data:Object)`进行返回，以遵循特定格式，方便前端识别。如接口返回错误，直接`throw new BadRequestError('error')`抛出对应异常即可，项目已做统一封装处理，详情请参考[响应及异常封装]		693986817568931840	12	13		604612615536115712	604612615536115712	2026-03-31 08:59:09.958+08	2026-03-31 13:52:23.732+08	0	1.0.0	controller
-694026177186103296	请求	\N	2	1	95	\n# 接口请求\n\n接口请求函数`request`位于文件`@/utils/request.ts`中，基于[axios](https://www.axios-http.cn/)和[vue-request v2.x](https://next.cn.attojs.org/guide/introduction.html)二次封装,使用前请先阅读[axios](https://www.axios-http.cn/)和[vue-request v2.x](https://next.cn.attojs.org/guide/introduction.html)文档\n\n核心代码如下：\n``` ts\n/**\n * 请求函数\n * @param axiosConfig  axios的配置项\n * @param options vue request配置项+自定义配置项参考 RequestOptions\n * @param returnAxios\n * @returns\n */\nexport function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>, options?: RequestOptions<R, P>, returnAxios?: T) {\n  const axiosService = async (...args: P): Promise<R> => {\n    try {\n      //loading放到微任务中去执行以确保在自动调用请求时等待所有的宏任务中的生命周期函数执行完再创建loading实例 以规避currentInstance的相关警告\n      !options?.noLoading && Promise.resolve(undefined).then(loading);\n      const config = await axiosConfig(...args);\n      if (options?.clearEmpty) {\n        if (config.params) config.params = clearEmptyParam(config.params, options?.clearEmpty);\n        if (config.data) config.data = clearEmptyParam(config.data, options?.clearEmpty);\n      }\n      const locale = useSettingStore().locale;\n      if (locale) {\n        config.params = Object.assign({ locale }, config.params);\n      }\n      const { data: res } = await service(config);\n      if (!res || res.code === undefined) {\n        throw Error(t('返回值解析失败'));\n      }\n      // 401：认证失败\n      if (res.code === '401') {\n        ElMessageBox.confirm(res.msg, '请登录', {\n          confirmButtonText: '去 登 陆',\n          cancelButtonText: '取消',\n          type: 'warning',\n          showClose: false,\n          closeOnClickModal: false,\n          closeOnPressEscape: false,\n          closeOnHashChange: false,\n        })\n          .then(async () => {\n            await useUserStore().logOut();\n          })\n          .catch(() => {});\n        throw Error(res.msg);\n      }\n      // 没有权限\n      if (res.code === '403') {\n        ElMessageBox.confirm(res.msg, '无权限访问', {\n          confirmButtonText: '切换账户',\n          cancelButtonText: '取消',\n          type: 'warning',\n          showClose: false,\n          closeOnClickModal: false,\n          closeOnPressEscape: false,\n          closeOnHashChange: false,\n        })\n          .then(async () => {\n            await useUserStore().logOut();\n          })\n          .catch(() => {});\n        throw Error(res.msg);\n      }\n      if (res.code !== '200') {\n        throw Error(res.msg);\n      }\n      if (options?.success) {\n        ElMessage.success({ message: res.msg });\n      }\n      !options?.noLoading && closeLoading();\n      return options?.needAll ? res : res.data;\n    } catch (e) {\n      !options?.noLoading && closeLoading();\n      !options?.noError &&\n        ElMessage.error({\n          message: e instanceof Error ? e.message : String(e),\n        });\n      throw e;\n    }\n  };\n\n  return returnAxios ? axiosService : useRequest<R, P>(axiosService, options);\n}\n```\n\n## 自定义返回值格式\n`request`函数主要是封装`vue-request`使其发起请求使用`axios`，并且请求时加上了loading、对接口返回值进行了校验处理、出错时自动报错提示\n\n接口处理格式已和后端api格式同步，如需要更改可自行修改以下代码\n``` ts\n  if (!res || res.code === undefined) {\n    throw Error(t('返回值解析失败'));\n  }\n  // 401：认证失败\n  if (res.code === '401') {\n    ElMessageBox.confirm(res.msg, '请登录', {\n      confirmButtonText: '去 登 陆',\n      cancelButtonText: '取消',\n      type: 'warning',\n      showClose: false,\n      closeOnClickModal: false,\n      closeOnPressEscape: false,\n      closeOnHashChange: false,\n    })\n      .then(async () => {\n        await useUserStore().logOut();\n      })\n      .catch(() => {});\n    throw Error(res.msg);\n  }\n  // 没有权限\n  if (res.code === '403') {\n    ElMessageBox.confirm(res.msg, '无权限访问', {\n      confirmButtonText: '切换账户',\n      cancelButtonText: '取消',\n      type: 'warning',\n      showClose: false,\n      closeOnClickModal: false,\n      closeOnPressEscape: false,\n      closeOnHashChange: false,\n    })\n      .then(async () => {\n        await useUserStore().logOut();\n      })\n      .catch(() => {});\n    throw Error(res.msg);\n  }\n  if (res.code !== '200') {\n    throw Error(res.msg);\n  }\n  if (options?.success) {\n    ElMessage.success({ message: res.msg });\n  }\n  !options?.noLoading && closeLoading();\n  return options?.needAll ? res : res.data;\n```\n\n## 入参说明\n| 参数      | 类型 | 说明 | 是否必填 |\n| ----------- | ----------- | ----------- | ----------- |\n| axiosConfig | AxiosRequestConfig | 接口请求数据，完全遵循 [axios config](https://www.axios-http.cn/docs/req_config) 的规则 |是|\n| options   | RequestOptions    | 基于[vue-request options](https://next.cn.attojs.org/api/#options)配置扩展了个别配置，下面会详细说名 |否|\n| returnAxios | boolean | 返回axios，当传入true是返回axios不传或false时返回vue-reques对象 | 否 |\n\n| RequestOptions | 类型 | 说明 | 是否必填 |\n| ----------- | ----------- | ----------- | ----------- |\n| needAll | boolean | 返回完整的返回值忽略格式化返回值（默认返回的是data字段） | 否 |\n| noLoading | boolean | 不需要lodaing | 否 |\n| noError | boolean | 不需要报错 | 否 |\n| ... vue-request options | [vue-request options](https://next.cn.attojs.org/api/#options) | 更多字段参考[vue-request options](https://next.cn.attojs.org/api/#options) 文档| 否 |\n\n## 使用示例\n\n- 在接口文件夹`@/api`文件夹中新建接口文件`@/api/example.ts`\n\n- 在`@/api/example.ts`加入接口声明代码\n``` ts\nimport { PageParam, PageResult } from '@/api/api.model.js';\nimport { SystemAdminInfo } from '@/api/system/admin.js';\nimport request from '@/utils/request.js';\n\n//示例_书籍\nexport type ExampleBook = {\n  createdAdmin: SystemAdminInfo | null; //创建者\n  updatedAdmin: SystemAdminInfo | null; //最后更新者\n  id: string; //ID\n  name: string; //名称\n  createdAt: string; //创建时间\n  updatedAt: string; //最后更新时间\n};\n\n//获取示例_书籍信息\nexport function getExampleBookApi() {\n  return request<\n    PageResult<ExampleBook>,\n    [\n      PageParam & {\n        id?: string;\n        name?: string;\n      },\n    ]\n  >(\n    (data) => ({\n      url: 'example/demo/getExampleBook',\n      method: 'post',\n      data: data,\n    }),\n    { noLoading: true },\n  );\n}\n\n```\n\n- 在`vue`文件中使用\n``` vue\n<template>\n  <div class="list" v-loading="loading">\n    <template v-if="data">\n      <div v-for="(item, index) in data" :key="index">\n        {{ item }}\n      </div>\n    </template>\n\n  </div>\n</template>\n<script setup lang="ts" name="request">\nimport { getExampleBookApi } from '@/api/example';\nconst { runAsync, loading, error, data } = getExampleBookApi();\nrunAsync({page:1,pageSize:10});//请求接口 建议使用runAsync请求而不是run,区别请参考文档https://next.cn.attojs.org/api/#runasync\n</script>\n```\n\n## 自动请求示例\n\n- 在`vue`文件中使用\n``` vue\n<template>\n  <div class="list" v-loading="loading">\n    <template v-if="data">\n      <div v-for="(item, index) in data" :key="index">\n        {{ item }}\n      </div>\n    </template>\n\n  </div>\n</template>\n<script setup lang="ts" name="request">\nimport { listApi } from '@/api/example';\nconst { runAsync, loading, error, data } = listApi({ defaultParams: [{ page: 1, pageSize: 10 }], manual: false });//manual: false代表组件加载后自动请求接口\n</script>\n```\n## `setup`外请求示例\n\n`vue-request` 是专门为`setup`使用的一个类库，详情请参考[issues:149](https://github.com/AttoJS/vue-request/issues/149)。\n在`setup`外使用时应该直接使用`axios`,`request`函数允许接收一个参数直接返回`axios`实例\n\n- 在`@/api/routeMenu.ts`加入接口声明代码\n  \n```ts\nimport { request } from '@/utils/request';\nimport { RouteRecordRaw } from 'vue-router';\n\nexport function menuApi<T extends boolean = true>(\n  options: RequestOptions<RouteRecordRaw[], []> = {},\n  returnAxios: T = true as T,\n) {\n  return request(\n    () => ({\n      url: '/api/menu/list',\n      method: 'get',\n    }),\n    options,\n    returnAxios,\n  );\n}\n\n```\n\n- 在setup外使用\n\n```ts\nconsole.log(await menuApi()());\n```\n		694025634292170752	40	41		604612615536115712	604612615536115712	2026-03-31 11:32:15.025+08	2026-03-31 13:52:23.732+08	0	1.0.0	request
-693986817568931840	后端文档	\N	1	1	98				9	28		604612615536115712	604612615536115712	2026-03-31 08:55:50.96+08	2026-03-31 13:52:23.732+08	\N	1.0.0	\N
-694016827243626496	前端文档	\N	1	1	97				29	86		604612615536115712	604612615536115712	2026-03-31 10:55:05.824+08	2026-03-31 13:52:23.732+08	\N	1.0.0	\N
-694039459389243392	文件上传	\N	2	1	96	## 文件上传\n\n本项目封装了文件上传组件，支持分片上传、秒传，直接使用即可。\n\n多文件上传\n```\n  <me-upload v-model="files"></me-upload>\n```\n\n单文件上传\n```\n   <me-upload :limit="1" :model-value="info.avatar ? [info.avatar] : []" @update:model-value="(files) => (info.avatar = files.length ? files[0] : null)"></me-upload>\n```\n支持的props\n```\nshowSelect:boolean 是否展示文件选择按钮，默认true\n//其余 element-plus upload组件的所有属性\n\n```\n[ element-plus upload组件 文档](https://element-plus.org/zh-CN/component/upload#%E5%B1%9E%E6%80%A7)		694038800321478656	68	69		604612615536115712	604612615536115712	2026-03-31 12:25:01.748+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694061247515066368	Github	\N	2	1	98		https://github.com/meadmin-cn/meadmin	694060975577366528	94	95		604612615536115712	604612615536115712	2026-03-31 13:51:36.442+08	2026-03-31 13:52:23.732+08	1	1.0.0	\N
-693987244020596736	介绍	\N	2	1	99	# 介绍\n后端使用Midway框架，Midway 是阿里巴巴 - 淘宝前端架构团队，基于渐进式理念研发的 Node.js 框架，通过自研的依赖注入容器，搭配各种上层模块，组合出适用于不同场景的解决方案。\n如需对后端进行更多了解，可阅读[midway文档](https://midwayjs.org/docs/intro)\n\n## 目录结构\n```\n├──.husky git hooks钩子文件夹\n├──.vscode vscode推荐配置文件夹\n├── dist 后端打包文件夹\n├──logs 日志文件夹\n├──public 静态资源文件\n│   ├── admin 后台静态资源\n│   ├── index 前台静态资源\n├── src  后端主目录\n│   ├── app 后端模块根目录\n│   │   ├──admin 后台接口模块\n│   │   │   ├── controller 模块控制器文件夹\n│   │   │   ├── dto 模块出入参dto类文件夹\n│   │   │   ├── middleware 模块中间件夹\n│   │   │   └── service 模块service文件夹\n│   │   ├──index 前台接口模块\n│   │   │   ├── controller 模块控制器文件夹\n│   │   │   ├── dto 模块出入参dto类文件夹\n│   │   │   ├── middleware 模块中间件夹\n│   │   │   └── service 模块service文件夹\n│   │   └──home.controller.ts 页面渲染控制器\n│   ├── config 配置文件夹\n│   ├── controller 公共控制器文件夹\n│   ├── decorators 装饰器文件夹\n│   ├── dict 字典文件夹\n│   ├── dto 出入参dto基类文件夹\n│   ├── entities 数据库实体类文件夹\n│   ├── fileManage 文件夹管理助手类\n│   ├── filter 异常类文件夹\n│   ├── helper 助手函数文件夹\n│   ├── locales 后端多语言文件包\n│   ├── response 反参基类\n|   ├── ruleType 后端自定义校验规则\n|   ├── service 全局公共service\n|   ├── types 类型扩展\n|   ├── configuration.ts 启动文件\n│   └── logger.ts logger初始化文件\n├── uploadFile 本地上传目录\n├── view 前端文件夹\n├── .env env环境变量，VIEW_ADMIN_开头的可被 前端admin项目获取到，VIEW_INDEX_开头的可被前端 index项目获取到\n├── .env.prod 启动后env环境变量\n├── .eslintrc.json eslint配置文件\n├── .gitignore git 忽略文件\n├── .npmrc pnpm配置文件\n├── .prettierignore prettier忽略文件\n├── .prettierrc.cjs prettier配置文件\n├── bootstrap.js 部署后bootstrap启动文件\n├── sql 初始化sql文件\n├── pnpm-workspace.yaml pnpm workspace 配置\n└── tsconfig.json typescript配置文件\n```\n\n\n## 基本概念\n\n后端基于 Node.js 监听端口，对外主要提供 API 接口及页面访问。\n\n后端架构主要划分为以下几层：router、controller、service、dto、entity。\n\n- router：定义路由映射，将不同请求指向对应 controller 类中的方法。访问相应地址时会自动触发对应的 controller 逻辑。\n\n- controller：作为请求入口，负责入参校验、调用 service、返回响应，并集成 Swagger 生成接口文档。其中可能封装少量控制逻辑，但核心业务处理一般交由 service。\n\n- service：封装核心业务逻辑，根据场景组织代码。通过 entity 数据模型进行数据库操作，并实现复杂业务处理。\n\n- entity：对应数据库表的模型实体，所有数据库操作均通过 entity 完成。\n\n- dto：定义接口的请求参数与响应结果格式。每个接口都有对应的 DTO 类，controller 在接收到请求时会自动基于 DTO 完成参数校验。\n\n\n## 改动及封装\n本项目对midway做了以下封装，详情请参考相关章节。\n\n### controller装饰器会继承prefix和routerOptions。\n 根据 controller 继承关系 递归合成Controller装饰器的参数\n 从第一个prefix以/开头的祖级开始合并controller的prefix和routerOptions，如果prefix 以/开头，则不合并prefix和routerOptions\n### 强制文件目录结构\nMidway 对目录没有特别的限制，但当前项目，将一部分常用的文件进行归类，放到一些默认的文件夹中。文件夹详情请参考[目录结构](#目录结构)。日常开发需要关注的主要有：`src/app/*/controller`文件、`src/app/*/service`文件、`src/app/*/dto`文件、`src/app/*/middleware`中间件文件、`src/entities`数据库实体类文件。\n### 模块\n本项目增加了模块的概念，在`src/app/`下每一个文件夹代表一个模块，将相关逻辑归类存放。\n### 应用\n应用基于koa 使用`@midwayjs/koa`组件\n### 参数校验\n已集成，源于`joi`的`@midwayjs/validate@3`参数校验组件，并自定义了`mobile`等校验规则\n### 多语言\n已集成`@midwayjs/i18n@3`多语言组件，多语言文件夹为`locales/en.json`，并且翻译失败使用当前key做为返回值\n### 数据库访问\n已集成sequelize7，自定义封装的sequelize访问service，相关源码在`src/service/dataSourceManager.service.ts`,对应配置文件在`src/config/database.ts`\n### 静态文件映射\n集成 `@midwayjs/static-file@3`组件，`public`文件夹下的资源都可以使用`/文件名`直接访问\n### 模板引擎\n集成 `@medamin/midway-vite-view`组件，实现vite+vue模板渲染支持\n### 缓存\n集成`@midwayjs/redis@3`和`@midwayjs/cache-manager@3`组件，实现基于redis的缓存支持\n### 日志\n调试模式及部署模式，都将日志目录改为本地的 ${app.appDir}/logs/ 目录下		693986817568931840	10	11		604612615536115712	604612615536115712	2026-03-31 08:57:32.634+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694038659338338304	服务方式调用组件	\N	2	1	94	# 服务方式调用组件\n\n本系统支持服务方式调用任意组件，主要方便以函数方式打开新增、编辑弹窗等组件。所有服务方式调用的组件都会被渲染到body下。\n\n## 调用示例\n\n### 声明组件\n\n示例文件位置：`src/views/example/service/components/add.vue`\n\n```vue\n<template>\n  <el-dialog v-model="show" @closed="$emit('closed')">\n    <div>这是测试弹窗 <el-button @click="add()"> 再次打开弹窗 </el-button></div>\n  </el-dialog>\n</template>\n\n<script setup lang="ts" name="Add">\nimport add from './add';\nconst show = defineModel<boolean>('show');\ndefineEmits<{ closed: [] }>();\n</script>\n```\n\n### 声明调用函数\n\n示例文件位置: `src/views/example/service/components/add.ts`\n\n```vue\nimport { useGlobalStore } from '@/store';\nimport Add from './add.vue';\nexport default async (props: Omit<ComponentProps<typeof Add>, 'show'> = {}) => {\n  const show = ref(true);\n  const globalStore = useGlobalStore();\n  const key = globalStore.addGlobalComponents(\n    Add,\n    computed(() => ({\n      show: show.value,\n      ...props,\n      ['onUpdate:show']: (value: boolean) => {\n        show.value = value;\n      },\n      onClosed: () => {\n        globalStore.removeGlobalComponents(key); //关闭时移除当前组件\n        props.onClosed && props.onClosed();\n      },\n    })),\n  );\n  await nextTick();\n  return key;\n};\n```\n\n### 以函数方式调用\n```ts\nimport add from './add';\nadd();\n```\n\n## 注意事项\n- 在合适的时机(如弹窗关闭时)调用`globalStore.removeGlobalComponents(key)`移除组件。\n\n## 原理说明\n\n服务调用方式采用将被调用组件放入全局store中，在`app.vue`中动态获取渲染的方式实现。\n未使用类似于`meImageViewer`这种服务式组件由`h`函数动态创建然后绑定到当前vue示例的原因，是`h`函数动态创建的组件使用`vue-devtools`调试时无法追寻父级，不方便调试，调试模式下不容易被选取。		694026784546488320	58	59		604612615536115712	604612615536115712	2026-03-31 12:21:51.001+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694027005343039488	组件自动按需引入	\N	2	1	99	# 组件自动按需引入\n组件自动引入功能基于[vite-plugin-autogeneration-import-file](https://github.com/yuntian001/vite-plugin-autogeneration-import-file)、[unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)插件实现，相关配置说明请参考对应文档\n\n## elment-plus组件自动引入\n直接在vue文件中使用elment-plus组件，编译时会自动按需引入。\n使用示例：\n```\n<template>\n  <el-dropdown class="me-size-select" trigger="click" max-height="500px">\n    <div class="flex-center pointer">\n      <me-icon-size class="icon"></me-icon-size>\n    </div>\n    <template #dropdown>\n      <el-dropdown-menu>\n        <el-dropdown-item\n          v-for="item in SizeEnum"\n          :key="item"\n          :disabled="themeConfig.size === item"\n          @click="themeConfig.size = item"\n          >{{ $t(item) }}</el-dropdown-item\n        >\n      </el-dropdown-menu>\n    </template>\n  </el-dropdown>\n</template>\n<script setup lang="ts" name="meSize">\nimport { SizeEnum } from '@/enums/configEnum';\nimport { useSettingStore } from '@/store';\nconst { themeConfig } = useSettingStore();\n</script>\n<style lang="scss" scoped>\n.me-size-select {\n  .flex-center {\n    padding: 0 10px;\n\n    .icon {\n      font-size: 1.2em;\n    }\n  }\n}\n</style>\n```\n## 公共组件自动按需引入\n- 在`@/components`文件夹下符合`['*.vue', '**/index.{vue,ts}']` `glob`规则的文件会被自动识别为公共组件，在使用时可直接使用，编译时会自动引入，组件名规则为相对于`@/components`并去除结尾的(index、Index)的大驼峰名称，最终名称可去类型声明文件中确认。\n- 公共组件会自动创建类型声明，类型声明文件位于`types/components.d.ts`。\n\n使用示例\n```\n<template>\n  <div class="header">\n    <me-dark-switch v-if="themeConfig.showDark"></me-dark-switch>\n    <me-size-select v-if="themeConfig.showSize"></me-size-select>\n    <me-locale-select v-if="localeConfig.localeList.length > 1"></me-locale-select>\n  </div>\n</template>\n<script setup lang="ts" name="Header">\nimport { localeConfig } from '@/config';\nimport { useSettingStore } from '@/store';\nconst { themeConfig } = useSettingStore();\n</script>\n<style lang="scss" scoped>\n.header {\n  display: flex;\n  justify-content: right;\n  align-items: center;\n  padding: 12px;\n}\n</style>\n```\n## 自定义引入规则\n自动引入规则可在`plugins/autoImport.ts`中可自行配置更改，详细说明请参考[vite-plugin-autogeneration-import-file文档](https://github.com/yuntian001/vite-plugin-autogeneration-import-file/blob/main/README-zh-cn.md) 核心代码如下\n\n### 规则核心代码\n`plugins/autoImport.ts`\n```ts\nimport { dirname, resolve } from 'path';\nimport * as fs from 'fs';\nimport { createPlugin } from 'vite-plugin-autogeneration-import-file';\nimport { fileURLToPath } from 'url';\nconst { autoImport, resolver: resolverFn } = createPlugin();\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = dirname(__filename);\nfunction pathResolve(dir: string) {\n  return resolve(__dirname, '../', dir);\n}\nexport default () =>\n  autoImport([\n    // 自动生成\n    {\n      // svg icon type\n      pattern: ['*.svg'],\n      dir: pathResolve('src/icons/svg'),\n      toFile: pathResolve('types/meIconComments.d.ts'),\n      name: 'MeIcon_{{name}}',\n      template: fs.readFileSync(pathResolve('./template/meIconComments.d.ts'), 'utf-8'),\n      codeTemplates: [{ key: '//code', template: '{{name}}: Icon;\\n    ' }],\n    },\n    {\n      // pinia module\n      pattern: ['**/*.{ts,js}', '*.{ts,js}'],\n      dir: pathResolve('src/store/modules'),\n      toFile: pathResolve('src/store/module.ts'),\n      name: 'use_{{name}}_store',\n    },\n    {\n      // auto import directives\n      pattern: ['*.ts', '**/index.ts'],\n      dir: pathResolve('src/directives'),\n      toFile: pathResolve('types/directives.d.ts'),\n      template: fs.readFileSync(pathResolve('./template/directives.d.ts'), 'utf-8'),\n      codeTemplates: [\n        {\n          key: '//code',\n          template: '{{name}}: typeof import("{{path}}")["default"];\\n    ',\n        },\n      ],\n      name: 'V_{{name}}',\n    },\n    {\n      // auto import components\n      pattern: ['*.{vue,ts}', '**/index.{vue,ts}'],//具体文件规则，当前规则为 dir文件夹下的.vue或.ts 或者dir子文件夹下的index.vue或index.ts文件\n      dir: pathResolve('src/components'),//扫描的文件夹\n      toFile: pathResolve('types/components.d.ts'),//生成的type文件位置\n      template: fs.readFileSync(pathResolve('./template/components.d.ts'), 'utf-8'),//生成文件模板\n      codeTemplates: [ //生成代码替换模板\n        {\n          key: '//code',\n          template: '{{name}}: typeof import("{{path}}")["default"];\\n    ',\n        },\n        {\n          key: '//typeCode',\n          template: 'type {{name}}Instance = InstanceType<typeof import("{{path}}")["default"]>;\\n  ',\n        },\n      ],\n      name: '_{{name}}',//组件名称命名模板\n    },\n  ]);\n\nexport const resolver = resolverFn;\n\n```\n\n### 自动引入核心代码\n`plugins/autoComponents.ts`\n```ts\nimport { ElementPlusResolver } from 'unplugin-vue-components/resolvers';\nimport Components from 'unplugin-vue-components/vite';\nimport { resolver } from './autoImport';\nexport default () =>\n  // 组件自动注册核心代码\n  Components({\n    include: [],\n    dts: false,\n    //resolver函数的第一个数组参数代表组件自动引入的规则index,第二个数组参数代表指令自动引入的规则index\n    resolvers: [ElementPlusResolver({ importStyle: false }), resolver([3], [2])],\n  });\n\n```		694026784546488320	48	49		604612615536115712	604612615536115712	2026-03-31 11:35:32.472+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-693989780223950848	其他	\N	2	1	92	# 其他\n\n## 权限校验\n后台`admin`接口权限校验，在`controller`使用`@AdminPermission`装饰器。\n```\nimport { AdminPermission, ApiOperationResponse } from '@/decorators/index.js';\nimport { User } from '@/entities/user.entity.js';\nimport { Body, Controller, Inject, Post } from '@midwayjs/core';\nimport { UserCreateDto } from '../dto/userCreate.dto.js';\nimport { UserService } from '../service/user.service.js';\nimport { BaseController } from './base.controller.js';\n\n/**\n * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。\n * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址\n */\n@Controller('user')\nexport class UserController extends BaseController {\n  @Inject()\n  userService: UserService;\n\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Post('/add')\n  @ApiOperationResponse({\n    responseType: User,\n    summary: '添加用户信息',\n  })\n  @AdminPermission('UserAdd')\n  async add(@Body() createDto: UserCreateDto) {\n    return this.success(await this.userService.create(createDto));\n  }\n}\n```\n\n前台`index`接口权限校验，在`controller`使用`@IndexPermission`装饰器。前台登录仅校验是否登录，未做过多的权限封装。\n```\nimport { ApiOperationResponse, IndexPermission } from '@/decorators/index.js';\nimport { Controller, Get, Inject } from '@midwayjs/core';\nimport { User } from '../../../entities/user.entity.js';\nimport { UserService } from '../service/user.service.js';\nimport { BaseController } from './base.controller.js';\n\n/**\n * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。\n * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址\n */\n@Controller('user')\nexport class UserController extends BaseController {\n  @Inject()\n  userService: UserService;\n\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Get('/info')\n  @ApiOperationResponse({\n    responseType: User,\n    summary: '获取当前用户的信息',\n  })\n  @IndexPermission()\n  async info() {\n    const entity = await this.userService.findOne(this.ctx.userInfo.id);\n    return this.success(entity);\n  }\n}\n\n```\n\n## 登录校验\n后台`admin`接口放开登录校验可在`src/config/config.default.ts`中配置。\n```\nadmin: {\n    login: {\n      secret: 'desec2ec3=ase$&e1#edad#$%%', //token加密平台标识\n      expiresIn: 3600000 * 6, //token过期时间ms\n      renewal: 60000 * 10, //续期时间ms\n      cacheKey: 'admin', //token使用的缓存key对应cacheManager.clients\n    },\n    auth: {\n      noLoginUrl: [`/api/admin/login/login`, `/api/admin/login/captcha`, new RegExp('/api/admin/file/get/.+')] as Array<string | RegExp>, //无需登录地址，支持字符串或正则\n    },\n  },\n```\n## 配置和环境变量\n本项目配置文件在`src/config/config.default.ts`中，并根据运行环境加载对应的.env文件。\n\n如`dev`命令`cross-env NODE_ENV=local  npx me-devBootstrap --cleanOutDir --watch --run @midwayjs/mock/app`会依次加载 `.env``.env.local`文件\n\n`start` 命令`cross-env NODE_ENV=prod node ./bootstrap.js`会依次加载 `.env``.env.prod`文件\n更多说明请参考[midway 文档](https://midwayjs.org/docs/env_config)。\n\n`.env`环境变量中以`VIEW_ADMIN_`开头和以`VIEW_INDEX_`开头的环境变量可分别被 `admin`及`index`前台项目读取到。\n\n## 多语言\n本项目的多语言目录在`src/locales`中,配置方式如下：\n```\n//src/config/config.default.ts\ni18n: {\n  // 默认语言  "zh-cn"\n  defaultLocale: 'zh-cn',\n  // used to alter the behaviour of missing keys\n  missingKeyFn: function (locale, value) {\n    return value;\n  },\n\n  // 把你的翻译文本放到这里\n  localeTable: {\n    'zh-cn': {\n      validate: {\n        'string.mobile': '{{#label}} 必须是一个正确的手机号',\n      },\n    },\n    'en': {\n      default: await import('../locales/en.json', { with: { type: 'json' } }),\n      validate: await import('@midwayjs/validate/locales/en_US.json', { with: { type: 'json' } }),\n    },\n  },\n\n  missingKeyHandler: (message: string, options?: TranslateOptions) => (options?.args ? formatText(message, options.args) : message),\n},\n```\n更多说明请参考[midway文档](https://midwayjs.org/docs/extensions/i18n)\n## 日志\n调试模式及部署模式，都将日志目录改为本地的 ${app.appDir}/logs/ 目录下\n```\n//src/config/config.default.ts\nmidwayLogger: {\n    default: {\n      transports: {\n        file: {\n          dir: resolve(import.meta.dirname, '../../logs'),\n        },\n        error: {\n          dir: resolve(import.meta.dirname, '../../logs'),\n        },\n      },\n    },\n    // ...\n  },\n```\n## 缓存\n集成@midwayjs/redis@3和@midwayjs/cache-manager@3组件，实现基于redis的缓存支持\n```\n//src/config/config.default.ts\n  redis: {\n    clients: {\n      cache: {\n        host: process.env.REDIS_HOST,\n        port: process.env.REDIS_PORT,\n        password: process.env.REDIS_PASS,\n        db: 0,\n      },\n    },\n  },\n  cacheManager: {\n    //缓存配置\n    clients: {\n      admin: {\n        store: createRedisStore('cache'),\n      },\n      index: {\n        store: createRedisStore('cache'),\n      },\n    },\n  },\n```\n## 静态文件映射\n集成 @midwayjs/static-file@3组件，public文件夹下的资源都可以使用/文件名直接访问\n```\n//src/config/config.default.ts\n  staticFile: {\n    dirs: {\n      default: {\n        prefix: '/',\n        dir: 'public',\n      },\n      viewAdmin: {\n        prefix: '/html/admin/',\n        dir: 'view/admin/dist',\n      },\n      viewIndex: {\n        prefix: '/html/index/',\n        dir: 'view/index/dist',\n      },\n    },\n  },\n```\n\n## 更多\n依赖注入、生命周期、Cookies 和 Session、内置服务、Web 路由表、现有装饰器索引、框架错误码、设计模式等更多特性请参考[midway文档](https://midwayjs.org/docs/container)		693986817568931840	26	27		604612615536115712	604612615536115712	2026-03-31 09:07:37.313+08	2026-03-31 13:52:23.732+08	0	1.0.0	other
-694024975761276928	配置	\N	2	1	99	# 配置\n## 目录结构\n前端项目`admin`根目录位于 `view/admin`，下边的目录相对于`view/admin`文件夹。\n```\n.\n├── dist 打包文件夹\n├── plugins vite插件\n├── public 公共静态资源目录\n├── src  主目录\n│   ├── api 接口文件\n│   ├── assets 资源文件\n│   │   └── images 项目存放图片的文件夹\n│   ├── components 公共组件（里面的组件会自动引入）\n│   ├── config 配置文件夹\n│   │   ├── index.ts 配置入口文件\n│   │   ├── locale.ts 国际化配置\n│   │   ├── login.ts  登录配置\n│   │   └── theme.ts  主题配置\n│   ├── directives 指令（里面的指令会自动引入）\n│   ├── dict  字典\n│   ├── event 事件\n|   ├── hooks 公共hooks\n│   ├── icons 图标\n│   │   ├── svg  svg图标文件夹（放入此文件夹的svg会被自动注册图标组件）\n│   │   └── index.ts 图标自动注册入口文件\n│   ├── layout 布局文件\n│   ├── locales  国际化\n│   │   └── lang 全局语言包\n│   ├── router  路由配置\n│   │   ├── guard 路由全局守卫\n│   │   └── routes 动态路由存放目录\n|   ├── styles 样式文件 \n│   ├── store  pinia文件夹\n│   ├── utils  工具类\n│   ├── views  页面\n│   └── main.ts 入口文件\n├── template自动生成模板\n├── types  类型文件\n└── vite.config.ts vite配置文件\n```\n## 基础配置\n\n配置文件地址 `@/config/index.ts`\n```ts\nconst settingConfig = {\n  version: '1.0.3', //版本当版本改变时会清空localStorage和sessionStorage\n  openKeepAlive: true, // 是否开启KeepAlive缓存\n  menuMode: MenuModeEnum.STATIC, // 动态路由模式 MenuModeEnum.STATIC/MenuModeEnum.API\n};\n```\n\n## 登录配置\n\n登录后token会储存在在cookie中，可以在配置文件中配置token相关cookie设置\n\n配置文件地址 `@/config/login.ts`\n``` ts\nexport default {\n  tokenName: 'auth-token', // cookie中存储的token key\n  tokenExpires: 7, // token 过期时间\n  tokenDomain: typeof window === 'undefined' ? '' : window.location.hostname, // token 存储cookie域名\n};\n```\n\n## 主题配置\n\n配置文件地址`@/config/theme.ts`\n``` ts\nimport { SizeEnum } from '@/enums/configEnum';\nexport default {\n  primaryColor: '#409eff', // 主题颜色\n  menuBg: '#1d1e1f', // 菜单背景颜色\n  menuWidth: '200px', // 菜单展开宽度\n  menuCollapse: true, // 菜单是否折叠\n  size: SizeEnum.DEFAULT, // 默认大小\n  fixedHeader: true, // 固定header\n  topBar: true, // 是否显示顶栏\n  breadcrumb: true, // 面包屑\n  showDark: true, // 开启暗黑模式切换\n  showSize: true, // 开启大小切换\n  tagBar: true, // 标签栏\n  tagBarMenu: true, // 标签栏快捷菜单\n  tagBarRefresh: true, // 标签栏刷新按钮\n  showSetting: true, // 展示设置按钮\n};\n```\n\n## 国际化配置\n\n配置文件地址`@/config/locale.ts`\n\n- 语言包异步导入配置\n  \n``` ts\nexport const loadMessageConfig = {\n// 导入语言包配置\ntimeOut: 10000, // 导入语言包超时时间ms(对于单次导入而不是整体导入)0代表不超时\nerrorWarning: false, // 导入失败的警告（生产环境会被屏蔽）\ncomponentLoad: true, // 组件语言包导入 不需要多语言或只使用全局语言包时设置为false以提升性能\n};\n```\n- 语言列表\n  \n!!! warning 注意\nlocale命名时需要和[element-plus](https://element-plus.gitee.io/zh-CN/guide/i18n.html#cdn-%E7%94%A8%E6%B3%95)的local命名一致，否则无法加载element-plus对应的语言包 \n!!!\n\n``` ts\nexport const localeList = [\n  {\n    text: '简体中文',\n    locale: 'zh-cn',\n  },\n  {\n    text: '美国英语',\n    locale: 'en',\n  },\n]\n```\n\n- 全局[VueI18n](https://vue-i18n.intlify.dev/api/general.html#i18noptions)初始参数(VueI18n版本基于v9.x)\n\n!!! warning 注意\nlegacy和globalInjection无需设置\n程序内部强制把legacy设置为了false、globalInjection设置为了true。\n!!!\n\n``` ts\nconst localeSetting: I18nOptions = {\n  // Locale\n  locale: localeList[0].locale,\n  // Default locale\n  fallbackLocale: localeList[0].locale,\n  missingWarn: false, // 当本地化失败时，压制输出的警告\n  fallbackWarn: false, // 抑制回落警告\n  fallbackFormat: true, // 跳过为你的"base"语言编写模板;key是您的模板\n};\n```		694025634292170752	32	33		604612615536115712	604612615536115712	2026-03-31 11:27:28.582+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694023777788362752	介绍	\N	2	1	98	# 后台文档\n\n## 简介 \n后台前端模板，基于vue3、vite、 pinia、 elment-plus构建，如需仅使用纯前端模板可以去[Me-admin template](https://github.com/meadmin-cn/meadmin-template) clone，纯前端模板文档[https://www.cn/meadmin-template-doc/](https://www.cn/meadmin-template-doc/)。\n\n\n## 前端特性\n - **基于vue3、vite、pinia、elment-plus、vue-request@next**\n - **基于typescript** 应用级JavaScript 的语言\n - **可配置主题** 可配置主题色及主题模式\n - **友好的国际化方案** 基于vue-i18n 支持按组件异步加载语言包。\n - **自定义keepAlive缓存** 可根据key进行vue keep-alive,解决不同路由统一组件不能独立刷新缓存问题\n - **权限** 内置完善的动态路由权限生成方案，按钮级权限。支持前端菜单和接口动态获取菜单两种模式\n - **组件自动按需引入** 自动按需引入components下的组件定义,支持自定义引入位置和模式，真正的按需引入。\n - **便捷的类型自动生成** 自动生成ts type 最大程度减少工作量\n - **集成vxeTable** 功能最完善的国人开源vue table组件\n\n## vite插件推荐\n 本项目中用到的vite插件，非常好用，如果能帮到您，请点个star\n- [vite-plugin-autogeneration-import-file](https://github.com/yuntian001/vite-plugin-autogeneration-import-file) 自动生成文件，用于type文件和引入文件的自动生成\n- [@yuntian001/vue-setup-extend](https://github.com/yuntian001/vue-setup-extend) 方便给vue `<script setup>` 标签语法设置自定义属性。\n- [unplugin-auto-import](https://github.com/antfu/unplugin-auto-import) 按需自动导入Vue、Vue Router、pinia等官方Api\n- [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components) 按需自动导入组件\n- [vite-svg-loader](https://github.com/jpkleemans/vite-svg-loader) Vite插件加载SVG文件作为Vue组件，使用SVGO进行优化\n\n\n## 浏览器兼容性\n- 由于 Vue 3 不再支持 IE11，本项目不支持 IE 浏览器。\n- 如果需要配置兼容性可参考[如何配置浏览器兼容性](/client/admin/other/question.md#如何配置浏览器兼容性)\n\n| ![](https://cdn.jsdelivr.net/npm/@browser-logos/edge/edge_32x32.png) |![](https://cdn.jsdelivr.net/npm/@browser-logos/firefox/firefox_32x32.png) | ![](https://cdn.jsdelivr.net/npm/@browser-logos/chrome/chrome_32x32.png) | ![](https://cdn.jsdelivr.net/npm/@browser-logos/safari/safari_32x32.png)|\n| --- | --- | --- | --- |\n| 88 | 78 | 87 | 13 |		694025634292170752	34	35		604612615536115712	604612615536115712	2026-03-31 11:22:42.963+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694026555071922176	样式	\N	2	1	93	# 样式\n本系统样式采用的 [sass](https://www.sass.hk/)，建议全局样式和变量放在 公共样式文件夹 中，组件样式写在各自组件的`<style lang="scss" scoped>`标签中，请提前了解\n[sass](https://www.sass.hk/) 和 [vue css](https://cn.vuejs.org/api/sfc-css-features.html)文档\n\n## 公共样式文件夹\n```\n├── src  \n|   ├── styles 公共样式文件\n│   │   ├── element-plus.scss element-plus覆盖样式\n│   │   ├── index.scss 全局样式\n│   │   ├── transition.scss 动画样式\n│   │   └── variables.scss  sass变量\n```\n\n## sass变量\nsass 变量位于 `src/styles/variables.scss`文件中，已用`vite`的`css.preprocessorOptions.scss.additionalData`配置项自动引入，`vue`的模板中可直接使用\n\n### 使用示例\n\n```\n<style lang="scss" scoped>\n.main {\n  padding: $page-padding;\n}\n</style>\n```\n\n## size切换\n\n为了实现size 的切换功能，做了以下更改\n\n- 修改large、small下的--el-font-size-base，代码位置位于`src/styles/element-plus.scss`\n\n``` scss\n.me-large:root {\n  //这里强制将font-size-base设置为large\n  --el-font-size-base: var(--el-font-size-large);\n}\n.me-small:root {\n  //这里强制将font-size-base设置为small\n  --el-font-size-base: var(--el-font-size-small);\n}\n```\n\n- 不同size下 html基础`font-size`不同,代码位置位于`src/styles/index.scss`\n\n``` scss\n.me-large {\n  font-size: var(--el-font-size-base);\n}\n\n.me-default {\n  font-size: var(--el-font-size-base);\n}\n\n.me-small {\n  font-size: var(--el-font-size-small);\n}\n```\n- 将`font-size`的值由`px`自动转化为`rem`,实现代码位于`vite.config.ts`\n``` ts\npostcss: {\n    plugins: [\n        autoprefixer,\n        px2rem({\n        rootValue: 14, //换算基数，将 px 替换为 1/rootValue rem (即设计图下的fontSize)\n        // unitPrecision: 5, //允许REM单位增长到的十进制数字。\n        propWhiteList: ['font-size'], //默认值是一个空数组，这意味着禁用白名单并启用所有属性。\n        // propBlackList: ['font-size', 'border'], //不应从 px 更改为 rem 的属性\n        exclude: /(node_module)/, //默认false，可以（reg）利用正则表达式排除某些文件夹的方法，例如/(node_module)\\/如果想把前端UI框架内的px也转换成rem，请把此属性设为默认值\n        // selectorBlackList: [], //要忽略并保留为px的选择器\n        // ignoreIdentifier: false,  //（boolean/string）忽略单个属性的方法，启用ignoreidentifier后，replace将自动设置为true。\n        // replace: true, // （布尔值）替换包含REM的规则，而不是添加回退。\n        mediaQuery: false, //（布尔值）允许在媒体查询中转换px。\n        minPixelValue: 2, //设置要替换的最小像素值(包含)。 默认 0\n        }),\n    ],\n},\n```\n## 全局样式类\n- `page-100` 设置页面组件高度为100%，因当前页面布局用的flex自动撑开，设置view组件'height:100%'是无效的，想设置高度为100%只需要给view组件根元素加上`page-100` 类即可\n- `ellipsis-1` 超出一行展示省略号...\n- `ellipsis-2`、`ellipsis-3`超出2/3行展示省略号...\n- `pointer` 鼠标移入变小手\n- `flex-center` 使用flex使子元素居中		694025634292170752	44	45		604612615536115712	604612615536115712	2026-03-31 11:33:45.12+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694017222984597504	后台文档	\N	1	1	99			694016827243626496	30	83		604612615536115712	604612615536115712	2026-03-31 10:56:40.177+08	2026-03-31 13:52:23.732+08	\N	1.0.0	\N
-693989595624243200	一键crud	\N	2	1	93	# 一键crud\n本项目支持根据数据库实体文件 一键生成crud\n## 示例\n- `pnpm meadmin crud exampleDemo --menu`  --menu 参数代表数据库同步生成后台菜单\n\n运行后会生成以下文件\n```\nsrc/app/admin/dto/example/demoCreate.dto.ts 后端新增dto校验文件\nsrc/app/admin/dto/example/demoUpdate.dto.ts 后端更新dto校验文件\nsrc/app/admin/dto/example/demoQuery.dto.ts 后端查询入参dto校验文件\nsrc/app/admin/service/example/demo.service.ts 后端service\nsrc/app/admin/controller/example/demo.controller.ts 后端 controller\nview/admin/src/api/example/demo.ts  前端 api接口定义 \nview/admin/src/views/example/demo/lang/en.json 前端组件语言包 \nview/admin/src/views/example/demo/dict.ts 前端字典\nview/admin/src/views/example/demo/index.vue 前端字典列表组件\nview/admin/src/views/example/demo/components/info.vue 前端字典详情组件\nview/admin/src/views/example/demo/components/addOrUp.vue 前端字典新增/修改组件\n```\n## 参数说明\n`pnpm meadmin [-m <char> 环境变量] crud entity实体文件 参数`\n\n```\n  --model <char>            model名称会放到app/{model}下对应的文件夹 (default: "admin")\n  -f, --force               强制覆盖\n  -n, --name <char>         使用的数据库配置defaultDataSourceName\n  -d, --dbConfig <char>     数据库配置文件地址默认为当前目录下dist/config/database.js (default: "G:\\\\my\\\\meadmin\\\\dist\\\\config\\\\database.js")        \n  --del                     删除crud创建的文件\n  --path <char>             生成的路径，默认根据驼峰转多级路径\n  -c, --controller <char>   生成的controller路径，默认使用path\n  --menu                    生成菜单\n  --cov, --coverage <char>  生成代码发覆盖范围：b后端代码、a前端api接口代码、v前端view 代码、p后台权限校验，默认值bavp (default: "bavp")\n```\n例如 `pnpm meadmin -m dev crud exampleDemo --menu` 加载`dev`环境变量根据`dist/entities/exampleDemo.entity.js`生成对应的文件并创建菜单。\n\n## 规则\n自动生成具有以下规则\n- 根据`swagger`规则自动创建 必填、min、max、mobile、email校验规则\n- 以“名称:值1=说明1;值2=说明2”，格式声明的备注会自动创建字典和下拉列表，并且支持number、string两种类型\n- 根据枚举值自动创建 select下拉选项\n- `BelongsToMany`及 `BelongsTo`关联自动创建远程下拉搜索\n- 以`At`结尾自动创建时间范围筛选\n- 关联`File`实体自动应用文件上传组件		693986817568931840	24	25		604612615536115712	604612615536115712	2026-03-31 09:06:53.3+08	2026-03-31 13:52:23.732+08	0	1.0.0	crud
-694038048488292352	api自动引入	\N	2	1	97	# api自动引入\n\n基于[unplugin-auto-import](https://github.com/antfu/unplugin-auto-import)的api自动引入，支持`vue` `vue-router` `pinia` `@vueuse/core`更多说明参考[unplugin-auto-import](https://github.com/antfu/unplugin-auto-import)文档\n\n配置代码位置`vite.config.ts` \n``` ts\nAutoImport({\n    // 自动加载API\n    imports: ['vue', 'vue-router', 'pinia', '@vueuse/core'],\n    // 可以选择auto-imports.d.ts生成的位置，使用ts建议设置为'src/auto-imports.d.ts'\n    dts: 'types/auto-imports.d.ts',\n    resolvers: [ElementPlusResolver()],\n}),\n```\n\n**无需**\n\n``` ts\nimport { computed, ref } from 'vue'\nconst count = ref(0)\nconst doubled = computed(() => count.value * 2)\n```\n\n**直接**\n\n``` ts\nconst count = ref(0)\nconst doubled = computed(() => count.value * 2)\n```		694026784546488320	52	53		604612615536115712	604612615536115712	2026-03-31 12:19:25.363+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694038985755852800	MeKeepAlive	\N	2	1	99	# MeKeepAlive\n\nvue 官方的KeepAlive缓存只支持按组件名筛选过滤，这里自定义了MeKeepAlive组件,在KeepAlive的前提下增加了组件key过滤条件,其余规范和功能和KeepAlive组件一致，KeepAlive官方说明[KeepAlive](https://cn.vuejs.org/guide/built-ins/keep-alive.html)\n\n## 组件props\n\n| props      | 类型 |说明|\n| ----------- | ----------- | ----------- |\n| max       | number | 限制最大缓存实例数 |\n| include      | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组 | 过滤组件名白名单 |\n| exclude    | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组     | 过滤组件名黑名单 |\n| includeKey      | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组 | 过滤组件key白名单 |\n| excludeKey    | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组     | 过滤组件key黑名单 |\n\n## 使用演示\n\n这里只样式includeKey、excludeKey其余说明参考[KeepAlive](https://cn.vuejs.org/guide/built-ins/keep-alive.html)\n```vue\n<me-keep-alive includeKey="a,b">\n  <component :is="view" key="a" />\n  <component :is="view" key="b" />\n  <component :is="view" key="c" />\n</me-keep-alive>\n```\n```vue\n<me-keep-alive excludeKey="c">\n  <component :is="view" key="a" />\n  <component :is="view" key="b" />\n  <component :is="view" key="c" />\n</me-keep-alive>\n```\n\n## 局限性\n\n因为vue编译模板时对`KeepAlive` `tagName`做了特殊处理,当`MeKeepAlive`和`Transition`组件、`TransitionGroup`配合使用使用时，只能用渲染函数的方式使用，在`Vue 的单文件组件 (即 *.vue 文件)`中请使用`KeepAlive`组件。\n\n### `Transition`+渲染函数使用示例\n\n```\nimport { Transition } from 'vue';\nconst transitionProps={};\nconst meKeepAliveProps={};\nh(Transition, transitionProps, { \n  default: () => h(MeKeepAlive, meKeepAliveProps, [componentOptions])\n})\n```		694038800321478656	62	63		604612615536115712	604612615536115712	2026-03-31 12:23:08.825+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694026400633454592	多语言	\N	2	1	94	# 国际化\n- 详细配置说明请参考[国际化配置](../guide/config.md#国际化配置)\n- 国际化基于[vue-i18n v9.x](https://kazupon.github.io/vue-i18n/zh/introduction.html)开发。具体翻译规则请参考[vue-i18n v9.x 文档](https://kazupon.github.io/vue-i18n/zh/introduction.html)\n## 设置语言列表\n在配置文件`@/config/locale.ts`设置语言选项，新增成功后`localeList`里面的`text`会展示在语言切换的下拉列表中,如果`localeList`只有一个元素则不会展示切换语言按钮\n  \n!!! warning 注意\nlocale命名时需要和[element-plus](https://element-plus.gitee.io/zh-CN/guide/i18n.html#cdn-%E7%94%A8%E6%B3%95)的local命名一致，否则无法加载element-plus对应的语言包 \n!!!\n\n``` ts\nexport const localeList = [\n  {\n    text: '简体中文',\n    locale: 'zh-cn',\n  },\n  {\n    text: '美国英语',\n    locale: 'en',\n  },\n]\n```\n## 设置默认语言\n修改配置文件`@/config/locale.ts`中的`localeSetting.locale`的值为`localeList`任一元素的`locale`来配置初始语言\n\n## 全局语言包\n### 添加全局语言包\n全局语言包位于`@/locales/lang`文件夹下，下面以新建en对应语言包为例：\n- 在`@/locales/lang`文件夹下新建文件夹`en`(文件夹名要和`locale`名称一致)\n``` sh\n  cd ./locales/lang\n  mkdir en\n```\n- 在`@/locales/lang/en`文件夹中新建`index.ts`文件并写入以下代码\n``` ts\nimport { forOwn } from 'lodash-es';\nconst modules = import.meta.glob('./**/*.{json,ts}', { eager: true, import: 'default' });\nconst langs = {} as Record<string, string>;\nforOwn(modules, (value) => {\n  Object.assign(langs, value);\n});\nexport default langs;\n```\n- 在`@/locales/lang/en`文件夹下新建任意`json/ts`语言包文件,语言系统会自动加载\n::: warning 注意\n- 非必要优先使用json格式语言包(有利于自行修改为VueI18nPlugin生成预加载包)。\n:::\n`//@/locales/lang/en/menu.json`\n``` json\n{\n  "首页": "Index",\n  "示例": "Example",\n  "权限": "Permission",\n  "组件语言包": "Component Language Pack",\n  "请求示例": "Request Example",\n  "页面权限": "Page Permission",\n  "多级菜单": "Multilevel Menu",\n  "多级菜单1": "Multilevel Menu 1",\n  "多级菜单1-1": "Multilevel Menu 1-1",\n  "多级菜单1-1-1": "Multilevel Menu 1-1-1",\n  "多级菜单1-2": "Multilevel Menu 1-2"\n}\n```\n### `template`中按[vue-i18n v9.x](https://kazupon.github.io/vue-i18n/zh/introduction.html)规范使用\n``` vue\n<template>\n  <div>\n    {{ $t('多级菜单1') }}\n    <br />\n    {{ $t('权限') }}\n  </div>\n</template>\n```\n## 组件语言包\n### 添加组件语言包\n假设组件目录结构如下\n```\n├── componentLang 组件文件夹\n│   └── index.vue 组件vue文件\n```\n- 在`componentLang`文件夹下新建组件语言包文件夹`lang`(组件语言包文件夹名必须为`lang`)\n``` sh\n mkdir lang\n```\n- 在`componentLang/lang`文件夹下建立对应语言`json/ts`文件，文件名和`localeList`里面的`local`值相同,以`en`语言举例\n::: warning 注意\n- 非必要优先使用json格式语言包(有利于自行修改为VueI18nPlugin生成预加载包)。\n:::\n```\n  touch en.json\n```\n- 在语言文件中写入翻译内容\n``` json\n{\n  "切换语言查看效果": "Switch languages to see the effect",\n  "打开Network可以看到语言包请求": "Open Network to see the language pack request"\n}\n```\n\n### 使用组件语言包\n- 引入\n\n  直接利用顶层setup异步能力，`await loadRes`即可。\n  ::: warning 注意\n  - `[(locale: string) => import(`./lang/${locale}.json`), 'compnentLang']` 中的 `compnentLang`为组件语言包的缓存名称，确保同一语言(locale)下每个组件语言包一一对应，compnentLang 参数可忽略。\n  :::\n\n  ``` vue\n  <script setup lang="ts">\n  import { useLocalesI18n } from '@/locales/i18n';\n  const { t, loadRes }  = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'compnentLang']);\n  await loadRes;//顶层异步加载语言包\n  </script>\n  ```\n  \n- `template`中按[vue-i18n v9.x](https://kazupon.github.io/vue-i18n/zh/introduction.html)规范使用即可\n``` vue\n<template>\n  <div class="component-lang">\n    {{ t('切换语言查看效果') }}\n    <br />\n    {{ t('打开Network可以看到语言包请求') }}\n  </div>\n</template>\n```\n\n### 优化建议\n\n- 建议翻译key值为初始化语言的值，这样能节省对应语言包的编写。\n- 如果您的语言包数据不大或用不到多语言建议将翻译全部放在全局语言包中，在配置文件`@/config/locale.ts`中设置`loadMessageConfig.componentLoad`的值为`false`,以避免切换路由时的语言包请求，优化性能。		694025634292170752	42	43		604612615536115712	604612615536115712	2026-03-31 11:33:08.298+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694039759151955968	富文本	\N	2	1	95	# 富文本(WangEditor)\n组件名`MeWangEditor`，集成了[WangEditor](https://www.wangeditor.com/v5/getting-started.html),编辑器默认高度为`500px`可通过样式直接覆盖更改,详细说明请参考[WangEditor 文档](https://www.wangeditor.com/v5/getting-started.html)和[用于Vue3](https://www.wangeditor.com/v5/for-frame.html#vue3)。\n\n!!! warning 注意\n- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。\n- 当前组件位置`@/components/meWangEditor`\n!!!\n\n## 组件props\n\n| props      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| mode      | 'simple' \\| 'default' | 模式，默认值为`default`。 'default'默认模式，集成了 wangEditor 所有功能。 'simple'简洁模式，仅有部分常见功能，但更加简洁易用|否|\n| config      | `{ toolbar?: Partial<IToolbarConfig>; editor?: Partial<IEditorConfig> }` | wangeditor配置，默认值为`{}`。toolbar为[工具栏配置](https://www.wangeditor.com/v5/toolbar-config.html)对象， editor为[编辑器配置](https://www.wangeditor.com/v5/editor-config.html)和[菜单配置](https://www.wangeditor.com/v5/menu-config.html)对象。|否|\n| modelValue(v-model) | string | 非格式化的 html内容 |是|\n| defaultContent | SlateDescendant[](editor.children 获取的内容) | 编辑器默认内容,默认值为`[]`,参考[设置-json](https://www.wangeditor.com/v5/content.html#%E8%AE%BE%E7%BD%AE-json) |否|\n| defaultHtml | string | 默认html内容，默认值为`''`,为空时编辑器会使用`v-model`绑定的值。参考[设置-html](https://www.wangeditor.com/v5/content.html#%E8%AE%BE%E7%BD%AE-html) | 否|\n\n\n## 组件事件\n\n| emit      | 格式 |说明|\n| ----------- | ----------- | ----------- |\n| onCreated | (editor: IDomEditor) =>void | 编辑器创建完毕时的回调函数。参考[onCreated](https://www.wangeditor.com/v5/editor-config.html#oncreated) |\n| onChange | (editor: IDomEditor) =>void | 编辑器内容、选区变化时的回调函数。参考[onChange](https://www.wangeditor.com/v5/editor-config.html#onchange) |\n| onDestroyed | (editor: IDomEditor) =>void | 编辑器销毁时的回调函数。参考[onDestroyed](https://www.wangeditor.com/v5/editor-config.html#ondestroyed) |\n| onMaxLength | (editor: IDomEditor) =>void | 配置编辑器的 maxlength。参考[maxLength onMaxLength](https://www.wangeditor.com/v5/editor-config.html#maxlength-onmaxlength) |\n| onFocus | (editor: IDomEditor) =>void | 编辑器 focus 时的回调函数。参考[onFocus](https://www.wangeditor.com/v5/editor-config.html#onfocus) |\n| onBlur | (editor: IDomEditor) =>void | 编辑器 blur 时的回调函数。参考[onBlur](https://www.wangeditor.com/v5/editor-config.html#onblur) |\n| customAlert | (s: string, t: string) =>void | 自定义编辑器 alert 。如想用 antd 的 message 功能。参考[customAlert](https://www.wangeditor.com/v5/editor-config.html#customalert) |\n| customPaste | (editor: IDomEditor, event: ClipboardEvent,(val: boolean) => { res = val})=>void | 自定义粘贴。可阻止编辑器的默认粘贴，实现自己的粘贴逻辑。参考[customPaste](https://www.wangeditor.com/v5/editor-config.html#custompaste)和[wangEditor-for-vue3](https://github.com/wangeditor-team/wangEditor-for-vue3/blob/main/src/components/Editor.vue) |\n\n!!! warning 注意\n注意上述组件事件，必须通过 Vue 事件来传递，不可以放在 `config.editor` 中\n!!!\n\n## 示例\n\n```vue\n<template>\n  <div>\n    <me-wang-editor v-model="html" :config="config"></me-wang-editor>\n  </div>\n</template>\n<script setup lang="ts" name="WangEditor">\nconst html = ref('<p>hello word!</p>');\nconst config = {\n  editor: {\n    maxLength: 1000,\n    ['MENU_CONF']: {\n      uploadImage: {\n        // 小于该值就插入 base64 格式（而不上传），默认为 0\n        base64LimitSize: 2 * 1024 * 1024, // 5mb\n      },\n    },\n  },\n};\n</script>\n```		694038800321478656	70	71		604612615536115712	604612615536115712	2026-03-31 12:26:13.217+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694038194332631040	配置vscode模板片段	\N	2	1	96	# 配置vscode模板片段\n\n## vue模板\n- 点击vscode 左下角设置图标\n- 选中配置用户代码片段\n- 选中新建全局代码片段\n- 输入名称`v3`\n- 粘贴入以下代码\n```\n{\n\t// Place your snippets for vue here. Each snippet is defined under a snippet name and has a prefix, body and \n\t// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:\n\t// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the \n\t// same ids are connected.\n\t// Example:\n\t"Print to console": {\n\t\t"prefix": "<v3",\n\t\t"body": [\n\t\t\t"<template>",\n                "<div class=\\"${TM_FILENAME_BASE/([A-Z])/-${1:/downcase}/g}\\">",\n\t\t\t\t"${1}",\n\t\t\t\t"</div>",\n                "</template>",\n                "",\n                "<script setup lang=\\"ts\\" name=\\"${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}\\">",\n\t\t\t\t"",\n                "</script>",\n                "<style lang=\\"scss\\" scoped>",\n                ".${TM_FILENAME_BASE/([A-Z])/-${1:/downcase}/g}{",\n\t\t\t\t"",\n\t\t\t\t"}",\n                "</style>"\n\t\t],\n\t\t"description": "A vue file template"\n\t}\n}\n```\n - 新建`.vue`文件后 输入`<v3`会出现对应模板选项，选中后会自动生成vue文件模板\n\n ## pinia 模板\n ```\n {\n\t// Place your 全局 snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and \n\t// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope \n\t// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is \n\t// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: \n\t// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. \n\t// Placeholders with the same ids are connected.\n\t// Example:\n\t"Print to console": {\n\t\t"scope": "typescript",\n\t\t"prefix": "<s",\n\t\t"body": [\n\t\t\t"const use${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}Store =  defineStore('global', {",\n\t\t\t"  state:()=>({",\n\t\t\t"    $0",\n\t\t\t"  }),",\n\t\t\t"});",\n\t\t\t"",\n\t\t\t"if (import.meta.hot) {",\n\t\t\t"  import.meta.hot.accept(acceptHMRUpdate(use${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}Store, import.meta.hot))",\n\t\t\t"}",\n\t\t\t"",\n\t\t\t"export default use${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}Store",\n\t\t\t""\n\t\t],\n\t\t"description": "vue pinia store"\n\t}\n}\n ```		694026784546488320	54	55		604612615536115712	604612615536115712	2026-03-31 12:20:00.135+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694039290857914368	icon	\N	2	1	97	# 图标\n\n## 自定义svg图标\n\nsvg图标的存放目录为`@/src/icons/svg`，该文件夹下.svg结尾的文件会被自动注册为图标组件，组件名为`me-icon-{name}`\n\n## 使用elment-plus图标\nelment-plus图标默认已全局注册，注册组件名为`mel-icon-{name}`,elment-plus图标完整列表请参考[elment-plus文档](https://element-plus.org/zh-CN/component/icon.html#%E5%9B%BE%E6%A0%87%E9%9B%86%E5%90%88)\n\n## 组件props\n\n图标组件接受两个props：size、color\n| props      | 类型 |说明|\n| ----------- | ----------- | ----------- |\n| size      | string/number | 图标的fontSize |\n| color   | string        | 图标的color属性 |		694038800321478656	66	67		604612615536115712	604612615536115712	2026-03-31 12:24:21.567+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-693989329118167040	最佳实践	\N	2	1	94	# 最佳实践\n本项目推荐最佳实践，在数据库实体`entity`文件中声明所有属性、校验规则、及api文档。dto继承自`entity`文件，做相应处理。\n## `entity`文件\n```typescript\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { BelongsManyModel, BelongsToModel } from '@/types/entity.js';\nimport { DataTypes, NonAttribute, Op } from '@sequelize/core';\nimport { Attribute, BelongsTo, BelongsToMany, Default, DeletedAt, Index, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\nimport { ExampleBook } from './exampleBook.entity.js';\nimport { File } from './file.entity.js';\nimport { User } from './user.entity.js';\n\n//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null\n@Table({ tableName: 'example_demo', comment: '示例_Demo' })\n//继承自DelParanoidModel则使用软删除。\nexport class ExampleDemo extends AdminBaseModel<ExampleDemo> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })\n  id: string;\n\n  //唯一索引名称必须全库唯一，当两个null值时唯一索引会认为不是同一个值\n  @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引\n  @Attribute({ type: DataTypes.STRING(11), comment: '手机号' })\n  @ApiPropertyRule({ description: '手机号', rule: RuleType.string().mobile().description('手机号').required() })\n  mobile: string;\n\n  //以“名称:值1=说明1;值2=说明2”，格式声明的备注会自动创建字典和下拉列表，并且支持number、string两种类型\n  @Attribute({\n    comment: '类型:0=书籍;1=电子产品;2=卡片',\n    defaultValue: 0,\n    allowNull: false,\n    type: DataTypes.TINYINT.UNSIGNED,\n  })\n  @ApiPropertyRule({ description: '类型:0=书籍;1=电子产品;2=卡片', rule: RuleType.number().equal(0, 1, 2).required() })\n  type: number;\n\n  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)\n  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。\n  @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })\n  @ApiPropertyRule({ description: '名称', rule: RuleType.string().max(20).min(1).required() })\n  name: string;\n\n  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/\n  @BelongsToMany(() => ExampleBook, {\n    through: 'example_demo_books', //中间表名称 或者 对应的Model，\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: 'demos',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;\n  })\n  @ApiPropertyRule({\n    description: '书籍',\n    type: 'array',\n    items: {\n      type: () => ExampleBook,\n    },\n    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),\n  })\n  books?: NonAttribute<ExampleBook[]>;\n\n  //反向BelongsTo关联从属， 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to/\n  @Attribute({ type: DataTypes.STRING(20), comment: '关联前台用户id' })\n  userId: string;\n  @ApiPropertyRule({ description: '用户', type: () => User, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })\n  @BelongsTo(() => User, {\n    foreignKey: 'userId', //外键名称\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n  })\n  user?: NonAttribute<User>;\n\n  //反向BelongsTo关联从属，File类型创建单文件\n  @Attribute({ type: DataTypes.STRING(20), comment: '头像附件id' })\n  avatarFileId: string;\n  @ApiPropertyRule({ description: '头像', type: () => File, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })\n  @BelongsTo(() => File, {\n    foreignKey: 'avatarFileId', //外键名称\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n  })\n  avatar?: NonAttribute<File>;\n\n  //BelongsTo多对多关联从属，File类型创建多文件选择\n  @BelongsToMany(() => File, {\n    through: 'example_demo_files', //中间表名称 或者 对应的Model，\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n  })\n  @ApiPropertyRule({\n    description: '附件',\n    type: 'array',\n    items: {\n      type: () => File,\n    },\n    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),\n  })\n  files?: NonAttribute<File[]>;\n\n  @DeletedAt //设置为软删除\n  @Attribute({ comment: '删除时间' })\n  declare deletedAt: Date | null;\n}\n//声明自动关联方法\nexport declare interface ExampleDemo extends BelongsManyModel<'books', 'book', 'books', ExampleBook> {}\nexport declare interface ExampleDemo extends BelongsToModel<'user', User> {}\nexport declare interface ExampleDemo extends BelongsToModel<'avatar', File> {}\nexport declare interface ExampleDemo extends BelongsManyModel<'files', 'file', 'files', File> {}\n\n```\n\n\n## 校验文件\n```\nimport { OmitDtoType } from '@/helper/dto.js';\nimport { InferAttributesLoose } from '@/types/entity.js';\nimport { ExampleDemo } from '../../../../entities/exampleDemo.entity.js';\n\n//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效\nexport class ExampleDemoCreateDto extends OmitDtoType(\n  ExampleDemo as new () => InferAttributesLoose<ExampleDemo>, //只保留声明属性\n  ['id', 'createdAt', 'updatedAt', 'deletedAt', 'createdAdminId', 'updatedAdminId', 'createdAdmin', 'updatedAdmin'], //排除自动创建的字段\n) {}\n\n```\n```\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { PageDto } from '@/dto/page.dto.js';\nimport { IntersectionType, PartialType } from '@/helper/dto.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { InferAttributesLoose } from '@/types/entity.js';\nimport { ExampleDemo } from '../../../../entities/exampleDemo.entity.js';\n\n//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效\nexport class ExampleDemoQueryDto extends IntersectionType(PageDto, PartialType(ExampleDemo as new () => InferAttributesLoose<ExampleDemo>)) {\n  @ApiPropertyRule({ description: '创建时间(起)', rule: RuleType.date() })\n  startCreatedAt?: Date;\n\n  @ApiPropertyRule({ description: '创建时间(止)', rule: RuleType.date() })\n  endCreatedAt?: Date;\n  @ApiPropertyRule({ description: '最后更新时间(起)', rule: RuleType.date() })\n  startUpdatedAt?: Date;\n\n  @ApiPropertyRule({ description: '最后更新时间(止)', rule: RuleType.date() })\n  endUpdatedAt?: Date;\n}\n\n```\n```\nimport { OmitDtoType, PartialType } from '@/helper/dto.js';\nimport { InferAttributesLoose } from '@/types/entity.js';\nimport { ExampleDemo } from '../../../../entities/exampleDemo.entity.js';\n\n//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效\nexport class ExampleDemoUpdateDto extends PartialType(\n  OmitDtoType(\n    ExampleDemo as new () => InferAttributesLoose<ExampleDemo>, //只保留声明属性\n    ['id', 'createdAt', 'updatedAt', 'deletedAt', 'createdAdminId', 'updatedAdminId', 'createdAdmin', 'updatedAdmin'], //排除自动创建的字段\n  ),\n) {}\n\n```\n## 控制器\n```\nimport { AdminPermission, ApiOperationResponse } from '@/decorators/index.js';\nimport { Body, Controller, Get, Inject, Param, Post } from '@midwayjs/core';\nimport { ExampleDemo } from '../../../../entities/exampleDemo.entity.js';\nimport { ExampleDemoCreateDto } from '../../dto/example/demoCreate.dto.js';\nimport { ExampleDemoQueryDto } from '../../dto/example/demoQuery.dto.js';\nimport { ExampleDemoUpdateDto } from '../../dto/example/demoUpdate.dto.js';\nimport { ExampleDemoService } from '../../service/example/demo.service.js';\nimport { BaseController } from '../base.controller.js';\n\n/**\n * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。\n * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址\n */\n@Controller('example/demo')\nexport class ExampleDemoController extends BaseController {\n  @Inject()\n  exampleDemoService: ExampleDemoService;\n\n  //查询belongsTo关联模型user用户\n  //获取用户信息\n  @Post('/getUser')\n  @ApiOperationResponse({\n    responseType: ExampleDemo,\n    summary: '查询用户信息',\n  })\n  @AdminPermission('ExampleDemoList')\n  async getUser(@Body('id') id: string, @Body('username') username: string, @Body('page') page = 1, @Body('pageSize') pageSize = 10) {\n    return this.success(await this.exampleDemoService.getUser(page, pageSize, id, username));\n  }\n\n  //查询belongsToMany关联模型books示例_书籍\n  //获取示例_书籍信息\n  @Post('/getExampleBook')\n  @ApiOperationResponse({\n    responseType: ExampleDemo,\n    summary: '查询示例_书籍信息',\n  })\n  @AdminPermission('ExampleDemoList')\n  async getExampleBook(@Body('id') id: string, @Body('name') name: string, @Body('page') page = 1, @Body('pageSize') pageSize = 10) {\n    return this.success(await this.exampleDemoService.getExampleBook(page, pageSize, id, name));\n  }\n\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Post('/add')\n  @ApiOperationResponse({\n    responseType: ExampleDemo,\n    summary: '添加示例_Demo信息',\n  })\n  @AdminPermission('ExampleDemoAdd')\n  async add(@Body() createDto: ExampleDemoCreateDto) {\n    return this.success(await this.exampleDemoService.create(createDto));\n  }\n\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Post('/')\n  @ApiOperationResponse({\n    responsePage: ExampleDemo,\n    summary: '获取示例_Demo列表',\n  })\n  @AdminPermission('ExampleDemoList')\n  async list(@Body() queryDto: ExampleDemoQueryDto) {\n    return this.success(await this.exampleDemoService.list(queryDto));\n  }\n\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Get('/info/:id')\n  @ApiOperationResponse({\n    responseType: ExampleDemo,\n    summary: '根据id获取示例_Demo详情',\n  })\n  @AdminPermission('ExampleDemoEdit')\n  async findOne(@Param('id') id: string) {\n    const entity = await this.exampleDemoService.findOne(id);\n    return this.success(entity);\n  }\n\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Post('/up/:id')\n  @ApiOperationResponse({\n    responseType: ExampleDemo,\n    summary: '根据id更新示例_Demo详情',\n  })\n  @AdminPermission('ExampleDemoEdit')\n  async update(@Param('id') id: string, @Body() updateDto: ExampleDemoUpdateDto) {\n    return this.success(await this.exampleDemoService.update(id, updateDto));\n  }\n\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Post('/del/:id')\n  @ApiOperationResponse({\n    summary: '根据id删除示例_Demo信息',\n  })\n  @AdminPermission('ExampleDemoDel')\n  async delete(@Param('id') id: string) {\n    await this.exampleDemoService.remove(id);\n    return this.success();\n  }\n}\n\n```\n\n## service\n```\nimport { InjectRepository, Transaction } from '@/decorators/index.js';\nimport { Inject, Provide } from '@midwayjs/core';\nimport { BadRequestError } from '@midwayjs/core/dist/error/http.js';\nimport { MidwayI18nService } from '@midwayjs/i18n';\nimport { Op } from '@sequelize/core';\nimport { ExampleBook } from '../../../../entities/exampleBook.entity.js';\nimport { ExampleDemo } from '../../../../entities/exampleDemo.entity.js';\nimport { User } from '../../../../entities/user.entity.js';\nimport { ExampleDemoCreateDto } from '../../dto/example/demoCreate.dto.js';\nimport { ExampleDemoQueryDto } from '../../dto/example/demoQuery.dto.js';\nimport { ExampleDemoUpdateDto } from '../../dto/example/demoUpdate.dto.js';\n\n//示例_Demo\n@Provide()\nexport class ExampleDemoService {\n  @InjectRepository(ExampleDemo)\n  exampleDemoRepository: typeof ExampleDemo;\n\n  @Inject()\n  i18nService: MidwayI18nService;\n\n  //查询belongsTo关联模型user用户\n  @InjectRepository(User)\n  userRepository: typeof User;\n\n  /**\n   * 获取用户信息\n   * @param queryDto\n   * @returns\n   */\n  @Transaction()\n  async getUser(page: number, pageSize: number, id: string, username: string = '') {\n    const where = {};\n    if (id) {\n      where['id'] = id;\n    }\n    if (username) {\n      where['username'] = { [Op.like]: '%' + username + '%' };\n    }\n    const { count, rows } = await this.userRepository.findAndCountAll({\n      where,\n      offset: (page - 1) * pageSize,\n      limit: pageSize,\n    });\n    return {\n      list: rows,\n      total: count,\n      page: page,\n      pageSize: pageSize,\n    };\n  }\n\n  //查询belongsToMany关联模型books示例_书籍\n  @InjectRepository(ExampleBook)\n  exampleBookRepository: typeof ExampleBook;\n\n  /**\n   * 获取示例_书籍信息\n   * @param queryDto\n   * @returns\n   */\n  @Transaction()\n  async getExampleBook(page: number, pageSize: number, id: string, name: string = '') {\n    const where = {};\n    if (id) {\n      where['id'] = id;\n    }\n    if (name) {\n      where['name'] = { [Op.like]: '%' + name + '%' };\n    }\n    const { count, rows } = await this.exampleBookRepository.findAndCountAll({\n      where,\n      offset: (page - 1) * pageSize,\n      limit: pageSize,\n    });\n    return {\n      list: rows,\n      total: count,\n      page: page,\n      pageSize: pageSize,\n    };\n  }\n\n  /**\n   * 创建数据\n   * @param createDto\n   * @returns\n   */\n  @Transaction()\n  async create(createDto: ExampleDemoCreateDto) {\n    const entity = await this.exampleDemoRepository.create(createDto);\n\n    if (createDto.user) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setUser(createDto.user.id);\n    }\n\n    if (createDto.avatar) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setAvatar(createDto.avatar.id);\n    }\n\n    if (createDto.books) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setBooks(createDto.books.map((v) => v.id));\n    }\n\n    if (createDto.files) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setFiles(createDto.files.map((v) => v.id));\n    }\n\n    return entity;\n  }\n\n  /**\n   * 列表分页查询\n   * @param queryDto 查询条件\n   * @returns\n   */\n  @Transaction()\n  async list(queryDto: ExampleDemoQueryDto) {\n    const where = {};\n    Object.keys(queryDto).forEach((key) => {\n      if (['page', 'pageSize'].includes(key)) {\n        return;\n      }\n      if ([null, undefined, ''].includes(queryDto[key])) {\n        return;\n      }\n      if (key === 'startCreatedAt') {\n        where['createdAt'] = where['createdAt'] ?? {};\n        where['createdAt'][Op.gte] = queryDto[key];\n        return;\n      }\n      if (key === 'endCreatedAt') {\n        where['createdAt'] = where['createdAt'] ?? {};\n        where['createdAt'][Op.lte] = queryDto[key];\n        return;\n      }\n      if (key === 'startUpdatedAt') {\n        where['updatedAt'] = where['updatedAt'] ?? {};\n        where['updatedAt'][Op.gte] = queryDto[key];\n        return;\n      }\n      if (key === 'endUpdatedAt') {\n        where['updatedAt'] = where['updatedAt'] ?? {};\n        where['updatedAt'][Op.lte] = queryDto[key];\n        return;\n      }\n      where[key] = queryDto[key];\n    });\n    const { count, rows } = await this.exampleDemoRepository.findAndCountAll({\n      where,\n      offset: (queryDto.page - 1) * queryDto.pageSize,\n      limit: queryDto.pageSize,\n      include: [\n        'createdAdmin',\n        'updatedAdmin',\n        'books',\n        'user',\n        {\n          association: 'avatar',\n          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)\n        },\n        {\n          association: 'files',\n          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)\n        },\n      ],\n      order: [['createdAt', 'DESC']],\n    });\n    return {\n      list: rows,\n      total: count,\n      page: queryDto.page,\n      pageSize: queryDto.pageSize,\n    };\n  }\n\n  /**\n   * 根据主键获取一条信息\n   * @param id 主键\n   * @returns\n   */\n  @Transaction()\n  async findOne(id: string) {\n    const entity = await this.exampleDemoRepository.findByPk(id, {\n      include: [\n        'createdAdmin',\n        'updatedAdmin',\n        'books',\n        'user',\n        {\n          association: 'avatar',\n          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)\n        },\n        {\n          association: 'files',\n          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)\n        },\n      ],\n    });\n    if (!entity) {\n      throw new BadRequestError(this.i18nService.translate('没有对应的信息'));\n    }\n    return entity;\n  }\n\n  /**\n   * 更新数据\n   * @param id 主键\n   * @param updateDto 数据对象\n   * @returns\n   */\n  @Transaction()\n  async update(id: string, updateDto: ExampleDemoUpdateDto) {\n    const entity = await this.exampleDemoRepository.findByPk(id);\n    if (!entity) {\n      throw new BadRequestError(this.i18nService.translate('没有对应的信息'));\n    }\n    Object.assign(entity, updateDto);\n\n    if (updateDto.user !== undefined) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setUser(updateDto.user?.id ?? null);\n    }\n\n    if (updateDto.avatar !== undefined) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setAvatar(updateDto.avatar?.id ?? null);\n    }\n\n    if (updateDto.books) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setBooks(updateDto.books.map((v) => v.id));\n    }\n\n    if (updateDto.files) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setFiles(updateDto.files.map((v) => v.id));\n    }\n\n    return await entity.save();\n  }\n\n  /**\n   * 删除数据\n   * @param id 主键\n   * @returns\n   */\n  @Transaction()\n  async remove(id: string) {\n    const entity = await this.exampleDemoRepository.findByPk(id);\n    if (!entity) {\n      throw new BadRequestError(this.i18nService.translate('没有对应的信息'));\n    }\n    await entity.destroy();\n  }\n}\n\n```		693986817568931840	22	23		604612615536115712	604612615536115712	2026-03-31 09:05:49.761+08	2026-03-31 13:52:23.732+08	0	1.0.0	best
-693988406782328832	Service服务	\N	2	1	99	# Service服务\n\n在业务中，只有控制器（Controller）的代码是不够的，一般来说会有一些业务逻辑被抽象到一个特定的逻辑单元中，我们一般称为服务（Service）。\n![](/api/admin/file/get/693988309440921600/image.png)\n提供这个抽象有以下几个好处：\n\n- 保持 Controller 中的逻辑更加简洁。\n- 保持业务逻辑的独立性，抽象出来的 Service 可以被多个 Controller 重复调用。\n- 将逻辑和展现分离，更容易编写测试用例。\n\n本项目对service没有做特别封装，除了文件命名及目录位置外规则和midway一致，更多内容请阅读[midway 服务和注入](https://midwayjs.org/docs/service)文档。\n\n## 创建服务\n普通的服务就是一个 Class，比如我们之前创建了一个接受 user 请求的 Controller，我们来新增一个处理这些数据的服务。\n对于服务的文件，我们一般会存放到 对应模块的`service` 目录中。我们来添加一个 user 服务。\n```\n├── src\n│   ├── app\n│   │   ├──admin\n│   │   │   ├── controller\n│   │   │   │   ├── user.controller.ts\n│   │   │   └── service\n│   │   │       └── user.service.ts\n├── package.json\n└── tsconfig.json\n```\n内容为：\n```\n// src/app/admin/service/user.service.ts\nimport { Provide } from '@midwayjs/core';\n\n@Provide()\nexport class UserService {\n  async getUser(id: string) {\n    return {\n      id,\n      name: 'Harry',\n      age: 18,\n    };\n  }\n}\n```\n除了一个 @Provide 装饰器外，整个服务的结构和普通的 Class 一模一样，这样就行了。\n\n## 使用服务\n在 Controller 处，我们需要来调用这个服务。传统的代码写法，我们需要初始化这个 Class（new），然后将实例放在需要调用的地方。在 Midway 中，你不需要这么做，只需要编写我们提供的 **"依赖注入"** 的代码写法。\n\n```\n//src/app/admin/controller/user.controller.ts\nimport { Inject, Controller, Get, Provide, Query } from '@midwayjs/core';\nimport { BaseController } from './base.controller.js';\nimport { UserService } from '../service/user.service.js';\n\n@Controller('user')\nexport class UserController extends BaseController {\n\n  @Inject()\n  userService: UserService;\n\n  @Get('/info/:id')\n  async getUser(@Param('id') id: string) {\n    const user = await this.userService.getUser(uid);\n   return this.success(user);\n  }\n}\n```\n使用服务的过程分为几部分：\n\n- 使用 @Provide 装饰器暴露你的服务\n- 在调用的代码处，使用 @Inject 装饰器注入你的服务\n- 调用注入服务，执行对应的方法\n\n## 注入行为描述\nMidway 的核心 “依赖注入” 容器会自动关联你的控制器（Controller） 和服务（Service），在运行过程中会自动初始化所有的代码，你无需手动初始化这些 Class。\n\n@Provide 装饰器的作用：\n\n- 这个 Class，被依赖注入容器托管，会自动被实例化（new）\n- 这个 Class，可以被其他在容器中的 Class 注入\n而对应的 @Inject 装饰器，作用为：\n- 在依赖注入容器中，找到对应的属性名，并赋值为对应的实例化对象\n\n@Provide 和 @Inject 装饰器是成对出现的，两者通过冒号后的类名进行关联。\n\n事实上，控制器（Controller） 上也有这个装饰器，只是在Midway中，Controller 包含了 Provide 的功能。如果你不确定什么时候可以隐藏，可以都写上。\n上边的controller代码等价于\n```\n@Provide()\n@Controller('user')\nexport class UserController extends BaseController {\n```\n\n## 在其余地方使用service\n根据上边的介绍，我们可以知道在任何`@Provide`修饰的地方都可以用`@Inject`调用服务，下边我们举个`service`服务互相调用的例子\n```\n//src/app/admin/service/login.service.ts\nimport { Inject, Controller, Get, Provide, Query } from '@midwayjs/core';\nimport { UserService } from '../service/user.service.js';\n\n@Provide()\nexport class LoginService {\n\n  @Inject()\n  userService: UserService;\n\n  async hasUser(id: string) {\n    return (await this.userService.getUser(uid))?true:false;\n  }\n}\n```\n依赖注入 是 Midway 的核心特性，通过装饰器的轻量特性，让依赖注入变的优雅，从而让开发过程变的便捷有趣。如果想更深一步了解，可以阅读[midway 依赖注入](https://midwayjs.org/docs/container)文档。		693986817568931840	16	17		604612615536115712	604612615536115712	2026-03-31 09:02:09.858+08	2026-03-31 13:52:23.732+08	0	1.0.0	service
-694025172922925056	路由	\N	2	1	97	# 路由菜单\n\n这里的路由分为两种，constantRoutes 和 asyncRoutes。\n\nconstantRoutes： 代表那些不需要动态判断权限的路由，如登录页、404、等通用页面。\n\nasyncRoutes： 代表那些需求动态判断权限并通过 addRoutes 动态添加的页面。\n## 静态路由(constantRoutes)\n\n静态路由定义位于`@/router/routes/index.ts`文件下,主要包含一些无需登录的公共路由。\n\n```\nexport const constantRoutes: RouteRecordRaw[] = [\n  {\n    path: PageEnum.LOGIN,\n    component: async () => await import('@/views/login/index.vue'),\n    meta: {\n      hideMenu: true,\n      title: '登录',\n    },\n  },\n  {\n    path: PageEnum.HOME,\n    meta: {\n      hideMenu: true,\n      title: '首页',\n    },\n    redirect: () => useRouteStore().firstMenu(),//重定向到第一个路由\n  },\n  {\n    path: '/redirect',\n    component: Layout,\n    children: [\n      {\n        name: 'redirect',\n        path: '/redirect/:path(.*)',\n        component: async () => await import('@/views/redirect.vue'),\n      },\n    ],\n    meta: {\n      hideMenu: true,\n      title: '',\n      noCache: true,\n    },\n  },\n  {\n    path: '/:pathMatch(.*)*',\n    component: async () => await import('@/views/404.vue'),\n    meta: { hideMenu: true, title: '404' },\n  },\n];\n```\n\n\n## 动态路由(asyncRoutes)\n\n- **动态定义通过api接口获取**\n- **动态路由获取成功后会动态注册到vue-router中。**\n- **动态路由注册时会自动注册到一级路由`/`的children下,这样菜单路由只有一级也可以渲染出layout框架**\n\n\n路由功能基于[vue-router](https://router.vuejs.org/zh/introduction.html)开发,自定义配置放在了[meta](#meta配置说明)中,其余定义规则参考[vue-router#routerecordraw](https://router.vuejs.org/zh/api/#routerecordraw)。\n\n将`settingConfig.menuMode`(位于`@/config/index.ts`文件中)设置为`MenuModeEnum.API`，将使用前端定义模式。\n\n### 动态路由api获取模式\n\n将`settingConfig.menuMode`(位于`@/config/index.ts`文件中)设置为`MenuModeEnum.API`，将使用api模式，此值已自动设置，请勿更改。\n\n在api模式下，登录成功后或者已登录首次访问时，会通过调用接口获取菜单数组，动态注册到vue-router中。\n\n### 创建菜单\n\n在 菜单权限页面 直接创建 类型为 菜单， 组件路径为 相对于`src/views`文件夹无后缀的相对路径即可\n![alt text](image.png)\n\n\n### 配置说明\n```\nexport interface RouteMeta extends Record<string | number | symbol, unknown> {\n    // 标题设置该路由在侧边栏和面包屑中展示的名字\n    title: string;\n    // 对应权限 多个之间为或的关系\n    rule?: string[];\n    // 是否是固定的tag\n    affix?: boolean;\n    // 图标\n    icon?: string;\n    // 在tag中隐藏\n    hideTag?: boolean;\n    // 外链\n    isLink?: boolean;\n    // 当路由设置了该属性，则会高亮相对应的侧边栏。\n    // 这在某些场景非常有用，比如：一个文章的列表页路由为：/article/list\n    // 点击文章进入文章详情页，这时候路由为/article/1，但你想在侧边栏高亮文章列表的路由，就可以进行如下设置\n    // asyncRoutes如果不设置会自动计算展示不隐藏的祖级（包括当前）\n    activeMenu?: string;\n    // 如果设置为true，则不会被 <keep-alive> 缓存\n    noCache?: boolean;\n    // 在菜单中隐藏\n    hideMenu?: boolean;\n    // 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式\n    // 只有一个时，会将那个子路由当做根路由显示在侧边栏\n    // 若你想不管路由下面的 children 声明的个数都显示你的根路由\n    // 你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由\n    alwaysShow?: boolean;\n    // 是否需要面包屑 false不展示在面包屑,ture一直展示在面包屑,undefined当只有一个子元素面包屑时跳过展示\n    breadcrumb?: boolean;\n  }\n```\n\n### 外链\n\n当为外链 时，路径 需填写外链地址。\n\n### 菜单图标\n\n菜单图标定义值为图标组件的name,自定义svg图标和使用elment-plus图标请参考[图标](./icon.md)\n\n### keepAlive缓存\n\n页面缓存通过 组件[me-keep-alive](../components/core/meKeepAlive.md)实现,通过路由的fullPath进行缓存过滤，所以无需对页面组件设置name,即可进行缓存，并且多路由共用同一页面组件时，可以进行独立刷新，互不影响。\n\n\n - 如果想全局禁用keppAlive，去`@/config/index.ts`配置`settingConfig.openKeepAlive`为`false`即可，配置详情参见[config](./config.md#基础配置)。\n - 如需设置某个路由不缓存设置缓存值为`否`即可。		694025634292170752	36	37		604612615536115712	604612615536115712	2026-03-31 11:28:15.589+08	2026-03-31 13:52:23.732+08	0	1.0.0	route
-693988724551188480	数据库	\N	2	1	96	# 数据库\n数据库使用postgresql,连接框架使用seqlize@7,相关配置在`src/database.ts`中，`src/database.ts`加载了env环境变量，如需配置数据库连接方式可直接更改`.env`文件的相关配置。注意:本项目自行封装使用的seqlize@7，未使用`@midwayjs/sequelize@3`组件。\n\n相关使用方式如下：\n\n## 模型定义\n\n### 1、创建 Model（Entity）\n\n我们通过模型和数据库关联，在应用中的模型就是数据库表，在 Sequelize 中，模型是和实体绑定的，每一个实体（Entity) 文件，即是 Model，也是实体（Entity）。\n所有的实体存储在`src/entities`文件夹和数据库表想对应。\n在示例中，需要一个实体，我们这里拿 ExampleBook 举例。在`src/entities`文件夹添加实体文件 `exampleBook.entity.ts` ，一个简单的实体如下。\n\n```typescript\n// src/entities/exampleBook.entity.ts\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { DataTypes } from '@sequelize/core';\nimport { Attribute, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\n\n@Table({ tableName: 'example_book', comment: '示例_书籍' })\nexport class ExampleBook extends AdminBaseModel<ExampleBook> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  id: string;\n\n  @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })\n  name: string;\n}\n\n```\n\n- 管理后台的表需继承AdminBaseModel，会自动创建 和维护`createdAdminId`、`updatedAdminId`、`createdAt`、`updatedAt`，相关内容是在Hooks钩子中维护的，如执行自定义sql需手动维护相关值。\n- 前台表需继承IndexBaseModel，会自动创建 和维护`createdAdminId`、`updatedAdminId`、`createdAt`、`updatedAt`，相关内容是在Hooks钩子中维护的，如执行自定义sql需手动维护相关值。\n- @Table 装饰器可以在不传递任何参数的情况下使用，本项目约定，数据库表名使用下划线方式命名，`seqlize`默认会使用复数形式命名表名，本项目推荐手动传入tableName、comment定义表名和备注。更多参数请查看[seqlize 文档](https://sequelize.org/docs/v7/models/naming-strategies/) 。 \n\n### 2、 主键\n\n@PrimaryKey 定义主键，`postgresql`不支持自增主键，如想实现需通过自增序列实现，但迁移时比较麻烦。本项目推荐使用自定义函数`uuid`维护string类型主键，方式为`@Default(uuid)``@Attribute({ type: DataTypes.STRING(20), allowNull: false })`。\n\n```typescript\n// src/entities/exampleBook.entity.ts\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { DataTypes } from '@sequelize/core';\nimport { Attribute, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\n\n@Table({ tableName: 'example_book', comment: '示例_书籍' })\nexport class ExampleBook extends AdminBaseModel<ExampleBook> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  id: string;\n}\n\n```\n### 3、时间列\n主要指代的是 `@CreatedAt`, `@UpdatedAt`, `@DeletedAt` 单个装饰器标注的列。\n比如：\n```typescript\nimport { InferCreationAttributes, InferAttributes, Model, CreationOptional } from '@sequelize/core';\nimport { CreatedAt, UpdatedAt, DeletedAt, Table } from '@sequelize/core/decorators-legacy';\n\n@Table({ tableName: 'example_book', comment: '示例_书籍' })\nexport class ExampleBook extends Model<InferAttributes<ExampleBook>, InferCreationAttributes<ExampleBook>> {\n  @CreatedAt\n  declare createdAt: Date;\n\n  @UpdatedAt\n  declare updatedAt: Date;\n\n  @DeletedAt\n  declare deletedAt: Date | null;\n}\n```\n|装饰器|\t描述|\n| --   | --   |\n|@CreatedAt|\t会设置 自动维护的创建时间字段|\n|@UpdatedAt|\t会设置 自动维护的更新时间字段|\n|@DeletedAt|\t会设置 自动维护的删除时间字段，值为非null的记录会被识别为逻辑删除|\n\n如果继承`AdminBaseModel`或`IndexBaseModel`会自动继承`createdAt`和`updatedAt`字段，无需手动维护。`deletedAt`按需求自行维护。\n\n### 4、普通列\n`@Column` 装饰器用于标注普通列，需要在参数中传入类型和备注。\n```typescript\n// src/entities/exampleBook.entity.ts\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { DataTypes } from '@sequelize/core';\nimport { Attribute, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\n\n@Table({ tableName: 'example_book', comment: '示例_书籍' })\nexport class ExampleBook extends AdminBaseModel<ExampleBook> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  id: string;\n\n  @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })\n  name: string;\n}\n\n```\n更多类型请，参考[seqlize 文档](https://sequelize.org/docs/v7/models/data-types/)\n\n## 数据源配置\n我们支持多库数据源配置 在`src/config/database.ts`中配置\n```typescript\nimport { importModels, Options } from '@sequelize/core';\nimport { PostgresDialect } from '@sequelize/postgres';\nimport { appLogger } from '../logger.js';\nexport default async () => ({\n  dataSource: {\n    default: {\n      dialect: PostgresDialect,\n      host: process.env.DATABASE_HOST ?? '127.0.0.1',\n      port: process.env.DATABASE_PORT ?? 5342,\n      database: process.env.DATABASE_DB ?? 'meadmin',\n      user: process.env.DATABASE_USER ?? 'root',\n      password: process.env.DATABASE_PASSWORD ?? 'root',\n      client_encoding: 'utf8',\n      models: await importModels((import.meta.dirname + '/../**/*.entity.js').replace(/\\\\/g, '/')), // 支持如下的扫描形式，或实体形式[User,Admin]\n      options: `-c search_path=${process.env.DATABASE_SCHEMA}`, //设置模式查询顺序\n      define: {\n        underscored: true, //强制表名和列名转换为snake_case\n        freezeTableName: true, //强制模型名称不变换（取消表名的单词复数转换和snake_case转换)\n        timestamps: false, // 禁用createAt和updateAt的自动声明\n        noPrimaryKey: true, //禁止自动创建主键id\n        schema: process.env.DATABASE_SCHEMA ?? 'public',\n        timezone: 'Asia/Shanghai',\n      },\n      logging(sql, timing, seqlize?) {\n        appLogger.info('[sql]耗时 %d ms，%s', timing, sql, seqlize?.bind);\n      },\n      benchmark: true, //开启日志打印sql耗时参数传递\n    } as Options<PostgresDialect>,\n  },\n  // 第二个数据源\n  default2: {\n    // ...\n  },\n});\n```\n使用时\n```typescript\nimport { InjectRepository, Transaction } from '@/decorators/index.js';\nimport { Provide } from '@midwayjs/core';\nimport { BadRequestError } from '@midwayjs/core/dist/error/http.js';\nimport { User } from '../../../entities/user.entity.js';\n\n//用户\n@Provide()\nexport class UserService {\n  @InjectRepository(User)//声明entity,默认加载default数据源相当于@InjectRepository(User,'default')\n  userRepository: typeof User;\n \n  /**\n   * 根据主键获取一条信息\n   * @param id 主键\n   * @returns\n   */\n  @Transaction()\n  async findOne(id: string) {\n    const entity = await this.userRepository.findByPk(id, {\n      include: [\n        'createdUser'\n      ],\n    });\n    if (!entity) {\n      throw new BadRequestError('没有对应的信息');\n    }\n    return entity;\n  }\n}\n```\n## 模型关联\n可以通过 `@HasMany` 、`@HasOne` 、`@BelongsTo`、`@BelongsToMany` 装饰器在模型中直接描述关系。\n### 1、一对多或一对一从属\n```typescript\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { BelongsToModel } from '@/types/entity.js';\nimport { DataTypes, NonAttribute } from '@sequelize/core';\nimport { Attribute, BelongsTo, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\nimport { User } from './user.entity.js';\n\n@Table({ tableName: 'example_demo', comment: '示例_Demo' })\n//继承自DelParanoidModel则使用软删除。\nexport class ExampleDemo extends AdminBaseModel<ExampleDemo> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })\n  id: string;\n\n   //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)\n  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。\n  @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })\n  name: string;\n\n  //反向BelongsTo关联从属， 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to/\n  @Attribute({ type: DataTypes.STRING(20), comment: '关联前台用户id' })\n  userId: string;\n \n  @BelongsTo(() => User, {\n    foreignKey: 'userId', //外键名称\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n  })\n  user?: NonAttribute<User>;\n}\n//声明自动关联方法\nexport declare interface ExampleDemo extends BelongsToModel<'user', User> {}\n```\n`sequelize-typescript` 会在内部进行关联，会自动查询出相关的依赖。\n```typescript\n const entity = await this.userRepository.findByPk(id, {\n      include: ['user'],\n    });\n```\n### 多对多\n\n```typescript\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { BelongsManyModel } from '@/types/entity.js';\nimport { DataTypes, NonAttribute } from '@sequelize/core';\nimport { Attribute, BelongsToMany, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\nimport { ExampleBook } from './exampleBook.entity.js';\n\n//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null\n@Table({ tableName: 'example_demo', comment: '示例_Demo' })\n//继承自DelParanoidModel则使用软删除。\nexport class ExampleDemo extends AdminBaseModel<ExampleDemo> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })\n  id: string;\n\n\n  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)\n  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。\n  @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })\n  @ApiPropertyRule({ description: '名称', rule: RuleType.string().max(20).min(1).required() })\n  name: string;\n\n  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/\n  @BelongsToMany(() => ExampleBook, {\n    through: 'example_demo_books', //中间表名称 或者 对应的Model，\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: 'demos',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;\n  })\n  @ApiPropertyRule({\n    description: '书籍',\n    type: 'array',\n    items: {\n      type: () => ExampleBook,\n    },\n    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),\n  })\n  books?: NonAttribute<ExampleBook[]>;\n}\n//声明自动关联方法\nexport declare interface ExampleDemo extends BelongsManyModel<'books', 'book', 'books', ExampleBook> {}\n\n```\nBelongsToMany 关联会自动在目标模型上创建逆关联，目标模型也是一个 BelongsToMany 关联。您可以通过使用反向选项自定义反关联：\n\n```typescript\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { BelongsManyModel } from '@/types/entity.js';\nimport { DataTypes, NonAttribute } from '@sequelize/core';\nimport { Attribute, BelongsToMany, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\nimport { ExampleBook } from './exampleBook.entity.js';\n\n//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null\n@Table({ tableName: 'example_demo', comment: '示例_Demo' })\n//继承自DelParanoidModel则使用软删除。\nexport class ExampleDemo extends AdminBaseModel<ExampleDemo> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })\n  id: string;\n\n\n  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)\n  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。\n  @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })\n  @ApiPropertyRule({ description: '名称', rule: RuleType.string().max(20).min(1).required() })\n  name: string;\n\n  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/\n  @BelongsToMany(() => ExampleBook, {\n    through: 'example_demo_books', //中间表名称 或者 对应的Model，\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n    inverse: {as: 'demos',},\n    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: 'demos',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;\n  })\n  books?: NonAttribute<ExampleBook[]>;\n}\n//声明自动关联方法\nexport declare interface ExampleDemo extends BelongsManyModel<'books', 'book', 'books', ExampleBook> {}\n\n```\n```typescript\nimport { NonAttribute } from "@sequelize/core";\nimport { AdminBaseModel } from "./abstract/adminBase.entity.js";\nimport { ExampleDemo } from "./exampleDemo.entity.js";\n\nexport class ExampleBook extends AdminBaseModel<ExampleBook> {\n  /** Declared by {@link ExampleDemo.books} */\n  declare demos?: NonAttribute<ExampleDemo[]>;\n}\n```\n`sequelize-typescript` 会在内部进行关联，会自动查询出相关的依赖。\n```typescript\n const entity = await this.exampleDemoRepository.findByPk(id, {\n      include: ['books'],\n    });\n```\n更多文档请参考[seqlize 文档](https://sequelize.org/docs/v7/associations/belongs-to-many/)\n### 3、模型循环依赖\n如果你使用了 `@BelongsTo` 装饰器定义双向依赖时，很容易触发一个模型循环依赖的错误，比如：\n```typescript\nReferenceError: Cannot access 'User' before initialization \n```\n这是因为“emitDecoratorMetadata”在类初始化时会添加对另一个类的引用。\n既然是循环导入，这样做必然会导致你遇到的错误。\n\n解决办法是只在一侧声明关联。反面可以用 `inverse` property 性质声明\n你还需要将用户导入标记为导入类型：\n\n```typescript\n//joke.js\nimport { DataTypes, Model,InferAttributes,InferCreationAttributes,CreationOptional } from '@sequelize/core';\nimport { Attribute, PrimaryKey, AutoIncrement, NotNull, BelongsTo } from '@sequelize/core/decorators-legacy';\nimport type { User } from './user.js';//注意使用type引用\n  \nexport class Joke extends Model<InferAttributes<Joke>, InferCreationAttributes<Joke>> \n{\n    @Attribute(DataTypes.INTEGER)\n    @PrimaryKey\n    @AutoIncrement\n    declare id: CreationOptional<number>;\n\n    @Attribute(DataTypes.STRING)\n    @NotNull\n    declare content: string;\n\n-   @BelongsTo(() => User, 'userId')\n    user!: User;\n    \n    // This is the foreign key\n    @Attribute(DataTypes.INTEGER)\n    @NotNull\n    declare userId: number;\n\n    declare createdAt: CreationOptional<Date>;\n    declare updatedAt: CreationOptional<Date>;\n}\n```\n```typescript\n//user.js\nimport { DataTypes,Model,InferAttributes,InferCreationAttributes,CreationOptional, NonAttribute } from '@sequelize/core';\nimport { Attribute, PrimaryKey, AutoIncrement, NotNull, HasMany } from '@sequelize/core/decorators-legacy';\nimport { Joke } from './joke.js';\n  \nexport class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> \n{\n    @Attribute(DataTypes.INTEGER)\n    @PrimaryKey\n    @AutoIncrement\n    declare id: CreationOptional<number>;\n\n    @Attribute(DataTypes.STRING)\n    @NotNull\n    declare name: string;\n\n    @Attribute(DataTypes.STRING)\n    declare email: string;\n\n    declare createdAt: CreationOptional<Date>;\n    declare updatedAt: CreationOptional<Date>;\n\n    @HasMany(() => Joke, { foreignKey: 'userId', inverse: 'user' })\n    declare jokes?: NonAttribute<Joke[]>;\n}\n\n```\n相关参考[github](https://github.com/sequelize/sequelize/issues/17444)\n\n## 数据库操作\n\n```typescript\nimport { InjectRepository } from '@/decorators/index.js';\nimport { Provide } from '@midwayjs/core';\nimport { BadRequestError } from '@midwayjs/core/dist/error/http.js';\nimport { Op } from '@sequelize/core';\nimport { User } from '../../../entities/user.entity.js';\n\n//用户\n@Provide()\nexport class UserService {\n  @InjectRepository(User) //声明entity,默认加载default数据源相当于@InjectRepository(User,'default')\n  userRepository: typeof User;\n\n  /**\n   * 根据主键获取一条信息\n   * @param id 主键\n   * @returns\n   */\n  async findOne(id: string) {\n    // 查询\n    let result = await this.userRepository.findAll();\n    console.log(result);\n\n    // 新增\n    await this.userRepository.create({\n      nickname: '123',\n    });\n\n    // 删除\n    await this.userRepository.destroy({\n      where: {\n        nickname: '123',\n      },\n    });\n\n    // 联合查询\n    // SELECT * FROM photo WHERE name = "23" OR name = "34";\n    let result = await this.userRepository.findAll({\n      where: {\n        [Op.or]: [{ nickname: '23' }, { nickname: '34' }],\n      },\n    });\n    // => result\n\n    // 连表查询\n    const entity = await this.userRepository.findByPk(id, {\n      include: ['createdUser'],\n    });\n    if (!entity) {\n      throw new BadRequestError('没有对应的信息');\n    }\n    return entity;\n  }\n}\n```\n更多用法请查询：[seqlize文档](https://sequelize.org/docs/v7/category/querying/)\n## 事务\n本项目封装了`Transaction`装饰器，只需要添加上，即可在函数执行时应用`seqlize`的托管事务，事务会在函数，执行完毕后自动提交\n，异常时自动回滚。默认情况下，`Sequelize` 使用 `AsyncLocalStorage` 在函数及子函数调用中开始的所有查询中自动使用该活跃事务。更多请参考[seqlize文档](https://sequelize.org/docs/v7/querying/transactions/#managed-transactions-recommended)\n```typescript\nimport { InjectRepository, Transaction } from '@/decorators/index.js';\nimport { Provide } from '@midwayjs/core';\nimport { User } from '../../../entities/user.entity.js';\n\n//用户\n@Provide()\nexport class UserService {\n  @InjectRepository(User) //声明entity,默认加载default数据源相当于@InjectRepository(User,'default')\n  userRepository: typeof User;\n\n  async create(){\n     // 新增\n    await this.userRepository.create({\n      nickname: '123',\n    });\n  }\n  /**\n   * 根据主键获取一条信息\n   * @param id 主键\n   * @returns\n   */\n  @Transaction()\n  async findOne(id: string) {\n    // 查询\n    let result = await this.userRepository.findAll();\n    console.log(result);\n    await this.create();\n  }\n}\n```\n## 同步数据库结构\n\n- `pnpm exec meadmin sync *` 同步所有\n- 或 `pnpm meadmin sync exampleDemo,systemAdmin,exampleBook,user,file` 定向同步exampleDemo文件（定向同步文件时，需将关联依赖全部罗列出来，一起同步）\n\n## 更多特性\n连接池、自定义数据类型、读取复制、Hooks钩子等更多特性请参考[seqlize 文档](https://sequelize.org/docs/v7/category/other-topics/)		693986817568931840	18	19		604612615536115712	604612615536115712	2026-03-31 09:03:25.62+08	2026-03-31 13:52:23.732+08	0	1.0.0	96
-693988974405877760	校验和swagger	\N	2	1	95	# 校验和Swagger文档\n## 校验\n我们经常要在方法调用时执行一些类型检查，参数转换的操作，本项目利用dto文件结合`Midway`的`@midwayjs/validate@3`组件，提供了一种简单的能力来快速检查参数的类型，这个能力来源于 `joi` 。\n\n### 背景\n最常用参数校验的地方是 控制器（Controller），同时你也可以在任意的 Class 中使用这个能力。\n\n我们以控制器（Controller）中使用为例，还是那个 user。\n普通情况下，我们从 body 上拿到所有 Post 结果，并进行一些校验。\n```\n// src/interface.ts\nexport interface User {\n  id: number;\n  firstName: string;\n  lastName: string;\n  age: number;\n}\n\n// src/controller/home.ts\nimport { Controller, Get, Provide } from '@midwayjs/core';\n\n@Controller('/api/user')\nexport class HomeController {\n  @Post('/')\n  async updateUser(@Body() user: User) {\n    if (!user.id || typeof user.id !== 'number') {\n      throw new Error('id error');\n    }\n\n    if (user.age <= 30) {\n      throw new Error('age not match');\n    }\n    // xxx\n  }\n}\n```\n如果每个方法都需要这么校验，会非常的繁琐。\n\n针对这种情况， 配合 `@Validate` 和 `@Rule` 装饰器，用来 快速定义校验的规则，帮助用户 减少这些重复的代码。\n### 创建校验文件\n本项目校验文件为dto 类,统一放在模块的`dto`文件夹\n```\n//src/app/admin/dto/loginParam.dto.ts\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { RuleType } from '@midwayjs/validate';\n\nexport class LoginParamDto {\n  @ApiPropertyRule({ description: '用户名', rule: RuleType.string().max(10).min(1).required() })\n  username: string;\n  @ApiPropertyRule({ description: '密码', rule: RuleType.string().required() })\n  password: string;\n  @ApiPropertyRule({ description: '验证码标识', rule: RuleType.string().required()})\n  captchaId: string;\n  @ApiPropertyRule({ description: '验证码', rule: RuleType.string().required() })\n  captcha: string;\n}\n\n```\n由于这个类属于一个 PlainObject ，也不需要被依赖注入管理，我们不需要提供 @Provide 装饰器。\n\n这个 `LoginParamDto` Class 提供了三个属性和他们对应的校验规则。\n\n- username 一个必填的字符串类型,长度在1-10之间\n\n- password 一个必填的字符串类型\n\n- captchaId 一个必填的字符串类型\n\n- captcha 一个必填的字符串类型\n\n不同于`midway`用`@Rule`装饰器修饰需要被校验的属性，本项目声明了`@ApiPropertyRule`装饰器，它封装了`swagger`的`@ApiProperty`装饰器和`validate`的`Rule`装饰器，它的参数为rule,接受一个 RuleType 对象提供的校验规则的链式方法。\n`@ApiPropertyRule` 针对日常应用还做了以下处理\n- 将 空串视为空而不是无效值,否则空串会被 stripUnknown 配置 视为无效值处理掉\n- 如果不是必填值，允许null\n- 自动将 `RuleType` 的 required规则赋值给`@ApiProperty`装饰器\n- 自动将maximum、minimum、minLength、maxLength、enmu赋值给`RuleType`\n- 自动将`description`添加为 `RuleType`的`label`用于多语言\n\n### 使用校验文件\n定义完类型之后，就可以直接在业务代码中使用了。\n\n```\nimport { ApiOperationResponse } from '@/decorators/swagger.js';\nimport { Body, Controller, Inject, Post } from '@midwayjs/core';\nimport { Context } from '@midwayjs/koa';\nimport { LoginParamDto } from '../dto/loginParam.dto.js';\nimport { LoginResultDto } from '../dto/loginResult.dto.js';\nimport { LoginService } from '../service/login.serveice.js';\nimport { BaseController } from './base.controller.js';\n\n@Controller('login')\nexport class LoginController extends BaseController {\n  @Inject()\n  loginService: LoginService;\n\n  @Inject()\n  ctx: Context;\n\n  @Post('/login')\n  @ApiOperationResponse({\n    responseType: LoginResultDto,\n    summary: '登录',\n  })\n  async login(@Body() param: LoginParamDto) {\n    return this.success(await this.loginService.login(param.username, param.password, this.ctx));\n  }\n}\n```\n### 从原有 DTO 创建新 DTO\n有时候，我们会希望从某个 DTO 中获取一部分属性，变成一个新的 DTO 类。\n\n本项目 提供了 `PickDtoType` `OmitDtoType` `PartialType` `RequiredType` `IntersectionType` 五个方法根据现有的的 DTO 类型创建新的 DTO。请注意这些函数从`@/helper/dto.js`导出。\n\nPickDto 用于从现有的 DTO 中获取一些属性，变成新的 DTO，而 OmitDto 用于将其中某些属性剔除，PartialType  将属性设置为可选，RequiredType 将属性设置为必填， IntersectionType 将两种类型合并为一种新类型,结合了两种类型的所有属性。比如：\n```typescript\nimport { OmitDtoType } from '@/helper/dto.js';\nimport { InferAttributesLoose } from '@/types/entity.js';\nimport { File } from '../../../entities/file.entity.js';\n\n//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效\nexport class FileCreateDto extends OmitDtoType(\n  File as new () => InferAttributesLoose<File>, //只保留声明属性\n  ['id', 'createdAt', 'updatedAt', 'url', 'createdAdminId', 'updatedAdminId'], //排除自动创建的属性\n) {}\n```\n### 配置\n配置文件在src/config/config.default.ts中，默认开启了以下配置\n```\n  validate: {\n    validationOptions: {\n      allowUnknown: false, // 全局生效 允许未定义的字段\n      convert: true, // 当为true时，尝试将值转换为所需的类型（例如，将字符串转换为数字.\n      stripUnknown: true, // 全局生效,移除多余的字段\n    },\n  },\n```\n更多说明请参考[midway](https://midwayjs.org/docs/extensions/validate)和[joi](https://joi.dev/api/)文档\n## swagger文档\nswagger 基于`@midwayjs/swagger@3 `只做了`@ApiPropertyRule`的封装，`@ApiPropertyRule`可接受`@ApiProperty`的全部参数\n\n### 开启组件\n在 configuration.ts 中增加组件。\n```\nimport { Configuration } from '@midwayjs/core';\nimport * as swagger from '@midwayjs/swagger';\n\n@Configuration({\n  imports: [\n    // ...\n    swagger\n  ]\n})\nexport class MainConfiguration {\n\n}\n```\n可以配置启用的环境，比如下面的代码指的是 只在 local 环境下启用。本项目已默认在local和dev环境下开启\n```\nimport { Configuration } from '@midwayjs/core';\nimport * as swagger from '@midwayjs/swagger';\n\n@Configuration({\n  imports: [\n    // ...\n    {\n      component: swagger,\n      enabledEnvironment: ['local']\n    }\n  ]\n})\nexport class MainConfiguration {\n\n}\n```\n然后启动项目，访问地址：\n\nUI: [http://127.0.0.1:7001/swagger-ui/index.html](http://127.0.0.1:7001/swagger-ui/index.html)\n\nJSON: [http://127.0.0.1:7001/swagger-ui/index.json](http://127.0.0.1:7001/swagger-ui/index.json)\n路径可以通过 swaggerPath 参数配置。\n\n### 数据类型\n自动类型提取\nSwagger 组件会识别各个 @Controller 中每个路由方法的 @Body()、@Query()、@Param() 装饰器，提取路由方法参数和类型。\n\n比如下面的代码：\n```typescript\n@Get('/')\nasync home(\n  @Query('uid') uid: number,\n  @Query('tid') tid: string,\n  @Query('isBoolean') isBoolean: boolean,\n) {\n    // ...\n}\n```\n会自动提取相关参数生成文档。\n### Schema\n本项目推荐使用dto文件参数使用对象，并使用定义好的类作为类型，这个时候 swagger 组件也能自动识别，同时也能和普通的类型进行组合识别。\n\n比如下面的代码：\n```\n@Post('/:id', { summary: 'test'})\nasync create(@Body() LoginParamDto: LoginParamDto, @Param('id') id: number) {\n  // ...\n}\n```\nCreateCatDto 类型的定义如下，我们使用 ApiPropertyRule 将其中的每个属性都进行了定义。\n```\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { RuleType } from '@midwayjs/validate';\n\nexport class LoginParamDto {\n  @ApiPropertyRule({ description: '用户名', rule: RuleType.string().max(10).min(1).required().empty('') })\n  username: string;\n  @ApiPropertyRule({ description: '密码', rule: RuleType.string().required().empty('') })\n  password: string;\n  @ApiPropertyRule({ description: '验证码标识', rule: RuleType.string().required().empty('') })\n  captchaId: string;\n  @ApiPropertyRule({ description: '验证码', rule: RuleType.string().required().empty('') })\n  captcha: string;\n}\n\n```\n详细的类型参考请查阅 [midway文档](https://midwayjs.org/docs/extensions/swagger)\n\n### 循环依赖\n当类之间具有循环依赖关系时，请使用惰性函数提供类型信息。\n\n比如 type 字段的循环。\n```\nclass Photo {\n  // ...\n  @ApiProperty({\n    type: () => Album\n  })\n  album: Album;\n}\nclass Album {\n  // ...\n  @ApiProperty({\n    type: () => Photo\n  })\n  photo: Photo;\n}\n```\n\ngetSchemaPath 也可以使用。\n```\nexport class CreateCatDto {\n  // ...\n\n  @ApiProperty({\n    type: 'array',\n    items: {\n      $ref: () => getSchemaPath(Cat)\n    }\n  })\n  relatedList: Cat[];\n}\n```\n### 请求 Response\n本项目封装了`@ApiOperationResponse({...})` 来自定义请求 Response,单条数据获取传入`responseType`参数，分页列表获取传入`responsePage`参数。\n```\n@Get('/:id')\n@ApiOperationResponse({\n  responseType: User,\n  summary: '用户信息',\n})\nfindOne(@Param('id') id: string, @Query('test') test: any): Cat {\n  return this.catsService.findOne(+id);\n}\n```\n```\n//接口方法必须加async 方法的接口装饰器值必须/开头\n@Post('/')\n@ApiOperationResponse({\n  responsePage: User,\n  summary: '获取用户列表',\n})\n@AdminPermission('UserList')\nasync list(@Body() queryDto: UserQueryDto) {\n  return this.success(await this.userService.list(queryDto));\n}\n```		693986817568931840	20	21		604612615536115712	604612615536115712	2026-03-31 09:04:25.19+08	2026-03-31 13:52:23.732+08	0	1.0.0	validateSwagger
-694060730139279360	社区	\N	1	1	96				87	90		604612615536115712	604612615536115712	2026-03-31 13:49:33.091+08	2026-03-31 13:52:23.732+08	\N	1.0.0	\N
-694059215051816960	图片预览	\N	2	1	92	# 预览图片\n将 `element-plus` 的 `ElImageViewer` 组件函数化，可通过服务方式调用。\n\n!!! warning 注意\n- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。\n- 当前组件位置`@/components/service/meImageViewer.ts`\n- 服务式组件只能通过服务方式调用\n!!!\n\n## 组件props\n\n| props      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| urlList\t  | string[] | 用于预览的图片链接列表，默认为[]|否|\n| zIndex      | number \\| string | 预览时遮罩层的 z-index |否|\n| initialIndex | number | 初始预览图像索引，小于 urlList 的长度,默认为0 |否|\n| infinite | boolean | 是否可以无限循环预览，默认为true |否|\n| hideOnClickModal\t | boolean | 是否可以通过点击遮罩层关闭预览,默认为false | 否|\n|teleported| boolean | image 自身是否插入至 body 元素上。嵌套的父元素属性会发生修改时应该将此属性设置为 true，默认为fale| 否 |\n|onClose | ()=>void| 当点击 X 按钮或者在hideOnClickModal为 true 时点击遮罩层时触发 | 否|\n|onSwitch | (index: number) => void| 切换图像时触发。 | 否 |\n\n## 使用示例\n\n```ts\nimport { createImageViewer } from '@/components/service/meImageViewer';\n\ncreateImageViewer({\nurlList: [\n    'https://scpic.chinaz.net/Files/pic/pic6/pic1281.jpg',\n    'https://scpic.chinaz.net/files/pic/pic9/202009/apic27858.jpg',\n    'https://tse3-mm.cn.bing.net/th/id/OIP-C.n0_p3rYRuofABd3XudbZnAHaEo?pid=ImgDet&rs=1',\n],\n});\n```		694038800321478656	78	79		604612615536115712	604612615536115712	2026-03-31 13:43:31.866+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694061143752179712	预览	\N	2	1	99		https://meadmin-cn.github.io/meadmin-template/	694060975577366528	92	93		604612615536115712	604612615536115712	2026-03-31 13:51:11.703+08	2026-03-31 13:52:23.732+08	1	1.0.0	\N
-694059381699903488	前台文档	\N	2	1	98	# 前台文档\n前台前端模板，与后台模板规则一致，只是去除了多语言和权限校验，增加了服务端渲染支持。\n详细说明请参考[后台文档](/client/admin/guide/)\n## 目录结构\n根目录为`view/index`\n```\n├── dist 打包文件夹\n│   ├── mock mock文件夹\n│   ├── plugins vite插件\n│   ├── public 公共静态资源目录\n│   ├── src  主目录\n│   │   ├── api 接口文件\n│   │   ├── assets 资源文件\n│   │   │   └── images 项目存放图片的文件夹\n│   │   ├── components 公共组件（里面的组件会自动引入）\n│   │   ├── config 配置文件夹\n│   │   │   ├── index.ts 配置入口文件\n│   │   │   └── login.ts  登录配置\n│   │   ├── dict  字典\n│   │   ├── directives 指令（里面的指令会自动引入）\n│   │   ├── event 事件\n│   |   ├── hooks 公共hooks\n│   │   ├── icons 图标\n│   │   │   ├── svg  svg图标文件夹（放入此文件夹的svg会被自动注册图标组件）\n│   │   │   └── index.ts 图标自动注册入口文件\n│   │   ├── layout 布局文件\n│   │   ├── router  路由配置\n│   │   │   ├── guard 路由全局守卫\n│   │   │   └── routes 动态路由文件夹\n│   │   ├── store  pinia文件夹\n│   |   ├── styles 样式文件 \n│   │   ├── utils  工具类\n│   │   ├── views  页面\n│   │   ├── entry-client.ts 客户端渲染入口文件\n│   │   ├── entry-server.ts 服务端渲染入口文件\n│   │   └── main.ts 入口文件\n│   ├── template自动生成模板\n│   ├── types  类型文件\n└── └── vite.config.ts vite配置文件\n```\n## 注意事项\n开发需寻遵循以下事项，以兼容服务端渲染特性\n\n- 如需使用window对象需增加服务端渲染判断\n```\nif (!import.meta.env.SSR) {\n  //下面代码仅在客户端执行\n  window.addEventListener('resize', () => mitter.emit(event.RESIZE));\n}\n\n```\n\n- request请求需在setup顶层创建，以规避服务端渲染“跨请求状态污染”\n```\n//login.vue\n<script setup lang="ts" name="Login">\n//...\nimport {  loginCaptchaApi } from '@/api/login';\nconst { data: captchaObj, runAsync: getCaptchRun } = loginCaptchaApi();\nconst getCaptch = async () => {\n  await getCaptchRun();\n  //...\n};\nawait getCaptch();\n//...\n</script>\n\n```\n- 如在组件外发送请求需透传app给request方法，\n```\n//login.ts\nexport function loginApi<T extends boolean = true>(returnAxios: T = true as T, app?:App) {\n  return request<LoginResult, [LoginParams], T>(\n    (params) => ({\n      url: 'login/login',\n      method: 'post',\n      data: params,\n    }),\n    {},\n    returnAxios,\n    app,\n  );\n}\n```\n```\n // userStore\n  login: async function (app:App, params: LoginParams) {\n    //...\n    const res = await loginApi(true,app)(params);\n    //...\n  },\n```\n```\n//login.vue\nconst _this = getCurrentInstance();\nconst submit = async () => {\n  //...\n  await userStore.login(_this!.appContext.app,loginParams);\n};\n//...\n```\n- 请求直接，在setp 顶层await否则服务端渲染期间无法获取到数据。\n\n- 如需在组件外创建store，需传入pinia\n```\n//request.ts\n\nexport function request<R, P extends unknown[] = [], T = boolean>(\n  axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>,\n  options?: RequestOptions<R, P>,\n  returnAxios?: T,\n  app?: App,\n) {\n//...\n store = app?.config.globalProperties.$pinia;\n const userStore = useUserStore(store);\n//...\n}\n\n```\n## 路由声明\n\n前台项目路由声明在`src/routes`文件夹下，src/routes文件夹下的`.ts`会自动引入加载，不经过权限校验。\n```\n//src/router/routes/002-demo.ts\nimport Layout from '@/layout/default/index.vue';\nimport { concatObjectValue } from '@/utils/helper';\nimport { RouteRecordRaw } from 'vue-router';\nexport const routes: RouteRecordRaw[] = [\n  {\n    path: '/demo',\n    redirect: '/demo/1',\n    component: Layout,\n    children: concatObjectValue<RouteRecordRaw>(import.meta.glob('./demo/*.ts', { eager: true, import: 'routes' })),\n    meta: { title: '演示菜单' },\n  },\n];\n\n```		694016827243626496	84	85		604612615536115712	604612615536115712	2026-03-31 13:44:11.597+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694060174612103168	开发规范	\N	2	1	97	# 开发规范\n## git提交规范[conventionalcommits](https://www.conventionalcommits.org/en/v1.0.0/)\n - 本项目的git提交规范遵循[conventionalcommits](https://www.conventionalcommits.org/en/v1.0.0/)并进行了自定义配置，具体配置规则如下\n```\n"types": [\n    {\n    "type": "feat",\n    "section": "新功能[feat]"\n    },\n    {\n    "type": "fix",\n    "section": "Bug 修复[fix]"\n    },\n    {\n    "type": "chore",\n    "section": "其他[chore]"\n    },\n    {\n    "type": "docs",\n    "section": "文档更改[docs]"\n    },\n    {\n    "type": "style",\n    "section": "样式更改[style]"\n    },\n    {\n    "type": "refactor",\n    "section": "重构[refactor]"\n    },\n    {\n    "type": "perf",\n    "section": "性能改进[perf]"\n    },\n    {\n    "type": "test",\n    "section": "测试添加/更正[test]"\n    },\n    {\n    "type": "revert",\n    "section": "还原提交[revert]"\n    },\n    {\n    "type": "ignore",\n    "section": "需要忽略[ignore]",\n    "hidden": true\n    },\n    {\n    "type": "ci",\n    "section": "CI发版[ci]"\n    }\n]\n```\n- 如果使用`vscode`编辑器，建议安装[Conventional Commits](https://marketplace.visualstudio.com/items?itemName=vivaxy.vscode-conventional-commits)插件,此插件会自动生成对应格式提交日志\n\n## husky自动化\n1. 安装时不使用`npm install`直接使用`npm run i `,或者初始化后在当前目录下运行`npx husky install`\n2. 或者在 package.json加入以下`scripts`再install ([husky对应文档](https://typicode.github.io/husky/#/?id=install))\n   ```\n   //npm/pnpm\n   {\n        "scripts": {\n            "prepare": "husky install"\n        }\n    }\n   ```\n   ```\n   //yarn\n    {\n    "private": true, // ← your package is private, you only need postinstall\n    "scripts": {\n        "postinstall": "husky install"\n    }\n    }\n   ```\n会自动生成生成`husky`对应的git hook`husky`会在git提交时进行以下操作:\n- 自动运行`prettier --write`进行代码格式化\n- 自动运行`eslint --cache --fix`进行`eslint`校验和修复,如果无法修复会报错并停止提交\n- 自动校验提交`message`是否符合`conventionalcommits`规范，如果不符合会报错并停止提交\n ### husky 在linux/mac下不生效\n husky目前有一个bug, windows下创建的hooks 当在linux/macos下拉取后即使执行了`husky install`也不能成功调用，需要单独执行下`chmod ug+x .husky/*` 赋予脚本执行权限。对应的[issue](https://github.com/typicode/husky/issues/1177)		682458162829197312	6	7		604612615536115712	604612615536115712	2026-03-31 13:47:20.642+08	2026-03-31 13:52:24.089+08	0	1.0.0	\N
-694059064967036928	查询表单	\N	2	1	91	# 查询表单\n组件名`meSearchForm`，对[elment-plus from](https://element-plus.org/zh-CN/component/form.html)组件的封装，在保留原有功能的情况下，扩展了收起展开、查询、重置功能，并且保留`elment-plus table`的 `props` 和 `emit` `type`提示。\n\n!!! warning 注意\n- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。\n- 当前组件位置`@/components/meSearchForm`。\n!!!\n\n## 组件props\n\n| props      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| forever| number | 收起后展示的筛选项数量,为0表示不收起，默认为1| 否 |\n| defaultAll | boolean | 默认值为`false` ，默认展开所有筛选  | 否 |\n| searchText | string | 默认值为'查询' 查询按钮文案，当值为`undefined`时不展示查询按钮 | 否 |\n| resetText |  string | 默认值为'重置' 重置按钮文案，当值为`undefined`时不展示重置按钮 | 否 |\n| labelWidth |  string| label宽度默认80px | 否 |\n| labelPosition| `left`\\|`right`| label展示位置 默认right | 否 |\n| elForm的属性 | - | 支持element-plus  Form组件 的所有属性，请参考[elForm文档](https://element-plus.org/zh-CN/component/form.html#form-%E5%B1%9E%E6%80%A7)| - | \n\n## 组件事件\n\n| emit      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| search | `() => void` | 查询事件 | - |\n| reset | `() => void` | 重置事件,不绑定重置事件时，点击重置按钮会调用 `elFormRef.resetFields()`| - |\n| elForm的事件 | - | 支持element-plus  Form组件的所有事件，请参考[elForm文档](https://element-plus.org/zh-CN/component/form.html#form-%E4%BA%8B%E4%BB%B6)| - | \n\n## 插槽\n| 插槽名  |\t说明  |\t子标签 |\n| ----------- | ----------- | ----------- |\n| - | 自定义默认内容。和[elForm](https://element-plus.org/zh-CN/component/form.html#form-%E6%8F%92%E6%A7%BD)对应插槽功能一致。 | FormItem |\n| button | 尾部按钮 | - |\n\n\n## 组件属性/方法\n| 名称 | 类型 | 说明 |\n| ----------- | ----------- | ----------- |\n| elFormRef | FormInstance | `elForm` 的 `ref`引用，可通过其访问`elForm`的属性和方法 |		694038800321478656	80	81		604612615536115712	604612615536115712	2026-03-31 13:42:56.083+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694058883286564864	弹窗	\N	2	1	93	# Dialog 对话框\n组件名`MeDialog`，对[elment-plus dialog](https://element-plus.org/zh-CN/component/dialog.html)组件的封装，在保留原有功能的情况下，扩展了最大化/还原、拖动大小、样式调整自动滚动条、可移动功能，并且保留`elment-plus dialog`的 `props` 和 `emit` `type`提示。\n\n!!! warning 注意\n- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。\n- 当前组件位置`@/components/meDialog`。\n!!!\n\n## 组件props\n\n| props      | 类型 |说明|必填|\n| ----------- | ----------- | ----------- | ----------- |\n| full | boolean | 名称默认值为`true`,是否启用最大化/还原、拖动大小、可移动功能 | 否 |\n| maxHeight | boolean | 名称默认值为`60vh`,弹窗最大高度 | 否 |\n| elDialog的属性 | - | 支持element-plus  Dialog组件 的所有属性，请参考[elDialog文档](https://element-plus.org/zh-CN/component/dialog.html#%E5%B1%9E%E6%80%A7)| - | \n\n## 组件事件\n| emit      | 格式 |说明|\n| ----------- | ----------- | ----------- |\n| elDialog的事件 | - | 支持element-plus  Dialog组件 的所有事件，请参考[elDialog文档](https://element-plus.org/zh-CN/component/dialog.html#%E4%BA%8B%E4%BB%B6)| - |\n\n## 组件插槽\n\n| 插槽名  |\t说明  |\t子标签 |\n| ----------- | ----------- | ----------- |\n| - | Dialog 的内容,和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。| - |\n| header | 对话框标题的内容；会替换标题部分，但不会移除关闭按钮。和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。|\t— |\n| title\t| 与 header 作用相同 请使用 header,和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。|\t— |\n| footer | Dialog 按钮操作区的内容,和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。| — |\n\n![](/api/admin/file/get/694058854975012864/image.png)\n		694038800321478656	74	75		604612615536115712	604612615536115712	2026-03-31 13:42:12.766+08	2026-03-31 13:52:23.732+08	0	1.0.0	\N
-694102373970214912	指南	\N	1	1	99			\N	97	106		604612615536115712	604612615536115712	2026-02-27 13:25:05.479+08	2026-03-31 19:37:41.364+08	\N	1.1.0	\N
-694102376537128960	数据库	\N	2	1	96	# 数据库\n数据库使用postgresql,连接框架使用seqlize@7,相关配置在`src/database.ts`中，`src/database.ts`加载了env环境变量，如需配置数据库连接方式可直接更改`.env`文件的相关配置。注意:本项目自行封装使用的seqlize@7，未使用`@midwayjs/sequelize@3`组件。\n\n相关使用方式如下：\n\n## 模型定义\n\n### 1、创建 Model（Entity）\n\n我们通过模型和数据库关联，在应用中的模型就是数据库表，在 Sequelize 中，模型是和实体绑定的，每一个实体（Entity) 文件，即是 Model，也是实体（Entity）。\n所有的实体存储在`src/entities`文件夹和数据库表想对应。\n在示例中，需要一个实体，我们这里拿 ExampleBook 举例。在`src/entities`文件夹添加实体文件 `exampleBook.entity.ts` ，一个简单的实体如下。\n\n```typescript\n// src/entities/exampleBook.entity.ts\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { DataTypes } from '@sequelize/core';\nimport { Attribute, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\n\n@Table({ tableName: 'example_book', comment: '示例_书籍' })\nexport class ExampleBook extends AdminBaseModel<ExampleBook> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  id: string;\n\n  @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })\n  name: string;\n}\n\n```\n\n- 管理后台的表需继承AdminBaseModel，会自动创建 和维护`createdAdminId`、`updatedAdminId`、`createdAt`、`updatedAt`，相关内容是在Hooks钩子中维护的，如执行自定义sql需手动维护相关值。\n- 前台表需继承IndexBaseModel，会自动创建 和维护`createdAdminId`、`updatedAdminId`、`createdAt`、`updatedAt`，相关内容是在Hooks钩子中维护的，如执行自定义sql需手动维护相关值。\n- @Table 装饰器可以在不传递任何参数的情况下使用，本项目约定，数据库表名使用下划线方式命名，`seqlize`默认会使用复数形式命名表名，本项目推荐手动传入tableName、comment定义表名和备注。更多参数请查看[seqlize 文档](https://sequelize.org/docs/v7/models/naming-strategies/) 。 \n\n### 2、 主键\n\n@PrimaryKey 定义主键，`postgresql`不支持自增主键，如想实现需通过自增序列实现，但迁移时比较麻烦。本项目推荐使用自定义函数`uuid`维护string类型主键，方式为`@Default(uuid)``@Attribute({ type: DataTypes.STRING(20), allowNull: false })`。\n\n```typescript\n// src/entities/exampleBook.entity.ts\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { DataTypes } from '@sequelize/core';\nimport { Attribute, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\n\n@Table({ tableName: 'example_book', comment: '示例_书籍' })\nexport class ExampleBook extends AdminBaseModel<ExampleBook> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  id: string;\n}\n\n```\n### 3、时间列\n主要指代的是 `@CreatedAt`, `@UpdatedAt`, `@DeletedAt` 单个装饰器标注的列。\n比如：\n```typescript\nimport { InferCreationAttributes, InferAttributes, Model, CreationOptional } from '@sequelize/core';\nimport { CreatedAt, UpdatedAt, DeletedAt, Table } from '@sequelize/core/decorators-legacy';\n\n@Table({ tableName: 'example_book', comment: '示例_书籍' })\nexport class ExampleBook extends Model<InferAttributes<ExampleBook>, InferCreationAttributes<ExampleBook>> {\n  @CreatedAt\n  declare createdAt: Date;\n\n  @UpdatedAt\n  declare updatedAt: Date;\n\n  @DeletedAt\n  declare deletedAt: Date | null;\n}\n```\n|装饰器|\t描述|\n| --   | --   |\n|@CreatedAt|\t会设置 自动维护的创建时间字段|\n|@UpdatedAt|\t会设置 自动维护的更新时间字段|\n|@DeletedAt|\t会设置 自动维护的删除时间字段，值为非null的记录会被识别为逻辑删除|\n\n如果继承`AdminBaseModel`或`IndexBaseModel`会自动继承`createdAt`和`updatedAt`字段，无需手动维护。`deletedAt`按需求自行维护。\n\n### 4、普通列\n`@Column` 装饰器用于标注普通列，需要在参数中传入类型和备注。\n```typescript\n// src/entities/exampleBook.entity.ts\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { DataTypes } from '@sequelize/core';\nimport { Attribute, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\n\n@Table({ tableName: 'example_book', comment: '示例_书籍' })\nexport class ExampleBook extends AdminBaseModel<ExampleBook> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  id: string;\n\n  @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })\n  name: string;\n}\n\n```\n更多类型请，参考[seqlize 文档](https://sequelize.org/docs/v7/models/data-types/)\n\n## 数据源配置\n我们支持多库数据源配置 在`src/config/database.ts`中配置\n```typescript\nimport { importModels, Options } from '@sequelize/core';\nimport { PostgresDialect } from '@sequelize/postgres';\nimport { appLogger } from '../logger.js';\nexport default async () => ({\n  dataSource: {\n    default: {\n      dialect: PostgresDialect,\n      host: process.env.DATABASE_HOST ?? '127.0.0.1',\n      port: process.env.DATABASE_PORT ?? 5342,\n      database: process.env.DATABASE_DB ?? 'meadmin',\n      user: process.env.DATABASE_USER ?? 'root',\n      password: process.env.DATABASE_PASSWORD ?? 'root',\n      client_encoding: 'utf8',\n      models: await importModels((import.meta.dirname + '/../**/*.entity.js').replace(/\\\\/g, '/')), // 支持如下的扫描形式，或实体形式[User,Admin]\n      options: `-c search_path=${process.env.DATABASE_SCHEMA}`, //设置模式查询顺序\n      define: {\n        underscored: true, //强制表名和列名转换为snake_case\n        freezeTableName: true, //强制模型名称不变换（取消表名的单词复数转换和snake_case转换)\n        timestamps: false, // 禁用createAt和updateAt的自动声明\n        noPrimaryKey: true, //禁止自动创建主键id\n        schema: process.env.DATABASE_SCHEMA ?? 'public',\n        timezone: 'Asia/Shanghai',\n      },\n      logging(sql, timing, seqlize?) {\n        appLogger.info('[sql]耗时 %d ms，%s', timing, sql, seqlize?.bind);\n      },\n      benchmark: true, //开启日志打印sql耗时参数传递\n    } as Options<PostgresDialect>,\n  },\n  // 第二个数据源\n  default2: {\n    // ...\n  },\n});\n```\n使用时\n```typescript\nimport { InjectRepository, Transaction } from '@/decorators/index.js';\nimport { Provide } from '@midwayjs/core';\nimport { BadRequestError } from '@midwayjs/core/dist/error/http.js';\nimport { User } from '../../../entities/user.entity.js';\n\n//用户\n@Provide()\nexport class UserService {\n  @InjectRepository(User)//声明entity,默认加载default数据源相当于@InjectRepository(User,'default')\n  userRepository: typeof User;\n \n  /**\n   * 根据主键获取一条信息\n   * @param id 主键\n   * @returns\n   */\n  @Transaction()\n  async findOne(id: string) {\n    const entity = await this.userRepository.findByPk(id, {\n      include: [\n        'createdUser'\n      ],\n    });\n    if (!entity) {\n      throw new BadRequestError('没有对应的信息');\n    }\n    return entity;\n  }\n}\n```\n## 模型关联\n可以通过 `@HasMany` 、`@HasOne` 、`@BelongsTo`、`@BelongsToMany` 装饰器在模型中直接描述关系。\n### 1、一对多或一对一从属\n```typescript\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { BelongsToModel } from '@/types/entity.js';\nimport { DataTypes, NonAttribute } from '@sequelize/core';\nimport { Attribute, BelongsTo, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\nimport { User } from './user.entity.js';\n\n@Table({ tableName: 'example_demo', comment: '示例_Demo' })\n//继承自DelParanoidModel则使用软删除。\nexport class ExampleDemo extends AdminBaseModel<ExampleDemo> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })\n  id: string;\n\n   //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)\n  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。\n  @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })\n  name: string;\n\n  //反向BelongsTo关联从属， 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to/\n  @Attribute({ type: DataTypes.STRING(20), comment: '关联前台用户id' })\n  userId: string;\n \n  @BelongsTo(() => User, {\n    foreignKey: 'userId', //外键名称\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n  })\n  user?: NonAttribute<User>;\n}\n//声明自动关联方法\nexport declare interface ExampleDemo extends BelongsToModel<'user', User> {}\n```\n`sequelize-typescript` 会在内部进行关联，会自动查询出相关的依赖。\n```typescript\n const entity = await this.userRepository.findByPk(id, {\n      include: ['user'],\n    });\n```\n### 多对多\n\n```typescript\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { BelongsManyModel } from '@/types/entity.js';\nimport { DataTypes, NonAttribute } from '@sequelize/core';\nimport { Attribute, BelongsToMany, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\nimport { ExampleBook } from './exampleBook.entity.js';\n\n//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null\n@Table({ tableName: 'example_demo', comment: '示例_Demo' })\n//继承自DelParanoidModel则使用软删除。\nexport class ExampleDemo extends AdminBaseModel<ExampleDemo> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })\n  id: string;\n\n\n  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)\n  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。\n  @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })\n  @ApiPropertyRule({ description: '名称', rule: RuleType.string().max(20).min(1).required() })\n  name: string;\n\n  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/\n  @BelongsToMany(() => ExampleBook, {\n    through: 'example_demo_books', //中间表名称 或者 对应的Model，\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: 'demos',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;\n  })\n  @ApiPropertyRule({\n    description: '书籍',\n    type: 'array',\n    items: {\n      type: () => ExampleBook,\n    },\n    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),\n  })\n  books?: NonAttribute<ExampleBook[]>;\n}\n//声明自动关联方法\nexport declare interface ExampleDemo extends BelongsManyModel<'books', 'book', 'books', ExampleBook> {}\n\n```\nBelongsToMany 关联会自动在目标模型上创建逆关联，目标模型也是一个 BelongsToMany 关联。您可以通过使用反向选项自定义反关联：\n\n```typescript\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { BelongsManyModel } from '@/types/entity.js';\nimport { DataTypes, NonAttribute } from '@sequelize/core';\nimport { Attribute, BelongsToMany, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\nimport { ExampleBook } from './exampleBook.entity.js';\n\n//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null\n@Table({ tableName: 'example_demo', comment: '示例_Demo' })\n//继承自DelParanoidModel则使用软删除。\nexport class ExampleDemo extends AdminBaseModel<ExampleDemo> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })\n  id: string;\n\n\n  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)\n  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。\n  @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })\n  @ApiPropertyRule({ description: '名称', rule: RuleType.string().max(20).min(1).required() })\n  name: string;\n\n  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/\n  @BelongsToMany(() => ExampleBook, {\n    through: 'example_demo_books', //中间表名称 或者 对应的Model，\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n    inverse: {as: 'demos',},\n    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: 'demos',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;\n  })\n  books?: NonAttribute<ExampleBook[]>;\n}\n//声明自动关联方法\nexport declare interface ExampleDemo extends BelongsManyModel<'books', 'book', 'books', ExampleBook> {}\n\n```\n```typescript\nimport { NonAttribute } from "@sequelize/core";\nimport { AdminBaseModel } from "./abstract/adminBase.entity.js";\nimport { ExampleDemo } from "./exampleDemo.entity.js";\n\nexport class ExampleBook extends AdminBaseModel<ExampleBook> {\n  /** Declared by {@link ExampleDemo.books} */\n  declare demos?: NonAttribute<ExampleDemo[]>;\n}\n```\n`sequelize-typescript` 会在内部进行关联，会自动查询出相关的依赖。\n```typescript\n const entity = await this.exampleDemoRepository.findByPk(id, {\n      include: ['books'],\n    });\n```\n更多文档请参考[seqlize 文档](https://sequelize.org/docs/v7/associations/belongs-to-many/)\n### 3、模型循环依赖\n如果你使用了 `@BelongsTo` 装饰器定义双向依赖时，很容易触发一个模型循环依赖的错误，比如：\n```typescript\nReferenceError: Cannot access 'User' before initialization \n```\n这是因为“emitDecoratorMetadata”在类初始化时会添加对另一个类的引用。\n既然是循环导入，这样做必然会导致你遇到的错误。\n\n解决办法是只在一侧声明关联。反面可以用 `inverse` property 性质声明\n你还需要将用户导入标记为导入类型：\n\n```typescript\n//joke.js\nimport { DataTypes, Model,InferAttributes,InferCreationAttributes,CreationOptional } from '@sequelize/core';\nimport { Attribute, PrimaryKey, AutoIncrement, NotNull, BelongsTo } from '@sequelize/core/decorators-legacy';\nimport type { User } from './user.js';//注意使用type引用\n  \nexport class Joke extends Model<InferAttributes<Joke>, InferCreationAttributes<Joke>> \n{\n    @Attribute(DataTypes.INTEGER)\n    @PrimaryKey\n    @AutoIncrement\n    declare id: CreationOptional<number>;\n\n    @Attribute(DataTypes.STRING)\n    @NotNull\n    declare content: string;\n\n-   @BelongsTo(() => User, 'userId')\n    user!: User;\n    \n    // This is the foreign key\n    @Attribute(DataTypes.INTEGER)\n    @NotNull\n    declare userId: number;\n\n    declare createdAt: CreationOptional<Date>;\n    declare updatedAt: CreationOptional<Date>;\n}\n```\n```typescript\n//user.js\nimport { DataTypes,Model,InferAttributes,InferCreationAttributes,CreationOptional, NonAttribute } from '@sequelize/core';\nimport { Attribute, PrimaryKey, AutoIncrement, NotNull, HasMany } from '@sequelize/core/decorators-legacy';\nimport { Joke } from './joke.js';\n  \nexport class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> \n{\n    @Attribute(DataTypes.INTEGER)\n    @PrimaryKey\n    @AutoIncrement\n    declare id: CreationOptional<number>;\n\n    @Attribute(DataTypes.STRING)\n    @NotNull\n    declare name: string;\n\n    @Attribute(DataTypes.STRING)\n    declare email: string;\n\n    declare createdAt: CreationOptional<Date>;\n    declare updatedAt: CreationOptional<Date>;\n\n    @HasMany(() => Joke, { foreignKey: 'userId', inverse: 'user' })\n    declare jokes?: NonAttribute<Joke[]>;\n}\n\n```\n相关参考[github](https://github.com/sequelize/sequelize/issues/17444)\n\n## 数据库操作\n\n```typescript\nimport { InjectRepository } from '@/decorators/index.js';\nimport { Provide } from '@midwayjs/core';\nimport { BadRequestError } from '@midwayjs/core/dist/error/http.js';\nimport { Op } from '@sequelize/core';\nimport { User } from '../../../entities/user.entity.js';\n\n//用户\n@Provide()\nexport class UserService {\n  @InjectRepository(User) //声明entity,默认加载default数据源相当于@InjectRepository(User,'default')\n  userRepository: typeof User;\n\n  /**\n   * 根据主键获取一条信息\n   * @param id 主键\n   * @returns\n   */\n  async findOne(id: string) {\n    // 查询\n    let result = await this.userRepository.findAll();\n    console.log(result);\n\n    // 新增\n    await this.userRepository.create({\n      nickname: '123',\n    });\n\n    // 删除\n    await this.userRepository.destroy({\n      where: {\n        nickname: '123',\n      },\n    });\n\n    // 联合查询\n    // SELECT * FROM photo WHERE name = "23" OR name = "34";\n    let result = await this.userRepository.findAll({\n      where: {\n        [Op.or]: [{ nickname: '23' }, { nickname: '34' }],\n      },\n    });\n    // => result\n\n    // 连表查询\n    const entity = await this.userRepository.findByPk(id, {\n      include: ['createdUser'],\n    });\n    if (!entity) {\n      throw new BadRequestError('没有对应的信息');\n    }\n    return entity;\n  }\n}\n```\n更多用法请查询：[seqlize文档](https://sequelize.org/docs/v7/category/querying/)\n## 事务\n本项目封装了`Transaction`装饰器，只需要添加上，即可在函数执行时应用`seqlize`的托管事务，事务会在函数，执行完毕后自动提交\n，异常时自动回滚。默认情况下，`Sequelize` 使用 `AsyncLocalStorage` 在函数及子函数调用中开始的所有查询中自动使用该活跃事务。更多请参考[seqlize文档](https://sequelize.org/docs/v7/querying/transactions/#managed-transactions-recommended)\n```typescript\nimport { InjectRepository, Transaction } from '@/decorators/index.js';\nimport { Provide } from '@midwayjs/core';\nimport { User } from '../../../entities/user.entity.js';\n\n//用户\n@Provide()\nexport class UserService {\n  @InjectRepository(User) //声明entity,默认加载default数据源相当于@InjectRepository(User,'default')\n  userRepository: typeof User;\n\n  async create(){\n     // 新增\n    await this.userRepository.create({\n      nickname: '123',\n    });\n  }\n  /**\n   * 根据主键获取一条信息\n   * @param id 主键\n   * @returns\n   */\n  @Transaction()\n  async findOne(id: string) {\n    // 查询\n    let result = await this.userRepository.findAll();\n    console.log(result);\n    await this.create();\n  }\n}\n```\n## 同步数据库结构\n\n- `pnpm exec meadmin sync *` 同步所有\n- 或 `pnpm meadmin sync exampleDemo,systemAdmin,exampleBook,user,file` 定向同步exampleDemo文件（定向同步文件时，需将关联依赖全部罗列出来，一起同步）\n\n## 更多特性\n连接池、自定义数据类型、读取复制、Hooks钩子等更多特性请参考[seqlize 文档](https://sequelize.org/docs/v7/category/other-topics/)		694102375132037120	116	117		604612615536115712	604612615536115712	2026-03-31 09:03:25.62+08	2026-03-31 19:37:41.701+08	0	1.1.0	96
-694102377094971392	最佳实践	\N	2	1	94	# 最佳实践\n本项目推荐最佳实践，在数据库实体`entity`文件中声明所有属性、校验规则、及api文档。dto继承自`entity`文件，做相应处理。\n## `entity`文件\n```typescript\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { uuid } from '@/helper/snowflake.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { BelongsManyModel, BelongsToModel } from '@/types/entity.js';\nimport { DataTypes, NonAttribute, Op } from '@sequelize/core';\nimport { Attribute, BelongsTo, BelongsToMany, Default, DeletedAt, Index, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';\nimport { AdminBaseModel } from './abstract/adminBase.entity.js';\nimport { ExampleBook } from './exampleBook.entity.js';\nimport { File } from './file.entity.js';\nimport { User } from './user.entity.js';\n\n//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null\n@Table({ tableName: 'example_demo', comment: '示例_Demo' })\n//继承自DelParanoidModel则使用软删除。\nexport class ExampleDemo extends AdminBaseModel<ExampleDemo> {\n  //自动生成的主键\n  @Attribute({ type: DataTypes.STRING(20), allowNull: false })\n  @PrimaryKey\n  @Default(uuid)\n  @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })\n  id: string;\n\n  //唯一索引名称必须全库唯一，当两个null值时唯一索引会认为不是同一个值\n  @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引\n  @Attribute({ type: DataTypes.STRING(11), comment: '手机号' })\n  @ApiPropertyRule({ description: '手机号', rule: RuleType.string().mobile().description('手机号').required() })\n  mobile: string;\n\n  //以“名称:值1=说明1;值2=说明2”，格式声明的备注会自动创建字典和下拉列表，并且支持number、string两种类型\n  @Attribute({\n    comment: '类型:0=书籍;1=电子产品;2=卡片',\n    defaultValue: 0,\n    allowNull: false,\n    type: DataTypes.TINYINT.UNSIGNED,\n  })\n  @ApiPropertyRule({ description: '类型:0=书籍;1=电子产品;2=卡片', rule: RuleType.number().equal(0, 1, 2).required() })\n  type: number;\n\n  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)\n  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。\n  @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })\n  @ApiPropertyRule({ description: '名称', rule: RuleType.string().max(20).min(1).required() })\n  name: string;\n\n  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/\n  @BelongsToMany(() => ExampleBook, {\n    through: 'example_demo_books', //中间表名称 或者 对应的Model，\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: 'demos',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;\n  })\n  @ApiPropertyRule({\n    description: '书籍',\n    type: 'array',\n    items: {\n      type: () => ExampleBook,\n    },\n    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),\n  })\n  books?: NonAttribute<ExampleBook[]>;\n\n  //反向BelongsTo关联从属， 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to/\n  @Attribute({ type: DataTypes.STRING(20), comment: '关联前台用户id' })\n  userId: string;\n  @ApiPropertyRule({ description: '用户', type: () => User, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })\n  @BelongsTo(() => User, {\n    foreignKey: 'userId', //外键名称\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n  })\n  user?: NonAttribute<User>;\n\n  //反向BelongsTo关联从属，File类型创建单文件\n  @Attribute({ type: DataTypes.STRING(20), comment: '头像附件id' })\n  avatarFileId: string;\n  @ApiPropertyRule({ description: '头像', type: () => File, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })\n  @BelongsTo(() => File, {\n    foreignKey: 'avatarFileId', //外键名称\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n  })\n  avatar?: NonAttribute<File>;\n\n  //BelongsTo多对多关联从属，File类型创建多文件选择\n  @BelongsToMany(() => File, {\n    through: 'example_demo_files', //中间表名称 或者 对应的Model，\n    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决\n  })\n  @ApiPropertyRule({\n    description: '附件',\n    type: 'array',\n    items: {\n      type: () => File,\n    },\n    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),\n  })\n  files?: NonAttribute<File[]>;\n\n  @DeletedAt //设置为软删除\n  @Attribute({ comment: '删除时间' })\n  declare deletedAt: Date | null;\n}\n//声明自动关联方法\nexport declare interface ExampleDemo extends BelongsManyModel<'books', 'book', 'books', ExampleBook> {}\nexport declare interface ExampleDemo extends BelongsToModel<'user', User> {}\nexport declare interface ExampleDemo extends BelongsToModel<'avatar', File> {}\nexport declare interface ExampleDemo extends BelongsManyModel<'files', 'file', 'files', File> {}\n\n```\n\n\n## 校验文件\n```\nimport { OmitDtoType } from '@/helper/dto.js';\nimport { InferAttributesLoose } from '@/types/entity.js';\nimport { ExampleDemo } from '../../../../entities/exampleDemo.entity.js';\n\n//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效\nexport class ExampleDemoCreateDto extends OmitDtoType(\n  ExampleDemo as new () => InferAttributesLoose<ExampleDemo>, //只保留声明属性\n  ['id', 'createdAt', 'updatedAt', 'deletedAt', 'createdAdminId', 'updatedAdminId', 'createdAdmin', 'updatedAdmin'], //排除自动创建的字段\n) {}\n\n```\n```\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { PageDto } from '@/dto/page.dto.js';\nimport { IntersectionType, PartialType } from '@/helper/dto.js';\nimport { RuleType } from '@/ruleType/index.js';\nimport { InferAttributesLoose } from '@/types/entity.js';\nimport { ExampleDemo } from '../../../../entities/exampleDemo.entity.js';\n\n//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效\nexport class ExampleDemoQueryDto extends IntersectionType(PageDto, PartialType(ExampleDemo as new () => InferAttributesLoose<ExampleDemo>)) {\n  @ApiPropertyRule({ description: '创建时间(起)', rule: RuleType.date() })\n  startCreatedAt?: Date;\n\n  @ApiPropertyRule({ description: '创建时间(止)', rule: RuleType.date() })\n  endCreatedAt?: Date;\n  @ApiPropertyRule({ description: '最后更新时间(起)', rule: RuleType.date() })\n  startUpdatedAt?: Date;\n\n  @ApiPropertyRule({ description: '最后更新时间(止)', rule: RuleType.date() })\n  endUpdatedAt?: Date;\n}\n\n```\n```\nimport { OmitDtoType, PartialType } from '@/helper/dto.js';\nimport { InferAttributesLoose } from '@/types/entity.js';\nimport { ExampleDemo } from '../../../../entities/exampleDemo.entity.js';\n\n//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效\nexport class ExampleDemoUpdateDto extends PartialType(\n  OmitDtoType(\n    ExampleDemo as new () => InferAttributesLoose<ExampleDemo>, //只保留声明属性\n    ['id', 'createdAt', 'updatedAt', 'deletedAt', 'createdAdminId', 'updatedAdminId', 'createdAdmin', 'updatedAdmin'], //排除自动创建的字段\n  ),\n) {}\n\n```\n## 控制器\n```\nimport { AdminPermission, ApiOperationResponse } from '@/decorators/index.js';\nimport { Body, Controller, Get, Inject, Param, Post } from '@midwayjs/core';\nimport { ExampleDemo } from '../../../../entities/exampleDemo.entity.js';\nimport { ExampleDemoCreateDto } from '../../dto/example/demoCreate.dto.js';\nimport { ExampleDemoQueryDto } from '../../dto/example/demoQuery.dto.js';\nimport { ExampleDemoUpdateDto } from '../../dto/example/demoUpdate.dto.js';\nimport { ExampleDemoService } from '../../service/example/demo.service.js';\nimport { BaseController } from '../base.controller.js';\n\n/**\n * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。\n * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址\n */\n@Controller('example/demo')\nexport class ExampleDemoController extends BaseController {\n  @Inject()\n  exampleDemoService: ExampleDemoService;\n\n  //查询belongsTo关联模型user用户\n  //获取用户信息\n  @Post('/getUser')\n  @ApiOperationResponse({\n    responseType: ExampleDemo,\n    summary: '查询用户信息',\n  })\n  @AdminPermission('ExampleDemoList')\n  async getUser(@Body('id') id: string, @Body('username') username: string, @Body('page') page = 1, @Body('pageSize') pageSize = 10) {\n    return this.success(await this.exampleDemoService.getUser(page, pageSize, id, username));\n  }\n\n  //查询belongsToMany关联模型books示例_书籍\n  //获取示例_书籍信息\n  @Post('/getExampleBook')\n  @ApiOperationResponse({\n    responseType: ExampleDemo,\n    summary: '查询示例_书籍信息',\n  })\n  @AdminPermission('ExampleDemoList')\n  async getExampleBook(@Body('id') id: string, @Body('name') name: string, @Body('page') page = 1, @Body('pageSize') pageSize = 10) {\n    return this.success(await this.exampleDemoService.getExampleBook(page, pageSize, id, name));\n  }\n\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Post('/add')\n  @ApiOperationResponse({\n    responseType: ExampleDemo,\n    summary: '添加示例_Demo信息',\n  })\n  @AdminPermission('ExampleDemoAdd')\n  async add(@Body() createDto: ExampleDemoCreateDto) {\n    return this.success(await this.exampleDemoService.create(createDto));\n  }\n\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Post('/')\n  @ApiOperationResponse({\n    responsePage: ExampleDemo,\n    summary: '获取示例_Demo列表',\n  })\n  @AdminPermission('ExampleDemoList')\n  async list(@Body() queryDto: ExampleDemoQueryDto) {\n    return this.success(await this.exampleDemoService.list(queryDto));\n  }\n\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Get('/info/:id')\n  @ApiOperationResponse({\n    responseType: ExampleDemo,\n    summary: '根据id获取示例_Demo详情',\n  })\n  @AdminPermission('ExampleDemoEdit')\n  async findOne(@Param('id') id: string) {\n    const entity = await this.exampleDemoService.findOne(id);\n    return this.success(entity);\n  }\n\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Post('/up/:id')\n  @ApiOperationResponse({\n    responseType: ExampleDemo,\n    summary: '根据id更新示例_Demo详情',\n  })\n  @AdminPermission('ExampleDemoEdit')\n  async update(@Param('id') id: string, @Body() updateDto: ExampleDemoUpdateDto) {\n    return this.success(await this.exampleDemoService.update(id, updateDto));\n  }\n\n  //接口方法必须加async 方法的接口装饰器值必须/开头\n  @Post('/del/:id')\n  @ApiOperationResponse({\n    summary: '根据id删除示例_Demo信息',\n  })\n  @AdminPermission('ExampleDemoDel')\n  async delete(@Param('id') id: string) {\n    await this.exampleDemoService.remove(id);\n    return this.success();\n  }\n}\n\n```\n\n## service\n```\nimport { InjectRepository, Transaction } from '@/decorators/index.js';\nimport { Inject, Provide } from '@midwayjs/core';\nimport { BadRequestError } from '@midwayjs/core/dist/error/http.js';\nimport { MidwayI18nService } from '@midwayjs/i18n';\nimport { Op } from '@sequelize/core';\nimport { ExampleBook } from '../../../../entities/exampleBook.entity.js';\nimport { ExampleDemo } from '../../../../entities/exampleDemo.entity.js';\nimport { User } from '../../../../entities/user.entity.js';\nimport { ExampleDemoCreateDto } from '../../dto/example/demoCreate.dto.js';\nimport { ExampleDemoQueryDto } from '../../dto/example/demoQuery.dto.js';\nimport { ExampleDemoUpdateDto } from '../../dto/example/demoUpdate.dto.js';\n\n//示例_Demo\n@Provide()\nexport class ExampleDemoService {\n  @InjectRepository(ExampleDemo)\n  exampleDemoRepository: typeof ExampleDemo;\n\n  @Inject()\n  i18nService: MidwayI18nService;\n\n  //查询belongsTo关联模型user用户\n  @InjectRepository(User)\n  userRepository: typeof User;\n\n  /**\n   * 获取用户信息\n   * @param queryDto\n   * @returns\n   */\n  @Transaction()\n  async getUser(page: number, pageSize: number, id: string, username: string = '') {\n    const where = {};\n    if (id) {\n      where['id'] = id;\n    }\n    if (username) {\n      where['username'] = { [Op.like]: '%' + username + '%' };\n    }\n    const { count, rows } = await this.userRepository.findAndCountAll({\n      where,\n      offset: (page - 1) * pageSize,\n      limit: pageSize,\n    });\n    return {\n      list: rows,\n      total: count,\n      page: page,\n      pageSize: pageSize,\n    };\n  }\n\n  //查询belongsToMany关联模型books示例_书籍\n  @InjectRepository(ExampleBook)\n  exampleBookRepository: typeof ExampleBook;\n\n  /**\n   * 获取示例_书籍信息\n   * @param queryDto\n   * @returns\n   */\n  @Transaction()\n  async getExampleBook(page: number, pageSize: number, id: string, name: string = '') {\n    const where = {};\n    if (id) {\n      where['id'] = id;\n    }\n    if (name) {\n      where['name'] = { [Op.like]: '%' + name + '%' };\n    }\n    const { count, rows } = await this.exampleBookRepository.findAndCountAll({\n      where,\n      offset: (page - 1) * pageSize,\n      limit: pageSize,\n    });\n    return {\n      list: rows,\n      total: count,\n      page: page,\n      pageSize: pageSize,\n    };\n  }\n\n  /**\n   * 创建数据\n   * @param createDto\n   * @returns\n   */\n  @Transaction()\n  async create(createDto: ExampleDemoCreateDto) {\n    const entity = await this.exampleDemoRepository.create(createDto);\n\n    if (createDto.user) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setUser(createDto.user.id);\n    }\n\n    if (createDto.avatar) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setAvatar(createDto.avatar.id);\n    }\n\n    if (createDto.books) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setBooks(createDto.books.map((v) => v.id));\n    }\n\n    if (createDto.files) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setFiles(createDto.files.map((v) => v.id));\n    }\n\n    return entity;\n  }\n\n  /**\n   * 列表分页查询\n   * @param queryDto 查询条件\n   * @returns\n   */\n  @Transaction()\n  async list(queryDto: ExampleDemoQueryDto) {\n    const where = {};\n    Object.keys(queryDto).forEach((key) => {\n      if (['page', 'pageSize'].includes(key)) {\n        return;\n      }\n      if ([null, undefined, ''].includes(queryDto[key])) {\n        return;\n      }\n      if (key === 'startCreatedAt') {\n        where['createdAt'] = where['createdAt'] ?? {};\n        where['createdAt'][Op.gte] = queryDto[key];\n        return;\n      }\n      if (key === 'endCreatedAt') {\n        where['createdAt'] = where['createdAt'] ?? {};\n        where['createdAt'][Op.lte] = queryDto[key];\n        return;\n      }\n      if (key === 'startUpdatedAt') {\n        where['updatedAt'] = where['updatedAt'] ?? {};\n        where['updatedAt'][Op.gte] = queryDto[key];\n        return;\n      }\n      if (key === 'endUpdatedAt') {\n        where['updatedAt'] = where['updatedAt'] ?? {};\n        where['updatedAt'][Op.lte] = queryDto[key];\n        return;\n      }\n      where[key] = queryDto[key];\n    });\n    const { count, rows } = await this.exampleDemoRepository.findAndCountAll({\n      where,\n      offset: (queryDto.page - 1) * queryDto.pageSize,\n      limit: queryDto.pageSize,\n      include: [\n        'createdAdmin',\n        'updatedAdmin',\n        'books',\n        'user',\n        {\n          association: 'avatar',\n          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)\n        },\n        {\n          association: 'files',\n          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)\n        },\n      ],\n      order: [['createdAt', 'DESC']],\n    });\n    return {\n      list: rows,\n      total: count,\n      page: queryDto.page,\n      pageSize: queryDto.pageSize,\n    };\n  }\n\n  /**\n   * 根据主键获取一条信息\n   * @param id 主键\n   * @returns\n   */\n  @Transaction()\n  async findOne(id: string) {\n    const entity = await this.exampleDemoRepository.findByPk(id, {\n      include: [\n        'createdAdmin',\n        'updatedAdmin',\n        'books',\n        'user',\n        {\n          association: 'avatar',\n          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)\n        },\n        {\n          association: 'files',\n          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)\n        },\n      ],\n    });\n    if (!entity) {\n      throw new BadRequestError(this.i18nService.translate('没有对应的信息'));\n    }\n    return entity;\n  }\n\n  /**\n   * 更新数据\n   * @param id 主键\n   * @param updateDto 数据对象\n   * @returns\n   */\n  @Transaction()\n  async update(id: string, updateDto: ExampleDemoUpdateDto) {\n    const entity = await this.exampleDemoRepository.findByPk(id);\n    if (!entity) {\n      throw new BadRequestError(this.i18nService.translate('没有对应的信息'));\n    }\n    Object.assign(entity, updateDto);\n\n    if (updateDto.user !== undefined) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setUser(updateDto.user?.id ?? null);\n    }\n\n    if (updateDto.avatar !== undefined) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setAvatar(updateDto.avatar?.id ?? null);\n    }\n\n    if (updateDto.books) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setBooks(updateDto.books.map((v) => v.id));\n    }\n\n    if (updateDto.files) {\n      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例\n      await entity.setFiles(updateDto.files.map((v) => v.id));\n    }\n\n    return await entity.save();\n  }\n\n  /**\n   * 删除数据\n   * @param id 主键\n   * @returns\n   */\n  @Transaction()\n  async remove(id: string) {\n    const entity = await this.exampleDemoRepository.findByPk(id);\n    if (!entity) {\n      throw new BadRequestError(this.i18nService.translate('没有对应的信息'));\n    }\n    await entity.destroy();\n  }\n}\n\n```		694102375132037120	120	121		604612615536115712	604612615536115712	2026-03-31 09:05:49.761+08	2026-03-31 19:37:41.701+08	0	1.1.0	best
-694102378286153728	后台文档	\N	1	1	99			694102378021912576	128	181		604612615536115712	604612615536115712	2026-03-31 10:56:40.177+08	2026-03-31 19:37:41.701+08	\N	1.1.0	\N
-\.
+INSERT INTO aon_doc VALUES ('694102382237188096', 'setup标签语法设置自定义属性', NULL, 2, 1, 95, '# ```setup```标签语法设置自定义属性
+
+!!! warning 注意 
+当代码中存在```<script lang="ts"> ```标签时，插件不会执行 
+!!!
+
+```
+ <script lang="ts" setup name="App" auth="{{''type''+(3+4)}}" >
+  const test = 1
+</script>
+```
+会生成
+```
+<script lang="ts">
+ import { defineComponent } from ''vue'';
+ export default defineComponent({name:''App'',auth:''type''+(3+4)});
+</script>
+<script lang="ts" setup>
+ const test = 1
+</script>
+```', '', '694102380874039296', 154, 155, '', '604612615536115712', '604612615536115712', '2026-03-31 12:20:45.903+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102384783130624', '弹窗', NULL, 2, 1, 93, '# Dialog 对话框
+组件名`MeDialog`，对[elment-plus dialog](https://element-plus.org/zh-CN/component/dialog.html)组件的封装，在保留原有功能的情况下，扩展了最大化/还原、拖动大小、样式调整自动滚动条、可移动功能，并且保留`elment-plus dialog`的 `props` 和 `emit` `type`提示。
+
+!!! warning 注意
+- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。
+- 当前组件位置`@/components/meDialog`。
+!!!
+
+## 组件props
+
+| props      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| full | boolean | 名称默认值为`true`,是否启用最大化/还原、拖动大小、可移动功能 | 否 |
+| maxHeight | boolean | 名称默认值为`60vh`,弹窗最大高度 | 否 |
+| elDialog的属性 | - | 支持element-plus  Dialog组件 的所有属性，请参考[elDialog文档](https://element-plus.org/zh-CN/component/dialog.html#%E5%B1%9E%E6%80%A7)| - | 
+
+## 组件事件
+| emit      | 格式 |说明|
+| ----------- | ----------- | ----------- |
+| elDialog的事件 | - | 支持element-plus  Dialog组件 的所有事件，请参考[elDialog文档](https://element-plus.org/zh-CN/component/dialog.html#%E4%BA%8B%E4%BB%B6)| - |
+
+## 组件插槽
+
+| 插槽名  |	说明  |	子标签 |
+| ----------- | ----------- | ----------- |
+| - | Dialog 的内容,和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。| - |
+| header | 对话框标题的内容；会替换标题部分，但不会移除关闭按钮。和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。|	— |
+| title	| 与 header 作用相同 请使用 header,和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。|	— |
+| footer | Dialog 按钮操作区的内容,和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。| — |
+
+![](/api/admin/file/get/694058854975012864/image.png)
+', '', '694102382786641920', 172, 173, '', '604612615536115712', '604612615536115712', '2026-03-31 13:42:12.766+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102385051566080', '图片预览', NULL, 2, 1, 92, '# 预览图片
+将 `element-plus` 的 `ElImageViewer` 组件函数化，可通过服务方式调用。
+
+!!! warning 注意
+- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。
+- 当前组件位置`@/components/service/meImageViewer.ts`
+- 服务式组件只能通过服务方式调用
+!!!
+
+## 组件props
+
+| props      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| urlList	  | string[] | 用于预览的图片链接列表，默认为[]|否|
+| zIndex      | number \| string | 预览时遮罩层的 z-index |否|
+| initialIndex | number | 初始预览图像索引，小于 urlList 的长度,默认为0 |否|
+| infinite | boolean | 是否可以无限循环预览，默认为true |否|
+| hideOnClickModal	 | boolean | 是否可以通过点击遮罩层关闭预览,默认为false | 否|
+|teleported| boolean | image 自身是否插入至 body 元素上。嵌套的父元素属性会发生修改时应该将此属性设置为 true，默认为fale| 否 |
+|onClose | ()=>void| 当点击 X 按钮或者在hideOnClickModal为 true 时点击遮罩层时触发 | 否|
+|onSwitch | (index: number) => void| 切换图像时触发。 | 否 |
+
+## 使用示例
+
+```ts
+import { createImageViewer } from ''@/components/service/meImageViewer'';
+
+createImageViewer({
+urlList: [
+    ''https://scpic.chinaz.net/Files/pic/pic6/pic1281.jpg'',
+    ''https://scpic.chinaz.net/files/pic/pic9/202009/apic27858.jpg'',
+    ''https://tse3-mm.cn.bing.net/th/id/OIP-C.n0_p3rYRuofABd3XudbZnAHaEo?pid=ImgDet&rs=1'',
+],
+});
+```', '', '694102382786641920', 174, 175, '', '604612615536115712', '604612615536115712', '2026-03-31 13:43:31.866+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694027573885140992', 'Pinia使用', NULL, 2, 1, 98, '# Pinia使用
+
+Pinia 是 下一代 Vue 的存储库，相关使用说明请参考[Pinia](https://pinia.web3doc.top/introduction.html)文档
+
+## 新建store文件
+store存放文件夹为`@/store/modules`，在store文件夹下新建对应store文件，按[Pinia](https://pinia.web3doc.top/introduction.html)规则声明`defineStore`函数并导出为`default`即可
+
+示例：
+```
+import { filterAsyncRoutes } from ''@/utils/permission'';
+import useUserStore from ''./user'';
+import { constantRoutes, asyncRoutes } from ''@/router'';
+import { RouteRecordRaw } from ''vue-router'';
+
+export default defineStore(''route'', {
+  state: () => ({
+    addRoutes: [] as RouteRecordRaw[],
+    noCacheFullPath: [] as Array<string | RegExp>,
+  }),
+  getters: {
+    routes: (state) => constantRoutes.concat(state.addRoutes),
+  },
+  actions: {
+    generateRoutes() {
+      if (useUserStore().rules) {
+        this.addRoutes = markRaw(filterAsyncRoutes(asyncRoutes));
+      }
+      return this.addRoutes;
+    },
+    setNoCache(fullPath: string) {
+      if (!this.noCacheFullPath.includes(fullPath)) {
+        this.noCacheFullPath.push(fullPath);
+      }
+    },
+    removeNoCache(fullPath: string) {
+      const index = this.noCacheFullPath.indexOf(fullPath);
+      if (index > -1) {
+        this.noCacheFullPath.splice(index, 1);
+      }
+    },
+  },
+});
+
+```
+## 导出语句自动生成
+- 在`@/store/modules`文件夹下符合`[''**/*.{ts,js}'', ''*.{ts,js}'']` `glob`规则的文件会在`@/store/module.ts`文件中自动创建对应导出语句
+
+!!! tip 说明
+此功能基于[unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)插件实现,对应配置位于`vite.config.ts`中
+!!!
+```
+//当前文件由vite-plugin-autogeneration-import-file自动生成
+export { default as useGlobalStore } from "./modules/global"
+export { default as useRouteStore } from "./modules/route"
+export { default as useSettingStore } from "./modules/setting"
+export { default as useUserStore } from "./modules/user"
+//code
+```
+- `@/store/index.ts`文件对`@/store/module.ts`文件进行了二次导出
+```
+export * from ''./module'';
+```
+## 使用store
+直接导入后使用即可,具体规则请参考[Pinia](https://pinia.web3doc.top/introduction.html)文档
+```
+import { useUserStore } from ''@/store'';
+const userStore = useUserStore();
+```', '', '694026784546488320', 50, 51, '', '604612615536115712', '604612615536115712', '2026-03-31 11:37:48.023+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694039633108926464', '数字动画', NULL, 2, 1, 90, '
+# 数字动画
+
+组件名`MeNumber`，数字动画组件，基于[vueuse usetransition](https://vueuse.org/core/usetransition/#usetransition)实现。
+
+!!! warning 注意
+- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。
+- 当前组件位置`@/components/meNumber.vue`
+!!!
+
+## 组件props
+
+| props      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| start      | number | 数字动画起始值 默认为0|否|
+| end      | number \| [number(结束数字),string(前缀),string(后缀)] | 数字动画结束值 |是|
+| delay    | number | 开始动画等待的毫秒数默认为0 |否|
+| disabled | boolean | 禁用动画(默认为false) |否|
+| duration | number | 动画持续时间毫秒数默认为1000 | 否|
+| transition|  EasingFunction \| keyof typeof TransitionPresets  | 动画类型默认为`''easeOutExpo''`，详细说明请参考[vueuse文档](https://vueuse.org/core/usetransition/#type-declarations) | 否 |
+|format| (number: number, decimals: number) => string | number |数字格式化函数,number为当前展示数字，decimals为end的小数位数 默认值`(number: number, decimals: number) => formatNumber({ truncate: decimals, padRight: decimals })(number)`，每千分位一个`,`隔开  参考[format-number文档](https://www.npmjs.com/package/format-number)|否|
+
+## 组件事件
+
+| emit      | 格式 |说明|
+| ----------- | ----------- | ----------- |
+| onFinished | () => void | 转换完成后执行。|
+| onStarted | () => void | 转换开始后执行。|
+
+## 示例
+
+```vue
+<me-number :end="103256.25"></me-number>
+```
+', '', '694038800321478656', 76, 77, '', '604612615536115712', '604612615536115712', '2026-03-31 12:25:43.166+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('693986599695810560', '快速开始', NULL, 2, 1, 98, '# 快速开始
+
+## 依赖环境
+
+- 存储数据库：PostgreSQL
+- 缓存数据库：Redis
+- 语言：nodejs>= 22.14.0
+- 工具：pnpm 
+
+!!! warning
+开始本项目前，请务必准备好相关环境，服务器推荐使用[宝塔服务器面板]( https://www.bt.cn/u/M6tROn)，一键全能部署及管理安装PostgreSQL、Redis
+!!!
+
+## 快速启动
+
+### 安装项目
+执行命令 下面命令 根据提示数据配置选项即可！
+```
+pnpm create meadminjs
+```
+
+### 调试项目
+
+- 在项目根目录执行 `pnpm dev`
+- 后台访问 [http://127.0.0.1:7001/admin](http://127.0.0.1:7001/admin)
+- 前台访问 [http://127.0.0.1:7001/](http://127.0.0.1:7001/)
+
+### 默认账户
+
+#### 后台
+默认账户 admin
+默认密码 meAdmin#202507!P
+
+#### 前台
+默认账户 test
+默认密码 123456789
+
+
+## 编写数据库实体文件
+
+```
+//src/entities/exampleDemo.entity.ts
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { BelongsManyModel, BelongsToModel } from ''@/types/entity.js'';
+import { DataTypes, NonAttribute, Op } from ''@sequelize/core'';
+import { Attribute, BelongsTo, BelongsToMany, Default, DeletedAt, Index, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+import { ExampleBook } from ''./exampleBook.entity.js'';
+import { File } from ''./file.entity.js'';
+import { User } from ''./user.entity.js'';
+
+//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
+@Table({ tableName: ''example_demo'', comment: ''示例_Demo'' })
+//继承自DelParanoidModel则使用软删除。
+export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  @ApiPropertyRule({ description: ''ID'', rule: RuleType.string() })
+  id: string;
+
+  //唯一索引名称必须全库唯一，当两个null值时唯一索引会认为不是同一个值
+  @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引
+  @Attribute({ type: DataTypes.STRING(11), comment: ''手机号'' })
+  @ApiPropertyRule({ description: ''手机号'', rule: RuleType.string().mobile().description(''手机号'').required() })
+  mobile: string;
+
+  //以“名称:值1=说明1;值2=说明2”，格式声明的备注会自动创建字典和下拉列表，并且支持number、string两种类型
+  @Attribute({
+    comment: ''类型:0=书籍;1=电子产品;2=卡片'',
+    defaultValue: 0,
+    allowNull: false,
+    type: DataTypes.TINYINT.UNSIGNED,
+  })
+  @ApiPropertyRule({ description: ''类型:0=书籍;1=电子产品;2=卡片'', rule: RuleType.number().equal(0, 1, 2).required() })
+  type: number;
+
+  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)
+  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。
+  @Attribute({ type: DataTypes.STRING(20), comment: ''名称'', allowNull: false, defaultValue: '''' })
+  @ApiPropertyRule({ description: ''名称'', rule: RuleType.string().max(20).min(1).required() })
+  name: string;
+
+  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/
+  @BelongsToMany(() => ExampleBook, {
+    through: ''example_demo_books'', //中间表名称 或者 对应的Model，
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: ''demos'',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;
+  })
+  @ApiPropertyRule({
+    description: ''书籍'',
+    type: ''array'',
+    items: {
+      type: () => ExampleBook,
+    },
+    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),
+  })
+  books?: NonAttribute<ExampleBook[]>;
+
+  //反向BelongsTo关联从属， 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to/
+  @Attribute({ type: DataTypes.STRING(20), comment: ''关联前台用户id'' })
+  userId: string;
+  @ApiPropertyRule({ description: ''用户'', type: () => User, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })
+  @BelongsTo(() => User, {
+    foreignKey: ''userId'', //外键名称
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
+  user?: NonAttribute<User>;
+
+  //反向BelongsTo关联从属，File类型创建单文件
+  @Attribute({ type: DataTypes.STRING(20), comment: ''头像附件id'' })
+  avatarFileId: string;
+  @ApiPropertyRule({ description: ''头像'', type: () => File, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })
+  @BelongsTo(() => File, {
+    foreignKey: ''avatarFileId'', //外键名称
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
+  avatar?: NonAttribute<File>;
+
+  //BelongsTo多对多关联从属，File类型创建多文件选择
+  @BelongsToMany(() => File, {
+    through: ''example_demo_files'', //中间表名称 或者 对应的Model，
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
+  @ApiPropertyRule({
+    description: ''附件'',
+    type: ''array'',
+    items: {
+      type: () => File,
+    },
+    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),
+  })
+  files?: NonAttribute<File[]>;
+
+  @DeletedAt //设置为软删除
+  @Attribute({ comment: ''删除时间'' })
+  declare deletedAt: Date | null;
+}
+//声明自动关联方法
+export declare interface ExampleDemo extends BelongsManyModel<''books'', ''book'', ''books'', ExampleBook> {}
+export declare interface ExampleDemo extends BelongsToModel<''user'', User> {}
+export declare interface ExampleDemo extends BelongsToModel<''avatar'', File> {}
+export declare interface ExampleDemo extends BelongsManyModel<''files'', ''file'', ''files'', File> {}
+
+```
+!!! danger
+以下 meadmin 命令会读取数据库实体对应的 JS 文件，这些文件位于 dist/entities 目录中。
+请注意：
+
+- 在调试模式下`pnpm dev` 新增实体(会监听文件改动自动生成 JS 文件)；
+- 或新增实体后已执行了 `pnpm dev`。
+
+再运行下列命令。
+!!!
+
+
+## 同步数据库结构
+
+- `pnpm exec meadmin sync *`
+- 或 `pnpm meadmin sync exampleDemo,systemAdmin,exampleBook,user,file` 定向同步exampleDemo文件（定向同步文件时，需将关联依赖全部罗列出来，一起同步）
+
+
+## 一键生成crud
+
+- `pnpm meadmin crud exampleDemo --menu`  --menu 参数代表数据库同步生成后台菜单
+
+运行后会生成以下文件
+```
+src/app/admin/dto/example/demoCreate.dto.ts 后端新增dto校验文件
+src/app/admin/dto/example/demoUpdate.dto.ts 后端更新dto校验文件
+src/app/admin/dto/example/demoQuery.dto.ts 后端查询入参dto校验文件
+src/app/admin/service/example/demo.service.ts 后端service
+src/app/admin/controller/example/demo.controller.ts 后端 controller
+view/admin/src/api/example/demo.ts  前端 api接口定义 
+view/admin/src/views/example/demo/lang/en.json 前端组件语言包 
+view/admin/src/views/example/demo/dict.ts 前端字典
+view/admin/src/views/example/demo/index.vue 前端字典列表组件
+view/admin/src/views/example/demo/components/info.vue 前端字典详情组件
+view/admin/src/views/example/demo/components/addOrUp.vue 前端字典新增/修改组件
+```', '', '682458162829197312', 2, 3, '', '604612615536115712', '604612615536115712', '2026-03-31 08:54:59.015+08', '2026-03-31 12:17:36.667+08', 0, '1.0.0', 'start');
+INSERT INTO aon_doc VALUES ('694102374855213056', '开发规范', NULL, 2, 1, 96, '# 开发规范
+## git提交规范[conventionalcommits](https://www.conventionalcommits.org/en/v1.0.0/)
+ - 本项目的git提交规范遵循[conventionalcommits](https://www.conventionalcommits.org/en/v1.0.0/)并进行了自定义配置，具体配置规则如下
+```
+"types": [
+    {
+    "type": "feat",
+    "section": "新功能[feat]"
+    },
+    {
+    "type": "fix",
+    "section": "Bug 修复[fix]"
+    },
+    {
+    "type": "chore",
+    "section": "其他[chore]"
+    },
+    {
+    "type": "docs",
+    "section": "文档更改[docs]"
+    },
+    {
+    "type": "style",
+    "section": "样式更改[style]"
+    },
+    {
+    "type": "refactor",
+    "section": "重构[refactor]"
+    },
+    {
+    "type": "perf",
+    "section": "性能改进[perf]"
+    },
+    {
+    "type": "test",
+    "section": "测试添加/更正[test]"
+    },
+    {
+    "type": "revert",
+    "section": "还原提交[revert]"
+    },
+    {
+    "type": "ignore",
+    "section": "需要忽略[ignore]",
+    "hidden": true
+    },
+    {
+    "type": "ci",
+    "section": "CI发版[ci]"
+    }
+]
+```
+- 如果使用`vscode`编辑器，建议安装[Conventional Commits](https://marketplace.visualstudio.com/items?itemName=vivaxy.vscode-conventional-commits)插件,此插件会自动生成对应格式提交日志
+
+## husky自动化
+1. 安装时不使用`npm install`直接使用`npm run i `,或者初始化后在当前目录下运行`npx husky install`
+2. 或者在 package.json加入以下`scripts`再install ([husky对应文档](https://typicode.github.io/husky/#/?id=install))
+   ```
+   //npm/pnpm
+   {
+        "scripts": {
+            "prepare": "husky install"
+        }
+    }
+   ```
+   ```
+   //yarn
+    {
+    "private": true, // ← your package is private, you only need postinstall
+    "scripts": {
+        "postinstall": "husky install"
+    }
+    }
+   ```
+会自动生成生成`husky`对应的git hook`husky`会在git提交时进行以下操作:
+- 自动运行`prettier --write`进行代码格式化
+- 自动运行`eslint --cache --fix`进行`eslint`校验和修复,如果无法修复会报错并停止提交
+- 自动校验提交`message`是否符合`conventionalcommits`规范，如果不符合会报错并停止提交
+ ### husky 在linux/mac下不生效
+ husky目前有一个bug, windows下创建的hooks 当在linux/macos下拉取后即使执行了`husky install`也不能成功调用，需要单独执行下`chmod ug+x .husky/*` 赋予脚本执行权限。对应的[issue](https://github.com/typicode/husky/issues/1177)', '', '694102373970214912', 100, 101, '', '604612615536115712', '604612615536115712', '2026-03-31 13:47:20.642+08', '2026-03-31 19:37:00.995+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('682458787847602176', '介绍', NULL, 2, 1, 99, '## 介绍
+后端使用Midway框架，Midway 是阿里巴巴 - 淘宝前端架构团队，基于渐进式理念研发的 Node.js 框架，通过自研的依赖注入容器，搭配各种上层模块，组合出适用于不同场景的解决方案。
+如需对后端进行更多了解，可阅读[midway文档](https://midwayjs.org/docs/intro)
+
+## 目录结构
+```
+├──.husky git hooks钩子文件夹
+├──.vscode vscode推荐配置文件夹
+├── dist 后端打包文件夹
+├──logs 日志文件夹
+├──public 静态资源文件
+│   ├── admin 后台静态资源
+│   ├── index 前台静态资源
+├── src  后端主目录
+│   ├── app 后端模块根目录
+│   │   ├──admin 后台接口模块
+│   │   │   ├── controller 模块控制器文件夹
+│   │   │   ├── dto 模块出入参dto类文件夹
+│   │   │   ├── middleware 模块中间件夹
+│   │   │   └── service 模块service文件夹
+│   │   ├──index 前台接口模块
+│   │   │   ├── controller 模块控制器文件夹
+│   │   │   ├── dto 模块出入参dto类文件夹
+│   │   │   ├── middleware 模块中间件夹
+│   │   │   └── service 模块service文件夹
+│   │   └──home.controller.ts 页面渲染控制器
+│   ├── config 配置文件夹
+│   ├── controller 公共控制器文件夹
+│   ├── decorators 装饰器文件夹
+│   ├── dict 字典文件夹
+│   ├── dto 出入参dto基类文件夹
+│   ├── entities 数据库实体类文件夹
+│   ├── fileManage 文件夹管理助手类
+│   ├── filter 异常类文件夹
+│   ├── helper 助手函数文件夹
+│   ├── locales 后端多语言文件包
+│   ├── response 反参基类
+|   ├── ruleType 后端自定义校验规则
+|   ├── service 全局公共service
+|   ├── types 类型扩展
+|   ├── configuration.ts 启动文件
+│   └── logger.ts logger初始化文件
+├── uploadFile 本地上传目录
+├── view 前端文件夹
+├── .env env环境变量，VIEW_ADMIN_开头的可被 前端admin项目获取到，VIEW_INDEX_开头的可被前端 index项目获取到
+├── .env.prod 启动后env环境变量
+├── .eslintrc.json eslint配置文件
+├── .gitignore git 忽略文件
+├── .npmrc pnpm配置文件
+├── .prettierignore prettier忽略文件
+├── .prettierrc.cjs prettier配置文件
+├── bootstrap.js 部署后bootstrap启动文件
+├── sql 初始化sql文件
+├── pnpm-workspace.yaml pnpm workspace 配置
+└── tsconfig.json typescript配置文件
+```
+
+
+## 基本概念
+
+后端基于 Node.js 监听端口，对外主要提供 API 接口及页面访问。
+
+后端架构主要划分为以下几层：router、controller、service、dto、entity。
+
+- router：定义路由映射，将不同请求指向对应 controller 类中的方法。访问相应地址时会自动触发对应的 controller 逻辑。
+
+- controller：作为请求入口，负责入参校验、调用 service、返回响应，并集成 Swagger 生成接口文档。其中可能封装少量控制逻辑，但核心业务处理一般交由 service。
+
+- service：封装核心业务逻辑，根据场景组织代码。通过 entity 数据模型进行数据库操作，并实现复杂业务处理。
+
+- entity：对应数据库表的模型实体，所有数据库操作均通过 entity 完成。
+
+- dto：定义接口的请求参数与响应结果格式。每个接口都有对应的 DTO 类，controller 在接收到请求时会自动基于 DTO 完成参数校验。
+
+
+## 改动及封装
+本项目对midway做了以下封装，详情请参考相关章节。
+
+### controller装饰器会继承prefix和routerOptions。
+ 根据 controller 继承关系 递归合成Controller装饰器的参数
+ 从第一个prefix以/开头的祖级开始合并controller的prefix和routerOptions，如果prefix 以/开头，则不合并prefix和routerOptions
+### 强制文件目录结构
+Midway 对目录没有特别的限制，但当前项目，将一部分常用的文件进行归类，放到一些默认的文件夹中。文件夹详情请参考[目录结构](#目录结构)。日常开发需要关注的主要有：`src/app/*/controller`文件、`src/app/*/service`文件、`src/app/*/dto`文件、`src/app/*/middleware`中间件文件、`src/entities`数据库实体类文件。
+### 模块
+本项目增加了模块的概念，在`src/app/`下每一个文件夹代表一个模块，将相关逻辑归类存放。
+### 应用
+应用基于koa 使用`@midwayjs/koa`组件
+### 参数校验
+已集成，源于`joi`的`@midwayjs/validate@3`参数校验组件，并自定义了`mobile`等校验规则
+### 多语言
+已集成`@midwayjs/i18n@3`多语言组件，多语言文件夹为`locales/en.json`，并且翻译失败使用当前key做为返回值
+### 数据库访问
+已集成sequelize7，自定义封装的sequelize访问service，相关源码在`src/service/dataSourceManager.service.ts`,对应配置文件在`src/config/database.ts`
+### 静态文件映射
+集成 `@midwayjs/static-file@3`组件，`public`文件夹下的资源都可以使用`/文件名`直接访问
+### 模板引擎
+集成 `@medamin/midway-vite-view`组件，实现vite+vue模板渲染支持
+### 缓存
+集成`@midwayjs/redis@3`和`@midwayjs/cache-manager@3`组件，实现基于redis的缓存支持
+### 日志
+调试模式及部署模式，都将日志目录改为本地的 ${app.appDir}/logs/ 目录下
+
+', '', '682458162829197312', 4, 5, '', '604612615536115712', '604612615536115712', '2026-02-27 13:27:34.494+08', '2026-03-31 12:18:25.708+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694102374540640256', '快速开始', NULL, 2, 1, 98, '# 快速开始
+
+## 依赖环境
+
+- 存储数据库：PostgreSQL
+- 缓存数据库：Redis
+- 语言：nodejs>= 22.14.0
+- 工具：pnpm 
+
+!!! warning
+开始本项目前，请务必准备好相关环境，服务器推荐使用[宝塔服务器面板]( https://www.bt.cn/u/M6tROn)，一键全能部署及管理安装PostgreSQL、Redis
+!!!
+
+## 快速启动
+
+### 安装项目
+执行命令 下面命令 根据提示数据配置选项即可！
+```
+pnpm create meadminjs
+```
+
+### 调试项目
+
+- 在项目根目录执行 `pnpm dev`
+- 后台访问 [http://127.0.0.1:7001/admin](http://127.0.0.1:7001/admin)
+- 前台访问 [http://127.0.0.1:7001/](http://127.0.0.1:7001/)
+
+### 默认账户
+
+#### 后台
+默认账户 admin
+默认密码 meAdmin#202507!P
+
+#### 前台
+默认账户 test
+默认密码 123456789
+
+
+## 编写数据库实体文件
+
+```
+//src/entities/exampleDemo.entity.ts
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { BelongsManyModel, BelongsToModel } from ''@/types/entity.js'';
+import { DataTypes, NonAttribute, Op } from ''@sequelize/core'';
+import { Attribute, BelongsTo, BelongsToMany, Default, DeletedAt, Index, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+import { ExampleBook } from ''./exampleBook.entity.js'';
+import { File } from ''./file.entity.js'';
+import { User } from ''./user.entity.js'';
+
+//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
+@Table({ tableName: ''example_demo'', comment: ''示例_Demo'' })
+//继承自DelParanoidModel则使用软删除。
+export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  @ApiPropertyRule({ description: ''ID'', rule: RuleType.string() })
+  id: string;
+
+  //唯一索引名称必须全库唯一，当两个null值时唯一索引会认为不是同一个值
+  @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引
+  @Attribute({ type: DataTypes.STRING(11), comment: ''手机号'' })
+  @ApiPropertyRule({ description: ''手机号'', rule: RuleType.string().mobile().description(''手机号'').required() })
+  mobile: string;
+
+  //以“名称:值1=说明1;值2=说明2”，格式声明的备注会自动创建字典和下拉列表，并且支持number、string两种类型
+  @Attribute({
+    comment: ''类型:0=书籍;1=电子产品;2=卡片'',
+    defaultValue: 0,
+    allowNull: false,
+    type: DataTypes.TINYINT.UNSIGNED,
+  })
+  @ApiPropertyRule({ description: ''类型:0=书籍;1=电子产品;2=卡片'', rule: RuleType.number().equal(0, 1, 2).required() })
+  type: number;
+
+  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)
+  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。
+  @Attribute({ type: DataTypes.STRING(20), comment: ''名称'', allowNull: false, defaultValue: '''' })
+  @ApiPropertyRule({ description: ''名称'', rule: RuleType.string().max(20).min(1).required() })
+  name: string;
+
+  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/
+  @BelongsToMany(() => ExampleBook, {
+    through: ''example_demo_books'', //中间表名称 或者 对应的Model，
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: ''demos'',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;
+  })
+  @ApiPropertyRule({
+    description: ''书籍'',
+    type: ''array'',
+    items: {
+      type: () => ExampleBook,
+    },
+    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),
+  })
+  books?: NonAttribute<ExampleBook[]>;
+
+  //反向BelongsTo关联从属， 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to/
+  @Attribute({ type: DataTypes.STRING(20), comment: ''关联前台用户id'' })
+  userId: string;
+  @ApiPropertyRule({ description: ''用户'', type: () => User, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })
+  @BelongsTo(() => User, {
+    foreignKey: ''userId'', //外键名称
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
+  user?: NonAttribute<User>;
+
+  //反向BelongsTo关联从属，File类型创建单文件
+  @Attribute({ type: DataTypes.STRING(20), comment: ''头像附件id'' })
+  avatarFileId: string;
+  @ApiPropertyRule({ description: ''头像'', type: () => File, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })
+  @BelongsTo(() => File, {
+    foreignKey: ''avatarFileId'', //外键名称
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
+  avatar?: NonAttribute<File>;
+
+  //BelongsTo多对多关联从属，File类型创建多文件选择
+  @BelongsToMany(() => File, {
+    through: ''example_demo_files'', //中间表名称 或者 对应的Model，
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
+  @ApiPropertyRule({
+    description: ''附件'',
+    type: ''array'',
+    items: {
+      type: () => File,
+    },
+    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),
+  })
+  files?: NonAttribute<File[]>;
+
+  @DeletedAt //设置为软删除
+  @Attribute({ comment: ''删除时间'' })
+  declare deletedAt: Date | null;
+}
+//声明自动关联方法
+export declare interface ExampleDemo extends BelongsManyModel<''books'', ''book'', ''books'', ExampleBook> {}
+export declare interface ExampleDemo extends BelongsToModel<''user'', User> {}
+export declare interface ExampleDemo extends BelongsToModel<''avatar'', File> {}
+export declare interface ExampleDemo extends BelongsManyModel<''files'', ''file'', ''files'', File> {}
+
+```
+!!! danger
+以下 meadmin 命令会读取数据库实体对应的 JS 文件，这些文件位于 dist/entities 目录中。
+请注意：
+
+- 在调试模式下`pnpm dev` 新增实体(会监听文件改动自动生成 JS 文件)；
+- 或新增实体后已执行了 `pnpm dev`。
+
+再运行下列命令。
+!!!
+
+
+## 同步数据库结构
+
+- `pnpm exec meadmin sync *`
+- 或 `pnpm meadmin sync exampleDemo,systemAdmin,exampleBook,user,file` 定向同步exampleDemo文件（定向同步文件时，需将关联依赖全部罗列出来，一起同步）
+
+
+## 一键生成crud
+
+- `pnpm meadmin crud exampleDemo --menu`  --menu 参数代表数据库同步生成后台菜单
+
+运行后会生成以下文件
+```
+src/app/admin/dto/example/demoCreate.dto.ts 后端新增dto校验文件
+src/app/admin/dto/example/demoUpdate.dto.ts 后端更新dto校验文件
+src/app/admin/dto/example/demoQuery.dto.ts 后端查询入参dto校验文件
+src/app/admin/service/example/demo.service.ts 后端service
+src/app/admin/controller/example/demo.controller.ts 后端 controller
+view/admin/src/api/example/demo.ts  前端 api接口定义 
+view/admin/src/views/example/demo/lang/en.json 前端组件语言包 
+view/admin/src/views/example/demo/dict.ts 前端字典
+view/admin/src/views/example/demo/index.vue 前端字典列表组件
+view/admin/src/views/example/demo/components/info.vue 前端字典详情组件
+view/admin/src/views/example/demo/components/addOrUp.vue 前端字典新增/修改组件
+```', '', '694102373970214912', 98, 99, '', '604612615536115712', '604612615536115712', '2026-03-31 08:54:59.015+08', '2026-03-31 19:37:00.995+08', 0, '1.1.0', 'start');
+INSERT INTO aon_doc VALUES ('694102374251233280', '介绍', NULL, 2, 1, 99, '# 介绍
+后端使用Midway框架，Midway 是阿里巴巴 - 淘宝前端架构团队，基于渐进式理念研发的 Node.js 框架，通过自研的依赖注入容器，搭配各种上层模块，组合出适用于不同场景的解决方案。
+如需对后端进行更多了解，可阅读[midway文档](https://midwayjs.org/docs/intro)
+
+## 目录结构
+```
+├──.husky git hooks钩子文件夹
+├──.vscode vscode推荐配置文件夹
+├── dist 后端打包文件夹
+├──logs 日志文件夹
+├──public 静态资源文件
+│   ├── admin 后台静态资源
+│   ├── index 前台静态资源
+├── src  后端主目录
+│   ├── app 后端模块根目录
+│   │   ├──admin 后台接口模块
+│   │   │   ├── controller 模块控制器文件夹
+│   │   │   ├── dto 模块出入参dto类文件夹
+│   │   │   ├── middleware 模块中间件夹
+│   │   │   └── service 模块service文件夹
+│   │   ├──index 前台接口模块
+│   │   │   ├── controller 模块控制器文件夹
+│   │   │   ├── dto 模块出入参dto类文件夹
+│   │   │   ├── middleware 模块中间件夹
+│   │   │   └── service 模块service文件夹
+│   │   └──home.controller.ts 页面渲染控制器
+│   ├── config 配置文件夹
+│   ├── controller 公共控制器文件夹
+│   ├── decorators 装饰器文件夹
+│   ├── dict 字典文件夹
+│   ├── dto 出入参dto基类文件夹
+│   ├── entities 数据库实体类文件夹
+│   ├── fileManage 文件夹管理助手类
+│   ├── filter 异常类文件夹
+│   ├── helper 助手函数文件夹
+│   ├── locales 后端多语言文件包
+│   ├── response 反参基类
+|   ├── ruleType 后端自定义校验规则
+|   ├── service 全局公共service
+|   ├── types 类型扩展
+|   ├── configuration.ts 启动文件
+│   └── logger.ts logger初始化文件
+├── uploadFile 本地上传目录
+├── view 前端文件夹
+├── .env env环境变量，VIEW_ADMIN_开头的可被 前端admin项目获取到，VIEW_INDEX_开头的可被前端 index项目获取到
+├── .env.prod 启动后env环境变量
+├── .eslintrc.json eslint配置文件
+├── .gitignore git 忽略文件
+├── .npmrc pnpm配置文件
+├── .prettierignore prettier忽略文件
+├── .prettierrc.cjs prettier配置文件
+├── bootstrap.js 部署后bootstrap启动文件
+├── sql 初始化sql文件
+├── pnpm-workspace.yaml pnpm workspace 配置
+└── tsconfig.json typescript配置文件
+```
+
+
+## 基本概念
+
+后端基于 Node.js 监听端口，对外主要提供 API 接口及页面访问。
+
+后端架构主要划分为以下几层：router、controller、service、dto、entity。
+
+- router：定义路由映射，将不同请求指向对应 controller 类中的方法。访问相应地址时会自动触发对应的 controller 逻辑。
+
+- controller：作为请求入口，负责入参校验、调用 service、返回响应，并集成 Swagger 生成接口文档。其中可能封装少量控制逻辑，但核心业务处理一般交由 service。
+
+- service：封装核心业务逻辑，根据场景组织代码。通过 entity 数据模型进行数据库操作，并实现复杂业务处理。
+
+- entity：对应数据库表的模型实体，所有数据库操作均通过 entity 完成。
+
+- dto：定义接口的请求参数与响应结果格式。每个接口都有对应的 DTO 类，controller 在接收到请求时会自动基于 DTO 完成参数校验。
+
+
+## 改动及封装
+本项目对midway做了以下封装，详情请参考相关章节。
+
+### controller装饰器会继承prefix和routerOptions。
+ 根据 controller 继承关系 递归合成Controller装饰器的参数
+ 从第一个prefix以/开头的祖级开始合并controller的prefix和routerOptions，如果prefix 以/开头，则不合并prefix和routerOptions
+### 强制文件目录结构
+Midway 对目录没有特别的限制，但当前项目，将一部分常用的文件进行归类，放到一些默认的文件夹中。文件夹详情请参考[目录结构](#目录结构)。日常开发需要关注的主要有：`src/app/*/controller`文件、`src/app/*/service`文件、`src/app/*/dto`文件、`src/app/*/middleware`中间件文件、`src/entities`数据库实体类文件。
+### 模块
+本项目增加了模块的概念，在`src/app/`下每一个文件夹代表一个模块，将相关逻辑归类存放。
+### 应用
+应用基于koa 使用`@midwayjs/koa`组件
+### 参数校验
+已集成，源于`joi`的`@midwayjs/validate@3`参数校验组件，并自定义了`mobile`等校验规则
+### 多语言
+已集成`@midwayjs/i18n@3`多语言组件，多语言文件夹为`locales/en.json`，并且翻译失败使用当前key做为返回值
+### 数据库访问
+已集成sequelize7，自定义封装的sequelize访问service，相关源码在`src/service/dataSourceManager.service.ts`,对应配置文件在`src/config/database.ts`
+### 静态文件映射
+集成 `@midwayjs/static-file@3`组件，`public`文件夹下的资源都可以使用`/文件名`直接访问
+### 模板引擎
+集成 `@medamin/midway-vite-view`组件，实现vite+vue模板渲染支持
+### 缓存
+集成`@midwayjs/redis@3`和`@midwayjs/cache-manager@3`组件，实现基于redis的缓存支持
+### 日志
+调试模式及部署模式，都将日志目录改为本地的 ${app.appDir}/logs/ 目录下
+
+', '', '694102373970214912', 102, 103, '', '604612615536115712', '604612615536115712', '2026-02-27 13:27:34.494+08', '2026-03-31 19:37:40+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102384485335040', '表格', NULL, 2, 1, 94, '# vxeTable表格
+组件名`MeVxeTable`，对[vxe table](https://vxetable.cn/)组件的封装，在保留原有功能的情况下，扩展了顶部工具栏、分页功能，并且保留`VxeTable`的 `props` 和 `emit` `type`提示。
+
+!!! warning 注意
+- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。
+- 当前组件位置`@/components/meVxeTable`。
+- 组件对应的全局语言包文件为`src/locales/lang/en/meVxeTable.ts` `src/locales/lang/zh-cn/meVxeTable.ts`。
+- 所有的非`props` `attr`不会设置到根元素,都会透传到 `VxeTable`上。
+!!!
+
+## 组件props
+
+| props      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| name | string | 名称默认值为meVxeTable,会做为打印的表头和导出的文件名 | 否|
+| meClass|string | string[]| 根元素上的class | 否 |
+| exportMenu | `{label: string;filename?: string;handle: (vxeTable: VxeTableInstance, filename: string) => void \| ''csv'' \| ''html'' \| ''xml'' \| ''txt''}[]` | 导出菜单默认值为 `[{ label: ''csv'', handle: ''csv'' },{ label: ''html'', handle: ''html'' },{ label: ''xml'', handle: ''xml'' },{ label: ''txt'', handle: ''txt'' }]` | 否|
+| print | boolean\|VxeTablePropTypes.PrintConfig | 打印配置，默认为{}，如果不想展示传入false | 否 |
+| customColumn | boolean |自定义列，默认为true | 否 |
+| defaultShowSearch | boolean | 默认是否展示 筛选 默认值为false | 否 | 
+| toolbar | boolean | 是否展示工具栏 默认为true,这里的工具栏是自行封装的工具栏非vxeToolbar | 否 |
+| quickSearch | string | 快捷搜索关键词 需要v-model绑定 | 否 |
+| quickSearchPlaceholder | string | 快捷搜索框placeholder,默认为快捷搜索 | 否 |
+| paginationOptions | object  | 分页配置,详情见下文`props.paginationOptions` | 否 |
+| autoHeight | boolean  | 根据父级自适应高度（默认为true，如果父级高度不固定请设置为false） | 否 |
+| vxeTable的属性 | - | 支持vxeTable的所有属性，请参考[vxeTable文档](https://vxetable.cn/#/table/api)| - | 
+
+| props.exportMenu      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| label | string | 导出选项名称| 是 |
+| filename | string | 导出文件名，为空时使用`props.name` | 否 |
+| handle | (vxeTable: VxeTableInstance, filename: string) => void \| ''csv'' \| ''html'' \| ''xml'' \| ''txt'' | 导出执行函数/受支持的导出code | 是 |
+
+|props.paginationOptions| 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| noAutoLayout | boolean | 默认为手机模式时使用最小layout,设置为true关闭此配置 | 否 |
+| change | (page: number, size: number) => void | page或size改变时触发 | 是 |
+| pagination的属性 | - | 支持element-plus  Pagination组件 的所有属性，请参考[pagination文档](https://element-plus.gitee.io/zh-CN/component/pagination.html#%E5%B1%9E%E6%80%A7) | - |
+| pagination的事件 | function |  支持element-plus  Pagination组件 的所有事件，请参考[pagination文档](https://element-plus.gitee.io/zh-CN/component/pagination.html#%E4%BA%8B%E4%BB%B6)(需要在事件名前面加上on前缀并使用驼峰写法如`prev-click`事件属性名为`onPrevClick`)  | - | 
+
+## 组件事件
+
+| emit      | 格式 |说明|
+| ----------- | ----------- | ----------- |
+| quickSearch | (searchText:string) => void | 快捷搜索|
+| refresh | () => void | 刷新按钮被点击时触发 |
+| add | () => void | 新增按钮被点击时触发 |
+| vxeTable的事件 | - | 支持vxeTable的所有事件，请参考[vxeTable文档](https://vxetable.cn/#/table/api)| - |
+
+## 组件插槽
+
+| 插槽名  |	说明  |	子标签 |
+| ----------- | ----------- | ----------- |
+| - | 和[vxeTable](https://vxetable.cn/#/table/base/basic)对应插槽功能一致。自定义默认内容 | vxe-column |
+| empty	| 和[vxeTable](https://vxetable.cn/#/table/api)对应插槽功能一致。当数据为空时自定义的内容|	— |
+| search | 筛选项，当点击工具栏筛选按钮时会控制其显隐 | — |
+| buttons | 工具栏左侧扩展操作按钮 | — |
+| tools | 工具栏右侧扩展菜单 | — |
+| toolsButton|  工具栏右侧扩展按钮 | — |
+
+## 组件属性/方法
+| 名称  |	类型  |	说明 |
+| ----------- | ----------- | ----------- |
+| vxeTableRef | VxeTableInstance | vxeTable的ref对象 |
+|searchText |string | 快捷搜索关键字 |
+
+## 示例
+
+```vue
+<template>
+  <el-card shadow="never" class="vxe-table-demo">
+    <me-vxe-table
+      ref="meVxeTableRef"
+      v-model:quick-search="searchForm.search"
+      :loading="loading"
+      :data="data?.list"
+      :footer-method="footerMethod"
+      :edit-config="{ trigger: ''click'', mode: ''row'', showStatus: true }"
+      :print="print"
+      :pagination-options="paginationOptions"
+      stripe
+      height="600px"
+      me-class="table"
+      border
+      show-overflow
+      show-footer
+      keep-source
+      class="my-xtable-element"
+      @refresh="getData"
+      @quick-search="getData(1)"
+    >
+      <template #search>
+        <el-form ref="searchRef" :model="searchForm" inline label-width="100px" class="search">
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="searchForm.name" />
+          </el-form-item>
+          <el-form-item label="类型" prop="type">
+            <el-select v-model="searchForm.type" clearable>
+              <el-option label="类型1" value="1" />
+              <el-option label="类型2" value="2" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="日期" prop="date">
+            <el-date-picker v-model="searchForm.date" type="date" />
+          </el-form-item>
+          <el-form-item label="地址" prop="address">
+            <el-input v-model="searchForm.address" />
+          </el-form-item>
+          <el-form-item label="邮政编码" prop="zip">
+            <el-input v-model="searchForm.zip" />
+          </el-form-item>
+          <el-form-item label=" ">
+            <el-button type="primary" @click="getData(1)">查询</el-button>
+            <el-button @click="()=>($refs.searchRef as FormInstance).resetFields()">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </template>
+      <template #buttons>
+        <el-button @click="() => (print = print ? false : {})">打印显/隐</el-button>
+        <el-button @click="xTable!.clearCheckboxRow()">全选清空</el-button>
+      </template>
+      <vxe-column type="checkbox" width="60"></vxe-column>
+      <vxe-column type="seq" width="80">
+        <template #header>
+          <span>序号</span>
+          <i class="el-icon-question"></i>
+        </template>
+      </vxe-column>
+      <vxe-colgroup title="Group1">
+        <vxe-column field="name" title="ElInput" min-width="140" :edit-render="{}">
+          <template #edit="scope">
+            <el-input v-model="scope.row.name" @input="xTable!.updateStatus(scope)"></el-input>
+          </template>
+        </vxe-column>
+        <vxe-column field="role" title="ElAutocomplete" min-width="160" :edit-render="{}">
+          <template #edit="{ row }">
+            <el-autocomplete v-model="row.role" :fetch-suggestions="roleSearchEvent"></el-autocomplete>
+          </template>
+        </vxe-column>
+        <vxe-column field="age" title="ElInputNumber" width="160" :edit-render="{}">
+          <template #header="{ column }">
+            <span>{{ column.title }}</span>
+            <i class="el-icon-warning"></i>
+          </template>
+          <template #edit="{ row }">
+            <el-input-number v-model="row.age" :max="99" :min="18"></el-input-number>
+          </template>
+        </vxe-column>
+        <vxe-colgroup title="Group2">
+          <vxe-column field="sex" title="ElSelect" width="140" :edit-render="{}">
+            <template #edit="scope">
+              <el-select v-model="scope.row.sex" @change="xTable!.updateStatus(scope)">
+                <el-option
+                  v-for="item in demo1.sexList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+            <template #default="{ row }">{{ getSelectLabel(row.sex, demo1.sexList) }}</template>
+          </vxe-column>
+          <vxe-column field="sex1" title="ElSelect" width="180" :edit-render="{}">
+            <template #edit="scope">
+              <el-select v-model="scope.row.sex1" multiple>
+                <el-option
+                  v-for="item in demo1.sexList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+            <template #default="{ row }">{{ getSelectMultipleLabel(row.sex1, demo1.sexList) }}</template>
+          </vxe-column>
+          <vxe-column field="region" title="ElCascader" width="200" :edit-render="{}">
+            <template #edit="{ row }">
+              <el-cascader v-model="row.region" :options="demo1.regionList"></el-cascader>
+            </template>
+            <template #default="{ row }">{{ getCascaderLabel(row.region, demo1.regionList) }}</template>
+          </vxe-column>
+        </vxe-colgroup>
+      </vxe-colgroup>
+      <vxe-colgroup title="Group1">
+        <vxe-column field="date" title="ElDatePicker" width="200" :edit-render="{}">
+          <template #edit="{ row }">
+            <el-date-picker v-model="row.date" type="date" format="YYYY/MM/DD"></el-date-picker>
+          </template>
+          <template #default="{ row }">{{ formatDate(row.date, ''YYYY/MM/DD'') }}</template>
+        </vxe-column>
+        <vxe-column field="date1" title="ElDatePicker" width="220" :edit-render="{}">
+          <template #edit="{ row }">
+            <el-date-picker v-model="row.date1" type="datetime" format="YYYY-MM-DD HH:mm:ss"></el-date-picker>
+          </template>
+          <template #default="{ row }">{{ formatDate(row.date1, ''YYYY-MM-DD HH:mm:ss'') }}</template>
+        </vxe-column>
+        <vxe-column field="date2" title="ElTimePicker" width="200" :edit-render="{}">
+          <template #edit="{ row }">
+            <el-time-select
+              v-model="row.date2"
+              :picker-options="{ start: ''08:30'', step: ''00:15'', end: ''18:30'' }"
+            ></el-time-select>
+          </template>
+        </vxe-column>
+        <vxe-column field="color1" title="ElColorPicker" width="140" :edit-render="{}">
+          <template #edit="{ row }">
+            <el-color-picker v-model="row.color1"></el-color-picker>
+          </template>
+        </vxe-column>
+        <vxe-column field="rate" title="ElRate" width="200">
+          <template #default="{ row }">
+            <el-rate v-model="row.rate"></el-rate>
+          </template>
+        </vxe-column>
+        <vxe-column field="flag" title="ElSwitch" width="100">
+          <template #default="{ row }">
+            <el-switch v-model="row.flag"></el-switch>
+          </template>
+        </vxe-column>
+      </vxe-colgroup>
+    </me-vxe-table>
+  </el-card>
+</template>
+<script setup lang="ts" name="VxeTableDemo">
+import { VxeTablePropTypes } from ''vxe-table'';
+import XEUtils from ''xe-utils'';
+import { FormInstance } from ''element-plus'';
+import { listApi } from ''@/api/vxeTable'';
+const meVxeTableRef = ref<MeVxeTableInstance>();
+const xTable = computed(() => meVxeTableRef.value?.vxeTableRef);
+const restaurants = [
+  { value: ''Designer'', name: ''Designer'' },
+  { value: ''Develop'', name: ''Develop'' },
+  { value: ''Test'', name: ''Test'' },
+  { value: ''PM'', name: ''PM'' },
+];
+
+const demo1 = {
+  sexList: [
+    { value: ''1'', label: ''男'' },
+    { value: ''0'', label: ''女'' },
+  ],
+  regionList: [
+    {
+      label: ''北京'',
+      value: 1,
+      children: [
+        { value: 3, label: ''东城区'' },
+        { value: 4, label: ''西城区'' },
+      ],
+    },
+    {
+      label: ''上海'',
+      value: 21,
+      children: [
+        { value: 23, label: ''黄浦区'' },
+        { value: 24, label: ''卢湾区'' },
+      ],
+    },
+    {
+      label: ''广东'',
+      value: 42,
+      children: [
+        { value: 43, label: ''广州市'' },
+        { value: 67, label: ''深圳市'' },
+      ],
+    },
+  ],
+};
+
+const formatDate = (value: any, format: string) => {
+  return XEUtils.toDateString(value, format);
+};
+
+const getSelectLabel = (value: any, list: any[], valueProp = ''value'', labelField = ''label'') => {
+  const item = list.find((item) => item[valueProp] === value);
+  return item ? item[labelField] : null;
+};
+
+const getSelectMultipleLabel = (value: any[], list: any[], valueProp = ''value'', labelField = ''label'') => {
+  return value
+    .map((val) => {
+      const item = list.find((item) => item[valueProp] === val);
+      return item ? item[labelField] : null;
+    })
+    .join('', '');
+};
+
+const getCascaderLabel = (value: any, list: any[]) => {
+  const values: any[] = value || [];
+  const labels: any[] = [];
+  const matchCascaderData = function (index: any, list: any[]) {
+    const val = values[ index ];
+    if (list && values.length > index) {
+      list.forEach((item) => {
+        if (item.value === val) {
+          labels.push(item.label);
+          matchCascaderData(++index, item.children);
+        }
+      });
+    }
+  };
+  matchCascaderData(0, list);
+  return labels.join('' / '');
+};
+
+const roleSearchEvent = (queryString: string, cb: (params: any) => void) => {
+  const results = queryString
+    ? restaurants.filter((item) => item.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+    : restaurants;
+  setTimeout(() => {
+    cb(results);
+  }, 500 * Math.random());
+};
+
+const meanNum = (list: any[], field: string) => {
+  let count = 0;
+  list.forEach((item) => {
+    count += Number(item[field]);
+  });
+  return count / list.length;
+};
+
+const sumNum = (list: any[], field: string) => {
+  let count = 0;
+  list.forEach((item) => {
+    count += Number(item[field]);
+  });
+  return count;
+};
+
+const footerMethod: VxeTablePropTypes.FooterMethod = ({ columns, data }) => {
+  return [
+    columns.map((column, columnIndex) => {
+      if (columnIndex === 0) {
+        return ''平均'';
+      }
+      if ([''age'', ''rate''].includes(column.property)) {
+        return meanNum(data, column.property);
+      }
+      return null;
+    }),
+    columns.map((column: any, columnIndex: number) => {
+      if (columnIndex === 0) {
+        return ''和值'';
+      }
+      if ([''age'', ''rate''].includes(column.property)) {
+        return sumNum(data, column.property);
+      }
+      return null;
+    }),
+  ];
+};
+
+const searchForm = reactive({
+  name: '''',
+  search: '''',
+  type: undefined,
+  date: '''',
+  address: '''',
+  zip: '''',
+  page: 1,
+  size: 10,
+});
+const { loading, run, data } = listApi({ defaultParams: [searchForm], manual: false });
+const getData = (page = searchForm.page, size = searchForm.size) => {
+  run(Object.assign(searchForm, { page, size }));
+};
+const paginationOptions = reactive({
+  currentPage: computed(() => searchForm.page),
+  pageSize: computed(() => searchForm.size),
+  total: computed(() => data.value?.count ?? 0),
+  change: getData,
+});
+const print = ref({} as object | boolean);
+</script>
+<style lang="scss" scoped>
+.vxe-table-demo {
+  .search {
+    :deep(.el-form-item) {
+      width: 319px;
+    }
+  }
+}
+</style>
+```', '', '694102382786641920', 170, 171, '', '604612615536115712', '604612615536115712', '2026-03-31 12:26:45.213+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102378021912576', '前端文档', NULL, 1, 1, 97, '', '', NULL, 127, 184, '', '604612615536115712', '604612615536115712', '2026-03-31 10:55:05.824+08', '2026-03-31 19:37:41.701+08', NULL, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102381167640576', '组件自动按需引入', NULL, 2, 1, 99, '# 组件自动按需引入
+组件自动引入功能基于[vite-plugin-autogeneration-import-file](https://github.com/yuntian001/vite-plugin-autogeneration-import-file)、[unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)插件实现，相关配置说明请参考对应文档
+
+## elment-plus组件自动引入
+直接在vue文件中使用elment-plus组件，编译时会自动按需引入。
+使用示例：
+```
+<template>
+  <el-dropdown class="me-size-select" trigger="click" max-height="500px">
+    <div class="flex-center pointer">
+      <me-icon-size class="icon"></me-icon-size>
+    </div>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item
+          v-for="item in SizeEnum"
+          :key="item"
+          :disabled="themeConfig.size === item"
+          @click="themeConfig.size = item"
+          >{{ $t(item) }}</el-dropdown-item
+        >
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
+</template>
+<script setup lang="ts" name="meSize">
+import { SizeEnum } from ''@/enums/configEnum'';
+import { useSettingStore } from ''@/store'';
+const { themeConfig } = useSettingStore();
+</script>
+<style lang="scss" scoped>
+.me-size-select {
+  .flex-center {
+    padding: 0 10px;
+
+    .icon {
+      font-size: 1.2em;
+    }
+  }
+}
+</style>
+```
+## 公共组件自动按需引入
+- 在`@/components`文件夹下符合`[''*.vue'', ''**/index.{vue,ts}'']` `glob`规则的文件会被自动识别为公共组件，在使用时可直接使用，编译时会自动引入，组件名规则为相对于`@/components`并去除结尾的(index、Index)的大驼峰名称，最终名称可去类型声明文件中确认。
+- 公共组件会自动创建类型声明，类型声明文件位于`types/components.d.ts`。
+
+使用示例
+```
+<template>
+  <div class="header">
+    <me-dark-switch v-if="themeConfig.showDark"></me-dark-switch>
+    <me-size-select v-if="themeConfig.showSize"></me-size-select>
+    <me-locale-select v-if="localeConfig.localeList.length > 1"></me-locale-select>
+  </div>
+</template>
+<script setup lang="ts" name="Header">
+import { localeConfig } from ''@/config'';
+import { useSettingStore } from ''@/store'';
+const { themeConfig } = useSettingStore();
+</script>
+<style lang="scss" scoped>
+.header {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  padding: 12px;
+}
+</style>
+```
+## 自定义引入规则
+自动引入规则可在`plugins/autoImport.ts`中可自行配置更改，详细说明请参考[vite-plugin-autogeneration-import-file文档](https://github.com/yuntian001/vite-plugin-autogeneration-import-file/blob/main/README-zh-cn.md) 核心代码如下
+
+### 规则核心代码
+`plugins/autoImport.ts`
+```ts
+import { dirname, resolve } from ''path'';
+import * as fs from ''fs'';
+import { createPlugin } from ''vite-plugin-autogeneration-import-file'';
+import { fileURLToPath } from ''url'';
+const { autoImport, resolver: resolverFn } = createPlugin();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+function pathResolve(dir: string) {
+  return resolve(__dirname, ''../'', dir);
+}
+export default () =>
+  autoImport([
+    // 自动生成
+    {
+      // svg icon type
+      pattern: [''*.svg''],
+      dir: pathResolve(''src/icons/svg''),
+      toFile: pathResolve(''types/meIconComments.d.ts''),
+      name: ''MeIcon_{{name}}'',
+      template: fs.readFileSync(pathResolve(''./template/meIconComments.d.ts''), ''utf-8''),
+      codeTemplates: [{ key: ''//code'', template: ''{{name}}: Icon;\n    '' }],
+    },
+    {
+      // pinia module
+      pattern: [''**/*.{ts,js}'', ''*.{ts,js}''],
+      dir: pathResolve(''src/store/modules''),
+      toFile: pathResolve(''src/store/module.ts''),
+      name: ''use_{{name}}_store'',
+    },
+    {
+      // auto import directives
+      pattern: [''*.ts'', ''**/index.ts''],
+      dir: pathResolve(''src/directives''),
+      toFile: pathResolve(''types/directives.d.ts''),
+      template: fs.readFileSync(pathResolve(''./template/directives.d.ts''), ''utf-8''),
+      codeTemplates: [
+        {
+          key: ''//code'',
+          template: ''{{name}}: typeof import("{{path}}")["default"];\n    '',
+        },
+      ],
+      name: ''V_{{name}}'',
+    },
+    {
+      // auto import components
+      pattern: [''*.{vue,ts}'', ''**/index.{vue,ts}''],//具体文件规则，当前规则为 dir文件夹下的.vue或.ts 或者dir子文件夹下的index.vue或index.ts文件
+      dir: pathResolve(''src/components''),//扫描的文件夹
+      toFile: pathResolve(''types/components.d.ts''),//生成的type文件位置
+      template: fs.readFileSync(pathResolve(''./template/components.d.ts''), ''utf-8''),//生成文件模板
+      codeTemplates: [ //生成代码替换模板
+        {
+          key: ''//code'',
+          template: ''{{name}}: typeof import("{{path}}")["default"];\n    '',
+        },
+        {
+          key: ''//typeCode'',
+          template: ''type {{name}}Instance = InstanceType<typeof import("{{path}}")["default"]>;\n  '',
+        },
+      ],
+      name: ''_{{name}}'',//组件名称命名模板
+    },
+  ]);
+
+export const resolver = resolverFn;
+
+```
+
+### 自动引入核心代码
+`plugins/autoComponents.ts`
+```ts
+import { ElementPlusResolver } from ''unplugin-vue-components/resolvers'';
+import Components from ''unplugin-vue-components/vite'';
+import { resolver } from ''./autoImport'';
+export default () =>
+  // 组件自动注册核心代码
+  Components({
+    include: [],
+    dts: false,
+    //resolver函数的第一个数组参数代表组件自动引入的规则index,第二个数组参数代表指令自动引入的规则index
+    resolvers: [ElementPlusResolver({ importStyle: false }), resolver([3], [2])],
+  });
+
+```', '', '694102380874039296', 146, 147, '', '604612615536115712', '604612615536115712', '2026-03-31 11:35:32.472+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102386800590848', '相关外链', NULL, 1, 1, 95, '', '', NULL, 189, 194, '', '604612615536115712', '604612615536115712', '2026-03-31 13:50:31.607+08', '2026-03-31 19:37:41.701+08', NULL, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102381972946944', '配置vscode模板片段', NULL, 2, 1, 96, '# 配置vscode模板片段
+
+## vue模板
+- 点击vscode 左下角设置图标
+- 选中配置用户代码片段
+- 选中新建全局代码片段
+- 输入名称`v3`
+- 粘贴入以下代码
+```
+{
+	// Place your snippets for vue here. Each snippet is defined under a snippet name and has a prefix, body and 
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+	// same ids are connected.
+	// Example:
+	"Print to console": {
+		"prefix": "<v3",
+		"body": [
+			"<template>",
+                "<div class=\"${TM_FILENAME_BASE/([A-Z])/-${1:/downcase}/g}\">",
+				"${1}",
+				"</div>",
+                "</template>",
+                "",
+                "<script setup lang=\"ts\" name=\"${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}\">",
+				"",
+                "</script>",
+                "<style lang=\"scss\" scoped>",
+                ".${TM_FILENAME_BASE/([A-Z])/-${1:/downcase}/g}{",
+				"",
+				"}",
+                "</style>"
+		],
+		"description": "A vue file template"
+	}
+}
+```
+ - 新建`.vue`文件后 输入`<v3`会出现对应模板选项，选中后会自动生成vue文件模板
+
+ ## pinia 模板
+ ```
+ {
+	// Place your 全局 snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	"Print to console": {
+		"scope": "typescript",
+		"prefix": "<s",
+		"body": [
+			"const use${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}Store =  defineStore(''global'', {",
+			"  state:()=>({",
+			"    $0",
+			"  }),",
+			"});",
+			"",
+			"if (import.meta.hot) {",
+			"  import.meta.hot.accept(acceptHMRUpdate(use${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}Store, import.meta.hot))",
+			"}",
+			"",
+			"export default use${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}Store",
+			""
+		],
+		"description": "vue pinia store"
+	}
+}
+ ```', '', '694102380874039296', 152, 153, '', '604612615536115712', '604612615536115712', '2026-03-31 12:20:00.135+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('682458162829197312', '指南', NULL, 1, 1, 99, '', '', '', 1, 8, '', '604612615536115712', '604612615536115712', '2026-02-27 13:25:05.479+08', '2026-03-31 13:52:23.393+08', NULL, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694102376260304896', 'Application 和 Context', NULL, 2, 1, 97, '# Application 和 Context
+Midway 的应用会同时对外暴露不同协议，比如 Http，WebSocket 等等，这里每个协议对 Midway 来说都是由独立的组件提供的。
+
+本项目应用的是 `@midwayjs/koa`，基于`koa`一个提供 Http 服务的组件。
+
+每个使用的 Web 框架会提供自己独特的能力，这些独特的能力都会体现在各自的 上下文（Context）和 应用（Application）之上。
+
+本项目封装了全局方法/属性便于获取`Context` `Application`
+
+## Application
+Application 是某一个组件中的应用对象，在不同的组件中，可能有着不同的实现。Application 对象上会包含一些统一的方法，这些方法统一来自于 IMidwayApplication 定义。
+### 获取方式
+本项目为了方便获取，为Application封装了全局变量，在`onReady`生命周期后可以调用到。示例：
+```
+import {app} from ''@meadmin/core'';
+export function getConfig(){
+   return  app.getConfig()
+
+}
+```
+Application 具有以下方法
+|方法名|说明|使用方法|
+|  --  | -- |  --    |
+|getAppDir| 用于获取项目根目录路径| app.getAppDir()|
+|getBaseDir|用于获取项目 TypeScript 基础路径，默认开发中为 src 目录，编译后为 dist 目录。|app.getBaseDir()|
+|getEnv|获取当前项目环境。|app.getEnv()|
+|getApplicationContext|获取当前全局依赖注入容器。|app.getApplicationContext()|
+|getConfig|获取配置。|app.getConfig()|
+|getLogger|获取某个 Logger，不传参数，默认返回 appLogger。|app.getLogger()|
+|getCoreLogger|获取 Core Logger。|app.getCoreLogger()|
+|getProjectName|获取项目名，一般从 package.json 中获取。|app.getProjectName()|
+|setAttr & getAttr|临时的全局数据存储|app.setAttr(''abc'', {a: 1,b: 2,});app.getAttr(''abc'');|
+|getNamespace|通过 getNamespace API ，可以获取到当前 app 归属的组件的 框架的类型（即组件的 namespace）。|app.getNamespace();|
+
+更多说明请参考[midway Application 和 Context文档](https://midwayjs.org/docs/req_res_app)
+!!! info
+- ''@meadmin/core''的app返回的是项目的` Main Application`(src/configuration.ts 中第一个引入的 Application 即为主要的 Application) `@midwayjs/koa`
+- ''@meadmin/core''的app是在`onReady`生命周期赋值的，使用时请确保`onReady`生命周期已执行
+- `Midway`具有如下生命周期：
+1. 配置文件加载，我们可以在这里去修改配置（onConfigLoad）
+2. 依赖注入容器准备完毕，可以在这个阶段做大部分的事情（onReady）
+3. 服务启动完成，可以拿到 server（onServerReady）
+4. 应用即将关闭，在这里清理资源（onStop）
+更多生命周期说明请参考文档：[midway 生命周期](https://midwayjs.org/docs/lifecycle)
+!!!
+
+## Context
+Context 是一个请求级别的对象，在每一次收到用户请求时，框架会实例化一个 Context 对象，
+
+在 Http 场景中，这个对象封装了这次用户请求的信息，或者其他获取请求参数，设置响应信息的方法，在 WebSocket，Rabbitmq 等场景中，Context 也有各自的属性，以框架的定义为准。
+
+下面的 API 是每个上下文实现通用的属性或者接口。
+### 获取方式
+本项目为了方便获取，为context封装了全局获取方法，在任何请求上下文中都可以可以调用到。获取到的context 为 项目的主请求组件`@midwayjs/koa`组件 的`content`。获取示例：
+```
+import { getContext } from ''@meadmin/core'';
+export function getConfig(){
+   ctx = getContext();
+   //返回上下文的开始实际
+   return ctx.startTime;
+}
+```
+下面的 API 是每个上下文实现通用的属性或者接口。
+|方法名|说明|使用方法|
+|  --  | -- |  --    |
+| requestContext | Midway 会为每个 Context 挂载一个 requestContext 属性，即请求作用域下的依赖注入容器，用来创建请求作用域下的对象。|const userService = await ctx.requestContext.getAsync(UserService); |
+| logger | 请求作用域下的默认 logger 对象，包含上下文数据。| ctx.logger.info(''xxxx'');|
+| startTime | 上下文执行开始的时间。| ctx.startTime |
+| setAttr & getAttr | 和 app 上的方法相同，这些方法的数据是保存在请求链路中，随着请求销毁，你可以在其中放一些请求的临时数据。 |ctx.setAttr(''abc'', {a: 1,  b: 2,});ctx.getAttr(''abc''); |
+| ctx.getLogger(''custom''); | 获取某个自定义 Logger 对应的上下文日志。| ctx.getLogger(''custom'') |
+| getApp | 从 ctx 上获取当前框架类型的 app 对象。| ctx.getApp(); |  
+
+更多说明请参考[midway Application 和 Context文档](https://midwayjs.org/docs/req_res_app)
+
+!!! info
+`Context` 利用的`AsyncLocalStorage`在全局中间件绑定在了请求上下文中
+!!!', '', '694102375132037120', 114, 115, '', '604612615536115712', '604612615536115712', '2026-03-31 09:00:06.561+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', 'applicationContext');
+INSERT INTO aon_doc VALUES ('694102385315807232', '查询表单', NULL, 2, 1, 91, '# 查询表单
+组件名`meSearchForm`，对[elment-plus from](https://element-plus.org/zh-CN/component/form.html)组件的封装，在保留原有功能的情况下，扩展了收起展开、查询、重置功能，并且保留`elment-plus table`的 `props` 和 `emit` `type`提示。
+
+!!! warning 注意
+- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。
+- 当前组件位置`@/components/meSearchForm`。
+!!!
+
+## 组件props
+
+| props      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| forever| number | 收起后展示的筛选项数量,为0表示不收起，默认为1| 否 |
+| defaultAll | boolean | 默认值为`false` ，默认展开所有筛选  | 否 |
+| searchText | string | 默认值为''查询'' 查询按钮文案，当值为`undefined`时不展示查询按钮 | 否 |
+| resetText |  string | 默认值为''重置'' 重置按钮文案，当值为`undefined`时不展示重置按钮 | 否 |
+| labelWidth |  string| label宽度默认80px | 否 |
+| labelPosition| `left`\|`right`| label展示位置 默认right | 否 |
+| elForm的属性 | - | 支持element-plus  Form组件 的所有属性，请参考[elForm文档](https://element-plus.org/zh-CN/component/form.html#form-%E5%B1%9E%E6%80%A7)| - | 
+
+## 组件事件
+
+| emit      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| search | `() => void` | 查询事件 | - |
+| reset | `() => void` | 重置事件,不绑定重置事件时，点击重置按钮会调用 `elFormRef.resetFields()`| - |
+| elForm的事件 | - | 支持element-plus  Form组件的所有事件，请参考[elForm文档](https://element-plus.org/zh-CN/component/form.html#form-%E4%BA%8B%E4%BB%B6)| - | 
+
+## 插槽
+| 插槽名  |	说明  |	子标签 |
+| ----------- | ----------- | ----------- |
+| - | 自定义默认内容。和[elForm](https://element-plus.org/zh-CN/component/form.html#form-%E6%8F%92%E6%A7%BD)对应插槽功能一致。 | FormItem |
+| button | 尾部按钮 | - |
+
+
+## 组件属性/方法
+| 名称 | 类型 | 说明 |
+| ----------- | ----------- | ----------- |
+| elFormRef | FormInstance | `elForm` 的 `ref`引用，可通过其访问`elForm`的属性和方法 |', '', '694102382786641920', 176, 177, '', '604612615536115712', '604612615536115712', '2026-03-31 13:42:56.083+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102386515378176', 'QQ群：752939100', NULL, 2, 1, 99, '', 'https://jq.qq.com/?_wv=1027&k=zSjWSant', '694102386230165504', 186, 187, '', '604612615536115712', '604612615536115712', '2026-03-31 13:50:01.909+08', '2026-03-31 19:37:41.701+08', 1, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102387064832000', '预览', NULL, 2, 1, 99, '', 'https://meadmin-cn.github.io/meadmin-template/', '694102386800590848', 190, 191, '', '604612615536115712', '604612615536115712', '2026-03-31 13:51:11.703+08', '2026-03-31 19:37:41.701+08', 1, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102380597215232', '样式', NULL, 2, 1, 93, '# 样式
+本系统样式采用的 [sass](https://www.sass.hk/)，建议全局样式和变量放在 公共样式文件夹 中，组件样式写在各自组件的`<style lang="scss" scoped>`标签中，请提前了解
+[sass](https://www.sass.hk/) 和 [vue css](https://cn.vuejs.org/api/sfc-css-features.html)文档
+
+## 公共样式文件夹
+```
+├── src  
+|   ├── styles 公共样式文件
+│   │   ├── element-plus.scss element-plus覆盖样式
+│   │   ├── index.scss 全局样式
+│   │   ├── transition.scss 动画样式
+│   │   └── variables.scss  sass变量
+```
+
+## sass变量
+sass 变量位于 `src/styles/variables.scss`文件中，已用`vite`的`css.preprocessorOptions.scss.additionalData`配置项自动引入，`vue`的模板中可直接使用
+
+### 使用示例
+
+```
+<style lang="scss" scoped>
+.main {
+  padding: $page-padding;
+}
+</style>
+```
+
+## size切换
+
+为了实现size 的切换功能，做了以下更改
+
+- 修改large、small下的--el-font-size-base，代码位置位于`src/styles/element-plus.scss`
+
+``` scss
+.me-large:root {
+  //这里强制将font-size-base设置为large
+  --el-font-size-base: var(--el-font-size-large);
+}
+.me-small:root {
+  //这里强制将font-size-base设置为small
+  --el-font-size-base: var(--el-font-size-small);
+}
+```
+
+- 不同size下 html基础`font-size`不同,代码位置位于`src/styles/index.scss`
+
+``` scss
+.me-large {
+  font-size: var(--el-font-size-base);
+}
+
+.me-default {
+  font-size: var(--el-font-size-base);
+}
+
+.me-small {
+  font-size: var(--el-font-size-small);
+}
+```
+- 将`font-size`的值由`px`自动转化为`rem`,实现代码位于`vite.config.ts`
+``` ts
+postcss: {
+    plugins: [
+        autoprefixer,
+        px2rem({
+        rootValue: 14, //换算基数，将 px 替换为 1/rootValue rem (即设计图下的fontSize)
+        // unitPrecision: 5, //允许REM单位增长到的十进制数字。
+        propWhiteList: [''font-size''], //默认值是一个空数组，这意味着禁用白名单并启用所有属性。
+        // propBlackList: [''font-size'', ''border''], //不应从 px 更改为 rem 的属性
+        exclude: /(node_module)/, //默认false，可以（reg）利用正则表达式排除某些文件夹的方法，例如/(node_module)\/如果想把前端UI框架内的px也转换成rem，请把此属性设为默认值
+        // selectorBlackList: [], //要忽略并保留为px的选择器
+        // ignoreIdentifier: false,  //（boolean/string）忽略单个属性的方法，启用ignoreidentifier后，replace将自动设置为true。
+        // replace: true, // （布尔值）替换包含REM的规则，而不是添加回退。
+        mediaQuery: false, //（布尔值）允许在媒体查询中转换px。
+        minPixelValue: 2, //设置要替换的最小像素值(包含)。 默认 0
+        }),
+    ],
+},
+```
+## 全局样式类
+- `page-100` 设置页面组件高度为100%，因当前页面布局用的flex自动撑开，设置view组件''height:100%''是无效的，想设置高度为100%只需要给view组件根元素加上`page-100` 类即可
+- `ellipsis-1` 超出一行展示省略号...
+- `ellipsis-2`、`ellipsis-3`超出2/3行展示省略号...
+- `pointer` 鼠标移入变小手
+- `flex-center` 使用flex使子元素居中', '', '694102378554589184', 142, 143, '', '604612615536115712', '604612615536115712', '2026-03-31 11:33:45.12+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102380874039296', '深入', NULL, 1, 1, 98, '', '', '694102378286153728', 145, 158, '', '604612615536115712', '604612615536115712', '2026-03-31 11:34:39.83+08', '2026-03-31 19:37:41.701+08', NULL, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102375132037120', '后端文档', NULL, 1, 1, 98, '', '', NULL, 107, 126, '', '604612615536115712', '604612615536115712', '2026-03-31 08:55:50.96+08', '2026-03-31 19:37:41.701+08', NULL, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102375656325120', 'Service服务', NULL, 2, 1, 99, '# Service服务
+
+在业务中，只有控制器（Controller）的代码是不够的，一般来说会有一些业务逻辑被抽象到一个特定的逻辑单元中，我们一般称为服务（Service）。
+![](/api/admin/file/get/693988309440921600/image.png)
+提供这个抽象有以下几个好处：
+
+- 保持 Controller 中的逻辑更加简洁。
+- 保持业务逻辑的独立性，抽象出来的 Service 可以被多个 Controller 重复调用。
+- 将逻辑和展现分离，更容易编写测试用例。
+
+本项目对service没有做特别封装，除了文件命名及目录位置外规则和midway一致，更多内容请阅读[midway 服务和注入](https://midwayjs.org/docs/service)文档。
+
+## 创建服务
+普通的服务就是一个 Class，比如我们之前创建了一个接受 user 请求的 Controller，我们来新增一个处理这些数据的服务。
+对于服务的文件，我们一般会存放到 对应模块的`service` 目录中。我们来添加一个 user 服务。
+```
+├── src
+│   ├── app
+│   │   ├──admin
+│   │   │   ├── controller
+│   │   │   │   ├── user.controller.ts
+│   │   │   └── service
+│   │   │       └── user.service.ts
+├── package.json
+└── tsconfig.json
+```
+内容为：
+```
+// src/app/admin/service/user.service.ts
+import { Provide } from ''@midwayjs/core'';
+
+@Provide()
+export class UserService {
+  async getUser(id: string) {
+    return {
+      id,
+      name: ''Harry'',
+      age: 18,
+    };
+  }
+}
+```
+除了一个 @Provide 装饰器外，整个服务的结构和普通的 Class 一模一样，这样就行了。
+
+## 使用服务
+在 Controller 处，我们需要来调用这个服务。传统的代码写法，我们需要初始化这个 Class（new），然后将实例放在需要调用的地方。在 Midway 中，你不需要这么做，只需要编写我们提供的 **"依赖注入"** 的代码写法。
+
+```
+//src/app/admin/controller/user.controller.ts
+import { Inject, Controller, Get, Provide, Query } from ''@midwayjs/core'';
+import { BaseController } from ''./base.controller.js'';
+import { UserService } from ''../service/user.service.js'';
+
+@Controller(''user'')
+export class UserController extends BaseController {
+
+  @Inject()
+  userService: UserService;
+
+  @Get(''/info/:id'')
+  async getUser(@Param(''id'') id: string) {
+    const user = await this.userService.getUser(uid);
+   return this.success(user);
+  }
+}
+```
+使用服务的过程分为几部分：
+
+- 使用 @Provide 装饰器暴露你的服务
+- 在调用的代码处，使用 @Inject 装饰器注入你的服务
+- 调用注入服务，执行对应的方法
+
+## 注入行为描述
+Midway 的核心 “依赖注入” 容器会自动关联你的控制器（Controller） 和服务（Service），在运行过程中会自动初始化所有的代码，你无需手动初始化这些 Class。
+
+@Provide 装饰器的作用：
+
+- 这个 Class，被依赖注入容器托管，会自动被实例化（new）
+- 这个 Class，可以被其他在容器中的 Class 注入
+而对应的 @Inject 装饰器，作用为：
+- 在依赖注入容器中，找到对应的属性名，并赋值为对应的实例化对象
+
+@Provide 和 @Inject 装饰器是成对出现的，两者通过冒号后的类名进行关联。
+
+事实上，控制器（Controller） 上也有这个装饰器，只是在Midway中，Controller 包含了 Provide 的功能。如果你不确定什么时候可以隐藏，可以都写上。
+上边的controller代码等价于
+```
+@Provide()
+@Controller(''user'')
+export class UserController extends BaseController {
+```
+
+## 在其余地方使用service
+根据上边的介绍，我们可以知道在任何`@Provide`修饰的地方都可以用`@Inject`调用服务，下边我们举个`service`服务互相调用的例子
+```
+//src/app/admin/service/login.service.ts
+import { Inject, Controller, Get, Provide, Query } from ''@midwayjs/core'';
+import { UserService } from ''../service/user.service.js'';
+
+@Provide()
+export class LoginService {
+
+  @Inject()
+  userService: UserService;
+
+  async hasUser(id: string) {
+    return (await this.userService.getUser(uid))?true:false;
+  }
+}
+```
+依赖注入 是 Midway 的核心特性，通过装饰器的轻量特性，让依赖注入变的优雅，从而让开发过程变的便捷有趣。如果想更深一步了解，可以阅读[midway 依赖注入](https://midwayjs.org/docs/container)文档。', '', '694102375132037120', 110, 111, '', '604612615536115712', '604612615536115712', '2026-03-31 09:02:09.858+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', 'service');
+INSERT INTO aon_doc VALUES ('694102386230165504', '社区', NULL, 1, 1, 96, '', '', NULL, 185, 188, '', '604612615536115712', '604612615536115712', '2026-03-31 13:49:33.091+08', '2026-03-31 19:37:41.701+08', NULL, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102375387889664', '介绍', NULL, 2, 1, 99, '# 介绍
+后端使用Midway框架，Midway 是阿里巴巴 - 淘宝前端架构团队，基于渐进式理念研发的 Node.js 框架，通过自研的依赖注入容器，搭配各种上层模块，组合出适用于不同场景的解决方案。
+如需对后端进行更多了解，可阅读[midway文档](https://midwayjs.org/docs/intro)
+
+## 目录结构
+```
+├──.husky git hooks钩子文件夹
+├──.vscode vscode推荐配置文件夹
+├── dist 后端打包文件夹
+├──logs 日志文件夹
+├──public 静态资源文件
+│   ├── admin 后台静态资源
+│   ├── index 前台静态资源
+├── src  后端主目录
+│   ├── app 后端模块根目录
+│   │   ├──admin 后台接口模块
+│   │   │   ├── controller 模块控制器文件夹
+│   │   │   ├── dto 模块出入参dto类文件夹
+│   │   │   ├── middleware 模块中间件夹
+│   │   │   └── service 模块service文件夹
+│   │   ├──index 前台接口模块
+│   │   │   ├── controller 模块控制器文件夹
+│   │   │   ├── dto 模块出入参dto类文件夹
+│   │   │   ├── middleware 模块中间件夹
+│   │   │   └── service 模块service文件夹
+│   │   └──home.controller.ts 页面渲染控制器
+│   ├── config 配置文件夹
+│   ├── controller 公共控制器文件夹
+│   ├── decorators 装饰器文件夹
+│   ├── dict 字典文件夹
+│   ├── dto 出入参dto基类文件夹
+│   ├── entities 数据库实体类文件夹
+│   ├── fileManage 文件夹管理助手类
+│   ├── filter 异常类文件夹
+│   ├── helper 助手函数文件夹
+│   ├── locales 后端多语言文件包
+│   ├── response 反参基类
+|   ├── ruleType 后端自定义校验规则
+|   ├── service 全局公共service
+|   ├── types 类型扩展
+|   ├── configuration.ts 启动文件
+│   └── logger.ts logger初始化文件
+├── uploadFile 本地上传目录
+├── view 前端文件夹
+├── .env env环境变量，VIEW_ADMIN_开头的可被 前端admin项目获取到，VIEW_INDEX_开头的可被前端 index项目获取到
+├── .env.prod 启动后env环境变量
+├── .eslintrc.json eslint配置文件
+├── .gitignore git 忽略文件
+├── .npmrc pnpm配置文件
+├── .prettierignore prettier忽略文件
+├── .prettierrc.cjs prettier配置文件
+├── bootstrap.js 部署后bootstrap启动文件
+├── sql 初始化sql文件
+├── pnpm-workspace.yaml pnpm workspace 配置
+└── tsconfig.json typescript配置文件
+```
+
+
+## 基本概念
+
+后端基于 Node.js 监听端口，对外主要提供 API 接口及页面访问。
+
+后端架构主要划分为以下几层：router、controller、service、dto、entity。
+
+- router：定义路由映射，将不同请求指向对应 controller 类中的方法。访问相应地址时会自动触发对应的 controller 逻辑。
+
+- controller：作为请求入口，负责入参校验、调用 service、返回响应，并集成 Swagger 生成接口文档。其中可能封装少量控制逻辑，但核心业务处理一般交由 service。
+
+- service：封装核心业务逻辑，根据场景组织代码。通过 entity 数据模型进行数据库操作，并实现复杂业务处理。
+
+- entity：对应数据库表的模型实体，所有数据库操作均通过 entity 完成。
+
+- dto：定义接口的请求参数与响应结果格式。每个接口都有对应的 DTO 类，controller 在接收到请求时会自动基于 DTO 完成参数校验。
+
+
+## 改动及封装
+本项目对midway做了以下封装，详情请参考相关章节。
+
+### controller装饰器会继承prefix和routerOptions。
+ 根据 controller 继承关系 递归合成Controller装饰器的参数
+ 从第一个prefix以/开头的祖级开始合并controller的prefix和routerOptions，如果prefix 以/开头，则不合并prefix和routerOptions
+### 强制文件目录结构
+Midway 对目录没有特别的限制，但当前项目，将一部分常用的文件进行归类，放到一些默认的文件夹中。文件夹详情请参考[目录结构](#目录结构)。日常开发需要关注的主要有：`src/app/*/controller`文件、`src/app/*/service`文件、`src/app/*/dto`文件、`src/app/*/middleware`中间件文件、`src/entities`数据库实体类文件。
+### 模块
+本项目增加了模块的概念，在`src/app/`下每一个文件夹代表一个模块，将相关逻辑归类存放。
+### 应用
+应用基于koa 使用`@midwayjs/koa`组件
+### 参数校验
+已集成，源于`joi`的`@midwayjs/validate@3`参数校验组件，并自定义了`mobile`等校验规则
+### 多语言
+已集成`@midwayjs/i18n@3`多语言组件，多语言文件夹为`locales/en.json`，并且翻译失败使用当前key做为返回值
+### 数据库访问
+已集成sequelize7，自定义封装的sequelize访问service，相关源码在`src/service/dataSourceManager.service.ts`,对应配置文件在`src/config/database.ts`
+### 静态文件映射
+集成 `@midwayjs/static-file@3`组件，`public`文件夹下的资源都可以使用`/文件名`直接访问
+### 模板引擎
+集成 `@medamin/midway-vite-view`组件，实现vite+vue模板渲染支持
+### 缓存
+集成`@midwayjs/redis@3`和`@midwayjs/cache-manager@3`组件，实现基于redis的缓存支持
+### 日志
+调试模式及部署模式，都将日志目录改为本地的 ${app.appDir}/logs/ 目录下', '', '694102375132037120', 108, 109, '', '604612615536115712', '604612615536115712', '2026-03-31 08:57:32.634+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102383369650176', 'MeComponent', NULL, 2, 1, 98, '# MeComponent
+MeComponent基于 `component` 结合`keepAlive``transition``doneProgress``suspense`，而封装自定义组件。
+
+## 组件props
+
+| props      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| is       | 当 is 是字符串，它既可以是 HTML 标签名也可以是组件的注册名。或者，is 也可以直接绑定到组件的定义 | 会透传给`compnent`组件 |是|
+| keepAlive      | `MeKeepAlive` `props` Object | 传给`MeKeepAlive` 的props对象，不传此值代表不开启KeepAlive缓存 |否|
+| componentKey    | string | 自定义组件的`key` |否|
+| transition |`TransitionProps` `props` Object| 传给`Transition` 的props对象，不传此值代表不开启Transition动画 |否|
+| doneProgress| boolean | 是否需要执行nProgress.done() | 否|
+| suspense| SuspenseProps| 异步组件 | 否|
+## 示例
+
+```vue
+<router-view v-slot="{ Component }">
+      <me-component :is="Component" done-progress></me-component>
+</router-view>
+```', '', '694102382786641920', 162, 163, '', '604612615536115712', '604612615536115712', '2026-03-31 12:23:51.939+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102382514012160', '服务方式调用组件', NULL, 2, 1, 94, '# 服务方式调用组件
+
+本系统支持服务方式调用任意组件，主要方便以函数方式打开新增、编辑弹窗等组件。所有服务方式调用的组件都会被渲染到body下。
+
+## 调用示例
+
+### 声明组件
+
+示例文件位置：`src/views/example/service/components/add.vue`
+
+```vue
+<template>
+  <el-dialog v-model="show" @closed="$emit(''closed'')">
+    <div>这是测试弹窗 <el-button @click="add()"> 再次打开弹窗 </el-button></div>
+  </el-dialog>
+</template>
+
+<script setup lang="ts" name="Add">
+import add from ''./add'';
+const show = defineModel<boolean>(''show'');
+defineEmits<{ closed: [] }>();
+</script>
+```
+
+### 声明调用函数
+
+示例文件位置: `src/views/example/service/components/add.ts`
+
+```vue
+import { useGlobalStore } from ''@/store'';
+import Add from ''./add.vue'';
+export default async (props: Omit<ComponentProps<typeof Add>, ''show''> = {}) => {
+  const show = ref(true);
+  const globalStore = useGlobalStore();
+  const key = globalStore.addGlobalComponents(
+    Add,
+    computed(() => ({
+      show: show.value,
+      ...props,
+      [''onUpdate:show'']: (value: boolean) => {
+        show.value = value;
+      },
+      onClosed: () => {
+        globalStore.removeGlobalComponents(key); //关闭时移除当前组件
+        props.onClosed && props.onClosed();
+      },
+    })),
+  );
+  await nextTick();
+  return key;
+};
+```
+
+### 以函数方式调用
+```ts
+import add from ''./add'';
+add();
+```
+
+## 注意事项
+- 在合适的时机(如弹窗关闭时)调用`globalStore.removeGlobalComponents(key)`移除组件。
+
+## 原理说明
+
+服务调用方式采用将被调用组件放入全局store中，在`app.vue`中动态获取渲染的方式实现。
+未使用类似于`meImageViewer`这种服务式组件由`h`函数动态创建然后绑定到当前vue示例的原因，是`h`函数动态创建的组件使用`vue-devtools`调试时无法追寻父级，不方便调试，调试模式下不容易被选取。', '', '694102380874039296', 156, 157, '', '604612615536115712', '604612615536115712', '2026-03-31 12:21:51.001+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102383080243200', 'MeKeepAlive', NULL, 2, 1, 99, '# MeKeepAlive
+
+vue 官方的KeepAlive缓存只支持按组件名筛选过滤，这里自定义了MeKeepAlive组件,在KeepAlive的前提下增加了组件key过滤条件,其余规范和功能和KeepAlive组件一致，KeepAlive官方说明[KeepAlive](https://cn.vuejs.org/guide/built-ins/keep-alive.html)
+
+## 组件props
+
+| props      | 类型 |说明|
+| ----------- | ----------- | ----------- |
+| max       | number | 限制最大缓存实例数 |
+| include      | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组 | 过滤组件名白名单 |
+| exclude    | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组     | 过滤组件名黑名单 |
+| includeKey      | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组 | 过滤组件key白名单 |
+| excludeKey    | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组     | 过滤组件key黑名单 |
+
+## 使用演示
+
+这里只样式includeKey、excludeKey其余说明参考[KeepAlive](https://cn.vuejs.org/guide/built-ins/keep-alive.html)
+```vue
+<me-keep-alive includeKey="a,b">
+  <component :is="view" key="a" />
+  <component :is="view" key="b" />
+  <component :is="view" key="c" />
+</me-keep-alive>
+```
+```vue
+<me-keep-alive excludeKey="c">
+  <component :is="view" key="a" />
+  <component :is="view" key="b" />
+  <component :is="view" key="c" />
+</me-keep-alive>
+```
+
+## 局限性
+
+因为vue编译模板时对`KeepAlive` `tagName`做了特殊处理,当`MeKeepAlive`和`Transition`组件、`TransitionGroup`配合使用使用时，只能用渲染函数的方式使用，在`Vue 的单文件组件 (即 *.vue 文件)`中请使用`KeepAlive`组件。
+
+### `Transition`+渲染函数使用示例
+
+```
+import { Transition } from ''vue'';
+const transitionProps={};
+const meKeepAliveProps={};
+h(Transition, transitionProps, { 
+  default: () => h(MeKeepAlive, meKeepAliveProps, [componentOptions])
+})
+```', '', '694102382786641920', 160, 161, '', '604612615536115712', '604612615536115712', '2026-03-31 12:23:08.825+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102381696122880', 'api自动引入', NULL, 2, 1, 97, '# api自动引入
+
+基于[unplugin-auto-import](https://github.com/antfu/unplugin-auto-import)的api自动引入，支持`vue` `vue-router` `pinia` `@vueuse/core`更多说明参考[unplugin-auto-import](https://github.com/antfu/unplugin-auto-import)文档
+
+配置代码位置`vite.config.ts` 
+``` ts
+AutoImport({
+    // 自动加载API
+    imports: [''vue'', ''vue-router'', ''pinia'', ''@vueuse/core''],
+    // 可以选择auto-imports.d.ts生成的位置，使用ts建议设置为''src/auto-imports.d.ts''
+    dts: ''types/auto-imports.d.ts'',
+    resolvers: [ElementPlusResolver()],
+}),
+```
+
+**无需**
+
+``` ts
+import { computed, ref } from ''vue''
+const count = ref(0)
+const doubled = computed(() => count.value * 2)
+```
+
+**直接**
+
+``` ts
+const count = ref(0)
+const doubled = computed(() => count.value * 2)
+```', '', '694102380874039296', 150, 151, '', '604612615536115712', '604612615536115712', '2026-03-31 12:19:25.363+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102379959681024', '请求', NULL, 2, 1, 95, '
+# 接口请求
+
+接口请求函数`request`位于文件`@/utils/request.ts`中，基于[axios](https://www.axios-http.cn/)和[vue-request v2.x](https://next.cn.attojs.org/guide/introduction.html)二次封装,使用前请先阅读[axios](https://www.axios-http.cn/)和[vue-request v2.x](https://next.cn.attojs.org/guide/introduction.html)文档
+
+核心代码如下：
+``` ts
+/**
+ * 请求函数
+ * @param axiosConfig  axios的配置项
+ * @param options vue request配置项+自定义配置项参考 RequestOptions
+ * @param returnAxios
+ * @returns
+ */
+export function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>, options?: RequestOptions<R, P>, returnAxios?: T) {
+  const axiosService = async (...args: P): Promise<R> => {
+    try {
+      //loading放到微任务中去执行以确保在自动调用请求时等待所有的宏任务中的生命周期函数执行完再创建loading实例 以规避currentInstance的相关警告
+      !options?.noLoading && Promise.resolve(undefined).then(loading);
+      const config = await axiosConfig(...args);
+      if (options?.clearEmpty) {
+        if (config.params) config.params = clearEmptyParam(config.params, options?.clearEmpty);
+        if (config.data) config.data = clearEmptyParam(config.data, options?.clearEmpty);
+      }
+      const locale = useSettingStore().locale;
+      if (locale) {
+        config.params = Object.assign({ locale }, config.params);
+      }
+      const { data: res } = await service(config);
+      if (!res || res.code === undefined) {
+        throw Error(t(''返回值解析失败''));
+      }
+      // 401：认证失败
+      if (res.code === ''401'') {
+        ElMessageBox.confirm(res.msg, ''请登录'', {
+          confirmButtonText: ''去 登 陆'',
+          cancelButtonText: ''取消'',
+          type: ''warning'',
+          showClose: false,
+          closeOnClickModal: false,
+          closeOnPressEscape: false,
+          closeOnHashChange: false,
+        })
+          .then(async () => {
+            await useUserStore().logOut();
+          })
+          .catch(() => {});
+        throw Error(res.msg);
+      }
+      // 没有权限
+      if (res.code === ''403'') {
+        ElMessageBox.confirm(res.msg, ''无权限访问'', {
+          confirmButtonText: ''切换账户'',
+          cancelButtonText: ''取消'',
+          type: ''warning'',
+          showClose: false,
+          closeOnClickModal: false,
+          closeOnPressEscape: false,
+          closeOnHashChange: false,
+        })
+          .then(async () => {
+            await useUserStore().logOut();
+          })
+          .catch(() => {});
+        throw Error(res.msg);
+      }
+      if (res.code !== ''200'') {
+        throw Error(res.msg);
+      }
+      if (options?.success) {
+        ElMessage.success({ message: res.msg });
+      }
+      !options?.noLoading && closeLoading();
+      return options?.needAll ? res : res.data;
+    } catch (e) {
+      !options?.noLoading && closeLoading();
+      !options?.noError &&
+        ElMessage.error({
+          message: e instanceof Error ? e.message : String(e),
+        });
+      throw e;
+    }
+  };
+
+  return returnAxios ? axiosService : useRequest<R, P>(axiosService, options);
+}
+```
+
+## 自定义返回值格式
+`request`函数主要是封装`vue-request`使其发起请求使用`axios`，并且请求时加上了loading、对接口返回值进行了校验处理、出错时自动报错提示
+
+接口处理格式已和后端api格式同步，如需要更改可自行修改以下代码
+``` ts
+  if (!res || res.code === undefined) {
+    throw Error(t(''返回值解析失败''));
+  }
+  // 401：认证失败
+  if (res.code === ''401'') {
+    ElMessageBox.confirm(res.msg, ''请登录'', {
+      confirmButtonText: ''去 登 陆'',
+      cancelButtonText: ''取消'',
+      type: ''warning'',
+      showClose: false,
+      closeOnClickModal: false,
+      closeOnPressEscape: false,
+      closeOnHashChange: false,
+    })
+      .then(async () => {
+        await useUserStore().logOut();
+      })
+      .catch(() => {});
+    throw Error(res.msg);
+  }
+  // 没有权限
+  if (res.code === ''403'') {
+    ElMessageBox.confirm(res.msg, ''无权限访问'', {
+      confirmButtonText: ''切换账户'',
+      cancelButtonText: ''取消'',
+      type: ''warning'',
+      showClose: false,
+      closeOnClickModal: false,
+      closeOnPressEscape: false,
+      closeOnHashChange: false,
+    })
+      .then(async () => {
+        await useUserStore().logOut();
+      })
+      .catch(() => {});
+    throw Error(res.msg);
+  }
+  if (res.code !== ''200'') {
+    throw Error(res.msg);
+  }
+  if (options?.success) {
+    ElMessage.success({ message: res.msg });
+  }
+  !options?.noLoading && closeLoading();
+  return options?.needAll ? res : res.data;
+```
+
+## 入参说明
+| 参数      | 类型 | 说明 | 是否必填 |
+| ----------- | ----------- | ----------- | ----------- |
+| axiosConfig | AxiosRequestConfig | 接口请求数据，完全遵循 [axios config](https://www.axios-http.cn/docs/req_config) 的规则 |是|
+| options   | RequestOptions    | 基于[vue-request options](https://next.cn.attojs.org/api/#options)配置扩展了个别配置，下面会详细说名 |否|
+| returnAxios | boolean | 返回axios，当传入true是返回axios不传或false时返回vue-reques对象 | 否 |
+
+| RequestOptions | 类型 | 说明 | 是否必填 |
+| ----------- | ----------- | ----------- | ----------- |
+| needAll | boolean | 返回完整的返回值忽略格式化返回值（默认返回的是data字段） | 否 |
+| noLoading | boolean | 不需要lodaing | 否 |
+| noError | boolean | 不需要报错 | 否 |
+| ... vue-request options | [vue-request options](https://next.cn.attojs.org/api/#options) | 更多字段参考[vue-request options](https://next.cn.attojs.org/api/#options) 文档| 否 |
+
+## 使用示例
+
+- 在接口文件夹`@/api`文件夹中新建接口文件`@/api/example.ts`
+
+- 在`@/api/example.ts`加入接口声明代码
+``` ts
+import { PageParam, PageResult } from ''@/api/api.model.js'';
+import { SystemAdminInfo } from ''@/api/system/admin.js'';
+import request from ''@/utils/request.js'';
+
+//示例_书籍
+export type ExampleBook = {
+  createdAdmin: SystemAdminInfo | null; //创建者
+  updatedAdmin: SystemAdminInfo | null; //最后更新者
+  id: string; //ID
+  name: string; //名称
+  createdAt: string; //创建时间
+  updatedAt: string; //最后更新时间
+};
+
+//获取示例_书籍信息
+export function getExampleBookApi() {
+  return request<
+    PageResult<ExampleBook>,
+    [
+      PageParam & {
+        id?: string;
+        name?: string;
+      },
+    ]
+  >(
+    (data) => ({
+      url: ''example/demo/getExampleBook'',
+      method: ''post'',
+      data: data,
+    }),
+    { noLoading: true },
+  );
+}
+
+```
+
+- 在`vue`文件中使用
+``` vue
+<template>
+  <div class="list" v-loading="loading">
+    <template v-if="data">
+      <div v-for="(item, index) in data" :key="index">
+        {{ item }}
+      </div>
+    </template>
+
+  </div>
+</template>
+<script setup lang="ts" name="request">
+import { getExampleBookApi } from ''@/api/example'';
+const { runAsync, loading, error, data } = getExampleBookApi();
+runAsync({page:1,pageSize:10});//请求接口 建议使用runAsync请求而不是run,区别请参考文档https://next.cn.attojs.org/api/#runasync
+</script>
+```
+
+## 自动请求示例
+
+- 在`vue`文件中使用
+``` vue
+<template>
+  <div class="list" v-loading="loading">
+    <template v-if="data">
+      <div v-for="(item, index) in data" :key="index">
+        {{ item }}
+      </div>
+    </template>
+
+  </div>
+</template>
+<script setup lang="ts" name="request">
+import { listApi } from ''@/api/example'';
+const { runAsync, loading, error, data } = listApi({ defaultParams: [{ page: 1, pageSize: 10 }], manual: false });//manual: false代表组件加载后自动请求接口
+</script>
+```
+## `setup`外请求示例
+
+`vue-request` 是专门为`setup`使用的一个类库，详情请参考[issues:149](https://github.com/AttoJS/vue-request/issues/149)。
+在`setup`外使用时应该直接使用`axios`,`request`函数允许接收一个参数直接返回`axios`实例
+
+- 在`@/api/routeMenu.ts`加入接口声明代码
+  
+```ts
+import { request } from ''@/utils/request'';
+import { RouteRecordRaw } from ''vue-router'';
+
+export function menuApi<T extends boolean = true>(
+  options: RequestOptions<RouteRecordRaw[], []> = {},
+  returnAxios: T = true as T,
+) {
+  return request(
+    () => ({
+      url: ''/api/menu/list'',
+      method: ''get'',
+    }),
+    options,
+    returnAxios,
+  );
+}
+
+```
+
+- 在setup外使用
+
+```ts
+console.log(await menuApi()());
+```
+', '', '694102378554589184', 138, 139, '', '604612615536115712', '604612615536115712', '2026-03-31 11:32:15.025+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', 'request');
+INSERT INTO aon_doc VALUES ('694102377434710016', '一键crud', NULL, 2, 1, 93, '# 一键crud
+本项目支持根据数据库实体文件 一键生成crud
+## 示例
+- `pnpm meadmin crud exampleDemo --menu`  --menu 参数代表数据库同步生成后台菜单
+
+运行后会生成以下文件
+```
+src/app/admin/dto/example/demoCreate.dto.ts 后端新增dto校验文件
+src/app/admin/dto/example/demoUpdate.dto.ts 后端更新dto校验文件
+src/app/admin/dto/example/demoQuery.dto.ts 后端查询入参dto校验文件
+src/app/admin/service/example/demo.service.ts 后端service
+src/app/admin/controller/example/demo.controller.ts 后端 controller
+view/admin/src/api/example/demo.ts  前端 api接口定义 
+view/admin/src/views/example/demo/lang/en.json 前端组件语言包 
+view/admin/src/views/example/demo/dict.ts 前端字典
+view/admin/src/views/example/demo/index.vue 前端字典列表组件
+view/admin/src/views/example/demo/components/info.vue 前端字典详情组件
+view/admin/src/views/example/demo/components/addOrUp.vue 前端字典新增/修改组件
+```
+## 参数说明
+`pnpm meadmin [-m <char> 环境变量] crud entity实体文件 参数`
+
+```
+  --model <char>            model名称会放到app/{model}下对应的文件夹 (default: "admin")
+  -f, --force               强制覆盖
+  -n, --name <char>         使用的数据库配置defaultDataSourceName
+  -d, --dbConfig <char>     数据库配置文件地址默认为当前目录下dist/config/database.js (default: "G:\\my\\meadmin\\dist\\config\\database.js")        
+  --del                     删除crud创建的文件
+  --path <char>             生成的路径，默认根据驼峰转多级路径
+  -c, --controller <char>   生成的controller路径，默认使用path
+  --menu                    生成菜单
+  --cov, --coverage <char>  生成代码发覆盖范围：b后端代码、a前端api接口代码、v前端view 代码、p后台权限校验，默认值bavp (default: "bavp")
+```
+例如 `pnpm meadmin -m dev crud exampleDemo --menu` 加载`dev`环境变量根据`dist/entities/exampleDemo.entity.js`生成对应的文件并创建菜单。
+
+## 规则
+自动生成具有以下规则
+- 根据`swagger`规则自动创建 必填、min、max、mobile、email校验规则
+- 以“名称:值1=说明1;值2=说明2”，格式声明的备注会自动创建字典和下拉列表，并且支持number、string两种类型
+- 根据枚举值自动创建 select下拉选项
+- `BelongsToMany`及 `BelongsTo`关联自动创建远程下拉搜索
+- 以`At`结尾自动创建时间范围筛选
+- 关联`File`实体自动应用文件上传组件', '', '694102375132037120', 122, 123, '', '604612615536115712', '604612615536115712', '2026-03-31 09:06:53.3+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', 'crud');
+INSERT INTO aon_doc VALUES ('694102379682856960', '权限', NULL, 2, 1, 96, '# 权限
+
+## 初始化权限
+
+当登录成功或刷新页面后，会请求`userInfoApi`接口获取权限，相关代码在`@/store/modules/user.ts`中。
+``` ts
+// 初始化
+ init: async function (tokenValue?: string) {
+  const token = tokenValue ?? cookies.get(config.tokenName);
+  if (token) {
+    this.token = token;
+    const res = await userInfoApi(true, !tokenValue)();
+    this.user = res.info;
+    initDynamicViewsModules();
+    this.rules = res.btnRules;
+    this.menus = listToTree(
+      res.menus.map((item) => ({
+        id: item.id,
+        path: item.path,
+        parentId: item.parentId,
+        component: transitionComponent(item.component),
+        meta: {
+          // 标题设置该路由在侧边栏和面包屑中展示的名字
+          title: item.title,
+          // 对应权限 多个之间为或的关系
+          rule: [item.rule],
+          // 是否是固定的tag
+          affix: statusToBoolean(item.affix),
+          // 图标
+          icon: item.icon,
+          // 外链
+          isLink: statusToBoolean(item.isLink),
+          // 如果设置为true，则不会被 <keep-alive> 缓存
+          noCache: !statusToBoolean(item.cache),
+          // 在菜单中隐藏
+          hideMenu: statusToBoolean(item.hideMenu),
+          // 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式
+          // 只有一个时，会将那个子路由当做根路由显示在侧边栏
+          // 若你想不管路由下面的 children 声明的个数都显示你的根路由
+          // 你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由
+          alwaysShow: statusToBoolean(item.alwaysShow),
+          // 是否需要面包屑 false不展示在面包屑,ture一直展示在面包屑,undefined当只有一个子元素面包屑时跳过展示
+          breadcrumb: statusToBoolean(item.breadcrumb),
+        },
+      })),
+    );
+    await useRouteStore().initRoutes(); //初始化路由
+  } else {
+    this.token = '''';
+  }
+},
+```
+
+## 路由权限校验
+
+初始化完权限后，注册有权限的路由，过滤规则参考[路由权限](../guide/route.md#路由权限)
+
+## 按钮权限校验
+
+权限校验函数为permission(rules?: string | string[])，当入参为数组时，匹配成功数组中的任意一个权限则返回true。
+
+通过v-if指令和permission函数配合进行按钮权限校验(未进行封装指令的原因是，指令方式对服务端渲染不友好，建议使用v-if判断)。
+
+- 通过全局函数$permission()校验权限
+``` vue
+    <el-button v-if="$permission(''edit'')">{{ $t(''编辑'') }}</el-button>
+
+```
+- 引入 permission()函数校验
+  
+``` vue
+<template>
+  <div class="permission">
+    <el-button v-if="permission(''show'')">{{ $t(''查看'') }}</el-button>
+  </div>
+</template>
+<script setup lang="ts" name="permission">
+import { permission } from ''@/utils/permission'';
+</script>
+```
+
+## 超管权限
+
+当初始化权限时拿到的`rules`数组包含''*''时，代表具有所有权限，权限permission函数会必定返回`true`', '', '694102378554589184', 136, 137, '', '604612615536115712', '604612615536115712', '2026-03-31 11:29:22.062+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', 'permission');
+INSERT INTO aon_doc VALUES ('694102384191733760', '富文本', NULL, 2, 1, 95, '# 富文本(WangEditor)
+组件名`MeWangEditor`，集成了[WangEditor](https://www.wangeditor.com/v5/getting-started.html),编辑器默认高度为`500px`可通过样式直接覆盖更改,详细说明请参考[WangEditor 文档](https://www.wangeditor.com/v5/getting-started.html)和[用于Vue3](https://www.wangeditor.com/v5/for-frame.html#vue3)。
+
+!!! warning 注意
+- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。
+- 当前组件位置`@/components/meWangEditor`
+!!!
+
+## 组件props
+
+| props      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| mode      | ''simple'' \| ''default'' | 模式，默认值为`default`。 ''default''默认模式，集成了 wangEditor 所有功能。 ''simple''简洁模式，仅有部分常见功能，但更加简洁易用|否|
+| config      | `{ toolbar?: Partial<IToolbarConfig>; editor?: Partial<IEditorConfig> }` | wangeditor配置，默认值为`{}`。toolbar为[工具栏配置](https://www.wangeditor.com/v5/toolbar-config.html)对象， editor为[编辑器配置](https://www.wangeditor.com/v5/editor-config.html)和[菜单配置](https://www.wangeditor.com/v5/menu-config.html)对象。|否|
+| modelValue(v-model) | string | 非格式化的 html内容 |是|
+| defaultContent | SlateDescendant[](editor.children 获取的内容) | 编辑器默认内容,默认值为`[]`,参考[设置-json](https://www.wangeditor.com/v5/content.html#%E8%AE%BE%E7%BD%AE-json) |否|
+| defaultHtml | string | 默认html内容，默认值为`''''`,为空时编辑器会使用`v-model`绑定的值。参考[设置-html](https://www.wangeditor.com/v5/content.html#%E8%AE%BE%E7%BD%AE-html) | 否|
+
+
+## 组件事件
+
+| emit      | 格式 |说明|
+| ----------- | ----------- | ----------- |
+| onCreated | (editor: IDomEditor) =>void | 编辑器创建完毕时的回调函数。参考[onCreated](https://www.wangeditor.com/v5/editor-config.html#oncreated) |
+| onChange | (editor: IDomEditor) =>void | 编辑器内容、选区变化时的回调函数。参考[onChange](https://www.wangeditor.com/v5/editor-config.html#onchange) |
+| onDestroyed | (editor: IDomEditor) =>void | 编辑器销毁时的回调函数。参考[onDestroyed](https://www.wangeditor.com/v5/editor-config.html#ondestroyed) |
+| onMaxLength | (editor: IDomEditor) =>void | 配置编辑器的 maxlength。参考[maxLength onMaxLength](https://www.wangeditor.com/v5/editor-config.html#maxlength-onmaxlength) |
+| onFocus | (editor: IDomEditor) =>void | 编辑器 focus 时的回调函数。参考[onFocus](https://www.wangeditor.com/v5/editor-config.html#onfocus) |
+| onBlur | (editor: IDomEditor) =>void | 编辑器 blur 时的回调函数。参考[onBlur](https://www.wangeditor.com/v5/editor-config.html#onblur) |
+| customAlert | (s: string, t: string) =>void | 自定义编辑器 alert 。如想用 antd 的 message 功能。参考[customAlert](https://www.wangeditor.com/v5/editor-config.html#customalert) |
+| customPaste | (editor: IDomEditor, event: ClipboardEvent,(val: boolean) => { res = val})=>void | 自定义粘贴。可阻止编辑器的默认粘贴，实现自己的粘贴逻辑。参考[customPaste](https://www.wangeditor.com/v5/editor-config.html#custompaste)和[wangEditor-for-vue3](https://github.com/wangeditor-team/wangEditor-for-vue3/blob/main/src/components/Editor.vue) |
+
+!!! warning 注意
+注意上述组件事件，必须通过 Vue 事件来传递，不可以放在 `config.editor` 中
+!!!
+
+## 示例
+
+```vue
+<template>
+  <div>
+    <me-wang-editor v-model="html" :config="config"></me-wang-editor>
+  </div>
+</template>
+<script setup lang="ts" name="WangEditor">
+const html = ref(''<p>hello word!</p>'');
+const config = {
+  editor: {
+    maxLength: 1000,
+    [''MENU_CONF'']: {
+      uploadImage: {
+        // 小于该值就插入 base64 格式（而不上传），默认为 0
+        base64LimitSize: 2 * 1024 * 1024, // 5mb
+      },
+    },
+  },
+};
+</script>
+```', '', '694102382786641920', 168, 169, '', '604612615536115712', '604612615536115712', '2026-03-31 12:26:13.217+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102381431881728', 'Pinia使用', NULL, 2, 1, 98, '# Pinia使用
+
+Pinia 是 下一代 Vue 的存储库，相关使用说明请参考[Pinia](https://pinia.web3doc.top/introduction.html)文档
+
+## 新建store文件
+store存放文件夹为`@/store/modules`，在store文件夹下新建对应store文件，按[Pinia](https://pinia.web3doc.top/introduction.html)规则声明`defineStore`函数并导出为`default`即可
+
+示例：
+```
+import { filterAsyncRoutes } from ''@/utils/permission'';
+import useUserStore from ''./user'';
+import { constantRoutes, asyncRoutes } from ''@/router'';
+import { RouteRecordRaw } from ''vue-router'';
+
+export default defineStore(''route'', {
+  state: () => ({
+    addRoutes: [] as RouteRecordRaw[],
+    noCacheFullPath: [] as Array<string | RegExp>,
+  }),
+  getters: {
+    routes: (state) => constantRoutes.concat(state.addRoutes),
+  },
+  actions: {
+    generateRoutes() {
+      if (useUserStore().rules) {
+        this.addRoutes = markRaw(filterAsyncRoutes(asyncRoutes));
+      }
+      return this.addRoutes;
+    },
+    setNoCache(fullPath: string) {
+      if (!this.noCacheFullPath.includes(fullPath)) {
+        this.noCacheFullPath.push(fullPath);
+      }
+    },
+    removeNoCache(fullPath: string) {
+      const index = this.noCacheFullPath.indexOf(fullPath);
+      if (index > -1) {
+        this.noCacheFullPath.splice(index, 1);
+      }
+    },
+  },
+});
+
+```
+## 导出语句自动生成
+- 在`@/store/modules`文件夹下符合`[''**/*.{ts,js}'', ''*.{ts,js}'']` `glob`规则的文件会在`@/store/module.ts`文件中自动创建对应导出语句
+
+::: tip 说明
+此功能基于[unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)插件实现,对应配置位于`vite.config.ts`中
+:::
+```
+//当前文件由vite-plugin-autogeneration-import-file自动生成
+export { default as useGlobalStore } from "./modules/global"
+export { default as useRouteStore } from "./modules/route"
+export { default as useSettingStore } from "./modules/setting"
+export { default as useUserStore } from "./modules/user"
+//code
+```
+- `@/store/index.ts`文件对`@/store/module.ts`文件进行了二次导出
+```
+export * from ''./module'';
+```
+## 使用store
+直接导入后使用即可,具体规则请参考[Pinia](https://pinia.web3doc.top/introduction.html)文档
+```
+import { useUserStore } from ''@/store'';
+const userStore = useUserStore();
+```', '', '694102380874039296', 148, 149, '', '604612615536115712', '604612615536115712', '2026-03-31 11:37:48.023+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102385882038272', '前台文档', NULL, 2, 1, 98, '# 前台文档
+前台前端模板，与后台模板规则一致，只是去除了多语言和权限校验，增加了服务端渲染支持。
+详细说明请参考[后台文档](/client/admin/guide/)
+## 目录结构
+根目录为`view/index`
+```
+├── dist 打包文件夹
+│   ├── mock mock文件夹
+│   ├── plugins vite插件
+│   ├── public 公共静态资源目录
+│   ├── src  主目录
+│   │   ├── api 接口文件
+│   │   ├── assets 资源文件
+│   │   │   └── images 项目存放图片的文件夹
+│   │   ├── components 公共组件（里面的组件会自动引入）
+│   │   ├── config 配置文件夹
+│   │   │   ├── index.ts 配置入口文件
+│   │   │   └── login.ts  登录配置
+│   │   ├── dict  字典
+│   │   ├── directives 指令（里面的指令会自动引入）
+│   │   ├── event 事件
+│   |   ├── hooks 公共hooks
+│   │   ├── icons 图标
+│   │   │   ├── svg  svg图标文件夹（放入此文件夹的svg会被自动注册图标组件）
+│   │   │   └── index.ts 图标自动注册入口文件
+│   │   ├── layout 布局文件
+│   │   ├── router  路由配置
+│   │   │   ├── guard 路由全局守卫
+│   │   │   └── routes 动态路由文件夹
+│   │   ├── store  pinia文件夹
+│   |   ├── styles 样式文件 
+│   │   ├── utils  工具类
+│   │   ├── views  页面
+│   │   ├── entry-client.ts 客户端渲染入口文件
+│   │   ├── entry-server.ts 服务端渲染入口文件
+│   │   └── main.ts 入口文件
+│   ├── template自动生成模板
+│   ├── types  类型文件
+└── └── vite.config.ts vite配置文件
+```
+## 注意事项
+开发需寻遵循以下事项，以兼容服务端渲染特性
+
+- 如需使用window对象需增加服务端渲染判断
+```
+if (!import.meta.env.SSR) {
+  //下面代码仅在客户端执行
+  window.addEventListener(''resize'', () => mitter.emit(event.RESIZE));
+}
+
+```
+
+- request请求需在setup顶层创建，以规避服务端渲染“跨请求状态污染”
+```
+//login.vue
+<script setup lang="ts" name="Login">
+//...
+import {  loginCaptchaApi } from ''@/api/login'';
+const { data: captchaObj, runAsync: getCaptchRun } = loginCaptchaApi();
+const getCaptch = async () => {
+  await getCaptchRun();
+  //...
+};
+await getCaptch();
+//...
+</script>
+
+```
+- 如在组件外发送请求需透传app给request方法，
+```
+//login.ts
+export function loginApi<T extends boolean = true>(returnAxios: T = true as T, app?:App) {
+  return request<LoginResult, [LoginParams], T>(
+    (params) => ({
+      url: ''login/login'',
+      method: ''post'',
+      data: params,
+    }),
+    {},
+    returnAxios,
+    app,
+  );
+}
+```
+```
+ // userStore
+  login: async function (app:App, params: LoginParams) {
+    //...
+    const res = await loginApi(true,app)(params);
+    //...
+  },
+```
+```
+//login.vue
+const _this = getCurrentInstance();
+const submit = async () => {
+  //...
+  await userStore.login(_this!.appContext.app,loginParams);
+};
+//...
+```
+- 请求直接，在setp 顶层await否则服务端渲染期间无法获取到数据。
+
+- 如需在组件外创建store，需传入pinia
+```
+//request.ts
+
+export function request<R, P extends unknown[] = [], T = boolean>(
+  axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>,
+  options?: RequestOptions<R, P>,
+  returnAxios?: T,
+  app?: App,
+) {
+//...
+ store = app?.config.globalProperties.$pinia;
+ const userStore = useUserStore(store);
+//...
+}
+
+```
+## 路由声明
+
+前台项目路由声明在`src/routes`文件夹下，src/routes文件夹下的`.ts`会自动引入加载，不经过权限校验。
+```
+//src/router/routes/002-demo.ts
+import Layout from ''@/layout/default/index.vue'';
+import { concatObjectValue } from ''@/utils/helper'';
+import { RouteRecordRaw } from ''vue-router'';
+export const routes: RouteRecordRaw[] = [
+  {
+    path: ''/demo'',
+    redirect: ''/demo/1'',
+    component: Layout,
+    children: concatObjectValue<RouteRecordRaw>(import.meta.glob(''./demo/*.ts'', { eager: true, import: ''routes'' })),
+    meta: { title: ''演示菜单'' },
+  },
+];
+
+```', '', '694102378021912576', 182, 183, '', '604612615536115712', '604612615536115712', '2026-03-31 13:44:11.597+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102379116625920', '介绍', NULL, 2, 1, 98, '# 后台文档
+
+## 简介 
+后台前端模板，基于vue3、vite、 pinia、 elment-plus构建，如需仅使用纯前端模板可以去[Me-admin template](https://github.com/meadmin-cn/meadmin-template) clone，纯前端模板文档[https://www.cn/meadmin-template-doc/](https://www.cn/meadmin-template-doc/)。
+
+
+## 前端特性
+ - **基于vue3、vite、pinia、elment-plus、vue-request@next**
+ - **基于typescript** 应用级JavaScript 的语言
+ - **可配置主题** 可配置主题色及主题模式
+ - **友好的国际化方案** 基于vue-i18n 支持按组件异步加载语言包。
+ - **自定义keepAlive缓存** 可根据key进行vue keep-alive,解决不同路由统一组件不能独立刷新缓存问题
+ - **权限** 内置完善的动态路由权限生成方案，按钮级权限。支持前端菜单和接口动态获取菜单两种模式
+ - **组件自动按需引入** 自动按需引入components下的组件定义,支持自定义引入位置和模式，真正的按需引入。
+ - **便捷的类型自动生成** 自动生成ts type 最大程度减少工作量
+ - **集成vxeTable** 功能最完善的国人开源vue table组件
+
+## vite插件推荐
+ 本项目中用到的vite插件，非常好用，如果能帮到您，请点个star
+- [vite-plugin-autogeneration-import-file](https://github.com/yuntian001/vite-plugin-autogeneration-import-file) 自动生成文件，用于type文件和引入文件的自动生成
+- [@yuntian001/vue-setup-extend](https://github.com/yuntian001/vue-setup-extend) 方便给vue `<script setup>` 标签语法设置自定义属性。
+- [unplugin-auto-import](https://github.com/antfu/unplugin-auto-import) 按需自动导入Vue、Vue Router、pinia等官方Api
+- [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components) 按需自动导入组件
+- [vite-svg-loader](https://github.com/jpkleemans/vite-svg-loader) Vite插件加载SVG文件作为Vue组件，使用SVGO进行优化
+
+
+## 浏览器兼容性
+- 由于 Vue 3 不再支持 IE11，本项目不支持 IE 浏览器。
+- 如果需要配置兼容性可参考[如何配置浏览器兼容性](/client/admin/other/question.md#如何配置浏览器兼容性)
+
+| ![](https://cdn.jsdelivr.net/npm/@browser-logos/edge/edge_32x32.png) |![](https://cdn.jsdelivr.net/npm/@browser-logos/firefox/firefox_32x32.png) | ![](https://cdn.jsdelivr.net/npm/@browser-logos/chrome/chrome_32x32.png) | ![](https://cdn.jsdelivr.net/npm/@browser-logos/safari/safari_32x32.png)|
+| --- | --- | --- | --- |
+| 88 | 78 | 87 | 13 |', '', '694102378554589184', 132, 133, '', '604612615536115712', '604612615536115712', '2026-03-31 11:22:42.963+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102378554589184', '指南', NULL, 1, 1, 99, '', '', '694102378286153728', 129, 144, '', '604612615536115712', '604612615536115712', '2026-03-31 11:30:05.588+08', '2026-03-31 19:37:41.701+08', NULL, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102385609408512', '数字动画', NULL, 2, 1, 90, '
+# 数字动画
+
+组件名`MeNumber`，数字动画组件，基于[vueuse usetransition](https://vueuse.org/core/usetransition/#usetransition)实现。
+
+!!! warning 注意
+- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。
+- 当前组件位置`@/components/meNumber.vue`
+!!!
+
+## 组件props
+
+| props      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| start      | number | 数字动画起始值 默认为0|否|
+| end      | number \| [number(结束数字),string(前缀),string(后缀)] | 数字动画结束值 |是|
+| delay    | number | 开始动画等待的毫秒数默认为0 |否|
+| disabled | boolean | 禁用动画(默认为false) |否|
+| duration | number | 动画持续时间毫秒数默认为1000 | 否|
+| transition|  EasingFunction \| keyof typeof TransitionPresets  | 动画类型默认为`''easeOutExpo''`，详细说明请参考[vueuse文档](https://vueuse.org/core/usetransition/#type-declarations) | 否 |
+|format| (number: number, decimals: number) => string | number |数字格式化函数,number为当前展示数字，decimals为end的小数位数 默认值`(number: number, decimals: number) => formatNumber({ truncate: decimals, padRight: decimals })(number)`，每千分位一个`,`隔开  参考[format-number文档](https://www.npmjs.com/package/format-number)|否|
+
+## 组件事件
+
+| emit      | 格式 |说明|
+| ----------- | ----------- | ----------- |
+| onFinished | () => void | 转换完成后执行。|
+| onStarted | () => void | 转换开始后执行。|
+
+## 示例
+
+```vue
+<me-number :end="103256.25"></me-number>
+```
+', '', '694102382786641920', 178, 179, '', '604612615536115712', '604612615536115712', '2026-03-31 12:25:43.166+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694039893348712448', '表格', NULL, 2, 1, 94, '# vxeTable表格
+组件名`MeVxeTable`，对[vxe table](https://vxetable.cn/)组件的封装，在保留原有功能的情况下，扩展了顶部工具栏、分页功能，并且保留`VxeTable`的 `props` 和 `emit` `type`提示。
+
+!!! warning 注意
+- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。
+- 当前组件位置`@/components/meVxeTable`。
+- 组件对应的全局语言包文件为`src/locales/lang/en/meVxeTable.ts` `src/locales/lang/zh-cn/meVxeTable.ts`。
+- 所有的非`props` `attr`不会设置到根元素,都会透传到 `VxeTable`上。
+!!!
+
+## 组件props
+
+| props      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| name | string | 名称默认值为meVxeTable,会做为打印的表头和导出的文件名 | 否|
+| meClass|string | string[]| 根元素上的class | 否 |
+| exportMenu | `{label: string;filename?: string;handle: (vxeTable: VxeTableInstance, filename: string) => void \| ''csv'' \| ''html'' \| ''xml'' \| ''txt''}[]` | 导出菜单默认值为 `[{ label: ''csv'', handle: ''csv'' },{ label: ''html'', handle: ''html'' },{ label: ''xml'', handle: ''xml'' },{ label: ''txt'', handle: ''txt'' }]` | 否|
+| print | boolean\|VxeTablePropTypes.PrintConfig | 打印配置，默认为{}，如果不想展示传入false | 否 |
+| customColumn | boolean |自定义列，默认为true | 否 |
+| defaultShowSearch | boolean | 默认是否展示 筛选 默认值为false | 否 | 
+| toolbar | boolean | 是否展示工具栏 默认为true,这里的工具栏是自行封装的工具栏非vxeToolbar | 否 |
+| quickSearch | string | 快捷搜索关键词 需要v-model绑定 | 否 |
+| quickSearchPlaceholder | string | 快捷搜索框placeholder,默认为快捷搜索 | 否 |
+| paginationOptions | object  | 分页配置,详情见下文`props.paginationOptions` | 否 |
+| autoHeight | boolean  | 根据父级自适应高度（默认为true，如果父级高度不固定请设置为false） | 否 |
+| vxeTable的属性 | - | 支持vxeTable的所有属性，请参考[vxeTable文档](https://vxetable.cn/#/table/api)| - | 
+
+| props.exportMenu      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| label | string | 导出选项名称| 是 |
+| filename | string | 导出文件名，为空时使用`props.name` | 否 |
+| handle | (vxeTable: VxeTableInstance, filename: string) => void \| ''csv'' \| ''html'' \| ''xml'' \| ''txt'' | 导出执行函数/受支持的导出code | 是 |
+
+|props.paginationOptions| 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| noAutoLayout | boolean | 默认为手机模式时使用最小layout,设置为true关闭此配置 | 否 |
+| change | (page: number, size: number) => void | page或size改变时触发 | 是 |
+| pagination的属性 | - | 支持element-plus  Pagination组件 的所有属性，请参考[pagination文档](https://element-plus.gitee.io/zh-CN/component/pagination.html#%E5%B1%9E%E6%80%A7) | - |
+| pagination的事件 | function |  支持element-plus  Pagination组件 的所有事件，请参考[pagination文档](https://element-plus.gitee.io/zh-CN/component/pagination.html#%E4%BA%8B%E4%BB%B6)(需要在事件名前面加上on前缀并使用驼峰写法如`prev-click`事件属性名为`onPrevClick`)  | - | 
+
+## 组件事件
+
+| emit      | 格式 |说明|
+| ----------- | ----------- | ----------- |
+| quickSearch | (searchText:string) => void | 快捷搜索|
+| refresh | () => void | 刷新按钮被点击时触发 |
+| add | () => void | 新增按钮被点击时触发 |
+| vxeTable的事件 | - | 支持vxeTable的所有事件，请参考[vxeTable文档](https://vxetable.cn/#/table/api)| - |
+
+## 组件插槽
+
+| 插槽名  |	说明  |	子标签 |
+| ----------- | ----------- | ----------- |
+| - | 和[vxeTable](https://vxetable.cn/#/table/base/basic)对应插槽功能一致。自定义默认内容 | vxe-column |
+| empty	| 和[vxeTable](https://vxetable.cn/#/table/api)对应插槽功能一致。当数据为空时自定义的内容|	— |
+| search | 筛选项，当点击工具栏筛选按钮时会控制其显隐 | — |
+| buttons | 工具栏左侧扩展操作按钮 | — |
+| tools | 工具栏右侧扩展菜单 | — |
+| toolsButton|  工具栏右侧扩展按钮 | — |
+
+## 组件属性/方法
+| 名称  |	类型  |	说明 |
+| ----------- | ----------- | ----------- |
+| vxeTableRef | VxeTableInstance | vxeTable的ref对象 |
+|searchText |string | 快捷搜索关键字 |
+
+## 示例
+
+```vue
+<template>
+  <el-card shadow="never" class="vxe-table-demo">
+    <me-vxe-table
+      ref="meVxeTableRef"
+      v-model:quick-search="searchForm.search"
+      :loading="loading"
+      :data="data?.list"
+      :footer-method="footerMethod"
+      :edit-config="{ trigger: ''click'', mode: ''row'', showStatus: true }"
+      :print="print"
+      :pagination-options="paginationOptions"
+      stripe
+      height="600px"
+      me-class="table"
+      border
+      show-overflow
+      show-footer
+      keep-source
+      class="my-xtable-element"
+      @refresh="getData"
+      @quick-search="getData(1)"
+    >
+      <template #search>
+        <el-form ref="searchRef" :model="searchForm" inline label-width="100px" class="search">
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="searchForm.name" />
+          </el-form-item>
+          <el-form-item label="类型" prop="type">
+            <el-select v-model="searchForm.type" clearable>
+              <el-option label="类型1" value="1" />
+              <el-option label="类型2" value="2" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="日期" prop="date">
+            <el-date-picker v-model="searchForm.date" type="date" />
+          </el-form-item>
+          <el-form-item label="地址" prop="address">
+            <el-input v-model="searchForm.address" />
+          </el-form-item>
+          <el-form-item label="邮政编码" prop="zip">
+            <el-input v-model="searchForm.zip" />
+          </el-form-item>
+          <el-form-item label=" ">
+            <el-button type="primary" @click="getData(1)">查询</el-button>
+            <el-button @click="()=>($refs.searchRef as FormInstance).resetFields()">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </template>
+      <template #buttons>
+        <el-button @click="() => (print = print ? false : {})">打印显/隐</el-button>
+        <el-button @click="xTable!.clearCheckboxRow()">全选清空</el-button>
+      </template>
+      <vxe-column type="checkbox" width="60"></vxe-column>
+      <vxe-column type="seq" width="80">
+        <template #header>
+          <span>序号</span>
+          <i class="el-icon-question"></i>
+        </template>
+      </vxe-column>
+      <vxe-colgroup title="Group1">
+        <vxe-column field="name" title="ElInput" min-width="140" :edit-render="{}">
+          <template #edit="scope">
+            <el-input v-model="scope.row.name" @input="xTable!.updateStatus(scope)"></el-input>
+          </template>
+        </vxe-column>
+        <vxe-column field="role" title="ElAutocomplete" min-width="160" :edit-render="{}">
+          <template #edit="{ row }">
+            <el-autocomplete v-model="row.role" :fetch-suggestions="roleSearchEvent"></el-autocomplete>
+          </template>
+        </vxe-column>
+        <vxe-column field="age" title="ElInputNumber" width="160" :edit-render="{}">
+          <template #header="{ column }">
+            <span>{{ column.title }}</span>
+            <i class="el-icon-warning"></i>
+          </template>
+          <template #edit="{ row }">
+            <el-input-number v-model="row.age" :max="99" :min="18"></el-input-number>
+          </template>
+        </vxe-column>
+        <vxe-colgroup title="Group2">
+          <vxe-column field="sex" title="ElSelect" width="140" :edit-render="{}">
+            <template #edit="scope">
+              <el-select v-model="scope.row.sex" @change="xTable!.updateStatus(scope)">
+                <el-option
+                  v-for="item in demo1.sexList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+            <template #default="{ row }">{{ getSelectLabel(row.sex, demo1.sexList) }}</template>
+          </vxe-column>
+          <vxe-column field="sex1" title="ElSelect" width="180" :edit-render="{}">
+            <template #edit="scope">
+              <el-select v-model="scope.row.sex1" multiple>
+                <el-option
+                  v-for="item in demo1.sexList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+            <template #default="{ row }">{{ getSelectMultipleLabel(row.sex1, demo1.sexList) }}</template>
+          </vxe-column>
+          <vxe-column field="region" title="ElCascader" width="200" :edit-render="{}">
+            <template #edit="{ row }">
+              <el-cascader v-model="row.region" :options="demo1.regionList"></el-cascader>
+            </template>
+            <template #default="{ row }">{{ getCascaderLabel(row.region, demo1.regionList) }}</template>
+          </vxe-column>
+        </vxe-colgroup>
+      </vxe-colgroup>
+      <vxe-colgroup title="Group1">
+        <vxe-column field="date" title="ElDatePicker" width="200" :edit-render="{}">
+          <template #edit="{ row }">
+            <el-date-picker v-model="row.date" type="date" format="YYYY/MM/DD"></el-date-picker>
+          </template>
+          <template #default="{ row }">{{ formatDate(row.date, ''YYYY/MM/DD'') }}</template>
+        </vxe-column>
+        <vxe-column field="date1" title="ElDatePicker" width="220" :edit-render="{}">
+          <template #edit="{ row }">
+            <el-date-picker v-model="row.date1" type="datetime" format="YYYY-MM-DD HH:mm:ss"></el-date-picker>
+          </template>
+          <template #default="{ row }">{{ formatDate(row.date1, ''YYYY-MM-DD HH:mm:ss'') }}</template>
+        </vxe-column>
+        <vxe-column field="date2" title="ElTimePicker" width="200" :edit-render="{}">
+          <template #edit="{ row }">
+            <el-time-select
+              v-model="row.date2"
+              :picker-options="{ start: ''08:30'', step: ''00:15'', end: ''18:30'' }"
+            ></el-time-select>
+          </template>
+        </vxe-column>
+        <vxe-column field="color1" title="ElColorPicker" width="140" :edit-render="{}">
+          <template #edit="{ row }">
+            <el-color-picker v-model="row.color1"></el-color-picker>
+          </template>
+        </vxe-column>
+        <vxe-column field="rate" title="ElRate" width="200">
+          <template #default="{ row }">
+            <el-rate v-model="row.rate"></el-rate>
+          </template>
+        </vxe-column>
+        <vxe-column field="flag" title="ElSwitch" width="100">
+          <template #default="{ row }">
+            <el-switch v-model="row.flag"></el-switch>
+          </template>
+        </vxe-column>
+      </vxe-colgroup>
+    </me-vxe-table>
+  </el-card>
+</template>
+<script setup lang="ts" name="VxeTableDemo">
+import { VxeTablePropTypes } from ''vxe-table'';
+import XEUtils from ''xe-utils'';
+import { FormInstance } from ''element-plus'';
+import { listApi } from ''@/api/vxeTable'';
+const meVxeTableRef = ref<MeVxeTableInstance>();
+const xTable = computed(() => meVxeTableRef.value?.vxeTableRef);
+const restaurants = [
+  { value: ''Designer'', name: ''Designer'' },
+  { value: ''Develop'', name: ''Develop'' },
+  { value: ''Test'', name: ''Test'' },
+  { value: ''PM'', name: ''PM'' },
+];
+
+const demo1 = {
+  sexList: [
+    { value: ''1'', label: ''男'' },
+    { value: ''0'', label: ''女'' },
+  ],
+  regionList: [
+    {
+      label: ''北京'',
+      value: 1,
+      children: [
+        { value: 3, label: ''东城区'' },
+        { value: 4, label: ''西城区'' },
+      ],
+    },
+    {
+      label: ''上海'',
+      value: 21,
+      children: [
+        { value: 23, label: ''黄浦区'' },
+        { value: 24, label: ''卢湾区'' },
+      ],
+    },
+    {
+      label: ''广东'',
+      value: 42,
+      children: [
+        { value: 43, label: ''广州市'' },
+        { value: 67, label: ''深圳市'' },
+      ],
+    },
+  ],
+};
+
+const formatDate = (value: any, format: string) => {
+  return XEUtils.toDateString(value, format);
+};
+
+const getSelectLabel = (value: any, list: any[], valueProp = ''value'', labelField = ''label'') => {
+  const item = list.find((item) => item[valueProp] === value);
+  return item ? item[labelField] : null;
+};
+
+const getSelectMultipleLabel = (value: any[], list: any[], valueProp = ''value'', labelField = ''label'') => {
+  return value
+    .map((val) => {
+      const item = list.find((item) => item[valueProp] === val);
+      return item ? item[labelField] : null;
+    })
+    .join('', '');
+};
+
+const getCascaderLabel = (value: any, list: any[]) => {
+  const values: any[] = value || [];
+  const labels: any[] = [];
+  const matchCascaderData = function (index: any, list: any[]) {
+    const val = values[ index ];
+    if (list && values.length > index) {
+      list.forEach((item) => {
+        if (item.value === val) {
+          labels.push(item.label);
+          matchCascaderData(++index, item.children);
+        }
+      });
+    }
+  };
+  matchCascaderData(0, list);
+  return labels.join('' / '');
+};
+
+const roleSearchEvent = (queryString: string, cb: (params: any) => void) => {
+  const results = queryString
+    ? restaurants.filter((item) => item.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+    : restaurants;
+  setTimeout(() => {
+    cb(results);
+  }, 500 * Math.random());
+};
+
+const meanNum = (list: any[], field: string) => {
+  let count = 0;
+  list.forEach((item) => {
+    count += Number(item[field]);
+  });
+  return count / list.length;
+};
+
+const sumNum = (list: any[], field: string) => {
+  let count = 0;
+  list.forEach((item) => {
+    count += Number(item[field]);
+  });
+  return count;
+};
+
+const footerMethod: VxeTablePropTypes.FooterMethod = ({ columns, data }) => {
+  return [
+    columns.map((column, columnIndex) => {
+      if (columnIndex === 0) {
+        return ''平均'';
+      }
+      if ([''age'', ''rate''].includes(column.property)) {
+        return meanNum(data, column.property);
+      }
+      return null;
+    }),
+    columns.map((column: any, columnIndex: number) => {
+      if (columnIndex === 0) {
+        return ''和值'';
+      }
+      if ([''age'', ''rate''].includes(column.property)) {
+        return sumNum(data, column.property);
+      }
+      return null;
+    }),
+  ];
+};
+
+const searchForm = reactive({
+  name: '''',
+  search: '''',
+  type: undefined,
+  date: '''',
+  address: '''',
+  zip: '''',
+  page: 1,
+  size: 10,
+});
+const { loading, run, data } = listApi({ defaultParams: [searchForm], manual: false });
+const getData = (page = searchForm.page, size = searchForm.size) => {
+  run(Object.assign(searchForm, { page, size }));
+};
+const paginationOptions = reactive({
+  currentPage: computed(() => searchForm.page),
+  pageSize: computed(() => searchForm.size),
+  total: computed(() => data.value?.count ?? 0),
+  change: getData,
+});
+const print = ref({} as object | boolean);
+</script>
+<style lang="scss" scoped>
+.vxe-table-demo {
+  .search {
+    :deep(.el-form-item) {
+      width: 319px;
+    }
+  }
+}
+</style>
+```', '', '694038800321478656', 72, 73, '', '604612615536115712', '604612615536115712', '2026-03-31 12:26:45.213+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694025634292170752', '指南', NULL, 1, 1, 99, '', '', '694017222984597504', 31, 46, '', '604612615536115712', '604612615536115712', '2026-03-31 11:30:05.588+08', '2026-03-31 13:52:23.732+08', NULL, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694038800321478656', '组件', NULL, 1, 1, 97, '', '', '694017222984597504', 61, 82, '', '604612615536115712', '604612615536115712', '2026-03-31 12:22:24.614+08', '2026-03-31 13:52:23.732+08', NULL, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694102387345850368', 'Github', NULL, 2, 1, 98, '', 'https://github.com/meadmin-cn/meadmin', '694102386800590848', 192, 193, '', '604612615536115712', '604612615536115712', '2026-03-31 13:51:36.442+08', '2026-03-31 19:37:41.701+08', 1, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102376818147328', '校验和swagger', NULL, 2, 1, 95, '# 校验和Swagger文档
+## 校验
+我们经常要在方法调用时执行一些类型检查，参数转换的操作，本项目利用dto文件结合`Midway`的`@midwayjs/validate@3`组件，提供了一种简单的能力来快速检查参数的类型，这个能力来源于 `joi` 。
+
+### 背景
+最常用参数校验的地方是 控制器（Controller），同时你也可以在任意的 Class 中使用这个能力。
+
+我们以控制器（Controller）中使用为例，还是那个 user。
+普通情况下，我们从 body 上拿到所有 Post 结果，并进行一些校验。
+```
+// src/interface.ts
+export interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  age: number;
+}
+
+// src/controller/home.ts
+import { Controller, Get, Provide } from ''@midwayjs/core'';
+
+@Controller(''/api/user'')
+export class HomeController {
+  @Post(''/'')
+  async updateUser(@Body() user: User) {
+    if (!user.id || typeof user.id !== ''number'') {
+      throw new Error(''id error'');
+    }
+
+    if (user.age <= 30) {
+      throw new Error(''age not match'');
+    }
+    // xxx
+  }
+}
+```
+如果每个方法都需要这么校验，会非常的繁琐。
+
+针对这种情况， 配合 `@Validate` 和 `@Rule` 装饰器，用来 快速定义校验的规则，帮助用户 减少这些重复的代码。
+### 创建校验文件
+本项目校验文件为dto 类,统一放在模块的`dto`文件夹
+```
+//src/app/admin/dto/loginParam.dto.ts
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { RuleType } from ''@midwayjs/validate'';
+
+export class LoginParamDto {
+  @ApiPropertyRule({ description: ''用户名'', rule: RuleType.string().max(10).min(1).required() })
+  username: string;
+  @ApiPropertyRule({ description: ''密码'', rule: RuleType.string().required() })
+  password: string;
+  @ApiPropertyRule({ description: ''验证码标识'', rule: RuleType.string().required()})
+  captchaId: string;
+  @ApiPropertyRule({ description: ''验证码'', rule: RuleType.string().required() })
+  captcha: string;
+}
+
+```
+由于这个类属于一个 PlainObject ，也不需要被依赖注入管理，我们不需要提供 @Provide 装饰器。
+
+这个 `LoginParamDto` Class 提供了三个属性和他们对应的校验规则。
+
+- username 一个必填的字符串类型,长度在1-10之间
+
+- password 一个必填的字符串类型
+
+- captchaId 一个必填的字符串类型
+
+- captcha 一个必填的字符串类型
+
+不同于`midway`用`@Rule`装饰器修饰需要被校验的属性，本项目声明了`@ApiPropertyRule`装饰器，它封装了`swagger`的`@ApiProperty`装饰器和`validate`的`Rule`装饰器，它的参数为rule,接受一个 RuleType 对象提供的校验规则的链式方法。
+`@ApiPropertyRule` 针对日常应用还做了以下处理
+- 将 空串视为空而不是无效值,否则空串会被 stripUnknown 配置 视为无效值处理掉
+- 如果不是必填值，允许null
+- 自动将 `RuleType` 的 required规则赋值给`@ApiProperty`装饰器
+- 自动将maximum、minimum、minLength、maxLength、enmu赋值给`RuleType`
+- 自动将`description`添加为 `RuleType`的`label`用于多语言
+
+### 使用校验文件
+定义完类型之后，就可以直接在业务代码中使用了。
+
+```
+import { ApiOperationResponse } from ''@/decorators/swagger.js'';
+import { Body, Controller, Inject, Post } from ''@midwayjs/core'';
+import { Context } from ''@midwayjs/koa'';
+import { LoginParamDto } from ''../dto/loginParam.dto.js'';
+import { LoginResultDto } from ''../dto/loginResult.dto.js'';
+import { LoginService } from ''../service/login.serveice.js'';
+import { BaseController } from ''./base.controller.js'';
+
+@Controller(''login'')
+export class LoginController extends BaseController {
+  @Inject()
+  loginService: LoginService;
+
+  @Inject()
+  ctx: Context;
+
+  @Post(''/login'')
+  @ApiOperationResponse({
+    responseType: LoginResultDto,
+    summary: ''登录'',
+  })
+  async login(@Body() param: LoginParamDto) {
+    return this.success(await this.loginService.login(param.username, param.password, this.ctx));
+  }
+}
+```
+### 从原有 DTO 创建新 DTO
+有时候，我们会希望从某个 DTO 中获取一部分属性，变成一个新的 DTO 类。
+
+本项目 提供了 `PickDtoType` `OmitDtoType` `PartialType` `RequiredType` `IntersectionType` 五个方法根据现有的的 DTO 类型创建新的 DTO。请注意这些函数从`@/helper/dto.js`导出。
+
+PickDto 用于从现有的 DTO 中获取一些属性，变成新的 DTO，而 OmitDto 用于将其中某些属性剔除，PartialType  将属性设置为可选，RequiredType 将属性设置为必填， IntersectionType 将两种类型合并为一种新类型,结合了两种类型的所有属性。比如：
+```typescript
+import { OmitDtoType } from ''@/helper/dto.js'';
+import { InferAttributesLoose } from ''@/types/entity.js'';
+import { File } from ''../../../entities/file.entity.js'';
+
+//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效
+export class FileCreateDto extends OmitDtoType(
+  File as new () => InferAttributesLoose<File>, //只保留声明属性
+  [''id'', ''createdAt'', ''updatedAt'', ''url'', ''createdAdminId'', ''updatedAdminId''], //排除自动创建的属性
+) {}
+```
+### 配置
+配置文件在src/config/config.default.ts中，默认开启了以下配置
+```
+  validate: {
+    validationOptions: {
+      allowUnknown: false, // 全局生效 允许未定义的字段
+      convert: true, // 当为true时，尝试将值转换为所需的类型（例如，将字符串转换为数字.
+      stripUnknown: true, // 全局生效,移除多余的字段
+    },
+  },
+```
+更多说明请参考[midway](https://midwayjs.org/docs/extensions/validate)和[joi](https://joi.dev/api/)文档
+## swagger文档
+swagger 基于`@midwayjs/swagger@3 `只做了`@ApiPropertyRule`的封装，`@ApiPropertyRule`可接受`@ApiProperty`的全部参数
+
+### 开启组件
+在 configuration.ts 中增加组件。
+```
+import { Configuration } from ''@midwayjs/core'';
+import * as swagger from ''@midwayjs/swagger'';
+
+@Configuration({
+  imports: [
+    // ...
+    swagger
+  ]
+})
+export class MainConfiguration {
+
+}
+```
+可以配置启用的环境，比如下面的代码指的是 只在 local 环境下启用。本项目已默认在local和dev环境下开启
+```
+import { Configuration } from ''@midwayjs/core'';
+import * as swagger from ''@midwayjs/swagger'';
+
+@Configuration({
+  imports: [
+    // ...
+    {
+      component: swagger,
+      enabledEnvironment: [''local'']
+    }
+  ]
+})
+export class MainConfiguration {
+
+}
+```
+然后启动项目，访问地址：
+
+UI: [http://127.0.0.1:7001/swagger-ui/index.html](http://127.0.0.1:7001/swagger-ui/index.html)
+
+JSON: [http://127.0.0.1:7001/swagger-ui/index.json](http://127.0.0.1:7001/swagger-ui/index.json)
+路径可以通过 swaggerPath 参数配置。
+
+### 数据类型
+自动类型提取
+Swagger 组件会识别各个 @Controller 中每个路由方法的 @Body()、@Query()、@Param() 装饰器，提取路由方法参数和类型。
+
+比如下面的代码：
+```typescript
+@Get(''/'')
+async home(
+  @Query(''uid'') uid: number,
+  @Query(''tid'') tid: string,
+  @Query(''isBoolean'') isBoolean: boolean,
+) {
+    // ...
+}
+```
+会自动提取相关参数生成文档。
+### Schema
+本项目推荐使用dto文件参数使用对象，并使用定义好的类作为类型，这个时候 swagger 组件也能自动识别，同时也能和普通的类型进行组合识别。
+
+比如下面的代码：
+```
+@Post(''/:id'', { summary: ''test''})
+async create(@Body() LoginParamDto: LoginParamDto, @Param(''id'') id: number) {
+  // ...
+}
+```
+CreateCatDto 类型的定义如下，我们使用 ApiPropertyRule 将其中的每个属性都进行了定义。
+```
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { RuleType } from ''@midwayjs/validate'';
+
+export class LoginParamDto {
+  @ApiPropertyRule({ description: ''用户名'', rule: RuleType.string().max(10).min(1).required().empty('''') })
+  username: string;
+  @ApiPropertyRule({ description: ''密码'', rule: RuleType.string().required().empty('''') })
+  password: string;
+  @ApiPropertyRule({ description: ''验证码标识'', rule: RuleType.string().required().empty('''') })
+  captchaId: string;
+  @ApiPropertyRule({ description: ''验证码'', rule: RuleType.string().required().empty('''') })
+  captcha: string;
+}
+
+```
+详细的类型参考请查阅 [midway文档](https://midwayjs.org/docs/extensions/swagger)
+
+### 循环依赖
+当类之间具有循环依赖关系时，请使用惰性函数提供类型信息。
+
+比如 type 字段的循环。
+```
+class Photo {
+  // ...
+  @ApiProperty({
+    type: () => Album
+  })
+  album: Album;
+}
+class Album {
+  // ...
+  @ApiProperty({
+    type: () => Photo
+  })
+  photo: Photo;
+}
+```
+
+getSchemaPath 也可以使用。
+```
+export class CreateCatDto {
+  // ...
+
+  @ApiProperty({
+    type: ''array'',
+    items: {
+      $ref: () => getSchemaPath(Cat)
+    }
+  })
+  relatedList: Cat[];
+}
+```
+### 请求 Response
+本项目封装了`@ApiOperationResponse({...})` 来自定义请求 Response,单条数据获取传入`responseType`参数，分页列表获取传入`responsePage`参数。
+```
+@Get(''/:id'')
+@ApiOperationResponse({
+  responseType: User,
+  summary: ''用户信息'',
+})
+findOne(@Param(''id'') id: string, @Query(''test'') test: any): Cat {
+  return this.catsService.findOne(+id);
+}
+```
+```
+//接口方法必须加async 方法的接口装饰器值必须/开头
+@Post(''/'')
+@ApiOperationResponse({
+  responsePage: User,
+  summary: ''获取用户列表'',
+})
+@AdminPermission(''UserList'')
+async list(@Body() queryDto: UserQueryDto) {
+  return this.success(await this.userService.list(queryDto));
+}
+```', '', '694102375132037120', 118, 119, '', '604612615536115712', '604612615536115712', '2026-03-31 09:04:25.19+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', 'validateSwagger');
+INSERT INTO aon_doc VALUES ('694102377707339776', '其他', NULL, 2, 1, 92, '# 其他
+
+## 权限校验
+后台`admin`接口权限校验，在`controller`使用`@AdminPermission`装饰器。
+```
+import { AdminPermission, ApiOperationResponse } from ''@/decorators/index.js'';
+import { User } from ''@/entities/user.entity.js'';
+import { Body, Controller, Inject, Post } from ''@midwayjs/core'';
+import { UserCreateDto } from ''../dto/userCreate.dto.js'';
+import { UserService } from ''../service/user.service.js'';
+import { BaseController } from ''./base.controller.js'';
+
+/**
+ * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。
+ * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址
+ */
+@Controller(''user'')
+export class UserController extends BaseController {
+  @Inject()
+  userService: UserService;
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post(''/add'')
+  @ApiOperationResponse({
+    responseType: User,
+    summary: ''添加用户信息'',
+  })
+  @AdminPermission(''UserAdd'')
+  async add(@Body() createDto: UserCreateDto) {
+    return this.success(await this.userService.create(createDto));
+  }
+}
+```
+
+前台`index`接口权限校验，在`controller`使用`@IndexPermission`装饰器。前台登录仅校验是否登录，未做过多的权限封装。
+```
+import { ApiOperationResponse, IndexPermission } from ''@/decorators/index.js'';
+import { Controller, Get, Inject } from ''@midwayjs/core'';
+import { User } from ''../../../entities/user.entity.js'';
+import { UserService } from ''../service/user.service.js'';
+import { BaseController } from ''./base.controller.js'';
+
+/**
+ * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
+ * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址
+ */
+@Controller(''user'')
+export class UserController extends BaseController {
+  @Inject()
+  userService: UserService;
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Get(''/info'')
+  @ApiOperationResponse({
+    responseType: User,
+    summary: ''获取当前用户的信息'',
+  })
+  @IndexPermission()
+  async info() {
+    const entity = await this.userService.findOne(this.ctx.userInfo.id);
+    return this.success(entity);
+  }
+}
+
+```
+
+## 登录校验
+后台`admin`接口放开登录校验可在`src/config/config.default.ts`中配置。
+```
+admin: {
+    login: {
+      secret: ''desec2ec3=ase$&e1#edad#$%%'', //token加密平台标识
+      expiresIn: 3600000 * 6, //token过期时间ms
+      renewal: 60000 * 10, //续期时间ms
+      cacheKey: ''admin'', //token使用的缓存key对应cacheManager.clients
+    },
+    auth: {
+      noLoginUrl: [`/api/admin/login/login`, `/api/admin/login/captcha`, new RegExp(''/api/admin/file/get/.+'')] as Array<string | RegExp>, //无需登录地址，支持字符串或正则
+    },
+  },
+```
+## 配置和环境变量
+本项目配置文件在`src/config/config.default.ts`中，并根据运行环境加载对应的.env文件。
+
+如`dev`命令`cross-env NODE_ENV=local  npx me-devBootstrap --cleanOutDir --watch --run @midwayjs/mock/app`会依次加载 `.env``.env.local`文件
+
+`start` 命令`cross-env NODE_ENV=prod node ./bootstrap.js`会依次加载 `.env``.env.prod`文件
+更多说明请参考[midway 文档](https://midwayjs.org/docs/env_config)。
+
+`.env`环境变量中以`VIEW_ADMIN_`开头和以`VIEW_INDEX_`开头的环境变量可分别被 `admin`及`index`前台项目读取到。
+
+## 多语言
+本项目的多语言目录在`src/locales`中,配置方式如下：
+```
+//src/config/config.default.ts
+i18n: {
+  // 默认语言  "zh-cn"
+  defaultLocale: ''zh-cn'',
+  // used to alter the behaviour of missing keys
+  missingKeyFn: function (locale, value) {
+    return value;
+  },
+
+  // 把你的翻译文本放到这里
+  localeTable: {
+    ''zh-cn'': {
+      validate: {
+        ''string.mobile'': ''{{#label}} 必须是一个正确的手机号'',
+      },
+    },
+    ''en'': {
+      default: await import(''../locales/en.json'', { with: { type: ''json'' } }),
+      validate: await import(''@midwayjs/validate/locales/en_US.json'', { with: { type: ''json'' } }),
+    },
+  },
+
+  missingKeyHandler: (message: string, options?: TranslateOptions) => (options?.args ? formatText(message, options.args) : message),
+},
+```
+更多说明请参考[midway文档](https://midwayjs.org/docs/extensions/i18n)
+## 日志
+调试模式及部署模式，都将日志目录改为本地的 ${app.appDir}/logs/ 目录下
+```
+//src/config/config.default.ts
+midwayLogger: {
+    default: {
+      transports: {
+        file: {
+          dir: resolve(import.meta.dirname, ''../../logs''),
+        },
+        error: {
+          dir: resolve(import.meta.dirname, ''../../logs''),
+        },
+      },
+    },
+    // ...
+  },
+```
+## 缓存
+集成@midwayjs/redis@3和@midwayjs/cache-manager@3组件，实现基于redis的缓存支持
+```
+//src/config/config.default.ts
+  redis: {
+    clients: {
+      cache: {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
+        password: process.env.REDIS_PASS,
+        db: 0,
+      },
+    },
+  },
+  cacheManager: {
+    //缓存配置
+    clients: {
+      admin: {
+        store: createRedisStore(''cache''),
+      },
+      index: {
+        store: createRedisStore(''cache''),
+      },
+    },
+  },
+```
+## 静态文件映射
+集成 @midwayjs/static-file@3组件，public文件夹下的资源都可以使用/文件名直接访问
+```
+//src/config/config.default.ts
+  staticFile: {
+    dirs: {
+      default: {
+        prefix: ''/'',
+        dir: ''public'',
+      },
+      viewAdmin: {
+        prefix: ''/html/admin/'',
+        dir: ''view/admin/dist'',
+      },
+      viewIndex: {
+        prefix: ''/html/index/'',
+        dir: ''view/index/dist'',
+      },
+    },
+  },
+```
+
+## 更多
+依赖注入、生命周期、Cookies 和 Session、内置服务、Web 路由表、现有装饰器索引、框架错误码、设计模式等更多特性请参考[midway文档](https://midwayjs.org/docs/container)', '', '694102375132037120', 124, 125, '', '604612615536115712', '604612615536115712', '2026-03-31 09:07:37.313+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', 'other');
+INSERT INTO aon_doc VALUES ('694026784546488320', '深入', NULL, 1, 1, 98, '', '', '694017222984597504', 47, 60, '', '604612615536115712', '604612615536115712', '2026-03-31 11:34:39.83+08', '2026-03-31 13:52:23.732+08', NULL, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694060851014926336', 'QQ群：752939100', NULL, 2, 1, 99, '', 'https://jq.qq.com/?_wv=1027&k=zSjWSant', '694060730139279360', 88, 89, '', '604612615536115712', '604612615536115712', '2026-03-31 13:50:01.909+08', '2026-03-31 13:52:23.732+08', 1, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694060975577366528', '相关外链', NULL, 1, 1, 95, '', '', '', 91, 96, '', '604612615536115712', '604612615536115712', '2026-03-31 13:50:31.607+08', '2026-03-31 13:52:23.732+08', NULL, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694025451730894848', '权限', NULL, 2, 1, 96, '# 权限
+
+## 初始化权限
+
+当登录成功或刷新页面后，会请求`userInfoApi`接口获取权限，相关代码在`@/store/modules/user.ts`中。
+``` ts
+// 初始化
+ init: async function (tokenValue?: string) {
+  const token = tokenValue ?? cookies.get(config.tokenName);
+  if (token) {
+    this.token = token;
+    const res = await userInfoApi(true, !tokenValue)();
+    this.user = res.info;
+    initDynamicViewsModules();
+    this.rules = res.btnRules;
+    this.menus = listToTree(
+      res.menus.map((item) => ({
+        id: item.id,
+        path: item.path,
+        parentId: item.parentId,
+        component: transitionComponent(item.component),
+        meta: {
+          // 标题设置该路由在侧边栏和面包屑中展示的名字
+          title: item.title,
+          // 对应权限 多个之间为或的关系
+          rule: [item.rule],
+          // 是否是固定的tag
+          affix: statusToBoolean(item.affix),
+          // 图标
+          icon: item.icon,
+          // 外链
+          isLink: statusToBoolean(item.isLink),
+          // 如果设置为true，则不会被 <keep-alive> 缓存
+          noCache: !statusToBoolean(item.cache),
+          // 在菜单中隐藏
+          hideMenu: statusToBoolean(item.hideMenu),
+          // 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式
+          // 只有一个时，会将那个子路由当做根路由显示在侧边栏
+          // 若你想不管路由下面的 children 声明的个数都显示你的根路由
+          // 你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由
+          alwaysShow: statusToBoolean(item.alwaysShow),
+          // 是否需要面包屑 false不展示在面包屑,ture一直展示在面包屑,undefined当只有一个子元素面包屑时跳过展示
+          breadcrumb: statusToBoolean(item.breadcrumb),
+        },
+      })),
+    );
+    await useRouteStore().initRoutes(); //初始化路由
+  } else {
+    this.token = '''';
+  }
+},
+```
+
+## 路由权限校验
+
+初始化完权限后，注册有权限的路由，过滤规则参考[路由权限](../guide/route.md#路由权限)
+
+## 按钮权限校验
+
+权限校验函数为permission(rules?: string | string[])，当入参为数组时，匹配成功数组中的任意一个权限则返回true。
+
+通过v-if指令和permission函数配合进行按钮权限校验(未进行封装指令的原因是，指令方式对服务端渲染不友好，建议使用v-if判断)。
+
+- 通过全局函数$permission()校验权限
+``` vue
+    <el-button v-if="$permission(''edit'')">{{ $t(''编辑'') }}</el-button>
+
+```
+- 引入 permission()函数校验
+  
+``` vue
+<template>
+  <div class="permission">
+    <el-button v-if="permission(''show'')">{{ $t(''查看'') }}</el-button>
+  </div>
+</template>
+<script setup lang="ts" name="permission">
+import { permission } from ''@/utils/permission'';
+</script>
+```
+
+## 超管权限
+
+当初始化权限时拿到的`rules`数组包含''*''时，代表具有所有权限，权限permission函数会必定返回`true`', '', '694025634292170752', 38, 39, '', '604612615536115712', '604612615536115712', '2026-03-31 11:29:22.062+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', 'permission');
+INSERT INTO aon_doc VALUES ('694102379418615808', '路由', NULL, 2, 1, 97, '# 路由菜单
+
+这里的路由分为两种，constantRoutes 和 asyncRoutes。
+
+constantRoutes： 代表那些不需要动态判断权限的路由，如登录页、404、等通用页面。
+
+asyncRoutes： 代表那些需求动态判断权限并通过 addRoutes 动态添加的页面。
+## 静态路由(constantRoutes)
+
+静态路由定义位于`@/router/routes/index.ts`文件下,主要包含一些无需登录的公共路由。
+
+```
+export const constantRoutes: RouteRecordRaw[] = [
+  {
+    path: PageEnum.LOGIN,
+    component: async () => await import(''@/views/login/index.vue''),
+    meta: {
+      hideMenu: true,
+      title: ''登录'',
+    },
+  },
+  {
+    path: PageEnum.HOME,
+    meta: {
+      hideMenu: true,
+      title: ''首页'',
+    },
+    redirect: () => useRouteStore().firstMenu(),//重定向到第一个路由
+  },
+  {
+    path: ''/redirect'',
+    component: Layout,
+    children: [
+      {
+        name: ''redirect'',
+        path: ''/redirect/:path(.*)'',
+        component: async () => await import(''@/views/redirect.vue''),
+      },
+    ],
+    meta: {
+      hideMenu: true,
+      title: '''',
+      noCache: true,
+    },
+  },
+  {
+    path: ''/:pathMatch(.*)*'',
+    component: async () => await import(''@/views/404.vue''),
+    meta: { hideMenu: true, title: ''404'' },
+  },
+];
+```
+
+
+## 动态路由(asyncRoutes)
+
+- **动态定义通过api接口获取**
+- **动态路由获取成功后会动态注册到vue-router中。**
+- **动态路由注册时会自动注册到一级路由`/`的children下,这样菜单路由只有一级也可以渲染出layout框架**
+
+
+路由功能基于[vue-router](https://router.vuejs.org/zh/introduction.html)开发,自定义配置放在了[meta](#meta配置说明)中,其余定义规则参考[vue-router#routerecordraw](https://router.vuejs.org/zh/api/#routerecordraw)。
+
+将`settingConfig.menuMode`(位于`@/config/index.ts`文件中)设置为`MenuModeEnum.API`，将使用前端定义模式。
+
+### 动态路由api获取模式
+
+将`settingConfig.menuMode`(位于`@/config/index.ts`文件中)设置为`MenuModeEnum.API`，将使用api模式，此值已自动设置，请勿更改。
+
+在api模式下，登录成功后或者已登录首次访问时，会通过调用接口获取菜单数组，动态注册到vue-router中。
+
+### 创建菜单
+
+在 菜单权限页面 直接创建 类型为 菜单， 组件路径为 相对于`src/views`文件夹无后缀的相对路径即可
+![alt text](image.png)
+
+
+### 配置说明
+```
+export interface RouteMeta extends Record<string | number | symbol, unknown> {
+    // 标题设置该路由在侧边栏和面包屑中展示的名字
+    title: string;
+    // 对应权限 多个之间为或的关系
+    rule?: string[];
+    // 是否是固定的tag
+    affix?: boolean;
+    // 图标
+    icon?: string;
+    // 在tag中隐藏
+    hideTag?: boolean;
+    // 外链
+    isLink?: boolean;
+    // 当路由设置了该属性，则会高亮相对应的侧边栏。
+    // 这在某些场景非常有用，比如：一个文章的列表页路由为：/article/list
+    // 点击文章进入文章详情页，这时候路由为/article/1，但你想在侧边栏高亮文章列表的路由，就可以进行如下设置
+    // asyncRoutes如果不设置会自动计算展示不隐藏的祖级（包括当前）
+    activeMenu?: string;
+    // 如果设置为true，则不会被 <keep-alive> 缓存
+    noCache?: boolean;
+    // 在菜单中隐藏
+    hideMenu?: boolean;
+    // 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式
+    // 只有一个时，会将那个子路由当做根路由显示在侧边栏
+    // 若你想不管路由下面的 children 声明的个数都显示你的根路由
+    // 你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由
+    alwaysShow?: boolean;
+    // 是否需要面包屑 false不展示在面包屑,ture一直展示在面包屑,undefined当只有一个子元素面包屑时跳过展示
+    breadcrumb?: boolean;
+  }
+```
+
+### 外链
+
+当为外链 时，路径 需填写外链地址。
+
+### 菜单图标
+
+菜单图标定义值为图标组件的name,自定义svg图标和使用elment-plus图标请参考[图标](./icon.md)
+
+### keepAlive缓存
+
+页面缓存通过 组件[me-keep-alive](../components/core/meKeepAlive.md)实现,通过路由的fullPath进行缓存过滤，所以无需对页面组件设置name,即可进行缓存，并且多路由共用同一页面组件时，可以进行独立刷新，互不影响。
+
+
+ - 如果想全局禁用keppAlive，去`@/config/index.ts`配置`settingConfig.openKeepAlive`为`false`即可，配置详情参见[config](./config.md#基础配置)。
+ - 如需设置某个路由不缓存设置缓存值为`否`即可。', '', '694102378554589184', 134, 135, '', '604612615536115712', '604612615536115712', '2026-03-31 11:28:15.589+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', 'route');
+INSERT INTO aon_doc VALUES ('694102383633891328', 'icon', NULL, 2, 1, 97, '# 图标
+
+## 自定义svg图标
+
+svg图标的存放目录为`@/src/icons/svg`，该文件夹下.svg结尾的文件会被自动注册为图标组件，组件名为`me-icon-{name}`
+
+## 使用elment-plus图标
+elment-plus图标默认已全局注册，注册组件名为`mel-icon-{name}`,elment-plus图标完整列表请参考[elment-plus文档](https://element-plus.org/zh-CN/component/icon.html#%E5%9B%BE%E6%A0%87%E9%9B%86%E5%90%88)
+
+## 组件props
+
+图标组件接受两个props：size、color
+| props      | 类型 |说明|
+| ----------- | ----------- | ----------- |
+| size      | string/number | 图标的fontSize |
+| color   | string        | 图标的color属性 |', '', '694102382786641920', 164, 165, '', '604612615536115712', '604612615536115712', '2026-03-31 12:24:21.567+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102382786641920', '组件', NULL, 1, 1, 97, '', '', '694102378286153728', 159, 180, '', '604612615536115712', '604612615536115712', '2026-03-31 12:22:24.614+08', '2026-03-31 19:37:41.701+08', NULL, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102383906521088', '文件上传', NULL, 2, 1, 96, '## 文件上传
+
+本项目封装了文件上传组件，支持分片上传、秒传，直接使用即可。
+
+多文件上传
+```
+  <me-upload v-model="files"></me-upload>
+```
+
+单文件上传
+```
+   <me-upload :limit="1" :model-value="info.avatar ? [info.avatar] : []" @update:model-value="(files) => (info.avatar = files.length ? files[0] : null)"></me-upload>
+```
+支持的props
+```
+showSelect:boolean 是否展示文件选择按钮，默认true
+//其余 element-plus upload组件的所有属性
+
+```
+[ element-plus upload组件 文档](https://element-plus.org/zh-CN/component/upload#%E5%B1%9E%E6%80%A7)', '', '694102382786641920', 166, 167, '', '604612615536115712', '604612615536115712', '2026-03-31 12:25:01.748+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102868671594496', '插件', NULL, 2, 1, 97, '# 插件
+
+Me-Admin有灵活的插件系统，可快速扩展应用
+
+## 安装插件
+
+### 复制插件
+
+将插件包复制到 `addons`文件夹下
+
+### 安装插件
+
+执行`npx meadmin addon 【插件包文件夹名】 `安装插件，以 `doc`插件为例，执行`npx meadmin addon doc`, 执行命令后会执行以下操作：
+
+- copy插件目录下的`template` 文件到项目对应目录
+- 执行插件的`install.sql`文件生成数据库表
+- 执行插件`addons.json`的`installShell`的命令列表
+
+!!! warning
+- 如果插件已经安装完成， 请先卸载插件或使用-f参数（-f会先卸载再安装）`npx meadmin -m local addon doc -f`
+- meadmin 命令 支持-m传入 env环境变量， 以读取对应的数据库配置，例如 `npx meadmin -m local addon doc`
+!!!
+
+### 二次开发
+插件安装完毕后，后端文件会在`src/app/admin/addons/插件文件夹`和`src/app/index/addons/插件文件夹`，前端文件会分别在`view/admin/src/addons/插件文件夹`和`view/index/src/addons/插件文件夹`下。具体目录规则请参考 后端文档 和 前端文档
+
+## 卸载插件
+执行 `npx meadmin addon 【插件包文件夹名】 --rm`卸载插件，以 `doc`插件为例，执行`npx meadmin addon doc --rm`, 执行命令后会执行以下操作：
+
+- 删除下列文件夹：`src/app/admin/addons/插件包文件夹名/`、`src/app/index/addons/插件包文件夹名/`、`view/admin/src/addons/插件包文件夹名/`、`view/index/src/addons/插件包文件夹名/`
+- 执行插件的`uninstall.sql`文件删除数据库表
+- 执行插件`addons.json`的`uninstallShell`的命令列表
+
+
+!!! warning
+meadmin 命令 支持 -m 传入 env环境变量， 以读取对应的数据库配置，例如 `npx meadmin -m local addon doc --rm`
+!!!
+
+## 开发插件
+正在完善文档中...', '', '694102373970214912', 104, 105, '', '604612615536115712', '604612615536115712', '2026-03-31 16:36:59.7+08', '2026-03-31 19:37:42.051+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102375941537792', '路由和控制器', NULL, 2, 1, 98, '# 路由和控制器
+在常见的 MVC 架构中，C 即代表控制器，控制器用于负责 解析用户的输入，处理后返回相应的结果。
+
+更多内容请阅读[midway 路由和控制器](https://midwayjs.org/docs/controller)文档。
+
+## 定义路由可控制器
+用@Controller装饰器声明控制器类，@Get 、 @Post 、 @Put() 、 @Del() 、 @Patch() 、 @Options() 、 @Head() 和 @All()，表示各自的 HTTP 请求方法，声明路由方法。@All 装饰器比较特殊，表示能接受以上所有类型的 HTTP Method。midway 会自动扫描项目目录下的所有@Controller类进行路由注册。
+```
+import { Controller, Get } from ''@midwayjs/core'';
+
+@Controller(''/api/'')
+export class UserController {
+
+  @Get(''/home'')
+  async home(@Query(''uid'') uid: string) {
+    return {content:"Hello Meadmin! "+uid};
+  }
+
+  @Post(''/up'')
+  async update(@Body() user: User) {
+    return {content:"Hello Meadmin! "+user.uid};
+  }
+
+  @Get(''/:uid'')
+  async getUser(@Param(''uid'') uid: string): Promise<User> {
+    return {content:"Hello Meadmin! "+uid};
+  }  
+}
+```
+@Controller装饰器有一个可选参数，用于进行路由前缀（分组），这样这个控制器下面的所有路由都会带上这个前缀,如上述所示例允许的请求为：
+```
+GET ''/api/home?uid=123'' //返回json对象{"content":"Hello Midwayjs! 123"}
+POST ''/api/home''   {"uid": "1", "name": "harry"}  //返回json对象{"content":"Hello Midwayjs! 1"}
+GET ''/api/1''    //返回json对象{"content":"Hello Midwayjs! 1"}
+```
+!!! warning
+所有的控制器方法必须为异步函数
+!!!
+## 控制器继承
+本项目对路由和控制器做了单独封装会根据Controller继承关系 递归合成@Controller装饰器的参数
+从第一个prefix以/开头的祖级开始合并@Controller的第一个参数prefix和第二个参数routerOptions，如果prefix 以/开头，则重新计算，不合并父级的prefix和routerOptions
+例如有以下基类：
+```
+import { CodeEunm } from ''@/dict/code.enum.js'';
+import { ResponseService } from ''@/service/response.service.js'';
+import { Controller, Inject } from ''@midwayjs/core'';
+
+@Controller(''/api'')
+export abstract class ApiController {
+  @Inject()
+  protected readonly responseService: ResponseService;
+
+  success<T extends Record<string, any>>(data: T = {} as T, message = ''操作成功'') {
+    return this.responseService.success(data, message);
+  }
+
+  error(message: string, code: Exclude<CodeEunm, CodeEunm.Success> = CodeEunm.Fail) {
+    return this.responseService.error(message, code);
+  }
+
+  successPage<T = any>(list: T[], total = 0, page = 1, size = 10, message = ''列表数据获取成功'') {
+    return this.responseService.successPage(list, total, page, size, message);
+  }
+}
+
+```
+```
+//src/app/admin/controller/base.controller.ts
+import { ApiController } from ''@/controller/api.controller.js'';
+import { Controller } from ''@midwayjs/core'';
+import { AdminMiddleware } from ''../middleware/admin.middleware.js'';
+
+@Controller(''admin'', { middleware: [AdminMiddleware] })
+export abstract class BaseController extends ApiController {}
+
+```
+自定义controller
+```
+//src/app/admin/controller/user.controller.ts
+import { BaseController } from ''./base.controller.js'';
+@Controller(''user'')
+export class UserController extends BaseController {
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post(''/add'')
+  async add() {
+    return this.success({aa:1});
+  }
+}
+```
+当前@Controller 地址参数会被递归合并`/api/admin/user`,最终请求地址为`POST /api/admin/user/add`。并且userController会具有`AdminMiddleware`中间件。
+
+## 特别约定
+- 所有的文件以小驼峰命名，所有的装饰器文件命名以`小驼峰名称.controller.ts`命名，类名以`大驼峰名称Controller`命名，
+- 所有的装饰器放在对应模块的controller文件夹下，允许使用子文件夹自由组合嵌套。
+- 个别防火墙，默认只放行GET、POST请求，而GET请求传参受浏览器URL限制，如果需要传递的参数过多就会无法传递。服务端经常会将访问的完整 URL 记录到日志文件中，有一些敏感数据通过 URL 传递会不安全。CRUD自动生成的请求除详情接口外都为POST。推荐尽量使用POST请求。
+- 所有接口的Controller 需继承当前模块的`BaseController`
+- 所有接口的Controller返回值，需调用`return this.success(data:Object)`进行返回，以遵循特定格式，方便前端识别。如接口返回错误，直接`throw new BadRequestError(''error'')`抛出对应异常即可，项目已做统一封装处理，详情请参考[响应及异常封装]', '', '694102375132037120', 112, 113, '', '604612615536115712', '604612615536115712', '2026-03-31 08:59:09.958+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', 'controller');
+INSERT INTO aon_doc VALUES ('694102378806247424', '配置', NULL, 2, 1, 99, '# 配置
+## 目录结构
+前端项目`admin`根目录位于 `view/admin`，下边的目录相对于`view/admin`文件夹。
+```
+.
+├── dist 打包文件夹
+├── plugins vite插件
+├── public 公共静态资源目录
+├── src  主目录
+│   ├── api 接口文件
+│   ├── assets 资源文件
+│   │   └── images 项目存放图片的文件夹
+│   ├── components 公共组件（里面的组件会自动引入）
+│   ├── config 配置文件夹
+│   │   ├── index.ts 配置入口文件
+│   │   ├── locale.ts 国际化配置
+│   │   ├── login.ts  登录配置
+│   │   └── theme.ts  主题配置
+│   ├── directives 指令（里面的指令会自动引入）
+│   ├── dict  字典
+│   ├── event 事件
+|   ├── hooks 公共hooks
+│   ├── icons 图标
+│   │   ├── svg  svg图标文件夹（放入此文件夹的svg会被自动注册图标组件）
+│   │   └── index.ts 图标自动注册入口文件
+│   ├── layout 布局文件
+│   ├── locales  国际化
+│   │   └── lang 全局语言包
+│   ├── router  路由配置
+│   │   ├── guard 路由全局守卫
+│   │   └── routes 动态路由存放目录
+|   ├── styles 样式文件 
+│   ├── store  pinia文件夹
+│   ├── utils  工具类
+│   ├── views  页面
+│   └── main.ts 入口文件
+├── template自动生成模板
+├── types  类型文件
+└── vite.config.ts vite配置文件
+```
+## 基础配置
+
+配置文件地址 `@/config/index.ts`
+```ts
+const settingConfig = {
+  version: ''1.0.3'', //版本当版本改变时会清空localStorage和sessionStorage
+  openKeepAlive: true, // 是否开启KeepAlive缓存
+  menuMode: MenuModeEnum.STATIC, // 动态路由模式 MenuModeEnum.STATIC/MenuModeEnum.API
+};
+```
+
+## 登录配置
+
+登录后token会储存在在cookie中，可以在配置文件中配置token相关cookie设置
+
+配置文件地址 `@/config/login.ts`
+``` ts
+export default {
+  tokenName: ''auth-token'', // cookie中存储的token key
+  tokenExpires: 7, // token 过期时间
+  tokenDomain: typeof window === ''undefined'' ? '''' : window.location.hostname, // token 存储cookie域名
+};
+```
+
+## 主题配置
+
+配置文件地址`@/config/theme.ts`
+``` ts
+import { SizeEnum } from ''@/enums/configEnum'';
+export default {
+  primaryColor: ''#409eff'', // 主题颜色
+  menuBg: ''#1d1e1f'', // 菜单背景颜色
+  menuWidth: ''200px'', // 菜单展开宽度
+  menuCollapse: true, // 菜单是否折叠
+  size: SizeEnum.DEFAULT, // 默认大小
+  fixedHeader: true, // 固定header
+  topBar: true, // 是否显示顶栏
+  breadcrumb: true, // 面包屑
+  showDark: true, // 开启暗黑模式切换
+  showSize: true, // 开启大小切换
+  tagBar: true, // 标签栏
+  tagBarMenu: true, // 标签栏快捷菜单
+  tagBarRefresh: true, // 标签栏刷新按钮
+  showSetting: true, // 展示设置按钮
+};
+```
+
+## 国际化配置
+
+配置文件地址`@/config/locale.ts`
+
+- 语言包异步导入配置
+  
+``` ts
+export const loadMessageConfig = {
+// 导入语言包配置
+timeOut: 10000, // 导入语言包超时时间ms(对于单次导入而不是整体导入)0代表不超时
+errorWarning: false, // 导入失败的警告（生产环境会被屏蔽）
+componentLoad: true, // 组件语言包导入 不需要多语言或只使用全局语言包时设置为false以提升性能
+};
+```
+- 语言列表
+  
+!!! warning 注意
+locale命名时需要和[element-plus](https://element-plus.gitee.io/zh-CN/guide/i18n.html#cdn-%E7%94%A8%E6%B3%95)的local命名一致，否则无法加载element-plus对应的语言包 
+!!!
+
+``` ts
+export const localeList = [
+  {
+    text: ''简体中文'',
+    locale: ''zh-cn'',
+  },
+  {
+    text: ''美国英语'',
+    locale: ''en'',
+  },
+]
+```
+
+- 全局[VueI18n](https://vue-i18n.intlify.dev/api/general.html#i18noptions)初始参数(VueI18n版本基于v9.x)
+
+!!! warning 注意
+legacy和globalInjection无需设置
+程序内部强制把legacy设置为了false、globalInjection设置为了true。
+!!!
+
+``` ts
+const localeSetting: I18nOptions = {
+  // Locale
+  locale: localeList[0].locale,
+  // Default locale
+  fallbackLocale: localeList[0].locale,
+  missingWarn: false, // 当本地化失败时，压制输出的警告
+  fallbackWarn: false, // 抑制回落警告
+  fallbackFormat: true, // 跳过为你的"base"语言编写模板;key是您的模板
+};
+```', '', '694102378554589184', 130, 131, '', '604612615536115712', '604612615536115712', '2026-03-31 11:27:28.582+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102380303613952', '多语言', NULL, 2, 1, 94, '# 国际化
+- 详细配置说明请参考[国际化配置](../guide/config.md#国际化配置)
+- 国际化基于[vue-i18n v9.x](https://kazupon.github.io/vue-i18n/zh/introduction.html)开发。具体翻译规则请参考[vue-i18n v9.x 文档](https://kazupon.github.io/vue-i18n/zh/introduction.html)
+## 设置语言列表
+在配置文件`@/config/locale.ts`设置语言选项，新增成功后`localeList`里面的`text`会展示在语言切换的下拉列表中,如果`localeList`只有一个元素则不会展示切换语言按钮
+  
+!!! warning 注意
+locale命名时需要和[element-plus](https://element-plus.gitee.io/zh-CN/guide/i18n.html#cdn-%E7%94%A8%E6%B3%95)的local命名一致，否则无法加载element-plus对应的语言包 
+!!!
+
+``` ts
+export const localeList = [
+  {
+    text: ''简体中文'',
+    locale: ''zh-cn'',
+  },
+  {
+    text: ''美国英语'',
+    locale: ''en'',
+  },
+]
+```
+## 设置默认语言
+修改配置文件`@/config/locale.ts`中的`localeSetting.locale`的值为`localeList`任一元素的`locale`来配置初始语言
+
+## 全局语言包
+### 添加全局语言包
+全局语言包位于`@/locales/lang`文件夹下，下面以新建en对应语言包为例：
+- 在`@/locales/lang`文件夹下新建文件夹`en`(文件夹名要和`locale`名称一致)
+``` sh
+  cd ./locales/lang
+  mkdir en
+```
+- 在`@/locales/lang/en`文件夹中新建`index.ts`文件并写入以下代码
+``` ts
+import { forOwn } from ''lodash-es'';
+const modules = import.meta.glob(''./**/*.{json,ts}'', { eager: true, import: ''default'' });
+const langs = {} as Record<string, string>;
+forOwn(modules, (value) => {
+  Object.assign(langs, value);
+});
+export default langs;
+```
+- 在`@/locales/lang/en`文件夹下新建任意`json/ts`语言包文件,语言系统会自动加载
+!!! warning 注意
+- 非必要优先使用json格式语言包(有利于自行修改为VueI18nPlugin生成预加载包)。
+!!!
+`//@/locales/lang/en/menu.json`
+``` json
+{
+  "首页": "Index",
+  "示例": "Example",
+  "权限": "Permission",
+  "组件语言包": "Component Language Pack",
+  "请求示例": "Request Example",
+  "页面权限": "Page Permission",
+  "多级菜单": "Multilevel Menu",
+  "多级菜单1": "Multilevel Menu 1",
+  "多级菜单1-1": "Multilevel Menu 1-1",
+  "多级菜单1-1-1": "Multilevel Menu 1-1-1",
+  "多级菜单1-2": "Multilevel Menu 1-2"
+}
+```
+### `template`中按[vue-i18n v9.x](https://kazupon.github.io/vue-i18n/zh/introduction.html)规范使用
+``` vue
+<template>
+  <div>
+    {{ $t(''多级菜单1'') }}
+    <br />
+    {{ $t(''权限'') }}
+  </div>
+</template>
+```
+## 组件语言包
+### 添加组件语言包
+假设组件目录结构如下
+```
+├── componentLang 组件文件夹
+│   └── index.vue 组件vue文件
+```
+- 在`componentLang`文件夹下新建组件语言包文件夹`lang`(组件语言包文件夹名必须为`lang`)
+``` sh
+ mkdir lang
+```
+- 在`componentLang/lang`文件夹下建立对应语言`json/ts`文件，文件名和`localeList`里面的`local`值相同,以`en`语言举例
+::: warning 注意
+- 非必要优先使用json格式语言包(有利于自行修改为VueI18nPlugin生成预加载包)。
+:::
+```
+  touch en.json
+```
+- 在语言文件中写入翻译内容
+``` json
+{
+  "切换语言查看效果": "Switch languages to see the effect",
+  "打开Network可以看到语言包请求": "Open Network to see the language pack request"
+}
+```
+
+### 使用组件语言包
+- 引入
+
+  直接利用顶层setup异步能力，`await loadRes`即可。
+  ::: warning 注意
+  - `[(locale: string) => import(`./lang/${locale}.json`), ''compnentLang'']` 中的 `compnentLang`为组件语言包的缓存名称，确保同一语言(locale)下每个组件语言包一一对应，compnentLang 参数可忽略。
+  :::
+
+  ``` vue
+  <script setup lang="ts">
+  import { useLocalesI18n } from ''@/locales/i18n'';
+  const { t, loadRes }  = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), ''compnentLang'']);
+  await loadRes;//顶层异步加载语言包
+  </script>
+  ```
+  
+- `template`中按[vue-i18n v9.x](https://kazupon.github.io/vue-i18n/zh/introduction.html)规范使用即可
+``` vue
+<template>
+  <div class="component-lang">
+    {{ t(''切换语言查看效果'') }}
+    <br />
+    {{ t(''打开Network可以看到语言包请求'') }}
+  </div>
+</template>
+```
+
+### 优化建议
+
+- 建议翻译key值为初始化语言的值，这样能节省对应语言包的编写。
+- 如果您的语言包数据不大或用不到多语言建议将翻译全部放在全局语言包中，在配置文件`@/config/locale.ts`中设置`loadMessageConfig.componentLoad`的值为`false`,以避免切换路由时的语言包请求，优化性能。', '', '694102378554589184', 140, 141, '', '604612615536115712', '604612615536115712', '2026-03-31 11:33:08.298+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694039166589075456', 'MeComponent', NULL, 2, 1, 98, '# MeComponent
+MeComponent基于 `component` 结合`keepAlive``transition``doneProgress``suspense`，而封装自定义组件。
+
+## 组件props
+
+| props      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| is       | 当 is 是字符串，它既可以是 HTML 标签名也可以是组件的注册名。或者，is 也可以直接绑定到组件的定义 | 会透传给`compnent`组件 |是|
+| keepAlive      | `MeKeepAlive` `props` Object | 传给`MeKeepAlive` 的props对象，不传此值代表不开启KeepAlive缓存 |否|
+| componentKey    | string | 自定义组件的`key` |否|
+| transition |`TransitionProps` `props` Object| 传给`Transition` 的props对象，不传此值代表不开启Transition动画 |否|
+| doneProgress| boolean | 是否需要执行nProgress.done() | 否|
+| suspense| SuspenseProps| 异步组件 | 否|
+## 示例
+
+```vue
+<router-view v-slot="{ Component }">
+      <me-component :is="Component" done-progress></me-component>
+</router-view>
+```', '', '694038800321478656', 64, 65, '', '604612615536115712', '604612615536115712', '2026-03-31 12:23:51.939+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('693987889637228544', 'Application 和 Context', NULL, 2, 1, 97, '# Application 和 Context
+Midway 的应用会同时对外暴露不同协议，比如 Http，WebSocket 等等，这里每个协议对 Midway 来说都是由独立的组件提供的。
+
+本项目应用的是 `@midwayjs/koa`，基于`koa`一个提供 Http 服务的组件。
+
+每个使用的 Web 框架会提供自己独特的能力，这些独特的能力都会体现在各自的 上下文（Context）和 应用（Application）之上。
+
+本项目封装了全局方法/属性便于获取`Context` `Application`
+
+## Application
+Application 是某一个组件中的应用对象，在不同的组件中，可能有着不同的实现。Application 对象上会包含一些统一的方法，这些方法统一来自于 IMidwayApplication 定义。
+### 获取方式
+本项目为了方便获取，为Application封装了全局变量，在`onReady`生命周期后可以调用到。示例：
+```
+import {app} from ''@meadmin/core'';
+export function getConfig(){
+   return  app.getConfig()
+
+}
+```
+Application 具有以下方法
+|方法名|说明|使用方法|
+|  --  | -- |  --    |
+|getAppDir| 用于获取项目根目录路径| app.getAppDir()|
+|getBaseDir|用于获取项目 TypeScript 基础路径，默认开发中为 src 目录，编译后为 dist 目录。|app.getBaseDir()|
+|getEnv|获取当前项目环境。|app.getEnv()|
+|getApplicationContext|获取当前全局依赖注入容器。|app.getApplicationContext()|
+|getConfig|获取配置。|app.getConfig()|
+|getLogger|获取某个 Logger，不传参数，默认返回 appLogger。|app.getLogger()|
+|getCoreLogger|获取 Core Logger。|app.getCoreLogger()|
+|getProjectName|获取项目名，一般从 package.json 中获取。|app.getProjectName()|
+|setAttr & getAttr|临时的全局数据存储|app.setAttr(''abc'', {a: 1,b: 2,});app.getAttr(''abc'');|
+|getNamespace|通过 getNamespace API ，可以获取到当前 app 归属的组件的 框架的类型（即组件的 namespace）。|app.getNamespace();|
+
+更多说明请参考[midway Application 和 Context文档](https://midwayjs.org/docs/req_res_app)
+!!! info
+- ''@meadmin/core''的app返回的是项目的` Main Application`(src/configuration.ts 中第一个引入的 Application 即为主要的 Application) `@midwayjs/koa`
+- ''@meadmin/core''的app是在`onReady`生命周期赋值的，使用时请确保`onReady`生命周期已执行
+- `Midway`具有如下生命周期：
+1. 配置文件加载，我们可以在这里去修改配置（onConfigLoad）
+2. 依赖注入容器准备完毕，可以在这个阶段做大部分的事情（onReady）
+3. 服务启动完成，可以拿到 server（onServerReady）
+4. 应用即将关闭，在这里清理资源（onStop）
+更多生命周期说明请参考文档：[midway 生命周期](https://midwayjs.org/docs/lifecycle)
+!!!
+
+## Context
+Context 是一个请求级别的对象，在每一次收到用户请求时，框架会实例化一个 Context 对象，
+
+在 Http 场景中，这个对象封装了这次用户请求的信息，或者其他获取请求参数，设置响应信息的方法，在 WebSocket，Rabbitmq 等场景中，Context 也有各自的属性，以框架的定义为准。
+
+下面的 API 是每个上下文实现通用的属性或者接口。
+### 获取方式
+本项目为了方便获取，为context封装了全局获取方法，在任何请求上下文中都可以可以调用到。获取到的context 为 项目的主请求组件`@midwayjs/koa`组件 的`content`。获取示例：
+```
+import { getContext } from ''@meadmin/core'';
+export function getConfig(){
+   ctx = getContext();
+   //返回上下文的开始实际
+   return ctx.startTime;
+}
+```
+下面的 API 是每个上下文实现通用的属性或者接口。
+|方法名|说明|使用方法|
+|  --  | -- |  --    |
+| requestContext | Midway 会为每个 Context 挂载一个 requestContext 属性，即请求作用域下的依赖注入容器，用来创建请求作用域下的对象。|const userService = await ctx.requestContext.getAsync(UserService); |
+| logger | 请求作用域下的默认 logger 对象，包含上下文数据。| ctx.logger.info(''xxxx'');|
+| startTime | 上下文执行开始的时间。| ctx.startTime |
+| setAttr & getAttr | 和 app 上的方法相同，这些方法的数据是保存在请求链路中，随着请求销毁，你可以在其中放一些请求的临时数据。 |ctx.setAttr(''abc'', {a: 1,  b: 2,});ctx.getAttr(''abc''); |
+| ctx.getLogger(''custom''); | 获取某个自定义 Logger 对应的上下文日志。| ctx.getLogger(''custom'') |
+| getApp | 从 ctx 上获取当前框架类型的 app 对象。| ctx.getApp(); |  
+
+更多说明请参考[midway Application 和 Context文档](https://midwayjs.org/docs/req_res_app)
+
+!!! info
+`Context` 利用的`AsyncLocalStorage`在全局中间件绑定在了请求上下文中
+!!!', '', '693986817568931840', 14, 15, '', '604612615536115712', '604612615536115712', '2026-03-31 09:00:06.561+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', 'applicationContext');
+INSERT INTO aon_doc VALUES ('694038386293342208', 'setup标签语法设置自定义属性', NULL, 2, 1, 95, '# ```setup```标签语法设置自定义属性
+
+!!! warning 注意 
+当代码中存在```<script lang="ts"> ```标签时，插件不会执行 
+!!!
+
+```
+ <script lang="ts" setup name="App" auth="{{''type''+(3+4)}}" >
+  const test = 1
+</script>
+```
+会生成
+```
+<script lang="ts">
+ import { defineComponent } from ''vue'';
+ export default defineComponent({name:''App'',auth:''type''+(3+4)});
+</script>
+<script lang="ts" setup>
+ const test = 1
+</script>
+```', '', '694026784546488320', 56, 57, '', '604612615536115712', '604612615536115712', '2026-03-31 12:20:45.903+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('693987652227039232', '路由和控制器', NULL, 2, 1, 98, '# 路由和控制器
+在常见的 MVC 架构中，C 即代表控制器，控制器用于负责 解析用户的输入，处理后返回相应的结果。
+
+更多内容请阅读[midway 路由和控制器](https://midwayjs.org/docs/controller)文档。
+
+## 定义路由可控制器
+用@Controller装饰器声明控制器类，@Get 、 @Post 、 @Put() 、 @Del() 、 @Patch() 、 @Options() 、 @Head() 和 @All()，表示各自的 HTTP 请求方法，声明路由方法。@All 装饰器比较特殊，表示能接受以上所有类型的 HTTP Method。midway 会自动扫描项目目录下的所有@Controller类进行路由注册。
+```
+import { Controller, Get } from ''@midwayjs/core'';
+
+@Controller(''/api/'')
+export class UserController {
+
+  @Get(''/home'')
+  async home(@Query(''uid'') uid: string) {
+    return {content:"Hello Meadmin! "+uid};
+  }
+
+  @Post(''/up'')
+  async update(@Body() user: User) {
+    return {content:"Hello Meadmin! "+user.uid};
+  }
+
+  @Get(''/:uid'')
+  async getUser(@Param(''uid'') uid: string): Promise<User> {
+    return {content:"Hello Meadmin! "+uid};
+  }  
+}
+```
+@Controller装饰器有一个可选参数，用于进行路由前缀（分组），这样这个控制器下面的所有路由都会带上这个前缀,如上述所示例允许的请求为：
+```
+GET ''/api/home?uid=123'' //返回json对象{"content":"Hello Midwayjs! 123"}
+POST ''/api/home''   {"uid": "1", "name": "harry"}  //返回json对象{"content":"Hello Midwayjs! 1"}
+GET ''/api/1''    //返回json对象{"content":"Hello Midwayjs! 1"}
+```
+!!! warning
+所有的控制器方法必须为异步函数
+!!!
+## 控制器继承
+本项目对路由和控制器做了单独封装会根据Controller继承关系 递归合成@Controller装饰器的参数
+从第一个prefix以/开头的祖级开始合并@Controller的第一个参数prefix和第二个参数routerOptions，如果prefix 以/开头，则重新计算，不合并父级的prefix和routerOptions
+例如有以下基类：
+```
+import { CodeEunm } from ''@/dict/code.enum.js'';
+import { ResponseService } from ''@/service/response.service.js'';
+import { Controller, Inject } from ''@midwayjs/core'';
+
+@Controller(''/api'')
+export abstract class ApiController {
+  @Inject()
+  protected readonly responseService: ResponseService;
+
+  success<T extends Record<string, any>>(data: T = {} as T, message = ''操作成功'') {
+    return this.responseService.success(data, message);
+  }
+
+  error(message: string, code: Exclude<CodeEunm, CodeEunm.Success> = CodeEunm.Fail) {
+    return this.responseService.error(message, code);
+  }
+
+  successPage<T = any>(list: T[], total = 0, page = 1, size = 10, message = ''列表数据获取成功'') {
+    return this.responseService.successPage(list, total, page, size, message);
+  }
+}
+
+```
+```
+//src/app/admin/controller/base.controller.ts
+import { ApiController } from ''@/controller/api.controller.js'';
+import { Controller } from ''@midwayjs/core'';
+import { AdminMiddleware } from ''../middleware/admin.middleware.js'';
+
+@Controller(''admin'', { middleware: [AdminMiddleware] })
+export abstract class BaseController extends ApiController {}
+
+```
+自定义controller
+```
+//src/app/admin/controller/user.controller.ts
+import { BaseController } from ''./base.controller.js'';
+@Controller(''user'')
+export class UserController extends BaseController {
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post(''/add'')
+  async add() {
+    return this.success({aa:1});
+  }
+}
+```
+当前@Controller 地址参数会被递归合并`/api/admin/user`,最终请求地址为`POST /api/admin/user/add`。并且userController会具有`AdminMiddleware`中间件。
+
+## 特别约定
+- 所有的文件以小驼峰命名，所有的装饰器文件命名以`小驼峰名称.controller.ts`命名，类名以`大驼峰名称Controller`命名，
+- 所有的装饰器放在对应模块的controller文件夹下，允许使用子文件夹自由组合嵌套。
+- 个别防火墙，默认只放行GET、POST请求，而GET请求传参受浏览器URL限制，如果需要传递的参数过多就会无法传递。服务端经常会将访问的完整 URL 记录到日志文件中，有一些敏感数据通过 URL 传递会不安全。CRUD自动生成的请求除详情接口外都为POST。推荐尽量使用POST请求。
+- 所有接口的Controller 需继承当前模块的`BaseController`
+- 所有接口的Controller返回值，需调用`return this.success(data:Object)`进行返回，以遵循特定格式，方便前端识别。如接口返回错误，直接`throw new BadRequestError(''error'')`抛出对应异常即可，项目已做统一封装处理，详情请参考[响应及异常封装]', '', '693986817568931840', 12, 13, '', '604612615536115712', '604612615536115712', '2026-03-31 08:59:09.958+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', 'controller');
+INSERT INTO aon_doc VALUES ('694026177186103296', '请求', NULL, 2, 1, 95, '
+# 接口请求
+
+接口请求函数`request`位于文件`@/utils/request.ts`中，基于[axios](https://www.axios-http.cn/)和[vue-request v2.x](https://next.cn.attojs.org/guide/introduction.html)二次封装,使用前请先阅读[axios](https://www.axios-http.cn/)和[vue-request v2.x](https://next.cn.attojs.org/guide/introduction.html)文档
+
+核心代码如下：
+``` ts
+/**
+ * 请求函数
+ * @param axiosConfig  axios的配置项
+ * @param options vue request配置项+自定义配置项参考 RequestOptions
+ * @param returnAxios
+ * @returns
+ */
+export function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>, options?: RequestOptions<R, P>, returnAxios?: T) {
+  const axiosService = async (...args: P): Promise<R> => {
+    try {
+      //loading放到微任务中去执行以确保在自动调用请求时等待所有的宏任务中的生命周期函数执行完再创建loading实例 以规避currentInstance的相关警告
+      !options?.noLoading && Promise.resolve(undefined).then(loading);
+      const config = await axiosConfig(...args);
+      if (options?.clearEmpty) {
+        if (config.params) config.params = clearEmptyParam(config.params, options?.clearEmpty);
+        if (config.data) config.data = clearEmptyParam(config.data, options?.clearEmpty);
+      }
+      const locale = useSettingStore().locale;
+      if (locale) {
+        config.params = Object.assign({ locale }, config.params);
+      }
+      const { data: res } = await service(config);
+      if (!res || res.code === undefined) {
+        throw Error(t(''返回值解析失败''));
+      }
+      // 401：认证失败
+      if (res.code === ''401'') {
+        ElMessageBox.confirm(res.msg, ''请登录'', {
+          confirmButtonText: ''去 登 陆'',
+          cancelButtonText: ''取消'',
+          type: ''warning'',
+          showClose: false,
+          closeOnClickModal: false,
+          closeOnPressEscape: false,
+          closeOnHashChange: false,
+        })
+          .then(async () => {
+            await useUserStore().logOut();
+          })
+          .catch(() => {});
+        throw Error(res.msg);
+      }
+      // 没有权限
+      if (res.code === ''403'') {
+        ElMessageBox.confirm(res.msg, ''无权限访问'', {
+          confirmButtonText: ''切换账户'',
+          cancelButtonText: ''取消'',
+          type: ''warning'',
+          showClose: false,
+          closeOnClickModal: false,
+          closeOnPressEscape: false,
+          closeOnHashChange: false,
+        })
+          .then(async () => {
+            await useUserStore().logOut();
+          })
+          .catch(() => {});
+        throw Error(res.msg);
+      }
+      if (res.code !== ''200'') {
+        throw Error(res.msg);
+      }
+      if (options?.success) {
+        ElMessage.success({ message: res.msg });
+      }
+      !options?.noLoading && closeLoading();
+      return options?.needAll ? res : res.data;
+    } catch (e) {
+      !options?.noLoading && closeLoading();
+      !options?.noError &&
+        ElMessage.error({
+          message: e instanceof Error ? e.message : String(e),
+        });
+      throw e;
+    }
+  };
+
+  return returnAxios ? axiosService : useRequest<R, P>(axiosService, options);
+}
+```
+
+## 自定义返回值格式
+`request`函数主要是封装`vue-request`使其发起请求使用`axios`，并且请求时加上了loading、对接口返回值进行了校验处理、出错时自动报错提示
+
+接口处理格式已和后端api格式同步，如需要更改可自行修改以下代码
+``` ts
+  if (!res || res.code === undefined) {
+    throw Error(t(''返回值解析失败''));
+  }
+  // 401：认证失败
+  if (res.code === ''401'') {
+    ElMessageBox.confirm(res.msg, ''请登录'', {
+      confirmButtonText: ''去 登 陆'',
+      cancelButtonText: ''取消'',
+      type: ''warning'',
+      showClose: false,
+      closeOnClickModal: false,
+      closeOnPressEscape: false,
+      closeOnHashChange: false,
+    })
+      .then(async () => {
+        await useUserStore().logOut();
+      })
+      .catch(() => {});
+    throw Error(res.msg);
+  }
+  // 没有权限
+  if (res.code === ''403'') {
+    ElMessageBox.confirm(res.msg, ''无权限访问'', {
+      confirmButtonText: ''切换账户'',
+      cancelButtonText: ''取消'',
+      type: ''warning'',
+      showClose: false,
+      closeOnClickModal: false,
+      closeOnPressEscape: false,
+      closeOnHashChange: false,
+    })
+      .then(async () => {
+        await useUserStore().logOut();
+      })
+      .catch(() => {});
+    throw Error(res.msg);
+  }
+  if (res.code !== ''200'') {
+    throw Error(res.msg);
+  }
+  if (options?.success) {
+    ElMessage.success({ message: res.msg });
+  }
+  !options?.noLoading && closeLoading();
+  return options?.needAll ? res : res.data;
+```
+
+## 入参说明
+| 参数      | 类型 | 说明 | 是否必填 |
+| ----------- | ----------- | ----------- | ----------- |
+| axiosConfig | AxiosRequestConfig | 接口请求数据，完全遵循 [axios config](https://www.axios-http.cn/docs/req_config) 的规则 |是|
+| options   | RequestOptions    | 基于[vue-request options](https://next.cn.attojs.org/api/#options)配置扩展了个别配置，下面会详细说名 |否|
+| returnAxios | boolean | 返回axios，当传入true是返回axios不传或false时返回vue-reques对象 | 否 |
+
+| RequestOptions | 类型 | 说明 | 是否必填 |
+| ----------- | ----------- | ----------- | ----------- |
+| needAll | boolean | 返回完整的返回值忽略格式化返回值（默认返回的是data字段） | 否 |
+| noLoading | boolean | 不需要lodaing | 否 |
+| noError | boolean | 不需要报错 | 否 |
+| ... vue-request options | [vue-request options](https://next.cn.attojs.org/api/#options) | 更多字段参考[vue-request options](https://next.cn.attojs.org/api/#options) 文档| 否 |
+
+## 使用示例
+
+- 在接口文件夹`@/api`文件夹中新建接口文件`@/api/example.ts`
+
+- 在`@/api/example.ts`加入接口声明代码
+``` ts
+import { PageParam, PageResult } from ''@/api/api.model.js'';
+import { SystemAdminInfo } from ''@/api/system/admin.js'';
+import request from ''@/utils/request.js'';
+
+//示例_书籍
+export type ExampleBook = {
+  createdAdmin: SystemAdminInfo | null; //创建者
+  updatedAdmin: SystemAdminInfo | null; //最后更新者
+  id: string; //ID
+  name: string; //名称
+  createdAt: string; //创建时间
+  updatedAt: string; //最后更新时间
+};
+
+//获取示例_书籍信息
+export function getExampleBookApi() {
+  return request<
+    PageResult<ExampleBook>,
+    [
+      PageParam & {
+        id?: string;
+        name?: string;
+      },
+    ]
+  >(
+    (data) => ({
+      url: ''example/demo/getExampleBook'',
+      method: ''post'',
+      data: data,
+    }),
+    { noLoading: true },
+  );
+}
+
+```
+
+- 在`vue`文件中使用
+``` vue
+<template>
+  <div class="list" v-loading="loading">
+    <template v-if="data">
+      <div v-for="(item, index) in data" :key="index">
+        {{ item }}
+      </div>
+    </template>
+
+  </div>
+</template>
+<script setup lang="ts" name="request">
+import { getExampleBookApi } from ''@/api/example'';
+const { runAsync, loading, error, data } = getExampleBookApi();
+runAsync({page:1,pageSize:10});//请求接口 建议使用runAsync请求而不是run,区别请参考文档https://next.cn.attojs.org/api/#runasync
+</script>
+```
+
+## 自动请求示例
+
+- 在`vue`文件中使用
+``` vue
+<template>
+  <div class="list" v-loading="loading">
+    <template v-if="data">
+      <div v-for="(item, index) in data" :key="index">
+        {{ item }}
+      </div>
+    </template>
+
+  </div>
+</template>
+<script setup lang="ts" name="request">
+import { listApi } from ''@/api/example'';
+const { runAsync, loading, error, data } = listApi({ defaultParams: [{ page: 1, pageSize: 10 }], manual: false });//manual: false代表组件加载后自动请求接口
+</script>
+```
+## `setup`外请求示例
+
+`vue-request` 是专门为`setup`使用的一个类库，详情请参考[issues:149](https://github.com/AttoJS/vue-request/issues/149)。
+在`setup`外使用时应该直接使用`axios`,`request`函数允许接收一个参数直接返回`axios`实例
+
+- 在`@/api/routeMenu.ts`加入接口声明代码
+  
+```ts
+import { request } from ''@/utils/request'';
+import { RouteRecordRaw } from ''vue-router'';
+
+export function menuApi<T extends boolean = true>(
+  options: RequestOptions<RouteRecordRaw[], []> = {},
+  returnAxios: T = true as T,
+) {
+  return request(
+    () => ({
+      url: ''/api/menu/list'',
+      method: ''get'',
+    }),
+    options,
+    returnAxios,
+  );
+}
+
+```
+
+- 在setup外使用
+
+```ts
+console.log(await menuApi()());
+```
+', '', '694025634292170752', 40, 41, '', '604612615536115712', '604612615536115712', '2026-03-31 11:32:15.025+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', 'request');
+INSERT INTO aon_doc VALUES ('693986817568931840', '后端文档', NULL, 1, 1, 98, '', '', '', 9, 28, '', '604612615536115712', '604612615536115712', '2026-03-31 08:55:50.96+08', '2026-03-31 13:52:23.732+08', NULL, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694016827243626496', '前端文档', NULL, 1, 1, 97, '', '', '', 29, 86, '', '604612615536115712', '604612615536115712', '2026-03-31 10:55:05.824+08', '2026-03-31 13:52:23.732+08', NULL, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694039459389243392', '文件上传', NULL, 2, 1, 96, '## 文件上传
+
+本项目封装了文件上传组件，支持分片上传、秒传，直接使用即可。
+
+多文件上传
+```
+  <me-upload v-model="files"></me-upload>
+```
+
+单文件上传
+```
+   <me-upload :limit="1" :model-value="info.avatar ? [info.avatar] : []" @update:model-value="(files) => (info.avatar = files.length ? files[0] : null)"></me-upload>
+```
+支持的props
+```
+showSelect:boolean 是否展示文件选择按钮，默认true
+//其余 element-plus upload组件的所有属性
+
+```
+[ element-plus upload组件 文档](https://element-plus.org/zh-CN/component/upload#%E5%B1%9E%E6%80%A7)', '', '694038800321478656', 68, 69, '', '604612615536115712', '604612615536115712', '2026-03-31 12:25:01.748+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694061247515066368', 'Github', NULL, 2, 1, 98, '', 'https://github.com/meadmin-cn/meadmin', '694060975577366528', 94, 95, '', '604612615536115712', '604612615536115712', '2026-03-31 13:51:36.442+08', '2026-03-31 13:52:23.732+08', 1, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('693987244020596736', '介绍', NULL, 2, 1, 99, '# 介绍
+后端使用Midway框架，Midway 是阿里巴巴 - 淘宝前端架构团队，基于渐进式理念研发的 Node.js 框架，通过自研的依赖注入容器，搭配各种上层模块，组合出适用于不同场景的解决方案。
+如需对后端进行更多了解，可阅读[midway文档](https://midwayjs.org/docs/intro)
+
+## 目录结构
+```
+├──.husky git hooks钩子文件夹
+├──.vscode vscode推荐配置文件夹
+├── dist 后端打包文件夹
+├──logs 日志文件夹
+├──public 静态资源文件
+│   ├── admin 后台静态资源
+│   ├── index 前台静态资源
+├── src  后端主目录
+│   ├── app 后端模块根目录
+│   │   ├──admin 后台接口模块
+│   │   │   ├── controller 模块控制器文件夹
+│   │   │   ├── dto 模块出入参dto类文件夹
+│   │   │   ├── middleware 模块中间件夹
+│   │   │   └── service 模块service文件夹
+│   │   ├──index 前台接口模块
+│   │   │   ├── controller 模块控制器文件夹
+│   │   │   ├── dto 模块出入参dto类文件夹
+│   │   │   ├── middleware 模块中间件夹
+│   │   │   └── service 模块service文件夹
+│   │   └──home.controller.ts 页面渲染控制器
+│   ├── config 配置文件夹
+│   ├── controller 公共控制器文件夹
+│   ├── decorators 装饰器文件夹
+│   ├── dict 字典文件夹
+│   ├── dto 出入参dto基类文件夹
+│   ├── entities 数据库实体类文件夹
+│   ├── fileManage 文件夹管理助手类
+│   ├── filter 异常类文件夹
+│   ├── helper 助手函数文件夹
+│   ├── locales 后端多语言文件包
+│   ├── response 反参基类
+|   ├── ruleType 后端自定义校验规则
+|   ├── service 全局公共service
+|   ├── types 类型扩展
+|   ├── configuration.ts 启动文件
+│   └── logger.ts logger初始化文件
+├── uploadFile 本地上传目录
+├── view 前端文件夹
+├── .env env环境变量，VIEW_ADMIN_开头的可被 前端admin项目获取到，VIEW_INDEX_开头的可被前端 index项目获取到
+├── .env.prod 启动后env环境变量
+├── .eslintrc.json eslint配置文件
+├── .gitignore git 忽略文件
+├── .npmrc pnpm配置文件
+├── .prettierignore prettier忽略文件
+├── .prettierrc.cjs prettier配置文件
+├── bootstrap.js 部署后bootstrap启动文件
+├── sql 初始化sql文件
+├── pnpm-workspace.yaml pnpm workspace 配置
+└── tsconfig.json typescript配置文件
+```
+
+
+## 基本概念
+
+后端基于 Node.js 监听端口，对外主要提供 API 接口及页面访问。
+
+后端架构主要划分为以下几层：router、controller、service、dto、entity。
+
+- router：定义路由映射，将不同请求指向对应 controller 类中的方法。访问相应地址时会自动触发对应的 controller 逻辑。
+
+- controller：作为请求入口，负责入参校验、调用 service、返回响应，并集成 Swagger 生成接口文档。其中可能封装少量控制逻辑，但核心业务处理一般交由 service。
+
+- service：封装核心业务逻辑，根据场景组织代码。通过 entity 数据模型进行数据库操作，并实现复杂业务处理。
+
+- entity：对应数据库表的模型实体，所有数据库操作均通过 entity 完成。
+
+- dto：定义接口的请求参数与响应结果格式。每个接口都有对应的 DTO 类，controller 在接收到请求时会自动基于 DTO 完成参数校验。
+
+
+## 改动及封装
+本项目对midway做了以下封装，详情请参考相关章节。
+
+### controller装饰器会继承prefix和routerOptions。
+ 根据 controller 继承关系 递归合成Controller装饰器的参数
+ 从第一个prefix以/开头的祖级开始合并controller的prefix和routerOptions，如果prefix 以/开头，则不合并prefix和routerOptions
+### 强制文件目录结构
+Midway 对目录没有特别的限制，但当前项目，将一部分常用的文件进行归类，放到一些默认的文件夹中。文件夹详情请参考[目录结构](#目录结构)。日常开发需要关注的主要有：`src/app/*/controller`文件、`src/app/*/service`文件、`src/app/*/dto`文件、`src/app/*/middleware`中间件文件、`src/entities`数据库实体类文件。
+### 模块
+本项目增加了模块的概念，在`src/app/`下每一个文件夹代表一个模块，将相关逻辑归类存放。
+### 应用
+应用基于koa 使用`@midwayjs/koa`组件
+### 参数校验
+已集成，源于`joi`的`@midwayjs/validate@3`参数校验组件，并自定义了`mobile`等校验规则
+### 多语言
+已集成`@midwayjs/i18n@3`多语言组件，多语言文件夹为`locales/en.json`，并且翻译失败使用当前key做为返回值
+### 数据库访问
+已集成sequelize7，自定义封装的sequelize访问service，相关源码在`src/service/dataSourceManager.service.ts`,对应配置文件在`src/config/database.ts`
+### 静态文件映射
+集成 `@midwayjs/static-file@3`组件，`public`文件夹下的资源都可以使用`/文件名`直接访问
+### 模板引擎
+集成 `@medamin/midway-vite-view`组件，实现vite+vue模板渲染支持
+### 缓存
+集成`@midwayjs/redis@3`和`@midwayjs/cache-manager@3`组件，实现基于redis的缓存支持
+### 日志
+调试模式及部署模式，都将日志目录改为本地的 ${app.appDir}/logs/ 目录下', '', '693986817568931840', 10, 11, '', '604612615536115712', '604612615536115712', '2026-03-31 08:57:32.634+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694038659338338304', '服务方式调用组件', NULL, 2, 1, 94, '# 服务方式调用组件
+
+本系统支持服务方式调用任意组件，主要方便以函数方式打开新增、编辑弹窗等组件。所有服务方式调用的组件都会被渲染到body下。
+
+## 调用示例
+
+### 声明组件
+
+示例文件位置：`src/views/example/service/components/add.vue`
+
+```vue
+<template>
+  <el-dialog v-model="show" @closed="$emit(''closed'')">
+    <div>这是测试弹窗 <el-button @click="add()"> 再次打开弹窗 </el-button></div>
+  </el-dialog>
+</template>
+
+<script setup lang="ts" name="Add">
+import add from ''./add'';
+const show = defineModel<boolean>(''show'');
+defineEmits<{ closed: [] }>();
+</script>
+```
+
+### 声明调用函数
+
+示例文件位置: `src/views/example/service/components/add.ts`
+
+```vue
+import { useGlobalStore } from ''@/store'';
+import Add from ''./add.vue'';
+export default async (props: Omit<ComponentProps<typeof Add>, ''show''> = {}) => {
+  const show = ref(true);
+  const globalStore = useGlobalStore();
+  const key = globalStore.addGlobalComponents(
+    Add,
+    computed(() => ({
+      show: show.value,
+      ...props,
+      [''onUpdate:show'']: (value: boolean) => {
+        show.value = value;
+      },
+      onClosed: () => {
+        globalStore.removeGlobalComponents(key); //关闭时移除当前组件
+        props.onClosed && props.onClosed();
+      },
+    })),
+  );
+  await nextTick();
+  return key;
+};
+```
+
+### 以函数方式调用
+```ts
+import add from ''./add'';
+add();
+```
+
+## 注意事项
+- 在合适的时机(如弹窗关闭时)调用`globalStore.removeGlobalComponents(key)`移除组件。
+
+## 原理说明
+
+服务调用方式采用将被调用组件放入全局store中，在`app.vue`中动态获取渲染的方式实现。
+未使用类似于`meImageViewer`这种服务式组件由`h`函数动态创建然后绑定到当前vue示例的原因，是`h`函数动态创建的组件使用`vue-devtools`调试时无法追寻父级，不方便调试，调试模式下不容易被选取。', '', '694026784546488320', 58, 59, '', '604612615536115712', '604612615536115712', '2026-03-31 12:21:51.001+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694027005343039488', '组件自动按需引入', NULL, 2, 1, 99, '# 组件自动按需引入
+组件自动引入功能基于[vite-plugin-autogeneration-import-file](https://github.com/yuntian001/vite-plugin-autogeneration-import-file)、[unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)插件实现，相关配置说明请参考对应文档
+
+## elment-plus组件自动引入
+直接在vue文件中使用elment-plus组件，编译时会自动按需引入。
+使用示例：
+```
+<template>
+  <el-dropdown class="me-size-select" trigger="click" max-height="500px">
+    <div class="flex-center pointer">
+      <me-icon-size class="icon"></me-icon-size>
+    </div>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item
+          v-for="item in SizeEnum"
+          :key="item"
+          :disabled="themeConfig.size === item"
+          @click="themeConfig.size = item"
+          >{{ $t(item) }}</el-dropdown-item
+        >
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
+</template>
+<script setup lang="ts" name="meSize">
+import { SizeEnum } from ''@/enums/configEnum'';
+import { useSettingStore } from ''@/store'';
+const { themeConfig } = useSettingStore();
+</script>
+<style lang="scss" scoped>
+.me-size-select {
+  .flex-center {
+    padding: 0 10px;
+
+    .icon {
+      font-size: 1.2em;
+    }
+  }
+}
+</style>
+```
+## 公共组件自动按需引入
+- 在`@/components`文件夹下符合`[''*.vue'', ''**/index.{vue,ts}'']` `glob`规则的文件会被自动识别为公共组件，在使用时可直接使用，编译时会自动引入，组件名规则为相对于`@/components`并去除结尾的(index、Index)的大驼峰名称，最终名称可去类型声明文件中确认。
+- 公共组件会自动创建类型声明，类型声明文件位于`types/components.d.ts`。
+
+使用示例
+```
+<template>
+  <div class="header">
+    <me-dark-switch v-if="themeConfig.showDark"></me-dark-switch>
+    <me-size-select v-if="themeConfig.showSize"></me-size-select>
+    <me-locale-select v-if="localeConfig.localeList.length > 1"></me-locale-select>
+  </div>
+</template>
+<script setup lang="ts" name="Header">
+import { localeConfig } from ''@/config'';
+import { useSettingStore } from ''@/store'';
+const { themeConfig } = useSettingStore();
+</script>
+<style lang="scss" scoped>
+.header {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  padding: 12px;
+}
+</style>
+```
+## 自定义引入规则
+自动引入规则可在`plugins/autoImport.ts`中可自行配置更改，详细说明请参考[vite-plugin-autogeneration-import-file文档](https://github.com/yuntian001/vite-plugin-autogeneration-import-file/blob/main/README-zh-cn.md) 核心代码如下
+
+### 规则核心代码
+`plugins/autoImport.ts`
+```ts
+import { dirname, resolve } from ''path'';
+import * as fs from ''fs'';
+import { createPlugin } from ''vite-plugin-autogeneration-import-file'';
+import { fileURLToPath } from ''url'';
+const { autoImport, resolver: resolverFn } = createPlugin();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+function pathResolve(dir: string) {
+  return resolve(__dirname, ''../'', dir);
+}
+export default () =>
+  autoImport([
+    // 自动生成
+    {
+      // svg icon type
+      pattern: [''*.svg''],
+      dir: pathResolve(''src/icons/svg''),
+      toFile: pathResolve(''types/meIconComments.d.ts''),
+      name: ''MeIcon_{{name}}'',
+      template: fs.readFileSync(pathResolve(''./template/meIconComments.d.ts''), ''utf-8''),
+      codeTemplates: [{ key: ''//code'', template: ''{{name}}: Icon;\n    '' }],
+    },
+    {
+      // pinia module
+      pattern: [''**/*.{ts,js}'', ''*.{ts,js}''],
+      dir: pathResolve(''src/store/modules''),
+      toFile: pathResolve(''src/store/module.ts''),
+      name: ''use_{{name}}_store'',
+    },
+    {
+      // auto import directives
+      pattern: [''*.ts'', ''**/index.ts''],
+      dir: pathResolve(''src/directives''),
+      toFile: pathResolve(''types/directives.d.ts''),
+      template: fs.readFileSync(pathResolve(''./template/directives.d.ts''), ''utf-8''),
+      codeTemplates: [
+        {
+          key: ''//code'',
+          template: ''{{name}}: typeof import("{{path}}")["default"];\n    '',
+        },
+      ],
+      name: ''V_{{name}}'',
+    },
+    {
+      // auto import components
+      pattern: [''*.{vue,ts}'', ''**/index.{vue,ts}''],//具体文件规则，当前规则为 dir文件夹下的.vue或.ts 或者dir子文件夹下的index.vue或index.ts文件
+      dir: pathResolve(''src/components''),//扫描的文件夹
+      toFile: pathResolve(''types/components.d.ts''),//生成的type文件位置
+      template: fs.readFileSync(pathResolve(''./template/components.d.ts''), ''utf-8''),//生成文件模板
+      codeTemplates: [ //生成代码替换模板
+        {
+          key: ''//code'',
+          template: ''{{name}}: typeof import("{{path}}")["default"];\n    '',
+        },
+        {
+          key: ''//typeCode'',
+          template: ''type {{name}}Instance = InstanceType<typeof import("{{path}}")["default"]>;\n  '',
+        },
+      ],
+      name: ''_{{name}}'',//组件名称命名模板
+    },
+  ]);
+
+export const resolver = resolverFn;
+
+```
+
+### 自动引入核心代码
+`plugins/autoComponents.ts`
+```ts
+import { ElementPlusResolver } from ''unplugin-vue-components/resolvers'';
+import Components from ''unplugin-vue-components/vite'';
+import { resolver } from ''./autoImport'';
+export default () =>
+  // 组件自动注册核心代码
+  Components({
+    include: [],
+    dts: false,
+    //resolver函数的第一个数组参数代表组件自动引入的规则index,第二个数组参数代表指令自动引入的规则index
+    resolvers: [ElementPlusResolver({ importStyle: false }), resolver([3], [2])],
+  });
+
+```', '', '694026784546488320', 48, 49, '', '604612615536115712', '604612615536115712', '2026-03-31 11:35:32.472+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('693989780223950848', '其他', NULL, 2, 1, 92, '# 其他
+
+## 权限校验
+后台`admin`接口权限校验，在`controller`使用`@AdminPermission`装饰器。
+```
+import { AdminPermission, ApiOperationResponse } from ''@/decorators/index.js'';
+import { User } from ''@/entities/user.entity.js'';
+import { Body, Controller, Inject, Post } from ''@midwayjs/core'';
+import { UserCreateDto } from ''../dto/userCreate.dto.js'';
+import { UserService } from ''../service/user.service.js'';
+import { BaseController } from ''./base.controller.js'';
+
+/**
+ * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。
+ * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址
+ */
+@Controller(''user'')
+export class UserController extends BaseController {
+  @Inject()
+  userService: UserService;
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post(''/add'')
+  @ApiOperationResponse({
+    responseType: User,
+    summary: ''添加用户信息'',
+  })
+  @AdminPermission(''UserAdd'')
+  async add(@Body() createDto: UserCreateDto) {
+    return this.success(await this.userService.create(createDto));
+  }
+}
+```
+
+前台`index`接口权限校验，在`controller`使用`@IndexPermission`装饰器。前台登录仅校验是否登录，未做过多的权限封装。
+```
+import { ApiOperationResponse, IndexPermission } from ''@/decorators/index.js'';
+import { Controller, Get, Inject } from ''@midwayjs/core'';
+import { User } from ''../../../entities/user.entity.js'';
+import { UserService } from ''../service/user.service.js'';
+import { BaseController } from ''./base.controller.js'';
+
+/**
+ * 为了防止防火墙禁止PUT、DELETE请求，规避get请求缓存，统一使用post请求。
+ * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址
+ */
+@Controller(''user'')
+export class UserController extends BaseController {
+  @Inject()
+  userService: UserService;
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Get(''/info'')
+  @ApiOperationResponse({
+    responseType: User,
+    summary: ''获取当前用户的信息'',
+  })
+  @IndexPermission()
+  async info() {
+    const entity = await this.userService.findOne(this.ctx.userInfo.id);
+    return this.success(entity);
+  }
+}
+
+```
+
+## 登录校验
+后台`admin`接口放开登录校验可在`src/config/config.default.ts`中配置。
+```
+admin: {
+    login: {
+      secret: ''desec2ec3=ase$&e1#edad#$%%'', //token加密平台标识
+      expiresIn: 3600000 * 6, //token过期时间ms
+      renewal: 60000 * 10, //续期时间ms
+      cacheKey: ''admin'', //token使用的缓存key对应cacheManager.clients
+    },
+    auth: {
+      noLoginUrl: [`/api/admin/login/login`, `/api/admin/login/captcha`, new RegExp(''/api/admin/file/get/.+'')] as Array<string | RegExp>, //无需登录地址，支持字符串或正则
+    },
+  },
+```
+## 配置和环境变量
+本项目配置文件在`src/config/config.default.ts`中，并根据运行环境加载对应的.env文件。
+
+如`dev`命令`cross-env NODE_ENV=local  npx me-devBootstrap --cleanOutDir --watch --run @midwayjs/mock/app`会依次加载 `.env``.env.local`文件
+
+`start` 命令`cross-env NODE_ENV=prod node ./bootstrap.js`会依次加载 `.env``.env.prod`文件
+更多说明请参考[midway 文档](https://midwayjs.org/docs/env_config)。
+
+`.env`环境变量中以`VIEW_ADMIN_`开头和以`VIEW_INDEX_`开头的环境变量可分别被 `admin`及`index`前台项目读取到。
+
+## 多语言
+本项目的多语言目录在`src/locales`中,配置方式如下：
+```
+//src/config/config.default.ts
+i18n: {
+  // 默认语言  "zh-cn"
+  defaultLocale: ''zh-cn'',
+  // used to alter the behaviour of missing keys
+  missingKeyFn: function (locale, value) {
+    return value;
+  },
+
+  // 把你的翻译文本放到这里
+  localeTable: {
+    ''zh-cn'': {
+      validate: {
+        ''string.mobile'': ''{{#label}} 必须是一个正确的手机号'',
+      },
+    },
+    ''en'': {
+      default: await import(''../locales/en.json'', { with: { type: ''json'' } }),
+      validate: await import(''@midwayjs/validate/locales/en_US.json'', { with: { type: ''json'' } }),
+    },
+  },
+
+  missingKeyHandler: (message: string, options?: TranslateOptions) => (options?.args ? formatText(message, options.args) : message),
+},
+```
+更多说明请参考[midway文档](https://midwayjs.org/docs/extensions/i18n)
+## 日志
+调试模式及部署模式，都将日志目录改为本地的 ${app.appDir}/logs/ 目录下
+```
+//src/config/config.default.ts
+midwayLogger: {
+    default: {
+      transports: {
+        file: {
+          dir: resolve(import.meta.dirname, ''../../logs''),
+        },
+        error: {
+          dir: resolve(import.meta.dirname, ''../../logs''),
+        },
+      },
+    },
+    // ...
+  },
+```
+## 缓存
+集成@midwayjs/redis@3和@midwayjs/cache-manager@3组件，实现基于redis的缓存支持
+```
+//src/config/config.default.ts
+  redis: {
+    clients: {
+      cache: {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
+        password: process.env.REDIS_PASS,
+        db: 0,
+      },
+    },
+  },
+  cacheManager: {
+    //缓存配置
+    clients: {
+      admin: {
+        store: createRedisStore(''cache''),
+      },
+      index: {
+        store: createRedisStore(''cache''),
+      },
+    },
+  },
+```
+## 静态文件映射
+集成 @midwayjs/static-file@3组件，public文件夹下的资源都可以使用/文件名直接访问
+```
+//src/config/config.default.ts
+  staticFile: {
+    dirs: {
+      default: {
+        prefix: ''/'',
+        dir: ''public'',
+      },
+      viewAdmin: {
+        prefix: ''/html/admin/'',
+        dir: ''view/admin/dist'',
+      },
+      viewIndex: {
+        prefix: ''/html/index/'',
+        dir: ''view/index/dist'',
+      },
+    },
+  },
+```
+
+## 更多
+依赖注入、生命周期、Cookies 和 Session、内置服务、Web 路由表、现有装饰器索引、框架错误码、设计模式等更多特性请参考[midway文档](https://midwayjs.org/docs/container)', '', '693986817568931840', 26, 27, '', '604612615536115712', '604612615536115712', '2026-03-31 09:07:37.313+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', 'other');
+INSERT INTO aon_doc VALUES ('694024975761276928', '配置', NULL, 2, 1, 99, '# 配置
+## 目录结构
+前端项目`admin`根目录位于 `view/admin`，下边的目录相对于`view/admin`文件夹。
+```
+.
+├── dist 打包文件夹
+├── plugins vite插件
+├── public 公共静态资源目录
+├── src  主目录
+│   ├── api 接口文件
+│   ├── assets 资源文件
+│   │   └── images 项目存放图片的文件夹
+│   ├── components 公共组件（里面的组件会自动引入）
+│   ├── config 配置文件夹
+│   │   ├── index.ts 配置入口文件
+│   │   ├── locale.ts 国际化配置
+│   │   ├── login.ts  登录配置
+│   │   └── theme.ts  主题配置
+│   ├── directives 指令（里面的指令会自动引入）
+│   ├── dict  字典
+│   ├── event 事件
+|   ├── hooks 公共hooks
+│   ├── icons 图标
+│   │   ├── svg  svg图标文件夹（放入此文件夹的svg会被自动注册图标组件）
+│   │   └── index.ts 图标自动注册入口文件
+│   ├── layout 布局文件
+│   ├── locales  国际化
+│   │   └── lang 全局语言包
+│   ├── router  路由配置
+│   │   ├── guard 路由全局守卫
+│   │   └── routes 动态路由存放目录
+|   ├── styles 样式文件 
+│   ├── store  pinia文件夹
+│   ├── utils  工具类
+│   ├── views  页面
+│   └── main.ts 入口文件
+├── template自动生成模板
+├── types  类型文件
+└── vite.config.ts vite配置文件
+```
+## 基础配置
+
+配置文件地址 `@/config/index.ts`
+```ts
+const settingConfig = {
+  version: ''1.0.3'', //版本当版本改变时会清空localStorage和sessionStorage
+  openKeepAlive: true, // 是否开启KeepAlive缓存
+  menuMode: MenuModeEnum.STATIC, // 动态路由模式 MenuModeEnum.STATIC/MenuModeEnum.API
+};
+```
+
+## 登录配置
+
+登录后token会储存在在cookie中，可以在配置文件中配置token相关cookie设置
+
+配置文件地址 `@/config/login.ts`
+``` ts
+export default {
+  tokenName: ''auth-token'', // cookie中存储的token key
+  tokenExpires: 7, // token 过期时间
+  tokenDomain: typeof window === ''undefined'' ? '''' : window.location.hostname, // token 存储cookie域名
+};
+```
+
+## 主题配置
+
+配置文件地址`@/config/theme.ts`
+``` ts
+import { SizeEnum } from ''@/enums/configEnum'';
+export default {
+  primaryColor: ''#409eff'', // 主题颜色
+  menuBg: ''#1d1e1f'', // 菜单背景颜色
+  menuWidth: ''200px'', // 菜单展开宽度
+  menuCollapse: true, // 菜单是否折叠
+  size: SizeEnum.DEFAULT, // 默认大小
+  fixedHeader: true, // 固定header
+  topBar: true, // 是否显示顶栏
+  breadcrumb: true, // 面包屑
+  showDark: true, // 开启暗黑模式切换
+  showSize: true, // 开启大小切换
+  tagBar: true, // 标签栏
+  tagBarMenu: true, // 标签栏快捷菜单
+  tagBarRefresh: true, // 标签栏刷新按钮
+  showSetting: true, // 展示设置按钮
+};
+```
+
+## 国际化配置
+
+配置文件地址`@/config/locale.ts`
+
+- 语言包异步导入配置
+  
+``` ts
+export const loadMessageConfig = {
+// 导入语言包配置
+timeOut: 10000, // 导入语言包超时时间ms(对于单次导入而不是整体导入)0代表不超时
+errorWarning: false, // 导入失败的警告（生产环境会被屏蔽）
+componentLoad: true, // 组件语言包导入 不需要多语言或只使用全局语言包时设置为false以提升性能
+};
+```
+- 语言列表
+  
+!!! warning 注意
+locale命名时需要和[element-plus](https://element-plus.gitee.io/zh-CN/guide/i18n.html#cdn-%E7%94%A8%E6%B3%95)的local命名一致，否则无法加载element-plus对应的语言包 
+!!!
+
+``` ts
+export const localeList = [
+  {
+    text: ''简体中文'',
+    locale: ''zh-cn'',
+  },
+  {
+    text: ''美国英语'',
+    locale: ''en'',
+  },
+]
+```
+
+- 全局[VueI18n](https://vue-i18n.intlify.dev/api/general.html#i18noptions)初始参数(VueI18n版本基于v9.x)
+
+!!! warning 注意
+legacy和globalInjection无需设置
+程序内部强制把legacy设置为了false、globalInjection设置为了true。
+!!!
+
+``` ts
+const localeSetting: I18nOptions = {
+  // Locale
+  locale: localeList[0].locale,
+  // Default locale
+  fallbackLocale: localeList[0].locale,
+  missingWarn: false, // 当本地化失败时，压制输出的警告
+  fallbackWarn: false, // 抑制回落警告
+  fallbackFormat: true, // 跳过为你的"base"语言编写模板;key是您的模板
+};
+```', '', '694025634292170752', 32, 33, '', '604612615536115712', '604612615536115712', '2026-03-31 11:27:28.582+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694023777788362752', '介绍', NULL, 2, 1, 98, '# 后台文档
+
+## 简介 
+后台前端模板，基于vue3、vite、 pinia、 elment-plus构建，如需仅使用纯前端模板可以去[Me-admin template](https://github.com/meadmin-cn/meadmin-template) clone，纯前端模板文档[https://www.cn/meadmin-template-doc/](https://www.cn/meadmin-template-doc/)。
+
+
+## 前端特性
+ - **基于vue3、vite、pinia、elment-plus、vue-request@next**
+ - **基于typescript** 应用级JavaScript 的语言
+ - **可配置主题** 可配置主题色及主题模式
+ - **友好的国际化方案** 基于vue-i18n 支持按组件异步加载语言包。
+ - **自定义keepAlive缓存** 可根据key进行vue keep-alive,解决不同路由统一组件不能独立刷新缓存问题
+ - **权限** 内置完善的动态路由权限生成方案，按钮级权限。支持前端菜单和接口动态获取菜单两种模式
+ - **组件自动按需引入** 自动按需引入components下的组件定义,支持自定义引入位置和模式，真正的按需引入。
+ - **便捷的类型自动生成** 自动生成ts type 最大程度减少工作量
+ - **集成vxeTable** 功能最完善的国人开源vue table组件
+
+## vite插件推荐
+ 本项目中用到的vite插件，非常好用，如果能帮到您，请点个star
+- [vite-plugin-autogeneration-import-file](https://github.com/yuntian001/vite-plugin-autogeneration-import-file) 自动生成文件，用于type文件和引入文件的自动生成
+- [@yuntian001/vue-setup-extend](https://github.com/yuntian001/vue-setup-extend) 方便给vue `<script setup>` 标签语法设置自定义属性。
+- [unplugin-auto-import](https://github.com/antfu/unplugin-auto-import) 按需自动导入Vue、Vue Router、pinia等官方Api
+- [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components) 按需自动导入组件
+- [vite-svg-loader](https://github.com/jpkleemans/vite-svg-loader) Vite插件加载SVG文件作为Vue组件，使用SVGO进行优化
+
+
+## 浏览器兼容性
+- 由于 Vue 3 不再支持 IE11，本项目不支持 IE 浏览器。
+- 如果需要配置兼容性可参考[如何配置浏览器兼容性](/client/admin/other/question.md#如何配置浏览器兼容性)
+
+| ![](https://cdn.jsdelivr.net/npm/@browser-logos/edge/edge_32x32.png) |![](https://cdn.jsdelivr.net/npm/@browser-logos/firefox/firefox_32x32.png) | ![](https://cdn.jsdelivr.net/npm/@browser-logos/chrome/chrome_32x32.png) | ![](https://cdn.jsdelivr.net/npm/@browser-logos/safari/safari_32x32.png)|
+| --- | --- | --- | --- |
+| 88 | 78 | 87 | 13 |', '', '694025634292170752', 34, 35, '', '604612615536115712', '604612615536115712', '2026-03-31 11:22:42.963+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694026555071922176', '样式', NULL, 2, 1, 93, '# 样式
+本系统样式采用的 [sass](https://www.sass.hk/)，建议全局样式和变量放在 公共样式文件夹 中，组件样式写在各自组件的`<style lang="scss" scoped>`标签中，请提前了解
+[sass](https://www.sass.hk/) 和 [vue css](https://cn.vuejs.org/api/sfc-css-features.html)文档
+
+## 公共样式文件夹
+```
+├── src  
+|   ├── styles 公共样式文件
+│   │   ├── element-plus.scss element-plus覆盖样式
+│   │   ├── index.scss 全局样式
+│   │   ├── transition.scss 动画样式
+│   │   └── variables.scss  sass变量
+```
+
+## sass变量
+sass 变量位于 `src/styles/variables.scss`文件中，已用`vite`的`css.preprocessorOptions.scss.additionalData`配置项自动引入，`vue`的模板中可直接使用
+
+### 使用示例
+
+```
+<style lang="scss" scoped>
+.main {
+  padding: $page-padding;
+}
+</style>
+```
+
+## size切换
+
+为了实现size 的切换功能，做了以下更改
+
+- 修改large、small下的--el-font-size-base，代码位置位于`src/styles/element-plus.scss`
+
+``` scss
+.me-large:root {
+  //这里强制将font-size-base设置为large
+  --el-font-size-base: var(--el-font-size-large);
+}
+.me-small:root {
+  //这里强制将font-size-base设置为small
+  --el-font-size-base: var(--el-font-size-small);
+}
+```
+
+- 不同size下 html基础`font-size`不同,代码位置位于`src/styles/index.scss`
+
+``` scss
+.me-large {
+  font-size: var(--el-font-size-base);
+}
+
+.me-default {
+  font-size: var(--el-font-size-base);
+}
+
+.me-small {
+  font-size: var(--el-font-size-small);
+}
+```
+- 将`font-size`的值由`px`自动转化为`rem`,实现代码位于`vite.config.ts`
+``` ts
+postcss: {
+    plugins: [
+        autoprefixer,
+        px2rem({
+        rootValue: 14, //换算基数，将 px 替换为 1/rootValue rem (即设计图下的fontSize)
+        // unitPrecision: 5, //允许REM单位增长到的十进制数字。
+        propWhiteList: [''font-size''], //默认值是一个空数组，这意味着禁用白名单并启用所有属性。
+        // propBlackList: [''font-size'', ''border''], //不应从 px 更改为 rem 的属性
+        exclude: /(node_module)/, //默认false，可以（reg）利用正则表达式排除某些文件夹的方法，例如/(node_module)\/如果想把前端UI框架内的px也转换成rem，请把此属性设为默认值
+        // selectorBlackList: [], //要忽略并保留为px的选择器
+        // ignoreIdentifier: false,  //（boolean/string）忽略单个属性的方法，启用ignoreidentifier后，replace将自动设置为true。
+        // replace: true, // （布尔值）替换包含REM的规则，而不是添加回退。
+        mediaQuery: false, //（布尔值）允许在媒体查询中转换px。
+        minPixelValue: 2, //设置要替换的最小像素值(包含)。 默认 0
+        }),
+    ],
+},
+```
+## 全局样式类
+- `page-100` 设置页面组件高度为100%，因当前页面布局用的flex自动撑开，设置view组件''height:100%''是无效的，想设置高度为100%只需要给view组件根元素加上`page-100` 类即可
+- `ellipsis-1` 超出一行展示省略号...
+- `ellipsis-2`、`ellipsis-3`超出2/3行展示省略号...
+- `pointer` 鼠标移入变小手
+- `flex-center` 使用flex使子元素居中', '', '694025634292170752', 44, 45, '', '604612615536115712', '604612615536115712', '2026-03-31 11:33:45.12+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694017222984597504', '后台文档', NULL, 1, 1, 99, '', '', '694016827243626496', 30, 83, '', '604612615536115712', '604612615536115712', '2026-03-31 10:56:40.177+08', '2026-03-31 13:52:23.732+08', NULL, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('693989595624243200', '一键crud', NULL, 2, 1, 93, '# 一键crud
+本项目支持根据数据库实体文件 一键生成crud
+## 示例
+- `pnpm meadmin crud exampleDemo --menu`  --menu 参数代表数据库同步生成后台菜单
+
+运行后会生成以下文件
+```
+src/app/admin/dto/example/demoCreate.dto.ts 后端新增dto校验文件
+src/app/admin/dto/example/demoUpdate.dto.ts 后端更新dto校验文件
+src/app/admin/dto/example/demoQuery.dto.ts 后端查询入参dto校验文件
+src/app/admin/service/example/demo.service.ts 后端service
+src/app/admin/controller/example/demo.controller.ts 后端 controller
+view/admin/src/api/example/demo.ts  前端 api接口定义 
+view/admin/src/views/example/demo/lang/en.json 前端组件语言包 
+view/admin/src/views/example/demo/dict.ts 前端字典
+view/admin/src/views/example/demo/index.vue 前端字典列表组件
+view/admin/src/views/example/demo/components/info.vue 前端字典详情组件
+view/admin/src/views/example/demo/components/addOrUp.vue 前端字典新增/修改组件
+```
+## 参数说明
+`pnpm meadmin [-m <char> 环境变量] crud entity实体文件 参数`
+
+```
+  --model <char>            model名称会放到app/{model}下对应的文件夹 (default: "admin")
+  -f, --force               强制覆盖
+  -n, --name <char>         使用的数据库配置defaultDataSourceName
+  -d, --dbConfig <char>     数据库配置文件地址默认为当前目录下dist/config/database.js (default: "G:\\my\\meadmin\\dist\\config\\database.js")        
+  --del                     删除crud创建的文件
+  --path <char>             生成的路径，默认根据驼峰转多级路径
+  -c, --controller <char>   生成的controller路径，默认使用path
+  --menu                    生成菜单
+  --cov, --coverage <char>  生成代码发覆盖范围：b后端代码、a前端api接口代码、v前端view 代码、p后台权限校验，默认值bavp (default: "bavp")
+```
+例如 `pnpm meadmin -m dev crud exampleDemo --menu` 加载`dev`环境变量根据`dist/entities/exampleDemo.entity.js`生成对应的文件并创建菜单。
+
+## 规则
+自动生成具有以下规则
+- 根据`swagger`规则自动创建 必填、min、max、mobile、email校验规则
+- 以“名称:值1=说明1;值2=说明2”，格式声明的备注会自动创建字典和下拉列表，并且支持number、string两种类型
+- 根据枚举值自动创建 select下拉选项
+- `BelongsToMany`及 `BelongsTo`关联自动创建远程下拉搜索
+- 以`At`结尾自动创建时间范围筛选
+- 关联`File`实体自动应用文件上传组件', '', '693986817568931840', 24, 25, '', '604612615536115712', '604612615536115712', '2026-03-31 09:06:53.3+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', 'crud');
+INSERT INTO aon_doc VALUES ('694038048488292352', 'api自动引入', NULL, 2, 1, 97, '# api自动引入
+
+基于[unplugin-auto-import](https://github.com/antfu/unplugin-auto-import)的api自动引入，支持`vue` `vue-router` `pinia` `@vueuse/core`更多说明参考[unplugin-auto-import](https://github.com/antfu/unplugin-auto-import)文档
+
+配置代码位置`vite.config.ts` 
+``` ts
+AutoImport({
+    // 自动加载API
+    imports: [''vue'', ''vue-router'', ''pinia'', ''@vueuse/core''],
+    // 可以选择auto-imports.d.ts生成的位置，使用ts建议设置为''src/auto-imports.d.ts''
+    dts: ''types/auto-imports.d.ts'',
+    resolvers: [ElementPlusResolver()],
+}),
+```
+
+**无需**
+
+``` ts
+import { computed, ref } from ''vue''
+const count = ref(0)
+const doubled = computed(() => count.value * 2)
+```
+
+**直接**
+
+``` ts
+const count = ref(0)
+const doubled = computed(() => count.value * 2)
+```', '', '694026784546488320', 52, 53, '', '604612615536115712', '604612615536115712', '2026-03-31 12:19:25.363+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694038985755852800', 'MeKeepAlive', NULL, 2, 1, 99, '# MeKeepAlive
+
+vue 官方的KeepAlive缓存只支持按组件名筛选过滤，这里自定义了MeKeepAlive组件,在KeepAlive的前提下增加了组件key过滤条件,其余规范和功能和KeepAlive组件一致，KeepAlive官方说明[KeepAlive](https://cn.vuejs.org/guide/built-ins/keep-alive.html)
+
+## 组件props
+
+| props      | 类型 |说明|
+| ----------- | ----------- | ----------- |
+| max       | number | 限制最大缓存实例数 |
+| include      | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组 | 过滤组件名白名单 |
+| exclude    | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组     | 过滤组件名黑名单 |
+| includeKey      | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组 | 过滤组件key白名单 |
+| excludeKey    | 以英文逗号分隔的字符串、一个正则表达式，或是包含这两种类型的一个数组     | 过滤组件key黑名单 |
+
+## 使用演示
+
+这里只样式includeKey、excludeKey其余说明参考[KeepAlive](https://cn.vuejs.org/guide/built-ins/keep-alive.html)
+```vue
+<me-keep-alive includeKey="a,b">
+  <component :is="view" key="a" />
+  <component :is="view" key="b" />
+  <component :is="view" key="c" />
+</me-keep-alive>
+```
+```vue
+<me-keep-alive excludeKey="c">
+  <component :is="view" key="a" />
+  <component :is="view" key="b" />
+  <component :is="view" key="c" />
+</me-keep-alive>
+```
+
+## 局限性
+
+因为vue编译模板时对`KeepAlive` `tagName`做了特殊处理,当`MeKeepAlive`和`Transition`组件、`TransitionGroup`配合使用使用时，只能用渲染函数的方式使用，在`Vue 的单文件组件 (即 *.vue 文件)`中请使用`KeepAlive`组件。
+
+### `Transition`+渲染函数使用示例
+
+```
+import { Transition } from ''vue'';
+const transitionProps={};
+const meKeepAliveProps={};
+h(Transition, transitionProps, { 
+  default: () => h(MeKeepAlive, meKeepAliveProps, [componentOptions])
+})
+```', '', '694038800321478656', 62, 63, '', '604612615536115712', '604612615536115712', '2026-03-31 12:23:08.825+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694026400633454592', '多语言', NULL, 2, 1, 94, '# 国际化
+- 详细配置说明请参考[国际化配置](../guide/config.md#国际化配置)
+- 国际化基于[vue-i18n v9.x](https://kazupon.github.io/vue-i18n/zh/introduction.html)开发。具体翻译规则请参考[vue-i18n v9.x 文档](https://kazupon.github.io/vue-i18n/zh/introduction.html)
+## 设置语言列表
+在配置文件`@/config/locale.ts`设置语言选项，新增成功后`localeList`里面的`text`会展示在语言切换的下拉列表中,如果`localeList`只有一个元素则不会展示切换语言按钮
+  
+!!! warning 注意
+locale命名时需要和[element-plus](https://element-plus.gitee.io/zh-CN/guide/i18n.html#cdn-%E7%94%A8%E6%B3%95)的local命名一致，否则无法加载element-plus对应的语言包 
+!!!
+
+``` ts
+export const localeList = [
+  {
+    text: ''简体中文'',
+    locale: ''zh-cn'',
+  },
+  {
+    text: ''美国英语'',
+    locale: ''en'',
+  },
+]
+```
+## 设置默认语言
+修改配置文件`@/config/locale.ts`中的`localeSetting.locale`的值为`localeList`任一元素的`locale`来配置初始语言
+
+## 全局语言包
+### 添加全局语言包
+全局语言包位于`@/locales/lang`文件夹下，下面以新建en对应语言包为例：
+- 在`@/locales/lang`文件夹下新建文件夹`en`(文件夹名要和`locale`名称一致)
+``` sh
+  cd ./locales/lang
+  mkdir en
+```
+- 在`@/locales/lang/en`文件夹中新建`index.ts`文件并写入以下代码
+``` ts
+import { forOwn } from ''lodash-es'';
+const modules = import.meta.glob(''./**/*.{json,ts}'', { eager: true, import: ''default'' });
+const langs = {} as Record<string, string>;
+forOwn(modules, (value) => {
+  Object.assign(langs, value);
+});
+export default langs;
+```
+- 在`@/locales/lang/en`文件夹下新建任意`json/ts`语言包文件,语言系统会自动加载
+::: warning 注意
+- 非必要优先使用json格式语言包(有利于自行修改为VueI18nPlugin生成预加载包)。
+:::
+`//@/locales/lang/en/menu.json`
+``` json
+{
+  "首页": "Index",
+  "示例": "Example",
+  "权限": "Permission",
+  "组件语言包": "Component Language Pack",
+  "请求示例": "Request Example",
+  "页面权限": "Page Permission",
+  "多级菜单": "Multilevel Menu",
+  "多级菜单1": "Multilevel Menu 1",
+  "多级菜单1-1": "Multilevel Menu 1-1",
+  "多级菜单1-1-1": "Multilevel Menu 1-1-1",
+  "多级菜单1-2": "Multilevel Menu 1-2"
+}
+```
+### `template`中按[vue-i18n v9.x](https://kazupon.github.io/vue-i18n/zh/introduction.html)规范使用
+``` vue
+<template>
+  <div>
+    {{ $t(''多级菜单1'') }}
+    <br />
+    {{ $t(''权限'') }}
+  </div>
+</template>
+```
+## 组件语言包
+### 添加组件语言包
+假设组件目录结构如下
+```
+├── componentLang 组件文件夹
+│   └── index.vue 组件vue文件
+```
+- 在`componentLang`文件夹下新建组件语言包文件夹`lang`(组件语言包文件夹名必须为`lang`)
+``` sh
+ mkdir lang
+```
+- 在`componentLang/lang`文件夹下建立对应语言`json/ts`文件，文件名和`localeList`里面的`local`值相同,以`en`语言举例
+::: warning 注意
+- 非必要优先使用json格式语言包(有利于自行修改为VueI18nPlugin生成预加载包)。
+:::
+```
+  touch en.json
+```
+- 在语言文件中写入翻译内容
+``` json
+{
+  "切换语言查看效果": "Switch languages to see the effect",
+  "打开Network可以看到语言包请求": "Open Network to see the language pack request"
+}
+```
+
+### 使用组件语言包
+- 引入
+
+  直接利用顶层setup异步能力，`await loadRes`即可。
+  ::: warning 注意
+  - `[(locale: string) => import(`./lang/${locale}.json`), ''compnentLang'']` 中的 `compnentLang`为组件语言包的缓存名称，确保同一语言(locale)下每个组件语言包一一对应，compnentLang 参数可忽略。
+  :::
+
+  ``` vue
+  <script setup lang="ts">
+  import { useLocalesI18n } from ''@/locales/i18n'';
+  const { t, loadRes }  = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), ''compnentLang'']);
+  await loadRes;//顶层异步加载语言包
+  </script>
+  ```
+  
+- `template`中按[vue-i18n v9.x](https://kazupon.github.io/vue-i18n/zh/introduction.html)规范使用即可
+``` vue
+<template>
+  <div class="component-lang">
+    {{ t(''切换语言查看效果'') }}
+    <br />
+    {{ t(''打开Network可以看到语言包请求'') }}
+  </div>
+</template>
+```
+
+### 优化建议
+
+- 建议翻译key值为初始化语言的值，这样能节省对应语言包的编写。
+- 如果您的语言包数据不大或用不到多语言建议将翻译全部放在全局语言包中，在配置文件`@/config/locale.ts`中设置`loadMessageConfig.componentLoad`的值为`false`,以避免切换路由时的语言包请求，优化性能。', '', '694025634292170752', 42, 43, '', '604612615536115712', '604612615536115712', '2026-03-31 11:33:08.298+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694039759151955968', '富文本', NULL, 2, 1, 95, '# 富文本(WangEditor)
+组件名`MeWangEditor`，集成了[WangEditor](https://www.wangeditor.com/v5/getting-started.html),编辑器默认高度为`500px`可通过样式直接覆盖更改,详细说明请参考[WangEditor 文档](https://www.wangeditor.com/v5/getting-started.html)和[用于Vue3](https://www.wangeditor.com/v5/for-frame.html#vue3)。
+
+!!! warning 注意
+- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。
+- 当前组件位置`@/components/meWangEditor`
+!!!
+
+## 组件props
+
+| props      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| mode      | ''simple'' \| ''default'' | 模式，默认值为`default`。 ''default''默认模式，集成了 wangEditor 所有功能。 ''simple''简洁模式，仅有部分常见功能，但更加简洁易用|否|
+| config      | `{ toolbar?: Partial<IToolbarConfig>; editor?: Partial<IEditorConfig> }` | wangeditor配置，默认值为`{}`。toolbar为[工具栏配置](https://www.wangeditor.com/v5/toolbar-config.html)对象， editor为[编辑器配置](https://www.wangeditor.com/v5/editor-config.html)和[菜单配置](https://www.wangeditor.com/v5/menu-config.html)对象。|否|
+| modelValue(v-model) | string | 非格式化的 html内容 |是|
+| defaultContent | SlateDescendant[](editor.children 获取的内容) | 编辑器默认内容,默认值为`[]`,参考[设置-json](https://www.wangeditor.com/v5/content.html#%E8%AE%BE%E7%BD%AE-json) |否|
+| defaultHtml | string | 默认html内容，默认值为`''''`,为空时编辑器会使用`v-model`绑定的值。参考[设置-html](https://www.wangeditor.com/v5/content.html#%E8%AE%BE%E7%BD%AE-html) | 否|
+
+
+## 组件事件
+
+| emit      | 格式 |说明|
+| ----------- | ----------- | ----------- |
+| onCreated | (editor: IDomEditor) =>void | 编辑器创建完毕时的回调函数。参考[onCreated](https://www.wangeditor.com/v5/editor-config.html#oncreated) |
+| onChange | (editor: IDomEditor) =>void | 编辑器内容、选区变化时的回调函数。参考[onChange](https://www.wangeditor.com/v5/editor-config.html#onchange) |
+| onDestroyed | (editor: IDomEditor) =>void | 编辑器销毁时的回调函数。参考[onDestroyed](https://www.wangeditor.com/v5/editor-config.html#ondestroyed) |
+| onMaxLength | (editor: IDomEditor) =>void | 配置编辑器的 maxlength。参考[maxLength onMaxLength](https://www.wangeditor.com/v5/editor-config.html#maxlength-onmaxlength) |
+| onFocus | (editor: IDomEditor) =>void | 编辑器 focus 时的回调函数。参考[onFocus](https://www.wangeditor.com/v5/editor-config.html#onfocus) |
+| onBlur | (editor: IDomEditor) =>void | 编辑器 blur 时的回调函数。参考[onBlur](https://www.wangeditor.com/v5/editor-config.html#onblur) |
+| customAlert | (s: string, t: string) =>void | 自定义编辑器 alert 。如想用 antd 的 message 功能。参考[customAlert](https://www.wangeditor.com/v5/editor-config.html#customalert) |
+| customPaste | (editor: IDomEditor, event: ClipboardEvent,(val: boolean) => { res = val})=>void | 自定义粘贴。可阻止编辑器的默认粘贴，实现自己的粘贴逻辑。参考[customPaste](https://www.wangeditor.com/v5/editor-config.html#custompaste)和[wangEditor-for-vue3](https://github.com/wangeditor-team/wangEditor-for-vue3/blob/main/src/components/Editor.vue) |
+
+!!! warning 注意
+注意上述组件事件，必须通过 Vue 事件来传递，不可以放在 `config.editor` 中
+!!!
+
+## 示例
+
+```vue
+<template>
+  <div>
+    <me-wang-editor v-model="html" :config="config"></me-wang-editor>
+  </div>
+</template>
+<script setup lang="ts" name="WangEditor">
+const html = ref(''<p>hello word!</p>'');
+const config = {
+  editor: {
+    maxLength: 1000,
+    [''MENU_CONF'']: {
+      uploadImage: {
+        // 小于该值就插入 base64 格式（而不上传），默认为 0
+        base64LimitSize: 2 * 1024 * 1024, // 5mb
+      },
+    },
+  },
+};
+</script>
+```', '', '694038800321478656', 70, 71, '', '604612615536115712', '604612615536115712', '2026-03-31 12:26:13.217+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694038194332631040', '配置vscode模板片段', NULL, 2, 1, 96, '# 配置vscode模板片段
+
+## vue模板
+- 点击vscode 左下角设置图标
+- 选中配置用户代码片段
+- 选中新建全局代码片段
+- 输入名称`v3`
+- 粘贴入以下代码
+```
+{
+	// Place your snippets for vue here. Each snippet is defined under a snippet name and has a prefix, body and 
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+	// same ids are connected.
+	// Example:
+	"Print to console": {
+		"prefix": "<v3",
+		"body": [
+			"<template>",
+                "<div class=\"${TM_FILENAME_BASE/([A-Z])/-${1:/downcase}/g}\">",
+				"${1}",
+				"</div>",
+                "</template>",
+                "",
+                "<script setup lang=\"ts\" name=\"${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}\">",
+				"",
+                "</script>",
+                "<style lang=\"scss\" scoped>",
+                ".${TM_FILENAME_BASE/([A-Z])/-${1:/downcase}/g}{",
+				"",
+				"}",
+                "</style>"
+		],
+		"description": "A vue file template"
+	}
+}
+```
+ - 新建`.vue`文件后 输入`<v3`会出现对应模板选项，选中后会自动生成vue文件模板
+
+ ## pinia 模板
+ ```
+ {
+	// Place your 全局 snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	"Print to console": {
+		"scope": "typescript",
+		"prefix": "<s",
+		"body": [
+			"const use${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}Store =  defineStore(''global'', {",
+			"  state:()=>({",
+			"    $0",
+			"  }),",
+			"});",
+			"",
+			"if (import.meta.hot) {",
+			"  import.meta.hot.accept(acceptHMRUpdate(use${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}Store, import.meta.hot))",
+			"}",
+			"",
+			"export default use${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}Store",
+			""
+		],
+		"description": "vue pinia store"
+	}
+}
+ ```', '', '694026784546488320', 54, 55, '', '604612615536115712', '604612615536115712', '2026-03-31 12:20:00.135+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694039290857914368', 'icon', NULL, 2, 1, 97, '# 图标
+
+## 自定义svg图标
+
+svg图标的存放目录为`@/src/icons/svg`，该文件夹下.svg结尾的文件会被自动注册为图标组件，组件名为`me-icon-{name}`
+
+## 使用elment-plus图标
+elment-plus图标默认已全局注册，注册组件名为`mel-icon-{name}`,elment-plus图标完整列表请参考[elment-plus文档](https://element-plus.org/zh-CN/component/icon.html#%E5%9B%BE%E6%A0%87%E9%9B%86%E5%90%88)
+
+## 组件props
+
+图标组件接受两个props：size、color
+| props      | 类型 |说明|
+| ----------- | ----------- | ----------- |
+| size      | string/number | 图标的fontSize |
+| color   | string        | 图标的color属性 |', '', '694038800321478656', 66, 67, '', '604612615536115712', '604612615536115712', '2026-03-31 12:24:21.567+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('693989329118167040', '最佳实践', NULL, 2, 1, 94, '# 最佳实践
+本项目推荐最佳实践，在数据库实体`entity`文件中声明所有属性、校验规则、及api文档。dto继承自`entity`文件，做相应处理。
+## `entity`文件
+```typescript
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { BelongsManyModel, BelongsToModel } from ''@/types/entity.js'';
+import { DataTypes, NonAttribute, Op } from ''@sequelize/core'';
+import { Attribute, BelongsTo, BelongsToMany, Default, DeletedAt, Index, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+import { ExampleBook } from ''./exampleBook.entity.js'';
+import { File } from ''./file.entity.js'';
+import { User } from ''./user.entity.js'';
+
+//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
+@Table({ tableName: ''example_demo'', comment: ''示例_Demo'' })
+//继承自DelParanoidModel则使用软删除。
+export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  @ApiPropertyRule({ description: ''ID'', rule: RuleType.string() })
+  id: string;
+
+  //唯一索引名称必须全库唯一，当两个null值时唯一索引会认为不是同一个值
+  @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引
+  @Attribute({ type: DataTypes.STRING(11), comment: ''手机号'' })
+  @ApiPropertyRule({ description: ''手机号'', rule: RuleType.string().mobile().description(''手机号'').required() })
+  mobile: string;
+
+  //以“名称:值1=说明1;值2=说明2”，格式声明的备注会自动创建字典和下拉列表，并且支持number、string两种类型
+  @Attribute({
+    comment: ''类型:0=书籍;1=电子产品;2=卡片'',
+    defaultValue: 0,
+    allowNull: false,
+    type: DataTypes.TINYINT.UNSIGNED,
+  })
+  @ApiPropertyRule({ description: ''类型:0=书籍;1=电子产品;2=卡片'', rule: RuleType.number().equal(0, 1, 2).required() })
+  type: number;
+
+  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)
+  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。
+  @Attribute({ type: DataTypes.STRING(20), comment: ''名称'', allowNull: false, defaultValue: '''' })
+  @ApiPropertyRule({ description: ''名称'', rule: RuleType.string().max(20).min(1).required() })
+  name: string;
+
+  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/
+  @BelongsToMany(() => ExampleBook, {
+    through: ''example_demo_books'', //中间表名称 或者 对应的Model，
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: ''demos'',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;
+  })
+  @ApiPropertyRule({
+    description: ''书籍'',
+    type: ''array'',
+    items: {
+      type: () => ExampleBook,
+    },
+    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),
+  })
+  books?: NonAttribute<ExampleBook[]>;
+
+  //反向BelongsTo关联从属， 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to/
+  @Attribute({ type: DataTypes.STRING(20), comment: ''关联前台用户id'' })
+  userId: string;
+  @ApiPropertyRule({ description: ''用户'', type: () => User, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })
+  @BelongsTo(() => User, {
+    foreignKey: ''userId'', //外键名称
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
+  user?: NonAttribute<User>;
+
+  //反向BelongsTo关联从属，File类型创建单文件
+  @Attribute({ type: DataTypes.STRING(20), comment: ''头像附件id'' })
+  avatarFileId: string;
+  @ApiPropertyRule({ description: ''头像'', type: () => File, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })
+  @BelongsTo(() => File, {
+    foreignKey: ''avatarFileId'', //外键名称
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
+  avatar?: NonAttribute<File>;
+
+  //BelongsTo多对多关联从属，File类型创建多文件选择
+  @BelongsToMany(() => File, {
+    through: ''example_demo_files'', //中间表名称 或者 对应的Model，
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
+  @ApiPropertyRule({
+    description: ''附件'',
+    type: ''array'',
+    items: {
+      type: () => File,
+    },
+    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),
+  })
+  files?: NonAttribute<File[]>;
+
+  @DeletedAt //设置为软删除
+  @Attribute({ comment: ''删除时间'' })
+  declare deletedAt: Date | null;
+}
+//声明自动关联方法
+export declare interface ExampleDemo extends BelongsManyModel<''books'', ''book'', ''books'', ExampleBook> {}
+export declare interface ExampleDemo extends BelongsToModel<''user'', User> {}
+export declare interface ExampleDemo extends BelongsToModel<''avatar'', File> {}
+export declare interface ExampleDemo extends BelongsManyModel<''files'', ''file'', ''files'', File> {}
+
+```
+
+
+## 校验文件
+```
+import { OmitDtoType } from ''@/helper/dto.js'';
+import { InferAttributesLoose } from ''@/types/entity.js'';
+import { ExampleDemo } from ''../../../../entities/exampleDemo.entity.js'';
+
+//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效
+export class ExampleDemoCreateDto extends OmitDtoType(
+  ExampleDemo as new () => InferAttributesLoose<ExampleDemo>, //只保留声明属性
+  [''id'', ''createdAt'', ''updatedAt'', ''deletedAt'', ''createdAdminId'', ''updatedAdminId'', ''createdAdmin'', ''updatedAdmin''], //排除自动创建的字段
+) {}
+
+```
+```
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { PageDto } from ''@/dto/page.dto.js'';
+import { IntersectionType, PartialType } from ''@/helper/dto.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { InferAttributesLoose } from ''@/types/entity.js'';
+import { ExampleDemo } from ''../../../../entities/exampleDemo.entity.js'';
+
+//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效
+export class ExampleDemoQueryDto extends IntersectionType(PageDto, PartialType(ExampleDemo as new () => InferAttributesLoose<ExampleDemo>)) {
+  @ApiPropertyRule({ description: ''创建时间(起)'', rule: RuleType.date() })
+  startCreatedAt?: Date;
+
+  @ApiPropertyRule({ description: ''创建时间(止)'', rule: RuleType.date() })
+  endCreatedAt?: Date;
+  @ApiPropertyRule({ description: ''最后更新时间(起)'', rule: RuleType.date() })
+  startUpdatedAt?: Date;
+
+  @ApiPropertyRule({ description: ''最后更新时间(止)'', rule: RuleType.date() })
+  endUpdatedAt?: Date;
+}
+
+```
+```
+import { OmitDtoType, PartialType } from ''@/helper/dto.js'';
+import { InferAttributesLoose } from ''@/types/entity.js'';
+import { ExampleDemo } from ''../../../../entities/exampleDemo.entity.js'';
+
+//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效
+export class ExampleDemoUpdateDto extends PartialType(
+  OmitDtoType(
+    ExampleDemo as new () => InferAttributesLoose<ExampleDemo>, //只保留声明属性
+    [''id'', ''createdAt'', ''updatedAt'', ''deletedAt'', ''createdAdminId'', ''updatedAdminId'', ''createdAdmin'', ''updatedAdmin''], //排除自动创建的字段
+  ),
+) {}
+
+```
+## 控制器
+```
+import { AdminPermission, ApiOperationResponse } from ''@/decorators/index.js'';
+import { Body, Controller, Get, Inject, Param, Post } from ''@midwayjs/core'';
+import { ExampleDemo } from ''../../../../entities/exampleDemo.entity.js'';
+import { ExampleDemoCreateDto } from ''../../dto/example/demoCreate.dto.js'';
+import { ExampleDemoQueryDto } from ''../../dto/example/demoQuery.dto.js'';
+import { ExampleDemoUpdateDto } from ''../../dto/example/demoUpdate.dto.js'';
+import { ExampleDemoService } from ''../../service/example/demo.service.js'';
+import { BaseController } from ''../base.controller.js'';
+
+/**
+ * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。
+ * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址
+ */
+@Controller(''example/demo'')
+export class ExampleDemoController extends BaseController {
+  @Inject()
+  exampleDemoService: ExampleDemoService;
+
+  //查询belongsTo关联模型user用户
+  //获取用户信息
+  @Post(''/getUser'')
+  @ApiOperationResponse({
+    responseType: ExampleDemo,
+    summary: ''查询用户信息'',
+  })
+  @AdminPermission(''ExampleDemoList'')
+  async getUser(@Body(''id'') id: string, @Body(''username'') username: string, @Body(''page'') page = 1, @Body(''pageSize'') pageSize = 10) {
+    return this.success(await this.exampleDemoService.getUser(page, pageSize, id, username));
+  }
+
+  //查询belongsToMany关联模型books示例_书籍
+  //获取示例_书籍信息
+  @Post(''/getExampleBook'')
+  @ApiOperationResponse({
+    responseType: ExampleDemo,
+    summary: ''查询示例_书籍信息'',
+  })
+  @AdminPermission(''ExampleDemoList'')
+  async getExampleBook(@Body(''id'') id: string, @Body(''name'') name: string, @Body(''page'') page = 1, @Body(''pageSize'') pageSize = 10) {
+    return this.success(await this.exampleDemoService.getExampleBook(page, pageSize, id, name));
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post(''/add'')
+  @ApiOperationResponse({
+    responseType: ExampleDemo,
+    summary: ''添加示例_Demo信息'',
+  })
+  @AdminPermission(''ExampleDemoAdd'')
+  async add(@Body() createDto: ExampleDemoCreateDto) {
+    return this.success(await this.exampleDemoService.create(createDto));
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post(''/'')
+  @ApiOperationResponse({
+    responsePage: ExampleDemo,
+    summary: ''获取示例_Demo列表'',
+  })
+  @AdminPermission(''ExampleDemoList'')
+  async list(@Body() queryDto: ExampleDemoQueryDto) {
+    return this.success(await this.exampleDemoService.list(queryDto));
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Get(''/info/:id'')
+  @ApiOperationResponse({
+    responseType: ExampleDemo,
+    summary: ''根据id获取示例_Demo详情'',
+  })
+  @AdminPermission(''ExampleDemoEdit'')
+  async findOne(@Param(''id'') id: string) {
+    const entity = await this.exampleDemoService.findOne(id);
+    return this.success(entity);
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post(''/up/:id'')
+  @ApiOperationResponse({
+    responseType: ExampleDemo,
+    summary: ''根据id更新示例_Demo详情'',
+  })
+  @AdminPermission(''ExampleDemoEdit'')
+  async update(@Param(''id'') id: string, @Body() updateDto: ExampleDemoUpdateDto) {
+    return this.success(await this.exampleDemoService.update(id, updateDto));
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post(''/del/:id'')
+  @ApiOperationResponse({
+    summary: ''根据id删除示例_Demo信息'',
+  })
+  @AdminPermission(''ExampleDemoDel'')
+  async delete(@Param(''id'') id: string) {
+    await this.exampleDemoService.remove(id);
+    return this.success();
+  }
+}
+
+```
+
+## service
+```
+import { InjectRepository, Transaction } from ''@/decorators/index.js'';
+import { Inject, Provide } from ''@midwayjs/core'';
+import { BadRequestError } from ''@midwayjs/core/dist/error/http.js'';
+import { MidwayI18nService } from ''@midwayjs/i18n'';
+import { Op } from ''@sequelize/core'';
+import { ExampleBook } from ''../../../../entities/exampleBook.entity.js'';
+import { ExampleDemo } from ''../../../../entities/exampleDemo.entity.js'';
+import { User } from ''../../../../entities/user.entity.js'';
+import { ExampleDemoCreateDto } from ''../../dto/example/demoCreate.dto.js'';
+import { ExampleDemoQueryDto } from ''../../dto/example/demoQuery.dto.js'';
+import { ExampleDemoUpdateDto } from ''../../dto/example/demoUpdate.dto.js'';
+
+//示例_Demo
+@Provide()
+export class ExampleDemoService {
+  @InjectRepository(ExampleDemo)
+  exampleDemoRepository: typeof ExampleDemo;
+
+  @Inject()
+  i18nService: MidwayI18nService;
+
+  //查询belongsTo关联模型user用户
+  @InjectRepository(User)
+  userRepository: typeof User;
+
+  /**
+   * 获取用户信息
+   * @param queryDto
+   * @returns
+   */
+  @Transaction()
+  async getUser(page: number, pageSize: number, id: string, username: string = '''') {
+    const where = {};
+    if (id) {
+      where[''id''] = id;
+    }
+    if (username) {
+      where[''username''] = { [Op.like]: ''%'' + username + ''%'' };
+    }
+    const { count, rows } = await this.userRepository.findAndCountAll({
+      where,
+      offset: (page - 1) * pageSize,
+      limit: pageSize,
+    });
+    return {
+      list: rows,
+      total: count,
+      page: page,
+      pageSize: pageSize,
+    };
+  }
+
+  //查询belongsToMany关联模型books示例_书籍
+  @InjectRepository(ExampleBook)
+  exampleBookRepository: typeof ExampleBook;
+
+  /**
+   * 获取示例_书籍信息
+   * @param queryDto
+   * @returns
+   */
+  @Transaction()
+  async getExampleBook(page: number, pageSize: number, id: string, name: string = '''') {
+    const where = {};
+    if (id) {
+      where[''id''] = id;
+    }
+    if (name) {
+      where[''name''] = { [Op.like]: ''%'' + name + ''%'' };
+    }
+    const { count, rows } = await this.exampleBookRepository.findAndCountAll({
+      where,
+      offset: (page - 1) * pageSize,
+      limit: pageSize,
+    });
+    return {
+      list: rows,
+      total: count,
+      page: page,
+      pageSize: pageSize,
+    };
+  }
+
+  /**
+   * 创建数据
+   * @param createDto
+   * @returns
+   */
+  @Transaction()
+  async create(createDto: ExampleDemoCreateDto) {
+    const entity = await this.exampleDemoRepository.create(createDto);
+
+    if (createDto.user) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setUser(createDto.user.id);
+    }
+
+    if (createDto.avatar) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setAvatar(createDto.avatar.id);
+    }
+
+    if (createDto.books) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setBooks(createDto.books.map((v) => v.id));
+    }
+
+    if (createDto.files) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setFiles(createDto.files.map((v) => v.id));
+    }
+
+    return entity;
+  }
+
+  /**
+   * 列表分页查询
+   * @param queryDto 查询条件
+   * @returns
+   */
+  @Transaction()
+  async list(queryDto: ExampleDemoQueryDto) {
+    const where = {};
+    Object.keys(queryDto).forEach((key) => {
+      if ([''page'', ''pageSize''].includes(key)) {
+        return;
+      }
+      if ([null, undefined, ''''].includes(queryDto[key])) {
+        return;
+      }
+      if (key === ''startCreatedAt'') {
+        where[''createdAt''] = where[''createdAt''] ?? {};
+        where[''createdAt''][Op.gte] = queryDto[key];
+        return;
+      }
+      if (key === ''endCreatedAt'') {
+        where[''createdAt''] = where[''createdAt''] ?? {};
+        where[''createdAt''][Op.lte] = queryDto[key];
+        return;
+      }
+      if (key === ''startUpdatedAt'') {
+        where[''updatedAt''] = where[''updatedAt''] ?? {};
+        where[''updatedAt''][Op.gte] = queryDto[key];
+        return;
+      }
+      if (key === ''endUpdatedAt'') {
+        where[''updatedAt''] = where[''updatedAt''] ?? {};
+        where[''updatedAt''][Op.lte] = queryDto[key];
+        return;
+      }
+      where[key] = queryDto[key];
+    });
+    const { count, rows } = await this.exampleDemoRepository.findAndCountAll({
+      where,
+      offset: (queryDto.page - 1) * queryDto.pageSize,
+      limit: queryDto.pageSize,
+      include: [
+        ''createdAdmin'',
+        ''updatedAdmin'',
+        ''books'',
+        ''user'',
+        {
+          association: ''avatar'',
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+        {
+          association: ''files'',
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+      ],
+      order: [[''createdAt'', ''DESC'']],
+    });
+    return {
+      list: rows,
+      total: count,
+      page: queryDto.page,
+      pageSize: queryDto.pageSize,
+    };
+  }
+
+  /**
+   * 根据主键获取一条信息
+   * @param id 主键
+   * @returns
+   */
+  @Transaction()
+  async findOne(id: string) {
+    const entity = await this.exampleDemoRepository.findByPk(id, {
+      include: [
+        ''createdAdmin'',
+        ''updatedAdmin'',
+        ''books'',
+        ''user'',
+        {
+          association: ''avatar'',
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+        {
+          association: ''files'',
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+      ],
+    });
+    if (!entity) {
+      throw new BadRequestError(this.i18nService.translate(''没有对应的信息''));
+    }
+    return entity;
+  }
+
+  /**
+   * 更新数据
+   * @param id 主键
+   * @param updateDto 数据对象
+   * @returns
+   */
+  @Transaction()
+  async update(id: string, updateDto: ExampleDemoUpdateDto) {
+    const entity = await this.exampleDemoRepository.findByPk(id);
+    if (!entity) {
+      throw new BadRequestError(this.i18nService.translate(''没有对应的信息''));
+    }
+    Object.assign(entity, updateDto);
+
+    if (updateDto.user !== undefined) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setUser(updateDto.user?.id ?? null);
+    }
+
+    if (updateDto.avatar !== undefined) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setAvatar(updateDto.avatar?.id ?? null);
+    }
+
+    if (updateDto.books) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setBooks(updateDto.books.map((v) => v.id));
+    }
+
+    if (updateDto.files) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setFiles(updateDto.files.map((v) => v.id));
+    }
+
+    return await entity.save();
+  }
+
+  /**
+   * 删除数据
+   * @param id 主键
+   * @returns
+   */
+  @Transaction()
+  async remove(id: string) {
+    const entity = await this.exampleDemoRepository.findByPk(id);
+    if (!entity) {
+      throw new BadRequestError(this.i18nService.translate(''没有对应的信息''));
+    }
+    await entity.destroy();
+  }
+}
+
+```', '', '693986817568931840', 22, 23, '', '604612615536115712', '604612615536115712', '2026-03-31 09:05:49.761+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', 'best');
+INSERT INTO aon_doc VALUES ('693988406782328832', 'Service服务', NULL, 2, 1, 99, '# Service服务
+
+在业务中，只有控制器（Controller）的代码是不够的，一般来说会有一些业务逻辑被抽象到一个特定的逻辑单元中，我们一般称为服务（Service）。
+![](/api/admin/file/get/693988309440921600/image.png)
+提供这个抽象有以下几个好处：
+
+- 保持 Controller 中的逻辑更加简洁。
+- 保持业务逻辑的独立性，抽象出来的 Service 可以被多个 Controller 重复调用。
+- 将逻辑和展现分离，更容易编写测试用例。
+
+本项目对service没有做特别封装，除了文件命名及目录位置外规则和midway一致，更多内容请阅读[midway 服务和注入](https://midwayjs.org/docs/service)文档。
+
+## 创建服务
+普通的服务就是一个 Class，比如我们之前创建了一个接受 user 请求的 Controller，我们来新增一个处理这些数据的服务。
+对于服务的文件，我们一般会存放到 对应模块的`service` 目录中。我们来添加一个 user 服务。
+```
+├── src
+│   ├── app
+│   │   ├──admin
+│   │   │   ├── controller
+│   │   │   │   ├── user.controller.ts
+│   │   │   └── service
+│   │   │       └── user.service.ts
+├── package.json
+└── tsconfig.json
+```
+内容为：
+```
+// src/app/admin/service/user.service.ts
+import { Provide } from ''@midwayjs/core'';
+
+@Provide()
+export class UserService {
+  async getUser(id: string) {
+    return {
+      id,
+      name: ''Harry'',
+      age: 18,
+    };
+  }
+}
+```
+除了一个 @Provide 装饰器外，整个服务的结构和普通的 Class 一模一样，这样就行了。
+
+## 使用服务
+在 Controller 处，我们需要来调用这个服务。传统的代码写法，我们需要初始化这个 Class（new），然后将实例放在需要调用的地方。在 Midway 中，你不需要这么做，只需要编写我们提供的 **"依赖注入"** 的代码写法。
+
+```
+//src/app/admin/controller/user.controller.ts
+import { Inject, Controller, Get, Provide, Query } from ''@midwayjs/core'';
+import { BaseController } from ''./base.controller.js'';
+import { UserService } from ''../service/user.service.js'';
+
+@Controller(''user'')
+export class UserController extends BaseController {
+
+  @Inject()
+  userService: UserService;
+
+  @Get(''/info/:id'')
+  async getUser(@Param(''id'') id: string) {
+    const user = await this.userService.getUser(uid);
+   return this.success(user);
+  }
+}
+```
+使用服务的过程分为几部分：
+
+- 使用 @Provide 装饰器暴露你的服务
+- 在调用的代码处，使用 @Inject 装饰器注入你的服务
+- 调用注入服务，执行对应的方法
+
+## 注入行为描述
+Midway 的核心 “依赖注入” 容器会自动关联你的控制器（Controller） 和服务（Service），在运行过程中会自动初始化所有的代码，你无需手动初始化这些 Class。
+
+@Provide 装饰器的作用：
+
+- 这个 Class，被依赖注入容器托管，会自动被实例化（new）
+- 这个 Class，可以被其他在容器中的 Class 注入
+而对应的 @Inject 装饰器，作用为：
+- 在依赖注入容器中，找到对应的属性名，并赋值为对应的实例化对象
+
+@Provide 和 @Inject 装饰器是成对出现的，两者通过冒号后的类名进行关联。
+
+事实上，控制器（Controller） 上也有这个装饰器，只是在Midway中，Controller 包含了 Provide 的功能。如果你不确定什么时候可以隐藏，可以都写上。
+上边的controller代码等价于
+```
+@Provide()
+@Controller(''user'')
+export class UserController extends BaseController {
+```
+
+## 在其余地方使用service
+根据上边的介绍，我们可以知道在任何`@Provide`修饰的地方都可以用`@Inject`调用服务，下边我们举个`service`服务互相调用的例子
+```
+//src/app/admin/service/login.service.ts
+import { Inject, Controller, Get, Provide, Query } from ''@midwayjs/core'';
+import { UserService } from ''../service/user.service.js'';
+
+@Provide()
+export class LoginService {
+
+  @Inject()
+  userService: UserService;
+
+  async hasUser(id: string) {
+    return (await this.userService.getUser(uid))?true:false;
+  }
+}
+```
+依赖注入 是 Midway 的核心特性，通过装饰器的轻量特性，让依赖注入变的优雅，从而让开发过程变的便捷有趣。如果想更深一步了解，可以阅读[midway 依赖注入](https://midwayjs.org/docs/container)文档。', '', '693986817568931840', 16, 17, '', '604612615536115712', '604612615536115712', '2026-03-31 09:02:09.858+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', 'service');
+INSERT INTO aon_doc VALUES ('694025172922925056', '路由', NULL, 2, 1, 97, '# 路由菜单
+
+这里的路由分为两种，constantRoutes 和 asyncRoutes。
+
+constantRoutes： 代表那些不需要动态判断权限的路由，如登录页、404、等通用页面。
+
+asyncRoutes： 代表那些需求动态判断权限并通过 addRoutes 动态添加的页面。
+## 静态路由(constantRoutes)
+
+静态路由定义位于`@/router/routes/index.ts`文件下,主要包含一些无需登录的公共路由。
+
+```
+export const constantRoutes: RouteRecordRaw[] = [
+  {
+    path: PageEnum.LOGIN,
+    component: async () => await import(''@/views/login/index.vue''),
+    meta: {
+      hideMenu: true,
+      title: ''登录'',
+    },
+  },
+  {
+    path: PageEnum.HOME,
+    meta: {
+      hideMenu: true,
+      title: ''首页'',
+    },
+    redirect: () => useRouteStore().firstMenu(),//重定向到第一个路由
+  },
+  {
+    path: ''/redirect'',
+    component: Layout,
+    children: [
+      {
+        name: ''redirect'',
+        path: ''/redirect/:path(.*)'',
+        component: async () => await import(''@/views/redirect.vue''),
+      },
+    ],
+    meta: {
+      hideMenu: true,
+      title: '''',
+      noCache: true,
+    },
+  },
+  {
+    path: ''/:pathMatch(.*)*'',
+    component: async () => await import(''@/views/404.vue''),
+    meta: { hideMenu: true, title: ''404'' },
+  },
+];
+```
+
+
+## 动态路由(asyncRoutes)
+
+- **动态定义通过api接口获取**
+- **动态路由获取成功后会动态注册到vue-router中。**
+- **动态路由注册时会自动注册到一级路由`/`的children下,这样菜单路由只有一级也可以渲染出layout框架**
+
+
+路由功能基于[vue-router](https://router.vuejs.org/zh/introduction.html)开发,自定义配置放在了[meta](#meta配置说明)中,其余定义规则参考[vue-router#routerecordraw](https://router.vuejs.org/zh/api/#routerecordraw)。
+
+将`settingConfig.menuMode`(位于`@/config/index.ts`文件中)设置为`MenuModeEnum.API`，将使用前端定义模式。
+
+### 动态路由api获取模式
+
+将`settingConfig.menuMode`(位于`@/config/index.ts`文件中)设置为`MenuModeEnum.API`，将使用api模式，此值已自动设置，请勿更改。
+
+在api模式下，登录成功后或者已登录首次访问时，会通过调用接口获取菜单数组，动态注册到vue-router中。
+
+### 创建菜单
+
+在 菜单权限页面 直接创建 类型为 菜单， 组件路径为 相对于`src/views`文件夹无后缀的相对路径即可
+![alt text](image.png)
+
+
+### 配置说明
+```
+export interface RouteMeta extends Record<string | number | symbol, unknown> {
+    // 标题设置该路由在侧边栏和面包屑中展示的名字
+    title: string;
+    // 对应权限 多个之间为或的关系
+    rule?: string[];
+    // 是否是固定的tag
+    affix?: boolean;
+    // 图标
+    icon?: string;
+    // 在tag中隐藏
+    hideTag?: boolean;
+    // 外链
+    isLink?: boolean;
+    // 当路由设置了该属性，则会高亮相对应的侧边栏。
+    // 这在某些场景非常有用，比如：一个文章的列表页路由为：/article/list
+    // 点击文章进入文章详情页，这时候路由为/article/1，但你想在侧边栏高亮文章列表的路由，就可以进行如下设置
+    // asyncRoutes如果不设置会自动计算展示不隐藏的祖级（包括当前）
+    activeMenu?: string;
+    // 如果设置为true，则不会被 <keep-alive> 缓存
+    noCache?: boolean;
+    // 在菜单中隐藏
+    hideMenu?: boolean;
+    // 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式
+    // 只有一个时，会将那个子路由当做根路由显示在侧边栏
+    // 若你想不管路由下面的 children 声明的个数都显示你的根路由
+    // 你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由
+    alwaysShow?: boolean;
+    // 是否需要面包屑 false不展示在面包屑,ture一直展示在面包屑,undefined当只有一个子元素面包屑时跳过展示
+    breadcrumb?: boolean;
+  }
+```
+
+### 外链
+
+当为外链 时，路径 需填写外链地址。
+
+### 菜单图标
+
+菜单图标定义值为图标组件的name,自定义svg图标和使用elment-plus图标请参考[图标](./icon.md)
+
+### keepAlive缓存
+
+页面缓存通过 组件[me-keep-alive](../components/core/meKeepAlive.md)实现,通过路由的fullPath进行缓存过滤，所以无需对页面组件设置name,即可进行缓存，并且多路由共用同一页面组件时，可以进行独立刷新，互不影响。
+
+
+ - 如果想全局禁用keppAlive，去`@/config/index.ts`配置`settingConfig.openKeepAlive`为`false`即可，配置详情参见[config](./config.md#基础配置)。
+ - 如需设置某个路由不缓存设置缓存值为`否`即可。', '', '694025634292170752', 36, 37, '', '604612615536115712', '604612615536115712', '2026-03-31 11:28:15.589+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', 'route');
+INSERT INTO aon_doc VALUES ('693988724551188480', '数据库', NULL, 2, 1, 96, '# 数据库
+数据库使用postgresql,连接框架使用seqlize@7,相关配置在`src/database.ts`中，`src/database.ts`加载了env环境变量，如需配置数据库连接方式可直接更改`.env`文件的相关配置。注意:本项目自行封装使用的seqlize@7，未使用`@midwayjs/sequelize@3`组件。
+
+相关使用方式如下：
+
+## 模型定义
+
+### 1、创建 Model（Entity）
+
+我们通过模型和数据库关联，在应用中的模型就是数据库表，在 Sequelize 中，模型是和实体绑定的，每一个实体（Entity) 文件，即是 Model，也是实体（Entity）。
+所有的实体存储在`src/entities`文件夹和数据库表想对应。
+在示例中，需要一个实体，我们这里拿 ExampleBook 举例。在`src/entities`文件夹添加实体文件 `exampleBook.entity.ts` ，一个简单的实体如下。
+
+```typescript
+// src/entities/exampleBook.entity.ts
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { DataTypes } from ''@sequelize/core'';
+import { Attribute, Default, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+
+@Table({ tableName: ''example_book'', comment: ''示例_书籍'' })
+export class ExampleBook extends AdminBaseModel<ExampleBook> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  id: string;
+
+  @Attribute({ type: DataTypes.STRING(20), comment: ''名称'', allowNull: false, defaultValue: '''' })
+  name: string;
+}
+
+```
+
+- 管理后台的表需继承AdminBaseModel，会自动创建 和维护`createdAdminId`、`updatedAdminId`、`createdAt`、`updatedAt`，相关内容是在Hooks钩子中维护的，如执行自定义sql需手动维护相关值。
+- 前台表需继承IndexBaseModel，会自动创建 和维护`createdAdminId`、`updatedAdminId`、`createdAt`、`updatedAt`，相关内容是在Hooks钩子中维护的，如执行自定义sql需手动维护相关值。
+- @Table 装饰器可以在不传递任何参数的情况下使用，本项目约定，数据库表名使用下划线方式命名，`seqlize`默认会使用复数形式命名表名，本项目推荐手动传入tableName、comment定义表名和备注。更多参数请查看[seqlize 文档](https://sequelize.org/docs/v7/models/naming-strategies/) 。 
+
+### 2、 主键
+
+@PrimaryKey 定义主键，`postgresql`不支持自增主键，如想实现需通过自增序列实现，但迁移时比较麻烦。本项目推荐使用自定义函数`uuid`维护string类型主键，方式为`@Default(uuid)``@Attribute({ type: DataTypes.STRING(20), allowNull: false })`。
+
+```typescript
+// src/entities/exampleBook.entity.ts
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { DataTypes } from ''@sequelize/core'';
+import { Attribute, Default, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+
+@Table({ tableName: ''example_book'', comment: ''示例_书籍'' })
+export class ExampleBook extends AdminBaseModel<ExampleBook> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  id: string;
+}
+
+```
+### 3、时间列
+主要指代的是 `@CreatedAt`, `@UpdatedAt`, `@DeletedAt` 单个装饰器标注的列。
+比如：
+```typescript
+import { InferCreationAttributes, InferAttributes, Model, CreationOptional } from ''@sequelize/core'';
+import { CreatedAt, UpdatedAt, DeletedAt, Table } from ''@sequelize/core/decorators-legacy'';
+
+@Table({ tableName: ''example_book'', comment: ''示例_书籍'' })
+export class ExampleBook extends Model<InferAttributes<ExampleBook>, InferCreationAttributes<ExampleBook>> {
+  @CreatedAt
+  declare createdAt: Date;
+
+  @UpdatedAt
+  declare updatedAt: Date;
+
+  @DeletedAt
+  declare deletedAt: Date | null;
+}
+```
+|装饰器|	描述|
+| --   | --   |
+|@CreatedAt|	会设置 自动维护的创建时间字段|
+|@UpdatedAt|	会设置 自动维护的更新时间字段|
+|@DeletedAt|	会设置 自动维护的删除时间字段，值为非null的记录会被识别为逻辑删除|
+
+如果继承`AdminBaseModel`或`IndexBaseModel`会自动继承`createdAt`和`updatedAt`字段，无需手动维护。`deletedAt`按需求自行维护。
+
+### 4、普通列
+`@Column` 装饰器用于标注普通列，需要在参数中传入类型和备注。
+```typescript
+// src/entities/exampleBook.entity.ts
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { DataTypes } from ''@sequelize/core'';
+import { Attribute, Default, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+
+@Table({ tableName: ''example_book'', comment: ''示例_书籍'' })
+export class ExampleBook extends AdminBaseModel<ExampleBook> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  id: string;
+
+  @Attribute({ type: DataTypes.STRING(20), comment: ''名称'', allowNull: false, defaultValue: '''' })
+  name: string;
+}
+
+```
+更多类型请，参考[seqlize 文档](https://sequelize.org/docs/v7/models/data-types/)
+
+## 数据源配置
+我们支持多库数据源配置 在`src/config/database.ts`中配置
+```typescript
+import { importModels, Options } from ''@sequelize/core'';
+import { PostgresDialect } from ''@sequelize/postgres'';
+import { appLogger } from ''../logger.js'';
+export default async () => ({
+  dataSource: {
+    default: {
+      dialect: PostgresDialect,
+      host: process.env.DATABASE_HOST ?? ''127.0.0.1'',
+      port: process.env.DATABASE_PORT ?? 5342,
+      database: process.env.DATABASE_DB ?? ''meadmin'',
+      user: process.env.DATABASE_USER ?? ''root'',
+      password: process.env.DATABASE_PASSWORD ?? ''root'',
+      client_encoding: ''utf8'',
+      models: await importModels((import.meta.dirname + ''/../**/*.entity.js'').replace(/\\/g, ''/'')), // 支持如下的扫描形式，或实体形式[User,Admin]
+      options: `-c search_path=${process.env.DATABASE_SCHEMA}`, //设置模式查询顺序
+      define: {
+        underscored: true, //强制表名和列名转换为snake_case
+        freezeTableName: true, //强制模型名称不变换（取消表名的单词复数转换和snake_case转换)
+        timestamps: false, // 禁用createAt和updateAt的自动声明
+        noPrimaryKey: true, //禁止自动创建主键id
+        schema: process.env.DATABASE_SCHEMA ?? ''public'',
+        timezone: ''Asia/Shanghai'',
+      },
+      logging(sql, timing, seqlize?) {
+        appLogger.info(''[sql]耗时 %d ms，%s'', timing, sql, seqlize?.bind);
+      },
+      benchmark: true, //开启日志打印sql耗时参数传递
+    } as Options<PostgresDialect>,
+  },
+  // 第二个数据源
+  default2: {
+    // ...
+  },
+});
+```
+使用时
+```typescript
+import { InjectRepository, Transaction } from ''@/decorators/index.js'';
+import { Provide } from ''@midwayjs/core'';
+import { BadRequestError } from ''@midwayjs/core/dist/error/http.js'';
+import { User } from ''../../../entities/user.entity.js'';
+
+//用户
+@Provide()
+export class UserService {
+  @InjectRepository(User)//声明entity,默认加载default数据源相当于@InjectRepository(User,''default'')
+  userRepository: typeof User;
+ 
+  /**
+   * 根据主键获取一条信息
+   * @param id 主键
+   * @returns
+   */
+  @Transaction()
+  async findOne(id: string) {
+    const entity = await this.userRepository.findByPk(id, {
+      include: [
+        ''createdUser''
+      ],
+    });
+    if (!entity) {
+      throw new BadRequestError(''没有对应的信息'');
+    }
+    return entity;
+  }
+}
+```
+## 模型关联
+可以通过 `@HasMany` 、`@HasOne` 、`@BelongsTo`、`@BelongsToMany` 装饰器在模型中直接描述关系。
+### 1、一对多或一对一从属
+```typescript
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { BelongsToModel } from ''@/types/entity.js'';
+import { DataTypes, NonAttribute } from ''@sequelize/core'';
+import { Attribute, BelongsTo, Default, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+import { User } from ''./user.entity.js'';
+
+@Table({ tableName: ''example_demo'', comment: ''示例_Demo'' })
+//继承自DelParanoidModel则使用软删除。
+export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  @ApiPropertyRule({ description: ''ID'', rule: RuleType.string() })
+  id: string;
+
+   //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)
+  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。
+  @Attribute({ type: DataTypes.STRING(20), comment: ''名称'', allowNull: false, defaultValue: '''' })
+  name: string;
+
+  //反向BelongsTo关联从属， 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to/
+  @Attribute({ type: DataTypes.STRING(20), comment: ''关联前台用户id'' })
+  userId: string;
+ 
+  @BelongsTo(() => User, {
+    foreignKey: ''userId'', //外键名称
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
+  user?: NonAttribute<User>;
+}
+//声明自动关联方法
+export declare interface ExampleDemo extends BelongsToModel<''user'', User> {}
+```
+`sequelize-typescript` 会在内部进行关联，会自动查询出相关的依赖。
+```typescript
+ const entity = await this.userRepository.findByPk(id, {
+      include: [''user''],
+    });
+```
+### 多对多
+
+```typescript
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { BelongsManyModel } from ''@/types/entity.js'';
+import { DataTypes, NonAttribute } from ''@sequelize/core'';
+import { Attribute, BelongsToMany, Default, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+import { ExampleBook } from ''./exampleBook.entity.js'';
+
+//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
+@Table({ tableName: ''example_demo'', comment: ''示例_Demo'' })
+//继承自DelParanoidModel则使用软删除。
+export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  @ApiPropertyRule({ description: ''ID'', rule: RuleType.string() })
+  id: string;
+
+
+  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)
+  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。
+  @Attribute({ type: DataTypes.STRING(20), comment: ''名称'', allowNull: false, defaultValue: '''' })
+  @ApiPropertyRule({ description: ''名称'', rule: RuleType.string().max(20).min(1).required() })
+  name: string;
+
+  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/
+  @BelongsToMany(() => ExampleBook, {
+    through: ''example_demo_books'', //中间表名称 或者 对应的Model，
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: ''demos'',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;
+  })
+  @ApiPropertyRule({
+    description: ''书籍'',
+    type: ''array'',
+    items: {
+      type: () => ExampleBook,
+    },
+    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),
+  })
+  books?: NonAttribute<ExampleBook[]>;
+}
+//声明自动关联方法
+export declare interface ExampleDemo extends BelongsManyModel<''books'', ''book'', ''books'', ExampleBook> {}
+
+```
+BelongsToMany 关联会自动在目标模型上创建逆关联，目标模型也是一个 BelongsToMany 关联。您可以通过使用反向选项自定义反关联：
+
+```typescript
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { BelongsManyModel } from ''@/types/entity.js'';
+import { DataTypes, NonAttribute } from ''@sequelize/core'';
+import { Attribute, BelongsToMany, Default, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+import { ExampleBook } from ''./exampleBook.entity.js'';
+
+//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
+@Table({ tableName: ''example_demo'', comment: ''示例_Demo'' })
+//继承自DelParanoidModel则使用软删除。
+export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  @ApiPropertyRule({ description: ''ID'', rule: RuleType.string() })
+  id: string;
+
+
+  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)
+  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。
+  @Attribute({ type: DataTypes.STRING(20), comment: ''名称'', allowNull: false, defaultValue: '''' })
+  @ApiPropertyRule({ description: ''名称'', rule: RuleType.string().max(20).min(1).required() })
+  name: string;
+
+  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/
+  @BelongsToMany(() => ExampleBook, {
+    through: ''example_demo_books'', //中间表名称 或者 对应的Model，
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+    inverse: {as: ''demos'',},
+    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: ''demos'',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;
+  })
+  books?: NonAttribute<ExampleBook[]>;
+}
+//声明自动关联方法
+export declare interface ExampleDemo extends BelongsManyModel<''books'', ''book'', ''books'', ExampleBook> {}
+
+```
+```typescript
+import { NonAttribute } from "@sequelize/core";
+import { AdminBaseModel } from "./abstract/adminBase.entity.js";
+import { ExampleDemo } from "./exampleDemo.entity.js";
+
+export class ExampleBook extends AdminBaseModel<ExampleBook> {
+  /** Declared by {@link ExampleDemo.books} */
+  declare demos?: NonAttribute<ExampleDemo[]>;
+}
+```
+`sequelize-typescript` 会在内部进行关联，会自动查询出相关的依赖。
+```typescript
+ const entity = await this.exampleDemoRepository.findByPk(id, {
+      include: [''books''],
+    });
+```
+更多文档请参考[seqlize 文档](https://sequelize.org/docs/v7/associations/belongs-to-many/)
+### 3、模型循环依赖
+如果你使用了 `@BelongsTo` 装饰器定义双向依赖时，很容易触发一个模型循环依赖的错误，比如：
+```typescript
+ReferenceError: Cannot access ''User'' before initialization 
+```
+这是因为“emitDecoratorMetadata”在类初始化时会添加对另一个类的引用。
+既然是循环导入，这样做必然会导致你遇到的错误。
+
+解决办法是只在一侧声明关联。反面可以用 `inverse` property 性质声明
+你还需要将用户导入标记为导入类型：
+
+```typescript
+//joke.js
+import { DataTypes, Model,InferAttributes,InferCreationAttributes,CreationOptional } from ''@sequelize/core'';
+import { Attribute, PrimaryKey, AutoIncrement, NotNull, BelongsTo } from ''@sequelize/core/decorators-legacy'';
+import type { User } from ''./user.js'';//注意使用type引用
+  
+export class Joke extends Model<InferAttributes<Joke>, InferCreationAttributes<Joke>> 
+{
+    @Attribute(DataTypes.INTEGER)
+    @PrimaryKey
+    @AutoIncrement
+    declare id: CreationOptional<number>;
+
+    @Attribute(DataTypes.STRING)
+    @NotNull
+    declare content: string;
+
+-   @BelongsTo(() => User, ''userId'')
+    user!: User;
+    
+    // This is the foreign key
+    @Attribute(DataTypes.INTEGER)
+    @NotNull
+    declare userId: number;
+
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+}
+```
+```typescript
+//user.js
+import { DataTypes,Model,InferAttributes,InferCreationAttributes,CreationOptional, NonAttribute } from ''@sequelize/core'';
+import { Attribute, PrimaryKey, AutoIncrement, NotNull, HasMany } from ''@sequelize/core/decorators-legacy'';
+import { Joke } from ''./joke.js'';
+  
+export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> 
+{
+    @Attribute(DataTypes.INTEGER)
+    @PrimaryKey
+    @AutoIncrement
+    declare id: CreationOptional<number>;
+
+    @Attribute(DataTypes.STRING)
+    @NotNull
+    declare name: string;
+
+    @Attribute(DataTypes.STRING)
+    declare email: string;
+
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+
+    @HasMany(() => Joke, { foreignKey: ''userId'', inverse: ''user'' })
+    declare jokes?: NonAttribute<Joke[]>;
+}
+
+```
+相关参考[github](https://github.com/sequelize/sequelize/issues/17444)
+
+## 数据库操作
+
+```typescript
+import { InjectRepository } from ''@/decorators/index.js'';
+import { Provide } from ''@midwayjs/core'';
+import { BadRequestError } from ''@midwayjs/core/dist/error/http.js'';
+import { Op } from ''@sequelize/core'';
+import { User } from ''../../../entities/user.entity.js'';
+
+//用户
+@Provide()
+export class UserService {
+  @InjectRepository(User) //声明entity,默认加载default数据源相当于@InjectRepository(User,''default'')
+  userRepository: typeof User;
+
+  /**
+   * 根据主键获取一条信息
+   * @param id 主键
+   * @returns
+   */
+  async findOne(id: string) {
+    // 查询
+    let result = await this.userRepository.findAll();
+    console.log(result);
+
+    // 新增
+    await this.userRepository.create({
+      nickname: ''123'',
+    });
+
+    // 删除
+    await this.userRepository.destroy({
+      where: {
+        nickname: ''123'',
+      },
+    });
+
+    // 联合查询
+    // SELECT * FROM photo WHERE name = "23" OR name = "34";
+    let result = await this.userRepository.findAll({
+      where: {
+        [Op.or]: [{ nickname: ''23'' }, { nickname: ''34'' }],
+      },
+    });
+    // => result
+
+    // 连表查询
+    const entity = await this.userRepository.findByPk(id, {
+      include: [''createdUser''],
+    });
+    if (!entity) {
+      throw new BadRequestError(''没有对应的信息'');
+    }
+    return entity;
+  }
+}
+```
+更多用法请查询：[seqlize文档](https://sequelize.org/docs/v7/category/querying/)
+## 事务
+本项目封装了`Transaction`装饰器，只需要添加上，即可在函数执行时应用`seqlize`的托管事务，事务会在函数，执行完毕后自动提交
+，异常时自动回滚。默认情况下，`Sequelize` 使用 `AsyncLocalStorage` 在函数及子函数调用中开始的所有查询中自动使用该活跃事务。更多请参考[seqlize文档](https://sequelize.org/docs/v7/querying/transactions/#managed-transactions-recommended)
+```typescript
+import { InjectRepository, Transaction } from ''@/decorators/index.js'';
+import { Provide } from ''@midwayjs/core'';
+import { User } from ''../../../entities/user.entity.js'';
+
+//用户
+@Provide()
+export class UserService {
+  @InjectRepository(User) //声明entity,默认加载default数据源相当于@InjectRepository(User,''default'')
+  userRepository: typeof User;
+
+  async create(){
+     // 新增
+    await this.userRepository.create({
+      nickname: ''123'',
+    });
+  }
+  /**
+   * 根据主键获取一条信息
+   * @param id 主键
+   * @returns
+   */
+  @Transaction()
+  async findOne(id: string) {
+    // 查询
+    let result = await this.userRepository.findAll();
+    console.log(result);
+    await this.create();
+  }
+}
+```
+## 同步数据库结构
+
+- `pnpm exec meadmin sync *` 同步所有
+- 或 `pnpm meadmin sync exampleDemo,systemAdmin,exampleBook,user,file` 定向同步exampleDemo文件（定向同步文件时，需将关联依赖全部罗列出来，一起同步）
+
+## 更多特性
+连接池、自定义数据类型、读取复制、Hooks钩子等更多特性请参考[seqlize 文档](https://sequelize.org/docs/v7/category/other-topics/)', '', '693986817568931840', 18, 19, '', '604612615536115712', '604612615536115712', '2026-03-31 09:03:25.62+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', '96');
+INSERT INTO aon_doc VALUES ('693988974405877760', '校验和swagger', NULL, 2, 1, 95, '# 校验和Swagger文档
+## 校验
+我们经常要在方法调用时执行一些类型检查，参数转换的操作，本项目利用dto文件结合`Midway`的`@midwayjs/validate@3`组件，提供了一种简单的能力来快速检查参数的类型，这个能力来源于 `joi` 。
+
+### 背景
+最常用参数校验的地方是 控制器（Controller），同时你也可以在任意的 Class 中使用这个能力。
+
+我们以控制器（Controller）中使用为例，还是那个 user。
+普通情况下，我们从 body 上拿到所有 Post 结果，并进行一些校验。
+```
+// src/interface.ts
+export interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  age: number;
+}
+
+// src/controller/home.ts
+import { Controller, Get, Provide } from ''@midwayjs/core'';
+
+@Controller(''/api/user'')
+export class HomeController {
+  @Post(''/'')
+  async updateUser(@Body() user: User) {
+    if (!user.id || typeof user.id !== ''number'') {
+      throw new Error(''id error'');
+    }
+
+    if (user.age <= 30) {
+      throw new Error(''age not match'');
+    }
+    // xxx
+  }
+}
+```
+如果每个方法都需要这么校验，会非常的繁琐。
+
+针对这种情况， 配合 `@Validate` 和 `@Rule` 装饰器，用来 快速定义校验的规则，帮助用户 减少这些重复的代码。
+### 创建校验文件
+本项目校验文件为dto 类,统一放在模块的`dto`文件夹
+```
+//src/app/admin/dto/loginParam.dto.ts
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { RuleType } from ''@midwayjs/validate'';
+
+export class LoginParamDto {
+  @ApiPropertyRule({ description: ''用户名'', rule: RuleType.string().max(10).min(1).required() })
+  username: string;
+  @ApiPropertyRule({ description: ''密码'', rule: RuleType.string().required() })
+  password: string;
+  @ApiPropertyRule({ description: ''验证码标识'', rule: RuleType.string().required()})
+  captchaId: string;
+  @ApiPropertyRule({ description: ''验证码'', rule: RuleType.string().required() })
+  captcha: string;
+}
+
+```
+由于这个类属于一个 PlainObject ，也不需要被依赖注入管理，我们不需要提供 @Provide 装饰器。
+
+这个 `LoginParamDto` Class 提供了三个属性和他们对应的校验规则。
+
+- username 一个必填的字符串类型,长度在1-10之间
+
+- password 一个必填的字符串类型
+
+- captchaId 一个必填的字符串类型
+
+- captcha 一个必填的字符串类型
+
+不同于`midway`用`@Rule`装饰器修饰需要被校验的属性，本项目声明了`@ApiPropertyRule`装饰器，它封装了`swagger`的`@ApiProperty`装饰器和`validate`的`Rule`装饰器，它的参数为rule,接受一个 RuleType 对象提供的校验规则的链式方法。
+`@ApiPropertyRule` 针对日常应用还做了以下处理
+- 将 空串视为空而不是无效值,否则空串会被 stripUnknown 配置 视为无效值处理掉
+- 如果不是必填值，允许null
+- 自动将 `RuleType` 的 required规则赋值给`@ApiProperty`装饰器
+- 自动将maximum、minimum、minLength、maxLength、enmu赋值给`RuleType`
+- 自动将`description`添加为 `RuleType`的`label`用于多语言
+
+### 使用校验文件
+定义完类型之后，就可以直接在业务代码中使用了。
+
+```
+import { ApiOperationResponse } from ''@/decorators/swagger.js'';
+import { Body, Controller, Inject, Post } from ''@midwayjs/core'';
+import { Context } from ''@midwayjs/koa'';
+import { LoginParamDto } from ''../dto/loginParam.dto.js'';
+import { LoginResultDto } from ''../dto/loginResult.dto.js'';
+import { LoginService } from ''../service/login.serveice.js'';
+import { BaseController } from ''./base.controller.js'';
+
+@Controller(''login'')
+export class LoginController extends BaseController {
+  @Inject()
+  loginService: LoginService;
+
+  @Inject()
+  ctx: Context;
+
+  @Post(''/login'')
+  @ApiOperationResponse({
+    responseType: LoginResultDto,
+    summary: ''登录'',
+  })
+  async login(@Body() param: LoginParamDto) {
+    return this.success(await this.loginService.login(param.username, param.password, this.ctx));
+  }
+}
+```
+### 从原有 DTO 创建新 DTO
+有时候，我们会希望从某个 DTO 中获取一部分属性，变成一个新的 DTO 类。
+
+本项目 提供了 `PickDtoType` `OmitDtoType` `PartialType` `RequiredType` `IntersectionType` 五个方法根据现有的的 DTO 类型创建新的 DTO。请注意这些函数从`@/helper/dto.js`导出。
+
+PickDto 用于从现有的 DTO 中获取一些属性，变成新的 DTO，而 OmitDto 用于将其中某些属性剔除，PartialType  将属性设置为可选，RequiredType 将属性设置为必填， IntersectionType 将两种类型合并为一种新类型,结合了两种类型的所有属性。比如：
+```typescript
+import { OmitDtoType } from ''@/helper/dto.js'';
+import { InferAttributesLoose } from ''@/types/entity.js'';
+import { File } from ''../../../entities/file.entity.js'';
+
+//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效
+export class FileCreateDto extends OmitDtoType(
+  File as new () => InferAttributesLoose<File>, //只保留声明属性
+  [''id'', ''createdAt'', ''updatedAt'', ''url'', ''createdAdminId'', ''updatedAdminId''], //排除自动创建的属性
+) {}
+```
+### 配置
+配置文件在src/config/config.default.ts中，默认开启了以下配置
+```
+  validate: {
+    validationOptions: {
+      allowUnknown: false, // 全局生效 允许未定义的字段
+      convert: true, // 当为true时，尝试将值转换为所需的类型（例如，将字符串转换为数字.
+      stripUnknown: true, // 全局生效,移除多余的字段
+    },
+  },
+```
+更多说明请参考[midway](https://midwayjs.org/docs/extensions/validate)和[joi](https://joi.dev/api/)文档
+## swagger文档
+swagger 基于`@midwayjs/swagger@3 `只做了`@ApiPropertyRule`的封装，`@ApiPropertyRule`可接受`@ApiProperty`的全部参数
+
+### 开启组件
+在 configuration.ts 中增加组件。
+```
+import { Configuration } from ''@midwayjs/core'';
+import * as swagger from ''@midwayjs/swagger'';
+
+@Configuration({
+  imports: [
+    // ...
+    swagger
+  ]
+})
+export class MainConfiguration {
+
+}
+```
+可以配置启用的环境，比如下面的代码指的是 只在 local 环境下启用。本项目已默认在local和dev环境下开启
+```
+import { Configuration } from ''@midwayjs/core'';
+import * as swagger from ''@midwayjs/swagger'';
+
+@Configuration({
+  imports: [
+    // ...
+    {
+      component: swagger,
+      enabledEnvironment: [''local'']
+    }
+  ]
+})
+export class MainConfiguration {
+
+}
+```
+然后启动项目，访问地址：
+
+UI: [http://127.0.0.1:7001/swagger-ui/index.html](http://127.0.0.1:7001/swagger-ui/index.html)
+
+JSON: [http://127.0.0.1:7001/swagger-ui/index.json](http://127.0.0.1:7001/swagger-ui/index.json)
+路径可以通过 swaggerPath 参数配置。
+
+### 数据类型
+自动类型提取
+Swagger 组件会识别各个 @Controller 中每个路由方法的 @Body()、@Query()、@Param() 装饰器，提取路由方法参数和类型。
+
+比如下面的代码：
+```typescript
+@Get(''/'')
+async home(
+  @Query(''uid'') uid: number,
+  @Query(''tid'') tid: string,
+  @Query(''isBoolean'') isBoolean: boolean,
+) {
+    // ...
+}
+```
+会自动提取相关参数生成文档。
+### Schema
+本项目推荐使用dto文件参数使用对象，并使用定义好的类作为类型，这个时候 swagger 组件也能自动识别，同时也能和普通的类型进行组合识别。
+
+比如下面的代码：
+```
+@Post(''/:id'', { summary: ''test''})
+async create(@Body() LoginParamDto: LoginParamDto, @Param(''id'') id: number) {
+  // ...
+}
+```
+CreateCatDto 类型的定义如下，我们使用 ApiPropertyRule 将其中的每个属性都进行了定义。
+```
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { RuleType } from ''@midwayjs/validate'';
+
+export class LoginParamDto {
+  @ApiPropertyRule({ description: ''用户名'', rule: RuleType.string().max(10).min(1).required().empty('''') })
+  username: string;
+  @ApiPropertyRule({ description: ''密码'', rule: RuleType.string().required().empty('''') })
+  password: string;
+  @ApiPropertyRule({ description: ''验证码标识'', rule: RuleType.string().required().empty('''') })
+  captchaId: string;
+  @ApiPropertyRule({ description: ''验证码'', rule: RuleType.string().required().empty('''') })
+  captcha: string;
+}
+
+```
+详细的类型参考请查阅 [midway文档](https://midwayjs.org/docs/extensions/swagger)
+
+### 循环依赖
+当类之间具有循环依赖关系时，请使用惰性函数提供类型信息。
+
+比如 type 字段的循环。
+```
+class Photo {
+  // ...
+  @ApiProperty({
+    type: () => Album
+  })
+  album: Album;
+}
+class Album {
+  // ...
+  @ApiProperty({
+    type: () => Photo
+  })
+  photo: Photo;
+}
+```
+
+getSchemaPath 也可以使用。
+```
+export class CreateCatDto {
+  // ...
+
+  @ApiProperty({
+    type: ''array'',
+    items: {
+      $ref: () => getSchemaPath(Cat)
+    }
+  })
+  relatedList: Cat[];
+}
+```
+### 请求 Response
+本项目封装了`@ApiOperationResponse({...})` 来自定义请求 Response,单条数据获取传入`responseType`参数，分页列表获取传入`responsePage`参数。
+```
+@Get(''/:id'')
+@ApiOperationResponse({
+  responseType: User,
+  summary: ''用户信息'',
+})
+findOne(@Param(''id'') id: string, @Query(''test'') test: any): Cat {
+  return this.catsService.findOne(+id);
+}
+```
+```
+//接口方法必须加async 方法的接口装饰器值必须/开头
+@Post(''/'')
+@ApiOperationResponse({
+  responsePage: User,
+  summary: ''获取用户列表'',
+})
+@AdminPermission(''UserList'')
+async list(@Body() queryDto: UserQueryDto) {
+  return this.success(await this.userService.list(queryDto));
+}
+```', '', '693986817568931840', 20, 21, '', '604612615536115712', '604612615536115712', '2026-03-31 09:04:25.19+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', 'validateSwagger');
+INSERT INTO aon_doc VALUES ('694060730139279360', '社区', NULL, 1, 1, 96, '', '', '', 87, 90, '', '604612615536115712', '604612615536115712', '2026-03-31 13:49:33.091+08', '2026-03-31 13:52:23.732+08', NULL, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694059215051816960', '图片预览', NULL, 2, 1, 92, '# 预览图片
+将 `element-plus` 的 `ElImageViewer` 组件函数化，可通过服务方式调用。
+
+!!! warning 注意
+- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。
+- 当前组件位置`@/components/service/meImageViewer.ts`
+- 服务式组件只能通过服务方式调用
+!!!
+
+## 组件props
+
+| props      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| urlList	  | string[] | 用于预览的图片链接列表，默认为[]|否|
+| zIndex      | number \| string | 预览时遮罩层的 z-index |否|
+| initialIndex | number | 初始预览图像索引，小于 urlList 的长度,默认为0 |否|
+| infinite | boolean | 是否可以无限循环预览，默认为true |否|
+| hideOnClickModal	 | boolean | 是否可以通过点击遮罩层关闭预览,默认为false | 否|
+|teleported| boolean | image 自身是否插入至 body 元素上。嵌套的父元素属性会发生修改时应该将此属性设置为 true，默认为fale| 否 |
+|onClose | ()=>void| 当点击 X 按钮或者在hideOnClickModal为 true 时点击遮罩层时触发 | 否|
+|onSwitch | (index: number) => void| 切换图像时触发。 | 否 |
+
+## 使用示例
+
+```ts
+import { createImageViewer } from ''@/components/service/meImageViewer'';
+
+createImageViewer({
+urlList: [
+    ''https://scpic.chinaz.net/Files/pic/pic6/pic1281.jpg'',
+    ''https://scpic.chinaz.net/files/pic/pic9/202009/apic27858.jpg'',
+    ''https://tse3-mm.cn.bing.net/th/id/OIP-C.n0_p3rYRuofABd3XudbZnAHaEo?pid=ImgDet&rs=1'',
+],
+});
+```', '', '694038800321478656', 78, 79, '', '604612615536115712', '604612615536115712', '2026-03-31 13:43:31.866+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694061143752179712', '预览', NULL, 2, 1, 99, '', 'https://meadmin-cn.github.io/meadmin-template/', '694060975577366528', 92, 93, '', '604612615536115712', '604612615536115712', '2026-03-31 13:51:11.703+08', '2026-03-31 13:52:23.732+08', 1, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694059381699903488', '前台文档', NULL, 2, 1, 98, '# 前台文档
+前台前端模板，与后台模板规则一致，只是去除了多语言和权限校验，增加了服务端渲染支持。
+详细说明请参考[后台文档](/client/admin/guide/)
+## 目录结构
+根目录为`view/index`
+```
+├── dist 打包文件夹
+│   ├── mock mock文件夹
+│   ├── plugins vite插件
+│   ├── public 公共静态资源目录
+│   ├── src  主目录
+│   │   ├── api 接口文件
+│   │   ├── assets 资源文件
+│   │   │   └── images 项目存放图片的文件夹
+│   │   ├── components 公共组件（里面的组件会自动引入）
+│   │   ├── config 配置文件夹
+│   │   │   ├── index.ts 配置入口文件
+│   │   │   └── login.ts  登录配置
+│   │   ├── dict  字典
+│   │   ├── directives 指令（里面的指令会自动引入）
+│   │   ├── event 事件
+│   |   ├── hooks 公共hooks
+│   │   ├── icons 图标
+│   │   │   ├── svg  svg图标文件夹（放入此文件夹的svg会被自动注册图标组件）
+│   │   │   └── index.ts 图标自动注册入口文件
+│   │   ├── layout 布局文件
+│   │   ├── router  路由配置
+│   │   │   ├── guard 路由全局守卫
+│   │   │   └── routes 动态路由文件夹
+│   │   ├── store  pinia文件夹
+│   |   ├── styles 样式文件 
+│   │   ├── utils  工具类
+│   │   ├── views  页面
+│   │   ├── entry-client.ts 客户端渲染入口文件
+│   │   ├── entry-server.ts 服务端渲染入口文件
+│   │   └── main.ts 入口文件
+│   ├── template自动生成模板
+│   ├── types  类型文件
+└── └── vite.config.ts vite配置文件
+```
+## 注意事项
+开发需寻遵循以下事项，以兼容服务端渲染特性
+
+- 如需使用window对象需增加服务端渲染判断
+```
+if (!import.meta.env.SSR) {
+  //下面代码仅在客户端执行
+  window.addEventListener(''resize'', () => mitter.emit(event.RESIZE));
+}
+
+```
+
+- request请求需在setup顶层创建，以规避服务端渲染“跨请求状态污染”
+```
+//login.vue
+<script setup lang="ts" name="Login">
+//...
+import {  loginCaptchaApi } from ''@/api/login'';
+const { data: captchaObj, runAsync: getCaptchRun } = loginCaptchaApi();
+const getCaptch = async () => {
+  await getCaptchRun();
+  //...
+};
+await getCaptch();
+//...
+</script>
+
+```
+- 如在组件外发送请求需透传app给request方法，
+```
+//login.ts
+export function loginApi<T extends boolean = true>(returnAxios: T = true as T, app?:App) {
+  return request<LoginResult, [LoginParams], T>(
+    (params) => ({
+      url: ''login/login'',
+      method: ''post'',
+      data: params,
+    }),
+    {},
+    returnAxios,
+    app,
+  );
+}
+```
+```
+ // userStore
+  login: async function (app:App, params: LoginParams) {
+    //...
+    const res = await loginApi(true,app)(params);
+    //...
+  },
+```
+```
+//login.vue
+const _this = getCurrentInstance();
+const submit = async () => {
+  //...
+  await userStore.login(_this!.appContext.app,loginParams);
+};
+//...
+```
+- 请求直接，在setp 顶层await否则服务端渲染期间无法获取到数据。
+
+- 如需在组件外创建store，需传入pinia
+```
+//request.ts
+
+export function request<R, P extends unknown[] = [], T = boolean>(
+  axiosConfig: (...args: P) => AxiosRequestConfig | Promise<AxiosRequestConfig>,
+  options?: RequestOptions<R, P>,
+  returnAxios?: T,
+  app?: App,
+) {
+//...
+ store = app?.config.globalProperties.$pinia;
+ const userStore = useUserStore(store);
+//...
+}
+
+```
+## 路由声明
+
+前台项目路由声明在`src/routes`文件夹下，src/routes文件夹下的`.ts`会自动引入加载，不经过权限校验。
+```
+//src/router/routes/002-demo.ts
+import Layout from ''@/layout/default/index.vue'';
+import { concatObjectValue } from ''@/utils/helper'';
+import { RouteRecordRaw } from ''vue-router'';
+export const routes: RouteRecordRaw[] = [
+  {
+    path: ''/demo'',
+    redirect: ''/demo/1'',
+    component: Layout,
+    children: concatObjectValue<RouteRecordRaw>(import.meta.glob(''./demo/*.ts'', { eager: true, import: ''routes'' })),
+    meta: { title: ''演示菜单'' },
+  },
+];
+
+```', '', '694016827243626496', 84, 85, '', '604612615536115712', '604612615536115712', '2026-03-31 13:44:11.597+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694060174612103168', '开发规范', NULL, 2, 1, 97, '# 开发规范
+## git提交规范[conventionalcommits](https://www.conventionalcommits.org/en/v1.0.0/)
+ - 本项目的git提交规范遵循[conventionalcommits](https://www.conventionalcommits.org/en/v1.0.0/)并进行了自定义配置，具体配置规则如下
+```
+"types": [
+    {
+    "type": "feat",
+    "section": "新功能[feat]"
+    },
+    {
+    "type": "fix",
+    "section": "Bug 修复[fix]"
+    },
+    {
+    "type": "chore",
+    "section": "其他[chore]"
+    },
+    {
+    "type": "docs",
+    "section": "文档更改[docs]"
+    },
+    {
+    "type": "style",
+    "section": "样式更改[style]"
+    },
+    {
+    "type": "refactor",
+    "section": "重构[refactor]"
+    },
+    {
+    "type": "perf",
+    "section": "性能改进[perf]"
+    },
+    {
+    "type": "test",
+    "section": "测试添加/更正[test]"
+    },
+    {
+    "type": "revert",
+    "section": "还原提交[revert]"
+    },
+    {
+    "type": "ignore",
+    "section": "需要忽略[ignore]",
+    "hidden": true
+    },
+    {
+    "type": "ci",
+    "section": "CI发版[ci]"
+    }
+]
+```
+- 如果使用`vscode`编辑器，建议安装[Conventional Commits](https://marketplace.visualstudio.com/items?itemName=vivaxy.vscode-conventional-commits)插件,此插件会自动生成对应格式提交日志
+
+## husky自动化
+1. 安装时不使用`npm install`直接使用`npm run i `,或者初始化后在当前目录下运行`npx husky install`
+2. 或者在 package.json加入以下`scripts`再install ([husky对应文档](https://typicode.github.io/husky/#/?id=install))
+   ```
+   //npm/pnpm
+   {
+        "scripts": {
+            "prepare": "husky install"
+        }
+    }
+   ```
+   ```
+   //yarn
+    {
+    "private": true, // ← your package is private, you only need postinstall
+    "scripts": {
+        "postinstall": "husky install"
+    }
+    }
+   ```
+会自动生成生成`husky`对应的git hook`husky`会在git提交时进行以下操作:
+- 自动运行`prettier --write`进行代码格式化
+- 自动运行`eslint --cache --fix`进行`eslint`校验和修复,如果无法修复会报错并停止提交
+- 自动校验提交`message`是否符合`conventionalcommits`规范，如果不符合会报错并停止提交
+ ### husky 在linux/mac下不生效
+ husky目前有一个bug, windows下创建的hooks 当在linux/macos下拉取后即使执行了`husky install`也不能成功调用，需要单独执行下`chmod ug+x .husky/*` 赋予脚本执行权限。对应的[issue](https://github.com/typicode/husky/issues/1177)', '', '682458162829197312', 6, 7, '', '604612615536115712', '604612615536115712', '2026-03-31 13:47:20.642+08', '2026-03-31 13:52:24.089+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694059064967036928', '查询表单', NULL, 2, 1, 91, '# 查询表单
+组件名`meSearchForm`，对[elment-plus from](https://element-plus.org/zh-CN/component/form.html)组件的封装，在保留原有功能的情况下，扩展了收起展开、查询、重置功能，并且保留`elment-plus table`的 `props` 和 `emit` `type`提示。
+
+!!! warning 注意
+- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。
+- 当前组件位置`@/components/meSearchForm`。
+!!!
+
+## 组件props
+
+| props      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| forever| number | 收起后展示的筛选项数量,为0表示不收起，默认为1| 否 |
+| defaultAll | boolean | 默认值为`false` ，默认展开所有筛选  | 否 |
+| searchText | string | 默认值为''查询'' 查询按钮文案，当值为`undefined`时不展示查询按钮 | 否 |
+| resetText |  string | 默认值为''重置'' 重置按钮文案，当值为`undefined`时不展示重置按钮 | 否 |
+| labelWidth |  string| label宽度默认80px | 否 |
+| labelPosition| `left`\|`right`| label展示位置 默认right | 否 |
+| elForm的属性 | - | 支持element-plus  Form组件 的所有属性，请参考[elForm文档](https://element-plus.org/zh-CN/component/form.html#form-%E5%B1%9E%E6%80%A7)| - | 
+
+## 组件事件
+
+| emit      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| search | `() => void` | 查询事件 | - |
+| reset | `() => void` | 重置事件,不绑定重置事件时，点击重置按钮会调用 `elFormRef.resetFields()`| - |
+| elForm的事件 | - | 支持element-plus  Form组件的所有事件，请参考[elForm文档](https://element-plus.org/zh-CN/component/form.html#form-%E4%BA%8B%E4%BB%B6)| - | 
+
+## 插槽
+| 插槽名  |	说明  |	子标签 |
+| ----------- | ----------- | ----------- |
+| - | 自定义默认内容。和[elForm](https://element-plus.org/zh-CN/component/form.html#form-%E6%8F%92%E6%A7%BD)对应插槽功能一致。 | FormItem |
+| button | 尾部按钮 | - |
+
+
+## 组件属性/方法
+| 名称 | 类型 | 说明 |
+| ----------- | ----------- | ----------- |
+| elFormRef | FormInstance | `elForm` 的 `ref`引用，可通过其访问`elForm`的属性和方法 |', '', '694038800321478656', 80, 81, '', '604612615536115712', '604612615536115712', '2026-03-31 13:42:56.083+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694058883286564864', '弹窗', NULL, 2, 1, 93, '# Dialog 对话框
+组件名`MeDialog`，对[elment-plus dialog](https://element-plus.org/zh-CN/component/dialog.html)组件的封装，在保留原有功能的情况下，扩展了最大化/还原、拖动大小、样式调整自动滚动条、可移动功能，并且保留`elment-plus dialog`的 `props` 和 `emit` `type`提示。
+
+!!! warning 注意
+- 扩展组件只存在`完整版`中，`基础模板`中不含有，如果想在基础模板中使用，请将对应文件粘贴到代码中使用。
+- 当前组件位置`@/components/meDialog`。
+!!!
+
+## 组件props
+
+| props      | 类型 |说明|必填|
+| ----------- | ----------- | ----------- | ----------- |
+| full | boolean | 名称默认值为`true`,是否启用最大化/还原、拖动大小、可移动功能 | 否 |
+| maxHeight | boolean | 名称默认值为`60vh`,弹窗最大高度 | 否 |
+| elDialog的属性 | - | 支持element-plus  Dialog组件 的所有属性，请参考[elDialog文档](https://element-plus.org/zh-CN/component/dialog.html#%E5%B1%9E%E6%80%A7)| - | 
+
+## 组件事件
+| emit      | 格式 |说明|
+| ----------- | ----------- | ----------- |
+| elDialog的事件 | - | 支持element-plus  Dialog组件 的所有事件，请参考[elDialog文档](https://element-plus.org/zh-CN/component/dialog.html#%E4%BA%8B%E4%BB%B6)| - |
+
+## 组件插槽
+
+| 插槽名  |	说明  |	子标签 |
+| ----------- | ----------- | ----------- |
+| - | Dialog 的内容,和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。| - |
+| header | 对话框标题的内容；会替换标题部分，但不会移除关闭按钮。和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。|	— |
+| title	| 与 header 作用相同 请使用 header,和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。|	— |
+| footer | Dialog 按钮操作区的内容,和[elDialog](https://element-plus.org/zh-CN/component/dialog.html#%E6%8F%92%E6%A7%BD)对应插槽功能一致。| — |
+
+![](/api/admin/file/get/694058854975012864/image.png)
+', '', '694038800321478656', 74, 75, '', '604612615536115712', '604612615536115712', '2026-03-31 13:42:12.766+08', '2026-03-31 13:52:23.732+08', 0, '1.0.0', NULL);
+INSERT INTO aon_doc VALUES ('694102373970214912', '指南', NULL, 1, 1, 99, '', '', NULL, 97, 106, '', '604612615536115712', '604612615536115712', '2026-02-27 13:25:05.479+08', '2026-03-31 19:37:41.364+08', NULL, '1.1.0', NULL);
+INSERT INTO aon_doc VALUES ('694102376537128960', '数据库', NULL, 2, 1, 96, '# 数据库
+数据库使用postgresql,连接框架使用seqlize@7,相关配置在`src/database.ts`中，`src/database.ts`加载了env环境变量，如需配置数据库连接方式可直接更改`.env`文件的相关配置。注意:本项目自行封装使用的seqlize@7，未使用`@midwayjs/sequelize@3`组件。
+
+相关使用方式如下：
+
+## 模型定义
+
+### 1、创建 Model（Entity）
+
+我们通过模型和数据库关联，在应用中的模型就是数据库表，在 Sequelize 中，模型是和实体绑定的，每一个实体（Entity) 文件，即是 Model，也是实体（Entity）。
+所有的实体存储在`src/entities`文件夹和数据库表想对应。
+在示例中，需要一个实体，我们这里拿 ExampleBook 举例。在`src/entities`文件夹添加实体文件 `exampleBook.entity.ts` ，一个简单的实体如下。
+
+```typescript
+// src/entities/exampleBook.entity.ts
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { DataTypes } from ''@sequelize/core'';
+import { Attribute, Default, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+
+@Table({ tableName: ''example_book'', comment: ''示例_书籍'' })
+export class ExampleBook extends AdminBaseModel<ExampleBook> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  id: string;
+
+  @Attribute({ type: DataTypes.STRING(20), comment: ''名称'', allowNull: false, defaultValue: '''' })
+  name: string;
+}
+
+```
+
+- 管理后台的表需继承AdminBaseModel，会自动创建 和维护`createdAdminId`、`updatedAdminId`、`createdAt`、`updatedAt`，相关内容是在Hooks钩子中维护的，如执行自定义sql需手动维护相关值。
+- 前台表需继承IndexBaseModel，会自动创建 和维护`createdAdminId`、`updatedAdminId`、`createdAt`、`updatedAt`，相关内容是在Hooks钩子中维护的，如执行自定义sql需手动维护相关值。
+- @Table 装饰器可以在不传递任何参数的情况下使用，本项目约定，数据库表名使用下划线方式命名，`seqlize`默认会使用复数形式命名表名，本项目推荐手动传入tableName、comment定义表名和备注。更多参数请查看[seqlize 文档](https://sequelize.org/docs/v7/models/naming-strategies/) 。 
+
+### 2、 主键
+
+@PrimaryKey 定义主键，`postgresql`不支持自增主键，如想实现需通过自增序列实现，但迁移时比较麻烦。本项目推荐使用自定义函数`uuid`维护string类型主键，方式为`@Default(uuid)``@Attribute({ type: DataTypes.STRING(20), allowNull: false })`。
+
+```typescript
+// src/entities/exampleBook.entity.ts
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { DataTypes } from ''@sequelize/core'';
+import { Attribute, Default, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+
+@Table({ tableName: ''example_book'', comment: ''示例_书籍'' })
+export class ExampleBook extends AdminBaseModel<ExampleBook> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  id: string;
+}
+
+```
+### 3、时间列
+主要指代的是 `@CreatedAt`, `@UpdatedAt`, `@DeletedAt` 单个装饰器标注的列。
+比如：
+```typescript
+import { InferCreationAttributes, InferAttributes, Model, CreationOptional } from ''@sequelize/core'';
+import { CreatedAt, UpdatedAt, DeletedAt, Table } from ''@sequelize/core/decorators-legacy'';
+
+@Table({ tableName: ''example_book'', comment: ''示例_书籍'' })
+export class ExampleBook extends Model<InferAttributes<ExampleBook>, InferCreationAttributes<ExampleBook>> {
+  @CreatedAt
+  declare createdAt: Date;
+
+  @UpdatedAt
+  declare updatedAt: Date;
+
+  @DeletedAt
+  declare deletedAt: Date | null;
+}
+```
+|装饰器|	描述|
+| --   | --   |
+|@CreatedAt|	会设置 自动维护的创建时间字段|
+|@UpdatedAt|	会设置 自动维护的更新时间字段|
+|@DeletedAt|	会设置 自动维护的删除时间字段，值为非null的记录会被识别为逻辑删除|
+
+如果继承`AdminBaseModel`或`IndexBaseModel`会自动继承`createdAt`和`updatedAt`字段，无需手动维护。`deletedAt`按需求自行维护。
+
+### 4、普通列
+`@Column` 装饰器用于标注普通列，需要在参数中传入类型和备注。
+```typescript
+// src/entities/exampleBook.entity.ts
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { DataTypes } from ''@sequelize/core'';
+import { Attribute, Default, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+
+@Table({ tableName: ''example_book'', comment: ''示例_书籍'' })
+export class ExampleBook extends AdminBaseModel<ExampleBook> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  id: string;
+
+  @Attribute({ type: DataTypes.STRING(20), comment: ''名称'', allowNull: false, defaultValue: '''' })
+  name: string;
+}
+
+```
+更多类型请，参考[seqlize 文档](https://sequelize.org/docs/v7/models/data-types/)
+
+## 数据源配置
+我们支持多库数据源配置 在`src/config/database.ts`中配置
+```typescript
+import { importModels, Options } from ''@sequelize/core'';
+import { PostgresDialect } from ''@sequelize/postgres'';
+import { appLogger } from ''../logger.js'';
+export default async () => ({
+  dataSource: {
+    default: {
+      dialect: PostgresDialect,
+      host: process.env.DATABASE_HOST ?? ''127.0.0.1'',
+      port: process.env.DATABASE_PORT ?? 5342,
+      database: process.env.DATABASE_DB ?? ''meadmin'',
+      user: process.env.DATABASE_USER ?? ''root'',
+      password: process.env.DATABASE_PASSWORD ?? ''root'',
+      client_encoding: ''utf8'',
+      models: await importModels((import.meta.dirname + ''/../**/*.entity.js'').replace(/\\/g, ''/'')), // 支持如下的扫描形式，或实体形式[User,Admin]
+      options: `-c search_path=${process.env.DATABASE_SCHEMA}`, //设置模式查询顺序
+      define: {
+        underscored: true, //强制表名和列名转换为snake_case
+        freezeTableName: true, //强制模型名称不变换（取消表名的单词复数转换和snake_case转换)
+        timestamps: false, // 禁用createAt和updateAt的自动声明
+        noPrimaryKey: true, //禁止自动创建主键id
+        schema: process.env.DATABASE_SCHEMA ?? ''public'',
+        timezone: ''Asia/Shanghai'',
+      },
+      logging(sql, timing, seqlize?) {
+        appLogger.info(''[sql]耗时 %d ms，%s'', timing, sql, seqlize?.bind);
+      },
+      benchmark: true, //开启日志打印sql耗时参数传递
+    } as Options<PostgresDialect>,
+  },
+  // 第二个数据源
+  default2: {
+    // ...
+  },
+});
+```
+使用时
+```typescript
+import { InjectRepository, Transaction } from ''@/decorators/index.js'';
+import { Provide } from ''@midwayjs/core'';
+import { BadRequestError } from ''@midwayjs/core/dist/error/http.js'';
+import { User } from ''../../../entities/user.entity.js'';
+
+//用户
+@Provide()
+export class UserService {
+  @InjectRepository(User)//声明entity,默认加载default数据源相当于@InjectRepository(User,''default'')
+  userRepository: typeof User;
+ 
+  /**
+   * 根据主键获取一条信息
+   * @param id 主键
+   * @returns
+   */
+  @Transaction()
+  async findOne(id: string) {
+    const entity = await this.userRepository.findByPk(id, {
+      include: [
+        ''createdUser''
+      ],
+    });
+    if (!entity) {
+      throw new BadRequestError(''没有对应的信息'');
+    }
+    return entity;
+  }
+}
+```
+## 模型关联
+可以通过 `@HasMany` 、`@HasOne` 、`@BelongsTo`、`@BelongsToMany` 装饰器在模型中直接描述关系。
+### 1、一对多或一对一从属
+```typescript
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { BelongsToModel } from ''@/types/entity.js'';
+import { DataTypes, NonAttribute } from ''@sequelize/core'';
+import { Attribute, BelongsTo, Default, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+import { User } from ''./user.entity.js'';
+
+@Table({ tableName: ''example_demo'', comment: ''示例_Demo'' })
+//继承自DelParanoidModel则使用软删除。
+export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  @ApiPropertyRule({ description: ''ID'', rule: RuleType.string() })
+  id: string;
+
+   //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)
+  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。
+  @Attribute({ type: DataTypes.STRING(20), comment: ''名称'', allowNull: false, defaultValue: '''' })
+  name: string;
+
+  //反向BelongsTo关联从属， 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to/
+  @Attribute({ type: DataTypes.STRING(20), comment: ''关联前台用户id'' })
+  userId: string;
+ 
+  @BelongsTo(() => User, {
+    foreignKey: ''userId'', //外键名称
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
+  user?: NonAttribute<User>;
+}
+//声明自动关联方法
+export declare interface ExampleDemo extends BelongsToModel<''user'', User> {}
+```
+`sequelize-typescript` 会在内部进行关联，会自动查询出相关的依赖。
+```typescript
+ const entity = await this.userRepository.findByPk(id, {
+      include: [''user''],
+    });
+```
+### 多对多
+
+```typescript
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { BelongsManyModel } from ''@/types/entity.js'';
+import { DataTypes, NonAttribute } from ''@sequelize/core'';
+import { Attribute, BelongsToMany, Default, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+import { ExampleBook } from ''./exampleBook.entity.js'';
+
+//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
+@Table({ tableName: ''example_demo'', comment: ''示例_Demo'' })
+//继承自DelParanoidModel则使用软删除。
+export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  @ApiPropertyRule({ description: ''ID'', rule: RuleType.string() })
+  id: string;
+
+
+  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)
+  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。
+  @Attribute({ type: DataTypes.STRING(20), comment: ''名称'', allowNull: false, defaultValue: '''' })
+  @ApiPropertyRule({ description: ''名称'', rule: RuleType.string().max(20).min(1).required() })
+  name: string;
+
+  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/
+  @BelongsToMany(() => ExampleBook, {
+    through: ''example_demo_books'', //中间表名称 或者 对应的Model，
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: ''demos'',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;
+  })
+  @ApiPropertyRule({
+    description: ''书籍'',
+    type: ''array'',
+    items: {
+      type: () => ExampleBook,
+    },
+    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),
+  })
+  books?: NonAttribute<ExampleBook[]>;
+}
+//声明自动关联方法
+export declare interface ExampleDemo extends BelongsManyModel<''books'', ''book'', ''books'', ExampleBook> {}
+
+```
+BelongsToMany 关联会自动在目标模型上创建逆关联，目标模型也是一个 BelongsToMany 关联。您可以通过使用反向选项自定义反关联：
+
+```typescript
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { BelongsManyModel } from ''@/types/entity.js'';
+import { DataTypes, NonAttribute } from ''@sequelize/core'';
+import { Attribute, BelongsToMany, Default, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+import { ExampleBook } from ''./exampleBook.entity.js'';
+
+//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
+@Table({ tableName: ''example_demo'', comment: ''示例_Demo'' })
+//继承自DelParanoidModel则使用软删除。
+export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  @ApiPropertyRule({ description: ''ID'', rule: RuleType.string() })
+  id: string;
+
+
+  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)
+  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。
+  @Attribute({ type: DataTypes.STRING(20), comment: ''名称'', allowNull: false, defaultValue: '''' })
+  @ApiPropertyRule({ description: ''名称'', rule: RuleType.string().max(20).min(1).required() })
+  name: string;
+
+  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/
+  @BelongsToMany(() => ExampleBook, {
+    through: ''example_demo_books'', //中间表名称 或者 对应的Model，
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+    inverse: {as: ''demos'',},
+    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: ''demos'',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;
+  })
+  books?: NonAttribute<ExampleBook[]>;
+}
+//声明自动关联方法
+export declare interface ExampleDemo extends BelongsManyModel<''books'', ''book'', ''books'', ExampleBook> {}
+
+```
+```typescript
+import { NonAttribute } from "@sequelize/core";
+import { AdminBaseModel } from "./abstract/adminBase.entity.js";
+import { ExampleDemo } from "./exampleDemo.entity.js";
+
+export class ExampleBook extends AdminBaseModel<ExampleBook> {
+  /** Declared by {@link ExampleDemo.books} */
+  declare demos?: NonAttribute<ExampleDemo[]>;
+}
+```
+`sequelize-typescript` 会在内部进行关联，会自动查询出相关的依赖。
+```typescript
+ const entity = await this.exampleDemoRepository.findByPk(id, {
+      include: [''books''],
+    });
+```
+更多文档请参考[seqlize 文档](https://sequelize.org/docs/v7/associations/belongs-to-many/)
+### 3、模型循环依赖
+如果你使用了 `@BelongsTo` 装饰器定义双向依赖时，很容易触发一个模型循环依赖的错误，比如：
+```typescript
+ReferenceError: Cannot access ''User'' before initialization 
+```
+这是因为“emitDecoratorMetadata”在类初始化时会添加对另一个类的引用。
+既然是循环导入，这样做必然会导致你遇到的错误。
+
+解决办法是只在一侧声明关联。反面可以用 `inverse` property 性质声明
+你还需要将用户导入标记为导入类型：
+
+```typescript
+//joke.js
+import { DataTypes, Model,InferAttributes,InferCreationAttributes,CreationOptional } from ''@sequelize/core'';
+import { Attribute, PrimaryKey, AutoIncrement, NotNull, BelongsTo } from ''@sequelize/core/decorators-legacy'';
+import type { User } from ''./user.js'';//注意使用type引用
+  
+export class Joke extends Model<InferAttributes<Joke>, InferCreationAttributes<Joke>> 
+{
+    @Attribute(DataTypes.INTEGER)
+    @PrimaryKey
+    @AutoIncrement
+    declare id: CreationOptional<number>;
+
+    @Attribute(DataTypes.STRING)
+    @NotNull
+    declare content: string;
+
+-   @BelongsTo(() => User, ''userId'')
+    user!: User;
+    
+    // This is the foreign key
+    @Attribute(DataTypes.INTEGER)
+    @NotNull
+    declare userId: number;
+
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+}
+```
+```typescript
+//user.js
+import { DataTypes,Model,InferAttributes,InferCreationAttributes,CreationOptional, NonAttribute } from ''@sequelize/core'';
+import { Attribute, PrimaryKey, AutoIncrement, NotNull, HasMany } from ''@sequelize/core/decorators-legacy'';
+import { Joke } from ''./joke.js'';
+  
+export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> 
+{
+    @Attribute(DataTypes.INTEGER)
+    @PrimaryKey
+    @AutoIncrement
+    declare id: CreationOptional<number>;
+
+    @Attribute(DataTypes.STRING)
+    @NotNull
+    declare name: string;
+
+    @Attribute(DataTypes.STRING)
+    declare email: string;
+
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+
+    @HasMany(() => Joke, { foreignKey: ''userId'', inverse: ''user'' })
+    declare jokes?: NonAttribute<Joke[]>;
+}
+
+```
+相关参考[github](https://github.com/sequelize/sequelize/issues/17444)
+
+## 数据库操作
+
+```typescript
+import { InjectRepository } from ''@/decorators/index.js'';
+import { Provide } from ''@midwayjs/core'';
+import { BadRequestError } from ''@midwayjs/core/dist/error/http.js'';
+import { Op } from ''@sequelize/core'';
+import { User } from ''../../../entities/user.entity.js'';
+
+//用户
+@Provide()
+export class UserService {
+  @InjectRepository(User) //声明entity,默认加载default数据源相当于@InjectRepository(User,''default'')
+  userRepository: typeof User;
+
+  /**
+   * 根据主键获取一条信息
+   * @param id 主键
+   * @returns
+   */
+  async findOne(id: string) {
+    // 查询
+    let result = await this.userRepository.findAll();
+    console.log(result);
+
+    // 新增
+    await this.userRepository.create({
+      nickname: ''123'',
+    });
+
+    // 删除
+    await this.userRepository.destroy({
+      where: {
+        nickname: ''123'',
+      },
+    });
+
+    // 联合查询
+    // SELECT * FROM photo WHERE name = "23" OR name = "34";
+    let result = await this.userRepository.findAll({
+      where: {
+        [Op.or]: [{ nickname: ''23'' }, { nickname: ''34'' }],
+      },
+    });
+    // => result
+
+    // 连表查询
+    const entity = await this.userRepository.findByPk(id, {
+      include: [''createdUser''],
+    });
+    if (!entity) {
+      throw new BadRequestError(''没有对应的信息'');
+    }
+    return entity;
+  }
+}
+```
+更多用法请查询：[seqlize文档](https://sequelize.org/docs/v7/category/querying/)
+## 事务
+本项目封装了`Transaction`装饰器，只需要添加上，即可在函数执行时应用`seqlize`的托管事务，事务会在函数，执行完毕后自动提交
+，异常时自动回滚。默认情况下，`Sequelize` 使用 `AsyncLocalStorage` 在函数及子函数调用中开始的所有查询中自动使用该活跃事务。更多请参考[seqlize文档](https://sequelize.org/docs/v7/querying/transactions/#managed-transactions-recommended)
+```typescript
+import { InjectRepository, Transaction } from ''@/decorators/index.js'';
+import { Provide } from ''@midwayjs/core'';
+import { User } from ''../../../entities/user.entity.js'';
+
+//用户
+@Provide()
+export class UserService {
+  @InjectRepository(User) //声明entity,默认加载default数据源相当于@InjectRepository(User,''default'')
+  userRepository: typeof User;
+
+  async create(){
+     // 新增
+    await this.userRepository.create({
+      nickname: ''123'',
+    });
+  }
+  /**
+   * 根据主键获取一条信息
+   * @param id 主键
+   * @returns
+   */
+  @Transaction()
+  async findOne(id: string) {
+    // 查询
+    let result = await this.userRepository.findAll();
+    console.log(result);
+    await this.create();
+  }
+}
+```
+## 同步数据库结构
+
+- `pnpm exec meadmin sync *` 同步所有
+- 或 `pnpm meadmin sync exampleDemo,systemAdmin,exampleBook,user,file` 定向同步exampleDemo文件（定向同步文件时，需将关联依赖全部罗列出来，一起同步）
+
+## 更多特性
+连接池、自定义数据类型、读取复制、Hooks钩子等更多特性请参考[seqlize 文档](https://sequelize.org/docs/v7/category/other-topics/)', '', '694102375132037120', 116, 117, '', '604612615536115712', '604612615536115712', '2026-03-31 09:03:25.62+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', '96');
+INSERT INTO aon_doc VALUES ('694102377094971392', '最佳实践', NULL, 2, 1, 94, '# 最佳实践
+本项目推荐最佳实践，在数据库实体`entity`文件中声明所有属性、校验规则、及api文档。dto继承自`entity`文件，做相应处理。
+## `entity`文件
+```typescript
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { uuid } from ''@/helper/snowflake.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { BelongsManyModel, BelongsToModel } from ''@/types/entity.js'';
+import { DataTypes, NonAttribute, Op } from ''@sequelize/core'';
+import { Attribute, BelongsTo, BelongsToMany, Default, DeletedAt, Index, PrimaryKey, Table } from ''@sequelize/core/decorators-legacy'';
+import { AdminBaseModel } from ''./abstract/adminBase.entity.js'';
+import { ExampleBook } from ''./exampleBook.entity.js'';
+import { File } from ''./file.entity.js'';
+import { User } from ''./user.entity.js'';
+
+//rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
+@Table({ tableName: ''example_demo'', comment: ''示例_Demo'' })
+//继承自DelParanoidModel则使用软删除。
+export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
+  //自动生成的主键
+  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @PrimaryKey
+  @Default(uuid)
+  @ApiPropertyRule({ description: ''ID'', rule: RuleType.string() })
+  id: string;
+
+  //唯一索引名称必须全库唯一，当两个null值时唯一索引会认为不是同一个值
+  @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引
+  @Attribute({ type: DataTypes.STRING(11), comment: ''手机号'' })
+  @ApiPropertyRule({ description: ''手机号'', rule: RuleType.string().mobile().description(''手机号'').required() })
+  mobile: string;
+
+  //以“名称:值1=说明1;值2=说明2”，格式声明的备注会自动创建字典和下拉列表，并且支持number、string两种类型
+  @Attribute({
+    comment: ''类型:0=书籍;1=电子产品;2=卡片'',
+    defaultValue: 0,
+    allowNull: false,
+    type: DataTypes.TINYINT.UNSIGNED,
+  })
+  @ApiPropertyRule({ description: ''类型:0=书籍;1=电子产品;2=卡片'', rule: RuleType.number().equal(0, 1, 2).required() })
+  type: number;
+
+  //ApiPropertyRule对RuleType规则做了封面，对于非必填的number和string自动允许null值，如果不允许null请设置required()或者设置invalid(null)
+  //前端会根据rule生成表达校验，包括必填、类型(string、number)、mobile、email、min、max。
+  @Attribute({ type: DataTypes.STRING(20), comment: ''名称'', allowNull: false, defaultValue: '''' })
+  @ApiPropertyRule({ description: ''名称'', rule: RuleType.string().max(20).min(1).required() })
+  name: string;
+
+  //多对多关联 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to-many/
+  @BelongsToMany(() => ExampleBook, {
+    through: ''example_demo_books'', //中间表名称 或者 对应的Model，
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+    // 如果需要在ExampleBook定义反向关联可以添加参数  inverse: {as: ''demos'',}, 并在 ExampleBook中添加 /** Declared by {@link Person.likedToots} */  declare demo?: NonAttribute<ExampleBook[]>;
+  })
+  @ApiPropertyRule({
+    description: ''书籍'',
+    type: ''array'',
+    items: {
+      type: () => ExampleBook,
+    },
+    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),
+  })
+  books?: NonAttribute<ExampleBook[]>;
+
+  //反向BelongsTo关联从属， 文档 可参考https://sequelize.org/docs/v7/associations/belongs-to/
+  @Attribute({ type: DataTypes.STRING(20), comment: ''关联前台用户id'' })
+  userId: string;
+  @ApiPropertyRule({ description: ''用户'', type: () => User, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })
+  @BelongsTo(() => User, {
+    foreignKey: ''userId'', //外键名称
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
+  user?: NonAttribute<User>;
+
+  //反向BelongsTo关联从属，File类型创建单文件
+  @Attribute({ type: DataTypes.STRING(20), comment: ''头像附件id'' })
+  avatarFileId: string;
+  @ApiPropertyRule({ description: ''头像'', type: () => File, rule: RuleType.object({ id: RuleType.string().required() }).pattern(RuleType.string(), RuleType.any()) })
+  @BelongsTo(() => File, {
+    foreignKey: ''avatarFileId'', //外键名称
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
+  avatar?: NonAttribute<File>;
+
+  //BelongsTo多对多关联从属，File类型创建多文件选择
+  @BelongsToMany(() => File, {
+    through: ''example_demo_files'', //中间表名称 或者 对应的Model，
+    foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
+  })
+  @ApiPropertyRule({
+    description: ''附件'',
+    type: ''array'',
+    items: {
+      type: () => File,
+    },
+    rule: RuleType.array().items(RuleType.object({ id: RuleType.string().required() })),
+  })
+  files?: NonAttribute<File[]>;
+
+  @DeletedAt //设置为软删除
+  @Attribute({ comment: ''删除时间'' })
+  declare deletedAt: Date | null;
+}
+//声明自动关联方法
+export declare interface ExampleDemo extends BelongsManyModel<''books'', ''book'', ''books'', ExampleBook> {}
+export declare interface ExampleDemo extends BelongsToModel<''user'', User> {}
+export declare interface ExampleDemo extends BelongsToModel<''avatar'', File> {}
+export declare interface ExampleDemo extends BelongsManyModel<''files'', ''file'', ''files'', File> {}
+
+```
+
+
+## 校验文件
+```
+import { OmitDtoType } from ''@/helper/dto.js'';
+import { InferAttributesLoose } from ''@/types/entity.js'';
+import { ExampleDemo } from ''../../../../entities/exampleDemo.entity.js'';
+
+//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效
+export class ExampleDemoCreateDto extends OmitDtoType(
+  ExampleDemo as new () => InferAttributesLoose<ExampleDemo>, //只保留声明属性
+  [''id'', ''createdAt'', ''updatedAt'', ''deletedAt'', ''createdAdminId'', ''updatedAdminId'', ''createdAdmin'', ''updatedAdmin''], //排除自动创建的字段
+) {}
+
+```
+```
+import { ApiPropertyRule } from ''@/decorators/index.js'';
+import { PageDto } from ''@/dto/page.dto.js'';
+import { IntersectionType, PartialType } from ''@/helper/dto.js'';
+import { RuleType } from ''@/ruleType/index.js'';
+import { InferAttributesLoose } from ''@/types/entity.js'';
+import { ExampleDemo } from ''../../../../entities/exampleDemo.entity.js'';
+
+//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效
+export class ExampleDemoQueryDto extends IntersectionType(PageDto, PartialType(ExampleDemo as new () => InferAttributesLoose<ExampleDemo>)) {
+  @ApiPropertyRule({ description: ''创建时间(起)'', rule: RuleType.date() })
+  startCreatedAt?: Date;
+
+  @ApiPropertyRule({ description: ''创建时间(止)'', rule: RuleType.date() })
+  endCreatedAt?: Date;
+  @ApiPropertyRule({ description: ''最后更新时间(起)'', rule: RuleType.date() })
+  startUpdatedAt?: Date;
+
+  @ApiPropertyRule({ description: ''最后更新时间(止)'', rule: RuleType.date() })
+  endUpdatedAt?: Date;
+}
+
+```
+```
+import { OmitDtoType, PartialType } from ''@/helper/dto.js'';
+import { InferAttributesLoose } from ''@/types/entity.js'';
+import { ExampleDemo } from ''../../../../entities/exampleDemo.entity.js'';
+
+//dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效
+export class ExampleDemoUpdateDto extends PartialType(
+  OmitDtoType(
+    ExampleDemo as new () => InferAttributesLoose<ExampleDemo>, //只保留声明属性
+    [''id'', ''createdAt'', ''updatedAt'', ''deletedAt'', ''createdAdminId'', ''updatedAdminId'', ''createdAdmin'', ''updatedAdmin''], //排除自动创建的字段
+  ),
+) {}
+
+```
+## 控制器
+```
+import { AdminPermission, ApiOperationResponse } from ''@/decorators/index.js'';
+import { Body, Controller, Get, Inject, Param, Post } from ''@midwayjs/core'';
+import { ExampleDemo } from ''../../../../entities/exampleDemo.entity.js'';
+import { ExampleDemoCreateDto } from ''../../dto/example/demoCreate.dto.js'';
+import { ExampleDemoQueryDto } from ''../../dto/example/demoQuery.dto.js'';
+import { ExampleDemoUpdateDto } from ''../../dto/example/demoUpdate.dto.js'';
+import { ExampleDemoService } from ''../../service/example/demo.service.js'';
+import { BaseController } from ''../base.controller.js'';
+
+/**
+ * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。
+ * meadmin对controller做了装饰器继承封装，当以/开头时会使用当前controller前缀地址，不以/开头时会递归继承controller前缀地址
+ */
+@Controller(''example/demo'')
+export class ExampleDemoController extends BaseController {
+  @Inject()
+  exampleDemoService: ExampleDemoService;
+
+  //查询belongsTo关联模型user用户
+  //获取用户信息
+  @Post(''/getUser'')
+  @ApiOperationResponse({
+    responseType: ExampleDemo,
+    summary: ''查询用户信息'',
+  })
+  @AdminPermission(''ExampleDemoList'')
+  async getUser(@Body(''id'') id: string, @Body(''username'') username: string, @Body(''page'') page = 1, @Body(''pageSize'') pageSize = 10) {
+    return this.success(await this.exampleDemoService.getUser(page, pageSize, id, username));
+  }
+
+  //查询belongsToMany关联模型books示例_书籍
+  //获取示例_书籍信息
+  @Post(''/getExampleBook'')
+  @ApiOperationResponse({
+    responseType: ExampleDemo,
+    summary: ''查询示例_书籍信息'',
+  })
+  @AdminPermission(''ExampleDemoList'')
+  async getExampleBook(@Body(''id'') id: string, @Body(''name'') name: string, @Body(''page'') page = 1, @Body(''pageSize'') pageSize = 10) {
+    return this.success(await this.exampleDemoService.getExampleBook(page, pageSize, id, name));
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post(''/add'')
+  @ApiOperationResponse({
+    responseType: ExampleDemo,
+    summary: ''添加示例_Demo信息'',
+  })
+  @AdminPermission(''ExampleDemoAdd'')
+  async add(@Body() createDto: ExampleDemoCreateDto) {
+    return this.success(await this.exampleDemoService.create(createDto));
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post(''/'')
+  @ApiOperationResponse({
+    responsePage: ExampleDemo,
+    summary: ''获取示例_Demo列表'',
+  })
+  @AdminPermission(''ExampleDemoList'')
+  async list(@Body() queryDto: ExampleDemoQueryDto) {
+    return this.success(await this.exampleDemoService.list(queryDto));
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Get(''/info/:id'')
+  @ApiOperationResponse({
+    responseType: ExampleDemo,
+    summary: ''根据id获取示例_Demo详情'',
+  })
+  @AdminPermission(''ExampleDemoEdit'')
+  async findOne(@Param(''id'') id: string) {
+    const entity = await this.exampleDemoService.findOne(id);
+    return this.success(entity);
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post(''/up/:id'')
+  @ApiOperationResponse({
+    responseType: ExampleDemo,
+    summary: ''根据id更新示例_Demo详情'',
+  })
+  @AdminPermission(''ExampleDemoEdit'')
+  async update(@Param(''id'') id: string, @Body() updateDto: ExampleDemoUpdateDto) {
+    return this.success(await this.exampleDemoService.update(id, updateDto));
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post(''/del/:id'')
+  @ApiOperationResponse({
+    summary: ''根据id删除示例_Demo信息'',
+  })
+  @AdminPermission(''ExampleDemoDel'')
+  async delete(@Param(''id'') id: string) {
+    await this.exampleDemoService.remove(id);
+    return this.success();
+  }
+}
+
+```
+
+## service
+```
+import { InjectRepository, Transaction } from ''@/decorators/index.js'';
+import { Inject, Provide } from ''@midwayjs/core'';
+import { BadRequestError } from ''@midwayjs/core/dist/error/http.js'';
+import { MidwayI18nService } from ''@midwayjs/i18n'';
+import { Op } from ''@sequelize/core'';
+import { ExampleBook } from ''../../../../entities/exampleBook.entity.js'';
+import { ExampleDemo } from ''../../../../entities/exampleDemo.entity.js'';
+import { User } from ''../../../../entities/user.entity.js'';
+import { ExampleDemoCreateDto } from ''../../dto/example/demoCreate.dto.js'';
+import { ExampleDemoQueryDto } from ''../../dto/example/demoQuery.dto.js'';
+import { ExampleDemoUpdateDto } from ''../../dto/example/demoUpdate.dto.js'';
+
+//示例_Demo
+@Provide()
+export class ExampleDemoService {
+  @InjectRepository(ExampleDemo)
+  exampleDemoRepository: typeof ExampleDemo;
+
+  @Inject()
+  i18nService: MidwayI18nService;
+
+  //查询belongsTo关联模型user用户
+  @InjectRepository(User)
+  userRepository: typeof User;
+
+  /**
+   * 获取用户信息
+   * @param queryDto
+   * @returns
+   */
+  @Transaction()
+  async getUser(page: number, pageSize: number, id: string, username: string = '''') {
+    const where = {};
+    if (id) {
+      where[''id''] = id;
+    }
+    if (username) {
+      where[''username''] = { [Op.like]: ''%'' + username + ''%'' };
+    }
+    const { count, rows } = await this.userRepository.findAndCountAll({
+      where,
+      offset: (page - 1) * pageSize,
+      limit: pageSize,
+    });
+    return {
+      list: rows,
+      total: count,
+      page: page,
+      pageSize: pageSize,
+    };
+  }
+
+  //查询belongsToMany关联模型books示例_书籍
+  @InjectRepository(ExampleBook)
+  exampleBookRepository: typeof ExampleBook;
+
+  /**
+   * 获取示例_书籍信息
+   * @param queryDto
+   * @returns
+   */
+  @Transaction()
+  async getExampleBook(page: number, pageSize: number, id: string, name: string = '''') {
+    const where = {};
+    if (id) {
+      where[''id''] = id;
+    }
+    if (name) {
+      where[''name''] = { [Op.like]: ''%'' + name + ''%'' };
+    }
+    const { count, rows } = await this.exampleBookRepository.findAndCountAll({
+      where,
+      offset: (page - 1) * pageSize,
+      limit: pageSize,
+    });
+    return {
+      list: rows,
+      total: count,
+      page: page,
+      pageSize: pageSize,
+    };
+  }
+
+  /**
+   * 创建数据
+   * @param createDto
+   * @returns
+   */
+  @Transaction()
+  async create(createDto: ExampleDemoCreateDto) {
+    const entity = await this.exampleDemoRepository.create(createDto);
+
+    if (createDto.user) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setUser(createDto.user.id);
+    }
+
+    if (createDto.avatar) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setAvatar(createDto.avatar.id);
+    }
+
+    if (createDto.books) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setBooks(createDto.books.map((v) => v.id));
+    }
+
+    if (createDto.files) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setFiles(createDto.files.map((v) => v.id));
+    }
+
+    return entity;
+  }
+
+  /**
+   * 列表分页查询
+   * @param queryDto 查询条件
+   * @returns
+   */
+  @Transaction()
+  async list(queryDto: ExampleDemoQueryDto) {
+    const where = {};
+    Object.keys(queryDto).forEach((key) => {
+      if ([''page'', ''pageSize''].includes(key)) {
+        return;
+      }
+      if ([null, undefined, ''''].includes(queryDto[key])) {
+        return;
+      }
+      if (key === ''startCreatedAt'') {
+        where[''createdAt''] = where[''createdAt''] ?? {};
+        where[''createdAt''][Op.gte] = queryDto[key];
+        return;
+      }
+      if (key === ''endCreatedAt'') {
+        where[''createdAt''] = where[''createdAt''] ?? {};
+        where[''createdAt''][Op.lte] = queryDto[key];
+        return;
+      }
+      if (key === ''startUpdatedAt'') {
+        where[''updatedAt''] = where[''updatedAt''] ?? {};
+        where[''updatedAt''][Op.gte] = queryDto[key];
+        return;
+      }
+      if (key === ''endUpdatedAt'') {
+        where[''updatedAt''] = where[''updatedAt''] ?? {};
+        where[''updatedAt''][Op.lte] = queryDto[key];
+        return;
+      }
+      where[key] = queryDto[key];
+    });
+    const { count, rows } = await this.exampleDemoRepository.findAndCountAll({
+      where,
+      offset: (queryDto.page - 1) * queryDto.pageSize,
+      limit: queryDto.pageSize,
+      include: [
+        ''createdAdmin'',
+        ''updatedAdmin'',
+        ''books'',
+        ''user'',
+        {
+          association: ''avatar'',
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+        {
+          association: ''files'',
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+      ],
+      order: [[''createdAt'', ''DESC'']],
+    });
+    return {
+      list: rows,
+      total: count,
+      page: queryDto.page,
+      pageSize: queryDto.pageSize,
+    };
+  }
+
+  /**
+   * 根据主键获取一条信息
+   * @param id 主键
+   * @returns
+   */
+  @Transaction()
+  async findOne(id: string) {
+    const entity = await this.exampleDemoRepository.findByPk(id, {
+      include: [
+        ''createdAdmin'',
+        ''updatedAdmin'',
+        ''books'',
+        ''user'',
+        {
+          association: ''avatar'',
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+        {
+          association: ''files'',
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+      ],
+    });
+    if (!entity) {
+      throw new BadRequestError(this.i18nService.translate(''没有对应的信息''));
+    }
+    return entity;
+  }
+
+  /**
+   * 更新数据
+   * @param id 主键
+   * @param updateDto 数据对象
+   * @returns
+   */
+  @Transaction()
+  async update(id: string, updateDto: ExampleDemoUpdateDto) {
+    const entity = await this.exampleDemoRepository.findByPk(id);
+    if (!entity) {
+      throw new BadRequestError(this.i18nService.translate(''没有对应的信息''));
+    }
+    Object.assign(entity, updateDto);
+
+    if (updateDto.user !== undefined) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setUser(updateDto.user?.id ?? null);
+    }
+
+    if (updateDto.avatar !== undefined) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setAvatar(updateDto.avatar?.id ?? null);
+    }
+
+    if (updateDto.books) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setBooks(updateDto.books.map((v) => v.id));
+    }
+
+    if (updateDto.files) {
+      //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
+      await entity.setFiles(updateDto.files.map((v) => v.id));
+    }
+
+    return await entity.save();
+  }
+
+  /**
+   * 删除数据
+   * @param id 主键
+   * @returns
+   */
+  @Transaction()
+  async remove(id: string) {
+    const entity = await this.exampleDemoRepository.findByPk(id);
+    if (!entity) {
+      throw new BadRequestError(this.i18nService.translate(''没有对应的信息''));
+    }
+    await entity.destroy();
+  }
+}
+
+```', '', '694102375132037120', 120, 121, '', '604612615536115712', '604612615536115712', '2026-03-31 09:05:49.761+08', '2026-03-31 19:37:41.701+08', 0, '1.1.0', 'best');
+INSERT INTO aon_doc VALUES ('694102378286153728', '后台文档', NULL, 1, 1, 99, '', '', '694102378021912576', 128, 181, '', '604612615536115712', '604612615536115712', '2026-03-31 10:56:40.177+08', '2026-03-31 19:37:41.701+08', NULL, '1.1.0', NULL);
 
 
 --
--- TOC entry 3368 (class 0 OID 29667)
+-- TOC entry 3360 (class 0 OID 29667)
 -- Dependencies: 243
--- Data for Name: aon_doc_config; Type: TABLE DATA; Schema: meadmin; Owner: meadmin
+-- Data for Name: aon_doc_config; Type: TABLE DATA; Schema: meadmin; Owner: -
 --
 
-COPY aon_doc_config (id, icon_file_id, version, links, created_admin_id, updated_admin_id, created_at, updated_at) FROM stdin;
-1	\N	[{"title":"V1.1.0","code":"1.1.0","status":1},{"title":"V1.0.0","code":"1.0.0","status":1}]	[{"icon":{"url":"/api/admin/file/get/694066691864264704/82af4fb1-7049-491b-b346-78a73dd26d77.png","id":"694066691864264704","storage":"local","md5":"dac00cfc094a2b9acefeb67be311e1f5","size":66346,"path":"dac00cfc094a2b9acefeb67be311e1f5.png","name":"82af4fb1-7049-491b-b346-78a73dd26d77.png","mimeType":"image/png","updatedAt":"2026-03-31T06:13:14.476Z","createdAt":"2026-03-31T06:13:14.476Z","createdAdminId":"604612615536115712","updatedAdminId":"604612615536115712","uid":1774937594276,"status":"success"},"title":"","url":"https://github.com/meadmin-cn/meadmin"}]	\N	604612615536115712	2026-03-22 10:26:01+08	2026-03-31 14:13:23.99+08
-\.
+INSERT INTO aon_doc_config VALUES ('1', NULL, '[{"title":"V1.1.0","code":"1.1.0","status":1},{"title":"V1.0.0","code":"1.0.0","status":1}]', '[{"icon":{"url":"/api/admin/file/get/694066691864264704/82af4fb1-7049-491b-b346-78a73dd26d77.png","id":"694066691864264704","storage":"local","md5":"dac00cfc094a2b9acefeb67be311e1f5","size":66346,"path":"dac00cfc094a2b9acefeb67be311e1f5.png","name":"82af4fb1-7049-491b-b346-78a73dd26d77.png","mimeType":"image/png","updatedAt":"2026-03-31T06:13:14.476Z","createdAt":"2026-03-31T06:13:14.476Z","createdAdminId":"604612615536115712","updatedAdminId":"604612615536115712","uid":1774937594276,"status":"success"},"title":"","url":"https://github.com/meadmin-cn/meadmin"}]', NULL, '604612615536115712', '2026-03-22 10:26:01+08', '2026-03-31 14:13:23.99+08');
 
 
 --
--- TOC entry 3366 (class 0 OID 27870)
--- Dependencies: 233
--- Data for Name: file; Type: TABLE DATA; Schema: meadmin; Owner: meadmin
---
-
-COPY file (id, name, mime_type, size, storage, created_at, updated_at, created_admin_id, updated_admin_id, path, md5) FROM stdin;
-693988309440921600	image.png	image/png	39008	local	2026-03-31 09:01:46.65+08	2026-03-31 09:01:46.65+08	604612615536115712	604612615536115712	3832e40249f4eb6c4feca1c257718907.png	3832e40249f4eb6c4feca1c257718907
-694058309212176384	image.png	image/png	91238	local	2026-03-31 13:39:55.897+08	2026-03-31 13:39:55.897+08	604612615536115712	604612615536115712	e27aae898e9bd0f8f1706246c1e6f372.png	e27aae898e9bd0f8f1706246c1e6f372
-694058854975012864	image.png	image/png	91238	local	2026-03-31 13:42:06.016+08	2026-03-31 13:42:06.016+08	604612615536115712	604612615536115712	e27aae898e9bd0f8f1706246c1e6f372.png	e27aae898e9bd0f8f1706246c1e6f372
-694066691864264704	82af4fb1-7049-491b-b346-78a73dd26d77.png	image/png	66346	local	2026-03-31 14:13:14.476+08	2026-03-31 14:13:14.476+08	604612615536115712	604612615536115712	dac00cfc094a2b9acefeb67be311e1f5.png	dac00cfc094a2b9acefeb67be311e1f5
-\.
-
-
---
--- TOC entry 3222 (class 2606 OID 29675)
--- Name: aon_doc_config aon_doc_config_pkey; Type: CONSTRAINT; Schema: meadmin; Owner: meadmin
+-- TOC entry 3215 (class 2606 OID 29675)
+-- Name: aon_doc_config aon_doc_config_pkey; Type: CONSTRAINT; Schema: meadmin; Owner: -
 --
 
 ALTER TABLE ONLY aon_doc_config
@@ -457,8 +9209,8 @@ ALTER TABLE ONLY aon_doc_config
 
 
 --
--- TOC entry 3219 (class 2606 OID 29531)
--- Name: aon_doc aon_doc_pkey; Type: CONSTRAINT; Schema: meadmin; Owner: meadmin
+-- TOC entry 3212 (class 2606 OID 29531)
+-- Name: aon_doc aon_doc_pkey; Type: CONSTRAINT; Schema: meadmin; Owner: -
 --
 
 ALTER TABLE ONLY aon_doc
@@ -466,36 +9218,65 @@ ALTER TABLE ONLY aon_doc
 
 
 --
--- TOC entry 3217 (class 2606 OID 27952)
--- Name: file file_pkey; Type: CONSTRAINT; Schema: meadmin; Owner: meadmin
---
-
-ALTER TABLE ONLY file
-    ADD CONSTRAINT file_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 3220 (class 1259 OID 29854)
--- Name: version_label; Type: INDEX; Schema: meadmin; Owner: meadmin
+-- TOC entry 3213 (class 1259 OID 29854)
+-- Name: version_label; Type: INDEX; Schema: meadmin; Owner: -
 --
 
 CREATE UNIQUE INDEX version_label ON aon_doc USING btree (version, label);
 
 
--- Completed on 2026-03-31 21:11:59
+-- Completed on 2026-04-01 15:52:57
+
+
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('682444732785229824', '文档', 2, 1, 'aon_doc', 99, '/addons/doc/doc', 0, 'addons/doc/views/doc/index', 0, 0, '', 0, 0, 1, '682444732227387392', 94, 105, '', '2026-02-27 12:31:43.506', '2026-03-31 18:32:01.920', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('682444732227387392', 'Doc', 1, 1, 'addons_doc', 99, '/addons/doc', 0, '', 0, 0, '', 0, 1, 1, NULL, 93, 112, '', '2026-02-27 12:31:43.374', '2026-03-31 18:32:01.920', NULL, NULL);
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('690749754484719616', '配置', 2, 1, 'aon_doc_config', 98, '/addons/doc/config', 0, 'addons/doc/views/config/index', 0, 0, '', 0, 0, 1, '682444732227387392', 106, 111, '', '2026-03-22 10:32:54.980', '2026-03-31 18:32:01.938', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('690749756724477952', '详情', 3, 1, 'aon_doc_config_info', 98, '', 0, '', 0, 0, '', 0, 0, 1, '690749754484719616', 107, 108, '', '2026-03-22 10:32:55.513', '2026-03-31 18:32:01.938', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('694131759574417408', '复制', 3, 1, 'aon_doc_copy', 94, '', 0, '', 0, 1, '', 0, 0, 1, '682444732785229824', 103, 104, '', '2026-03-31 18:31:47.828', '2026-03-31 18:32:01.958', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('682444733645062144', '详情', 3, 1, 'aon_doc_info', 98, '', 0, '', 0, 0, '', 0, 0, 1, '682444732785229824', 95, 96, '', '2026-02-27 12:31:43.711', '2026-03-25 19:41:09.179', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('682444734077075456', '新增', 3, 1, 'aon_doc_add', 97, '', 0, '', 0, 0, '', 0, 0, 1, '682444732785229824', 97, 98, '', '2026-02-27 12:31:43.814', '2026-03-25 19:41:09.179', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('682444734496505856', '编辑', 3, 1, 'aon_doc_edit', 96, '', 0, '', 0, 0, '', 0, 0, 1, '682444732785229824', 99, 100, '', '2026-02-27 12:31:43.914', '2026-03-25 19:41:09.179', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('682444734936907776', '删除', 3, 1, 'aon_doc_del', 95, '', 0, '', 0, 0, '', 0, 0, 1, '682444732785229824', 101, 102, '', '2026-02-27 12:31:44.019', '2026-03-25 19:41:09.179', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('690749758108598272', '编辑', 3, 1, 'aon_doc_config_edit', 96, '', 0, '', 0, 0, '', 0, 0, 1, '690749754484719616', 109, 110, '', '2026-03-22 10:32:55.843', '2026-03-31 18:32:01.938', NULL, '604612615536115712');
+
+
+INSERT INTO file
+(id, "name", mime_type, "size", "storage", created_at, updated_at, created_admin_id, updated_admin_id, "path", md5)
+VALUES('693988309440921600', 'image.png', 'image/png', 39008, 'local', '2026-03-31 09:01:46.650', '2026-03-31 09:01:46.650', '604612615536115712', '604612615536115712', '3832e40249f4eb6c4feca1c257718907.png', '3832e40249f4eb6c4feca1c257718907');
+INSERT INTO file
+(id, "name", mime_type, "size", "storage", created_at, updated_at, created_admin_id, updated_admin_id, "path", md5)
+VALUES('694058309212176384', 'image.png', 'image/png', 91238, 'local', '2026-03-31 13:39:55.897', '2026-03-31 13:39:55.897', '604612615536115712', '604612615536115712', 'e27aae898e9bd0f8f1706246c1e6f372.png', 'e27aae898e9bd0f8f1706246c1e6f372');
+INSERT INTO file
+(id, "name", mime_type, "size", "storage", created_at, updated_at, created_admin_id, updated_admin_id, "path", md5)
+VALUES('694058854975012864', 'image.png', 'image/png', 91238, 'local', '2026-03-31 13:42:06.016', '2026-03-31 13:42:06.016', '604612615536115712', '604612615536115712', 'e27aae898e9bd0f8f1706246c1e6f372.png', 'e27aae898e9bd0f8f1706246c1e6f372');
+INSERT INTO file
+(id, "name", mime_type, "size", "storage", created_at, updated_at, created_admin_id, updated_admin_id, "path", md5)
+VALUES('694066691864264704', '82af4fb1-7049-491b-b346-78a73dd26d77.png', 'image/png', 66346, 'local', '2026-03-31 14:13:14.476', '2026-03-31 14:13:14.476', '604612615536115712', '604612615536115712', 'dac00cfc094a2b9acefeb67be311e1f5.png', 'dac00cfc094a2b9acefeb67be311e1f5');
+
+
+
 
 --
 -- PostgreSQL database dump complete
 --
-COPY system_menu (id, title, menu_type, status, rule, order_num, path, is_link, component, hide_menu, cache, icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id) FROM stdin;
-682444732785229824	文档	2	1	aon_doc	99	/addons/doc/doc	0	addons/doc/views/doc/index	0	0		0	0	1	682444732227387392	94	105		2026-02-27 12:31:43.506+08	2026-03-31 18:32:01.92+08	\N	604612615536115712
-682444732227387392	Doc	1	1	addons_doc	99	/addons/doc	0		0	0		0	1	1	\N	93	112		2026-02-27 12:31:43.374+08	2026-03-31 18:32:01.92+08	\N	\N
-690749754484719616	配置	2	1	aon_doc_config	98	/addons/doc/config	0	addons/doc/views/config/index	0	0		0	0	1	682444732227387392	106	111		2026-03-22 10:32:54.98+08	2026-03-31 18:32:01.938+08	\N	604612615536115712
-690749756724477952	详情	3	1	aon_doc_config_info	98		0		0	0		0	0	1	690749754484719616	107	108		2026-03-22 10:32:55.513+08	2026-03-31 18:32:01.938+08	\N	604612615536115712
-694131759574417408	复制	3	1	aon_doc_copy	94		0		0	1		0	0	1	682444732785229824	103	104		2026-03-31 18:31:47.828+08	2026-03-31 18:32:01.958+08	604612615536115712	604612615536115712
-682444733645062144	详情	3	1	aon_doc_info	98		0		0	0		0	0	1	682444732785229824	95	96		2026-02-27 12:31:43.711+08	2026-03-25 19:41:09.179+08	\N	604612615536115712
-682444734077075456	新增	3	1	aon_doc_add	97		0		0	0		0	0	1	682444732785229824	97	98		2026-02-27 12:31:43.814+08	2026-03-25 19:41:09.179+08	\N	604612615536115712
-682444734496505856	编辑	3	1	aon_doc_edit	96		0		0	0		0	0	1	682444732785229824	99	100		2026-02-27 12:31:43.914+08	2026-03-25 19:41:09.179+08	\N	604612615536115712
-682444734936907776	删除	3	1	aon_doc_del	95		0		0	0		0	0	1	682444732785229824	101	102		2026-02-27 12:31:44.019+08	2026-03-25 19:41:09.179+08	\N	604612615536115712
-690749758108598272	编辑	3	1	aon_doc_config_edit	96		0		0	0		0	0	1	690749754484719616	109	110		2026-03-22 10:32:55.843+08	2026-03-31 18:32:01.938+08	\N	604612615536115712
-\.
+

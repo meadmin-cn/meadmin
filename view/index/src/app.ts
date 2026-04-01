@@ -7,6 +7,7 @@ import { installIcon } from './icons/index.js';
 import { setupRouterGuard } from './router/guard/index.js';
 import { installRoute } from './router/index.js';
 import { installStore } from './store/index.js';
+import { setApp } from './utils/request.js';
 export const ssrVersionKey = Symbol('ssrVersionKey');
 export async function bootscrapt(app: App, ssrVersion: string = '') {
   app.config.globalProperties.$start = true;
@@ -20,6 +21,7 @@ export async function bootscrapt(app: App, ssrVersion: string = '') {
   app.config.globalProperties.$router = router;
   const store = await installStore(app);
   app.use(router);
+  setApp(app);
   setupRouterGuard(router, store);
   initVxeTable(app);
   installIcon(app);

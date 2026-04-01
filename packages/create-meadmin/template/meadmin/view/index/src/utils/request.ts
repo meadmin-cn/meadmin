@@ -12,6 +12,11 @@ import { clearEmptyParam } from './helper.js';
 import log from './log';
 import { getServerCache, rmServerCache, setServerCache } from './server.js';
 
+let defaultApp: App = undefined;
+
+export const setApp = (app: App) => {
+  defaultApp = app;
+};
 export type RequestOptions<R, P extends unknown[]> = {
   needAll?: boolean; // 需要所有的格式，而不仅仅是data
   noLoading?: boolean; // 不需要加载特效
@@ -42,6 +47,9 @@ export function request<R, P extends unknown[] = [], T = boolean>(axiosConfig: (
   let ssrVersion = '';
   let store: Pinia | undefined;
   let router: Router | undefined;
+  if (!app) {
+    app = defaultApp;
+  }
   if (import.meta.env.SSR) {
     ssrVersion = app?.config.globalProperties.$ssrVersion;
     store = app?.config.globalProperties.$pinia;

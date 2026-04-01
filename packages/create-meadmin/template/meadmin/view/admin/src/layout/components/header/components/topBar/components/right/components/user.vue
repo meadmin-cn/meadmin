@@ -1,7 +1,7 @@
 <template>
   <el-dropdown class="me-size-select" trigger="click" max-height="500px">
     <div class="flex-center pointer" v-bind="$attrs">
-      <el-avatar size="small" class="avatar" :src="userStore.user.avatar" />
+      <el-avatar size="small" class="avatar" :src="userStore.user?.avatar?.url" />
       <span v-if="!globalStore.isMobile" class="ellipsis-2">{{ userStore.user.name }}</span>
     </div>
     <template #dropdown>

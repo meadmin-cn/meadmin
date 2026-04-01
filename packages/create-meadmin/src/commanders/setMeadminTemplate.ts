@@ -118,6 +118,7 @@ const copyFiles = {
       parser: 'yaml',
     });
   },
+  'pnpm-lock.yaml': {},
   'README.md': {},
   'tsconfig.json': {},
   'meadmin.sql': {},
@@ -129,7 +130,11 @@ const makeFiles = {
   'uploadFile/index/.gitkeep': {},
   'view/admin/dist/.gitkeep': {},
   'view/index/dist/.gitkeep': {},
-  'addons/': {},
+  'addons/.gitkeep': {},
+  'src/app/admin/addons/.gitkeep': {},
+  'src/app/index/addons/.gitkeep': {},
+  'view/admin/src/addons/.gitkeep': {},
+  'view/index/src/addons/.gitkeep': {},
 };
 
 export const setMeadminTemplate = (program: Command) => {

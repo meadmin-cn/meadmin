@@ -118,18 +118,24 @@ export class LoginService {
       where: {
         id: adminId,
       },
-      include: {
-        model: SystemRole,
-        where: { status: 1 },
-        required: false,
-        include: [
-          {
-            model: SystemMenu,
-            where: { status: 1 },
-            required: false,
-          },
-        ],
-      },
+      include: [
+        {
+          model: SystemRole,
+          where: { status: 1 },
+          required: false,
+          include: [
+            {
+              model: SystemMenu,
+              where: { status: 1 },
+              required: false,
+            },
+          ],
+        },
+        {
+          association: 'avatar',
+          attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
+        },
+      ],
     });
     if (admin?.roles.some((item) => item.isSuper === 1)) {
       admin.roleMenus = await this.menuRepository.findAll({
@@ -174,7 +180,7 @@ export class LoginService {
       entity.lastLoginIp = ctx?.ip ?? '';
       entity.save();
       return await this.getToken(entity.id);
-    } else {
+    } else if (entity) {
       await entity.increment('loginFailure', { by: 1 });
     }
     throw new BadRequestError(translate ? translate('错误的{key}', { args: { key: translate('用户名') + '/' + translate('密码') } }) : '错误的用户名/密码');

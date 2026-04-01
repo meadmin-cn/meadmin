@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, WriteFileOptions, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, WriteFileOptions, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 /**
  * 写入文件【当文件所在文件夹不存在时会递归创建】
@@ -55,8 +55,10 @@ export async function copyFile(fromFile: string, toFile: string, fileSetFunction
   let content = readFileSync(fromFile, 'utf-8');
   if (fileSetFunction) {
     content = await fileSetFunction(content);
+    return recursionWriteFileSync(encodePackageFileName(toFile, isEncodePackage), content);
+  } else {
+    return cpSync(fromFile, encodePackageFileName(toFile, isEncodePackage));
   }
-  return recursionWriteFileSync(encodePackageFileName(toFile, isEncodePackage), content);
 }
 
 /**

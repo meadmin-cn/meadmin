@@ -19,16 +19,64 @@ const copyFiles = {
   },
   '.vscode/': {},
   'src/': {
-    ignore: ['index/addons','admin/addons'],
+    ignore: ['index/addons', 'admin/addons'],
   },
   'test/': {},
   'public/admin/': {},
   'public/index/': {},
   'view/admin/': {
     ignore: ['node_modules', '.eslintcache', 'dist', 'src/addons'], //忽略的值
+    fileSetFunction: {
+      'package.json': async (content: string) => {
+        const jsonObj = JSON.parse(content);
+        Object.keys(jsonObj.devDependencies).forEach((key) => {
+          if (jsonObj.devDependencies[key] === 'workspace:^') {
+            const { version } = JSON.parse(readFileSync(resolve(fromPath, 'node_modules/', key + '/package.json')).toString());
+            jsonObj.devDependencies[key] = '~' + version;
+          }
+          if (key.startsWith('meadmin-addons-')) {
+            delete jsonObj.devDependencies[key];
+          }
+        });
+        Object.keys(jsonObj.dependencies).forEach((key) => {
+          if (jsonObj.dependencies[key] === 'workspace:^') {
+            const { version } = JSON.parse(readFileSync(resolve(fromPath, 'node_modules/', key + '/package.json')).toString());
+            jsonObj.dependencies[key] = '~' + version;
+          }
+          if (key.startsWith('meadmin-addons-')) {
+            delete jsonObj.dependencies[key];
+          }
+        });
+        return await prettier.format(JSON.stringify(jsonObj), { parser: 'json' });
+      },
+    },
   },
   'view/index/': {
     ignore: ['node_modules', '.eslintcache', 'dist', 'src/addons'], //忽略的值
+    fileSetFunction: {
+      'package.json': async (content: string) => {
+        const jsonObj = JSON.parse(content);
+        Object.keys(jsonObj.devDependencies).forEach((key) => {
+          if (jsonObj.devDependencies[key] === 'workspace:^') {
+            const { version } = JSON.parse(readFileSync(resolve(fromPath, 'node_modules/', key + '/package.json')).toString());
+            jsonObj.devDependencies[key] = '~' + version;
+          }
+          if (key.startsWith('meadmin-addons-')) {
+            delete jsonObj.devDependencies[key];
+          }
+        });
+        Object.keys(jsonObj.dependencies).forEach((key) => {
+          if (jsonObj.dependencies[key] === 'workspace:^') {
+            const { version } = JSON.parse(readFileSync(resolve(fromPath, 'node_modules/', key + '/package.json')).toString());
+            jsonObj.dependencies[key] = '~' + version;
+          }
+          if (key.startsWith('meadmin-addons-')) {
+            delete jsonObj.dependencies[key];
+          }
+        });
+        return await prettier.format(JSON.stringify(jsonObj), { parser: 'json' });
+      },
+    },
   },
   '.editorconfig': {},
   '.env': {},
@@ -48,13 +96,19 @@ const copyFiles = {
     Object.keys(jsonObj.devDependencies).forEach((key) => {
       if (jsonObj.devDependencies[key] === 'workspace:^') {
         const { version } = JSON.parse(readFileSync(resolve(fromPath, 'node_modules/', key + '/package.json')).toString());
-        jsonObj.devDependencies[key] = '^' + version;
+        jsonObj.devDependencies[key] = '~' + version;
+      }
+      if (key.startsWith('meadmin-addons-')) {
+        delete jsonObj.devDependencies[key];
       }
     });
     Object.keys(jsonObj.dependencies).forEach((key) => {
       if (jsonObj.dependencies[key] === 'workspace:^') {
         const { version } = JSON.parse(readFileSync(resolve(fromPath, 'node_modules/', key + '/package.json')).toString());
-        jsonObj.dependencies[key] = '^' + version;
+        jsonObj.dependencies[key] = '~' + version;
+      }
+      if (key.startsWith('meadmin-addons-')) {
+        delete jsonObj.dependencies[key];
       }
     });
     return await prettier.format(JSON.stringify(jsonObj), { parser: 'json' });
@@ -75,13 +129,13 @@ const makeFiles = {
   'uploadFile/index/.gitkeep': {},
   'view/admin/dist/.gitkeep': {},
   'view/index/dist/.gitkeep': {},
-  'addons/':{},
+  'addons/': {},
 };
 
 export const setMeadminTemplate = (program: Command) => {
   program
     .command('setMeadminTemplate')
-    .description('生成meadmin模板')
+    .description('生成meadmin模板, （输入模板目录名）')
     .argument('<file>', '文件夹名称')
     .action(async (file: string) => {
       const toPath = resolve(import.meta.dirname, '../template/', file + '/');

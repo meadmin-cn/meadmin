@@ -5,7 +5,7 @@ import { resolve } from 'path';
 export const version = (program: Command) => {
   program
     .command('version')
-    .description('设置版本号，会设置所以meadmin的版本号')
+    .description('设置版本号，会设置所有meadmin的版本号')
     .argument('<version>', '版本')
     .action(async (version: string) => {
       if (!version) {

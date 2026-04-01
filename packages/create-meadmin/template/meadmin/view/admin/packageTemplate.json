@@ -38,7 +38,6 @@
     "js-cookie": "^3.0.5",
     "lodash-es": "^4.17.21",
     "md-editor-v3": "^2.11.3",
-    "meadmin-addons-doc": "workspace:*",
     "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
     "path-browserify": "^1.0.1",
@@ -110,13 +109,9 @@
     "url": "git+https://github.com/meadmin-cn/meadmin.git"
   },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/meadmin-cn/meadmin/issues"
-  },
+  "bugs": { "url": "https://github.com/meadmin-cn/meadmin/issues" },
   "homepage": "https://github.com/meadmin-cn/meadmin",
-  "engines": {
-    "node": ">=20.10.0"
-  },
+  "engines": { "node": ">=20.10.0" },
   "lint-staged": {
     "**/*": "prettier --cache --write --ignore-unknown",
     "*.{vue,ts,tsx}": "eslint --cache --fix"

@@ -5,9 +5,9 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@meadmin/cli": "^1.1.0",
-    "@meadmin/core": "^1.1.0",
-    "@meadmin/midway-vite-view": "^1.1.0",
+    "@meadmin/cli": "~1.1.0",
+    "@meadmin/core": "~1.1.0",
+    "@meadmin/midway-vite-view": "~1.1.0",
     "@midwayjs/bootstrap": "^3.20.22",
     "@midwayjs/busboy": "^3.20.22",
     "@midwayjs/cache-manager": "^3.20.22",

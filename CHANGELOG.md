@@ -1,5 +1,28 @@
 
 
+## [1.2.3](https://github.com/meadmin-cn/midway-meamdin/compare/main-1.2.2...main-1.2.3) (2026-04-02)
+
+
+### 新功能[feat]
+
+* 设置版本时同步设置meadmin的版本 ([a110bc0](https://github.com/meadmin-cn/midway-meamdin/commit/a110bc0710a75892be0b24593581ffa5ca9c3f47))
+
+
+### Bug 修复[fix]
+
+* 模板创建时生成tmp文件夹 ([7f916e3](https://github.com/meadmin-cn/midway-meamdin/commit/7f916e3cdb47ffbb402fe6b502ec7d9aae22fd45))
+* **meadmin:** 修复打包后文件上传失败bug ([0ddf17c](https://github.com/meadmin-cn/midway-meamdin/commit/0ddf17cd8f26169757d03ecc50f4857059e34da2))
+
+
+### 其他[chore]
+
+* 版本升级到1.2.3 ([516f9cf](https://github.com/meadmin-cn/midway-meamdin/commit/516f9cf4ad7f403a7c63f94ba35a721ba34c5d7e))
+
+
+### CI发版[ci]
+
+* 更新发布模板 ([fb1dc48](https://github.com/meadmin-cn/midway-meamdin/commit/fb1dc48788a4563f7d3878cdab0867643f95e838))
+
 ## [1.2.2](https://github.com/meadmin-cn/midway-meamdin/compare/main-1.2.1...main-1.2.2) (2026-04-01)
 
 

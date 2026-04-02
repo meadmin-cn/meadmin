@@ -1,10 +1,9 @@
 import { FileInfo, uploadFileApi } from '@/api/file.js';
 import { UploadProgressEvent, UploadRawFile, UploadRequestOptions } from 'element-plus';
 import SparkMD5 from 'spark-md5';
-import md5WorkerURL from './fileMd5Work.js?url';
 let md5Worker: Worker;
 if (!import.meta.env.SSR) {
-  md5Worker = new Worker(md5WorkerURL, { type: 'module' });
+  md5Worker = new Worker(new URL('./fileMd5Work.js', import.meta.url), { type: 'module' });
 }
 
 export class UploadAjaxError extends Error {

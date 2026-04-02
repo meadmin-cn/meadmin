@@ -1,13 +1,13 @@
 {
   "name": "meadmin",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "description": "",
   "private": true,
   "type": "module",
   "dependencies": {
-    "@meadmin/cli": "~1.2.2",
-    "@meadmin/core": "~1.2.2",
-    "@meadmin/midway-vite-view": "~1.2.2",
+    "@meadmin/cli": "~1.2.3",
+    "@meadmin/core": "~1.2.3",
+    "@meadmin/midway-vite-view": "~1.2.3",
     "@midwayjs/bootstrap": "^3.20.22",
     "@midwayjs/busboy": "^3.20.22",
     "@midwayjs/cache-manager": "^3.20.22",

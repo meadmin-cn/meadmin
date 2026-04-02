@@ -21,3 +21,4 @@ uploadFile/*/**
 .env.production
 .env.prod
 .eslintcache
+.env.prod

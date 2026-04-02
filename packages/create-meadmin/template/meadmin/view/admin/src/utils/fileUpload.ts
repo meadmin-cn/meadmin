@@ -1,8 +1,7 @@
 import { FileInfo, uploadFileApi } from '@/api/file.js';
 import { UploadProgressEvent, UploadRawFile, UploadRequestOptions } from 'element-plus';
 import SparkMD5 from 'spark-md5';
-import md5WorkerURL from './fileMd5Work.js?url';
-const md5Worker = new Worker(md5WorkerURL, { type: 'module' });
+const md5Worker = new Worker(new URL('./fileMd5Work.js', import.meta.url), { type: 'module' });
 
 //上传管理员附件
 export class UploadAjaxError extends Error {
@@ -141,6 +140,7 @@ const uploadChunks = (file: UploadRawFile, chunkSize: number, data: UploadReques
 
 //上传请求兼容 element-plus上传事件
 export const fileUpload = async (options: UploadRequestOptions) => {
+  console.log('---', options);
   const chunkSize = 1024 * 1024;
   const progressEvt = new ProgressEvent('uploadProgress', {
     lengthComputable: true,

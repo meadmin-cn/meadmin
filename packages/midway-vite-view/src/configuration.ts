@@ -44,11 +44,11 @@ export class MidwayViteViewConfiguration {
       this.viteViewConfig.prod === false ||
       !['prod', 'production'].includes(this.app.getEnv())
     ) {
-      this.viteService.restoreVite();
+      this.viteService.getViteMiddlewareArr();
     }
   }
 
   async onStop() {
-    this.viteService.catchViteAddress();
+    this.viteService.closeAll();
   }
 }

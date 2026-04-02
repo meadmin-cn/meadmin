@@ -128,6 +128,7 @@ const makeFiles = {
   'logs/.gitkeep': {},
   'uploadFile/admin/.gitkeep': {},
   'uploadFile/index/.gitkeep': {},
+  'uploadFile/tmp/.gitkeep': {},
   'view/admin/dist/.gitkeep': {},
   'view/index/dist/.gitkeep': {},
   'addons/.gitkeep': {},

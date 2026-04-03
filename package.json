@@ -78,14 +78,6 @@
   "bugs": {
     "url": "https://github.com/meadmin-cn/meadmin"
   },
-  "pnpm": {
-    "overrides": {
-      "midway-vite-view": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/midway-vite-view",
-      "core": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/core",
-      "create-meadmin": "link:C:/Users/张佳云/AppData/Local/pnpm/global/5/node_modules/packages/create-meadmin",
-      "my-midway-esm-project": "link:"
-    }
-  },
   "lint-staged": {
     "**/*": "prettier --cache --write --ignore-unknown"
   }

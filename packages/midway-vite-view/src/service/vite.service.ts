@@ -1,11 +1,19 @@
-import { App, Config, Provide, Scope, ScopeEnum } from '@midwayjs/core';
+import {
+  App,
+  Config,
+  ILogger,
+  Logger,
+  Provide,
+  Scope,
+  ScopeEnum,
+  sleep,
+} from '@midwayjs/core';
 import * as koa from '@midwayjs/koa';
 import c2k from 'koa2-connect';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync } from 'node:fs';
 import * as path from 'node:path';
-import { createServer, HmrOptions, normalizePath, ViteDevServer } from 'vite';
+import { createServer, normalizePath, ViteDevServer } from 'vite';
 import { ViteViewConfig } from '../interface.js';
-import { getPort } from '../utils/index.js';
 
 const cachePostfix = '_';
 const vitePlugin = (
@@ -17,7 +25,7 @@ const vitePlugin = (
   name: 'vite-plugin-midway-vite-view',
   async config(config: any) {
     if (!config.server.hmr) {
-      const port = await getPort(hmrPort);
+      const port = hmrPort;
       config.server.hmr = {
         clientPort: port,
         port: port,
@@ -54,10 +62,14 @@ export class ViteService {
   @App()
   koaApp: koa.Application;
 
+  @Logger('coreLogger')
+  logger: ILogger;
+
   private vite = {} as { [key: string]: ViteDevServer };
   private middlewareArr = [] as MiddlewareArr;
+  private inited = 'not' as 'not' | 'processing' | 'success';
   //生成vite server
-  async createVite(name: string, hmr?: HmrOptions | boolean) {
+  async createVite(name: string) {
     if (!this.vite[name]) {
       let configFile = path.resolve(
         this.koaApp.getAppDir(),
@@ -65,9 +77,6 @@ export class ViteService {
         name,
         this.viteViewConfig.views[name].viteConfigFile
       );
-      if (typeof hmr === 'object') {
-        hmr.port = await getPort(hmr.port);
-      }
       const hmrPort = this.viteViewConfig.views[name].hmrPort;
       this.vite[name] = await createServer({
         configFile,
@@ -88,7 +97,6 @@ export class ViteService {
             usePolling: true,
             interval: 100,
           },
-          hmr: hmr,
         },
       });
     }
@@ -106,23 +114,53 @@ export class ViteService {
 
   //获取全部vite中间件数组
   async getViteMiddlewareArr() {
-    if (this.middlewareArr.length) {
+    if (this.inited === 'success') {
       return this.middlewareArr;
     }
-    const configSet = new Set<string | undefined>();
-    for (const [name, view] of Object.entries(this.viteViewConfig.views)) {
-      const viteServer = await this.createVite(name);
-      this.middlewareArr.splice(
-        this.getMiddlewareIndex(viteServer.config.base),
-        0,
-        {
-          middleware: c2k(viteServer.middlewares),
-          prefix: viteServer.config.base,
-        }
-      );
-      configSet.add(view.viteConfigFile);
+    if (this.inited === 'processing') {
+      await sleep(500);
+      return await this.getViteMiddlewareArr();
     }
-    return this.middlewareArr;
+    try {
+      this.inited = 'processing';
+      const configSet = new Set<string | undefined>();
+      const promiseArr = [] as Promise<unknown>[];
+      let start = +new Date();
+      for (const [name, view] of Object.entries(this.viteViewConfig.views)) {
+        promiseArr.push(
+          (async () => {
+            this.logger.info(` ${name} vite server开始创建`);
+
+            const viteServer = await this.createVite(name);
+            this.middlewareArr.splice(
+              this.getMiddlewareIndex(viteServer.config.base),
+              0,
+              {
+                middleware: c2k(viteServer.middlewares),
+                prefix: viteServer.config.base,
+              }
+            );
+            configSet.add(view.viteConfigFile);
+            this.logger.info(` ${name} vite server 创建 完成`);
+          })()
+        );
+      }
+      await Promise.all(promiseArr);
+      this.logger.info(`vite server 全部创建完成,耗时${+new Date() - start}ms`);
+      this.inited = 'success';
+      return this.middlewareArr;
+    } catch (e) {
+      this.inited = 'not';
+      throw e;
+    }
+  }
+
+  closeAll() {
+    for (const [, server] of Object.entries(this.vite)) {
+      server.close();
+    }
+    this.vite = {};
+    this.middlewareArr.splice(0, this.middlewareArr.length);
   }
 
   //获取catch文件地址
@@ -140,30 +178,5 @@ export class ViteService {
       mkdirSync(catchPath);
     }
     return path.resolve(catchPath, 'midway_vite_view_port.json');
-  }
-
-  //缓存vite地址
-  catchViteAddress() {
-    const catchPath = this.getCatchFile();
-    const json = {};
-    Object.keys(this.vite).forEach(key => {
-      json[key] = {
-        time: new Date(),
-        hmr: this.vite[key].config.server.hmr,
-      };
-    });
-    writeFileSync(catchPath, JSON.stringify(json), 'utf8');
-  }
-
-  //恢复缓存的vite
-  restoreVite() {
-    const catchPath = this.getCatchFile();
-    if (existsSync(catchPath)) {
-      const json = JSON.parse(readFileSync(catchPath, 'utf8'));
-      json &&
-        Object.keys(json).forEach(key => {
-          this.createVite(key, json[key].hmr);
-        });
-    }
   }
 }

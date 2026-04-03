@@ -20,6 +20,7 @@ export function getPort(port: number) {
     const server = net.createServer();
     server.unref();
     server.on('error', () => {
+      console.log(port + '已被占用');
       getPort(++port).then(resolve);
     });
     server.listen(port, () => {

@@ -106,6 +106,9 @@ export default {
       index: {
         store: createRedisStore('cache'),
       },
+      captcha:{
+        store: createRedisStore('cache'),
+      }
     },
   },
   admin: {

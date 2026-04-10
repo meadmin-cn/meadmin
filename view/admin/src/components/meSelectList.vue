@@ -13,9 +13,9 @@
 </template>
 
 <script setup lang="ts" name="MeSleectList">
-import { PageResult } from '@/api/api.model.js';
+import type { PageResult } from '@/api/api.model.js';
 import { snakeToCamelCaseObj } from '@/utils/formatting.js';
-import { SelectInstance, SelectProps } from 'element-plus';
+import type { SelectInstance, SelectProps } from 'element-plus';
 import { omit } from 'lodash-es';
 const attrs = snakeToCamelCaseObj(useAttrs()) as Record<string, any> & SelectProps;
 const modelValue = defineModel<SelectProps['modelValue']>();

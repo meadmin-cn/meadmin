@@ -1,6 +1,8 @@
-import { PageParam, PageResult } from '@/api/api.model.js';
-import request, { RequestOptions } from '@/utils/request.js';
-import { SystemAdminInfo } from './system/admin.js';
+import { PageResult } from '@/api/api.model.js';
+import { PageParam } from '@/api/api.model.js';
+import type { RequestOptions } from '@/utils/request.js';
+import request from '@/utils/request.js';
+import type { SystemAdminInfo } from './system/admin.js';
 
 //附件
 export class File {

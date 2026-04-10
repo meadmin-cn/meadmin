@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts" name="LayoutMenuItem">
-import { RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 const props = defineProps<{ item: RouteRecordRaw; noChild?: boolean; collapse?: boolean }>();
 const menu = ref<RouteRecordRaw>();
 const getMenu = (item: RouteRecordRaw): RouteRecordRaw => {

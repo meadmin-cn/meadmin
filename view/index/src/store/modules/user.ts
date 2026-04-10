@@ -1,12 +1,13 @@
-import { loginApi, LoginParams, userInfoApi } from '@/api/login';
-import { UserInfo } from '@/api/user.js';
+import type { LoginParams} from '@/api/login';
+import { loginApi, userInfoApi } from '@/api/login';
+import type { UserInfo } from '@/api/user.js';
 import { loginConfig as config } from '@/config';
 import { PageEnum } from '@/dict/pageEnum';
 import { event, mitter } from '@/event';
 import cookies from '@/utils/cookies.js';
 import { loading } from '@/utils/loading';
-import { App, Ref } from 'vue';
-import { Router } from 'vue-router';
+import type { App, Ref } from 'vue';
+import type { Router } from 'vue-router';
 import useRouteStore from './route';
 interface UserState {
   user: UserInfo; // 用户信息

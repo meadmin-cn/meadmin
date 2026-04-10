@@ -64,10 +64,11 @@
   </div>
 </template>
 <script lang="ts">
-import { TreeNodeData } from 'element-plus/es/components/tree/src/tree.type';
+import type { TreeNodeData } from 'element-plus/es/components/tree/src/tree.type';
 import { debounce } from 'lodash-es';
-import { ComponentCustomProperties, PropType, useTemplateRef } from 'vue';
-import { VxeTableDefines, VxeTableInstance, VxeTableListeners, VxeTableProps, VxeTablePropTypes } from 'vxe-table';
+import type { ComponentCustomProperties, PropType} from 'vue';
+import { useTemplateRef } from 'vue';
+import type { VxeTableDefines, VxeTableInstance, VxeTableListeners, VxeTableProps, VxeTablePropTypes } from 'vxe-table';
 import pagination from './components/pagination.vue';
 import resize from './directives/resize';
 import { getFullHight } from './util';

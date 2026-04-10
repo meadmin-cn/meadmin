@@ -1,6 +1,7 @@
-import { FileInfo } from '@/api/file.js';
-import { SystemAdminInfo } from '@/api/system/admin.js';
-import request, { RequestOptions } from '@/utils/request.js';
+import type { FileInfo } from '@/api/file.js';
+import type { SystemAdminInfo } from '@/api/system/admin.js';
+import type { RequestOptions } from '@/utils/request.js';
+import request from '@/utils/request.js';
 
 //配置
 export class AonDocConfig {

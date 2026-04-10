@@ -1,6 +1,7 @@
 import { ApiOperationResponse } from '@/decorators/index.js';
 import { uploadStorage } from '@/fileManage/index.js';
-import { UploadMiddleware, UploadOptions, UploadStreamFileInfo } from '@midwayjs/busboy';
+import { UploadOptions, UploadStreamFileInfo } from '@midwayjs/busboy';
+import { UploadMiddleware } from '@midwayjs/busboy';
 import { Body, Config, Controller, Fields, Files, Get, Inject, Param, Post } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { ApiBody, BodyContentType } from '@midwayjs/swagger';
@@ -68,7 +69,7 @@ export class FileController extends BaseController {
     summary: '获取我的附件列表',
   })
   async my(@Body() queryDto: FileQueryDto) {
-    queryDto.createdAdminId = this.ctx.adminInfo.id;
+    queryDto.createdAdminId = this.ctx.adminInfo?.id;
     return this.success(await this.fileService.list(queryDto));
   }
 

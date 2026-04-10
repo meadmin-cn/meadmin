@@ -18,7 +18,7 @@
 
 <script setup lang="ts" name="EditPass">
 import { updateUserApi } from '@/api/user.js';
-import { FormInstance, FormRules } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 const editPassParams = reactive({
   orgPassword: '',
   password: '',

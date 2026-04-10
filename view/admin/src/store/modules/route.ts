@@ -4,7 +4,7 @@ import { PageEnum } from '@/dict/pageEnum';
 import { asyncRoutes, constantRoutes, flatteningRoutes2, router } from '@/router';
 import { Layout } from '@/router/constant';
 import { filterAsyncRoutes } from '@/utils/permission';
-import { RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 import useUserStore from './user';
 export default defineStore('route', {
   state: () => ({

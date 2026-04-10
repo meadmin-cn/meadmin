@@ -1,7 +1,8 @@
-import request, { RequestOptions } from '@/utils/request';
-import { App } from 'vue';
-import { FileInfo } from './file.js';
-import { UserInfo } from './user.js';
+import type { RequestOptions } from '@/utils/request';
+import request from '@/utils/request';
+import type { App } from 'vue';
+import type { FileInfo } from './file.js';
+import type { UserInfo } from './user.js';
 //获取登录验证码
 export function loginCaptchaApi<T extends boolean = false>(returnAxios: T = false as T, noLoading = true) {
   return request<{ id: string; imageBase64: string }, [number?, number?], T>(

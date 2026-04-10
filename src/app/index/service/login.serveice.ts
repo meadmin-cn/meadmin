@@ -1,7 +1,7 @@
 import { InjectRepository } from '@/decorators/sequelize.js';
 import { User } from '@/entities/user.entity.js';
 import { CachingFactory, MidwayCache } from '@midwayjs/cache-manager';
-import { Config, Context, Init, Inject, Singleton } from '@midwayjs/core';
+import { Config, Init, Inject, Singleton } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import dayjs from 'dayjs';
 import { pbkdf2Sync, randomBytes } from 'node:crypto';
@@ -56,7 +56,7 @@ export class LoginService {
    * @param userId;
    * @returns;
    */
-  async createToken(userId: string) {
+  async createToken(userId: string):Promise<string> {
     const secret = this.secret + new Date();
     const token = pbkdf2Sync(tokenPrefix + userId, secret, 1000, 32, 'md5').toString('hex');
     if (await this.cache.get(this.getTokenCacheKey(token))) {
@@ -138,7 +138,7 @@ export class LoginService {
    * @param ctx      请求上下文
    * @returns
    */
-  async login(username, password, ctx?: Context) {
+  async login(username: string, password: string) {
     const entity = await this.userRepository.findOne({ where: { username } });
     if (entity && this.checkPassword(password, entity.salt, entity.password)) {
       if (entity.status !== 1) {

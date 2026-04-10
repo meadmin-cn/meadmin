@@ -1,7 +1,8 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@midwayjs/validate';
-import { DataTypes, NonAttribute } from '@sequelize/core';
+import { CreationOptional, NonAttribute } from '@sequelize/core';
+import { DataTypes } from '@sequelize/core';
 import { Attribute, BelongsTo, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
 import { AdminTreeModel } from './abstract/adminTree.entity.js';
 import { SystemRole } from './systemRole.entity.js';
@@ -13,7 +14,7 @@ export class SystemMenu extends AdminTreeModel<SystemMenu> {
   @PrimaryKey
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
-  id: string;
+  id: CreationOptional<string>;//CreationOptional 是 Sequelize 提供的一个类型，用于表示在创建实例时可以省略的属性，因为它们会由数据库自动生成或有默认值。
 
   @BelongsTo(() => SystemMenu, { foreignKey: 'parentId', foreignKeyConstraints: false }) //不创建数据库外键约束
   @ApiPropertyRule({ description: '父级', type: () => SystemMenu })

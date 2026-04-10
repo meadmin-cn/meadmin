@@ -10,7 +10,7 @@ export default {
   // use for cookie sign key, should change to your own and keep security
   keys: '1714030878233_897',
   koa: {
-    port: +process.env.SERVER_PORT,
+    port: +process.env.SERVER_PORT!,
   },
   debug: true,
   validate: {
@@ -24,7 +24,7 @@ export default {
     // 默认语言  "zh-cn"
     defaultLocale: 'zh-cn',
     // used to alter the behaviour of missing keys
-    missingKeyFn: function (locale, value) {
+    missingKeyFn: function (_locale: any, value: any) {
       return value;
     },
 

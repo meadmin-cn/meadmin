@@ -3,8 +3,8 @@
 </template>
 <script lang="ts">
 import { useGlobalStore } from '@/store';
-import { ElPagination } from 'element-plus';
-import { PropType } from 'vue';
+import type { ElPagination } from 'element-plus';
+import type { PropType } from 'vue';
 export default defineComponent({
   name: 'Pagination',
   props: {

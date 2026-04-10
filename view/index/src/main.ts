@@ -1,10 +1,11 @@
 // organize-imports-ignore
-import { App as AppType, createApp as createClientApp, createSSRApp } from 'vue';
+import type { App as AppType} from 'vue';
+import { createApp as createClientApp, createSSRApp } from 'vue';
 import { ID_INJECTION_KEY, ZINDEX_INJECTION_KEY } from 'element-plus';
 import { bootscrapt } from './app';
 import App from './App.vue';
-import { Router } from 'vue-router';
-import { Pinia } from 'pinia';
+import type { Router } from 'vue-router';
+import type { Pinia } from 'pinia';
 
 // SSR requires a fresh app instance per request, therefore we export a function
 // that creates a fresh app instance. If using Vuex, we'd also be creating a

@@ -1,6 +1,8 @@
-import { PageParam, PageResult } from '@/api/api.model.js';
-import request, { RequestOptions } from '@/utils/request.js';
-import { UserInfo } from './user.js';
+import type { PageResult } from '@/api/api.model.js';
+import { PageParam } from '@/api/api.model.js';
+import type { RequestOptions } from '@/utils/request.js';
+import request from '@/utils/request.js';
+import type { UserInfo } from './user.js';
 
 //附件
 export class File {

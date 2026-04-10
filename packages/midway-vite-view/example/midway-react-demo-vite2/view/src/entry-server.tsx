@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import type { StaticContext } from 'react-router';
+import { StaticContext } from 'react-router';
 import { StaticRouter } from 'react-router-dom';
 import { App } from './App';
 

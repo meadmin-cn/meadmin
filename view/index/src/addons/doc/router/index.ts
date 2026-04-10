@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 import Doc from '../views/doc.vue';
 
 export const routes: RouteRecordRaw[] = [

@@ -3,7 +3,8 @@ import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
 import { BelongsToModel } from '@/types/entity.js';
 import { getSchemaPath } from '@midwayjs/swagger';
-import { DataTypes, NonAttribute, Op } from '@sequelize/core';
+import { CreationOptional, NonAttribute } from '@sequelize/core';
+import { DataTypes, Op } from '@sequelize/core';
 import { Attribute, BelongsTo, Default, DeletedAt, Index, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
 import { BaseModel } from './abstract/base.entity.js';
 import { SystemAdmin } from './systemAdmin.entity.js';
@@ -17,7 +18,7 @@ export class User extends BaseModel<User> {
   @PrimaryKey
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
-  id: string;
+  id: CreationOptional<string>;
 
   @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引
   @Attribute({ type: DataTypes.STRING(50), comment: '用户名', allowNull: false, defaultValue: '' })
@@ -59,7 +60,7 @@ export class User extends BaseModel<User> {
     defaultValue: 0,
   })
   @ApiPropertyRule({ description: '登录失败次数' })
-  loginFailure: number;
+  loginFailure: CreationOptional<number>;
 
   @Attribute({
     type: DataTypes.DATE,
@@ -75,7 +76,7 @@ export class User extends BaseModel<User> {
     allowNull: false,
   })
   @ApiPropertyRule({ description: '最后登录ip', rule: RuleType.string() })
-  lastLoginIp: string;
+  lastLoginIp: CreationOptional<string>;
 
   @Attribute({
     comment: '状态:1=启用;0=禁用',
@@ -84,7 +85,7 @@ export class User extends BaseModel<User> {
     type: DataTypes.TINYINT.UNSIGNED,
   })
   @ApiPropertyRule({ description: '状态:1=启用;0=禁用', rule: RuleType.number().equal(1, 0).required() })
-  status: number;
+  status: CreationOptional<number>;
 
   @DeletedAt //设置为软删除
   @Attribute({ comment: '删除时间' })

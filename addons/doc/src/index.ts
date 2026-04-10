@@ -1,4 +1,5 @@
-import { config, GlobalConfig, MdCatalog, MdEditor, MdPreview } from 'md-editor-v3';
+import type { GlobalConfig } from 'md-editor-v3';
+import { config, MdCatalog, MdEditor, MdPreview } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 
 import screenfull from 'screenfull';
@@ -13,7 +14,6 @@ import mermaid from 'mermaid';
 
 import highlight from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
-
 // <3.0
 // import prettier from 'prettier';
 // import parserMarkdown from 'prettier/parser-markdown';

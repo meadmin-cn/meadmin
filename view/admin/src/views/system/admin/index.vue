@@ -101,7 +101,8 @@
 </template>
 
 <script setup lang="ts" name="SystemAdmin">
-import { delSystemAdminApi, SystemAdminInfo, systemAdminListApi, SystemAdminListParam } from '@/api/system/admin';
+import type { SystemAdminInfo} from '@/api/system/admin';
+import { delSystemAdminApi, systemAdminListApi, SystemAdminListParam } from '@/api/system/admin';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { createformatterDictFn, formatterArrFn, formatterAt, formatterStr } from '@/utils/helper.js';

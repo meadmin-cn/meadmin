@@ -1,11 +1,11 @@
-import { App, Configuration, ILogger, IMidwayApplication, IMidwayContainer, Init, Inject, Logger, MidwayDecoratorService } from '@midwayjs/core';
+import { ILogger, IMidwayApplication, IMidwayContainer, MidwayDecoratorService } from '@midwayjs/core';
+import { App, Configuration, Init, Inject, Logger } from '@midwayjs/core';
 import * as info from '@midwayjs/info';
 import * as koa from '@midwayjs/koa';
 import * as validate from '@midwayjs/validate';
 import './helper/dotenv.js';
 // import { ReportMiddleware } from './middleware/report.middleware.js';
 import DefaultConfig from '@/config/config.default.js';
-import UnittestConfig from '@/config/config.unittest.js';
 import * as meadmin from '@meadmin/core';
 import * as viteView from '@meadmin/midway-vite-view'; //引入view组件
 import * as busboy from '@midwayjs/busboy';
@@ -45,7 +45,6 @@ const registreDecorators = new RegistreDecorators();
   importConfigs: [
     {
       default: DefaultConfig,
-      unittest: UnittestConfig,
     },
   ],
 })
@@ -72,7 +71,7 @@ export class MainConfiguration {
    * 在应用配置加载后执行
    */
   async onConfigLoad?(container: IMidwayContainer, app: IMidwayApplication) {
-    registreDecorators.onConfigLoad(container, app);
+    registreDecorators.onConfigLoad?.(container, app);
   }
 
   /**
@@ -81,27 +80,27 @@ export class MainConfiguration {
   async onReady?(container: IMidwayContainer, app: IMidwayApplication) {
     initLogger(this.appLogger, this.coreLogger);
     this.app.useFilter(filters);
-    registreDecorators.onReady(container, app);
+    registreDecorators.onReady?.(container, app);
   }
 
   /**
    * 在应用服务启动后执行
    */
   async onServerReady?(container: IMidwayContainer, app: IMidwayApplication) {
-    registreDecorators.onServerReady(container, app);
+    registreDecorators.onServerReady?.(container, app);
   }
 
   /**
    * 在应用停止的时候执行
    */
   async onStop?(container: IMidwayContainer, app: IMidwayApplication) {
-    registreDecorators.onStop(container, app);
+    registreDecorators.onStop?.(container, app);
   }
 
   /**
    * 在健康检查时执行
    */
   async onHealthCheck?(container: IMidwayContainer) {
-    registreDecorators.onHealthCheck(container);
+    registreDecorators.onHealthCheck?.(container);
   }
 }

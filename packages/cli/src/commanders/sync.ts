@@ -14,7 +14,7 @@ export const syncInit = (program: Command) => {
     .option('-n, --name <char>', '使用的数据库配置defaultDataSourceName')
     .action(async (file: string, options) => {
       const config = Object.assign(await getConfig(options.dbConfig, options.name), {
-        logging: (message) => Log.log(message),
+        logging: (message:string) => Log.log(message),
       });
       const sequelize = new Sequelize(config);
       if (file === '*') {
@@ -24,11 +24,11 @@ export const syncInit = (program: Command) => {
         for (let i = 0; i < files.length; i++) {
           let model = files[i];
           if (sequelize.models.hasByName(model)) {
-            await sequelize.models.get(model).sync({ alter: true });
+            await sequelize.models.get(model)?.sync({ alter: true });
           } else {
             model = upperFirst(model);
             if (sequelize.models.hasByName(model)) {
-              await sequelize.models.get(model).sync({ alter: true });
+              await sequelize.models.get(model)?.sync({ alter: true });
             } else {
               Log.warn(model + '不存在，已自动跳过');
             }

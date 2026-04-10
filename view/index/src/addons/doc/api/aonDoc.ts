@@ -1,7 +1,8 @@
-import { FileResult } from '@/api/api.model.js';
-import { File } from '@/api/file.js';
-import { TreeArrayItem } from '@/utils/helper.js';
-import request, { RequestOptions } from '@/utils/request.js';
+import type { FileResult } from '@/api/api.model.js';
+import type { File } from '@/api/file.js';
+import type { TreeArrayItem } from '@/utils/helper.js';
+import type { RequestOptions } from '@/utils/request.js';
+import request from '@/utils/request.js';
 
 export type AonDocContentInfo = {
   title: string; //名称

@@ -20,7 +20,7 @@ export function normalizeToKebabOrSnakeCase(str: string, replaceStr = '-') {
  * @return  {[string]}       [return description]
  */
 export function toHump(str: string) {
-  return str.replace(/[\-_]([A-Za-z])/g, function (all, letter) {
+  return str.replace(/[-_]([A-Za-z])/g, (_all, letter) => {
     return letter.toUpperCase();
   });
 }

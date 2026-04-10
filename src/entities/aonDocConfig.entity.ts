@@ -1,6 +1,7 @@
 import { Attribute, BelongsTo, Default, PrimaryKey, Table } from "@sequelize/core/decorators-legacy";
 import { AdminBaseModel } from "./abstract/adminBase.entity.js";
-import { DataTypes, NonAttribute } from "@sequelize/core";
+import { CreationOptional, NonAttribute } from "@sequelize/core";
+import { DataTypes } from "@sequelize/core";
 import { uuid } from "@/helper/snowflake.js";
 import { ApiPropertyRule } from "@/decorators/index.js";
 import { RuleType } from "@/ruleType/index.js";
@@ -28,7 +29,7 @@ export class AonDocConfig extends AdminBaseModel<AonDocConfig>{
   @PrimaryKey
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
-  id: string;
+  id: CreationOptional<string>;//CreationOptional 是 Sequelize 提供的一个类型，用于表示在创建实例时可以省略的属性，因为它们会由数据库自动生成或有默认值。
   
   //反向BelongsTo关联从属，File类型创建单文件
   @Attribute({ type: DataTypes.STRING(20), comment: '图标附件id' })

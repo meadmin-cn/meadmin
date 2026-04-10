@@ -1,6 +1,7 @@
 import { ApiOperationResponse, IndexPermission } from '@/decorators/index.js';
 import { uploadStorage } from '@/fileManage/index.js';
-import { UploadMiddleware, UploadOptions, UploadStreamFileInfo } from '@midwayjs/busboy';
+import { UploadOptions, UploadStreamFileInfo } from '@midwayjs/busboy';
+import { UploadMiddleware } from '@midwayjs/busboy';
 import { Body, Config, Controller, Fields, Files, Get, Inject, Param, Post } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { ApiBody, BodyContentType } from '@midwayjs/swagger';
@@ -58,7 +59,7 @@ export class FileController extends BaseController {
   })
   @IndexPermission()
   async my(@Body() queryDto: FileQueryDto) {
-    queryDto.createdUserId = this.ctx.userInfo.id;
+    queryDto.createdUserId = this.ctx.userInfo!.id;
     return this.success(await this.fileService.list(queryDto));
   }
 }

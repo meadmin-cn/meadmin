@@ -1,10 +1,12 @@
 import { invokeArrayFns, isArray, isString } from '@vue/shared';
-import { ComponentOptions, ConcreteComponent, RendererElement, RendererNode, SetupContext, VNode, VNodeProps, cloneVNode, getCurrentInstance, isVNode, onBeforeUnmount, onMounted, onUpdated, setTransitionHooks, warn, watch } from 'vue';
+import type { ComponentOptions, ConcreteComponent, RendererElement, RendererNode, SetupContext, VNode, VNodeProps} from 'vue';
+import { cloneVNode, getCurrentInstance, isVNode, onBeforeUnmount, onMounted, onUpdated, setTransitionHooks, warn, watch } from 'vue';
 import { isAsyncWrapper } from './core/apiAsyncComponent';
 import { getComponentName } from './core/component';
-import { ComponentRenderContext } from './core/componentPublicInstance';
+import type { ComponentRenderContext } from './core/componentPublicInstance';
 import { devtoolsComponentAdded } from './core/devtools';
-import { MoveType, RendererInternals, queuePostRenderEffect } from './core/renderer';
+import type { RendererInternals} from './core/renderer';
+import { MoveType, queuePostRenderEffect } from './core/renderer';
 import { ShapeFlags } from './core/shapeFlags';
 import { isSuspense } from './core/Suspense';
 import { invokeVNodeHook } from './core/vnode';

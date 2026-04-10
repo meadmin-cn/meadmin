@@ -18,7 +18,10 @@ const copyFiles = {
   'src/app/index/addons/{addon}/': {},
   'view/admin/src/addons/{addon}/': {},
   'view/index/src/addons/{addon}/': {},
-};
+} as Record<string,{
+  ignore?:Array<string|RegExp>,
+  fileSetFunction?:Record<string,(content:string)=>string>
+}>;
 //安装时可删除的插件文件夹
 const rmDIr = ['src/app/admin/addons/{addon}/', 'src/app/index/addons/{addon}/', 'view/admin/src/addons/{addon}/', 'view/index/src/addons/{addon}/'];
 
@@ -39,14 +42,14 @@ const rmAddon = async (file: string, dbConfig: string, name: string) => {
   const entityFilePath = resolve(process.cwd(), 'src/entities/');
   const entityFiles = readdirSync(entityFilePath);
   entityFiles.forEach((file) => {
-    if (!new RegExp(`^(?!aon${upFirstCase(file)}[A-Z\.])`).test(file)) {
+    if (!new RegExp(`^(?!aon${upFirstCase(file)}[A-Z.])`).test(file)) {
       rmSync(resolve(entityFilePath, file), { force: true, recursive: true });
     }
   });
   const uninstallSqlPath = resolve(process.cwd(), `addons/${file}/uninstall.sql`);
   if (existsSync(uninstallSqlPath)) {
     const config = Object.assign(await getConfig(dbConfig, name), {
-      logging: (message) => Log.log(message),
+      logging: (message:string) => Log.log(message),
     });
     const sequelize = new Sequelize(config);
     await sequelize.queryRaw(readFileSync(uninstallSqlPath, 'utf-8'));
@@ -56,7 +59,7 @@ const rmAddon = async (file: string, dbConfig: string, name: string) => {
     const infoContent = JSON.parse(info);
     if (infoContent.uninstallShells?.length) {
       Log.log('正在执行卸载脚本...');
-      infoContent.uninstallShells.forEach((command) => {
+      infoContent.uninstallShells.forEach((command: string) => {
         const execRes = execSync(command, { encoding: 'utf-8' });
         Log.log(`卸载脚本 ${command} 执行完成:` + execRes);
       });
@@ -90,10 +93,10 @@ export const addoonInit = (program: Command) => {
         cpSync(resolve(import.meta.dirname, '../../template/addons'), resolve(process.cwd(), `addons/${file}/`), {
           recursive: true,
         });
-        let packageContent = readFileSync(resolve(toPath, 'packageTemplate.json'), 'utf-8');
+        const packageContent = readFileSync(resolve(toPath, 'packageTemplate.json'), 'utf-8');
         rmSync(resolve(toPath, 'packageTemplate.json'));
         writeFileSync(resolve(toPath, 'package.json'), packageContent.replace('{addonsName}', file), 'utf-8');
-        let addonsContent = readFileSync(resolve(toPath, 'addons.json'), 'utf-8');
+        const addonsContent = readFileSync(resolve(toPath, 'addons.json'), 'utf-8');
         writeFileSync(resolve(toPath, 'addons.json'), addonsContent.replace('{addonsName}', file), 'utf-8');
         Log.success(file + '插件创建成功');
       } else if (options.cp) {
@@ -118,7 +121,7 @@ export const addoonInit = (program: Command) => {
             }
           }),
         );
-        await copyPath(resolve(fromPath, 'src/entities/'), resolve(toPath, 'src/entities/'), '', [new RegExp(`^(?!aon${upFirstCase(file)}[A-Z\.])`)]);
+        await copyPath(resolve(fromPath, 'src/entities/'), resolve(toPath, 'src/entities/'), '', [new RegExp(`^(?!aon${upFirstCase(file)}[A-Z.])`)]);
         Log.success(file + '插件模板复制完成');
       } else if (options.rm) {
         await rmAddon(file, options.dbConfig, options.name);
@@ -143,7 +146,7 @@ export const addoonInit = (program: Command) => {
         if (existsSync(installSqlPath)) {
           Log.log('正在执行数据库脚本...');
           const config = Object.assign(await getConfig(options.dbConfig, options.name), {
-            logging: (message) => Log.log(message),
+            logging: (message:string) => Log.log(message),
           });
           const sequelize = new Sequelize(config);
           await sequelize.queryRaw(readFileSync(installSqlPath, 'utf-8'));
@@ -154,7 +157,7 @@ export const addoonInit = (program: Command) => {
           const infoContent = JSON.parse(info);
           if (infoContent.installShells?.length) {
             Log.log('正在执行安装脚本...');
-            infoContent.installShells.forEach((command) => {
+            infoContent.installShells.forEach((command: string) => {
               const execRes = execSync(command, { encoding: 'utf-8' });
               Log.log(`安装脚本 ${command} 执行完成:` + execRes);
             });

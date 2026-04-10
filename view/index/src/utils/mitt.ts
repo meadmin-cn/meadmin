@@ -1,5 +1,5 @@
 // 根据开源项目mitt自定义更改
-import EventEnum from '@/dict/eventEnmu';
+import type EventEnum from '@/dict/eventEnmu';
 import { onUnmounted } from 'vue';
 type EventType = EventEnum;
 

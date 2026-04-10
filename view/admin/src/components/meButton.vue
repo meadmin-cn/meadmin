@@ -8,9 +8,9 @@
 
 <script setup lang="ts" name="MeButton">
 import { snakeToCamelCaseObj } from '@/utils/formatting.js';
-import { ButtonInstance } from 'element-plus';
+import type { ButtonInstance } from 'element-plus';
 import { omit } from 'lodash-es';
-import { ComponentPublicInstance } from 'vue';
+import type { ComponentPublicInstance } from 'vue';
 const { loading = undefined } = defineProps<{ loading?: boolean }>();
 const btnLoading = ref(false);
 const attrs = snakeToCamelCaseObj(useAttrs());

@@ -1,4 +1,4 @@
-/* eslint-disable node/no-unpublished-import */
+ 
 import { defineConfig } from 'vite';
 import px2vp = require('postcss-px2vp');
 import legacy from '@vitejs/plugin-legacy';

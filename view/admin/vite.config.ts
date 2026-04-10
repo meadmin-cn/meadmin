@@ -1,6 +1,6 @@
 import autoprefixer from 'autoprefixer';
 import { resolve } from 'path';
-import { ConfigEnv, UserConfigExport } from 'vite';
+import type { ConfigEnv, UserConfigExport } from 'vite';
 import plugins from './plugins/index.js';
 // @ts-ignore
 import px2rem from 'postcss-plugin-px2rem';
@@ -78,20 +78,20 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
     },
 
     build: {
-      rollupOptions: {
-        experimentalLogSideEffects: false,
-        output: {
-          experimentalMinChunkSize: 20 * 1024,
-          manualChunks(id: string) {
-            if (['vue', 'vue-router', 'pinia', 'vue-request', 'jquery', 'axios'].some((v) => new RegExp(`.*node_modules/.*${v}.*`).test(id))) {
-              return 'core';
-            }
-            if (['@element-plus/icons-vue'].some((v) => new RegExp(`.*node_modules/.*${v}.*`).test(id))) {
-              return 'elIcon';
-            }
-            return null;
-          },
-        },
+      rolldownOptions: {
+        // experimentalLogSideEffects: false,
+        // output: {
+        //   experimentalMinChunkSize: 20 * 1024,
+        //   manualChunks(id: string) {
+        //     if (['vue', 'vue-router', 'pinia', 'vue-request', 'jquery', 'axios'].some((v) => new RegExp(`.*node_modules/.*${v}.*`).test(id))) {
+        //       return 'core';
+        //     }
+        //     if (['@element-plus/icons-vue'].some((v) => new RegExp(`.*node_modules/.*${v}.*`).test(id))) {
+        //       return 'elIcon';
+        //     }
+        //     return null;
+        //   },
+        // },
       },
       emptyOutDir: true,
     },

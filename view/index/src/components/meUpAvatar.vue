@@ -11,9 +11,9 @@
 </template>
 
 <script setup lang="ts" name="MeUpAvatar">
-import { FileInfo } from '@/api/file';
+import type { FileInfo } from '@/api/file';
 import { fileUpload } from '@/utils/fileUpload';
-import { UploadFile, UploadProgressEvent, UploadProps, UploadRequestOptions } from 'element-plus';
+import type { UploadFile, UploadProgressEvent, UploadProps, UploadRequestOptions } from 'element-plus';
 import { createImageViewer } from './service/meImageViewer';
 const file = defineModel<(FileInfo & { uid?: number }) | null>(undefined);
 const fileList = reactive([] as Array<FileInfo & { uid?: number }>);

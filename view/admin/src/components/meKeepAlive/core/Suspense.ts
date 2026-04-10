@@ -1,5 +1,6 @@
 import { isArray } from '@vue/shared';
-import { queuePostFlushCb, SuspenseBoundary } from 'vue';
+import type { SuspenseBoundary } from 'vue';
+import { queuePostFlushCb } from 'vue';
 export function queueEffectWithSuspense(fn: Function | Function[], suspense: SuspenseBoundary | null): void {
   if (suspense && suspense.pendingBranch) {
     if (isArray(fn)) {

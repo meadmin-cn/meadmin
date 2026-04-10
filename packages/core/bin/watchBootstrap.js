@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawn } from 'child_process';
-// eslint-disable-next-line node/no-unpublished-import
+ 
 import { run } from 'mwtsc';
 import { check } from 'mwtsc/lib/version/check.js';
 check(() => {

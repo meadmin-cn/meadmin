@@ -1,15 +1,17 @@
 import {
+  IMiddleware
+} from '@midwayjs/core';
+import {
   HttpServerResponse,
-  IMiddleware,
   Init,
   Inject,
   Middleware,
 } from '@midwayjs/core';
-import { Context, NextFunction } from '@midwayjs/koa';
+import { IMidwayKoaContext, NextFunction } from '@midwayjs/koa';
 import { MiddlewareArr, ViteService } from '../service/vite.service.js';
 
 @Middleware()
-export class ViteMiddleware implements IMiddleware<Context, NextFunction> {
+export class ViteMiddleware implements IMiddleware<IMidwayKoaContext, NextFunction> {
   @Inject()
   viteService: ViteService;
 
@@ -21,7 +23,7 @@ export class ViteMiddleware implements IMiddleware<Context, NextFunction> {
   }
 
   resolve() {
-    return async (ctx: Context, next: NextFunction) => {
+    return async (ctx: IMidwayKoaContext, next: NextFunction) => {
       if (
         ctx.originalUrl === '/.well-known/appspecific/com.chrome.devtools.json'
       ) {

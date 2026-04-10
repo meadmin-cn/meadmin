@@ -1,7 +1,8 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
-import { DataTypes, NonAttribute } from '@sequelize/core';
+import { CreationOptional, NonAttribute } from '@sequelize/core';
+import { DataTypes } from '@sequelize/core';
 import { Attribute, Default, HasMany, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
 import { AdminBaseModel } from './abstract/adminBase.entity.js';
 import { SystemAdmin } from './systemAdmin.entity.js';
@@ -13,7 +14,7 @@ export class File extends AdminBaseModel<File> {
   @PrimaryKey
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
-  id: string;
+  id: CreationOptional<string>;//CreationOptional 是 Sequelize 提供的一个类型，用于表示在创建实例时可以省略的属性，因为它们会由数据库自动生成或有默认值。
 
   @Attribute({ type: DataTypes.STRING(300), comment: '文件名', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '文件名', rule: RuleType.string().max(300).min(1).required().empty('') })
@@ -44,7 +45,7 @@ export class File extends AdminBaseModel<File> {
     description: '文件url',
     type: 'string',
   })
-  get url(): string {
+  get url(): CreationOptional<string> {
     return '/api/admin/file/get/' + this.id + '/' + this.name;
   }
 
@@ -59,7 +60,7 @@ export class File extends AdminBaseModel<File> {
   //json转义需要加上url属性，否则创建成功后的返回实体没有对应参数返回
   toJSON() {
     return Object.assign(
-      { url: this.url },
+      { url: this.url as string },
       this.get({
         plain: true,
       }),

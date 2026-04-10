@@ -48,7 +48,7 @@ import { isExternal } from '@/utils/validate';
 import { ElScrollbar } from 'element-plus';
 import $ from 'jquery';
 import { resolve } from 'path-browserify';
-import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
+import type { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
 import contextmenu from './components/contextmenu.vue';
 const { themeConfig } = storeToRefs(useSettingStore());
 // 初始化tags

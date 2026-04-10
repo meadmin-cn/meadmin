@@ -1,5 +1,6 @@
 import { globalAsyncLocalStorage, removeAsyncGlobal, setAsyncGloabel } from '@/asyncGlobal.js';
-import { IMiddleware, Middleware, NextFunction } from '@midwayjs/core';
+import { IMiddleware, NextFunction } from '@midwayjs/core';
+import { Middleware } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 let idSeq = 0;
 
@@ -18,8 +19,6 @@ export class GlobaleMiddleware implements IMiddleware<Context, NextFunction> {
         setAsyncGloabel('ctx', ctx);
         try {
           await next();
-        } catch (e) {
-          throw e;
         } finally {
           removeAsyncGlobal(undefined, id);
         }

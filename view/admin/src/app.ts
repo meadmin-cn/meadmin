@@ -1,7 +1,7 @@
 import '@/event/module';
 import layoutMenuItem from '@/layout/components/menu/components/menuItem.vue';
 import '@/styles/index.scss';
-import { App } from 'vue';
+import type { App } from 'vue';
 import { event, mitter } from './event';
 export let app: App;
 export async function bootscrapt(appObj: App) {

@@ -3,10 +3,10 @@
  */
 import EventEnum from '@/dict/eventEnmu';
 import Mitt from '@/utils/mitt';
-import { DynamicViewsModules } from '@/utils/permission';
-import { App } from 'vue';
-import { Composer } from 'vue-i18n';
-import { NavigationFailure, RouteLocationNormalized } from 'vue-router';
+import type { DynamicViewsModules } from '@/utils/permission';
+import type { App } from 'vue';
+import type { Composer } from 'vue-i18n';
+import type { NavigationFailure, RouteLocationNormalized } from 'vue-router';
 interface Events {
   // 事件总线
   [EventEnum.START]: App;

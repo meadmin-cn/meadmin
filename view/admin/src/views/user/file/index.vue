@@ -99,7 +99,8 @@
 </template>
 
 <script setup lang="ts" name="UserFile">
-import { delUserFileApi, UserFileInfo, userFileListApi, UserFileListParam } from '@/api/userFile';
+import type { UserFileInfo} from '@/api/userFile';
+import { delUserFileApi, userFileListApi, UserFileListParam } from '@/api/userFile';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { formatterAt, formatterObjectFn, formatterStr } from '@/utils/helper.js';

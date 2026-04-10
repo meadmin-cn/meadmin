@@ -54,7 +54,8 @@
 </template>
 
 <script setup lang="ts" name="MeSelectFile">
-import { UserFileInfo, userFileListApi, UserFileListParam } from '@/api/userFile';
+import type { UserFileInfo} from '@/api/userFile';
+import { userFileListApi, UserFileListParam } from '@/api/userFile';
 import { useLocalesI18n } from '@/locales/i18n';
 import { isImage } from '@/utils/helper';
 import { formatterAt, formatterStr } from '@/utils/helper.js';

@@ -1,8 +1,10 @@
-import { PageParam, PageResult } from '@/api/api.model.js';
-import request, { RequestOptions } from '@/utils/request.js';
-import { FileInfo } from '../file.js';
-import { SystemMenuInfo } from './menu.js';
-import { SystemRoleInfo } from './role.js';
+import type { PageResult } from '@/api/api.model.js';
+import { PageParam } from '@/api/api.model.js';
+import type { RequestOptions } from '@/utils/request.js';
+import request from '@/utils/request.js';
+import type { FileInfo } from '../file.js';
+import type { SystemMenuInfo } from './menu.js';
+import type { SystemRoleInfo } from './role.js';
 
 //管理员
 export class SystemAdmin {

@@ -37,7 +37,7 @@ import { ExampleDemo, addExampleDemoApi, exampleDemoInfoApi, updateExampleDemoAp
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
 import { isMobile } from '@/utils/validate.js';
-import { FormInstance, FormRules } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 //接口需要现在setup顶层初始化（如果是异步setup需要在异步调用之前初始化），否则会有unMounted，非法调用警告，因为vueRequest使用了unMounted
 const { runAsync: updateRunAsync } = updateExampleDemoApi();
 const { runAsync: addRunAsync } = addExampleDemoApi();

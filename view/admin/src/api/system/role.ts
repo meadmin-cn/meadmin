@@ -1,8 +1,10 @@
-import { PageParam, PageResult } from '@/api/api.model.js';
-import { TreeArrayItem } from '@/utils/helper.js';
-import request, { RequestOptions } from '@/utils/request.js';
-import { SystemAdmin } from './admin.js';
-import { SystemMenuInfo } from './menu.js';
+import type { PageResult } from '@/api/api.model.js';
+import { PageParam } from '@/api/api.model.js';
+import type { TreeArrayItem } from '@/utils/helper.js';
+import type { RequestOptions } from '@/utils/request.js';
+import request from '@/utils/request.js';
+import type { SystemAdmin } from './admin.js';
+import type { SystemMenuInfo } from './menu.js';
 
 //角色
 export class SystemRole {

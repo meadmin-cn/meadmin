@@ -1,7 +1,8 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
-import { DataTypes, NonAttribute } from '@sequelize/core';
+import { CreationOptional, NonAttribute } from '@sequelize/core';
+import { DataTypes } from '@sequelize/core';
 import { Attribute, Default, HasMany, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
 import { IndexBaseModel } from './abstract/indexBase.entity.js';
 import { User } from './user.entity.js';
@@ -13,8 +14,8 @@ export class UserFile extends IndexBaseModel<UserFile> {
   @PrimaryKey
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
-  id: string;
-
+  id: CreationOptional<string>;//CreationOptional标记在模型创建过程中可以省略的属性。用于具有默认值或标记为自动生成的属性。
+  
   @Attribute({ type: DataTypes.STRING(300), comment: '文件名', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '文件名', rule: RuleType.string().max(300).min(1).required().empty('') })
   name: string;
@@ -44,7 +45,7 @@ export class UserFile extends IndexBaseModel<UserFile> {
     description: '文件url',
     type: 'string',
   })
-  get url(): string {
+  get url(): CreationOptional<string> {
     return '/api/index/file/get/' + this.id + '/' + this.name;
   }
 
@@ -59,7 +60,7 @@ export class UserFile extends IndexBaseModel<UserFile> {
   //json转义需要加上url属性，否则创建成功后的返回实体没有对应参数返回
   toJSON() {
     return Object.assign(
-      { url: this.url },
+      { url: this.url as string },
       this.get({
         plain: true,
       }),

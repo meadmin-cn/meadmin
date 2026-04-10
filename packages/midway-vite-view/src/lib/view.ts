@@ -60,7 +60,7 @@ export class ViteView implements IViewEngine {
         request: this.ctx.request,
         ssrVersion: '' + ssrVersion,
         assign: assign || {},
-      };
+      } as Record<string,any>;
       const [appHtml, preloadLinks, teleports] = await render(
         url,
         manifest,
@@ -68,7 +68,8 @@ export class ViteView implements IViewEngine {
       );
       if (context['url']) {
         // Somewhere a `<Redirect>` was rendered
-        return this.ctx.redirect(context['url']);
+        this.ctx.redirect(context['url']);
+        return '';
       }
       let html = template
         .replace('<!--preload-links-->', preloadLinks)
@@ -92,7 +93,7 @@ export class ViteView implements IViewEngine {
   }
 
   async getClientHtml(
-    indexName,
+    indexName:string,
     assign: object | undefined,
     url: string,
     name: string
@@ -128,7 +129,7 @@ export class ViteView implements IViewEngine {
     locals: Record<string, any>,
     options: Record<string, any>
   ) {
-    let tpl = options.name;
+    let tpl:string;
     if (this.viteViewConfig.prod !== undefined) {
       this.prod = this.viteViewConfig.prod;
     } else {
@@ -138,7 +139,7 @@ export class ViteView implements IViewEngine {
     let entrySsr = entryInfo.entryServer;
     if (this.prod) {
       this.prodPath =
-        this.staticFileConfig.dirs[entryInfo.staticFileKey].dir + '/';
+        this.staticFileConfig.dirs![entryInfo.staticFileKey].dir + '/';
       tpl = path.resolve(this.prodPath, entryInfo.entry);
       entrySsr =
         locals.ssr !== false && entrySsr

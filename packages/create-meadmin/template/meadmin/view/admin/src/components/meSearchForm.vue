@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import type { FormInstance } from 'element-plus';
+import { FormInstance } from 'element-plus';
 import { ElForm } from 'element-plus';
 import $ from 'jquery';
 import { PropType } from 'vue';

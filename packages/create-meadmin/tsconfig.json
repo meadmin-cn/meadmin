@@ -7,5 +7,6 @@
     "baseUrl": ".",
     "paths": {}
   },
+  "include": ["./src/**/*.ts", "./src/**/*.d.ts",  "./types/**/*.d.ts"],
   "exclude": ["*.js", "*.ts", "dist", "node_modules", "test", "packages", "template"]
 }

@@ -1,5 +1,5 @@
-import type { SystemAdmin } from '@/entities/systemAdmin.entity.ts';
-import type { User } from '@/entities/user.entity.ts';
+import type { SystemAdmin } from '@/entities/systemAdmin.entity.js';
+import type { User } from '@/entities/user.entity.js';
 // 下面这段只 @midwayjs/koa 的 Context 做扩展
 import '@midwayjs/koa';
 declare module '@midwayjs/koa' {

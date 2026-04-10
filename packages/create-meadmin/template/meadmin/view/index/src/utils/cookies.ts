@@ -1,4 +1,4 @@
-import type { Context } from '@midwayjs/koa';
+import { Context } from '@midwayjs/koa';
 import cookies, { CookieAttributes } from 'js-cookie';
 
 const serverCookies = {} as Record<string, Context['Cookies']>;

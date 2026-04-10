@@ -1,6 +1,6 @@
 import request from '@/utils/request';
-import { SystemAdminInfo } from './system/admin.js';
-import { SystemMenuInfo } from './system/menu.js';
+import type { SystemAdminInfo } from './system/admin.js';
+import type { SystemMenuInfo } from './system/menu.js';
 
 //获取登录验证码
 export function loginCaptchaApi<T extends boolean = false>(returnAxios: T = false as T, noLoading = true) {

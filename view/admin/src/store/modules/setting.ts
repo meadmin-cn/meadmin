@@ -1,7 +1,7 @@
 import { localeConfig, settingKey, themeConfig } from '@/config';
 import { event, mitter } from '@/event';
 import { mixColor } from '@/utils/helper';
-import { Language } from 'element-plus/es/locale';
+import type { Language } from 'element-plus/es/locale';
 import { useGlobalStore } from '../module';
 const { css } = useStyleTag('');
 const useSettingStore = defineStore('setting', {

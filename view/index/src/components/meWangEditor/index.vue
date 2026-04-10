@@ -24,10 +24,12 @@
 
 <script setup lang="ts" name="MeWangEditor">
 import { useGlobalStore } from '@/store';
-import { i18nChangeLanguage, IDomEditor, IEditorConfig, IToolbarConfig, SlateDescendant } from '@wangeditor/editor';
+import type { IDomEditor, IEditorConfig, IToolbarConfig, SlateDescendant } from '@wangeditor/editor';
+import { i18nChangeLanguage } from '@wangeditor/editor';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import '@wangeditor/editor/dist/css/style.css'; // 引入 css
-import { onBeforeUnmount, PropType, shallowRef } from 'vue';
+import type { PropType} from 'vue';
+import { onBeforeUnmount, shallowRef } from 'vue';
 import './meWangEditor.scss';
 defineProps({
   mode: {

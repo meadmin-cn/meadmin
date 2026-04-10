@@ -1,4 +1,5 @@
-import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, WriteFileOptions, writeFileSync } from 'node:fs';
+import { WriteFileOptions } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 /**
  * 写入文件【当文件所在文件夹不存在时会递归创建】
@@ -71,7 +72,7 @@ export async function copyFile(fromFile: string, toFile: string, fileSetFunction
  * @param isEncodeFileName
  * @returns
  */
-export async function copyPath(pathFile, toPath, relativePath = '', ignoreFile = [] as Array<string | RegExp>, fileSetFunctions?: Record<string, (content: string) => string>, isEncodePackage = true) {
+export async function copyPath(pathFile: string, toPath: string, relativePath = '', ignoreFile = [] as Array<string | RegExp>, fileSetFunctions?: Record<string, (content: string) => string>, isEncodePackage = true) {
   if (!existsSync(pathFile)) {
     return;
   }
@@ -120,7 +121,7 @@ export async function copyPath(pathFile, toPath, relativePath = '', ignoreFile =
  * @param hasFiles
  * @returns
  */
-export function checkPathFile(pathFile, toPath, relativePath = '', hasFiles = [] as string[]) {
+export function checkPathFile(pathFile: string, toPath: string, relativePath = '', hasFiles = [] as string[]) {
   if (!existsSync(pathFile)) {
     return [];
   }

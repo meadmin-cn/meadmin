@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { ConfigEnv, UserConfigExport } from 'vite';
+import type { ConfigEnv, UserConfigExport } from 'vite';
 import plugins from './plugins/index.js';
 // @ts-ignore
 function pathResolve(dir: string) {

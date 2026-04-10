@@ -1,5 +1,6 @@
 import type { Context } from '@midwayjs/koa';
-import cookies, { CookieAttributes } from 'js-cookie';
+import type { CookieAttributes } from 'js-cookie';
+import cookies from 'js-cookie';
 
 const serverCookies = {} as Record<string, Context['Cookies']>;
 export const setServerCookies = (ssrVersion: string, cookies: Context['Cookies']) => {

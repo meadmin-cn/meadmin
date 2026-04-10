@@ -1,5 +1,6 @@
 import { ApiPropertyRule } from '@/decorators/swagger.js';
-import { DataTypes, NonAttribute } from '@sequelize/core';
+import { CreationOptional, NonAttribute } from '@sequelize/core';
+import { DataTypes } from '@sequelize/core';
 import { Attribute, BelongsTo, Table } from '@sequelize/core/decorators-legacy';
 import { SystemAdmin } from '../systemAdmin.entity.js';
 import { BaseModel } from './base.entity.js';
@@ -11,7 +12,7 @@ export class AdminBaseModel<M extends AdminBaseModel<any>> extends BaseModel<M> 
     comment: '创建者(管理员)Id',
     type: DataTypes.STRING(20),
   })
-  createdAdminId: string;
+  createdAdminId: CreationOptional<string>; //CreationOptional标记在模型创建过程中可以省略的属性。用于具有默认值或标记为自动生成的属性。
 
   @ApiPropertyRule({
     description: '创建者(管理员)',
@@ -24,7 +25,7 @@ export class AdminBaseModel<M extends AdminBaseModel<any>> extends BaseModel<M> 
     comment: '最后更新者(管理员)Id',
     type: DataTypes.STRING(20),
   })
-  updatedAdminId: string;
+  updatedAdminId: CreationOptional<string>; //CreationOptional标记在模型创建过程中可以省略的属性。用于具有默认值或标记为自动生成的属性。
 
   @ApiPropertyRule({
     description: '最后更新者(管理员)',

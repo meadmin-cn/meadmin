@@ -3,8 +3,8 @@ import { mitter } from '@/event';
 import { Layout, LayoutPage } from '@/router/constant';
 import { useUserStore } from '@/store';
 import Page404 from '@/views/404.vue';
-import { DefineComponent } from 'vue';
-import { RouteRecordRaw } from 'vue-router';
+import type { DefineComponent } from 'vue';
+import type { RouteRecordRaw } from 'vue-router';
 import log from './log';
 
 /**

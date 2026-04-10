@@ -13,7 +13,7 @@
 import { event, mitter } from '@/event';
 import Expand from '@/layout/components/expand.vue';
 import { useGlobalStore, useRouteStore, useSettingStore } from '@/store';
-import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
+import type { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
 const { themeConfig } = storeToRefs(useSettingStore());
 const globalStore = useGlobalStore();
 const breadcrumbList = ref([] as Pick<RouteRecordRaw, 'name' | 'path' | 'meta' | 'redirect'>[]);

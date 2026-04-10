@@ -1,6 +1,8 @@
-import { PageParam, PageResult } from '@/api/api.model.js';
-import request, { RequestOptions } from '@/utils/request.js';
-import { UserFileInfo } from './userFile.js';
+import type { PageResult } from '@/api/api.model.js';
+import { PageParam } from '@/api/api.model.js';
+import type { RequestOptions } from '@/utils/request.js';
+import request from '@/utils/request.js';
+import type { UserFileInfo } from './userFile.js';
 
 //前台用户
 export class User {

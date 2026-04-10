@@ -1,5 +1,5 @@
 import { event, mitter } from '@/event';
-import { Component, VNode } from 'vue';
+import type { Component, VNode } from 'vue';
 const WIDTH = 992; // refer to Bootstrap's responsive design
 const isMobile = ref(false);
 if (!import.meta.env.SSR) {

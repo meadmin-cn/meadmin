@@ -22,7 +22,8 @@
 </template>
 
 <script setup lang="ts" name="docLayout">
-import { AonDocMenuTree, aonDocmenuTreeApi } from '../../api/aonDoc';
+import type { AonDocMenuTree} from '../../api/aonDoc';
+import { aonDocmenuTreeApi } from '../../api/aonDoc';
 import Footer from './components/footer.vue';
 import Header from './components/header/index.vue';
 import MenuItem from './components/menuItem.vue';

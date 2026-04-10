@@ -1,4 +1,4 @@
-import { CamelCase, SnakeToCamelCase } from '#/global.js';
+import type { CamelCase, SnakeToCamelCase } from '#/global.js';
 
 /**
  * 将camelCase字符串更改为kebab-case，用破折号替换空格并保留下划线。

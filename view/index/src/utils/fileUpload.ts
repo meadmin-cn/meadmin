@@ -1,5 +1,6 @@
-import { FileInfo, uploadFileApi } from '@/api/file.js';
-import { UploadProgressEvent, UploadRawFile, UploadRequestOptions } from 'element-plus';
+import type { FileInfo} from '@/api/file.js';
+import { uploadFileApi } from '@/api/file.js';
+import type { UploadProgressEvent, UploadRawFile, UploadRequestOptions } from 'element-plus';
 import SparkMD5 from 'spark-md5';
 let md5Worker: Worker;
 if (!import.meta.env.SSR) {

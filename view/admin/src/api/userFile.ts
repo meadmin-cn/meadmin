@@ -1,7 +1,9 @@
-import { PageParam, PageResult } from '@/api/api.model.js';
-import { SystemAdminInfo } from '@/api/system/admin.js';
-import request, { RequestOptions } from '@/utils/request.js';
-import { UserInfo } from './user.js';
+import type { PageResult } from '@/api/api.model.js';
+import { PageParam } from '@/api/api.model.js';
+import type { SystemAdminInfo } from '@/api/system/admin.js';
+import type { RequestOptions } from '@/utils/request.js';
+import request from '@/utils/request.js';
+import type { UserInfo } from './user.js';
 
 //用户附件表(前台)
 export class UserFile {

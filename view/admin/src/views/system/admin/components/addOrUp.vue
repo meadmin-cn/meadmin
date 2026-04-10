@@ -41,7 +41,7 @@ import { systemRoleTreeAllApi } from '@/api/system/role';
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
 import { isMobile } from '@/utils/validate.js';
-import { FormInstance, FormRules } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 import { getDict } from '../dict.js';
 const { data: treeAllList, runAsync: getTreeAllAsync } = systemRoleTreeAllApi();
 const { runAsync: systemAdminInfoApiRunAsync } = systemAdminInfoApi();

@@ -1,6 +1,6 @@
 import '@/styles/index.scss';
 import nProgress from 'nprogress';
-import { App } from 'vue';
+import type { App } from 'vue';
 import { initVxeTable } from './components/meVxeTable/install.js';
 import { event, mitter } from './event';
 import { installIcon } from './icons/index.js';

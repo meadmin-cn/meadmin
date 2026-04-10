@@ -3,7 +3,8 @@ import { SystemMenu } from '@/entities/systemMenu.entity.js';
 import { Inject, Provide } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
-import { Op } from '@sequelize/core';
+import { InferAttributes, Op, WhereOperators } from '@sequelize/core';
+import { WhereAttributeHash } from '@sequelize/core/_non-semver-use-at-your-own-risk_/abstract-dialect/where-sql-builder-types.js';
 import { SystemAdmin } from '../../../../entities/systemAdmin.entity.js';
 import { SystemAdminCreateDto } from '../../dto/system/adminCreate.dto.js';
 import { SystemAdminQueryDto } from '../../dto/system/adminQuery.dto.js';
@@ -49,49 +50,50 @@ export class SystemAdminService {
    * @returns
    */
   async list(queryDto: SystemAdminQueryDto) {
-    const where = {};
-    Object.keys(queryDto).forEach((key) => {
-      if (['page', 'pageSize'].includes(key)) {
+    const where = {} as WhereAttributeHash<InferAttributes<SystemAdmin, { omit: never }>>;
+    (Object.keys(queryDto) as Array<keyof SystemAdminQueryDto>).forEach((key) => {
+      if ('page' === key || 'pageSize' === key) {
         return;
       }
-      if ([null, undefined, ''].includes(queryDto[key])) {
+      if (null === queryDto[key] || undefined === queryDto[key] || '' === queryDto[key]) {
         return;
       }
-      if (['username', 'nickname', 'mobile'].includes(key)) {
-        where[key] = { [Op.like]: `%${queryDto[key]}%` };
-        return;
-      }
+
       if (key === 'startLastLoginAt') {
-        where['lastLoginAt'] = where['lastLoginAt'] ?? {};
+        where['lastLoginAt'] = (where['lastLoginAt'] ?? {}) as WhereOperators<NonNullable<SystemAdmin['lastLoginAt']>>;
         where['lastLoginAt'][Op.gte] = queryDto[key];
         return;
       }
       if (key === 'endLastLoginAt') {
-        where['lastLoginAt'] = where['lastLoginAt'] ?? {};
+        where['lastLoginAt'] = (where['lastLoginAt'] ?? {}) as WhereOperators<NonNullable<SystemAdmin['lastLoginAt']>>;
         where['lastLoginAt'][Op.lte] = queryDto[key];
         return;
       }
       if (key === 'startCreatedAt') {
-        where['createdAt'] = where['createdAt'] ?? {};
+        where['createdAt'] = (where['createdAt'] ?? {}) as WhereOperators<SystemAdmin['createdAt']>;
         where['createdAt'][Op.gte] = queryDto[key];
         return;
       }
       if (key === 'endCreatedAt') {
-        where['createdAt'] = where['createdAt'] ?? {};
+        where['createdAt'] = (where['createdAt'] ?? {}) as WhereOperators<SystemAdmin['createdAt']>;
         where['createdAt'][Op.lte] = queryDto[key];
         return;
       }
       if (key === 'startUpdatedAt') {
-        where['updatedAt'] = where['updatedAt'] ?? {};
+        where['updatedAt'] = (where['updatedAt'] ?? {}) as WhereOperators<SystemAdmin['updatedAt']>;
         where['updatedAt'][Op.gte] = queryDto[key];
         return;
       }
       if (key === 'endUpdatedAt') {
-        where['updatedAt'] = where['updatedAt'] ?? {};
+        where['updatedAt'] = (where['updatedAt'] ?? {}) as WhereOperators<SystemAdmin['updatedAt']>;
         where['updatedAt'][Op.lte] = queryDto[key];
         return;
       }
-      where[key] = queryDto[key];
+      if (['username', 'nickname', 'mobile'].includes(key)) {
+        (where as Record<keyof typeof where, any>)[key] = { [Op.like]: `%${queryDto[key]}%` };
+        return;
+      }
+      (where as Record<keyof typeof where, any>)[key] = queryDto[key]; //where[key as Exclude<typeof key,'page'|'pageSize'>] = queryDto[key]; 赋值会触发 TS2590: Expression produces a union type that is too complex to represent.
     });
     const { count, rows } = await this.SystemAdminRepository.findAndCountAll({
       where,

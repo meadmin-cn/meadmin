@@ -11,13 +11,13 @@
   </el-upload>
 </template>
 <script lang="ts" name="MeUpload" setup>
-import { FileInfo } from '@/api/file';
+import type { FileInfo } from '@/api/file';
 import { useMeSelectFile } from '@/components/meSelectFile/meSelectFile.js';
 import { useLocalesI18n } from '@/locales/hooks';
 import { fileUpload } from '@/utils/fileUpload';
 import { snakeToCamelCaseObj } from '@/utils/formatting.js';
 import { isImage } from '@/utils/helper';
-import { UploadFile, UploadFiles, UploadInstance, UploadRequestHandler, UploadRequestOptions, UploadUserFile } from 'element-plus';
+import type { UploadFile, UploadFiles, UploadInstance, UploadRequestHandler, UploadRequestOptions, UploadUserFile } from 'element-plus';
 import { omit } from 'lodash-es';
 import { createImageViewer } from './service/meImageViewer';
 let { t } = useLocalesI18n();

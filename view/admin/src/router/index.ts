@@ -4,8 +4,9 @@ import { useRouteStore } from '@/store/index.js';
 import { concatObjectValue } from '@/utils/helper';
 import { isExternal } from '@/utils/validate';
 import { resolve } from 'path-browserify';
-import { App } from 'vue';
-import { createMemoryHistory, createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import type { App } from 'vue';
+import type { RouteRecordRaw } from 'vue-router';
+import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router';
 import { setupRouterGuard } from './guard';
 export const asyncRoutes = concatObjectValue<RouteRecordRaw>(import.meta.glob('./routes/*.ts', { eager: true, import: 'routes' }));
 

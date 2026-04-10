@@ -1,6 +1,7 @@
 import { AdminPermission, ApiOperationResponse } from '@/decorators/index.js';
 import { uploadStorage } from '@/fileManage/index.js';
-import { UploadMiddleware, UploadStreamFileInfo } from '@midwayjs/busboy';
+import { UploadStreamFileInfo } from '@midwayjs/busboy';
+import { UploadMiddleware } from '@midwayjs/busboy';
 import { Body, Controller, Fields, Files, Get, Inject, Param, Post } from '@midwayjs/core';
 import { ApiBody, BodyContentType } from '@midwayjs/swagger';
 import { UserFile } from '../../../entities/userFile.entity.js';

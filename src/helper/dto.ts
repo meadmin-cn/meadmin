@@ -1,5 +1,6 @@
 import { getClassExtendedMetadata, getPropertyType, INJECT_CUSTOM_PROPERTY, saveClassMetadata } from '@midwayjs/core';
-import { Dto, OmitDto, PickDto } from '@midwayjs/validate';
+import { Dto } from '@midwayjs/validate';
+import { OmitDto, PickDto } from '@midwayjs/validate';
 
 import { DECORATORS } from '@midwayjs/swagger/dist/constants.js';
 import { RULES_KEY } from '@midwayjs/validate/dist/constants.js';

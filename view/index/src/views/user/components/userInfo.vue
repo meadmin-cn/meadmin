@@ -23,8 +23,9 @@
 </template>
 
 <script setup lang="ts" name="UserInfo">
-import { updateUserApi, UpdateUserInfoParam, userInfoApi } from '@/api/user.js';
-import { FormInstance, FormRules } from 'element-plus';
+import type { UpdateUserInfoParam} from '@/api/user.js';
+import { updateUserApi, userInfoApi } from '@/api/user.js';
+import type { FormInstance, FormRules } from 'element-plus';
 
 const userInfo = await userInfoApi().runAsync();
 const userParams = reactive(userInfo);

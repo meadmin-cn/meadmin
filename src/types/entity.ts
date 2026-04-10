@@ -26,7 +26,7 @@ import {
   InferAttributesOptions,
   Model,
 } from '@sequelize/core';
-import type { AnyFunction } from '@sequelize/utils';
+import { AnyFunction } from '@sequelize/utils';
 
 export type HasOneModel<
   AssociationName extends string, //关联字段

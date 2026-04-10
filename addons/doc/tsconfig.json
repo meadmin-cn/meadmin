@@ -9,5 +9,6 @@
     "module": "es6",
     "moduleResolution": "bundler"
   },
+  "include": ["./src/**/*.ts", "./src/**/*.d.ts",  "./types/**/*.d.ts"],
   "exclude": ["*.js", "*.ts", "dist", "node_modules", "test", "rescources", "template"]
 }

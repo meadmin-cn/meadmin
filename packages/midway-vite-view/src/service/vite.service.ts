@@ -1,7 +1,9 @@
 import {
+  ILogger
+} from '@midwayjs/core';
+import {
   App,
   Config,
-  ILogger,
   Logger,
   Provide,
   Scope,
@@ -9,10 +11,11 @@ import {
   sleep,
 } from '@midwayjs/core';
 import * as koa from '@midwayjs/koa';
-import c2k from 'koa2-connect';
+import c2k from 'koa-connect';
 import { existsSync, mkdirSync } from 'node:fs';
 import * as path from 'node:path';
-import { createServer, normalizePath, ViteDevServer } from 'vite';
+import { ViteDevServer } from 'vite';
+import { createServer, normalizePath } from 'vite';
 import { ViteViewConfig } from '../interface.js';
 
 const cachePostfix = '_';
@@ -71,7 +74,7 @@ export class ViteService {
   //生成vite server
   async createVite(name: string) {
     if (!this.vite[name]) {
-      let configFile = path.resolve(
+      const configFile = path.resolve(
         this.koaApp.getAppDir(),
         this.viteViewConfig.rootDir,
         name,
@@ -113,7 +116,7 @@ export class ViteService {
   }
 
   //获取全部vite中间件数组
-  async getViteMiddlewareArr() {
+  async getViteMiddlewareArr():Promise<MiddlewareArr> {
     if (this.inited === 'success') {
       return this.middlewareArr;
     }
@@ -125,7 +128,7 @@ export class ViteService {
       this.inited = 'processing';
       const configSet = new Set<string | undefined>();
       const promiseArr = [] as Promise<unknown>[];
-      let start = +new Date();
+      const start = +new Date();
       for (const [name, view] of Object.entries(this.viteViewConfig.views)) {
         promiseArr.push(
           (async () => {

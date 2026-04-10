@@ -12,8 +12,6 @@
     "build": "mwtsc --cleanOutDir",
     "test": "mwtsc test --ts",
     "cov": "mwtsc cov --ts",
-    "lint": "mwts check",
-    "lint:fix": "mwts fix",
     "vueBuild": "vite bind",
     "prepublishOnly": "pnpm build"
   },
@@ -46,15 +44,14 @@
     "@midwayjs/view": "^3.20.17",
     "commander": "^14.0.0",
     "extend2": "^1.0.1",
-    "koa2-connect": "^1.0.2"
+    "koa-connect": "^2.1.1"
   },
   "devDependencies": {
-    "@midwayjs/mock": "^3.0.0",
     "@types/jest": "^27.4.0",
     "@types/node": "*",
     "compression": "^1.7.4",
     "jest": "^27.5.1",
-    "mwts": "^1.3.0",
+    "mwtsc": "^1.15.2",
     "typescript": "^5.9.2"
   },
   "peerDependencies": {

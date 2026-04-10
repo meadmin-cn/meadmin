@@ -64,7 +64,7 @@ export class LoginService {
    * @param adminId;
    * @returns;
    */
-  async createToken(adminId: string) {
+  async createToken(adminId: string):Promise<string> {
     const secret = this.secret + new Date();
     const token = pbkdf2Sync(tokenPrefix + adminId, secret, 1000, 32, 'md5').toString('hex');
     if (await this.cache.get(this.getTokenCacheKey(token))) {
@@ -137,7 +137,7 @@ export class LoginService {
         },
       ],
     });
-    if (admin?.roles.some((item) => item.isSuper === 1)) {
+    if (admin?.roles?.some((item) => item.isSuper === 1)) {
       admin.roleMenus = await this.menuRepository.findAll({
         where: { status: 1 },
       });
@@ -164,10 +164,10 @@ export class LoginService {
    * @returns
    */
   @Transaction()
-  async login(username, password, ctx?: Context) {
+  async login(username: string, password: string, ctx?: Context) {
     const entity = await this.adminRepository.findOne({ where: { username } });
 
-    let translate: MidwayI18nService['translate'];
+    let translate: MidwayI18nService['translate'] | undefined;
     if (ctx) {
       const i18n = await ctx.requestContext.getAsync(MidwayI18nService);
       translate = (...args) => i18n.translate(...args);

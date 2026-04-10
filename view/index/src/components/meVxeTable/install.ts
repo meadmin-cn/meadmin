@@ -1,4 +1,4 @@
-import { App } from 'vue';
+import type { App } from 'vue';
 import { VxeModal, VxeUI } from 'vxe-pc-ui';
 import 'vxe-pc-ui/es/style.css';
 import { VxeColgroup, VxeColumn, VxeGrid, VxeTable, VxeToolbar } from 'vxe-table';

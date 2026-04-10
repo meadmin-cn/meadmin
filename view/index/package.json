@@ -13,7 +13,7 @@
     "dev": "vite",
     "build": "npm run type-check && vite build -m prod ",
     "build-github": "npm run type-check && vite build -m prod --base=/meadmin-template/",
-    "type-check": "npx tsx ./cli/autoImport.ts  && vue-tsc --noEmit",
+    "type-check": "npx tsx ./cli/autoImport.ts  && vue-tsc -b --noEmit",
     "preview": "vite preview",
     "release-main": "release-it -c .release-it-main.json",
     "release-template": "release-it",

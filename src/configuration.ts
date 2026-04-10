@@ -1,5 +1,4 @@
-import { ILogger, IMidwayApplication, IMidwayContainer, MidwayDecoratorService } from '@midwayjs/core';
-import { App, Configuration, Init, Inject, Logger } from '@midwayjs/core';
+import { App, Configuration, ILogger, IMidwayApplication, IMidwayContainer, Init, Inject, Logger, MidwayDecoratorService } from '@midwayjs/core';
 import * as info from '@midwayjs/info';
 import * as koa from '@midwayjs/koa';
 import * as validate from '@midwayjs/validate';
@@ -64,14 +63,16 @@ export class MainConfiguration {
   @Init()
   async init() {
     registreDecorators.decoratorService = this.decoratorService;
-    registreDecorators.init();
+    await registreDecorators.init();
   }
 
   /**
    * 在应用配置加载后执行
    */
   async onConfigLoad?(container: IMidwayContainer, app: IMidwayApplication) {
-    registreDecorators.onConfigLoad?.(container, app);
+    registreDecorators.onConfigLoad?.(container, app).catch((err) => {
+      this.appLogger.error('Error in onConfigLoad:', err);
+    });
   }
 
   /**
@@ -80,27 +81,35 @@ export class MainConfiguration {
   async onReady?(container: IMidwayContainer, app: IMidwayApplication) {
     initLogger(this.appLogger, this.coreLogger);
     this.app.useFilter(filters);
-    registreDecorators.onReady?.(container, app);
+    registreDecorators.onReady?.(container, app).catch((err) => {
+      this.appLogger.error('Error in onReady:', err);
+    });
   }
 
   /**
    * 在应用服务启动后执行
    */
   async onServerReady?(container: IMidwayContainer, app: IMidwayApplication) {
-    registreDecorators.onServerReady?.(container, app);
+    registreDecorators.onServerReady?.(container, app).catch((err) => {
+      this.appLogger.error('Error in onServerReady:', err);
+    });
   }
 
   /**
    * 在应用停止的时候执行
    */
   async onStop?(container: IMidwayContainer, app: IMidwayApplication) {
-    registreDecorators.onStop?.(container, app);
+    registreDecorators.onStop?.(container, app).catch((err) => {
+      this.appLogger.error('Error in onStop:', err);
+    });
   }
 
   /**
    * 在健康检查时执行
    */
   async onHealthCheck?(container: IMidwayContainer) {
-    registreDecorators.onHealthCheck?.(container);
+    registreDecorators.onHealthCheck?.(container).catch((err) => {
+      this.appLogger.error('Error in onHealthCheck:', err);
+    });
   }
 }

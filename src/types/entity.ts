@@ -142,7 +142,7 @@ export type BelongsManyModel<
  * - 继承自 {@link Model}
  * - 使用 {@link InferAttributesOptions} 的 omit 选项手动排除
  */
-type InternalInferAttributeKeysFromFieldsLoose<M extends Model, Key extends keyof M, Options extends InferAttributesOptions<keyof M | never | ''>> =
+type InternalInferAttributeKeysFromFieldsLoose<M extends Model, Key extends keyof M, Options extends InferAttributesOptions<keyof M | ''>> =
   // fields inherited from Model are all excluded
   Key extends keyof Model
     ? never
@@ -204,6 +204,6 @@ type InternalInferAttributeKeysFromFieldsLoose<M extends Model, Key extends keyo
  * }
  * ```
  */
-export type InferAttributesLoose<M extends Model, Options extends InferAttributesOptions<keyof M | never | ''> = { omit: never }> = {
+export type InferAttributesLoose<M extends Model, Options extends InferAttributesOptions<keyof M | ''> = { omit: never }> = {
   [Key in keyof M as InternalInferAttributeKeysFromFieldsLoose<M, Key, Options>]: M[Key];
 };

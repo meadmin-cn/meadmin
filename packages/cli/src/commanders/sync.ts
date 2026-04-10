@@ -35,7 +35,7 @@ export const syncInit = (program: Command) => {
           }
         }
       }
-      sequelize.close();
+      await sequelize.close();
       Log.success('同步数据表结构成功');
     });
 };

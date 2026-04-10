@@ -31,7 +31,9 @@ export class AdminMiddleware implements IMiddleware<Context, NextFunction> {
           throw new UnauthorizedError('登录信息已失效请重新登录！');
         }
         if (adminInfo.status !== 1) {
-          this.loginService.removeToken(token);
+          this.loginService.removeToken(token).catch((error) => {
+            ctx.logger.error('移除token失败', error);
+          });
           throw new UnauthorizedError('用户已被禁用！');
         }
         ctx.adminInfo = adminInfo;

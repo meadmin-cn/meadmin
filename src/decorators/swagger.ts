@@ -129,7 +129,7 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & { rule?: RuleType
       options.required = options.rule.$_getFlag('presence') === 'required' ? true : undefined;
     }
     if (!options.enum && options.rule.describe().allow && options.rule.$_getFlag('only')) {
-      options.enum = options.rule.describe().allow;
+      options.enum = options.rule.describe().allow as any[] | Record<string, any>;
     } else if (options.enum && !options.enum.length) {
       options.enum = undefined;
     }
@@ -140,20 +140,20 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & { rule?: RuleType
     if (options.rule.type === 'number') {
        if(!options.type )options.type = 'number';
       if (options.maximum !== undefined) {
-        options.maximum = options.rule.$_getRule('max')?.args?.limit;
+        options.maximum = options.rule.$_getRule('max')?.args?.limit as number| undefined;
       }
       if (options.minimum !== undefined) {
-        options.minimum = options.rule.$_getRule('min')?.args?.limit;
+        options.minimum = options.rule.$_getRule('min')?.args?.limit as number| undefined;
       }
     }
     if (options.rule.type === 'string') {
       if(!options.type )options.type = 'string';
       options.rule.empty(''); //将 空串视为空而不是无效值,否则空串会被 stripUnknown 配置 视为无效值处理掉
       if (options.maxLength !== undefined) {
-        options.maxLength = options.rule.$_getRule('max')?.args?.limit;
+        options.maxLength = options.rule.$_getRule('max')?.args?.limit as number| undefined;
       }
       if (options.minLength !== undefined) {
-        options.minLength = options.rule.$_getRule('min')?.args?.limit;
+        options.minLength = options.rule.$_getRule('min')?.args?.limit as number| undefined;
       }
       if (!options.required && !(options.rule as any)._invalids?._values.has('')) {
         //如果不是必填值，允许空串

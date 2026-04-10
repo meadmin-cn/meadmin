@@ -8,7 +8,7 @@ export class BadRequestFilter {
   constructor() {
     this.resposes = new ResponseService();
   }
-  async catch(err: Error) {
+  catch(err: Error) {
     return this.resposes.error(err.message, CodeEunm.Fail);
   }
 }

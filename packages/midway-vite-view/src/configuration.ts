@@ -44,7 +44,9 @@ export class MidwayViteViewConfiguration {
       this.viteViewConfig.prod === false ||
       !['prod', 'production'].includes(this.app.getEnv())
     ) {
-      this.viteService.getViteMiddlewareArr();
+      this.viteService.getViteMiddlewareArr().catch((err) => {
+        console.error('vite服务启动失败', err);
+      });
     }
   }
 

@@ -17,7 +17,7 @@ export class ValidateErrorFilter {
     const args = {} as Record<string, string>;
     const i18n = await ctx.requestContext.getAsync(MidwayI18nService);
     extractBracesContent(err.message).forEach((v) => {
-      args[v] = i18n.translate(v);
+      args[v] = i18n.translate(v) as string;
     });
     return this.resposes.error(i18n.translate('参数校验错误:') + i18n.translate(err.message, { args }), CodeEunm.ValidateFail);
   }

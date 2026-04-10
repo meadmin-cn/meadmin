@@ -221,7 +221,7 @@ function tableInfo(entityName: string, noBelongs = false) {
       entityName,
       entityFileName: lowerFirstCase(entityName),
       tableComment,
-      pk: Array.from(modelDefinition.primaryKeysAttributeNames) as string[],
+      pk: Array.from(modelDefinition.primaryKeysAttributeNames),
       deletedAt: modelDefinition.options.deletedAt+'',
       attributes: modelDefinition.attributes,
       autoAttributes,
@@ -497,7 +497,7 @@ async function setMenu(model: string, namePath: string, sequelize: Sequelize) {
   );
   return;
 }
-export const crudInit = async (program: Command) => {
+export const crudInit = (program: Command) => {
   program
     .command('crud')
     .description('创建crud')
@@ -622,7 +622,7 @@ export const crudInit = async (program: Command) => {
       if (options.menu) {
         await setMenu(options.model, replaceNames.namePath, sequelize);
       }
-      sequelize.close();
+      await sequelize.close();
       Log.success(entityFileName + ' crud创建完成');
     });
 };

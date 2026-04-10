@@ -10,6 +10,6 @@ export async function getApp<T extends IMidwayFramework<any, any, any, any, any>
 
 export function closeApp() {
   if (app) {
-    close(app);
+    return close(app);
   }
 }

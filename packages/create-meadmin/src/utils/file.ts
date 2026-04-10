@@ -90,7 +90,7 @@ export async function copyPath(pathFile:string, toPath:string, relativePath = ''
       if (stats.isDirectory()) {
         mkdirSync(toSetPath, { recursive: true });
         //文件夹递归处理
-        copyPath(path, toSetPath, relativeFilePath, ignoreFile, fileSetFunctions, isEncodePackage);
+        await copyPath(path, toSetPath, relativeFilePath, ignoreFile, fileSetFunctions, isEncodePackage);
       } else {
         if (fileSetFunctions) {
           const files = Object.keys(fileSetFunctions);

@@ -7,7 +7,7 @@ export function get(object: any, path: string): any {
   const keys = path.split('.');
   let result = object;
 
-  keys.forEach(key => {
+  keys.forEach((key) => {
     result = result[key] ?? '';
   });
 
@@ -16,12 +16,16 @@ export function get(object: any, path: string): any {
 
 //获取可用端口号
 export function getPort(port: number) {
-  return new Promise<number>(resolve => {
+  return new Promise<number>((resolve) => {
     const server = net.createServer();
     server.unref();
     server.on('error', () => {
       console.log(port + '已被占用');
-      getPort(++port).then(resolve);
+      getPort(++port)
+        .then(resolve)
+        .catch(() => {
+          console.error('获取可用端口失败');
+        });
     });
     server.listen(port, () => {
       server.close(() => resolve(port));

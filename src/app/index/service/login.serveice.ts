@@ -42,7 +42,7 @@ export class LoginService {
 
   //根据用户id获取token列表
   async getUserTokens(userId: string) {
-    let userTokens = ((await this.cache.get(this.getUserIdCacheKey(userId))) ?? []) as Array<{ token: string; expiresInTime: number; expiresInTimeStr: string }>;
+    let userTokens = ((await this.cache.get(this.getUserIdCacheKey(userId))) ?? []);
     if (userTokens.length) {
       const nowTime = +new Date();
       userTokens = userTokens.filter((item) => item.expiresInTime > +nowTime);
@@ -57,12 +57,12 @@ export class LoginService {
    * @returns;
    */
   async createToken(userId: string):Promise<string> {
-    const secret = this.secret + new Date();
+    const secret = this.secret + (+new Date());
     const token = pbkdf2Sync(tokenPrefix + userId, secret, 1000, 32, 'md5').toString('hex');
     if (await this.cache.get(this.getTokenCacheKey(token))) {
       return await this.createToken(userId);
     }
-    this.cache.set(this.getTokenCacheKey(token), ' ', 2000);
+    await this.cache.set(this.getTokenCacheKey(token), ' ', 2000);
     return token;
   }
 

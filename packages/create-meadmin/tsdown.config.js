@@ -5,6 +5,6 @@ export default defineConfig({
   dts: true,
   target: 'node20',
   minify: false,
-  inlineOnly: false as const,
+  inlineOnly: false,
   fixedExtension: false,
 });

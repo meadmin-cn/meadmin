@@ -28,7 +28,7 @@ try {
       if (stats.isDirectory()) {
         mkdirSync(toSetPath, { recursive: true });
         //文件夹递归处理
-        copyPath(path, toSetPath, '', [], undefined, false);
+        await copyPath(path, toSetPath, '', [], undefined, false);
       } else {
         await copyFile(path, toSetPath, undefined, false);
       }
@@ -66,7 +66,7 @@ try {
       benchmark: true, //开启日志打印sql耗时参数传递
     });
     await sequelize.queryRaw(sql, { raw: true, type: QueryTypes.RAW });
-    sequelize.close();
+    await sequelize.close();
     console.log('数据库同步完成');
   }
   // 同步生成子进程，运行npm命令

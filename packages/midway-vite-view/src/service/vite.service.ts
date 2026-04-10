@@ -1,30 +1,13 @@
-import {
-  ILogger
-} from '@midwayjs/core';
-import {
-  App,
-  Config,
-  Logger,
-  Provide,
-  Scope,
-  ScopeEnum,
-  sleep,
-} from '@midwayjs/core';
+import { App, Config, ILogger, Logger, Provide, Scope, ScopeEnum, sleep } from '@midwayjs/core';
 import * as koa from '@midwayjs/koa';
 import c2k from 'koa-connect';
 import { existsSync, mkdirSync } from 'node:fs';
 import * as path from 'node:path';
-import { ViteDevServer } from 'vite';
-import { createServer, normalizePath } from 'vite';
+import { createServer, normalizePath, ViteDevServer } from 'vite';
 import { ViteViewConfig } from '../interface.js';
 
 const cachePostfix = '_';
-const vitePlugin = (
-  name: string,
-  viewRoot: string,
-  appDir: string,
-  hmrPort: number
-) => ({
+const vitePlugin = (name: string, viewRoot: string, appDir: string, hmrPort: number) => ({
   name: 'vite-plugin-midway-vite-view',
   async config(config: any) {
     if (!config.server.hmr) {
@@ -35,21 +18,14 @@ const vitePlugin = (
       };
     }
     if (!config.cacheDir) {
-      config.cacheDir = path.resolve(
-        appDir,
-        `node_modules/.vite${cachePostfix}${name}`
-      );
+      config.cacheDir = path.resolve(appDir, `node_modules/.vite${cachePostfix}${name}`);
       // cachePostfix = cachePostfix + '_';
     }
     if (!config.base) {
       if (!config.root) {
         throw new Error('vite config 中必须配置正确的base或root参数');
       }
-      config.base = normalizePath(
-        '/' +
-          path.relative(viewRoot, path.resolve(process.cwd(), config.root)) +
-          '/'
-      );
+      config.base = normalizePath('/' + path.relative(viewRoot, path.resolve(process.cwd(), config.root)) + '/');
     }
   },
 });
@@ -74,24 +50,12 @@ export class ViteService {
   //生成vite server
   async createVite(name: string) {
     if (!this.vite[name]) {
-      const configFile = path.resolve(
-        this.koaApp.getAppDir(),
-        this.viteViewConfig.rootDir,
-        name,
-        this.viteViewConfig.views[name].viteConfigFile
-      );
+      const configFile = path.resolve(this.koaApp.getAppDir(), this.viteViewConfig.rootDir, name, this.viteViewConfig.views[name].viteConfigFile);
       const hmrPort = this.viteViewConfig.views[name].hmrPort;
       this.vite[name] = await createServer({
         configFile,
         appType: 'custom',
-        plugins: [
-          vitePlugin(
-            name,
-            this.viteViewConfig.rootDir,
-            this.koaApp.getAppDir(),
-            hmrPort
-          ),
-        ],
+        plugins: [vitePlugin(name, this.viteViewConfig.rootDir, this.koaApp.getAppDir(), hmrPort)],
         server: {
           middlewareMode: true,
           watch: {
@@ -116,7 +80,7 @@ export class ViteService {
   }
 
   //获取全部vite中间件数组
-  async getViteMiddlewareArr():Promise<MiddlewareArr> {
+  async getViteMiddlewareArr(): Promise<MiddlewareArr> {
     if (this.inited === 'success') {
       return this.middlewareArr;
     }
@@ -135,17 +99,13 @@ export class ViteService {
             this.logger.info(` ${name} vite server开始创建`);
 
             const viteServer = await this.createVite(name);
-            this.middlewareArr.splice(
-              this.getMiddlewareIndex(viteServer.config.base),
-              0,
-              {
-                middleware: c2k(viteServer.middlewares),
-                prefix: viteServer.config.base,
-              }
-            );
+            this.middlewareArr.splice(this.getMiddlewareIndex(viteServer.config.base), 0, {
+              middleware: c2k(viteServer.middlewares),
+              prefix: viteServer.config.base,
+            });
             configSet.add(view.viteConfigFile);
             this.logger.info(` ${name} vite server 创建 完成`);
-          })()
+          })(),
         );
       }
       await Promise.all(promiseArr);
@@ -160,7 +120,9 @@ export class ViteService {
 
   closeAll() {
     for (const [, server] of Object.entries(this.vite)) {
-      server.close();
+      server.close().catch((err) => {
+        this.logger.error('关闭vite server失败', err);
+      });
     }
     this.vite = {};
     this.middlewareArr.splice(0, this.middlewareArr.length);

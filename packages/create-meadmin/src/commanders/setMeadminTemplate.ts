@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 //创建meadmin模板
 import { Command } from 'commander';
 import { mkdirSync, readFileSync, rmSync } from 'node:fs';

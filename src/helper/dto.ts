@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { getClassExtendedMetadata, getPropertyType, INJECT_CUSTOM_PROPERTY, saveClassMetadata } from '@midwayjs/core';
 import { Dto } from '@midwayjs/validate';
 import { OmitDto, PickDto } from '@midwayjs/validate';
@@ -56,7 +57,7 @@ export function OmitDtoType<T, K extends Array<keyof T>>(dto: Dto<T>, keys: K): 
   for (const key of Object.keys(fatherProperties)) {
     if (fatherProperties[key].key === DECORATORS.API_MODEL_PROPERTIES && !keys.includes(key as any)) {
       pickedProperties[key] = fatherProperties[key];
-      pickedProperties[key].metadata.type = pickedProperties[key].metadata.type ?? getPropertyType(dto.prototype, key as string).name;
+      pickedProperties[key].metadata.type = pickedProperties[key].metadata.type ?? getPropertyType(dto.prototype, key).name;
     }
   }
   saveClassMetadata(INJECT_CUSTOM_PROPERTY, pickedProperties, pickedDto);
@@ -105,7 +106,7 @@ export function PartialType<T, K extends Array<keyof T>>(
       if (!keys || keys.includes(key as any)) {
         partitalProperties[key].metadata.required = false;
       }
-      partitalProperties[key].metadata.type = partitalProperties[key].metadata.type ?? getPropertyType(dto.prototype, key as string).name;
+      partitalProperties[key].metadata.type = partitalProperties[key].metadata.type ?? getPropertyType(dto.prototype, key).name;
     }
   }
   saveClassMetadata(INJECT_CUSTOM_PROPERTY, partitalProperties, partitalDto);
@@ -154,7 +155,7 @@ export function RequiredType<T, K extends Array<keyof T>>(
       if (!keys || keys.includes(key as any)) {
         partitalProperties[key].metadata.required = false;
       }
-      partitalProperties[key].metadata.type = partitalProperties[key].metadata.type ?? getPropertyType(dto.prototype, key as string).name;
+      partitalProperties[key].metadata.type = partitalProperties[key].metadata.type ?? getPropertyType(dto.prototype, key).name;
     }
   }
   saveClassMetadata(INJECT_CUSTOM_PROPERTY, partitalProperties, requiredDto);

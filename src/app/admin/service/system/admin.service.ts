@@ -90,7 +90,7 @@ export class SystemAdminService {
         return;
       }
       if (['username', 'nickname', 'mobile'].includes(key)) {
-        (where as Record<keyof typeof where, any>)[key] = { [Op.like]: `%${queryDto[key]}%` };
+        (where as Record<keyof typeof where, any>)[key] = { [Op.like]: `%${(queryDto[key] as string)}%` };
         return;
       }
       (where as Record<keyof typeof where, any>)[key] = queryDto[key]; //where[key as Exclude<typeof key,'page'|'pageSize'>] = queryDto[key]; 赋值会触发 TS2590: Expression produces a union type that is too complex to represent.

@@ -9,13 +9,15 @@
   "paths": {
     "@/*": ["./src/*"]
   },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "index.d.ts",
+    "bin/**/*.ts"
+  ],
   "exclude": [
-    "*.js",
-    "*.ts",
     "dist",
     "node_modules",
-    "test",
-    "packages",
-    "example"
+    "test"
   ]
 }

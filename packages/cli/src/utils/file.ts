@@ -96,7 +96,7 @@ export async function copyPath(pathFile: string, toPath: string, relativePath = 
       if (stats.isDirectory()) {
         mkdirSync(toSetPath, { recursive: true });
         //文件夹递归处理
-        copyPath(path, toSetPath, relativeFilePath, ignoreFile, fileSetFunctions, isEncodePackage);
+        await copyPath(path, toSetPath, relativeFilePath, ignoreFile, fileSetFunctions, isEncodePackage);
       } else {
         if (fileSetFunctions) {
           const files = Object.keys(fileSetFunctions);
@@ -136,7 +136,7 @@ export function checkPathFile(pathFile: string, toPath: string, relativePath = '
     const stats = statSync(path);
     if (stats.isDirectory()) {
       //文件夹递归处理
-      copyPath(path, toSetPath, relativeFilePath, hasFiles);
+      checkPathFile(path, toSetPath, relativeFilePath, hasFiles);
     } else {
       hasFiles.push(toSetPath);
     }

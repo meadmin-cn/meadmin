@@ -3,7 +3,7 @@ npm-debug.log
 yarn-error.log
 node_modules/
 coverage/
-dist
+dist/*
 .idea/
 run/
 .DS_Store

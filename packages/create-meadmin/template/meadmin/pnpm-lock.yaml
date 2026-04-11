@@ -302,8 +302,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.2
       extend2:
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^4.0.0
+        version: 4.0.0
       koa-connect:
         specifier: ^2.1.1
         version: 2.1.1
@@ -4901,8 +4901,9 @@ packages:
   ext@1.7.0:
     resolution: {integrity: sha512-6hxeJYaL110a9b5TEJSj0gojyHQAmA2ch5Os+ySCiA1QGdS697XWY1pzsrSjqA9LDEEgdB/KypIlR59RcLuHYw==}
 
-  extend2@1.0.1:
-    resolution: {integrity: sha512-ISoKeVhtewd5YHzMo+r9KC3Zx0fdpNBqoRzot+6BeEQ3bWQYQQOt0jkkY5gLveI2e7j+vdCJKeszHJIbg2Uceg==}
+  extend2@4.0.0:
+    resolution: {integrity: sha512-d/h9M79qdaVeAzjJ5Rn2dCt0bENlD34tCRyWhynrngEh+LB+QLPpxB2tAqx/YkLr14dVF0J8xKGGPymvWiuXSg==}
+    engines: {node: '>=18.7.0'}
 
   external-editor@3.1.0:
     resolution: {integrity: sha512-hMQ4CX1p1izmuLYyZqLMO/qGNw10wSv9QDCPfzXfyFrOaCSSoRfqE1Kf1s5an66J5JZC62NewG+mK49jOCtQew==}
@@ -14491,7 +14492,7 @@ snapshots:
     dependencies:
       type: 2.7.3
 
-  extend2@1.0.1: {}
+  extend2@4.0.0: {}
 
   external-editor@3.1.0:
     dependencies:

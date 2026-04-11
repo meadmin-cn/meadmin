@@ -50,7 +50,7 @@ export class LoginService {
 
   //根据管理员id获取token列表
   async getAdminTokens(adminId: string) {
-    let adminTokens = ((await this.cache.get(this.getAdminIdCacheKey(adminId))) ?? []);
+    let adminTokens: Array<{ token: string; expiresInTime: number; expiresInTimeStr: string }> = (await this.cache.get(this.getAdminIdCacheKey(adminId))) ?? [];
     if (adminTokens.length) {
       const nowTime = +new Date();
       adminTokens = adminTokens.filter((item) => item.expiresInTime > +nowTime);
@@ -64,8 +64,8 @@ export class LoginService {
    * @param adminId;
    * @returns;
    */
-  async createToken(adminId: string):Promise<string> {
-    const secret = this.secret + (+new Date());
+  async createToken(adminId: string): Promise<string> {
+    const secret = this.secret + +new Date();
     const token = pbkdf2Sync(tokenPrefix + adminId, secret, 1000, 32, 'md5').toString('hex');
     if (await this.cache.get(this.getTokenCacheKey(token))) {
       return await this.createToken(adminId);

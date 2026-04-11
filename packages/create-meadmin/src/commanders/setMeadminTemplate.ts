@@ -121,6 +121,7 @@ const copyFiles = {
   },
   'pnpm-lock.yaml': {},
   'README.md': {},
+  'README_EN.md': {},
   'tsconfig.json': {},
   'meadmin.sql': {},
 };

@@ -13,7 +13,7 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
     root: import.meta.dirname,
     base: process.env.VIEW_ADMIN_PATH_PRE,
     envPrefix: 'VIEW_ADMIN_',
-    plugins: await plugins(configEnv),
+    plugins: await plugins(),
     css: {
       preprocessorOptions: {
         scss: {

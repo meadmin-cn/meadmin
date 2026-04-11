@@ -1,14 +1,14 @@
-# meadmin
-
+# Me-Admin
+[English](README_EN.md) | [简体中文](README.md)
 ## 简介
 
-Me-admin 是一个免费开源的nodejs + vue 全栈一站式中后台解决方案,后端基于medwayjs ,前台基于vue3构建，开箱即用。本项目采用最宽松的MIT协议，最新技术栈，助力你快速创建企业级web中后台项目。
+Me-Admin 是一个免费开源的nodejs + vue 全栈一站式中后台解决方案,后端基于medwayjs ,前台基于vue3构建，开箱即用。本项目采用最宽松的MIT协议，最新技术栈，助力你快速创建企业级web中后台项目。
 ## 相关文档
 [https://www.meadmin.cn/](https://www.meadmin.cn/)
 
 ## 主要特性
 - 基于typescript 应用级JavaScript 的语言
-- 基于sequelize7 、midwayjs3.x、vue3、vite7、pinia、elment-plus、vue-request@next
+- 基于sequelize7 、midwayjs3.x、vue3、vite8、pinia、elment-plus、vue-request@next
 - 提供一键生成CRUD与菜单的自动化能力，大幅简化开发流程，显著提升项目构建效率
 - 搭载完善的Auth权限控制，支持无限父子级分组与自由授权，管理员可跨组别，权限配置既灵活又严密。
 - 提供开箱即用的前台服务端渲染能力

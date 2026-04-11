@@ -1,5 +1,6 @@
-import type { LoginParams, UserInfoResult } from '@/api/login';
+import type { LoginParams } from '@/api/login';
 import { loginApi, userInfoApi } from '@/api/login';
+import type { SystemAdminInfo } from '@/api/system/admin.ts';
 import { loginConfig as config } from '@/config';
 import { PageEnum } from '@/dict/pageEnum';
 import { event, mitter } from '@/event';
@@ -12,7 +13,7 @@ import type { RouteRecordRaw } from 'vue-router';
 import { listToTree, statusToBoolean } from '../../utils/helper';
 import useRouteStore from './route';
 interface UserState {
-  user: UserInfoResult['info']; // 用户信息
+  user: SystemAdminInfo; // 用户信息
   rules: string[] | undefined; // 用户权限信息
   menus: RouteRecordRaw[]; //用户菜单数组
   token: Ref<string>; // 用户token
@@ -21,7 +22,7 @@ export default defineStore('user', {
   state: (): UserState => {
     let _token = '';
     return {
-      user: {} as UserInfoResult['info'],
+      user: {} as SystemAdminInfo,
       rules: undefined,
       menus: [],
       token: customRef<string>((track, trigger) => {

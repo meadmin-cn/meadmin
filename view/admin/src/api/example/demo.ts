@@ -1,4 +1,4 @@
-import { PageResult } from '@/api/api.model.js';
+import type { PageResult } from '@/api/api.model.js';
 import { PageParam } from '@/api/api.model.js';
 import type { FileInfo } from '@/api/file.js';
 import type { SystemAdminInfo } from '@/api/system/admin.js';

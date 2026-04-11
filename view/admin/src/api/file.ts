@@ -1,11 +1,11 @@
-import { PageResult } from '@/api/api.model.js';
+import type { PageResult } from '@/api/api.model.js';
 import { PageParam } from '@/api/api.model.js';
 import type { RequestOptions } from '@/utils/request.js';
 import request from '@/utils/request.js';
 import type { SystemAdminInfo } from './system/admin.js';
 
 //附件
-export class File {
+export class UpFile {
   id?: string; //ID
   name = '' as string; //文件名
   path = '' as string; //路径
@@ -15,7 +15,7 @@ export class File {
   url = ''; //访问地址
 }
 
-export type FileInfo = Required<File> & {
+export type FileInfo = Required<UpFile> & {
   id: string; //ID
   createdAdmin: Omit<SystemAdminInfo, 'roles' | 'roleMenus'>;
   updatedAdmin: Omit<SystemAdminInfo, 'roles' | 'roleMenus'>;

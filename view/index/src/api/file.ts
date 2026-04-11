@@ -5,7 +5,7 @@ import request from '@/utils/request.js';
 import type { UserInfo } from './user.js';
 
 //附件
-export class File {
+export class UpFile {
   id?: string; //ID
   name = '' as string; //文件名
   path = '' as string; //路径
@@ -15,7 +15,7 @@ export class File {
   url = ''; //访问地址
 }
 
-export type FileInfo = Required<File> & {
+export type FileInfo = Required<UpFile> & {
   id: string; //ID
   createdUser: NonNullable<Omit<UserInfo, 'avatar'>>;
   size: number;

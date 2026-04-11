@@ -78,20 +78,28 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
     },
 
     build: {
+      target: ['chrome93', 'safari15.2'],
       rolldownOptions: {
-        // experimentalLogSideEffects: false,
-        // output: {
-        //   experimentalMinChunkSize: 20 * 1024,
-        //   manualChunks(id: string) {
-        //     if (['vue', 'vue-router', 'pinia', 'vue-request', 'jquery', 'axios'].some((v) => new RegExp(`.*node_modules/.*${v}.*`).test(id))) {
-        //       return 'core';
-        //     }
-        //     if (['@element-plus/icons-vue'].some((v) => new RegExp(`.*node_modules/.*${v}.*`).test(id))) {
-        //       return 'elIcon';
-        //     }
-        //     return null;
-        //   },
-        // },
+        output: {
+          strictExecutionOrder: true, //强制引用顺序
+          codeSplitting: {
+            //自定义打包合并
+            groups: [
+              {
+                test: /node_modules\/(vue|vue-router|pinia|vue-request|axios)/,
+                name: 'core',
+              },
+              {
+                test: /node_modules\/@element-plus\/icons-vue/,
+                name: 'elIcon',
+              },
+              {
+                test: /.\/mock/,
+                name: 'mock',
+              },
+            ],
+          },
+        },
       },
       emptyOutDir: true,
     },

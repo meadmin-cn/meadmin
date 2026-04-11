@@ -6,17 +6,17 @@ import axios from 'axios';
 import { ElMessage } from 'element-plus';
 import type { Pinia } from 'pinia';
 import qs from 'qs';
-import type { App} from 'vue';
+import type { App } from 'vue';
 import { inject } from 'vue';
-import type { Options} from 'vue-request';
+import type { Options } from 'vue-request';
 import { setGlobalOptions, useRequest } from 'vue-request';
-import type { Router} from 'vue-router';
+import type { Router } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { clearEmptyParam } from './helper.js';
 import log from './log';
 import { getServerCache, rmServerCache, setServerCache } from './server.js';
 
-let defaultApp: App = undefined;
+let defaultApp: App | undefined;
 
 export const setApp = (app: App) => {
   defaultApp = app;

@@ -4,7 +4,7 @@
     <div class="title">无权限访问</div>
     <div class="footer">
       <me-button class="button" @click="router.back">返回上一页</me-button>
-      <me-button class="button active" type="primary" plain @click="userStore.logOut">{{ userStore.token ? '重新登陆' : '去 登 陆' }}</me-button>
+      <me-button class="button active" type="primary" plain @click="logOut">{{ userStore.token ? '重新登陆' : '去 登 陆' }}</me-button>
     </div>
   </div>
 </template>
@@ -12,6 +12,9 @@
 import { useUserStore } from '@/store';
 const userStore = useUserStore();
 const router = useRouter();
+const logOut = () => {
+  userStore.logOut(router);
+};
 defineProps<{ msg: string }>();
 </script>
 <style lang="scss" scoped>

@@ -82,7 +82,7 @@ const info = reactive(new AonDoc());
 const loading = ref(false);
 watch(
   () => info.version,
-  (version, oldVersion) => {
+  (_version, oldVersion) => {
     getTreeAllAsync(info.version);
     if (oldVersion) {
       info.parentId = null;

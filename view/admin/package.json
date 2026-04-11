@@ -17,8 +17,8 @@
     "preview": "vite preview",
     "release-main": "release-it -c .release-it-main.json",
     "release-template": "release-it",
-    "eslint": "eslint . --cache --ext .vue,.ts,.tsx",
-    "eslint:fix": "eslint . --ext .vue,.ts,.tsx --fix",
+    "lint": "eslint . --cache --ext .vue,.ts,.tsx",
+    "lint:fix": "eslint . --ext .vue,.ts,.tsx --fix",
     "prettier": "prettier --cache  -l \"./**/*\"",
     "prettier:fix": "prettier --write --cache  -l \"./**/*\""
   },

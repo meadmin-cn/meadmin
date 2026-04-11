@@ -23,12 +23,10 @@
 </template>
 
 <script setup lang="ts" name="MeWangEditor">
-import { useGlobalStore } from '@/store';
 import type { IDomEditor, IEditorConfig, IToolbarConfig, SlateDescendant } from '@wangeditor/editor';
-import { i18nChangeLanguage } from '@wangeditor/editor';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import '@wangeditor/editor/dist/css/style.css'; // 引入 css
-import type { PropType} from 'vue';
+import type { PropType } from 'vue';
 import { onBeforeUnmount, shallowRef } from 'vue';
 import './meWangEditor.scss';
 defineProps({
@@ -66,23 +64,10 @@ const emit = defineEmits<{
   (e: 'customAlert', s: string, t: string): void;
   (e: 'customPaste', editor: IDomEditor, event: ClipboardEvent): void;
 }>();
-const { i18n } = storeToRefs(useGlobalStore());
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef<IDomEditor | undefined>();
 defineExpose({ editorRef });
-//切换语言
 const showEditor = ref(true);
-i18nChangeLanguage(i18n.value.locale.value);
-watch(
-  () => i18n.value.locale.value,
-  async (locale) => {
-    // 切换语言 - 'en' 或者 'zh-CN'
-    showEditor.value = false;
-    await nextTick();
-    i18nChangeLanguage(locale);
-    showEditor.value = true;
-  },
-);
 // 组件销毁时，也及时销毁编辑器
 onBeforeUnmount(() => {
   editorRef.value && editorRef.value.destroy();

@@ -1,5 +1,6 @@
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import Components from 'unplugin-vue-components/vite';
+import type { Plugin } from 'vite';
 import { resolver } from './autoImport.js';
 export default () =>
   Components({
@@ -7,4 +8,6 @@ export default () =>
     include: [],
     dts: false,
     resolvers: [ElementPlusResolver({ importStyle: false }), resolver([3, 4], [2])],
-  });
+  }) as Plugin<any> & {
+    api: any;
+  };

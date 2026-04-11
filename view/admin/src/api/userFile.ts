@@ -13,7 +13,7 @@ export class UserFile {
   name = '' as string; //文件名
   path = '' as string; //路径
   mimeType = '' as string; //mime类型
-  size = undefined as number | null | undefined; //文件大小
+  size = undefined as number | undefined; //文件大小
   storage = '' as string; //存储引擎
   md5 = '' as string; //文件MD5值
 }

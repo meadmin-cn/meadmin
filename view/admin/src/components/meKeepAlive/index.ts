@@ -1,11 +1,11 @@
 import { invokeArrayFns, isArray, isString } from '@vue/shared';
-import type { ComponentOptions, ConcreteComponent, RendererElement, RendererNode, SetupContext, VNode, VNodeProps} from 'vue';
+import type { ComponentOptions, ConcreteComponent, RendererElement, RendererNode, SetupContext, VNode, VNodeProps } from 'vue';
 import { cloneVNode, getCurrentInstance, isVNode, onBeforeUnmount, onMounted, onUpdated, setTransitionHooks, warn, watch } from 'vue';
 import { isAsyncWrapper } from './core/apiAsyncComponent';
 import { getComponentName } from './core/component';
 import type { ComponentRenderContext } from './core/componentPublicInstance';
 import { devtoolsComponentAdded } from './core/devtools';
-import type { RendererInternals} from './core/renderer';
+import type { RendererInternals } from './core/renderer';
 import { MoveType, queuePostRenderEffect } from './core/renderer';
 import { ShapeFlags } from './core/shapeFlags';
 import { isSuspense } from './core/Suspense';
@@ -140,7 +140,7 @@ const KeepAliveImpl: ComponentOptions = {
     }
 
     function pruneCacheByKey(filter?: (key: CacheKey) => boolean) {
-      cache.forEach((vnode, key) => {
+      cache.forEach((_vnode, key) => {
         if (!filter || !filter(key)) {
           pruneCacheEntry(key);
         }

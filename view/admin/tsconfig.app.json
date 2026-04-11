@@ -9,6 +9,7 @@
     "typeRoots": ["./node_modules/@types/", "./types", "./node_modules"],
     "types": ["element-plus/global", "vite/client", "vite-svg-loader"],
     "lib": ["esnext", "dom"],
+    "skipLibCheck": true,
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
@@ -17,5 +18,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "types/**/*.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "types/**/*.d.ts"]
 }

@@ -7,7 +7,8 @@ import { {{@ replaceNames.UpdateDto}} } from '{{@ paths.updateDtoPath}}';
 import { {{@ replaceNames.Name}} } from '{{@ paths.entityPath}}';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { Transaction } from '@/decorators/index.js';
-import { Op } from '@sequelize/core';{{each $imports.objectKeys(entity.belongsToEntity)}}<% const valueEntity = entity.belongsToEntity[$value]; %>{{if ['File'].includes(valueEntity.entityName)}}<% return; %>{{/if}}
+import { WhereAttributeHash } from '@sequelize/core/_non-semver-use-at-your-own-risk_/abstract-dialect/where-sql-builder-types.js';
+import { InferAttributes, Op, WhereOperators } from '@sequelize/core';{{each $imports.objectKeys(entity.belongsToEntity)}}<% const valueEntity = entity.belongsToEntity[$value]; %>{{if ['File'].includes(valueEntity.entityName)}}<% return; %>{{/if}}
 import { {{@ valueEntity.entityName}} } from '{{@ paths.entityPath.replace(replaceNames.name,valueEntity.entityFileName)}}';{{/each}}{{each $imports.objectKeys(entity.belongsToManyEntity)}}<% const valueEntity = entity.belongsToManyEntity[$value]; %>{{if ['File'].includes(valueEntity.entityName)}}<% return; %>{{/if}}
 import { {{@ valueEntity.entityName}} } from '{{@ paths.entityPath.replace(replaceNames.name,valueEntity.entityFileName)}}';{{/each}}
 
@@ -117,25 +118,25 @@ export class {{@ replaceNames.Service}} {
    */
   @Transaction()
   async list(queryDto: {{@ replaceNames.QueryDto}}) {
-    const where = {};
-    Object.keys(queryDto).forEach((key) => {
-      if(['page', 'pageSize'].includes(key)){
+    const where = {} as WhereAttributeHash<InferAttributes<{{@ replaceNames.Name}}, { omit: never }>>;
+    (Object.keys(queryDto) as Array<keyof {{@ replaceNames.QueryDto}}>).forEach((key) => {
+      if ('page' === key || 'pageSize' === key) {
         return;
       }
-      if([null, undefined, ''].includes(queryDto[key])){
+      if (null === queryDto[key] || undefined === queryDto[key] || '' === queryDto[key]) {
         return;
       }{{each entitySchema.properties}}{{if $index.endsWith('At')}}
       if (key === 'start{{@ $imports.upFirstCase($index)}}') {
-        where['{{@ $index}}'] = where['{{@ $index}}'] ?? {};
+        where['{{@ $index}}'] = (where['{{@ $index}}'] ?? {}) as WhereOperators<NonNullable<{{@ replaceNames.Name}}['{{@ $index}}']>>
         where['{{@ $index}}'][Op.gte] = queryDto[key];
         return;
       }
       if (key === 'end{{@ $imports.upFirstCase($index)}}') {
-        where['{{@ $index}}'] = where['{{@ $index}}'] ?? {};
+        where['{{@ $index}}'] = (where['{{@ $index}}'] ?? {}) as WhereOperators<NonNullable<{{@ replaceNames.Name}}['{{@ $index}}']>>
         where['{{@ $index}}'][Op.lte] = queryDto[key];
         return;
       }{{/if}}{{/each}}
-      where[key] = queryDto[key];
+      (where as Record<keyof typeof where, any>)[key] = queryDto[key]; //因为 where[key as Exclude<typeof key,'page'|'pageSize'>] = queryDto[key]; 赋值会触发 TS2590: Expression produces a union type that is too complex to represent.
     });    
     const { count, rows } = await this.{{@ replaceNames.name}}Repository.findAndCountAll({
       where,

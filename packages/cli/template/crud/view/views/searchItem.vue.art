@@ -1,4 +1,4 @@
-{{each properties}}<% const keyInfo = $imports.getKeyInfo($value.description); %>{{if $index.endsWith('At')}}
+{{each properties}}<% const keyInfo = $imports.getKeyInfo($value.description); %>{{if !entity.noSearchAttributes.includes($index)}}{{if $index.endsWith('At')}}
 <el-form-item :label="t('{{@ keyInfo.name}}')" prop="{{@ $index}}">
   <el-date-picker v-model="params.start{{@ $imports.upFirstCase($index)}}" type="{{if $value.format === 'date-time'}}datetime{{else}}date{{/if}}" value-format="{{if $value.format === 'date-time'}}YYYY-MM-DD HH:mm:ss{{else}}YYYY-MM-DD{{/if}}" clearable />&nbsp; - &nbsp;
   <el-form-item prop="priceEnd">
@@ -14,4 +14,4 @@
   {{else if $value.type === 'string'}}
     <el-input v-model="params.{{@ $index}}" clearable ></el-input>  
   {{/if}}
-</el-form-item>{{/if}}{{/each}}
+</el-form-item>{{/if}}{{/if}}{{/each}}

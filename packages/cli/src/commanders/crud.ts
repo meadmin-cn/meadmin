@@ -38,19 +38,20 @@ if (!prettierrc.plugins) {
 let swaggerSchemas = {} as Record<string, SchemaObject>;
 let sequelize: Sequelize; //数据库配置
 type TableInfo = {
-  entityName?:string;
-  entityFileName?:string;
-  belongsTo?:string[];
-  belongsToEntity?:Record<string,TableInfo>,
-  belongsToMany?:string[],
-  belongsToManyEntity?:Record<string,TableInfo>,
-  belongs?: string[],
-  nameKeys?:string[],
+  entityName:string;
+  entityFileName:string;
+  belongsTo:string[];
+  belongsToEntity:Record<string,TableInfo>,
+  belongsToMany:string[],
+  belongsToManyEntity:Record<string,TableInfo>,
+  belongs: string[],
+  nameKeys:string[],
   tableComment: string;
   pk: string[];
   deletedAt: string | null;
   attributes: MapView<string, NormalizedAttributeOptions<Model<any, any>>>;
   autoAttributes: string[]
+  noSearchAttributes: string[];//不支持搜索的属性
 };
 const tableInfos = {} as Record<string,TableInfo>;
 //关闭自动编码
@@ -160,6 +161,15 @@ function tableInfo(entityName: string, noBelongs = false) {
       deletedAt: null,
       attributes: new MapView(new Map()),
       autoAttributes: [],
+      noSearchAttributes: [],
+      entityName:entityName,
+      entityFileName: lowerFirstCase(entityName),
+      belongsTo:[],
+      belongsToEntity:{},
+      belongsToMany:[],
+      belongsToManyEntity:{},
+      belongs: [],
+      nameKeys:[],
     };
   } else {
     let tableComment = modelDefinition.options.comment ||'';
@@ -217,6 +227,12 @@ function tableInfo(entityName: string, noBelongs = false) {
         nameKeys.push(key);
       }
     }
+    const noSearchAttributes = [
+      ...Object.keys(modelDefinition.associations),//关联key
+      ...modelDefinition.virtualAttributeNames,//虚拟属性 
+      ...modelDefinition.readOnlyAttributeNames, //只读属性
+    ] as string[];//不需要搜索的字段
+
     tableInfos[entityName] = {
       entityName,
       entityFileName: lowerFirstCase(entityName),
@@ -231,6 +247,7 @@ function tableInfo(entityName: string, noBelongs = false) {
       belongsToManyEntity,
       belongs: belongs,
       nameKeys,
+      noSearchAttributes,
     };
   }
   return tableInfos[entityName];

@@ -7,9 +7,10 @@
 </template>
 
 <script setup lang="ts">
-import { EasingFunction, TransitionPresets, useTransition } from '@vueuse/core';
+import type { EasingFunction} from '@vueuse/core';
+import { TransitionPresets, useTransition } from '@vueuse/core';
 import formatNumber from 'format-number';
-import { PropType } from 'vue';
+import type { PropType } from 'vue';
 const props = defineProps({
   start: {
     type: Number,

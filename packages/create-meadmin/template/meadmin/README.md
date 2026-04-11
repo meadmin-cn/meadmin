@@ -36,7 +36,7 @@ Me-admin 是一个免费开源的nodejs + vue 全栈一站式中后台解决方�
 - pnpm
 ### 初始化项目
 
-执行命令 `pnpm create meadminjs` 根据提示，配置选项即可！
+执行命令 `pnpm create meadminjs@latest` 根据提示，配置选项即可！
 
 ### 调试项目
 

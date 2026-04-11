@@ -27,7 +27,7 @@
 import { LoginParams, loginCaptchaApi } from '@/api/login';
 import { useLocalesI18n } from '@/locales/i18n';
 import { useUserStore } from '@/store';
-import { FormInstance, FormRules } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 import LoginHeader from './components/header.vue';
 const userStore = useUserStore();
 const formRef = ref<FormInstance>();

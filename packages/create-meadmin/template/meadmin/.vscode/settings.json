@@ -24,5 +24,7 @@
   },
   "vue.suggest.componentNameCasing": "alwaysKebabCase",
   "vue.suggest.propNameCasing": "alwaysKebabCase",
-  "editor.wordWrap": "on"
+  "editor.wordWrap": "on",
+  "js/ts.tsdk.path": "node_modules\\typescript\\lib",
+  "claudeCodeChat.permissions.yoloMode": true
 }

@@ -2,8 +2,10 @@ import { ApiPageRes, PageRes } from '@/response/apiPage.res.js';
 import { ApiSuccessRes, ApiSuccessResArr } from '@/response/apiSuccess.res.js';
 import { getKeyInfo } from '@meadmin/cli/utils/formatting';
 import { createCustomMethodDecorator } from '@midwayjs/core';
-import { ApiExtraModel, ApiOperation, ApiOperationOptions, ApiProperty, ApiPropertyOptions, ApiResponse, getSchemaPath, Type } from '@midwayjs/swagger';
-import { Rule, RuleType } from '@midwayjs/validate';
+import { ApiOperationOptions, ApiPropertyOptions, Type } from '@midwayjs/swagger';
+import { ApiExtraModel, ApiOperation, ApiProperty, ApiResponse, getSchemaPath } from '@midwayjs/swagger';
+import { RuleType } from '@midwayjs/validate';
+import { Rule } from '@midwayjs/validate';
 
 // 装饰器内部的唯一 id
 export const API_OPERATIN_RESONSE_KEY = 'meadmin:swagger:api_operation_respose';
@@ -20,7 +22,7 @@ export function ApiOperationResponse<TModel extends Type<any>>(
   },
 ): MethodDecorator {
   const classDecorators = [ApiExtraModel(ApiSuccessRes), ApiExtraModel(ApiPageRes), ApiExtraModel(PageRes)];
-  const methodDecorators = [];
+  const methodDecorators = [] as MethodDecorator[];
   if (options.responsePage) {
     classDecorators.push(ApiExtraModel(options.responsePage));
     methodDecorators.push(
@@ -105,8 +107,8 @@ export function ApiOperationResponse<TModel extends Type<any>>(
     );
   }
   methodDecorators.push(ApiOperation(Object.assign(options, { successType: undefined, responsePage: undefined })));
-  return <T>(target: (...args: any[]) => any, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<T>) => {
-    classDecorators.forEach((fn) => fn(target));
+  return <T>(target: object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<T>) => {
+    classDecorators.forEach((fn) => fn(target.constructor));
     methodDecorators.forEach((fn) => fn(target, propertyKey, descriptor));
     return createCustomMethodDecorator(API_OPERATIN_RESONSE_KEY, {}, false)(target, propertyKey, descriptor);
   };
@@ -127,7 +129,7 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & { rule?: RuleType
       options.required = options.rule.$_getFlag('presence') === 'required' ? true : undefined;
     }
     if (!options.enum && options.rule.describe().allow && options.rule.$_getFlag('only')) {
-      options.enum = options.rule.describe().allow;
+      options.enum = options.rule.describe().allow as any[] | Record<string, any>;
     } else if (options.enum && !options.enum.length) {
       options.enum = undefined;
     }
@@ -136,27 +138,34 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & { rule?: RuleType
       options.rule = options.rule.allow(null);
     }
     if (options.rule.type === 'number') {
+       if(!options.type )options.type = 'number';
       if (options.maximum !== undefined) {
-        options.maximum = options.rule.$_getRule('max')?.args?.limit;
+        options.maximum = options.rule.$_getRule('max')?.args?.limit as number| undefined;
       }
       if (options.minimum !== undefined) {
-        options.minimum = options.rule.$_getRule('min')?.args?.limit;
+        options.minimum = options.rule.$_getRule('min')?.args?.limit as number| undefined;
       }
     }
     if (options.rule.type === 'string') {
+      if(!options.type )options.type = 'string';
       options.rule.empty(''); //将 空串视为空而不是无效值,否则空串会被 stripUnknown 配置 视为无效值处理掉
       if (options.maxLength !== undefined) {
-        options.maxLength = options.rule.$_getRule('max')?.args?.limit;
+        options.maxLength = options.rule.$_getRule('max')?.args?.limit as number| undefined;
       }
       if (options.minLength !== undefined) {
-        options.minLength = options.rule.$_getRule('min')?.args?.limit;
+        options.minLength = options.rule.$_getRule('min')?.args?.limit as number| undefined;
       }
       if (!options.required && !(options.rule as any)._invalids?._values.has('')) {
         //如果不是必填值，允许空串
         options.rule = options.rule.allow('');
       }
     }
-
+    if (!options.type && options.rule.type === 'date') {
+      options.type = 'date';
+    }
+    if (!options.type && options.rule.type === 'object') {
+      options.type = 'object';
+    }
     if (options.default !== undefined) {
       options.default = options.rule.$_getFlag('default');
     }
@@ -164,7 +173,7 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & { rule?: RuleType
   }
   propertyDecorators.push(ApiProperty(options));
 
-  return (target: (...args: any[]) => any, propertyKey: string | symbol) => {
+  return (target: object, propertyKey: string | symbol) => {
     propertyDecorators.forEach((fn) => fn(target, propertyKey));
   };
 }

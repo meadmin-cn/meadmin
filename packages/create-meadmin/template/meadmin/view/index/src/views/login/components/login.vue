@@ -34,7 +34,7 @@
 <script setup lang="ts" name="Login">
 import { LoginParams, loginCaptchaApi } from '@/api/login';
 import { useUserStore } from '@/store';
-import { FormInstance } from 'element-plus';
+import type { FormInstance } from 'element-plus';
 const loginParams = reactive(new LoginParams());
 //验证码
 const { data: captchaObj, runAsync: getCaptchRun } = loginCaptchaApi();

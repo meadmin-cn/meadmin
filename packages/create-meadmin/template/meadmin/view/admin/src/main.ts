@@ -1,6 +1,7 @@
-import { Pinia } from 'pinia';
-import { App as AppType, createApp as createClientApp, createSSRApp } from 'vue';
-import { Router } from 'vue-router';
+import type { Pinia } from 'pinia';
+import type { App as AppType} from 'vue';
+import { createApp as createClientApp, createSSRApp } from 'vue';
+import type { Router } from 'vue-router';
 import { bootscrapt } from './app';
 import App from './App.vue';
 import { router } from './router';

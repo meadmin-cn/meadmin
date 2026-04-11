@@ -4,6 +4,7 @@ import eslintPluginVue from 'eslint-plugin-vue';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+
 export default defineConfig(
   eslint.configs.recommended,
   tseslint.configs.recommended,
@@ -18,9 +19,17 @@ export default defineConfig(
         tsconfigRootDir: import.meta.dirname,
         parser: tseslint.parser,
       },
+      parser: eslintPluginVue.parser, // 指定处理 .vue 文件的解析器
     },
     rules: {
       // override/add rules settings here, such as:
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          fixStyle: 'separate-type-imports',
+        },
+      ],
+      '@typescript-eslint/no-import-type-side-effects': 'error',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-expressions': [
         'error',
@@ -85,10 +94,10 @@ export default defineConfig(
       ],
     },
   },
-  { ignores: ['**/*.d.ts', '**/coverage', '**/dist'] },
+  { ignores: ['**/*.d.ts', '**/coverage', '**/dist', 'node_modules/**', '.prettierrc.js', 'commitlint.config.cjs', 'eslint.config.js'] },
   eslintConfigPrettier,
   {
-    files: ['**/*.js'],
+    files: ['*.js'],
     languageOptions: {
       parserOptions: {
         projectService: {

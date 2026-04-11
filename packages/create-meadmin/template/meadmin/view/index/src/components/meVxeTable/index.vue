@@ -15,11 +15,11 @@
           <slot name="buttons"></slot>
         </div>
         <div class="me-vxe-toolbar-tools">
-          <el-input v-if="quickSearch !== undefined" :model-value="quickSearch" :placeholder="typeof quickSearchPlaceholder === 'function' ? quickSearchPlaceholder($t) : quickSearchPlaceholder" prefix-icon="mel-icon-search" @update:model-value="$emit('update:quickSearch', $event)" @change="$emit('quickSearch', $event)" />
+          <el-input v-if="quickSearch !== undefined" :model-value="quickSearch" :placeholder="quickSearchPlaceholder" prefix-icon="mel-icon-search" @update:model-value="$emit('update:quickSearch', $event)" @change="$emit('quickSearch', $event)" />
           <el-button-group v-if="customColumn || exportMenu?.length || print">
             <el-popover v-if="customColumn" :teleported="false" placement="bottom" trigger="click" width="auto">
               <template #reference>
-                <el-button icon="mel-icon-grid" :title="$t('自定义列')" />
+                <el-button icon="mel-icon-grid" title="自定义列" />
               </template>
               <template #default>
                 <el-scrollbar max-height="300px" class="popover-scrollbar-y">
@@ -29,7 +29,7 @@
             </el-popover>
             <el-popover v-if="exportMenu?.length" pure placement="bottom" trigger="click" popper-class="me-vxe-exportmenu-popover el-dropdown__popper">
               <template #reference>
-                <el-button icon="mel-icon-download" :title="$t('导出')" />
+                <el-button icon="mel-icon-download" title="导出" />
               </template>
               <template #default>
                 <ul class="el-dropdown-menu">
@@ -39,10 +39,10 @@
                 </ul>
               </template>
             </el-popover>
-            <el-button v-if="print" icon="mel-icon-printer" :title="$t('打印')" @click="printTable()" />
+            <el-button v-if="print" icon="mel-icon-printer" title="打印" @click="printTable()" />
             <slot name="tools"></slot>
           </el-button-group>
-          <el-button v-if="$slots.search" :title="$t('更多筛选')" @click="showSearch = !showSearch">
+          <el-button v-if="$slots.search" title="更多筛选" @click="showSearch = !showSearch">
             <mel-icon-search></mel-icon-search>
           </el-button>
           <slot name="toolsButton"></slot>
@@ -64,10 +64,11 @@
   </div>
 </template>
 <script lang="ts">
-import { TreeNodeData } from 'element-plus/es/components/tree/src/tree.type';
+import type { TreeNodeData } from 'element-plus/es/components/tree/src/tree.type';
 import { debounce } from 'lodash-es';
-import { ComponentCustomProperties, PropType, useTemplateRef } from 'vue';
-import { VxeTableDefines, VxeTableInstance, VxeTableListeners, VxeTableProps, VxeTablePropTypes } from 'vxe-table';
+import type { PropType } from 'vue';
+import { useTemplateRef } from 'vue';
+import type { VxeTableDefines, VxeTableInstance, VxeTableListeners, VxeTableProps, VxeTablePropTypes } from 'vxe-table';
 import pagination from './components/pagination.vue';
 import resize from './directives/resize';
 import { getFullHight } from './util';
@@ -110,8 +111,8 @@ const props = {
   },
   quickSearch: String,
   quickSearchPlaceholder: {
-    type: [String, Function] as PropType<string | ((t: ComponentCustomProperties['$t']) => string)>,
-    default: () => (t: ComponentCustomProperties['$t']) => t('快捷搜索'),
+    type: String,
+    default: '快捷搜索',
   },
   paginationOptions: Object as PropType<InstanceType<typeof pagination>['options']>,
   autoHeight: {

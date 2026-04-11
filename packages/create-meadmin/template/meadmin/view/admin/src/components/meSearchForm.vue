@@ -18,10 +18,10 @@
 </template>
 
 <script lang="ts">
-import { FormInstance } from 'element-plus';
-import { ElForm } from 'element-plus';
+import type { FormInstance } from 'element-plus';
+import type { ElForm } from 'element-plus';
 import $ from 'jquery';
-import { PropType } from 'vue';
+import type { PropType } from 'vue';
 const props = {
   forever: {
     // 收起后展示的筛选项数量0为不收起

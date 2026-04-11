@@ -1,6 +1,6 @@
 import { asyncRoutes, constantRoutes, formatRoutes } from '@/router';
 import { cloneDeep } from 'lodash-es';
-import { Router, RouteRecordRaw } from 'vue-router';
+import type { Router, RouteRecordRaw } from 'vue-router';
 export default defineStore('route', {
   state: () => ({
     addRoutes: [] as RouteRecordRaw[],

@@ -3,11 +3,12 @@ import { SystemMenu } from '@/entities/systemMenu.entity.js';
 import { Inject, Provide } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
-import { Op } from '@sequelize/core';
+import { InferAttributes, Op, WhereOperators } from '@sequelize/core';
 import { SystemRole } from '../../../../entities/systemRole.entity.js';
 import { SystemRoleCreateDto } from '../../dto/system/roleCreate.dto.js';
 import { SystemRoleQueryDto } from '../../dto/system/roleQuery.dto.js';
 import { SystemRoleUpdateDto } from '../../dto/system/roleUpdate.dto.js';
+import { WhereAttributeHash } from '@sequelize/core/_non-semver-use-at-your-own-risk_/abstract-dialect/where-sql-builder-types.js';
 
 //角色
 @Provide()
@@ -37,35 +38,35 @@ export class SystemRoleService {
    * @returns
    */
   async list(queryDto: SystemRoleQueryDto) {
-    const where = {};
-    Object.keys(queryDto).forEach((key) => {
-      if (['page', 'pageSize'].includes(key)) {
+    const where = {} as WhereAttributeHash<InferAttributes<SystemRole, { omit: never }>>;
+    (Object.keys(queryDto) as Array<keyof SystemRoleQueryDto>).forEach((key) => {
+      if ('page' === key || 'pageSize' === key) {
         return;
       }
-      if ([null, undefined, ''].includes(queryDto[key])) {
+      if (null === queryDto[key] || undefined === queryDto[key] || '' === queryDto[key]) {
         return;
       }
       if (key === 'startCreatedAt') {
-        where['createdAt'] = where['createdAt'] ?? {};
-        where['createdAt'][Op.gte] = queryDto[key];
+        where['createdAt'] = (where['createdAt'] ?? {}) as WhereOperators<SystemRole['createdAt']>;
+        where['createdAt'] = { ...where['createdAt'], [Op.gte]: queryDto[key] };
         return;
       }
       if (key === 'endCreatedAt') {
-        where['createdAt'] = where['createdAt'] ?? {};
+        where['createdAt'] = (where['createdAt'] ?? {}) as WhereOperators<SystemRole['createdAt']>;
         where['createdAt'][Op.lte] = queryDto[key];
         return;
       }
       if (key === 'startUpdatedAt') {
-        where['updatedAt'] = where['updatedAt'] ?? {};
+        where['updatedAt'] = (where['updatedAt'] ?? {}) as WhereOperators<SystemRole['updatedAt']>;
         where['updatedAt'][Op.gte] = queryDto[key];
         return;
       }
       if (key === 'endUpdatedAt') {
-        where['updatedAt'] = where['updatedAt'] ?? {};
+        where['updatedAt'] = (where['updatedAt'] ?? {}) as WhereOperators<SystemRole['updatedAt']>;
         where['updatedAt'][Op.lte] = queryDto[key];
         return;
       }
-      where[key] = queryDto[key];
+      (where as Record<keyof typeof where, any>)[key] = queryDto[key]; //因为 where[key as Exclude<typeof key,'page'|'pageSize'>] = queryDto[key]; 赋值会触发 TS2590: Expression produces a union type that is too complex to represent.
     });
     const { count, rows } = await this.SystemRoleRepository.findAndCountAll({
       where,

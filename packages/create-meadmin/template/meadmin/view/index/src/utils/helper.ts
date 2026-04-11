@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { clone, cloneDeep } from 'lodash-es';
-import { SearchTreeOptions, default as XEUtils } from 'xe-utils';
+import type { SearchTreeOptions} from 'xe-utils';
+import { default as XEUtils } from 'xe-utils';
 
 /**
  * 对象中的每个可便利元素按序执行一个由您提供的 reducer 函数，

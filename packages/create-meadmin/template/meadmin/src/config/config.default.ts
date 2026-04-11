@@ -2,7 +2,7 @@ import { uploadWhiteList } from '@midwayjs/busboy';
 import { createRedisStore } from '@midwayjs/cache-manager';
 import { MidwayConfig } from '@midwayjs/core';
 import { TranslateOptions } from '@midwayjs/i18n';
-import { resolve } from 'path';
+import { resolve, sep } from 'path';
 import { formatText } from '../helper/utils.js';
 import database from './database.js';
 //配置文件避免出现@/等alisa，path引用
@@ -10,7 +10,7 @@ export default {
   // use for cookie sign key, should change to your own and keep security
   keys: '1714030878233_897',
   koa: {
-    port: +process.env.SERVER_PORT,
+    port: +process.env.SERVER_PORT!,
   },
   debug: true,
   validate: {
@@ -24,7 +24,7 @@ export default {
     // 默认语言  "zh-cn"
     defaultLocale: 'zh-cn',
     // used to alter the behaviour of missing keys
-    missingKeyFn: function (locale, value) {
+    missingKeyFn: function (_locale: any, value: any) {
       return value;
     },
 
@@ -50,6 +50,7 @@ export default {
   },
   // ...
   staticFile: {
+    //静态资源配置，线上部署时建议使用nginx代理，开发环境可以使用midway内置的静态资源服务
     dirs: {
       default: {
         prefix: '/',
@@ -58,10 +59,20 @@ export default {
       viewAdmin: {
         prefix: '/html/admin/',
         dir: 'view/admin/dist',
+        usePrecompiledGzip: true,
+        alias: {
+          //安全考虑，ssr-manifest.json文件不对外暴露，直接将其请求重定向到index.html
+          ['/html/admin/ssr-manifest.json'.replaceAll('/', sep)]: '/html/admin/index.html'.replaceAll('/', sep),
+        },
       },
       viewIndex: {
         prefix: '/html/index/',
         dir: 'view/index/dist',
+        usePrecompiledGzip: true,
+        alias: {
+          //安全考虑，ssr-manifest.json文件不对外暴露，直接将其请求重定向到index.html
+          ['/html/index/ssr-manifest.json'.replaceAll('/', sep)]: '/html/index/index.html'.replaceAll('/', sep),
+        },
       },
     },
   },
@@ -93,7 +104,7 @@ export default {
         host: process.env.REDIS_HOST,
         port: process.env.REDIS_PORT,
         password: process.env.REDIS_PASS,
-        db: 0,
+        db: process.env.REDIS_CACHE ?? 0,
       },
     },
   },
@@ -104,6 +115,9 @@ export default {
         store: createRedisStore('cache'),
       },
       index: {
+        store: createRedisStore('cache'),
+      },
+      captcha: {
         store: createRedisStore('cache'),
       },
     },

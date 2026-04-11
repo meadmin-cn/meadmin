@@ -1,7 +1,8 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
-import { DataTypes, NonAttribute } from '@sequelize/core';
+import { CreationOptional, NonAttribute } from '@sequelize/core';
+import { DataTypes } from '@sequelize/core';
 import { Attribute, BelongsTo, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
 // import { BaseModel } from './abstract/base.entity.js';
 import { BelongsToModel } from '@/types/entity.js';
@@ -15,7 +16,7 @@ export class AonDoc extends AdminTreeModel<AonDoc> {
   @PrimaryKey
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
-  id: string;
+  id: CreationOptional<string>;//CreationOptional 是 Sequelize 提供的一个类型，用于表示在创建实例时可以省略的属性，因为它们会由数据库自动生成或有默认值。
 
   @Attribute({
     comment: '版本',
@@ -116,7 +117,7 @@ export class AonDoc extends AdminTreeModel<AonDoc> {
     description: '内容类型:0=markdown;1=外链',
     rule: RuleType.number().valid(0, 1),
   })
-  contentType: number;
+  contentType: number | null;
 
   @Attribute({
     comment: '内容',

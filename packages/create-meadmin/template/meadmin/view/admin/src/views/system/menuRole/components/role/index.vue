@@ -44,13 +44,14 @@
   </div>
 </template>
 <script setup lang="ts" name="Group">
-import { delSystemRoleApi, SystemRoleInfo, SystemRoleTreeAll, systemRoleTreeAllApi, updateSystemRoleApi } from '@/api/system/role';
+import type { SystemRoleInfo, SystemRoleTreeAll} from '@/api/system/role';
+import { delSystemRoleApi, systemRoleTreeAllApi, updateSystemRoleApi } from '@/api/system/role';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { searchTreeTable } from '@/utils/helper.js';
 import { permission } from '@/utils/permission.js';
 import { cloneDeep } from 'lodash-es';
-import { VxeTableEvents } from 'vxe-table';
+import type { VxeTableEvents } from 'vxe-table';
 import AddOrUp from './components/addOrUp.vue';
 import Info from './components/info.vue';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemRole']);

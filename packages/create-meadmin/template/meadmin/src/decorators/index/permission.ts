@@ -1,6 +1,7 @@
 // src/decorator/logging.decorator.ts
 import { RegistreDecorator } from '@/types/decorator.js';
-import { createCustomMethodDecorator, JoinPoint, MidwayDecoratorService, REQUEST_OBJ_CTX_KEY } from '@midwayjs/core';
+import { JoinPoint, MidwayDecoratorService } from '@midwayjs/core';
+import { createCustomMethodDecorator, REQUEST_OBJ_CTX_KEY } from '@midwayjs/core';
 import { UnauthorizedError } from '@midwayjs/core/dist/error/http.js';
 
 // 装饰器内部的唯一 id
@@ -27,7 +28,7 @@ export class IndexPermissionRegistreDecorators implements RegistreDecorator {
             throw new UnauthorizedError('请登录后再访问！');
           }
           // 执行原方法
-          const result = await joinPoint.proceed(...joinPoint.args);
+          const result = await joinPoint.proceed?.(...joinPoint.args);
           // 返回执行结果
           return result;
         },

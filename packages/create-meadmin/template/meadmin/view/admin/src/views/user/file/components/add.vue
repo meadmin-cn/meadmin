@@ -12,7 +12,7 @@
   </me-dialog>
 </template>
 <script setup lang="ts" name="AddFile">
-import { FileInfo } from '@/api/file';
+import type { UserFileInfo } from '@/api/userFile';
 import { useLocalesI18n } from '@/locales/hooks';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'file']);
 await loadRes;
@@ -20,5 +20,5 @@ const show = defineModel<boolean>();
 const emit = defineEmits<{
   (e: 'closed'): void;
 }>();
-const files = ref([] as FileInfo[]);
+const files = ref([] as UserFileInfo[]);
 </script>

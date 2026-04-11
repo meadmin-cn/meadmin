@@ -1,5 +1,6 @@
-import { UserFileInfo, uploadFileApi } from '@/api/userFile.js';
-import { UploadProgressEvent, UploadRawFile, UploadRequestOptions } from 'element-plus';
+import type { UserFileInfo} from '@/api/userFile.js';
+import { uploadFileApi } from '@/api/userFile.js';
+import type { UploadProgressEvent, UploadRawFile, UploadRequestOptions } from 'element-plus';
 import SparkMD5 from 'spark-md5';
 import md5WorkerURL from './fileMd5Work.js?url';
 const md5Worker = new Worker(md5WorkerURL, { type: 'module' });

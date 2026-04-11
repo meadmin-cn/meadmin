@@ -2,7 +2,8 @@ import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { listToTree } from '@/helper/utils.js';
 import { RuleType } from '@midwayjs/validate';
-import { Attributes, CreateOptions, DataTypes, FindOptions, InferAttributes, InferCreationAttributes, InstanceDestroyOptions, InstanceUpdateOptions, Model, ModelStatic, Op, sql } from '@sequelize/core';
+import { Attributes, CreateOptions, CreationOptional, FindOptions, InferAttributes, InferCreationAttributes, InstanceDestroyOptions, InstanceUpdateOptions, Model, ModelStatic } from '@sequelize/core';
+import { DataTypes, Op, sql } from '@sequelize/core';
 import { AfterDestroy, AfterUpdate, Attribute, BeforeCreate, Table } from '@sequelize/core/decorators-legacy';
 import { AdminBaseModel } from './adminBase.entity.js';
 
@@ -20,13 +21,13 @@ export class AdminTreeModel<M extends AdminTreeModel<any> = any> extends AdminBa
     comment: '左树边界',
     type: DataTypes.INTEGER.UNSIGNED,
   })
-  left: number;
+  left: CreationOptional<number>;//CreationOptional标记在模型创建过程中可以省略的属性。用于具有默认值或标记为自动生成的属性。
 
   @Attribute({
     comment: '右树边界',
     type: DataTypes.INTEGER.UNSIGNED,
   })
-  right: number;
+  right: CreationOptional<number>;//  
 
   @Attribute({
     comment: '锁版本号',
@@ -34,7 +35,7 @@ export class AdminTreeModel<M extends AdminTreeModel<any> = any> extends AdminBa
     allowNull: false,
     defaultValue: '',
   })
-  lockVersion: string;
+  lockVersion: CreationOptional<string>;//CreationOptional标记在模型创建过程中可以省略的属性。用于具有默认值或标记为自动生成的属性。
 
   @BeforeCreate()
   static async setLeftRightByCreate<M extends AdminTreeModel>(this: ModelStatic<M>, info: M, options: CreateOptions<any>) {

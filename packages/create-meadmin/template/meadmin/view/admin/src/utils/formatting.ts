@@ -1,4 +1,4 @@
-import { CamelCase, SnakeToCamelCase } from '#/global.js';
+import type { CamelCase, SnakeToCamelCase } from '#/global.js';
 
 /**
  * 将camelCase字符串更改为kebab-case，用破折号替换空格并保留下划线。
@@ -21,7 +21,7 @@ export function normalizeToKebabOrSnakeCase(str: string, replaceStr = '-') {
  * @return  {[string]}       [return description]
  */
 export function snakeToCamelCase<T extends string>(str: T) {
-  return str.replace(/[-_]([A-Za-z])/g, function (all, letter) {
+  return str.replace(/[-_]([A-Za-z])/g, function (_all, letter) {
     return letter.toUpperCase();
   }) as CamelCase<T>;
 }

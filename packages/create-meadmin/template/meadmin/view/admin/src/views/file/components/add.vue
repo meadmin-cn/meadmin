@@ -12,7 +12,7 @@
   </me-dialog>
 </template>
 <script setup lang="ts" name="AddFile">
-import { FileInfo } from '@/api/file';
+import type { FileInfo } from '@/api/file';
 import { useLocalesI18n } from '@/locales/hooks';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'file']);
 await loadRes;

@@ -35,7 +35,7 @@
 
 <script setup lang="ts" name="Register">
 import { RegisterParams, registerApi } from '@/api/login';
-import { FormInstance } from 'element-plus';
+import type { FormInstance } from 'element-plus';
 const registerParams = reactive(new RegisterParams());
 const rules = {
   nickanem: [
@@ -82,7 +82,7 @@ const rules = {
       required: true,
       message: '确认密码',
       trigger: 'blur',
-      validator: (rule: any, value: string, callback: any) => {
+      validator: (_rule: any, value: string, callback: any) => {
         if (!value) {
           callback(new Error('请输入确认密码'));
         } else if (value !== registerParams.password) {

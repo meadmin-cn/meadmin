@@ -106,7 +106,8 @@
 </template>
 
 <script setup lang="ts" name="User">
-import { delUserApi, UserInfo, userListApi, UserListParam } from '@/api/user';
+import type { UserInfo} from '@/api/user';
+import { delUserApi, userListApi, UserListParam } from '@/api/user';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { createformatterDictFn, formatterAt, formatterObjectFn, formatterStr } from '@/utils/helper.js';

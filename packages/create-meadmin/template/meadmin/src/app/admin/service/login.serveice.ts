@@ -50,7 +50,7 @@ export class LoginService {
 
   //根据管理员id获取token列表
   async getAdminTokens(adminId: string) {
-    let adminTokens = ((await this.cache.get(this.getAdminIdCacheKey(adminId))) ?? []) as Array<{ token: string; expiresInTime: number; expiresInTimeStr: string }>;
+    let adminTokens: Array<{ token: string; expiresInTime: number; expiresInTimeStr: string }> = (await this.cache.get(this.getAdminIdCacheKey(adminId))) ?? [];
     if (adminTokens.length) {
       const nowTime = +new Date();
       adminTokens = adminTokens.filter((item) => item.expiresInTime > +nowTime);
@@ -64,13 +64,13 @@ export class LoginService {
    * @param adminId;
    * @returns;
    */
-  async createToken(adminId: string) {
-    const secret = this.secret + new Date();
+  async createToken(adminId: string): Promise<string> {
+    const secret = this.secret + +new Date();
     const token = pbkdf2Sync(tokenPrefix + adminId, secret, 1000, 32, 'md5').toString('hex');
     if (await this.cache.get(this.getTokenCacheKey(token))) {
       return await this.createToken(adminId);
     }
-    this.cache.set(this.getTokenCacheKey(token), ' ', 2000);
+    await this.cache.set(this.getTokenCacheKey(token), ' ', 2000);
     return token;
   }
 
@@ -137,7 +137,7 @@ export class LoginService {
         },
       ],
     });
-    if (admin?.roles.some((item) => item.isSuper === 1)) {
+    if (admin?.roles?.some((item) => item.isSuper === 1)) {
       admin.roleMenus = await this.menuRepository.findAll({
         where: { status: 1 },
       });
@@ -164,10 +164,10 @@ export class LoginService {
    * @returns
    */
   @Transaction()
-  async login(username, password, ctx?: Context) {
+  async login(username: string, password: string, ctx?: Context) {
     const entity = await this.adminRepository.findOne({ where: { username } });
 
-    let translate: MidwayI18nService['translate'];
+    let translate: MidwayI18nService['translate'] | undefined;
     if (ctx) {
       const i18n = await ctx.requestContext.getAsync(MidwayI18nService);
       translate = (...args) => i18n.translate(...args);
@@ -178,7 +178,7 @@ export class LoginService {
       }
       entity.lastLoginAt = new Date();
       entity.lastLoginIp = ctx?.ip ?? '';
-      entity.save();
+      await entity.save();
       return await this.getToken(entity.id);
     } else if (entity) {
       await entity.increment('loginFailure', { by: 1 });

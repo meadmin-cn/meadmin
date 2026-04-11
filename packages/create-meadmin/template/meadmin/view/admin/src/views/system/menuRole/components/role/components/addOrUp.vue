@@ -33,7 +33,7 @@
 import { SystemRole, addSystemRoleApi, systemRoleInfoApi, systemRoleTreeAllApi, updateSystemRoleApi } from '@/api/system/role';
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
-import { FormInstance, FormRules } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 import { getDict } from '../dict.js';
 const { runAsync: systemRoleInfoApiRunSync } = systemRoleInfoApi();
 const { runAsync: updateSystemRoleApiRunAsync } = updateSystemRoleApi();

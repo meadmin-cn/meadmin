@@ -1,12 +1,20 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { PageDto } from '@/dto/page.dto.js';
-import { IntersectionType, PartialType } from '@/helper/dto.js';
+import { IntersectionType, OmitDtoType, PartialType } from '@/helper/dto.js';
 import { RuleType } from '@/ruleType/index.js';
 import { InferAttributesLoose } from '@/types/entity.js';
 import { SystemRole } from '../../../../entities/systemRole.entity.js';
 
 //dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效
-export class SystemRoleQueryDto extends IntersectionType(PageDto, PartialType(SystemRole as new () => InferAttributesLoose<SystemRole>)) {
+export class SystemRoleQueryDto extends IntersectionType(
+  PageDto,
+  PartialType(
+    OmitDtoType(
+      SystemRole as new () => InferAttributesLoose<SystemRole>,
+      ['menus', 'parent', 'admins', 'createdAdmin', 'updatedAdmin'], //移除关联字段和虚拟属性
+    ),
+  ),
+) {
   @ApiPropertyRule({ description: '创建时间(起)', rule: RuleType.date() })
   startCreatedAt?: Date;
 

@@ -41,7 +41,7 @@ import { systemRoleTreeAllApi } from '@/api/system/role';
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
 import { isMobile } from '@/utils/validate.js';
-import { FormInstance, FormRules } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 import { getDict } from '../dict.js';
 const { data: treeAllList, runAsync: getTreeAllAsync } = systemRoleTreeAllApi();
 const { runAsync: systemAdminInfoApiRunAsync } = systemAdminInfoApi();
@@ -89,7 +89,7 @@ const rules: FormRules = {
   mobile: [
     { required: true, message: t('{label} 必须填写', { label: t('手机号') }), trigger: 'blur' },
 
-    { validator: (rule, value: string | number) => isMobile(value), message: t('{label} 必须是正确的手机号', { label: t('手机号') }), trigger: 'blur' },
+    { validator: (_rule, value: string | number) => isMobile(value), message: t('{label} 必须是正确的手机号', { label: t('手机号') }), trigger: 'blur' },
   ],
   status: [{ required: true, message: t('{label} 必须选择', { label: t('状态') }), trigger: 'blur' }],
 };

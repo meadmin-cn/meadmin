@@ -1,12 +1,20 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { PageDto } from '@/dto/page.dto.js';
-import { IntersectionType, PartialType } from '@/helper/dto.js';
+import { IntersectionType, OmitDtoType, PartialType } from '@/helper/dto.js';
 import { RuleType } from '@/ruleType/index.js';
 import { InferAttributesLoose } from '@/types/entity.js';
 import { User } from '../../../entities/user.entity.js';
 
 //dto参数校验继承 entity必须使用 PickDtoType|OmitDtoType|PartialType|RequiredType|IntersectionType 之一 否则不会生效
-export class UserQueryDto extends IntersectionType(PageDto, PartialType(User as new () => InferAttributesLoose<User>)) {
+export class UserQueryDto extends IntersectionType(
+  PageDto,
+  PartialType(
+    OmitDtoType(
+      User as new () => InferAttributesLoose<User>,
+      ['createdUser', 'updatedUser', 'createdAdmin', 'updatedAdmin', 'avatar'], //移除关联字段和虚拟属性
+    ),
+  ),
+) {
   @ApiPropertyRule({ description: '最后登录时间(起)', rule: RuleType.date() })
   startLastLoginAt?: Date;
 

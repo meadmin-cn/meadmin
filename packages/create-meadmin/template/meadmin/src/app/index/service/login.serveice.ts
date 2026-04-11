@@ -1,7 +1,7 @@
 import { InjectRepository } from '@/decorators/sequelize.js';
 import { User } from '@/entities/user.entity.js';
 import { CachingFactory, MidwayCache } from '@midwayjs/cache-manager';
-import { Config, Context, Init, Inject, Singleton } from '@midwayjs/core';
+import { Config, Init, Inject, Singleton } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import dayjs from 'dayjs';
 import { pbkdf2Sync, randomBytes } from 'node:crypto';
@@ -42,7 +42,7 @@ export class LoginService {
 
   //根据用户id获取token列表
   async getUserTokens(userId: string) {
-    let userTokens = ((await this.cache.get(this.getUserIdCacheKey(userId))) ?? []) as Array<{ token: string; expiresInTime: number; expiresInTimeStr: string }>;
+    let userTokens: Array<{ token: string; expiresInTime: number; expiresInTimeStr: string }> = (await this.cache.get(this.getUserIdCacheKey(userId))) ?? [];
     if (userTokens.length) {
       const nowTime = +new Date();
       userTokens = userTokens.filter((item) => item.expiresInTime > +nowTime);
@@ -56,13 +56,13 @@ export class LoginService {
    * @param userId;
    * @returns;
    */
-  async createToken(userId: string) {
-    const secret = this.secret + new Date();
+  async createToken(userId: string): Promise<string> {
+    const secret = this.secret + +new Date();
     const token = pbkdf2Sync(tokenPrefix + userId, secret, 1000, 32, 'md5').toString('hex');
     if (await this.cache.get(this.getTokenCacheKey(token))) {
       return await this.createToken(userId);
     }
-    this.cache.set(this.getTokenCacheKey(token), ' ', 2000);
+    await this.cache.set(this.getTokenCacheKey(token), ' ', 2000);
     return token;
   }
 
@@ -138,7 +138,7 @@ export class LoginService {
    * @param ctx      请求上下文
    * @returns
    */
-  async login(username, password, ctx?: Context) {
+  async login(username: string, password: string) {
     const entity = await this.userRepository.findOne({ where: { username } });
     if (entity && this.checkPassword(password, entity.salt, entity.password)) {
       if (entity.status !== 1) {

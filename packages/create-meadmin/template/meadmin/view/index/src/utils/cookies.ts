@@ -1,5 +1,5 @@
-import { Context } from '@midwayjs/koa';
-import cookies, { CookieAttributes } from 'js-cookie';
+import type { Context } from '@midwayjs/koa';
+import cookies from 'js-cookie';
 
 const serverCookies = {} as Record<string, Context['Cookies']>;
 export const setServerCookies = (ssrVersion: string, cookies: Context['Cookies']) => {
@@ -16,7 +16,7 @@ export default {
   /**
    * Create a cookie
    */
-  set(ssrVersion: string, name: string, value: string, options?: CookieAttributes) {
+  set(ssrVersion: string, name: string, value: string, options?: Cookies.CookieAttributes) {
     if (import.meta.env.SSR) {
       return serverCookies[ssrVersion].set(
         name,
@@ -49,7 +49,7 @@ export default {
   /**
    * Delete cookie
    */
-  remove(ssrVersion: string, name: string, options?: CookieAttributes) {
+  remove(ssrVersion: string, name: string, options?: Cookies.CookieAttributes) {
     if (import.meta.env.SSR) {
       serverCookies[ssrVersion].set(name, options);
     } else {

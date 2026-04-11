@@ -37,7 +37,7 @@ import { ExampleDemo, addExampleDemoApi, exampleDemoInfoApi, updateExampleDemoAp
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
 import { isMobile } from '@/utils/validate.js';
-import { FormInstance, FormRules } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 //接口需要现在setup顶层初始化（如果是异步setup需要在异步调用之前初始化），否则会有unMounted，非法调用警告，因为vueRequest使用了unMounted
 const { runAsync: updateRunAsync } = updateExampleDemoApi();
 const { runAsync: addRunAsync } = addExampleDemoApi();
@@ -92,7 +92,7 @@ watch(
 const rules: FormRules = {
   mobile: [
     { required: true, message: t('{label} 必须填写', { label: t('手机号') }), trigger: 'blur' },
-    { validator: (rule, value: string | number) => isMobile(value), message: t('{label} 必须是正确的手机号', { label: t('手机号') }), trigger: 'blur' },
+    { validator: (_rule, value: string | number) => isMobile(value), message: t('{label} 必须是正确的手机号', { label: t('手机号') }), trigger: 'blur' },
   ],
   type: [{ required: true, message: t('{label} 必须填写', { label: t('类型') }), trigger: 'blur' }],
   name: [

@@ -81,7 +81,7 @@ const copyFiles = {
   },
   '.editorconfig': {},
   '.env': {},
-  '.eslintrc.json': {},
+  'eslint.config.js': {},
   '.gitignore': {},
   '.mocharc.json': {},
   '.npmignore': {},

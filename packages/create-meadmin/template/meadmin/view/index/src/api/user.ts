@@ -1,5 +1,6 @@
-import request, { RequestOptions } from '@/utils/request.js';
-import { FileInfo } from './file.js';
+import type { RequestOptions } from '@/utils/request.js';
+import request from '@/utils/request.js';
+import type { FileInfo } from './file.js';
 
 export type UserInfo = {
   id: string; //ID

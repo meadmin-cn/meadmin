@@ -2,7 +2,8 @@ import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { BelongsManyModel } from '@/types/entity.js';
 import { RuleType } from '@midwayjs/validate';
-import { DataTypes, NonAttribute } from '@sequelize/core';
+import { CreationOptional, NonAttribute } from '@sequelize/core';
+import { DataTypes } from '@sequelize/core';
 import { Attribute, BelongsTo, BelongsToMany, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
 import { AdminTreeModel } from './abstract/adminTree.entity.js';
 import { SystemAdmin } from './systemAdmin.entity.js';
@@ -15,7 +16,7 @@ export class SystemRole extends AdminTreeModel<SystemRole> {
   @PrimaryKey
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
-  id: string;
+  id: CreationOptional<string>; //CreationOptional标记在模型创建过程中可以省略的属性。用于具有默认值或标记为自动生成的属性。
 
   @BelongsTo(() => SystemRole, { foreignKey: 'parentId', foreignKeyConstraints: false }) //不创建数据库外键约束
   @ApiPropertyRule({ description: '父级', type: () => SystemMenu })

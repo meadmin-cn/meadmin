@@ -9,7 +9,7 @@ export class UnauthorizedErrorFilter {
     this.resposes = new ResponseService();
   }
 
-  async catch(err: Error) {
+  catch(err: Error) {
     return this.resposes.error(err.message, CodeEunm.Unauthorized);
   }
 }

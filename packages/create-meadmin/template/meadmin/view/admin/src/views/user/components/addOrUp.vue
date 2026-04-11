@@ -49,7 +49,7 @@ import { User, addUserApi, updateUserApi, userInfoApi } from '@/api/user';
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
 import { isMobile } from '@/utils/validate.js';
-import { FormInstance, FormRules } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 import { getDict } from '../dict.js';
 //接口需要现在setup顶层初始化（如果是异步setup需要在异步调用之前初始化），否则会有unMounted，非法调用警告，因为vueRequest使用了unMounted
 const { runAsync: updateRunAsync } = updateUserApi();
@@ -94,7 +94,7 @@ const rules: FormRules = {
     { type: 'string', max: 100, message: t('{label} 长度必须小于等于 {max}', { label: t('邮箱'), max: 100 }), trigger: 'blur' },
     { type: 'email', message: t('{label} 必须是正确的邮箱格式', { label: t('邮箱') }), trigger: 'blur' },
   ],
-  mobile: [{ validator: (rule, value: string | number) => (value ? isMobile(value) : true), message: t('{label} 必须是正确的手机号', { label: t('手机号') }), trigger: 'blur' }],
+  mobile: [{ validator: (_rule, value: string | number) => (value ? isMobile(value) : true), message: t('{label} 必须是正确的手机号', { label: t('手机号') }), trigger: 'blur' }],
   status: [{ required: true, message: t('{label} 必须填写', { label: t('状态') }), trigger: 'blur' }],
 };
 const formEl = ref<FormInstance>();

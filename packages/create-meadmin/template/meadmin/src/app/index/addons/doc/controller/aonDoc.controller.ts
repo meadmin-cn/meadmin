@@ -26,12 +26,12 @@ export class AonDocController extends BaseController {
     summary: '获取所有菜单(按父子级返回)',
   })
   async menuTree(@Query('version') version?: string) {
-    let v = '';
+    let v:string;
     if (version) {
       v = version;
     } else {
       const config = await this.configService.findOne('1');
-      v = config.version.find((item) => item.status === 1).code;
+      v = config.version.find((item) => item.status === 1)?.code ?? '';
     }
     return this.success(await this.aonDocService.menuTree(v));
   }

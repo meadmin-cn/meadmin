@@ -23,7 +23,13 @@
     "rootDir": "src",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "strict": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": false,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "strictPropertyInitialization": false
   },
   "exclude": ["*.js", "*.ts", "dist", "node_modules", "test", "packages", "view", "addons"]
 }

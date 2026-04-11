@@ -87,7 +87,8 @@
 </template>
 
 <script setup lang="ts" name="ExampleDemo">
-import { delExampleDemoApi, ExampleDemoInfo, exampleDemoListApi, ExampleDemoListParam } from '@/api/example/demo';
+import type { ExampleDemoInfo} from '@/api/example/demo';
+import { delExampleDemoApi, exampleDemoListApi, ExampleDemoListParam } from '@/api/example/demo';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { createformatterDictFn, formatterArrFn, formatterAt, formatterObjectFn, formatterStr } from '@/utils/helper.js';

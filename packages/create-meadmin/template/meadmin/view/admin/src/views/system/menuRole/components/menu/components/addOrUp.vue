@@ -74,7 +74,7 @@
 import { SystemMenu, addSystemMenuApi, systemMenuInfoApi, systemMenuTreeAllApi, updateSystemMenuApi } from '@/api/system/menu';
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
-import { FormInstance, FormRules } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 import { getDict } from '../dict.js';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemMenu']);
 const { data: treeAllList, runAsync: getTreeAllAsync } = systemMenuTreeAllApi();

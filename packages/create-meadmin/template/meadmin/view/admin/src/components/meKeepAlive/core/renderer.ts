@@ -1,4 +1,5 @@
-import { ComponentInternalInstance, RendererElement, RendererNode, RendererOptions, SuspenseBoundary, VNode, VNodeArrayChildren, queuePostFlushCb } from 'vue';
+import type { ComponentInternalInstance, RendererElement, RendererNode, RendererOptions, SuspenseBoundary, VNode, VNodeArrayChildren} from 'vue';
+import { queuePostFlushCb } from 'vue';
 import { queueEffectWithSuspense } from './Suspense';
 
 // An object exposing the internals of a renderer, passed to tree-shakeable

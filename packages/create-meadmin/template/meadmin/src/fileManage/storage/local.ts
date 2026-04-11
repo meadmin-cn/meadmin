@@ -30,20 +30,20 @@ export class LocalStorage extends BaseStorage implements UpStorageInterface {
     });
   }
   async getFilePath(path: string) {
-    return resolve((app.getConfig('busboy') as UploadOptions).upDir + this.path, path);
+    return resolve((app!.getConfig('busboy') as UploadOptions).upDir + this.path, path);
   }
   async getFileReadSteam(path: string) {
     return createReadStream(await this.getFilePath(path));
   }
   async upload(file: UploadStreamFileInfo, params: UploadParam) {
-    const fileUpconfig = app.getConfig('busboy') as UploadOptions;
+    const fileUpconfig = app!.getConfig('busboy') as UploadOptions;
     const uploadResult = { storage: 'local' } as UploadResult;
     uploadResult.md5 = params.md5;
     //只处理1个文件上传
     const { filename, mimeType } = file;
     if (params.chunk !== '1') {
       //非分片上传
-      const res = await this.saveFie(file, params.md5, fileUpconfig.upDir + this.path, fileUpconfig.tmpdir);
+      const res = await this.saveFie(file, params.md5, fileUpconfig.upDir + this.path, fileUpconfig.tmpdir||'');
       uploadResult.size = res.size;
       uploadResult.path = relative(fileUpconfig.upDir + this.path, res.path);
     } else {
@@ -59,15 +59,15 @@ export class LocalStorage extends BaseStorage implements UpStorageInterface {
         if (params.start === undefined || params.over === undefined || params.chunkMd5 === undefined) {
           throw new Error('分片上传时，start、over、chunkMd5必须有值');
         }
-        const path = resolve(fileUpconfig.tmpdir, params.md5 + '/');
+        const path = resolve(fileUpconfig.tmpdir||'', params.md5 + '/');
         if (!existsSync(path)) {
           mkdirSync(path);
         }
         const res = await this.saveFie(file, params.chunkMd5, path, path);
-        const tmpFilePath = resolve(fileUpconfig.tmpdir, '__tmp__chunk_all__' + process.pid + '__' + params.md5 + suffix); //临时文件带上进程id防止重复
+        const tmpFilePath = resolve(fileUpconfig.tmpdir||'', '__tmp__chunk_all__' + process.pid + '__' + params.md5 + suffix); //临时文件带上进程id防止重复
         appendFileSync(tmpFilePath, ''); //追加空串确保文件存在
         await new Promise<void>((resolve, reject) => {
-          const fsStream = createWriteStream(tmpFilePath, { flags: 'r+', start: +params.start, autoClose: true });
+          const fsStream = createWriteStream(tmpFilePath, { flags: 'r+', start: +(params.start??''), autoClose: true });
           fsStream.on('close', () => {
             resolve();
           });

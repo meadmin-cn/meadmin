@@ -18,7 +18,7 @@
 
 <script setup lang="ts" name="EditPass">
 import { updateUserApi } from '@/api/user.js';
-import { FormInstance, FormRules } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 const editPassParams = reactive({
   orgPassword: '',
   password: '',
@@ -50,7 +50,7 @@ const rules: FormRules<typeof editPassParams> = {
       required: true,
       message: '确认密码',
       trigger: 'blur',
-      validator: (rule: any, value: string, callback: any) => {
+      validator: (_rule: any, value: string, callback: any) => {
         if (!value) {
           callback(new Error('请输入确认密码'));
         } else if (value !== editPassParams.password) {

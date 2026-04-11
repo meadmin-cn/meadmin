@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { ConfigEnv, UserConfigExport } from 'vite';
+import type { ConfigEnv, UserConfig, UserConfigExport } from 'vite';
 import plugins from './plugins/index.js';
 // @ts-ignore
 function pathResolve(dir: string) {
@@ -47,7 +47,7 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
     },
     experimental: {
       //ssr需求代码
-      renderBuiltUrl(filename, { hostType, type, ssr }) {
+      renderBuiltUrl(filename: any, { hostType, type, ssr }: any) {
         if (ssr && type === 'asset' && hostType === 'js') {
           return {
             runtime: `__ssr_vue_processAssetPath(${JSON.stringify(filename)})`,
@@ -56,7 +56,7 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
       },
     },
     build: {
-      rollupOptions: {},
+      target: ['chrome93', 'safari15.2'],
       emptyOutDir: true,
     },
     optimizeDeps: {
@@ -64,20 +64,27 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
       entries: ['src/**/*.{ts,tsx,vue}', './index.html'],
       include: ['element-plus/es/components/loading/style/css', 'element-plus/es/components/message/style/css', 'element-plus/es/components/message-box/style/css', 'element-plus/es/components/notification/style/css', 'node_modules/element-plus/es/index.mjs'],
     },
-  };
+  } as UserConfig;
   if (!configEnv.isSsrBuild) {
-    config.build.rollupOptions = {
-      experimentalLogSideEffects: false,
+    config.build!.rolldownOptions = {
       output: {
-        experimentalMinChunkSize: 20 * 1024,
-        manualChunks(id: string) {
-          if (['vue', 'vue-router', 'pinia', 'vue-request', 'jquery', 'axios'].some((v) => new RegExp(`.*node_modules/.*${v}.*`).test(id))) {
-            return 'core';
-          }
-          if (['@element-plus/icons-vue'].some((v) => new RegExp(`.*node_modules/.*${v}.*`).test(id))) {
-            return 'elIcon';
-          }
-          return null;
+        strictExecutionOrder: true, //强制引用顺序
+        codeSplitting: {
+          //自定义打包合并
+          groups: [
+            {
+              test: /node_modules\/(vue|vue-router|pinia|vue-request|axios)/,
+              name: 'core',
+            },
+            {
+              test: /node_modules\/@element-plus\/icons-vue/,
+              name: 'elIcon',
+            },
+            {
+              test: /.\/mock/,
+              name: 'mock',
+            },
+          ],
         },
       },
     };

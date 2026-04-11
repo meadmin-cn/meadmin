@@ -1,4 +1,5 @@
-import { importModels, Options } from '@sequelize/core';
+import { Options, QueryRawOptions } from '@sequelize/core';
+import { importModels } from '@sequelize/core';
 import { PostgresDialect } from '@sequelize/postgres';
 import { appLogger } from '../logger.js';
 export default async () => ({
@@ -21,7 +22,7 @@ export default async () => ({
         schema: process.env.DATABASE_SCHEMA ?? 'public',
         timezone: 'Asia/Shanghai',
       },
-      logging(sql, timing, seqlize?) {
+      logging(sql, timing, seqlize?:QueryRawOptions) {
         appLogger.info('[sql]耗时 %d ms，%s', timing, sql, seqlize?.bind);
       },
       benchmark: true, //开启日志打印sql耗时参数传递

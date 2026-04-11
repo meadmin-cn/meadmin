@@ -1,7 +1,8 @@
 import { concatObjectValue } from '@/utils/helper';
 import { isExternal } from '@/utils/validate';
 import path from 'path-browserify';
-import { createMemoryHistory, createRouter, createWebHistory, Router, RouteRecordRaw } from 'vue-router';
+import type { Router, RouteRecordRaw } from 'vue-router';
+import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router';
 export const asyncRoutes = concatObjectValue<RouteRecordRaw>(import.meta.glob('./routes/*.ts', { eager: true, import: 'routes' }));
 
 export const constantRoutes: RouteRecordRaw[] = [

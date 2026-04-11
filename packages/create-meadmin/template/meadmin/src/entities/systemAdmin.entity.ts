@@ -3,7 +3,8 @@ import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
 import { BelongsManyModel, BelongsToModel } from '@/types/entity.js';
 import { getSchemaPath } from '@midwayjs/swagger';
-import { DataTypes, NonAttribute, Op } from '@sequelize/core';
+import { CreationOptional, NonAttribute } from '@sequelize/core';
+import { DataTypes, Op } from '@sequelize/core';
 import { Attribute, BelongsTo, Default, DeletedAt, Index, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
 import { File } from './file.entity.js';
 import { SystemMenu } from './systemMenu.entity.js';
@@ -19,7 +20,7 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
   @PrimaryKey
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
-  id: string;
+  id: CreationOptional<string>;//CreationOptional 是 Sequelize 提供的一个类型，用于表示在创建实例时可以省略的属性，因为它们会由数据库自动生成或有默认值。
 
   @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引
   @Attribute({ type: DataTypes.STRING(50), comment: '用户名', allowNull: false, defaultValue: '' })
@@ -61,7 +62,7 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
     defaultValue: 0,
   })
   @ApiPropertyRule({ description: '登录失败次数' })
-  loginFailure: number;
+  loginFailure: CreationOptional<number>;//CreationOptional 是 Sequelize 提供的一个类型，用于表示在创建实例时可以省略的属性，因为它们会由数据库自动生成或有默认值。
 
   @Attribute({
     type: DataTypes.DATE,
@@ -77,7 +78,7 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
     allowNull: false,
   })
   @ApiPropertyRule({ description: '最后登录ip', rule: RuleType.string() })
-  lastLoginIp: string;
+  lastLoginIp: CreationOptional<string>;//CreationOptional 是 Sequelize 提供的一个类型，用于表示在创建实例时可以省略的属性，因为它们会由数据库自动生成或有默认值。
 
   @Attribute({
     comment: '状态:1=启用;0=禁用',
@@ -114,8 +115,8 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
     return (
       this._roleMenus ??
       this.roles!.reduce((a, b) => {
-        return a.concat(b.menus);
-      }, [])
+        return (a).concat(b.menus as NonAttribute<SystemMenu[]>);
+      }, [] as NonAttribute<SystemMenu[]>)
     );
   }
 
@@ -127,7 +128,7 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
     comment: '创建者(管理员)Id',
     type: DataTypes.STRING(20),
   })
-  createdAdminId: string;
+  createdAdminId: CreationOptional<string>;//CreationOptional 是 Sequelize 提供的一个类型，用于表示在创建实例时可以省略的属性，因为它们会由数据库自动生成或有默认值。
 
   @ApiPropertyRule({
     description: '创建者(管理员)',
@@ -140,7 +141,7 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
     comment: '最后更新者(管理员)Id',
     type: DataTypes.STRING(20),
   })
-  updatedAdminId: string;
+  updatedAdminId: CreationOptional<string>;//CreationOptional 是 Sequelize 提供的一个类型，用于表示在创建实例时可以省略的属性，因为它们会由数据库自动生成或有默认值。
 
   @ApiPropertyRule({
     description: '最后更新者(管理员)',

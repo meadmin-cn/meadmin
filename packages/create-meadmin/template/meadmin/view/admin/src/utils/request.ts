@@ -1,9 +1,11 @@
 import { useGlobalStore, useSettingStore, useUserStore } from '@/store';
 import { closeLoading, loading } from '@/utils/loading';
-import axios, { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import type { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import axios from 'axios';
 import { ElMessage } from 'element-plus';
 import qs from 'qs';
-import { Options, setGlobalOptions, useRequest } from 'vue-request';
+import type { Options} from 'vue-request';
+import { setGlobalOptions, useRequest } from 'vue-request';
 import { clearEmptyParam } from './helper.js';
 import log from './log';
 const t = (...args: [string | number]) => useGlobalStore().i18n.t(...args);

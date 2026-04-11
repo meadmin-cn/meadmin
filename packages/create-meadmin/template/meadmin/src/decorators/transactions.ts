@@ -1,7 +1,8 @@
 // 开启事务
 import { SequelizeDataSourceManagerService } from '@/service/dataSourceManager.service.js';
 import { RegistreDecorator } from '@/types/decorator.js';
-import { createCustomMethodDecorator, IMidwayContainer, JoinPoint, MidwayDecoratorService } from '@midwayjs/core';
+import { IMidwayContainer, JoinPoint, MidwayDecoratorService } from '@midwayjs/core';
+import { createCustomMethodDecorator } from '@midwayjs/core';
 import { ManagedTransactionOptions } from '@sequelize/core';
 
 // 装饰器内部的唯一 id
@@ -29,11 +30,11 @@ export class TransactionRegistreDecorators implements RegistreDecorator {
           return options.metadata?.options
             ? await seqlize.transaction(options.metadata.options, async () => {
                 // 执行原方法
-                return await joinPoint.proceed(...joinPoint.args);
+                return await joinPoint.proceed?.(...joinPoint.args);
               })
             : await seqlize.transaction(async () => {
                 // 执行原方法
-                return await joinPoint.proceed(...joinPoint.args);
+                return await joinPoint.proceed?.(...joinPoint.args);
               });
         },
       };

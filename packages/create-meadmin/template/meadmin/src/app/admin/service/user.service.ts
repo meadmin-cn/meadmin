@@ -3,7 +3,8 @@ import { InjectRepository, Transaction } from '@/decorators/index.js';
 import { Inject, Provide } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
-import { Op } from '@sequelize/core';
+import { InferAttributes, Op, WhereOperators } from '@sequelize/core';
+import { WhereAttributeHash } from '@sequelize/core/_non-semver-use-at-your-own-risk_/abstract-dialect/where-sql-builder-types.js';
 import { User } from '../../../entities/user.entity.js';
 import { UserFile } from '../../../entities/userFile.entity.js';
 import { UserCreateDto } from '../dto/userCreate.dto.js';
@@ -33,7 +34,7 @@ export class UserService {
    */
   @Transaction()
   async getUserFile(page: number, pageSize: number, id: string, name: string = '') {
-    const where = {};
+    const where = {} as WhereAttributeHash<InferAttributes<UserFile, { omit: never }>>;
     if (id) {
       where['id'] = id;
     }
@@ -77,45 +78,45 @@ export class UserService {
    */
   @Transaction()
   async list(queryDto: UserQueryDto) {
-    const where = {};
-    Object.keys(queryDto).forEach((key) => {
-      if (['page', 'pageSize'].includes(key)) {
+    const where = {} as WhereAttributeHash<InferAttributes<User, { omit: never }>>;
+    (Object.keys(queryDto) as Array<keyof UserQueryDto>).forEach((key) => {
+      if ('page' === key || 'pageSize' === key) {
         return;
       }
-      if ([null, undefined, ''].includes(queryDto[key])) {
-        return;
-      }
-      if (key === 'startLastLoginAt') {
-        where['lastLoginAt'] = where['lastLoginAt'] ?? {};
-        where['lastLoginAt'][Op.gte] = queryDto[key];
-        return;
-      }
-      if (key === 'endLastLoginAt') {
-        where['lastLoginAt'] = where['lastLoginAt'] ?? {};
-        where['lastLoginAt'][Op.lte] = queryDto[key];
+      if (null === queryDto[key] || undefined === queryDto[key] || '' === queryDto[key]) {
         return;
       }
       if (key === 'startCreatedAt') {
-        where['createdAt'] = where['createdAt'] ?? {};
-        where['createdAt'][Op.gte] = queryDto[key];
+        where['createdAt'] = (where['createdAt'] ?? {}) as WhereOperators<User['createdAt']>;
+        where['createdAt'] = { ...where['createdAt'], [Op.gte]: queryDto[key] };
         return;
       }
       if (key === 'endCreatedAt') {
-        where['createdAt'] = where['createdAt'] ?? {};
+        where['createdAt'] = (where['createdAt'] ?? {}) as WhereOperators<User['createdAt']>;
         where['createdAt'][Op.lte] = queryDto[key];
         return;
       }
       if (key === 'startUpdatedAt') {
-        where['updatedAt'] = where['updatedAt'] ?? {};
+        where['updatedAt'] = (where['updatedAt'] ?? {}) as WhereOperators<User['updatedAt']>;
         where['updatedAt'][Op.gte] = queryDto[key];
         return;
       }
       if (key === 'endUpdatedAt') {
-        where['updatedAt'] = where['updatedAt'] ?? {};
+        where['updatedAt'] = (where['updatedAt'] ?? {}) as WhereOperators<User['updatedAt']>;
         where['updatedAt'][Op.lte] = queryDto[key];
         return;
       }
-      where[key] = queryDto[key];
+       if (key === 'startLastLoginAt') {
+        where['lastLoginAt'] = (where['lastLoginAt'] ?? {}) as WhereOperators<NonNullable<User['lastLoginAt']>>;
+        where['lastLoginAt'][Op.gte] = queryDto[key]!;
+        return;
+      }
+       if (key === 'endLastLoginAt') {
+        where['lastLoginAt'] = (where['lastLoginAt'] ?? {}) as WhereOperators<NonNullable<User['lastLoginAt']>>;
+        where['lastLoginAt'][Op.lte] = queryDto[key]!;
+        return;
+      }
+      (where as Record<keyof typeof where, any>)[key] = queryDto[key]; //因为 where[key as Exclude<typeof key,'page'|'pageSize'>] = queryDto[key]; 赋值会触发 TS2590: Expression produces a union type that is too complex to represent.
     });
     const { count, rows } = await this.userRepository.findAndCountAll({
       where,

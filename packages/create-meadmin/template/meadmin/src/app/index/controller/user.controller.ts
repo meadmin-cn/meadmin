@@ -26,7 +26,7 @@ export class UserController extends BaseController {
   })
   @IndexPermission()
   async info() {
-    const entity = await this.userService.findOne(this.ctx.userInfo.id);
+    const entity = await this.userService.findOne(this.ctx.userInfo!.id);
     return this.success(entity);
   }
 
@@ -38,6 +38,6 @@ export class UserController extends BaseController {
   })
   @IndexPermission()
   async update(@Body() updateDto: UserUpdateDto) {
-    return this.success(await this.userService.update(this.ctx.userInfo.id, updateDto));
+    return this.success(await this.userService.update(this.ctx.userInfo!.id, updateDto));
   }
 }

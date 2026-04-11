@@ -1,6 +1,6 @@
 import Layout from '@/layout/default/index.vue';
 import { concatObjectValue } from '@/utils/helper';
-import { RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 export const routes: RouteRecordRaw[] = [
   {
     path: '/demo',

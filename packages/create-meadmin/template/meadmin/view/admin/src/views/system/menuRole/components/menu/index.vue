@@ -62,13 +62,14 @@
   </div>
 </template>
 <script setup lang="ts" name="Menu">
-import { delSystemMenuApi, SystemMenuInfo, SystemMenuTreeAll, systemMenuTreeAllApi } from '@/api/system/menu';
+import type { SystemMenuInfo, SystemMenuTreeAll} from '@/api/system/menu';
+import { delSystemMenuApi, systemMenuTreeAllApi } from '@/api/system/menu';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { formatterStr, searchTreeTable } from '@/utils/helper.js';
 import { permission } from '@/utils/permission.js';
 import { cloneDeep } from 'lodash-es';
-import { VxeColumnPropTypes } from 'vxe-table';
+import type { VxeColumnPropTypes } from 'vxe-table';
 import AddOrUp from './components/addOrUp.vue';
 import Info from './components/info.vue';
 import { getDict } from './dict.js';

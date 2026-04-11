@@ -1,7 +1,9 @@
-import { PageParam, PageResult } from '@/api/api.model.js';
-import { SystemAdminInfo } from '@/api/system/admin.js';
-import request, { RequestOptions } from '@/utils/request.js';
-import { UserInfo } from './user.js';
+import type { PageResult } from '@/api/api.model.js';
+import { PageParam } from '@/api/api.model.js';
+import type { SystemAdminInfo } from '@/api/system/admin.js';
+import type { RequestOptions } from '@/utils/request.js';
+import request from '@/utils/request.js';
+import type { UserInfo } from './user.js';
 
 //用户附件表(前台)
 export class UserFile {
@@ -11,7 +13,7 @@ export class UserFile {
   name = '' as string; //文件名
   path = '' as string; //路径
   mimeType = '' as string; //mime类型
-  size = undefined as number | null | undefined; //文件大小
+  size = undefined as number | undefined; //文件大小
   storage = '' as string; //存储引擎
   md5 = '' as string; //文件MD5值
 }

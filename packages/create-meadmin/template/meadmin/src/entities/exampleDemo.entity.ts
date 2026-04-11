@@ -2,7 +2,8 @@ import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
 import { BelongsManyModel, BelongsToModel } from '@/types/entity.js';
-import { DataTypes, NonAttribute, Op } from '@sequelize/core';
+import { CreationOptional, NonAttribute } from '@sequelize/core';
+import { DataTypes, Op } from '@sequelize/core';
 import { Attribute, BelongsTo, BelongsToMany, Default, DeletedAt, Index, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
 import { AdminBaseModel } from './abstract/adminBase.entity.js';
 import { ExampleBook } from './exampleBook.entity.js';
@@ -18,7 +19,7 @@ export class ExampleDemo extends AdminBaseModel<ExampleDemo> {
   @PrimaryKey
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
-  id: string;
+  id: CreationOptional<string>;//CreationOptional 是 Sequelize 提供的一个类型，用于表示在创建实例时可以省略的属性，因为它们会由数据库自动生成或有默认值。
 
   //唯一索引名称必须全库唯一，当两个null值时唯一索引会认为不是同一个值
   @Index({ unique: true, where: { deleted_at: { [Op.isNot]: null } } }) //局部唯一索引设置只有不删除的数据加索引

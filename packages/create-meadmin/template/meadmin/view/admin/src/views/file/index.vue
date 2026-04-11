@@ -86,7 +86,8 @@
 </template>
 
 <script setup lang="ts" name="File">
-import { delFileApi, FileInfo, fileListApi, FileListParam } from '@/api/file';
+import type { FileInfo} from '@/api/file';
+import { delFileApi, fileListApi, FileListParam } from '@/api/file';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { formatterAt, formatterStr } from '@/utils/helper.js';

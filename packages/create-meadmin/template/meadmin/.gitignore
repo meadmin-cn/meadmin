@@ -3,7 +3,7 @@ npm-debug.log
 yarn-error.log
 node_modules/
 coverage/
-dist
+dist/*
 .idea/
 run/
 .DS_Store
@@ -21,4 +21,4 @@ uploadFile/*/**
 .env.production
 .env.prod
 .eslintcache
-.env.prod
+tsconfig.tsbuildinfo

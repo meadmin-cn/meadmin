@@ -1,11 +1,12 @@
-import { Config, DataSourceManager, ILogger, Init, Inject, Logger, Provide, Scope, ScopeEnum } from '@midwayjs/core';
+import { DataSourceManagerConfigOption, ILogger } from '@midwayjs/core';
+import { Config, DataSourceManager, Init, Inject, Logger, Provide, Scope, ScopeEnum } from '@midwayjs/core';
 import Sequelize from '@sequelize/core';
 
 @Provide()
 @Scope(ScopeEnum.Singleton)
 export class SequelizeDataSourceManagerService extends DataSourceManager<Sequelize> {
   @Config('sequelize')
-  sequelizeConfig;
+  sequelizeConfig: DataSourceManagerConfigOption<Record<string, any>>;
 
   @Logger('coreLogger')
   coreLogger: ILogger;

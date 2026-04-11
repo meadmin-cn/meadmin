@@ -1,7 +1,7 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
-import { DataTypes } from '@sequelize/core';
+import { CreationOptional, DataTypes } from '@sequelize/core';
 import { Attribute, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
 import { AdminBaseModel } from './abstract/adminBase.entity.js';
 
@@ -14,7 +14,7 @@ export class ExampleBook extends AdminBaseModel<ExampleBook> {
   @PrimaryKey
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
-  id: string;
+  id: CreationOptional<string>;//CreationOptional 是 Sequelize 提供的一个类型，用于表示在创建实例时可以省略的属性，因为它们会由数据库自动生成或有默认值。
 
   @Attribute({ type: DataTypes.STRING(20), comment: '名称', allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '名称', rule: RuleType.string().max(20).min(1).required() })

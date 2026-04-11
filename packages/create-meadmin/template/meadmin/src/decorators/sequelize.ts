@@ -1,6 +1,7 @@
 import { SequelizeDataSourceManagerService } from '@/service/dataSourceManager.service.js';
 import { RegistreDecorator } from '@/types/decorator.js';
-import { createCustomPropertyDecorator, IMidwayContainer, MidwayDecoratorService } from '@midwayjs/core';
+import { IMidwayContainer, MidwayDecoratorService } from '@midwayjs/core';
+import { createCustomPropertyDecorator } from '@midwayjs/core';
 import { Model } from '@sequelize/core';
 
 //sequize获取Repository
@@ -28,7 +29,7 @@ export class SequelizeRegistreDecorators implements RegistreDecorator {
     this.decoratorService.registerPropertyHandler(
       ENTITY_MODEL_KEY,
       (
-        propertyName,
+        _propertyName,
         meta: {
           modelKey: { new (): Model<any, any> };
           connectionName?: string;
@@ -41,7 +42,7 @@ export class SequelizeRegistreDecorators implements RegistreDecorator {
     this.decoratorService.registerPropertyHandler(
       DATA_SOURCE_KEY,
       (
-        propertyName,
+        _propertyName,
         meta: {
           dataSourceName?: string;
         },

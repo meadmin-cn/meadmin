@@ -2,8 +2,8 @@ import { PageEnum } from '@/dict/pageEnum';
 import { event, mitter } from '@/event';
 import { useUserStore } from '@/store';
 import { done, remove, start } from '@/utils/nProgress';
-import { Pinia } from 'pinia';
-import { NavigationFailure, Router } from 'vue-router';
+import type { Pinia } from 'pinia';
+import type { NavigationFailure, Router } from 'vue-router';
 // Don't change the order of creation
 export function setupRouterGuard(router: Router, store: Pinia) {
   createPermissionGuard(router, store);

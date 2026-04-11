@@ -18,7 +18,7 @@
 import { PageEnum } from '@/dict/pageEnum';
 import { useGlobalStore, useRouteStore } from '@/store';
 import { ref } from 'vue';
-import { RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 import MenuItem from './components/menuItem.vue';
 import User from './components/user.vue';
 const route = useRoute();

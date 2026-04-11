@@ -57,7 +57,7 @@ export class LoginController extends BaseController {
     if (!(await this.captchaService.check(param.captchaId, param.captcha))) {
       throw new BadRequestError('验证码错误或已过期');
     }
-    return this.success(await this.loginService.login(param.username, param.password, this.ctx));
+    return this.success(await this.loginService.login(param.username, param.password));
   }
 
   @Post('/info')

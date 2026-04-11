@@ -3,7 +3,7 @@ export class CustomSnowflake {
   private sequence = 0; // 序列号
   private lastTimestamp = -1; // 上次生成ID的时间戳
   private epoch; // 初始时间戳，可自定义
-  constructor(workerId, epoch = 1609459200000) {
+  constructor(workerId: number, epoch = 1609459200000) {
     this.workerId = workerId; // 机器ID
     this.epoch = epoch; // 初始时间戳，可自定义
   }

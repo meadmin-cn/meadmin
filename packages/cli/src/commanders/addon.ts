@@ -18,20 +18,23 @@ const copyFiles = {
   'src/app/index/addons/{addon}/': {},
   'view/admin/src/addons/{addon}/': {},
   'view/index/src/addons/{addon}/': {},
-} as Record<string,{
-  ignore?:Array<string|RegExp>,
-  fileSetFunction?:Record<string,(content:string)=>string>
-}>;
+} as Record<
+  string,
+  {
+    ignore?: Array<string | RegExp>;
+    fileSetFunction?: Record<string, (content: string) => string>;
+  }
+>;
 //安装时可删除的插件文件夹
 const rmDIr = ['src/app/admin/addons/{addon}/', 'src/app/index/addons/{addon}/', 'view/admin/src/addons/{addon}/', 'view/index/src/addons/{addon}/'];
-
+let sequelize: Sequelize | null = null;
 /**
  * 卸载插件
  * @param file 插件名称
  * @param dbConfig 数据库配置文件地址
  * @param name 使用的数据库配置name
  */
-const rmAddon = async (file: string, dbConfig: string, name: string) => {
+const rmAddon = async (file: string, dbConfig: string, name: string, options: Record<string, any>) => {
   //删除插件文件夹
   rmDIr.forEach((k) => {
     const key = k.replace('{addon}', file);
@@ -46,24 +49,30 @@ const rmAddon = async (file: string, dbConfig: string, name: string) => {
       rmSync(resolve(entityFilePath, file), { force: true, recursive: true });
     }
   });
-  const uninstallSqlPath = resolve(process.cwd(), `addons/${file}/uninstall.sql`);
-  if (existsSync(uninstallSqlPath)) {
-    const config = Object.assign(await getConfig(dbConfig, name), {
-      logging: (message:string) => Log.log(message),
-    });
-    const sequelize = new Sequelize(config);
-    await sequelize.queryRaw(readFileSync(uninstallSqlPath, 'utf-8'));
-  }
   const info = readFileSync(resolve(process.cwd(), `addons/${file}/`, 'addons.json'), 'utf-8');
-  if (info) {
+  if (!options.nr && info) {
     const infoContent = JSON.parse(info);
     if (infoContent.uninstallShells?.length) {
       Log.log('正在执行卸载脚本...');
       infoContent.uninstallShells.forEach((command: string) => {
+        Log.log(`卸载脚本 ${command} 正在执行...`);
         const execRes = execSync(command, { encoding: 'utf-8' });
         Log.log(`卸载脚本 ${command} 执行完成:` + execRes);
       });
       Log.log('卸载脚本全部执行完成');
+    }
+  }
+  const uninstallSqlPath = resolve(process.cwd(), `addons/${file}/uninstall.sql`);
+  if (!options.nsql && existsSync(uninstallSqlPath)) {
+    const config = Object.assign(await getConfig(dbConfig, name), {
+      logging: (message: string) => Log.log(message),
+    });
+    if (!sequelize) {
+      sequelize = new Sequelize(config);
+    }
+    await sequelize.queryRaw(readFileSync(uninstallSqlPath, 'utf-8'));
+    if (options.rm) {
+      await sequelize.close();
     }
   }
 };
@@ -78,7 +87,9 @@ export const addoonInit = (program: Command) => {
     .option('--rm', '卸载插件(会删除插件文件及对应数据库内容)')
     .option('-d, --dbConfig <char>', '数据库配置文件地址默认为当前目录下dist/config/database.js', join(process.cwd(), 'dist/config/database.js'))
     .option('-n, --name <char>', '使用的数据库配置defaultDataSourceName')
-    .action(async (file: string, options) => {
+    .option('--nsql', '不执行对应的sql语句')
+    .option('--nr', '不执行对应的脚本命令')
+    .action(async (file: string, options: Record<string, any>) => {
       if (options.create) {
         const toPath = resolve(process.cwd(), `addons/${file}/`);
         if (existsSync(toPath)) {
@@ -124,7 +135,7 @@ export const addoonInit = (program: Command) => {
         await copyPath(resolve(fromPath, 'src/entities/'), resolve(toPath, 'src/entities/'), '', [new RegExp(`^(?!aon${upFirstCase(file)}[A-Z.])`)]);
         Log.success(file + '插件模板复制完成');
       } else if (options.rm) {
-        await rmAddon(file, options.dbConfig, options.name);
+        await rmAddon(file, options.dbConfig, options.name, options);
         Log.success(file + '插件卸载成功');
       } else {
         const fromPath = resolve(process.cwd(), `addons/${file}/template/`);
@@ -136,33 +147,37 @@ export const addoonInit = (program: Command) => {
           }
         } else {
           Log.log('正在卸载插件...');
-          await rmAddon(file, options.dbConfig, options.name);
+          await rmAddon(file, options.dbConfig, options.name, options);
           Log.log(file + '插件卸载成功');
         }
         Log.log('正在安装插件代码文件...');
         await copyPath(fromPath, toPath, '', [], undefined, true);
-        Log.log('正在插件代码文件安装完成');
-        const installSqlPath = resolve(process.cwd(), `addons/${file}/install.sql`);
-        if (existsSync(installSqlPath)) {
-          Log.log('正在执行数据库脚本...');
-          const config = Object.assign(await getConfig(options.dbConfig, options.name), {
-            logging: (message:string) => Log.log(message),
-          });
-          const sequelize = new Sequelize(config);
-          await sequelize.queryRaw(readFileSync(installSqlPath, 'utf-8'));
-          Log.log('安装脚数据库脚本执行完成');
-        }
+        Log.log('插件代码文件安装完成');
         const info = readFileSync(resolve(process.cwd(), `addons/${file}/`, 'addons.json'), 'utf-8');
-        if (info) {
+        if (!options.nr && info) {
           const infoContent = JSON.parse(info);
           if (infoContent.installShells?.length) {
             Log.log('正在执行安装脚本...');
             infoContent.installShells.forEach((command: string) => {
+              Log.log(`安装脚本 ${command} 正在执行...`);
               const execRes = execSync(command, { encoding: 'utf-8' });
               Log.log(`安装脚本 ${command} 执行完成:` + execRes);
             });
             Log.log('安装脚本全部执行完成');
           }
+        }
+        const installSqlPath = resolve(process.cwd(), `addons/${file}/install.sql`);
+        if (!options.nsql && existsSync(installSqlPath)) {
+          Log.log('正在执行数据库脚本...');
+          const config = Object.assign(await getConfig(options.dbConfig, options.name), {
+            logging: (message: string) => Log.log(message),
+          });
+          if (!sequelize) {
+            sequelize = new Sequelize(config);
+          }
+          await sequelize.queryRaw(readFileSync(installSqlPath, 'utf-8'));
+          await sequelize.close();
+          Log.log('安装脚数据库脚本执行完成');
         }
         Log.success(file + '插件安装成功');
       }

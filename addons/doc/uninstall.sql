@@ -1,5 +1,5 @@
-DROP TABLE aon_doc_config;
-DROP TABLE aon_doc;
+DROP TABLE IF EXISTS aon_doc_config;
+DROP TABLE IF EXISTS aon_doc;
 
 DELETE FROM system_menu
 WHERE id='682444732785229824';

@@ -31,7 +31,8 @@
 </template>
 
 <script setup lang="ts" name="Header">
-import { aonDocConfigApi, AonDocMenuTree } from '@/addons/doc/api/aonDoc';
+import type { AonDocMenuTree } from '@/addons/doc/api/aonDoc';
+import { aonDocConfigApi } from '@/addons/doc/api/aonDoc';
 import { PageEnum } from '@/dict/pageEnum';
 import { useGlobalStore } from '@/store';
 import MenuItem from './components/menuItem.vue';

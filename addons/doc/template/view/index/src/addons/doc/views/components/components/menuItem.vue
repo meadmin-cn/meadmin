@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts" name="MenuItem">
-import { AonDocMenuTree } from '@/addons/doc/api/aonDoc';
+import type { AonDocMenuTree } from '@/addons/doc/api/aonDoc';
 defineProps<{ menu: AonDocMenuTree[0]; collapse?: boolean }>();
 const getMenuPath = (item: AonDocMenuTree[0]) => {
   return item.contentType === 0 ? `/aon/doc/${item.version}/${item.label || item.id}` : item.link!;

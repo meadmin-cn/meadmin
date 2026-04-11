@@ -3,7 +3,8 @@
     <div class="aon-doc-config">
       <el-form ref="formEl" v-loading="loading" :model="info" :rules="rules" label-width="auto">
         <el-form-item :label="t('图标')" prop="icon">
-          <me-upload :limit="1" :model-value="info.icon ? [info.icon] : []"
+          <me-upload
+:limit="1" :model-value="info.icon ? [info.icon] : []"
             @update:model-value="(files) => (info.icon = files.length ? files[0] : null)"></me-upload>
         </el-form-item>
         <el-form-item :label="t('版本')" prop="version">
@@ -35,7 +36,8 @@
               <el-input v-model="item.url"></el-input>
             </el-form-item>
             <el-form-item :label="t('图标')" props="icon">
-              <me-upload :class="{ 'up-over': Boolean(item.icon) }" :limit="1"
+              <me-upload
+:class="{ 'up-over': Boolean(item.icon) }" :limit="1"
                 :model-value="item.icon ? [item.icon] : []" list-type="picture-card"
                 @update:model-value="(files) => (item.icon = files.length ? files[0] : null)">
                 <mel-icon-plus></mel-icon-plus>
@@ -57,7 +59,7 @@
 import { AonConfigVersion, AonDocConfig, aonDocConfigInfoApi, AonDocConfiglinks, updateAonDocConfigApi } from '@/addons/doc/api/config';
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
-import { FormInstance, FormRules } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 
 //接口需要现在setup顶层初始化（如果是异步setup需要在异步调用之前初始化），否则会有unMounted，非法调用警告，因为vueRequest使用了unMounted
 const { runAsync: updateRunAsync, loading } = updateAonDocConfigApi();

@@ -1,8 +1,10 @@
-import { PageParam, PageResult } from '@/api/api.model.js';
-import { FileInfo } from '@/api/file.js';
-import { SystemAdminInfo } from '@/api/system/admin.js';
-import { TreeArrayItem } from '@/utils/helper.js';
-import request, { RequestOptions } from '@/utils/request.js';
+import type { PageResult } from '@/api/api.model.js';
+import { PageParam } from '@/api/api.model.js';
+import type { FileInfo } from '@/api/file.js';
+import type { SystemAdminInfo } from '@/api/system/admin.js';
+import type { TreeArrayItem } from '@/utils/helper.js';
+import type { RequestOptions } from '@/utils/request.js';
+import request from '@/utils/request.js';
 
 //文档
 export class AonDoc {

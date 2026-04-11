@@ -1,7 +1,8 @@
-import { FileResult } from '@/api/api.model.js';
-import { File } from '@/api/file.js';
-import { TreeArrayItem } from '@/utils/helper.js';
-import request, { RequestOptions } from '@/utils/request.js';
+import type { FileResult } from '@/api/api.model.js';
+import type { UpFile } from '@/api/file.js';
+import type { TreeArrayItem } from '@/utils/helper.js';
+import type { RequestOptions } from '@/utils/request.js';
+import request from '@/utils/request.js';
 
 export type AonDocContentInfo = {
   title: string; //名称
@@ -49,7 +50,7 @@ export function aonDocmenuTreeApi(options?: RequestOptions<AonDocMenuTree, [stri
 
 //配置
 export class AonDocConfig {
-  icon = undefined as File | null | undefined; //图标
+  icon = undefined as UpFile | null | undefined; //图标
   version = [] as Array<AonConfigVersion>; //版本
   links = [] as Array<AonDocConfiglinks>; //外链
 }
@@ -61,7 +62,7 @@ export class AonConfigVersion {
 }
 
 export class AonDocConfiglinks {
-  icon = null as File | null; //图片(200*200)
+  icon = null as UpFile | null; //图片(200*200)
   title = ''; //标识
   url = ''; //地址
 }

@@ -10,7 +10,8 @@
 <script setup lang="ts" name="Doc">
 import { MdCatalog, MdPreview } from 'meadmin-addons-doc';
 import 'meadmin-addons-doc/dist/preview.js';
-import { aonDocGetContentApi, AonDocMenuTree, aonDocmenuTreeApi } from '../api/aonDoc';
+import type { AonDocMenuTree} from '../api/aonDoc';
+import { aonDocGetContentApi, aonDocmenuTreeApi } from '../api/aonDoc';
 import Layout from './components/layout.vue';
 const props = defineProps<{
   version?: string;

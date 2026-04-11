@@ -65,7 +65,8 @@
 </template>
 
 <script setup lang="ts" name="AonDoc">
-import { AonDocInfo, aonDocTreeAllApi, delAonDocApi } from '@/addons/doc/api/doc';
+import type { AonDocInfo} from '@/addons/doc/api/doc';
+import { aonDocTreeAllApi, delAonDocApi } from '@/addons/doc/api/doc';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { createformatterDictFn, formatterAt, formatterObjectFn, formatterStr } from '@/utils/helper.js';

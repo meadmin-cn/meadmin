@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts" name="MenuItem">
-import { AonDocMenuTree } from '@/addons/doc/api/aonDoc';
+import type { AonDocMenuTree } from '@/addons/doc/api/aonDoc';
 defineProps<{ menu: AonDocMenuTree[0]; collapse?: boolean }>();
 const getMenuPath = (version: string, label: string) => {
   return `/aon/doc/${version}/${label}`;

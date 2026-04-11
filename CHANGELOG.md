@@ -1,5 +1,53 @@
 
 
+## [1.3.1](https://github.com/meadmin-cn/meadmin/compare/main-1.2.3...main-1.3.1) (2026-04-11)
+
+
+### 新功能[feat]
+
+* 插件安装脚本加上 sql、命令不执行参数 ([94064a9](https://github.com/meadmin-cn/meadmin/commit/94064a9627526351e450c9c93a831b2cd33e7392))
+* 缓存数据库放到env环境变量配置中 ([f32a00d](https://github.com/meadmin-cn/meadmin/commit/f32a00d245c7bf4ed45c0272c06d67907bd540e4))
+* 加上 meadmin 英文说明 ([b41555b](https://github.com/meadmin-cn/meadmin/commit/b41555bed6ecb2b3ace73234d9d3ff8a7baf55ab))
+* 前端检查脚本更改 ([940db57](https://github.com/meadmin-cn/meadmin/commit/940db57484933746676130a66215a44ae59904fd))
+* eslint 修复，加上规则 ([66d396a](https://github.com/meadmin-cn/meadmin/commit/66d396ad5a971e15a984c495952665064c3b4898))
+* vite 升级到8.0.7，ts设置为 strict 模式 ([3978934](https://github.com/meadmin-cn/meadmin/commit/3978934e21a6c70df8e881356bc738de9e0446c9))
+
+
+### Bug 修复[fix]
+
+* 前端类型修复 ([1bb0d2d](https://github.com/meadmin-cn/meadmin/commit/1bb0d2d9301f6a755acbf4f2a4f6ae92c77dd951))
+* 修复 ts 类型错误 ([9ffde5c](https://github.com/meadmin-cn/meadmin/commit/9ffde5c10133df92ba9177fd7769dcdad9e5a4ff))
+* 修复错误的git忽略 ([74b8260](https://github.com/meadmin-cn/meadmin/commit/74b8260b9dd4497e4649e8eeb0494e847eda6cae))
+* 修复自动生成前端模板 import 为区分 type 引入 ([58dfab4](https://github.com/meadmin-cn/meadmin/commit/58dfab436b2ce43dc55866069dccbb7d84e53244))
+* 修复ssr-manifest.jso暴露的安全问题 ([4da5205](https://github.com/meadmin-cn/meadmin/commit/4da5205826657433fa480f76e41a2ab99d9dcc67))
+* 修复vite config 类型校验bug ([3b88269](https://github.com/meadmin-cn/meadmin/commit/3b88269947c7af4e7c7024b76d4e9722fc44e6f2))
+* 自动生成支持ts strict模式 ([a4ba51d](https://github.com/meadmin-cn/meadmin/commit/a4ba51d357bb430383c72c83f16c40961e8302d7))
+* doc 插件模板重新生成 ([12dcdff](https://github.com/meadmin-cn/meadmin/commit/12dcdffed10446e57047ea0f917b569531416b0b))
+* **meadmin:** 修复多进程部署，验证码判断失败bug ([c2ce607](https://github.com/meadmin-cn/meadmin/commit/c2ce6071aea662d7bb5bb827c423df00f4d28ffd))
+* **midway-vite-view:** 升级依赖包版本修复类型错误 ([f2944f5](https://github.com/meadmin-cn/meadmin/commit/f2944f5daae353f4ce565cd0c975568f62d2f8a2))
+
+
+### 其他[chore]
+
+* 移除多余的overrides ([015d44c](https://github.com/meadmin-cn/meadmin/commit/015d44c2b7321fc4342e0e3e3a014c743f6070ab))
+
+
+### 文档更改[docs]
+
+* 加上英文说明 ([a3a6882](https://github.com/meadmin-cn/meadmin/commit/a3a68825588d5823f1bc8c5b154e752ff22445e2))
+
+
+### 性能改进[perf]
+
+* **midway-vite-view:** 启动后立即创建vite server ([c867152](https://github.com/meadmin-cn/meadmin/commit/c8671523c3b03718fc41827ec91a3f00af1dad3f))
+
+
+### CI发版[ci]
+
+* 版本改为1.3.1 ([572a592](https://github.com/meadmin-cn/meadmin/commit/572a592cf2fde8e7b849a6f524080ae98857ddfb))
+* 创建模板更改 ([81f69e4](https://github.com/meadmin-cn/meadmin/commit/81f69e49324bf651903e9a7538c8cd9ef4ed673e))
+* 创建模板更改 ([dd4003b](https://github.com/meadmin-cn/meadmin/commit/dd4003b54553acdb1e2eef8949f26dd8ef31ee8c))
+
 ## [1.2.3](https://github.com/meadmin-cn/midway-meamdin/compare/main-1.2.2...main-1.2.3) (2026-04-02)
 
 

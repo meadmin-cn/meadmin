@@ -43,7 +43,7 @@
   "dependencies": {
     "@midwayjs/view": "^3.20.17",
     "commander": "^14.0.0",
-    "extend2": "^1.0.1",
+    "extend2": "^4.0.0",
     "koa-connect": "^2.1.1"
   },
   "devDependencies": {

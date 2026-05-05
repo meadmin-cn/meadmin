@@ -1,9 +1,10 @@
 import * as elementPlusIconsVue from '@element-plus/icons-vue';
 import { upperFirst } from 'lodash-es';
 import path from 'path-browserify';
-import type { App, Component} from 'vue';
+import type { App, Component } from 'vue';
 import { h } from 'vue';
-
+export const elIConNames = [] as string[];
+export const svgIconNames = [] as string[];
 export function installIcon(app: App) {
   function componentIcon(name: string, iconComponent: Component) {
     app.component(
@@ -41,6 +42,7 @@ export function installIcon(app: App) {
   // 注册element icons
   for (const [key, component] of Object.entries(elementPlusIconsVue)) {
     componentIcon(`MelIcon${key}`, component);
+    elIConNames.push(`MelIcon${key}`);
   }
   // 注册自定义的svg icons
   const svgModules = import.meta.glob('./svg/*.svg', {
@@ -49,5 +51,6 @@ export function installIcon(app: App) {
   });
   for (const [key, component] of Object.entries(<Record<string, Component>>svgModules)) {
     componentIcon('MeIcon' + upperFirst(path.parse(key).name), component);
+    svgIconNames.push('MeIcon' + upperFirst(path.parse(key).name));
   }
 }

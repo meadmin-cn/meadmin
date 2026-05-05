@@ -45,7 +45,7 @@
         </el-select>
       </el-form-item>
       <el-form-item :label="t('图标')" prop="icon">
-        <el-input v-model="info.icon"></el-input>
+        <me-icon-select v-model="info.icon"></me-icon-select>
       </el-form-item>
       <el-form-item :label="t('固定tag')" prop="affix">
         <el-select v-model="info.affix" :value-on-clear="null">

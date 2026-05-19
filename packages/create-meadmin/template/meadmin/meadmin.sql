@@ -1370,54 +1370,147 @@ INSERT INTO system_admin VALUES ('604612615536115712', 'admin', 'Admin', 'e8e51c
 -- Data for Name: system_menu; Type: TABLE DATA; Schema: meadmin; Owner: -
 --
 
-INSERT INTO system_menu VALUES ('664816035819421696', '新增', 3, 1, 'user_file_add', 97, '', 0, '', 0, 0, '', 0, 0, 1, '664816034456272896', 61, 62, '', '2026-01-09 21:01:34.624+08', '2026-01-16 18:32:59.036+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664816036259823616', '编辑', 3, 1, 'user_file_edit', 96, '', 0, '', 0, 0, '', 0, 0, 1, '664816034456272896', 63, 64, '', '2026-01-09 21:01:34.729+08', '2026-01-16 18:32:59.036+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664816034456272896', '前台附件', 2, 1, 'user_file', 998, 'user/file', 0, 'user/file/index', 0, 0, '', 0, 0, 1, '664816340996980736', 56, 67, '', '2026-01-09 21:01:34.3+08', '2026-01-16 18:32:59.036+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664813414475890688', '用户管理', 2, 1, 'user', 997, '/user', 0, 'user/index', 0, 0, '', 0, 0, 1, NULL, 81, 92, '', '2026-01-09 20:51:09.647+08', '2026-01-16 18:32:59.102+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664813415100841984', '列表', 3, 1, 'user_list', 99, '', 0, '', 0, 0, '', 0, 0, 1, '664813414475890688', 82, 83, '', '2026-01-09 20:51:09.796+08', '2026-01-16 18:32:59.102+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664813415503495168', '详情', 3, 1, 'user_info', 98, '', 0, '', 0, 0, '', 0, 0, 1, '664813414475890688', 84, 85, '', '2026-01-09 20:51:09.892+08', '2026-01-16 18:32:59.102+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664813415910342656', '新增', 3, 1, 'user_add', 97, '', 0, '', 0, 0, '', 0, 0, 1, '664813414475890688', 86, 87, '', '2026-01-09 20:51:09.989+08', '2026-01-16 18:32:59.102+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664813416312995840', '编辑', 3, 1, 'user_edit', 96, '', 0, '', 0, 0, '', 0, 0, 1, '664813414475890688', 88, 89, '', '2026-01-09 20:51:10.085+08', '2026-01-16 18:32:59.102+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664813416715649024', '删除', 3, 1, 'user_del', 95, '', 0, '', 0, 0, '', 0, 0, 1, '664813414475890688', 90, 91, '', '2026-01-09 20:51:10.181+08', '2026-01-16 18:32:59.102+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664799640041816064', '列表', 3, 1, 'system_role_list', 99, '', 0, '', 0, 1, '', 0, 0, 1, '664798918835437568', 28, 29, '', '2026-01-09 19:56:25.566+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664799999699189760', '编辑', 3, 1, 'system_role_edit', 96, '', 0, '', 0, 1, '', 0, 0, 1, '664798918835437568', 34, 35, '', '2026-01-09 19:57:51.316+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664816034934423552', '列表', 3, 1, 'user_file_list', 99, '', 0, '', 0, 0, '', 0, 0, 1, '664816034456272896', 57, 58, '', '2026-01-09 21:01:34.413+08', '2026-01-16 18:32:59.036+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664816036704419840', '删除', 3, 1, 'user_file_del', 95, '', 0, '', 0, 0, '', 0, 0, 1, '664816034456272896', 65, 66, '', '2026-01-09 21:01:34.835+08', '2026-01-16 18:32:59.036+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664816035383214080', '详情', 3, 1, 'user_file_info', 98, '', 0, '', 0, 0, '', 0, 0, 1, '664816034456272896', 59, 60, '', '2026-01-09 21:01:34.52+08', '2026-01-16 18:32:59.036+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664033966474395648', '列表', 3, 1, 'example_demo_list', 99, '', 0, '', 0, 0, '', 0, 0, 1, '664033966046576640', 43, 44, '', '2026-01-07 17:13:54.762+08', '2026-01-16 18:32:59.036+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664033966889631744', '详情', 3, 1, 'example_demo_info', 98, '', 0, '', 0, 0, '', 0, 0, 1, '664033966046576640', 45, 46, '', '2026-01-07 17:13:54.862+08', '2026-01-16 18:32:59.036+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('639418081101217792', '管理员附件', 2, 1, 'file', 999, 'file', 0, 'file/index', 0, 1, '', 0, 0, 1, '664816340996980736', 68, 79, '', '2025-10-31 18:59:10.348+08', '2026-01-16 18:32:59.036+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664803191971381248', '删除', 3, 1, 'file_del', 95, '', 0, '', 0, 1, '', 0, 0, 1, '639418081101217792', 75, 76, '', '2026-01-09 20:10:32.412+08', '2026-01-16 18:32:59.036+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664802952766029824', '编辑', 3, 1, 'file_edit', 96, '', 0, '', 0, 1, '', 0, 0, 1, '639418081101217792', 77, 78, '', '2026-01-09 20:09:35.381+08', '2026-01-16 18:32:59.036+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664798399022759936', '详情', 3, 1, 'system_admin_info', 98, '', 0, '', 0, 1, '', 0, 0, 1, '2', 3, 4, '', '2026-01-09 19:51:29.684+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664799196632580096', '菜单', 3, 1, 'system_menu', 98, '', 0, '', 0, 1, '', 0, 0, 1, '3', 15, 26, '', '2026-01-09 19:54:39.849+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664802471784218624', '列表', 3, 1, 'file_list', 99, '', 0, '', 0, 1, '', 0, 0, 1, '639418081101217792', 69, 70, '', '2026-01-09 20:07:40.707+08', '2026-01-16 18:32:59.036+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664816340996980736', '附件管理', 1, 1, 'file_manage', 998, 'fileManage', 0, '', 0, 1, '', 0, 0, 1, NULL, 55, 80, '', '2026-01-09 21:02:47.384+08', '2026-01-16 18:32:59.036+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664797436325134336', '新增', 3, 1, 'system_menu_add', 97, '', 0, '', 0, 1, '', 0, 0, 1, '664799196632580096', 16, 17, '', '2026-01-09 19:47:40.16+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('1', '系统设置', 1, 1, 'system', 999, '/system', 0, '', 0, 0, '', 0, 0, 1, NULL, 1, 40, '', '2025-07-31 15:20:29+08', '2026-01-09 21:02:06.329+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('658270653836689408', '新增', 3, 1, 'system_admin_add', 97, '', 0, '', 0, 1, '', 0, 0, 1, '2', 7, 8, '', '2025-12-22 19:32:33.952+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('658270767712043008', '编辑', 3, 1, 'system_admin_edit', 96, '', 0, '', 0, 1, '', 0, 0, 1, '2', 9, 10, '', '2025-12-22 19:33:01.102+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664797552121479168', '编辑', 3, 1, 'system_menu_edit', 96, '', 0, '', 0, 1, '', 0, 0, 1, '664799196632580096', 22, 23, '', '2026-01-09 19:48:07.767+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('658270533162369024', '列表', 3, 1, 'system_admin_list', 99, '', 0, '', 0, 1, '', 0, 0, 1, '2', 5, 6, '', '2025-12-22 19:32:05.181+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('658270899723567104', '删除', 3, 1, 'system_admin_del', 95, '', 0, '', 0, 1, '', 0, 0, 1, '2', 11, 12, '', '2025-12-22 19:33:32.576+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664797875221299200', '详情', 3, 1, 'system_menu_info', 98, '', 0, '', 0, 1, '', 0, 0, 1, '664799196632580096', 20, 21, '', '2026-01-09 19:49:24.8+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664798918835437568', '角色组', 3, 1, 'system_role', 99, '', 0, '', 0, 1, '', 0, 0, 1, '3', 27, 38, '', '2026-01-09 19:53:33.617+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664797660825255936', '删除', 3, 1, 'system_menu_del', 95, '', 0, '', 0, 1, '', 0, 0, 1, '664799196632580096', 18, 19, '', '2026-01-09 19:48:33.684+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664797278774493184', '列表', 3, 1, 'system_menu_list', 99, '', 0, '', 0, 1, '', 0, 0, 1, '664799196632580096', 24, 25, '', '2026-01-09 19:47:02.598+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('3', '菜单权限', 2, 1, 'system_menu_role', 0, '/system/menu', 0, 'system/menuRole/index', 0, 0, '', 0, 0, 1, '1', 14, 39, '', '2025-07-31 15:20:29+08', '2026-01-09 21:02:06.329+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664033967292284928', '新增', 3, 1, 'example_demo_add', 97, '', 0, '', 0, 0, '', 0, 0, 1, '664033966046576640', 47, 48, '', '2026-01-07 17:13:54.958+08', '2026-01-16 18:32:59.036+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664033965581008896', '示例', 1, 1, 'example', 996, '/example', 0, '', 0, 0, '', 0, 1, 1, NULL, 41, 54, '', '2026-01-07 17:13:54.549+08', '2026-01-16 18:32:59.036+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664033968131145728', '删除', 3, 1, 'example_demo_del', 95, '', 0, '', 0, 0, '', 0, 0, 1, '664033966046576640', 49, 50, '', '2026-01-07 17:13:55.158+08', '2026-01-16 18:32:59.036+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664033966046576640', 'Demo', 2, 1, 'example_demo', 999, '/example/demo', 0, 'example/demo/index', 0, 0, '', 0, 0, 1, '664033965581008896', 42, 53, '', '2026-01-07 17:13:54.66+08', '2026-01-16 18:32:59.036+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664033967724298240', '编辑', 3, 1, 'example_demo_edit', 96, '', 0, '', 0, 0, '', 0, 0, 1, '664033966046576640', 51, 52, '', '2026-01-07 17:13:55.06+08', '2026-01-16 18:32:59.036+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664803080839102464', '新增', 3, 1, 'file_add', 97, '', 0, '', 0, 1, '', 0, 0, 1, '639418081101217792', 73, 74, '', '2026-01-09 20:10:05.916+08', '2026-01-16 18:32:59.036+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664802570002235392', '详情', 3, 1, 'file_info', 98, '', 0, '', 0, 1, '', 0, 0, 1, '639418081101217792', 71, 72, '', '2026-01-09 20:08:04.123+08', '2026-01-16 18:32:59.036+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664800095295766528', '删除', 3, 1, 'system_role_del', 95, '', 0, '', 0, 1, '', 0, 0, 1, '664798918835437568', 36, 37, '', '2026-01-09 19:58:14.107+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('664799846128943104', '新增', 3, 1, 'system_role_add', 97, '', 0, '', 0, 1, '', 0, 0, 1, '664798918835437568', 32, 33, '', '2026-01-09 19:57:14.701+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-INSERT INTO system_menu VALUES ('2', '管理员', 2, 1, 'system_admin', 99, '/system/admin', 0, 'system/admin/index', 0, 0, '', 0, 0, 1, '1', 2, 13, '', '2025-07-31 15:20:29+08', '2026-01-09 21:02:06.329+08', NULL, '604612615536115712');
-INSERT INTO system_menu VALUES ('664799732303921152', '详情', 3, 1, 'system_role_info', 98, '', 0, '', 0, 1, '', 0, 0, 1, '664798918835437568', 30, 31, '', '2026-01-09 19:56:47.563+08', '2026-01-09 21:02:06.329+08', '604612615536115712', '604612615536115712');
-
-
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('1', '系统设置', 1, 1, 'system', 998, '/system', 0, '', 0, 0, 'MelIconSetting', 0, 0, 1, NULL, 3, 42, '', '2025-07-31 15:20:29.000', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('2', '管理员', 2, 1, 'system_admin', 99, '/system/admin', 0, 'system/admin/index', 0, 0, 'MelIconUser', 0, 0, 1, '1', 4, 15, '', '2025-07-31 15:20:29.000', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('3', '菜单权限', 2, 1, 'system_menu_role', 0, '/system/menu', 0, 'system/menuRole/index', 0, 0, 'MelIconMenu', 0, 0, 1, '1', 16, 41, '', '2025-07-31 15:20:29.000', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('639418081101217792', '管理员附件', 2, 1, 'file', 999, 'file', 0, 'file/index', 0, 1, 'MelIconFolder', 0, 0, 1, '664816340996980736', 44, 55, '', '2025-10-31 18:59:10.348', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('658270533162369024', '列表', 3, 1, 'system_admin_list', 99, '', 0, '', 0, 1, '', 0, 0, 1, '2', 7, 8, '', '2025-12-22 19:32:05.181', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('658270653836689408', '新增', 3, 1, 'system_admin_add', 97, '', 0, '', 0, 1, '', 0, 0, 1, '2', 9, 10, '', '2025-12-22 19:32:33.952', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('658270767712043008', '编辑', 3, 1, 'system_admin_edit', 96, '', 0, '', 0, 1, '', 0, 0, 1, '2', 11, 12, '', '2025-12-22 19:33:01.102', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('658270899723567104', '删除', 3, 1, 'system_admin_del', 95, '', 0, '', 0, 1, '', 0, 0, 1, '2', 13, 14, '', '2025-12-22 19:33:32.576', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664033965581008896', '示例', 1, 1, 'example', 995, '/example', 0, '', 0, 0, 'MelIconPlatform', 0, 1, 1, NULL, 81, 94, '', '2026-01-07 17:13:54.549', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664033966046576640', 'Demo', 2, 1, 'example_demo', 999, '/example/demo', 0, 'example/demo/index', 0, 0, '', 0, 0, 1, '664033965581008896', 82, 93, '', '2026-01-07 17:13:54.660', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664033966474395648', '列表', 3, 1, 'example_demo_list', 99, '', 0, '', 0, 0, '', 0, 0, 1, '664033966046576640', 83, 84, '', '2026-01-07 17:13:54.762', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664033966889631744', '详情', 3, 1, 'example_demo_info', 98, '', 0, '', 0, 0, '', 0, 0, 1, '664033966046576640', 85, 86, '', '2026-01-07 17:13:54.862', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664033967292284928', '新增', 3, 1, 'example_demo_add', 97, '', 0, '', 0, 0, '', 0, 0, 1, '664033966046576640', 87, 88, '', '2026-01-07 17:13:54.958', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664033967724298240', '编辑', 3, 1, 'example_demo_edit', 96, '', 0, '', 0, 0, '', 0, 0, 1, '664033966046576640', 91, 92, '', '2026-01-07 17:13:55.060', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664033968131145728', '删除', 3, 1, 'example_demo_del', 95, '', 0, '', 0, 0, '', 0, 0, 1, '664033966046576640', 89, 90, '', '2026-01-07 17:13:55.158', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664797278774493184', '列表', 3, 1, 'system_menu_list', 99, '', 0, '', 0, 1, '', 0, 0, 1, '664799196632580096', 26, 27, '', '2026-01-09 19:47:02.598', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664797436325134336', '新增', 3, 1, 'system_menu_add', 97, '', 0, '', 0, 1, '', 0, 0, 1, '664799196632580096', 18, 19, '', '2026-01-09 19:47:40.160', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664797552121479168', '编辑', 3, 1, 'system_menu_edit', 96, '', 0, '', 0, 1, '', 0, 0, 1, '664799196632580096', 24, 25, '', '2026-01-09 19:48:07.767', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664797660825255936', '删除', 3, 1, 'system_menu_del', 95, '', 0, '', 0, 1, '', 0, 0, 1, '664799196632580096', 20, 21, '', '2026-01-09 19:48:33.684', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664797875221299200', '详情', 3, 1, 'system_menu_info', 98, '', 0, '', 0, 1, '', 0, 0, 1, '664799196632580096', 22, 23, '', '2026-01-09 19:49:24.800', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664798399022759936', '详情', 3, 1, 'system_admin_info', 98, '', 0, '', 0, 1, '', 0, 0, 1, '2', 5, 6, '', '2026-01-09 19:51:29.684', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664798918835437568', '角色组', 3, 1, 'system_role', 99, '', 0, '', 0, 1, '', 0, 0, 1, '3', 29, 40, '', '2026-01-09 19:53:33.617', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664799196632580096', '菜单', 3, 1, 'system_menu', 98, '', 0, '', 0, 1, '', 0, 0, 1, '3', 17, 28, '', '2026-01-09 19:54:39.849', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664799640041816064', '列表', 3, 1, 'system_role_list', 99, '', 0, '', 0, 1, '', 0, 0, 1, '664798918835437568', 30, 31, '', '2026-01-09 19:56:25.566', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664799732303921152', '详情', 3, 1, 'system_role_info', 98, '', 0, '', 0, 1, '', 0, 0, 1, '664798918835437568', 32, 33, '', '2026-01-09 19:56:47.563', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664799846128943104', '新增', 3, 1, 'system_role_add', 97, '', 0, '', 0, 1, '', 0, 0, 1, '664798918835437568', 34, 35, '', '2026-01-09 19:57:14.701', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664799999699189760', '编辑', 3, 1, 'system_role_edit', 96, '', 0, '', 0, 1, '', 0, 0, 1, '664798918835437568', 36, 37, '', '2026-01-09 19:57:51.316', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664800095295766528', '删除', 3, 1, 'system_role_del', 95, '', 0, '', 0, 1, '', 0, 0, 1, '664798918835437568', 38, 39, '', '2026-01-09 19:58:14.107', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664802471784218624', '列表', 3, 1, 'file_list', 99, '', 0, '', 0, 1, '', 0, 0, 1, '639418081101217792', 45, 46, '', '2026-01-09 20:07:40.707', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664802570002235392', '详情', 3, 1, 'file_info', 98, '', 0, '', 0, 1, '', 0, 0, 1, '639418081101217792', 47, 48, '', '2026-01-09 20:08:04.123', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664802952766029824', '编辑', 3, 1, 'file_edit', 96, '', 0, '', 0, 1, '', 0, 0, 1, '639418081101217792', 53, 54, '', '2026-01-09 20:09:35.381', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664803080839102464', '新增', 3, 1, 'file_add', 97, '', 0, '', 0, 1, '', 0, 0, 1, '639418081101217792', 49, 50, '', '2026-01-09 20:10:05.916', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664803191971381248', '删除', 3, 1, 'file_del', 95, '', 0, '', 0, 1, '', 0, 0, 1, '639418081101217792', 51, 52, '', '2026-01-09 20:10:32.412', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664813414475890688', '用户管理', 2, 1, 'user', 996, '/user', 0, 'user/index', 0, 0, 'MelIconUser', 0, 0, 1, NULL, 69, 80, '', '2026-01-09 20:51:09.647', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664813415100841984', '列表', 3, 1, 'user_list', 99, '', 0, '', 0, 0, '', 0, 0, 1, '664813414475890688', 70, 71, '', '2026-01-09 20:51:09.796', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664813415503495168', '详情', 3, 1, 'user_info', 98, '', 0, '', 0, 0, '', 0, 0, 1, '664813414475890688', 72, 73, '', '2026-01-09 20:51:09.892', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664813415910342656', '新增', 3, 1, 'user_add', 97, '', 0, '', 0, 0, '', 0, 0, 1, '664813414475890688', 74, 75, '', '2026-01-09 20:51:09.989', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664813416312995840', '编辑', 3, 1, 'user_edit', 96, '', 0, '', 0, 0, '', 0, 0, 1, '664813414475890688', 76, 77, '', '2026-01-09 20:51:10.085', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664813416715649024', '删除', 3, 1, 'user_del', 95, '', 0, '', 0, 0, '', 0, 0, 1, '664813414475890688', 78, 79, '', '2026-01-09 20:51:10.181', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664816034456272896', '前台附件', 2, 1, 'user_file', 998, 'user/file', 0, 'user/file/index', 0, 0, 'MelIconFolder', 0, 0, 1, '664816340996980736', 56, 67, '', '2026-01-09 21:01:34.300', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664816034934423552', '列表', 3, 1, 'user_file_list', 99, '', 0, '', 0, 0, '', 0, 0, 1, '664816034456272896', 57, 58, '', '2026-01-09 21:01:34.413', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664816035383214080', '详情', 3, 1, 'user_file_info', 98, '', 0, '', 0, 0, '', 0, 0, 1, '664816034456272896', 59, 60, '', '2026-01-09 21:01:34.520', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664816035819421696', '新增', 3, 1, 'user_file_add', 97, '', 0, '', 0, 0, '', 0, 0, 1, '664816034456272896', 61, 62, '', '2026-01-09 21:01:34.624', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664816036259823616', '编辑', 3, 1, 'user_file_edit', 96, '', 0, '', 0, 0, '', 0, 0, 1, '664816034456272896', 63, 64, '', '2026-01-09 21:01:34.729', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664816036704419840', '删除', 3, 1, 'user_file_del', 95, '', 0, '', 0, 0, '', 0, 0, 1, '664816034456272896', 65, 66, '', '2026-01-09 21:01:34.835', '2026-05-05 16:15:19.302', NULL, '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('664816340996980736', '附件管理', 1, 1, 'file_manage', 997, 'fileManage', 0, '', 0, 1, 'MelIconFiles', 0, 0, 1, NULL, 43, 68, '', '2026-01-09 21:02:47.384', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
+INSERT INTO system_menu
+(id, title, menu_type, status, "rule", order_num, "path", is_link, component, hide_menu, "cache", icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at, created_admin_id, updated_admin_id)
+VALUES('701403170512830464', '控制台', 2, 1, 'dashboard', 999, 'index', 0, 'index/index', 0, 1, 'MeIconDashboard', 1, 0, 1, '', 1, 2, '', '2026-04-20 20:05:47.292', '2026-05-05 16:15:19.302', '604612615536115712', '604612615536115712');
 
 --
 -- TOC entry 3434 (class 0 OID 27912)

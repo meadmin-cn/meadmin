@@ -65,7 +65,7 @@ export default defineStore('user', {
             id: item.id,
             path: item.path,
             parentId: item.parentId,
-            component: transitionComponent(item.component),
+            component: item.menuType === 2 ? transitionComponent(item.component) : undefined,
             meta: {
               // 标题设置该路由在侧边栏和面包屑中展示的名字
               title: item.title,

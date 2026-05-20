@@ -45,16 +45,6 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
         ],
       },
     },
-    experimental: {
-      //ssr需求代码
-      renderBuiltUrl(filename: any, { hostType, type, ssr }: any) {
-        if (ssr && type === 'asset' && hostType === 'js') {
-          return {
-            runtime: `__ssr_vue_processAssetPath(${JSON.stringify(filename)})`,
-          };
-        }
-      },
-    },
     build: {
       target: ['chrome93', 'safari15.2'],
       emptyOutDir: true,

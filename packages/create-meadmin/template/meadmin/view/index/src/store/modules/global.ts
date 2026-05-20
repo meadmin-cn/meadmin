@@ -8,6 +8,10 @@ if (!import.meta.env.SSR) {
 mitter.on(event.RESIZE, () => {
   isMobile.value = window.document.body.offsetWidth < WIDTH;
 });
+let websiteName = '';
+if (!import.meta.env.SSR) {
+  websiteName = window?.customConfig?.websiteName || '';
+}
 export default defineStore('global', {
   state: () => {
     return {
@@ -19,7 +23,7 @@ export default defineStore('global', {
         props?: Record<string, any>;
         vnode?: Component;
       }>, //全局组件会渲染到app下
-      websiteName: '', //网站名称
+      websiteName: websiteName, //网站名称
     };
   },
   actions: {

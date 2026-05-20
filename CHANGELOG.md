@@ -1,5 +1,23 @@
 
 
+## [1.3.4](https://github.com/meadmin-cn/meadmin/compare/main-1.3.3...main-1.3.4) (2026-05-20)
+
+
+### 新功能[feat]
+
+* **create-meadmin:** 创建模板时携带默认上传文件 ([a3d8c1a](https://github.com/meadmin-cn/meadmin/commit/a3d8c1af27cd12fd2602b785fc7fe85e713389c6))
+
+
+### Bug 修复[fix]
+
+* 删除老版本多余的ssr打包代码 ([bc101d5](https://github.com/meadmin-cn/meadmin/commit/bc101d59c62b0e286194bf360683bf003b47df32))
+* 修复降级客户端渲染时，网站名不展示bug ([7e33bb5](https://github.com/meadmin-cn/meadmin/commit/7e33bb513377a062e07d790522269917c6eb956a))
+
+
+### 其他[chore]
+
+* 设备版本 ([bd12696](https://github.com/meadmin-cn/meadmin/commit/bd1269636f3bf1e6e0be415e54068e536f2a66c7))
+
 ## [1.3.3](https://github.com/meadmin-cn/meadmin/compare/main-1.3.2...main-1.3.3) (2026-05-20)
 
 

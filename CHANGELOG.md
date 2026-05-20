@@ -1,5 +1,17 @@
 
 
+## [1.3.3](https://github.com/meadmin-cn/meadmin/compare/main-1.3.2...main-1.3.3) (2026-05-20)
+
+
+### Bug 修复[fix]
+
+* 升级vite到8.0.13，修复服务端渲染丢失转换bug ([d9b79ec](https://github.com/meadmin-cn/meadmin/commit/d9b79ec7e65760bc940046ff2877c6c5bd88bc86))
+
+
+### CI发版[ci]
+
+* 设置版本 ([692fb1a](https://github.com/meadmin-cn/meadmin/commit/692fb1ae596672fe5bdf2673c7e2726a60da9509))
+
 ## [1.3.2](https://github.com/meadmin-cn/meadmin/compare/main-1.3.1...main-1.3.2) (2026-05-20)
 
 

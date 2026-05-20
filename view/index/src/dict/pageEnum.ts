@@ -1,4 +1,4 @@
-export const enum PageEnum {
+export enum PageEnum {
   //除了home以/结尾 其余都不以/结尾
   // basic login path
   LOGIN = '/login',

@@ -1,4 +1,4 @@
-import type { ComponentInternalInstance, RendererElement, RendererNode, RendererOptions, SuspenseBoundary, VNode, VNodeArrayChildren} from 'vue';
+import type { ComponentInternalInstance, RendererElement, RendererNode, RendererOptions, SuspenseBoundary, VNode, VNodeArrayChildren } from 'vue';
 import { queuePostFlushCb } from 'vue';
 import { queueEffectWithSuspense } from './Suspense';
 
@@ -39,7 +39,7 @@ type RemoveFn = (vnode: VNode) => void;
 
 type MoveFn = (vnode: VNode, container: RendererElement, anchor: RendererNode | null, type: MoveType, parentSuspense?: SuspenseBoundary | null) => void;
 
-export const enum MoveType {
+export enum MoveType {
   ENTER,
   LEAVE,
   REORDER,

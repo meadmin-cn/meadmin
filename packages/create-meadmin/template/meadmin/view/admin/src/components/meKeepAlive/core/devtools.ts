@@ -1,6 +1,6 @@
-import type { ComponentInternalInstance} from 'vue';
+import type { ComponentInternalInstance } from 'vue';
 import { devtools } from 'vue';
-const enum DevtoolsHooks {
+enum DevtoolsHooks {
   APP_INIT = 'app:init',
   APP_UNMOUNT = 'app:unmount',
   COMPONENT_UPDATED = 'component:updated',

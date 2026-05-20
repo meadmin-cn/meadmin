@@ -1,4 +1,4 @@
-export const enum ErrorCodes {
+export enum ErrorCodes {
   SETUP_FUNCTION,
   RENDER_FUNCTION,
   WATCH_GETTER,

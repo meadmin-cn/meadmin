@@ -1,4 +1,4 @@
-export const enum MenuModeEnum {
+export enum MenuModeEnum {
   STATIC = 'static',
   API = 'api',
 }

@@ -1,4 +1,4 @@
-const enum EventEnum {
+enum EventEnum {
   START = 'start', // vue准备启动
   READY = 'ready', // vue启动完成渲染之前触发
   BEFORE_ROUTE_CHANGE = 'beforeRouteChange', // 路由变更前

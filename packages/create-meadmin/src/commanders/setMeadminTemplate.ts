@@ -124,6 +124,13 @@ const copyFiles = {
   'README_EN.md': {},
   'tsconfig.json': {},
   'meadmin.sql': {},
+  'uploadFile/admin/3832e40249f4eb6c4feca1c257718907.png': {},
+  'uploadFile/admin/b51e6a53459859d203041f8c0dffcd92.png': {},
+  'uploadFile/admin/c99e23ad65db6db5bea03d828fb6166e.png': {},
+  'uploadFile/admin/dac00cfc094a2b9acefeb67be311e1f5.png': {},
+  'uploadFile/admin/e27aae898e9bd0f8f1706246c1e6f372.png': {},
+  'uploadFile/index/c99e23ad65db6db5bea03d828fb6166e.png': {},
+  'uploadFile/index/dac00cfc094a2b9acefeb67be311e1f5.png': {},
 };
 //需要创建的文件/文件夹
 const makeFiles = {

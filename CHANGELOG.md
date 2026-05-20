@@ -1,5 +1,42 @@
 
 
+## [1.3.2](https://github.com/meadmin-cn/meadmin/compare/main-1.3.1...main-1.3.2) (2026-05-20)
+
+
+### 新功能[feat]
+
+* 加上控制台示例页 ([94f302f](https://github.com/meadmin-cn/meadmin/commit/94f302f3a1ccbca275913a3e67d563193fc693f8))
+* 加上图标选择组件，菜单新增和修改支持图标选择 ([8490119](https://github.com/meadmin-cn/meadmin/commit/84901198d86c438ca1cdcd29eb5ecc500c115baa))
+* **create-meadmin:** 加上 创建数据库输入识别 ([67d4c00](https://github.com/meadmin-cn/meadmin/commit/67d4c001f3ca7e6ce63064983ca4dcda9e93f018))
+
+
+### Bug 修复[fix]
+
+* 加上发布创建文件涵盖 gnore文件 ([4783b7c](https://github.com/meadmin-cn/meadmin/commit/4783b7c52fbd8cbf3a0f2a23940e6fc94be663f6))
+* 修复空菜单渲染警告 ([38dc4d3](https://github.com/meadmin-cn/meadmin/commit/38dc4d39c09113458990de99f477a23d7f456b59))
+
+
+### 其他[chore]
+
+* 版本升级为1.3.1 ([cfffe02](https://github.com/meadmin-cn/meadmin/commit/cfffe029446104ba2352af8bad18ab7f11f4b08d))
+* 忽略tsconfig.node.tsbuildinfo ([851d0a4](https://github.com/meadmin-cn/meadmin/commit/851d0a4dfad2af343176f533e89402af73528d02))
+* 加上开源协议 ([afe9bea](https://github.com/meadmin-cn/meadmin/commit/afe9beacb61996adc45c4a3aafc9a50396d33907))
+* 修改创建语句 ([6ff0b72](https://github.com/meadmin-cn/meadmin/commit/6ff0b722bb2125a3b18db3fcd43956879dc64dc0))
+* **create-meadmin:** 更新模板 ([996ddc2](https://github.com/meadmin-cn/meadmin/commit/996ddc2e5cdce8de0560dc7be4574f3a1d1d6a7a))
+* **create-meadmin:** 更新模板 ([eb208d0](https://github.com/meadmin-cn/meadmin/commit/eb208d0e3a200f650177c6d07a5178bc88bdcbf2))
+* vite升级到8.0.10 ([1a326a5](https://github.com/meadmin-cn/meadmin/commit/1a326a52a4afd8e5c40433a68f0e4704f85e33a1))
+* vite升级到8.0.9 ([b93f64a](https://github.com/meadmin-cn/meadmin/commit/b93f64abcfe9ca5ca03a424eddad04d1dc11f688))
+
+
+### 性能改进[perf]
+
+* 加上初始化图片加入忽略列表 ([02759e6](https://github.com/meadmin-cn/meadmin/commit/02759e6bebc353da159635adf4a1c2207cec4396))
+
+
+### CI发版[ci]
+
+* **create-meadmin:** 加上上传默认图片 ([920ae87](https://github.com/meadmin-cn/meadmin/commit/920ae8761322c2254fe5f43e24275c87a69b9e56))
+
 ## [1.3.1](https://github.com/meadmin-cn/meadmin/compare/main-1.2.3...main-1.3.1) (2026-04-11)
 
 

@@ -47,5 +47,6 @@ declare global {
 
   declare interface Window {
     __serverCache: Record<string, Array<any>>;
+    customConfig?: Record<string, any>;
   }
 }

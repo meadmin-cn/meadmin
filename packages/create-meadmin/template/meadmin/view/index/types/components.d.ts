@@ -4,10 +4,10 @@ declare module 'vue' {
     MeNumber: (typeof import('../src/components/meNumber.vue'))['default'];
     MeUpAvatar: (typeof import('../src/components/meUpAvatar.vue'))['default'];
     MeUpload: (typeof import('../src/components/meUpload.vue'))['default'];
+    MeDialog: (typeof import('../src/components/meDialog/index.vue'))['default'];
     MeSelectFile: (typeof import('../src/components/meSelectFile/index.vue'))['default'];
     MeWangEditor: (typeof import('../src/components/meWangEditor/index.vue'))['default'];
     MeVxeTable: (typeof import('../src/components/meVxeTable/index.vue'))['default'];
-    MeDialog: (typeof import('../src/components/meDialog/index.vue'))['default'];
     //code
   }
 }
@@ -16,10 +16,10 @@ declare global {
   type MeNumberInstance = InstanceType<(typeof import('../src/components/meNumber.vue'))['default']>;
   type MeUpAvatarInstance = InstanceType<(typeof import('../src/components/meUpAvatar.vue'))['default']>;
   type MeUploadInstance = InstanceType<(typeof import('../src/components/meUpload.vue'))['default']>;
+  type MeDialogInstance = InstanceType<(typeof import('../src/components/meDialog/index.vue'))['default']>;
   type MeSelectFileInstance = InstanceType<(typeof import('../src/components/meSelectFile/index.vue'))['default']>;
   type MeWangEditorInstance = InstanceType<(typeof import('../src/components/meWangEditor/index.vue'))['default']>;
   type MeVxeTableInstance = InstanceType<(typeof import('../src/components/meVxeTable/index.vue'))['default']>;
-  type MeDialogInstance = InstanceType<(typeof import('../src/components/meDialog/index.vue'))['default']>;
   //typeCode
 }
 export {};

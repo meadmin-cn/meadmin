@@ -12,9 +12,9 @@
 </template>
 
 <script setup lang="ts" name="AddOrUp{{@ replaceNames.Name}}">
-import { {{@ replaceNames.Name}}, {{@ replaceNames.Name}}Info, add{{@ replaceNames.Name}}Api, update{{@ replaceNames.Name}}Api, {{@ replaceNames.name}}InfoApi } from '@/{{@ replaceNames.addonsPath}}api/{{@ replaceNames.namePath}}';
-import { useLocalesI18n } from '@/locales/i18n';
-import { resetObj<% if($imports.objectValues(entitySchema.properties).some(v=>v.enum || v.description.includes(':'))){%>, formatterStr<%}%> } from '@/utils/helper';
+import { {{@ replaceNames.Name}}, type {{@ replaceNames.Name}}Info, add{{@ replaceNames.Name}}Api, update{{@ replaceNames.Name}}Api, {{@ replaceNames.name}}InfoApi } from '@/{{@ replaceNames.addonsPath}}api/{{@ replaceNames.namePath}}';
+import { useLocalesI18n } from '@/locales/i18n';<% if($imports.objectValues(entitySchema.properties).some(v=>v.enum || v.description.includes(':'))){%>
+import { formatterStr } from '@/utils/helper';<%}%>
 import type { FormInstance, FormRules } from 'element-plus';
 {{if $imports.objectValues(entitySchema.properties).some(value=>value.rule?._rules.some(v=>v.name==='mobile'))}}import { isMobile } from '@/utils/validate.js';{{/if}}
 //接口需要现在setup顶层初始化（如果是异步setup需要在异步调用之前初始化），否则会有unMounted，非法调用警告，因为vueRequest使用了unMounted
@@ -62,14 +62,14 @@ const emit = defineEmits<{
 
 
 
-const info = reactive(new {{@ replaceNames.Name}}());
+const info = ref<{{@ replaceNames.Name}}|{{@ replaceNames.Name}}Info>(new {{@ replaceNames.Name}}());
 const loading = ref(false);
 watch(
   () => {{if entity.pk.length===1}}props.{{@ entity.pk[0]}}{{else}}[props.{{@ entity.pk.join(', props.')}}]{{/if}},
   async ({{@ entity.pk.map(v=>`${v}?:${entitySchema.properties[v].type}`).join(', ')}}) => {
     if ({{@ entity.pk[0]}}) {
       loading.value = true;
-      resetObj(info, await infoRunAsync({{@ entity.pk.join(', ')}}));
+      info.value = await infoRunAsync({{@ entity.pk.join(', ')}});
       loading.value = false;
     }
   },
@@ -86,9 +86,9 @@ const submit = async () => {
     return formEl.value!.scrollToField(Object.keys(invalidFields!)[0]);
   }
   if (props.{{@ entity.pk[0]}}) {
-    await updateRunAsync(props.{{@ entity.pk.join(', props.')}}, info);
+    await updateRunAsync(props.{{@ entity.pk.join(', props.')}}, info.value);
   } else {
-    await addRunAsync(info);
+    await addRunAsync(info.value);
   }
   show.value = false;
   emit('success');

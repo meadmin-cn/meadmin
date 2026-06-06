@@ -33,9 +33,8 @@
 </template>
 
 <script setup lang="ts" name="AddOrUpExampleDemo">
-import { ExampleDemo, addExampleDemoApi, exampleDemoInfoApi, updateExampleDemoApi } from '@/api/example/demo';
+import { ExampleDemo, addExampleDemoApi, exampleDemoInfoApi, updateExampleDemoApi, type ExampleDemoInfo } from '@/api/example/demo';
 import { useLocalesI18n } from '@/locales/i18n';
-import { resetObj } from '@/utils/helper';
 import { isMobile } from '@/utils/validate.js';
 import type { FormInstance, FormRules } from 'element-plus';
 //接口需要现在setup顶层初始化（如果是异步setup需要在异步调用之前初始化），否则会有unMounted，非法调用警告，因为vueRequest使用了unMounted
@@ -76,14 +75,14 @@ const emit = defineEmits<{
   (e: 'closed'): void;
 }>();
 
-const info = reactive(new ExampleDemo());
+const info = ref<ExampleDemo|ExampleDemoInfo>(new ExampleDemo());
 const loading = ref(false);
 watch(
   () => props.id,
   async (id?: string) => {
     if (id) {
       loading.value = true;
-      resetObj(info, await infoRunAsync(id));
+      info.value =  await infoRunAsync(id);
       loading.value = false;
     }
   },
@@ -108,9 +107,9 @@ const submit = async () => {
     return formEl.value!.scrollToField(Object.keys(invalidFields!)[0]);
   }
   if (props.id) {
-    await updateRunAsync(props.id, info);
+    await updateRunAsync(props.id, info.value);
   } else {
-    await addRunAsync(info);
+    await addRunAsync(info.value);
   }
   show.value = false;
   emit('success');

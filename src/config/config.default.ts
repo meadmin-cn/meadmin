@@ -30,10 +30,8 @@ export default {
 
     // 把你的翻译文本放到这里
     localeTable: {
-      'zh-cn': {
-        validate: {
-          'string.mobile': '{{#label}} 必须是一个正确的手机号',
-        },
+      'zh-cn': {//默认翻译返回的就是中文翻译，只有校验的默认返回英文，需要中文转义
+        validate: (await import('../locales/zh-cn.json', { with: { type: 'json' } })).default.validate,
       },
       'en': {
         default: await import('../locales/en.json', { with: { type: 'json' } }),

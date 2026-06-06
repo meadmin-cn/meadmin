@@ -11,6 +11,7 @@ import { SystemMenu } from './systemMenu.entity.js';
 import { SystemRole } from './systemRole.entity.js';
 // import { BaseModel } from './abstract/base.entity.js';
 import { BaseModel } from './abstract/base.entity.js';
+import { SystemOrgaization } from './systemOrganization.entity.js';
 
 //rule规则使用添加接口的校验规则,建议字符串的默认值统一使用空串，否则RuleType.string需要显示声明allow(null)允许传入null
 @Table({ tableName: 'system_admin', comment: '管理员表' })
@@ -124,6 +125,16 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
     this._roleMenus = roleMenus;
   }
 
+   /** Declared by {@link SystemOrgaization.admins} */
+  @ApiPropertyRule({
+    description: '具有的组织',
+    type: 'array',
+    items: {
+      $ref: () => getSchemaPath('SystemRole'),
+    },
+  })
+  declare orgaizations?: NonAttribute<SystemOrgaization[]>;
+
   @Attribute({
     comment: '创建者(管理员)Id',
     type: DataTypes.STRING(20),
@@ -162,4 +173,5 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
   }
 }
 export declare interface SystemAdmin extends BelongsManyModel<'roles', 'role', 'roles', SystemRole> {}
+export declare interface SystemAdmin extends BelongsManyModel<'orgaizations', 'orgaization', 'orgaizations', SystemOrgaization> {}
 export declare interface SystemAdmin extends BelongsToModel<'avatar', File> {}

@@ -217,9 +217,15 @@ importers:
       commander:
         specifier: ^14.0.0
         version: 14.0.0
+      dayjs:
+        specifier: ^1.11.21
+        version: 1.11.21
       dotenv:
         specifier: ^16.6.1
         version: 16.6.1
+      fflate:
+        specifier: ^0.8.3
+        version: 0.8.3
       prettier:
         specifier: 3.8.1
         version: 3.8.1
@@ -1742,6 +1748,7 @@ packages:
 
   /@emnapi/wasi-threads@1.2.1:
     resolution: {integrity: sha512-uTII7OYF+/Mes/MrcIOYp5yOtSMLBWSIoLPpcgwipoiKbli6k322tcoFsxoIIxPDqW01SQGAgko4EzZi2BNv2w==}
+    requiresBuild: true
     dependencies:
       tslib: 2.8.1
 
@@ -6797,7 +6804,7 @@ packages:
       '@simonwep/pickr': 1.8.2
       array-tree-filter: 2.1.0
       async-validator: 4.2.5
-      dayjs: 1.11.19
+      dayjs: 1.11.21
       dom-align: 1.12.4
       dom-scroll-into-view: 2.0.1
       lodash: 4.18.1
@@ -9000,7 +9007,7 @@ packages:
       '@types/lodash-es': 4.17.12
       '@vueuse/core': 10.11.1(vue@3.5.22)
       async-validator: 4.2.5
-      dayjs: 1.11.19
+      dayjs: 1.11.21
       lodash: 4.18.1
       lodash-es: 4.17.21
       lodash-unified: 1.0.3(@types/lodash-es@4.17.12)(lodash-es@4.17.21)(lodash@4.18.1)
@@ -9736,6 +9743,10 @@ packages:
         optional: true
     dependencies:
       picomatch: 4.0.4
+
+  /fflate@0.8.3:
+    resolution: {integrity: sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA==}
+    dev: false
 
   /figures@3.2.0:
     resolution: {integrity: sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==}

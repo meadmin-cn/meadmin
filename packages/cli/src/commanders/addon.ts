@@ -76,7 +76,7 @@ const rmAddon = async (file: string, dbConfig: string, name: string, options: Re
     }
   }
 };
-export const addoonInit = (program: Command) => {
+export const addonInit = (program: Command) => {
   program
     .command('addon')
     .description('安装插件')

@@ -40,10 +40,12 @@
   "dependencies": {
     "art-template": "4.13.2",
     "commander": "^14.0.0",
+    "dayjs": "^1.11.21",
     "dotenv": "^16.6.1",
-    "swagger-client": "^3.35.6",
+    "fflate": "^0.8.3",
     "prettier": "3.8.1",
-    "prettier-plugin-organize-imports": "^4.3.0"
+    "prettier-plugin-organize-imports": "^4.3.0",
+    "swagger-client": "^3.35.6"
   },
   "peerDependencies": {
     "@sequelize/cli": "7.x || >=7.0.0-alpha.46",

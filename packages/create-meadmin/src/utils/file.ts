@@ -49,7 +49,7 @@ export function encodePackageFileName(file: string, isEncodePackage: boolean) {
  * @param isEncodeFileName
  * @returns
  */
-export async function copyFile(fromFile: string, toFile: string, fileSetFunction?: (content: string) => string, isEncodePackage = true) {
+export async function copyFile(fromFile: string, toFile: string, fileSetFunction?: (content: string) => string|Promise<string>, isEncodePackage = true) {
   if (fileSetFunction) {
     let content = readFileSync(fromFile, 'utf-8');
     content = await fileSetFunction(content);
@@ -69,7 +69,7 @@ export async function copyFile(fromFile: string, toFile: string, fileSetFunction
  * @param isEncodeFileName
  * @returns
  */
-export async function copyPath(pathFile:string, toPath:string, relativePath = '', ignoreFile = [] as Array<string | RegExp>, fileSetFunctions?: Record<string, (content: string) => string>, isEncodePackage = true) {
+export async function copyPath(pathFile:string, toPath:string, relativePath = '', ignoreFile = [] as Array<string | RegExp>, fileSetFunctions?: Record<string, (content: string) => string | Promise<string>>, isEncodePackage = true) {
   const fileList = readdirSync(pathFile);
   return Promise.all(
     fileList.map(async (file) => {

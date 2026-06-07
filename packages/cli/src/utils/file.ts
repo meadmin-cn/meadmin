@@ -1,7 +1,6 @@
-import { createReadStream, WriteFileOptions } from 'node:fs';
-import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
-import { dirname, join, relative, resolve } from 'node:path';
 import { AsyncZipDeflate, Zip, type DeflateOptions } from 'fflate';
+import { cpSync, createReadStream, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, WriteFileOptions, writeFileSync } from 'node:fs';
+import { dirname, join, relative, resolve } from 'node:path';
 
 /**
  * 写入文件【当文件所在文件夹不存在时会递归创建】
@@ -51,7 +50,7 @@ export function encodePackageFileName(file: string, isEncodePackage: boolean) {
  * @param isEncodeFileName
  * @returns
  */
-export async function copyFile(fromFile: string, toFile: string, fileSetFunction?: (content: string) => string, isEncodePackage = true) {
+export async function copyFile(fromFile: string, toFile: string, fileSetFunction?: (content: string) => string | Promise<string>, isEncodePackage = true) {
   if (!existsSync(fromFile)) {
     return;
   }
@@ -74,7 +73,7 @@ export async function copyFile(fromFile: string, toFile: string, fileSetFunction
  * @param isEncodeFileName
  * @returns
  */
-export async function copyPath(pathFile: string, toPath: string, relativePath = '', ignoreFile = [] as Array<string | RegExp>, fileSetFunctions?: Record<string, (content: string) => string>, isEncodePackage = true) {
+export async function copyPath(pathFile: string, toPath: string, relativePath = '', ignoreFile = [] as Array<string | RegExp>, fileSetFunctions?: Record<string, (content: string) => string | Promise<string>>, isEncodePackage = true) {
   if (!existsSync(pathFile)) {
     return;
   }
@@ -161,7 +160,7 @@ export function checkPathFile(pathFile: string, toPath: string, relativePath = '
  *                          如果过程中发生错误则 reject。
  */
 export async function zipFolderAsyncOptimized(folderPath: string, outputPath: string, globalOptions: DeflateOptions = { level: 6 }): Promise<void> {
-  console.log(`开始优化压缩文件夹: ${folderPath} -> ${outputPath}`);
+  //开始优化压缩文件夹: ${folderPath} -> ${outputPath}`;
 
   // 获取文件列表的辅助函数
   function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
@@ -178,7 +177,7 @@ export async function zipFolderAsyncOptimized(folderPath: string, outputPath: st
   }
 
   const filePaths = getAllFiles(folderPath);
-  console.log(`找到 ${filePaths.length} 个文件进行压缩。`);
+  // console.log(`找到 ${filePaths.length} 个文件进行压缩。`);
 
   return new Promise<void>((resolve, reject) => {
     // 1. 创建主 ZIP 流实例
@@ -190,7 +189,7 @@ export async function zipFolderAsyncOptimized(folderPath: string, outputPath: st
     // 2. 设置 ZIP 流的数据处理函数
     zipStream.ondata = (err: Error | null, chunk: Uint8Array, final: boolean) => {
       if (err) {
-        console.error("ZIP 流处理出错:", err);
+        // console.error("ZIP 流处理出错:", err);
         // 如果出现错误，终止 ZIP 流并拒绝 Promise
         zipStream.terminate();
         reject(err);
@@ -201,68 +200,43 @@ export async function zipFolderAsyncOptimized(folderPath: string, outputPath: st
 
       if (final) {
         // 当收到最后一个数据块时，合并所有块并写入文件
-        console.log("所有 ZIP 数据块接收完毕，正在写入文件...");
+        // console.log("所有 ZIP 数据块接收完毕，正在写入文件...");
         try {
-            const fullZipData = new Uint8Array(
-                zipChunks.reduce((acc, chunk) => acc + chunk.length, 0)
-            );
-            let offset = 0;
-            for (const chunk of zipChunks) {
-              fullZipData.set(chunk, offset);
-              offset += chunk.length;
-            }
-            writeFileSync(outputPath, fullZipData);
-            console.log(`优化压缩完成: ${outputPath}`);
-            resolve(); // 压缩成功
+          const fullZipData = new Uint8Array(zipChunks.reduce((acc, chunk) => acc + chunk.length, 0));
+          let offset = 0;
+          for (const chunk of zipChunks) {
+            fullZipData.set(chunk, offset);
+            offset += chunk.length;
+          }
+          writeFileSync(outputPath, fullZipData);
+          resolve(); // 压缩成功
         } catch (writeErr) {
-            console.error("写入 ZIP 文件失败:", writeErr);
-            reject(writeErr);
+          reject(writeErr instanceof Error ? writeErr : new Error(String(writeErr)));
         }
       }
     };
 
     // 3. 遍历文件，为每个文件创建 AsyncZipDeflate 流并添加到主 ZIP 流
-    const addPromises = filePaths.map(filePath => {
+    const addPromises = filePaths.map((filePath) => {
       return new Promise<void>((fileResolve, fileReject) => {
         const relativePath = relative(folderPath, filePath).replace(/\\/g, '/');
-
-        // 3a. 创建针对单个文件的异步压缩流
+        // 3a. 创建针对单个文件的压缩流
         // 使用 ZipOptions 作为构造函数的选项类型
         const fileDeflater = new AsyncZipDeflate(relativePath, globalOptions);
-
-        // 3b. 设置单个文件流的数据处理函数
-        fileDeflater.ondata = (err: Error | null, chunk: Uint8Array, final: boolean) => {
-          if (err) {
-            console.error(`压缩文件 ${relativePath} 时出错:`, err);
-            // 出错时终止相关流并拒绝对应的 Promise
-            fileDeflater.terminate();
-            zipStream.terminate(); // 终止整个 ZIP 过程
-            fileReject(err);
-            return;
-          }
-          // 将单个文件压缩后的数据块推送到主 ZIP 流
-          zipStream.add(fileDeflater);
-          if (final) {
-            console.log(`文件已添加并压缩: ${relativePath}`);
-            fileResolve(); // 单个文件处理完成
-          }
-        };
-
+        zipStream.add(fileDeflater);
         // 3c. 开始读取文件并推送到压缩流
-        const fileReadStream = createReadStream(filePath);
-
+        const fileReadStream = createReadStream(relativePath);
         fileReadStream.on('data', (buffer: string | Buffer<ArrayBufferLike>) => {
           // 将读取到的 Buffer 推送到 AsyncZipDeflate 流进行压缩
           // 注意：push 的第二个参数 'false' 表示这不是最后一个数据块
-          fileDeflater.push(buffer as Buffer<ArrayBufferLike> , false);
+          fileDeflater.push(buffer as Buffer<ArrayBufferLike>, false);
         });
-
         fileReadStream.on('end', () => {
           // 文件读取完毕，向 AsyncZipDeflate 流推送最后一个数据块标记
           // 传入空的 Uint8Array 并标记 final=true
           fileDeflater.push(new Uint8Array(), true);
+          fileResolve(); // 当前文件处理完成，继续下一个文件
         });
-
         fileReadStream.on('error', (err: Error) => {
           console.error(`读取文件 ${filePath} 时出错:`, err);
           fileDeflater.terminate();
@@ -277,12 +251,12 @@ export async function zipFolderAsyncOptimized(folderPath: string, outputPath: st
       .then(() => {
         // 所有文件的读取和压缩流都已启动并标记结束
         // 现在通知主 ZIP 流结束归档
-        console.log("所有文件流已添加，正在结束 ZIP 归档...");
+        // console.log('所有文件流已添加，正在结束 ZIP 归档...');
         zipStream.end();
       })
       .catch((err) => {
         // 如果任何一个文件处理失败，则整个过程失败
-        console.error("处理某个文件时失败，终止 ZIP 流:", err);
+        // console.error('处理某个文件时失败，终止 ZIP 流:', err);
         zipStream.terminate();
         reject(err as Error);
       });

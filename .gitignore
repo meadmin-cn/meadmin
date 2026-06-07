@@ -4,6 +4,7 @@ yarn-error.log
 node_modules/
 coverage/
 dist/*
+dist_*
 .idea/
 run/
 .DS_Store

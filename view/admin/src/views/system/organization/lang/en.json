@@ -1,0 +1,17 @@
+{
+  "创建者(管理员)": "Created admin",
+  "最后更新者(管理员)": "Updated admin",
+  "父级id": "Parent id",
+  "ID": "Id",
+  "父级": "Parent",
+  "组织名称": "Org name",
+  "排序(降序)": "Order num",
+  "状态": "Status",
+  "备注": "Remark",
+  "负责人": "Leader",
+  "联系电话": "Phone",
+  "邮箱": "Email",
+  "关联管理员": "Admins",
+  "创建时间": "Created time",
+  "最后更新时间": "Updated time"
+}

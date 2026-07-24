@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts" name="{{@ replaceNames.Name}}">
-import type { {{@ replaceNames.Name}}Info} from '@/{{@ replaceNames.addonsPath}}api/{{replaceNames.namePath}};
+import type { {{@ replaceNames.Name}}Info} from '@/{{@ replaceNames.addonsPath}}api/{{replaceNames.namePath}}';
 import { {{@ replaceNames.name}}ListApi, {{@ replaceNames.Name}}ListParam, del{{@ replaceNames.Name}}Api } from '@/{{@ replaceNames.addonsPath}}api/{{replaceNames.namePath}}';
 import { useLocalesI18n } from '@/locales/i18n';
 import Info from './components/info.vue';

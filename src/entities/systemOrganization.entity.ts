@@ -1,23 +1,22 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
-import { CreationOptional, NonAttribute } from '@sequelize/core';
-import { DataTypes } from '@sequelize/core';
+import { BelongsToManySetAssociationsMixin, CreationOptional, DataTypes, NonAttribute } from '@sequelize/core';
 import { Attribute, BelongsTo, BelongsToMany, Default, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
 import { AdminTreeModel } from './abstract/adminTree.entity.js';
 import { SystemAdmin } from './systemAdmin.entity.js';
 //rule规则使用添加接口的校验规则
 @Table({ tableName: 'system_orgaization', comment: '组织表' })
-export class SystemOrgaization extends AdminTreeModel<SystemOrgaization> {
+export class SystemOrganization extends AdminTreeModel<SystemOrganization> {
   @Attribute({ type: DataTypes.STRING(20), allowNull: false })
   @PrimaryKey
   @Default(uuid)
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
   id: CreationOptional<string>; //CreationOptional标记在模型创建过程中可以省略的属性。用于具有默认值或标记为自动生成的属性。
 
-  @BelongsTo(() => SystemOrgaization, { foreignKey: 'parentId', foreignKeyConstraints: false }) //不创建数据库外键约束
-  @ApiPropertyRule({ description: '父级', type: () => SystemOrgaization })
-  declare parent?: NonAttribute<SystemOrgaization>;
+  @BelongsTo(() => SystemOrganization, { foreignKey: 'parentId', foreignKeyConstraints: false }) //不创建数据库外键约束
+  @ApiPropertyRule({ description: '父级', type: () => SystemOrganization })
+  declare parent?: NonAttribute<SystemOrganization>;
 
   @Attribute({ type: DataTypes.STRING(50), comment: '组织名称', defaultValue: '', allowNull: false })
   @ApiPropertyRule({ description: '组织名称', rule: RuleType.string().max(50).min(1).required().empty('') })
@@ -32,7 +31,7 @@ export class SystemOrgaization extends AdminTreeModel<SystemOrgaization> {
   @ApiPropertyRule({ description: '排序(降序)', rule: RuleType.number().integer().max(9999).default(0) })
   orderNum: number;
 
-   @Attribute({
+  @Attribute({
     comment: '状态:1=启用;0=禁用',
     defaultValue: 1,
     allowNull: false,
@@ -72,4 +71,6 @@ export class SystemOrgaization extends AdminTreeModel<SystemOrgaization> {
     },
   })
   declare admins?: NonAttribute<SystemAdmin[]>;
+
+  setAdmins: BelongsToManySetAssociationsMixin<SystemAdmin, SystemAdmin['id']>;
 }

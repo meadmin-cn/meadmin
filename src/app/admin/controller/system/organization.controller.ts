@@ -6,6 +6,7 @@ import { SystemOrganizationQueryDto } from '../../dto/system/organizationQuery.d
 import { SystemOrganizationUpdateDto } from '../../dto/system/organizationUpdate.dto.js';
 import { SystemOrganizationService } from '../../service/system/organization.service.js';
 import { BaseController } from '../base.controller.js';
+import { SystemOrganizationTreeAllResultDto } from '../../dto/system/organizationTreeAllResult.dto.js';
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。
@@ -48,6 +49,17 @@ export class SystemOrganizationController extends BaseController {
   @AdminPermission('system_organization_list')
   async list(@Body() queryDto: SystemOrganizationQueryDto) {
     return this.success(await this.systemOrganizationService.list(queryDto));
+  }
+
+  //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Get('/treeAll')
+  @ApiOperationResponse({
+    responseList: SystemOrganizationTreeAllResultDto,
+    summary: '获取所有组织(按父子级返回)',
+  })
+  @AdminPermission('system_organization_list')
+  async treeAll() {
+    return this.success(await this.systemOrganizationService.treeAll());
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头

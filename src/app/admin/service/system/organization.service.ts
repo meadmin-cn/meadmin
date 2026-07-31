@@ -120,6 +120,22 @@ export class SystemOrganizationService {
   }
 
   /**
+   * 获取组织树形结构
+   * @returns
+   */
+  async treeAll() {
+    const list = await this.systemOrganizationRepository.getTree({
+      order: [['orderNum', 'DESC']],
+      include: {
+        //关联查询管理员
+        association: 'admins',
+        attributes: ['id'],
+      },
+    });
+    return list;
+  }
+
+  /**
    * 根据主键获取一条信息
    * @param id 主键
    * @returns

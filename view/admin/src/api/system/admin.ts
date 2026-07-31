@@ -4,6 +4,7 @@ import type { RequestOptions } from '@/utils/request.js';
 import request from '@/utils/request.js';
 import type { FileInfo } from '../file.js';
 import type { SystemMenuInfo } from './menu.js';
+import type { SystemOrganizationInfo } from './organization.js';
 import type { SystemRoleInfo } from './role.js';
 
 //管理员
@@ -58,6 +59,7 @@ export class SystemAdminListParam extends PageParam {
   status?: 1 | 0; //状态:1=启用;0=禁用
   isSuper?: 1 | 0; //超级管理员:1=是;0=不是
   roles?: Array<Omit<SystemRoleInfo, 'menus'>> | null; //具有的角色
+  organizations?: Array<Omit<SystemOrganizationInfo, 'createdAdmin' | 'updatedAdmin'>> | null; //具有的组织
   startCreatedAt?: string; //创建时间(起)
   endCreatedAt?: string; //创建时间(止)
   startUpdatedAt?: string; //最后更新时间(起)

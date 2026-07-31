@@ -1,10 +1,10 @@
 import { InjectRepository } from '@/decorators/index.js';
 import { SystemMenu } from '@/entities/systemMenu.entity.js';
+import { NormalWhereOptions } from '@/types/entity.js';
 import { Inject, Provide } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
-import { InferAttributes, Op, WhereOperators } from '@sequelize/core';
-import { WhereAttributeHash } from '@sequelize/core/_non-semver-use-at-your-own-risk_/abstract-dialect/where-sql-builder-types.js';
+import { Includeable, InferAttributes, Op, WhereOperators } from '@sequelize/core';
 import { SystemAdmin } from '../../../../entities/systemAdmin.entity.js';
 import { SystemAdminCreateDto } from '../../dto/system/adminCreate.dto.js';
 import { SystemAdminQueryDto } from '../../dto/system/adminQuery.dto.js';
@@ -50,7 +50,8 @@ export class SystemAdminService {
    * @returns
    */
   async list(queryDto: SystemAdminQueryDto) {
-    const where = {} as WhereAttributeHash<InferAttributes<SystemAdmin, { omit: never }>>;
+    const where = {} as NormalWhereOptions<InferAttributes<SystemAdmin>>;
+    const benlongWhere = [] as Array<Includeable>;
     (Object.keys(queryDto) as Array<keyof SystemAdminQueryDto>).forEach((key) => {
       if ('page' === key || 'pageSize' === key) {
         return;
@@ -89,11 +90,35 @@ export class SystemAdminService {
         where['updatedAt'][Op.lte] = queryDto[key];
         return;
       }
-      if (['username', 'nickname', 'mobile'].includes(key)) {
-        (where as Record<keyof typeof where, any>)[key] = { [Op.like]: `%${(queryDto[key] as string)}%` };
+      if ((['username', 'nickname', 'mobile'] as const).includes(key)) {
+        (where as Record<keyof typeof where, any>)[key as 'username' | 'nickname' | 'mobile'] = { [Op.like]: `%${queryDto[key] as string}%` };
         return;
       }
-      (where as Record<keyof typeof where, any>)[key] = queryDto[key]; //where[key as Exclude<typeof key,'page'|'pageSize'>] = queryDto[key]; 赋值会触发 TS2590: Expression produces a union type that is too complex to represent.
+      if (key === 'query') {
+        where[Op.or] = [{ username: { [Op.like]: `%${queryDto[key]}%` } }, { nickname: { [Op.like]: `%${queryDto[key]}%` } }, { mobile: { [Op.like]: `%${queryDto[key]}%` } }];
+        return;
+      }
+      if (key === 'roleIds') {
+        benlongWhere.push({
+          association: 'roles',
+          as: 'rolesWhere',
+          attributes: [],
+          required: true,
+          where: { id: { [Op.in]: queryDto[key] } },
+        });
+        return;
+      }
+      if (key === 'orgIds') {
+        benlongWhere.push({
+          association: 'orgaizations',
+          as: 'orgaizationsWhere',
+          attributes: [],
+          required: true,
+          where: { id: { [Op.in]: queryDto[key] } },
+        });
+        return;
+      }
+      (where as Record<keyof typeof where, any>)[key as any] = queryDto[key]; //where[key as Exclude<typeof key,'page'|'pageSize'>] = queryDto[key]; 赋值会触发 TS2590: Expression produces a union type that is too complex to represent.
     });
     const { count, rows } = await this.SystemAdminRepository.findAndCountAll({
       where,
@@ -119,6 +144,12 @@ export class SystemAdminService {
           association: 'avatar',
           attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
         },
+        {
+          association: 'orgaizations',
+          where: { status: 1 },
+          required: false,
+        },
+        ...benlongWhere,
       ],
     });
     return {

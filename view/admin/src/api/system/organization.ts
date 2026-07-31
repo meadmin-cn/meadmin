@@ -1,6 +1,7 @@
 import type { PageResult } from '@/api/api.model.js';
 import { PageParam } from '@/api/api.model.js';
 import type { SystemAdminInfo } from '@/api/system/admin.js';
+import type { TreeArrayItem } from '@/utils/helper.ts';
 import type { RequestOptions } from '@/utils/request.js';
 import request from '@/utils/request.js';
 
@@ -21,7 +22,7 @@ export class SystemOrganization {
 //获取管理员信息
 export function getSystemAdminApi() {
   return request<
-    PageResult<SystemAdmin>,
+    PageResult<SystemAdminInfo>,
     [
       {
         id?: string;
@@ -88,6 +89,18 @@ export function systemOrganizationListApi(options?: RequestOptions<SystemOrganiz
       data: data,
     }),
     Object.assign({ noLoading: true, clearEmpty: ['', undefined, null] }, options),
+  );
+}
+
+export type SystemOrganizationTreeAll = TreeArrayItem<SystemOrganizationInfo, 'children'>[];
+//获取树形结构
+export function systemOrganizationTreeAllApi(options?: RequestOptions<SystemOrganizationTreeAll, []>) {
+  return request<SystemOrganizationTreeAll, []>(
+    () => ({
+      url: 'system/organization/treeAll',
+      method: 'get',
+    }),
+    Object.assign({ noLoading: true }, options),
   );
 }
 

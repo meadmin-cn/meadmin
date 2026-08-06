@@ -24,7 +24,7 @@
         <template #default="{ row }">
           <div class="role-item">
             <div>
-              <span v-html="row.roleName"></span>
+              <span v-html="row.orgName"></span>
               &nbsp;<el-tag v-if="row.status === 0" size="small" type="info">{{ t('禁用') }}</el-tag>
               <el-tag v-else size="small" type="primary">{{ t('启用') }}</el-tag>
             </div>
@@ -32,10 +32,8 @@
               <me-button v-if="permission('system_role_info')" link :title="t('详情')" @click="showInfo(row.id)">
                 <mel-icon-memo />
               </me-button>
-              <template v-if="row.isSuper === 0">
-                <me-button v-if="permission('system_organization_edit')" type="primary" link :title="t('编辑')" @click="showAddOrUp(row.id)"><mel-icon-edit /></me-button>
-                <me-button v-if="permission('system_organization_del')" type="danger" link style="margin-left: 5px" :title="t('删除')" @click="del(row.id)"><mel-icon-delete /></me-button>
-              </template>
+              <me-button v-if="permission('system_organization_edit')" type="primary" link :title="t('编辑')" @click="showAddOrUp(row.id)"><mel-icon-edit /></me-button>
+              <me-button v-if="permission('system_organization_del')" type="danger" link style="margin-left: 5px" :title="t('删除')" @click="del(row.id)"><mel-icon-delete /></me-button>
             </div>
           </div>
         </template>
@@ -46,15 +44,15 @@
 
 <script setup lang="ts" name="OrgListTree">
 import type { SystemOrganizationInfo, SystemOrganizationTreeAll } from '@/api/system/organization';
-import { delSystemOrganizationApi, systemOrganizationTreeAllApi, updateSystemOrganizationApi } from '@/api/system/organization';
+import { delSystemOrganizationApi, systemOrganizationTreeAllApi } from '@/api/system/organization';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { searchTreeTable } from '@/utils/helper.js';
 import { permission } from '@/utils/permission.js';
 import { cloneDeep } from 'lodash-es';
 import type { VxeTableEvents } from 'vxe-table';
-import AddOrUp from './components/addOrUp.vue';
-import Info from './components/info.vue';
+import AddOrUp from './addOrUp.vue';
+import Info from './info.vue';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemRole']);
 const roleRef = ref<MeVxeTableInstance>();
 const emit = defineEmits<{
@@ -68,7 +66,6 @@ const { open } = useActionModel(AddOrUp);
 const { open: openInfo } = useActionModel(Info);
 const { loading, runAsync } = systemOrganizationTreeAllApi();
 const { runAsync: delRun } = delSystemOrganizationApi();
-const { runAsync: updateSystemOrganizationApiRunAsync } = updateSystemOrganizationApi();
 let dataCopy = [] as SystemOrganizationTreeAll;
 const data = ref<SystemOrganizationTreeAll>([]);
 const searchText = ref('');
@@ -95,22 +92,9 @@ const showAddOrUp = (id?: string) => {
     },
   });
 };
-const setRoleMenu = async (adminIds?: string[]) => {
-  if (!adminIds) {
-    return false;
-  }
-  const row = roleRef.value!.vxeTableRef!.getCurrentRecord();
-  if (row) {
-    row.admins = adminIds.map((id) => ({ id }));
-    await updateSystemOrganizationApiRunAsync(row.id, { admins: row.admins });
-    return true;
-  }
-  ElMessage.error(t('请先选择组织'));
-};
 const showInfo = (id?: string) => {
   openInfo({ id });
 };
-defineExpose({ setRoleMenu });
 await Promise.all([loadRes, getOrg()]);
 </script>
 <style lang="scss" scoped>

@@ -3,7 +3,7 @@
     <me-vxe-table
       ref="menuRef"
       v-model:quick-search="searchText"
-      :data="data ?? []"
+      :data="data?.list ?? []"
       :loading="loading"
       :custom-column="false"
       :tree-config="{ expandAll: true, showLine: true, reserve: true }"
@@ -21,13 +21,12 @@
       :on-add="permission('system_admin_add') ? showAddOrUp : undefined"
       align="center"
       border
-      me-class="table-menu"
+      me-class="table-admin-list"
       height="auto"
       show-overflow
-      @refresh="getMenu"
-      @quick-search="search"
+      @refresh="search"
+      @quick-search="() => search(1)"
     >
-      <vxe-column type="checkbox" tree-node width="240px" align="left" header-align="center" field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="username" :title="t('用户名')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="nickname" :title="t('昵称')" :formatter="formatterStr"></vxe-column>
@@ -60,8 +59,8 @@
           </el-popconfirm>
         </template>
       </vxe-column>
-      <template #toolsButton>
-        <me-button type="success"> {t('添加关联用户')} </me-button>
+      <template #buttons>
+        <me-button type="success" @click="showSelectAdmin"> {{ t('添加关联用户') }} </me-button>
       </template>
     </me-vxe-table>
   </div>
@@ -69,6 +68,7 @@
 
 <script setup lang="ts" name="OrgAdminList">
 import { delSystemAdminApi, systemAdminListApi, SystemAdminListParam, type SystemAdminInfo } from '@/api/system/admin';
+import { updateSystemOrganizationApi } from '@/api/system/organization.js';
 import { useActionModel } from '@/hooks';
 import { useLocalesI18n } from '@/locales/i18n';
 import { createformatterDictFn, formatterArrFn, formatterAt, formatterStr } from '@/utils/helper.js';
@@ -76,18 +76,29 @@ import { permission } from '@/utils/permission.js';
 import AddOrUp from '../../admin/components/addOrUp.vue';
 import Info from '../../admin/components/info.vue';
 import { getDict } from '../../admin/dict.js';
+import SelectAdmin from '../../admin/selectAdmin.vue';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../../admin/lang/${locale}.json`), 'systemAdmin']);
 const dict = getDict(t);
 const formatterDict = createformatterDictFn<SystemAdminInfo>(dict);
 const { open } = useActionModel(AddOrUp);
 const { open: openInfo } = useActionModel(Info);
+const { open: openSelectAdmin } = useActionModel(SelectAdmin);
 const params = reactive(new SystemAdminListParam());
 const { loading, data, runAsync } = systemAdminListApi();
-const searchText = ref<string>();
-const { checkedOrgId } = defineProps<{
-  checkedOrgId: string | null;
+const searchText = ref('');
+const { orgId } = defineProps<{
+  orgId?: string;
 }>();
-const search = (page = params.page, pageSize = params.pageSize) => runAsync(Object.assign(params, { page, pageSize, organizations: { id: checkedOrgId } }));
+const { runAsync: updateOrRunAsync } = updateSystemOrganizationApi();
+
+const search = (page = params.page, pageSize = params.pageSize) => runAsync(Object.assign(params, { page, pageSize, orgIds: orgId ? [orgId] : undefined, query: searchText.value || undefined }));
+watch(
+  () => orgId,
+  () => {
+    search(1);
+  },
+  { immediate: true },
+);
 const { runAsync: delRun, loading: delLoading } = delSystemAdminApi();
 const delId = ref<string>();
 const del = async (id: string) => {
@@ -106,9 +117,35 @@ const showAddOrUp = (id?: string) => {
 const showInfo = (id?: string) => {
   openInfo({ id });
 };
-await Promise.all([loadRes, search(1)]);
+const showSelectAdmin = () => {
+  if (!orgId) {
+    ElMessage.error(t('请先选择组织'));
+    return;
+  }
+  openSelectAdmin({
+    selectedIds: data.value?.list?.map((item) => item.id) || [],
+    onSuccess: async (checkedIds: string[]) => {
+      await updateOrRunAsync(orgId, { adminIds: checkedIds });
+      await search(1);
+    },
+  });
+};
+await Promise.all([loadRes]);
 </script>
 <style lang="scss" scoped>
 .admin-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  .table-admin-list {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    :deep(.me-vxe-body) {
+      flex-grow: 1;
+    }
+  }
 }
 </style>

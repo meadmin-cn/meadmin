@@ -10,8 +10,8 @@ export class SystemOrganization {
   parentId = '' as string | null; //父级id
   parent = undefined as SystemOrganization | null | undefined; //父级
   orgName = '' as string; //组织名称
-  orderNum = undefined as number | undefined; //排序(降序)
-  status = undefined as 1 | 0 | undefined; //状态:1=启用;0=禁用
+  orderNum = 999; //排序(降序)
+  status = 1 as 1 | 0 | undefined; //状态:1=启用;0=禁用
   remark = '' as string; //备注
   leader = '' as string; //负责人
   phone = '' as string; //联系电话
@@ -115,7 +115,9 @@ export function systemOrganizationInfoApi(options?: RequestOptions<SystemOrganiz
   );
 }
 
-export type UpdateSystemOrganizationInfoParam = Omit<Partial<SystemOrganizationInfo>, 'id' | 'createdAt' | 'updatedAt' | 'createdAdmin' | 'updatedAdmin'>;
+export type UpdateSystemOrganizationInfoParam = Omit<Partial<SystemOrganizationInfo>, 'id' | 'createdAt' | 'updatedAt' | 'createdAdmin' | 'updatedAdmin'> & {
+  adminIds: string[]; //关联管理员id
+};
 //修改组织信息
 export function updateSystemOrganizationApi(options?: RequestOptions<SystemOrganizationInfo, [string, UpdateSystemOrganizationInfoParam]>) {
   return request<SystemOrganizationInfo, [string, UpdateSystemOrganizationInfoParam]>(

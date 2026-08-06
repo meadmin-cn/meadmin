@@ -142,7 +142,7 @@ export class SystemOrganizationService {
    */
   @Transaction()
   async findOne(id: string) {
-    const entity = await this.systemOrganizationRepository.findByPk(id, { include: ['createdAdmin', 'updatedAdmin', 'admins'] });
+    const entity = await this.systemOrganizationRepository.findByPk(id, { include: ['createdAdmin', 'updatedAdmin', 'admins', 'parent'] });
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
@@ -163,9 +163,9 @@ export class SystemOrganizationService {
     }
     Object.assign(entity, updateDto);
 
-    if (updateDto.admins) {
+    if (updateDto.adminIds) {
       //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
-      await entity.setAdmins(updateDto.admins.map((v) => v.id));
+      await entity.setAdmins(updateDto.adminIds);
     }
 
     return await entity.save();

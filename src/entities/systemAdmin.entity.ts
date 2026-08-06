@@ -135,7 +135,7 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
       $ref: () => getSchemaPath('SystemOrganization'),
     },
   })
-  declare orgaizations?: NonAttribute<SystemOrganization[]>;
+  declare organizations?: NonAttribute<SystemOrganization[]>;
 
   @Attribute({
     comment: '创建者(管理员)Id',
@@ -175,5 +175,5 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
   }
 }
 export declare interface SystemAdmin extends BelongsManyModel<'roles', 'role', 'roles', SystemRole> {}
-export declare interface SystemAdmin extends BelongsManyModel<'orgaizations', 'orgaization', 'orgaizations', SystemOrganization> {}
+export declare interface SystemAdmin extends BelongsManyModel<'organizations', 'organization', 'organizations', SystemOrganization> {}
 export declare interface SystemAdmin extends BelongsToModel<'avatar', File> {}

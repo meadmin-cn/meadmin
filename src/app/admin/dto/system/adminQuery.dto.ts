@@ -11,7 +11,7 @@ export class SystemAdminQueryDto extends IntersectionType(
   PartialType(
     OmitDtoType(
       SystemAdmin as new () => InferAttributesLoose<SystemAdmin>,
-      ['_roleMenus', 'roleMenus', 'avatar', 'roles', 'orgaizations', 'createdAdmin', 'updatedAdmin'], //移除关联字段和虚拟属性
+      ['_roleMenus', 'roleMenus', 'avatar', 'roles', 'organizations', 'createdAdmin', 'updatedAdmin'], //移除关联字段和虚拟属性
     ),
   ),
 ) {

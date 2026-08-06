@@ -2,7 +2,7 @@
   <me-dialog v-model="show" :title="t(id ? '编辑' : '新增')" :close-on-click-modal="false" @closed="emit('closed')">
     <el-form ref="formEl" v-loading="loading" :model="info" :rules="rules" class="add" label-width="auto">
       <el-form-item :label="t('父级id')" prop="parentId">
-        <el-input v-model="info.parentId"></el-input>
+        <el-tree-select v-model="info.parentId" :data="treeAllList || []" check-strictly node-key="id" :props="{ label: 'orgName' }" :render-after-expand="false" />
       </el-form-item>
       <el-form-item :label="t('组织名称')" prop="orgName">
         <el-input v-model="info.orgName"></el-input>
@@ -11,7 +11,7 @@
         <el-input-number v-model="info.orderNum" :value-on-clear="null"></el-input-number>
       </el-form-item>
       <el-form-item :label="t('状态')" prop="status">
-        <el-select v-model="info.status" :value-on-clear="null" clearable>
+        <el-select v-model="info.status" :value-on-clear="null">
           <el-option v-for="val in dict.status" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
       </el-form-item>
@@ -27,9 +27,6 @@
       <el-form-item :label="t('邮箱')" prop="email">
         <el-input v-model="info.email"></el-input>
       </el-form-item>
-      <el-form-item :label="t('关联管理员')" prop="admins">
-        <me-select-list v-model="info.admins" :props="{ label: 'username', value: 'id' }" value-key="id" :multiple="true" @search="serachSystemAdmin"></me-select-list>
-      </el-form-item>
     </el-form>
     <template #footer>
       <me-button @click="() => (show = false)">{{ t('取消') }}</me-button>
@@ -39,28 +36,19 @@
 </template>
 
 <script setup lang="ts" name="AddOrUpSystemOrganization">
-import { SystemOrganization, type SystemOrganizationInfo, addSystemOrganizationApi, systemOrganizationInfoApi, updateSystemOrganizationApi } from '@/api/system/organization';
+import { SystemOrganization, type SystemOrganizationInfo, addSystemOrganizationApi, systemOrganizationInfoApi, systemOrganizationTreeAllApi, updateSystemOrganizationApi } from '@/api/system/organization';
 import { useLocalesI18n } from '@/locales/i18n';
 import type { FormInstance, FormRules } from 'element-plus';
+import { getDict } from '../dict.js';
 
 //接口需要现在setup顶层初始化（如果是异步setup需要在异步调用之前初始化），否则会有unMounted，非法调用警告，因为vueRequest使用了unMounted
 const { runAsync: updateRunAsync } = updateSystemOrganizationApi();
 const { runAsync: addRunAsync } = addSystemOrganizationApi();
 const { runAsync: infoRunAsync } = systemOrganizationInfoApi();
-
-import { getSystemAdminApi } from '@/api/system/organization';
-import { getDict } from '../dict.js';
-const { runAsync: getSystemAdminRunAsync } = getSystemAdminApi();
-const serachSystemAdmin = async (query: string, page: number, pageSize: number) => {
-  return await getSystemAdminRunAsync({
-    username: query,
-    page: page,
-    pageSize: pageSize,
-  });
-};
+const { data: treeAllList, runAsync: getTreeAllAsync } = systemOrganizationTreeAllApi();
 
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemOrganization']);
-await loadRes;
+await Promise.all([loadRes, getTreeAllAsync()]);
 const dict = getDict(t);
 const show = defineModel<boolean>();
 const props = defineProps<{

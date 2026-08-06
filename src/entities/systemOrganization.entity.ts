@@ -6,7 +6,7 @@ import { Attribute, BelongsTo, BelongsToMany, Default, PrimaryKey, Table } from 
 import { AdminTreeModel } from './abstract/adminTree.entity.js';
 import { SystemAdmin } from './systemAdmin.entity.js';
 //rule规则使用添加接口的校验规则
-@Table({ tableName: 'system_orgaization', comment: '组织表' })
+@Table({ tableName: 'system_organization', comment: '组织表' })
 export class SystemOrganization extends AdminTreeModel<SystemOrganization> {
   @Attribute({ type: DataTypes.STRING(20), allowNull: false })
   @PrimaryKey
@@ -57,9 +57,9 @@ export class SystemOrganization extends AdminTreeModel<SystemOrganization> {
   email: string;
 
   @BelongsToMany(() => SystemAdmin, {
-    through: 'admin_orgaization', //中间表名称 或者 对应的Model
+    through: 'organization_admin', //中间表名称 或者 对应的Model
     inverse: {
-      as: 'orgaizations',
+      as: 'organizations',
     },
     foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
   })
@@ -71,6 +71,5 @@ export class SystemOrganization extends AdminTreeModel<SystemOrganization> {
     },
   })
   declare admins?: NonAttribute<SystemAdmin[]>;
-
-  setAdmins: BelongsToManySetAssociationsMixin<SystemAdmin, SystemAdmin['id']>;
+  declare setAdmins: BelongsToManySetAssociationsMixin<SystemAdmin, SystemAdmin['id']>;
 }

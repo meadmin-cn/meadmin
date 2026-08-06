@@ -5,17 +5,18 @@
     <OrgListTree ref="role" @current-change="setChecked"></OrgListTree>
   </div>
   <div class="index-menu">
-      <Menu :checked-menu-ids="checkedAdminIds" @sub-menus="role!.setRoleMenu($event)"></Menu>
+      <AdminList :org-id="checkedOrgId" ></AdminList>
   </div>
 </el-scrollbar>
 </div>
 </template>
 
-<script setup lang="ts" name="SystemOrganization">
-  import OrgListTree from './components/listTree.vue';
-const checkedOrgId = shallowRef(null as string|null);
+<script setup lang="ts" name="SystemOrganizationIndex">
+import OrgListTree from './components/listTree.vue';
+import AdminList from './components/adminList.vue';
+const checkedOrgId = shallowRef<string>();
 const setChecked = (orgId: string|null) => {
-  checkedOrgId.value = orgId;
+  checkedOrgId.value = orgId ? orgId : undefined;
 };
 </script>
 <style lang="scss" scoped>

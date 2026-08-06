@@ -31,6 +31,12 @@
             <el-option v-for="val in dict.status" :key="val.value" :value="val.value" :label="val.label" />
           </el-select>
         </el-form-item>
+        <el-form-item :label="t('组织')" prop="orgId">
+          <el-tree-select v-model="params.orgIds" :data="orgTreeAllList || []" filterable multiple clearable check-strictly node-key="id" :props="{ label: 'orgName' }" :render-after-expand="false" />
+        </el-form-item>
+        <el-form-item :label="t('角色')" prop="roleIds">
+          <el-tree-select v-model="params.roleIds" :data="roleTreeAllList || []" filterable multiple clearable check-strictly node-key="id" :props="{ label: 'roleName' }" :render-after-expand="false" />
+        </el-form-item>
         <el-form-item :label="t('创建时间')" prop="createdAt">
           <el-date-picker v-model="params.startCreatedAt" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" clearable />&nbsp; - &nbsp;
           <el-form-item prop="priceEnd">
@@ -46,6 +52,7 @@
       </me-search-form>
     </template>
     <me-vxe-table
+      v-model:quick-search="params.query"
       align="center"
       border
       :loading="loading"
@@ -57,8 +64,10 @@
         layout: 'sizes, prev, pager, next, jumper, ->, total',
         change: search,
       }"
+      :quick-search-placeholder="t('输入用户名/昵称/手机号快捷查询')"
       :on-add="permission('system_admin_add') ? showAddOrUp : undefined"
       @refresh="search(1)"
+      @quick-search="search(1)"
     >
       <vxe-column field="id" :title="t('ID')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="username" :title="t('用户名')" :formatter="formatterStr"></vxe-column>
@@ -70,11 +79,10 @@
       </vxe-column>
       <vxe-column field="email" :title="t('邮箱')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="mobile" :title="t('手机号')" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="loginFailure" :title="t('登录失败次数')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="lastLoginAt" :title="t('最后登录时间')" :formatter="formatterAt"></vxe-column>
-      <vxe-column field="lastLoginIp" :title="t('最后登录ip')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="status" :title="t('状态')" :formatter="formatterDict"></vxe-column>
       <vxe-column field="roles" :title="t('具有的角色')" :formatter="formatterArrFn((obj) => obj.roleName)"></vxe-column>
+      <vxe-column field="organizations" :title="t('所属组织')" :formatter="formatterArrFn((obj) => obj.orgName)"></vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column v-if="permission(['system_admin_info', 'system_admin_edit', 'system_admin_del'])" :title="t('操作')" fixed="right">
@@ -101,8 +109,10 @@
 </template>
 
 <script setup lang="ts" name="SystemAdmin">
-import type { SystemAdminInfo} from '@/api/system/admin';
+import type { SystemAdminInfo } from '@/api/system/admin';
 import { delSystemAdminApi, systemAdminListApi, SystemAdminListParam } from '@/api/system/admin';
+import { systemOrganizationTreeAllApi } from '@/api/system/organization.js';
+import { systemRoleTreeAllApi } from '@/api/system/role.js';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { createformatterDictFn, formatterArrFn, formatterAt, formatterStr } from '@/utils/helper.js';
@@ -113,6 +123,8 @@ import { getDict } from './dict.js';
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`./lang/${locale}.json`), 'systemAdmin']);
 const dict = getDict(t);
 const formatterDict = createformatterDictFn<SystemAdminInfo>(dict);
+const { data: orgTreeAllList, runAsync: getOrgTreeAllAsync } = systemOrganizationTreeAllApi();
+const { data: roleTreeAllList, runAsync: getRoleTreeAllAsync } = systemRoleTreeAllApi();
 const { open } = useActionModel(AddOrUp);
 const { open: openInfo } = useActionModel(Info);
 const params = reactive(new SystemAdminListParam());
@@ -136,7 +148,7 @@ const showAddOrUp = (id?: string) => {
 const showInfo = (id?: string) => {
   openInfo({ id });
 };
-await Promise.all([loadRes, search(1)]);
+await Promise.all([loadRes, search(1), getOrgTreeAllAsync(), getRoleTreeAllAsync()]);
 </script>
 <style lang="scss" scoped>
 .view-img {

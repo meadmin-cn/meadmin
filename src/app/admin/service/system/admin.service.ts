@@ -38,6 +38,9 @@ export class SystemAdminService {
     if (createDto.roleIds) {
       await entity.setRoles(createDto.roleIds);
     }
+    if (createDto.orgIds) {
+      await entity.setOrganizations(createDto.orgIds);
+    }
     if (createDto.avatar) {
       await entity.setAvatar(createDto.avatar.id);
     }
@@ -99,23 +102,27 @@ export class SystemAdminService {
         return;
       }
       if (key === 'roleIds') {
-        benlongWhere.push({
-          association: 'roles',
-          as: 'rolesWhere',
-          attributes: [],
-          required: true,
-          where: { id: { [Op.in]: queryDto[key] } },
-        });
+        if (queryDto[key]?.length) {
+          benlongWhere.push({
+            association: 'roles',
+            as: 'rolesWhere',
+            attributes: [],
+            required: true,
+            where: { id: { [Op.in]: queryDto[key] } },
+          });
+        }
         return;
       }
       if (key === 'orgIds') {
-        benlongWhere.push({
-          association: 'orgaizations',
-          as: 'orgaizationsWhere',
-          attributes: [],
-          required: true,
-          where: { id: { [Op.in]: queryDto[key] } },
-        });
+        if (queryDto[key]?.length) {
+          benlongWhere.push({
+            association: 'organizations',
+            as: 'organizationsWhere',
+            attributes: [],
+            required: true,
+            where: { id: { [Op.in]: queryDto[key] } },
+          });
+        }
         return;
       }
       (where as Record<keyof typeof where, any>)[key as any] = queryDto[key]; //where[key as Exclude<typeof key,'page'|'pageSize'>] = queryDto[key]; 赋值会触发 TS2590: Expression produces a union type that is too complex to represent.
@@ -135,7 +142,6 @@ export class SystemAdminService {
           include: [
             {
               model: SystemMenu,
-              where: { status: 1 },
               required: false,
             },
           ],
@@ -145,8 +151,7 @@ export class SystemAdminService {
           attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
         },
         {
-          association: 'orgaizations',
-          where: { status: 1 },
+          association: 'organizations',
           required: false,
         },
         ...benlongWhere,
@@ -172,7 +177,6 @@ export class SystemAdminService {
         'updatedAdmin',
         {
           association: 'roles',
-          where: { status: 1 },
           required: false,
           include: [
             {
@@ -181,6 +185,10 @@ export class SystemAdminService {
               required: false,
             },
           ],
+        },
+        {
+          association: 'organizations',
+          required: false,
         },
         {
           association: 'avatar',

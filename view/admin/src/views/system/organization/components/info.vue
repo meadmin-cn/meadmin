@@ -1,9 +1,8 @@
 <template>
   <me-dialog v-model="show" v-loading="loading" :title="t('详情')" :close-on-click-modal="false" @closed="emit('closed')">
     <el-descriptions class="info" :border="true">
-      <el-descriptions-item :label="t('父级id')"> {{ formatterStrExec(data?.parentId) }} </el-descriptions-item>
       <el-descriptions-item :label="t('ID')"> {{ formatterStrExec(data?.id) }} </el-descriptions-item>
-      <el-descriptions-item :label="t('父级')"> {{ formatterStrExec(data?.parent) }} </el-descriptions-item>
+      <el-descriptions-item :label="t('父级')"> {{ formatterStrExec(data?.parent?.orgName) }} </el-descriptions-item>
       <el-descriptions-item :label="t('组织名称')"> {{ formatterStrExec(data?.orgName) }} </el-descriptions-item>
       <el-descriptions-item :label="t('排序(降序)')"> {{ formatterStrExec(data?.orderNum) }} </el-descriptions-item>
       <el-descriptions-item :label="t('状态')"> {{ formatterDictExec(dict, 'status', data?.status) }} </el-descriptions-item>

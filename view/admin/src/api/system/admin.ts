@@ -17,14 +17,16 @@ export class SystemAdmin {
   mobile = '' as string; //手机号
   status = 1 as 1 | 0 | undefined; //状态:1=启用;0=禁用
   roleIds = [] as string[]; //具有的角色
+  orgIds = [] as string[]; //具有的组织
 }
 
-export type SystemAdminInfo = Omit<SystemAdmin, 'roleIds'> & {
+export type SystemAdminInfo = Omit<SystemAdmin, 'roleIds' | 'orgIds'> & {
   id: string; //ID
   loginFailure: number | undefined; //登录失败次数
   lastLoginAt: string | null; //最后登录时间
   lastLoginIp: string; //最后登录ip
   roles: Array<Omit<SystemRoleInfo, 'menus'>>;
+  organizations: Array<Omit<SystemOrganizationInfo, 'children' | 'parent'>>;
   roleMenus: NonNullable<SystemMenuInfo>;
   createdAt: string; //创建时间
   updatedAt: string; //最后更新时间
@@ -58,8 +60,9 @@ export class SystemAdminListParam extends PageParam {
   lastLoginIp?: string; //最后登录ip
   status?: 1 | 0; //状态:1=启用;0=禁用
   isSuper?: 1 | 0; //超级管理员:1=是;0=不是
-  roles?: Array<Omit<SystemRoleInfo, 'menus'>> | null; //具有的角色
-  organizations?: Array<Omit<SystemOrganizationInfo, 'createdAdmin' | 'updatedAdmin'>> | null; //具有的组织
+  roleIds?: Array<number>; //具有的角色
+  orgIds?: Array<number>; //具有的组织
+  query = ''; //查询条件(用户名/昵称/手机号)
   startCreatedAt?: string; //创建时间(起)
   endCreatedAt?: string; //创建时间(止)
   startUpdatedAt?: string; //最后更新时间(起)

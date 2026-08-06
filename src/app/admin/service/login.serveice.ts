@@ -135,6 +135,11 @@ export class LoginService {
           association: 'avatar',
           attributes: { exclude: [] }, //必须设置attributes，否则file的附件属性 url属性返回给前端时没有，已提交[BUG反馈](https://github.com/sequelize/sequelize/issues/18059)
         },
+        {
+          association: 'organizations',
+          required: false,
+          where: { status: 1 },
+        },
       ],
     });
     if (admin?.roles?.some((item) => item.isSuper === 1)) {

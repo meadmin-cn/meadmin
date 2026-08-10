@@ -7,6 +7,7 @@ import './helper/dotenv.js';
 import DefaultConfig from '@/config/config.default.js';
 import * as meadmin from '@meadmin/core';
 import * as viteView from '@meadmin/midway-vite-view'; //引入view组件
+import * as bullmq from '@midwayjs/bullmq';
 import * as busboy from '@midwayjs/busboy';
 import * as cacheManager from '@midwayjs/cache-manager';
 import * as captcha from '@midwayjs/captcha';
@@ -14,7 +15,9 @@ import * as i18n from '@midwayjs/i18n';
 import * as redis from '@midwayjs/redis';
 import * as staticFile from '@midwayjs/static-file';
 import * as swagger from '@midwayjs/swagger';
-import { RegistreDecorators } from './decorators/index.js';
+import { sql } from '@sequelize/core';
+import { InjectRepository, RegistreDecorators } from './decorators/index.js';
+import { Job } from './entities/job.entity.js';
 import { filters } from './filter/index.js';
 import { initLogger } from './logger.js';
 
@@ -40,6 +43,7 @@ const registreDecorators = new RegistreDecorators();
     cacheManager,
     captcha,
     busboy,
+    bullmq,
   ],
   importConfigs: [
     {
@@ -59,6 +63,12 @@ export class MainConfiguration {
 
   @Logger('coreLogger')
   coreLogger: ILogger;
+
+  @Inject()
+  bullmqFramework: bullmq.Framework;
+
+  @InjectRepository(Job)
+  JobRepository: typeof Job;
 
   @Init()
   async init() {
@@ -90,9 +100,77 @@ export class MainConfiguration {
    * 在应用服务启动后执行
    */
   async onServerReady?(container: IMidwayContainer, app: IMidwayApplication) {
-    registreDecorators.onServerReady?.(container, app).catch((err) => {
-      this.appLogger.error('Error in onServerReady:', err);
-    });
+    registreDecorators
+      .onServerReady?.(container, app)
+      .then(() => {
+        //监听队列状态
+        this.bullmqFramework.getQueueList().forEach((queue) => {
+          this.bullmqFramework.getWorkers(queue.name).forEach((worker) => {
+            worker.on('active', (job) => {
+              this.JobRepository.update(
+                { status: 'active', jobId: job.id },
+                {
+                  where: {
+                    name: job.name,
+                  },
+                },
+              ).catch((err) => {
+                this.appLogger.error('Error updating job status to active:', err);
+              });
+            });
+            worker.on('progress', (job, progress) => {
+              this.JobRepository.update(
+                { status: 'active', progress: Number(progress), jobId: job.id },
+                {
+                  where: {
+                    name: job.name,
+                  },
+                },
+              ).catch((err) => {
+                this.appLogger.error('Error updating job progress:', err);
+              });
+            });
+            worker.on('completed', (job, result) => {
+              const successResult = JSON.stringify({
+                result: result,
+                jobId: job.id,
+              });
+              this.JobRepository.update(
+                { status: 'completed', progress: 100, result: sql`failedResponse || ${successResult}::jsonb`, sucessedNum: sql`sucessedNum+1`, jobId: job.id },
+                {
+                  where: {
+                    name: job.name,
+                  },
+                },
+              ).catch((err) => {
+                this.appLogger.error('Error updating job status to completed:', err);
+              });
+            });
+            worker.on('failed', (job, error) => {
+              if (job) {
+                const failedResponse = JSON.stringify({
+                  message: error?.message || '',
+                  stack: error?.stack || '',
+                  jobId: job?.id || '',
+                });
+                this.JobRepository.update(
+                  { status: 'failed', failedResponse: sql`failedResponse || ${failedResponse}::jsonb`, failedNum: sql`failedNum + 1`, jobId: job?.id || undefined },
+                  {
+                    where: {
+                      name: job.name,
+                    },
+                  },
+                ).catch((err) => {
+                  this.appLogger.error('Error updating job status to failed:', err);
+                });
+              }
+            });
+          });
+        });
+      })
+      .catch((err) => {
+        this.appLogger.error('Error in onServerReady:', err);
+      });
   }
 
   /**

@@ -1,9 +1,7 @@
 import { getClassMetadata } from '@midwayjs/core';
-import { MixDecoratorMetadata, ReferenceObject, SchemaObject } from '@midwayjs/swagger';
-import { DECORATORS, DECORATORS_CLASS_METADATA, SwaggerExplorer } from '@midwayjs/swagger';
+import { DECORATORS, DECORATORS_CLASS_METADATA, MixDecoratorMetadata, ReferenceObject, SchemaObject, SwaggerExplorer } from '@midwayjs/swagger';
 import { DocumentBuilder } from '@midwayjs/swagger/dist/documentBuilder.js';
-import { Model, NormalizedAttributeOptions } from '@sequelize/core';
-import { Sequelize } from '@sequelize/core';
+import { Model, NormalizedAttributeOptions, Sequelize } from '@sequelize/core';
 import { MapView } from '@sequelize/utils';
 import template from 'art-template';
 import { Command } from 'commander';
@@ -38,22 +36,22 @@ if (!prettierrc.plugins) {
 let swaggerSchemas = {} as Record<string, SchemaObject>;
 let sequelize: Sequelize; //数据库配置
 type TableInfo = {
-  entityName:string;
-  entityFileName:string;
-  belongsTo:string[];
-  belongsToEntity:Record<string,TableInfo>,
-  belongsToMany:string[],
-  belongsToManyEntity:Record<string,TableInfo>,
-  belongs: string[],
-  nameKeys:string[],
+  entityName: string;
+  entityFileName: string;
+  belongsTo: string[];
+  belongsToEntity: Record<string, TableInfo>;
+  belongsToMany: string[];
+  belongsToManyEntity: Record<string, TableInfo>;
+  belongs: string[];
+  nameKeys: string[];
   tableComment: string;
   pk: string[];
   deletedAt: string | null;
   attributes: MapView<string, NormalizedAttributeOptions<Model<any, any>>>;
-  autoAttributes: string[]
-  noSearchAttributes: string[];//不支持搜索的属性
+  autoAttributes: string[];
+  noSearchAttributes: string[]; //不支持搜索的属性
 };
-const tableInfos = {} as Record<string,TableInfo>;
+const tableInfos = {} as Record<string, TableInfo>;
 //关闭自动编码
 template.defaults.excape = false;
 template.defaults.minimize = false;
@@ -162,17 +160,17 @@ function tableInfo(entityName: string, noBelongs = false) {
       attributes: new MapView(new Map()),
       autoAttributes: [],
       noSearchAttributes: [],
-      entityName:entityName,
+      entityName: entityName,
       entityFileName: lowerFirstCase(entityName),
-      belongsTo:[],
-      belongsToEntity:{},
-      belongsToMany:[],
-      belongsToManyEntity:{},
+      belongsTo: [],
+      belongsToEntity: {},
+      belongsToMany: [],
+      belongsToManyEntity: {},
       belongs: [],
-      nameKeys:[],
+      nameKeys: [],
     };
   } else {
-    let tableComment = modelDefinition.options.comment ||'';
+    let tableComment = modelDefinition.options.comment || '';
     if (tableComment?.endsWith('表')) {
       tableComment = tableComment.slice(0, -1);
     }
@@ -196,9 +194,9 @@ function tableInfo(entityName: string, noBelongs = false) {
     }
     const belongs: string[] = [];
     const belongsTo: string[] = [];
-    const belongsToEntity = {} as Record<string,TableInfo>;
+    const belongsToEntity = {} as Record<string, TableInfo>;
     const belongsToMany: string[] = [];
-    const belongsToManyEntity = {} as Record<string,TableInfo>;
+    const belongsToManyEntity = {} as Record<string, TableInfo>;
     if (!noBelongs) {
       Object.keys(modelDefinition.associations).forEach((key) => {
         if (['createdAdmin', 'updatedAdmin', 'createdUser', 'updatedUser'].includes(key)) {
@@ -228,17 +226,17 @@ function tableInfo(entityName: string, noBelongs = false) {
       }
     }
     const noSearchAttributes = [
-      ...Object.keys(modelDefinition.associations),//关联key
-      ...modelDefinition.virtualAttributeNames,//虚拟属性 
+      ...Object.keys(modelDefinition.associations), //关联key
+      ...modelDefinition.virtualAttributeNames, //虚拟属性
       ...modelDefinition.readOnlyAttributeNames, //只读属性
-    ] as string[];//不需要搜索的字段
+    ] as string[]; //不需要搜索的字段
 
     tableInfos[entityName] = {
       entityName,
       entityFileName: lowerFirstCase(entityName),
       tableComment,
       pk: Array.from(modelDefinition.primaryKeysAttributeNames),
-      deletedAt: modelDefinition.options.deletedAt+'',
+      deletedAt: modelDefinition.options.deletedAt + '',
       attributes: modelDefinition.attributes,
       autoAttributes,
       belongsTo,
@@ -309,13 +307,13 @@ let adminPermission = false;
  */
 function checkPaths() {
   const existsFiles: any[] = [];
-  (Object.keys(writeServerFiles) as  Array<keyof (typeof writeServerFiles)>).forEach((key) => {
+  (Object.keys(writeServerFiles) as Array<keyof typeof writeServerFiles>).forEach((key) => {
     const path = writeServerFiles[key].endsWith('.js') ? writeServerFiles[key].replace('.js', '.ts') : writeServerFiles[key];
     if (!noWriteKey.includes(key) && existsSync(path)) {
       existsFiles.push(path);
     }
   });
-  (Object.keys(writeViewFiles) as  Array<keyof (typeof writeViewFiles)>).forEach((key) => {
+  (Object.keys(writeViewFiles) as Array<keyof typeof writeViewFiles>).forEach((key) => {
     const path = writeViewFiles[key].endsWith('.js') ? writeViewFiles[key].replace('.js', '.ts') : writeViewFiles[key];
     if (!noWriteKey.includes(key) && existsSync(path)) {
       existsFiles.push(path);
@@ -330,8 +328,8 @@ function checkPaths() {
  * @param toPath 写入文件路径
  * @returns
  */
-async function writeContent(templatePath:string, toPath:string, writeType: 'api' | 'view') {
-  const paths = writeType === 'api' ? { ...writeServerFiles } : { ...writeViewFiles } as Record<string,string>;
+async function writeContent(templatePath: string, toPath: string, writeType: 'api' | 'view') {
+  const paths = writeType === 'api' ? { ...writeServerFiles } : ({ ...writeViewFiles } as Record<string, string>);
   Object.keys(paths).forEach((key) => {
     paths[key] = relativePath(toPath, paths[key], []);
   });
@@ -391,7 +389,7 @@ async function setMenu(model: string, namePath: string, sequelize: Sequelize) {
   let parentId: string | null = null;
   const paths = [];
   const langFilePath = resovePath(`view/${model}/src/${replaceNames.addonsPath}locales/lang/en/menu`, ['.json']);
-  let lang = { default: {} as Record<string,any> };
+  let lang = { default: {} as Record<string, any> };
   if (existsSync(langFilePath)) {
     lang = await import(pathToFileURL(langFilePath).href, {
       with: { type: 'json' },
@@ -438,6 +436,7 @@ async function setMenu(model: string, namePath: string, sequelize: Sequelize) {
         defaults: {
           title: menuTitle,
           menuType: 1, //目录
+          icon: 'MelIconList',
           orderNum: 99,
           path: '/' + paths.join('/'),
           parentId,
@@ -451,6 +450,7 @@ async function setMenu(model: string, namePath: string, sequelize: Sequelize) {
         defaults: {
           title: menuTitle,
           menuType: 2, //菜单
+          icon: 'MelIconList',
           orderNum: 99,
           path: '/' + paths.join('/'),
           component: (replaceNames.addonsPath ? replaceNames.addonsPath + 'views/' + namePath : namePath) + '/index',

@@ -1,7 +1,7 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
-import { CreationOptional, DataTypes } from '@sequelize/core';
+import { CreationOptional, DataTypes, sql } from '@sequelize/core';
 import { Attribute, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
 import { AdminBaseModel } from './abstract/adminBase.entity.js';
 
@@ -29,13 +29,13 @@ export class Job extends AdminBaseModel<Job> {
   strategy: 1 | 2 | 3 | 4;
 
   @Attribute({
-    comment: '延时时间(s)',
+    comment: '延时时间(ms)',
     defaultValue: 0,
-    allowNull: false,
+    allowNull: true,
     type: DataTypes.INTEGER.UNSIGNED,
   })
   @ApiPropertyRule({
-    description: '延时时间(s)',
+    description: '延时时间(ms)',
     rule: RuleType.number().integer().min(0).when('strategy', {
       is: 2,
       then: RuleType.required(),
@@ -46,7 +46,7 @@ export class Job extends AdminBaseModel<Job> {
   @Attribute({
     comment: '定时表达式(cron)',
     defaultValue: '',
-    allowNull: false,
+    allowNull: true,
     type: DataTypes.STRING(200),
   })
   @ApiPropertyRule({
@@ -68,11 +68,11 @@ export class Job extends AdminBaseModel<Job> {
   @ApiPropertyRule({ description: '去重策略:1=可重复;2=去重;3=覆盖', rule: RuleType.number().equal(1, 2, 3).required() })
   deduplication: 1 | 2 | 3;
 
-  @Attribute({ type: DataTypes.STRING(20), allowNull: false })
+  @Attribute({ type: DataTypes.STRING(100), allowNull: false })
   @ApiPropertyRule({ description: '任务id', rule: RuleType.string() })
   jobId: string;
 
-  @Attribute({ comment: '任务进度', type: DataTypes.DOUBLE(3, 2), allowNull: false })
+  @Attribute({ comment: '任务进度', type: DataTypes.DOUBLE(3, 2), allowNull: true })
   @ApiPropertyRule({ description: '任务进度', rule: RuleType.number().min(0).max(100) })
   progress: number;
 
@@ -89,6 +89,7 @@ export class Job extends AdminBaseModel<Job> {
     comment: 'sql语句',
     type: DataTypes.TEXT,
     allowNull: false,
+    defaultValue: '',
   })
   @ApiPropertyRule({
     description: 'sql语句',
@@ -103,6 +104,7 @@ export class Job extends AdminBaseModel<Job> {
     comment: 'url请求地址',
     type: DataTypes.STRING(200),
     allowNull: false,
+    defaultValue: '',
   })
   @ApiPropertyRule({
     description: 'url请求地址',
@@ -117,6 +119,7 @@ export class Job extends AdminBaseModel<Job> {
     comment: '请求方法',
     type: DataTypes.STRING(10),
     allowNull: false,
+    defaultValue: '',
   })
   @ApiPropertyRule({
     description: '请求方法:GET=GET请求;POST=POST请求;PUT=PUT请求;DELETE=DELETE请求',
@@ -131,6 +134,7 @@ export class Job extends AdminBaseModel<Job> {
     comment: '请求头',
     type: DataTypes.TEXT,
     allowNull: false,
+    defaultValue: '',
   })
   @ApiPropertyRule({
     description: '请求头(json格式)',
@@ -145,6 +149,7 @@ export class Job extends AdminBaseModel<Job> {
     comment: 'POST请求体(json格式)',
     type: DataTypes.TEXT,
     allowNull: false,
+    defaultValue: '',
   })
   @ApiPropertyRule({
     description: 'POST请求体(json格式)',
@@ -159,6 +164,7 @@ export class Job extends AdminBaseModel<Job> {
     comment: 'GET参数(json格式)',
     type: DataTypes.TEXT,
     allowNull: false,
+    defaultValue: '',
   })
   @ApiPropertyRule({
     description: 'GET参数(json格式)',
@@ -174,6 +180,7 @@ export class Job extends AdminBaseModel<Job> {
     comment: '自定义任务处理器',
     type: DataTypes.STRING(200),
     allowNull: false,
+    defaultValue: '',
   })
   @ApiPropertyRule({
     description: '自定义任务处理器',
@@ -188,6 +195,7 @@ export class Job extends AdminBaseModel<Job> {
     comment: '自定义任务处理器参数(json格式)',
     type: DataTypes.TEXT,
     allowNull: false,
+    defaultValue: '',
   })
   @ApiPropertyRule({ description: '自定义任务处理器参数(json格式)', rule: RuleType.string() })
   queueOptions: string;
@@ -195,19 +203,19 @@ export class Job extends AdminBaseModel<Job> {
   @Attribute({
     comment: '任务状态:active=执行中;completed=已完成;failed=失败;waiting=等待中',
     type: DataTypes.STRING(20),
-    allowNull: false,
+    allowNull: true,
   })
-  @ApiPropertyRule({ description: '任务状态:active=执行中;completed=已完成;failed=失败;waiting=等待中', rule: RuleType.string().equal('active', 'completed', 'failed', 'waiting').required() })
+  @ApiPropertyRule({ description: '任务状态:active=执行中;completed=已完成;failed=失败;waiting=等待中', rule: RuleType.string().equal('active', 'completed', 'failed', 'waiting') })
   status: 'active' | 'completed' | 'failed' | 'waiting';
 
   @Attribute({
     comment: '任务执行结果',
     type: DataTypes.JSONB,
     allowNull: false,
-    defaultValue: [],
+    defaultValue: sql`'[]'`,
   })
-  @ApiPropertyRule({ description: '任务执行结果', rule: RuleType.string() })
-  result: string;
+  @ApiPropertyRule({ description: '任务执行结果', rule: RuleType.array() })
+  result: any[];
 
   @Attribute({
     comment: '任务执行成功数',
@@ -231,8 +239,8 @@ export class Job extends AdminBaseModel<Job> {
     comment: '任务执行失败响应',
     type: DataTypes.JSONB,
     allowNull: false,
-    defaultValue: [],
+    defaultValue: sql`'[]'`,
   })
-  @ApiPropertyRule({ description: '任务执行失败响应', rule: RuleType.string() })
-  failedResponse: string;
+  @ApiPropertyRule({ description: '任务执行失败响应', rule: RuleType.array() })
+  failedResponse: any[];
 }

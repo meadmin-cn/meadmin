@@ -163,16 +163,16 @@ export default {
       },
     },
     // ...
-    bullmq: {
-      defaultConnection: {
-        host: process.env.REDIS_HOST,
-        port: process.env.REDIS_PORT,
-        password: process.env.REDIS_PASS,
-        db: process.env.REDIS_MQ ?? 1,
-      },
-      // 可选，队列前缀
-      defaultPrefix: '[meadmin-bullmq]',
-    },
-    // ...
   },
+  bullmq: {
+    defaultConnection: {
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
+      password: process.env.REDIS_PASS,
+      db: process.env.REDIS_MQ ?? 1,
+    },
+    // 可选，队列前缀
+    defaultPrefix: '[meadmin-bullmq]',
+  },
+  // ...
 } as MidwayConfig;

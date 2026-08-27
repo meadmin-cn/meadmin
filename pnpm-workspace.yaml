@@ -4,4 +4,5 @@ packages:
   - packages/*
   - view/* #pnpm 安装包时管理view前端包
   - addons/* #pnpm 安装包时管理插件包
-
+overrides:
+  'bullmq': '~5.81.3'

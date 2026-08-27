@@ -65,6 +65,11 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
           './src/utils/request.ts',
         ],
       },
+      port: 3100, // 首选端口
+      strictPort: false, // 端口被占用时自动尝试下一个可用端口
+      hmr: {
+        port: 3100, // HMR WebSocket端口，默认与server.port相同
+      },
     },
     build: {
       target: ['chrome93', 'safari15.2'],

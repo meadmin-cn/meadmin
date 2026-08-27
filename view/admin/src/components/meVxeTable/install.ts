@@ -11,7 +11,7 @@ if (app?.config?.globalProperties?.$start) {
   //为了兼容热更新重新拉取
   VxeUI.setConfig({
     // 对组件内置的提示语进行国际化翻译
-    i18n: app.config.globalProperties.$t,
+    translate: app.config.globalProperties.$t,
   });
   app.use(VxeModal);
   app.use(VxeTable);

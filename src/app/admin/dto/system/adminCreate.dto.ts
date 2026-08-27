@@ -11,4 +11,8 @@ export class SystemAdminCreateDto extends OmitDtoType(
 ) {
   @ApiPropertyRule({ description: '具有的角色id', rule: RuleType.array().items(RuleType.string()).required() })
   roleIds: string[];
+
+  //具有的组织
+  @ApiPropertyRule({ description: '具有的组织id', rule: RuleType.array().items(RuleType.string()).required() })
+  orgIds: string[];
 }

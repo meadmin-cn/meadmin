@@ -114,7 +114,7 @@ const copyFiles = {
     });
     return await prettier.format(JSON.stringify(jsonObj), { parser: 'json' });
   },
-  'pnpm-workspace.yaml'(content) {
+  'pnpm-workspace.yaml'(content: string) {
     return prettier.format(content.replace(`- packages/*`, ''), {
       parser: 'yaml',
     });
@@ -131,7 +131,13 @@ const copyFiles = {
   'uploadFile/admin/e27aae898e9bd0f8f1706246c1e6f372.png': {},
   'uploadFile/index/c99e23ad65db6db5bea03d828fb6166e.png': {},
   'uploadFile/index/dac00cfc094a2b9acefeb67be311e1f5.png': {},
-};
+} as Record<
+  string,
+  {
+    ignore?: Array<string | RegExp>;
+    fileSetFunction?: Record<string, (content: string) => string | Promise<string>>;
+  }
+>;
 //需要创建的文件/文件夹
 const makeFiles = {
   'logs/.gitkeep': {},

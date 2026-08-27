@@ -1,0 +1,6 @@
+{
+  "validate":{
+    "string.mobile": "{{#label}} 必须是一个正确的手机号",
+    "string.phone": "{{#label}} 必须是一个正确的手机号或座机号"
+  }
+}

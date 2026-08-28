@@ -1,5 +1,5 @@
 <template>
-  <JsonEditorVue :ref="changeRef" mode="text"></JsonEditorVue>
+  <JsonEditorVue :ref="changeRef"></JsonEditorVue>
 </template>
 
 <script setup lang="ts" name="MeJsonEditor">

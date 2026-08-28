@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { clone, cloneDeep } from 'lodash-es';
-import type { VxeTableDefines } from 'vxe-table';
-import type { SearchTreeOptions} from 'xe-utils';
+import type { VxeColumnDefines } from 'vxe-pc-ui/types/components/column';
+import type { SearchTreeOptions } from 'xe-utils';
 import { default as XEUtils } from 'xe-utils';
 
 /**
@@ -264,7 +264,7 @@ export function formatterAt({ cellValue }: { cellValue: string | null | undefine
 //格式化表格字典数据函数
 export function createformatterDictFn<T>(dict: Record<string, { value: string | number; label: string }[]>) {
   //因为ts类型判定不得不断言dict
-  return (data: { cellValue: any; column: VxeTableDefines.ColumnInfo<T> }) => {
+  return (data: VxeColumnDefines.CellFormatterParams<T>) => {
     return formatterDictExec(dict, data.column.field, data.cellValue);
   };
 }

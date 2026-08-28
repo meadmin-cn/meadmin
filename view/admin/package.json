@@ -52,8 +52,8 @@
     "vue-i18n": "^9.14.5",
     "vue-request": "^2.0.4",
     "vue-router": "^4.6.1",
-    "vxe-pc-ui": "^4.10.12",
-    "vxe-table": "^4.17.2",
+    "vxe-pc-ui": "^4.17.19",
+    "vxe-table": "^4.20.13",
     "vxe-table-plugin-element": "^4.0.4",
     "xe-utils": "^3.7.9"
   },

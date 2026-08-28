@@ -6,6 +6,7 @@
       :data="data || []"
       :loading="loading"
       :row-config="{ isCurrent: true, useKey: true }"
+      :current-row-config="{ strict: false }"
       :tree-config="{ expandAll: true, showLine: true }"
       :column-config="{ useKey: true }"
       :custom-column="false"
@@ -59,8 +60,8 @@ const emit = defineEmits<{
   currentChange: [orgId: string | null];
 }>();
 
-const roleChange: VxeTableEvents.CurrentRowChange<SystemOrganizationInfo> = ({ row }) => {
-  emit('currentChange', row.id);
+const roleChange: VxeTableEvents.CurrentRowChange<SystemOrganizationInfo> = ({ newValue }) => {
+  emit('currentChange', newValue?.id);
 };
 const { open } = useActionModel(AddOrUp);
 const { open: openInfo } = useActionModel(Info);

@@ -44,7 +44,7 @@
       <vxe-column field="roles" :title="t('具有的角色')" :formatter="formatterArrFn((obj) => obj.roleName)"></vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column>
-      <vxe-column v-if="permission(['system_admin_info', 'system_admin_edit', 'system_admin_del'])" title="操作" fixed="right">
+      <vxe-column v-if="permission(['system_admin_info', 'system_admin_edit', 'system_admin_del'])" title="操作" fixed="right" min-width="100px">
         <template #default="{ row }">
           <me-button v-if="permission('system_admin_info')" link :title="t('详情')" @click="showInfo(row.id)">
             <mel-icon-memo />

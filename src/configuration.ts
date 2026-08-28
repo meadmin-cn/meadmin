@@ -87,9 +87,7 @@ export class MainConfiguration {
    * 在应用配置加载后执行
    */
   async onConfigLoad?(container: IMidwayContainer, app: IMidwayApplication) {
-    registreDecorators.onConfigLoad?.(container, app).catch((err) => {
-      this.appLogger.error('Error in onConfigLoad:', err);
-    });
+    await registreDecorators.onConfigLoad?.(container, app);
   }
 
   /**
@@ -98,8 +96,113 @@ export class MainConfiguration {
   async onReady?(container: IMidwayContainer, app: IMidwayApplication) {
     initLogger(this.appLogger, this.coreLogger);
     this.app.useFilter(filters);
-    registreDecorators.onReady?.(container, app).catch((err) => {
-      this.appLogger.error('Error in onReady:', err);
+    await registreDecorators.onReady?.(container, app);
+    const dataSourceManager = await container.getAsync(SequelizeDataSourceManagerService);
+    const jobRepository = dataSourceManager.getDataSource(dataSourceManager.getDataSourceNameByModel(Job) || dataSourceManager.getDefaultDataSourceName()).models.get<Job>(Job.name);
+    if (!jobRepository) {
+      return this.appLogger.error('设置队列任务监听失败，jobRepository创建失败');
+    }
+    //监听队列状态
+    this.bullmqFramework.getQueueList().forEach((queue) => {
+      if (process.env.MODE !== 'ONLY_WORKER') {
+        queue.on('waiting', (job) => {
+          // Job is waiting to be processed.
+          jobRepository
+            .update(
+              { status: 'waiting', jobId: job.id },
+              {
+                where: {
+                  name: job.name,
+                  jobId: {
+                    [Op.ne]: job.id,
+                  },
+                },
+                transaction: null,
+              },
+            )
+            .catch((err: Error) => {
+              this.appLogger.error('Error updating job status to active:', err.stack || '');
+            });
+        });
+      }
+      if (process.env.MODE !== 'ONLY_API') {
+        this.bullmqFramework.getWorkers(queue.name).forEach((worker) => {
+          worker.on('active', (job) => {
+            jobRepository
+              .update(
+                { status: 'active', jobId: job.id },
+                {
+                  where: {
+                    name: job.name,
+                  },
+                  transaction: null,
+                },
+              )
+              .catch((err: Error) => {
+                this.appLogger.error('Error updating job status to active:', err.stack || '');
+              });
+          });
+          worker.on('progress', (job, progress) => {
+            jobRepository
+              .update(
+                { status: 'active', progress: Number(progress), jobId: job.id },
+                {
+                  where: {
+                    name: job.name,
+                  },
+                  transaction: null,
+                },
+              )
+              .catch((err: Error) => {
+                this.appLogger.error('Error updating job progress:', err.stack || '');
+              });
+          });
+          worker.on('completed', (job, result) => {
+            const successResult = JSON.stringify({
+              result: result,
+              jobId: job.id,
+              time: dayjs().format('YYYY-MM-DD HH:mm:ss.SSS'),
+            });
+            jobRepository
+              .update(
+                { status: 'completed', progress: 100, result: sql`${sql.attribute(jobRepository.modelDefinition.getColumnName('result'))} || ${successResult}::jsonb`, sucessedNum: sql` ${sql.attribute(jobRepository.modelDefinition.getColumnName('sucessedNum'))} + 1 `, jobId: job.id },
+                {
+                  where: {
+                    name: job.name,
+                  },
+                  transaction: null,
+                },
+              )
+              .catch((err: Error) => {
+                this.appLogger.error('Error updating job status to completed:' + err.message, err.stack || '');
+              });
+          });
+          worker.on('failed', (job, error) => {
+            if (job) {
+              const jobRepository = dataSourceManager.getDataSource(dataSourceManager.getDataSourceNameByModel(Job) || dataSourceManager.getDefaultDataSourceName()).models.get<Job>(Job.name)!;
+              const failedResponse = JSON.stringify({
+                message: error?.message || '',
+                stack: error?.stack || '',
+                jobId: job?.id || '',
+                time: dayjs().format('YYYY-MM-DD HH:mm:ss.SSS'),
+              });
+              jobRepository
+                .update(
+                  { status: 'failed', failedResponse: sql`${sql.attribute(jobRepository.modelDefinition.getColumnName('failedResponse'))} || ${failedResponse}::jsonb`, failedNum: sql`${sql.attribute(jobRepository.modelDefinition.getColumnName('failedNum'))} + 1`, jobId: job?.id || undefined },
+                  {
+                    where: {
+                      name: job.name,
+                    },
+                    transaction: null,
+                  },
+                )
+                .catch((err: Error) => {
+                  this.appLogger.error('Error updating job status to failed:' + err.message, err.stack || '');
+                });
+            }
+          });
+        });
+      }
     });
   }
 
@@ -107,137 +210,20 @@ export class MainConfiguration {
    * 在应用服务启动后执行
    */
   async onServerReady?(container: IMidwayContainer, app: IMidwayApplication) {
-    registreDecorators
-      .onServerReady?.(container, app)
-      .then(async () => {
-        const dataSourceManager = await container.getAsync(SequelizeDataSourceManagerService);
-        const jobRepository = dataSourceManager.getDataSource(dataSourceManager.getDataSourceNameByModel(Job) || dataSourceManager.getDefaultDataSourceName()).models.get<Job>(Job.name);
-        if (!jobRepository) {
-          return this.appLogger.error('设置队列任务监听失败，jobRepository创建失败');
-        }
-        //监听队列状态
-        this.bullmqFramework.getQueueList().forEach((queue) => {
-          if (process.env.MODE !== 'ONLY_WORKER') {
-            queue.on('waiting', (job) => {
-              // Job is waiting to be processed.
-              jobRepository
-                .update(
-                  { status: 'waiting', jobId: job.id },
-                  {
-                    where: {
-                      name: job.name,
-                      jobId: {
-                        [Op.ne]: job.id,
-                      },
-                    },
-                    transaction: null,
-                  },
-                )
-                .catch((err: Error) => {
-                  this.appLogger.error('Error updating job status to active:', err.stack || '');
-                });
-            });
-          }
-          if (process.env.MODE !== 'ONLY_API') {
-            this.bullmqFramework.getWorkers(queue.name).forEach((worker) => {
-              worker.on('active', (job) => {
-                jobRepository
-                  .update(
-                    { status: 'active', jobId: job.id },
-                    {
-                      where: {
-                        name: job.name,
-                      },
-                      transaction: null,
-                    },
-                  )
-                  .catch((err: Error) => {
-                    this.appLogger.error('Error updating job status to active:', err.stack || '');
-                  });
-              });
-              worker.on('progress', (job, progress) => {
-                jobRepository
-                  .update(
-                    { status: 'active', progress: Number(progress), jobId: job.id },
-                    {
-                      where: {
-                        name: job.name,
-                      },
-                      transaction: null,
-                    },
-                  )
-                  .catch((err: Error) => {
-                    this.appLogger.error('Error updating job progress:', err.stack || '');
-                  });
-              });
-              worker.on('completed', (job, result) => {
-                const successResult = JSON.stringify({
-                  result: result,
-                  jobId: job.id,
-                  time: dayjs().format('YYYY-MM-DD HH:mm:ss.SSS'),
-                });
-                jobRepository
-                  .update(
-                    { status: 'completed', progress: 100, result: sql`${sql.attribute(jobRepository.modelDefinition.getColumnName('result'))} || ${successResult}::jsonb`, sucessedNum: sql` ${sql.attribute(jobRepository.modelDefinition.getColumnName('sucessedNum'))} + 1 `, jobId: job.id },
-                    {
-                      where: {
-                        name: job.name,
-                      },
-                      transaction: null,
-                    },
-                  )
-                  .catch((err: Error) => {
-                    this.appLogger.error('Error updating job status to completed:' + err.message, err.stack || '');
-                  });
-              });
-              worker.on('failed', (job, error) => {
-                if (job) {
-                  const jobRepository = dataSourceManager.getDataSource(dataSourceManager.getDataSourceNameByModel(Job) || dataSourceManager.getDefaultDataSourceName()).models.get<Job>(Job.name)!;
-                  const failedResponse = JSON.stringify({
-                    message: error?.message || '',
-                    stack: error?.stack || '',
-                    jobId: job?.id || '',
-                    time: dayjs().format('YYYY-MM-DD HH:mm:ss.SSS'),
-                  });
-                  jobRepository
-                    .update(
-                      { status: 'failed', failedResponse: sql`${sql.attribute(jobRepository.modelDefinition.getColumnName('failedResponse'))} || ${failedResponse}::jsonb`, failedNum: sql`${sql.attribute(jobRepository.modelDefinition.getColumnName('failedNum'))} + 1`, jobId: job?.id || undefined },
-                      {
-                        where: {
-                          name: job.name,
-                        },
-                        transaction: null,
-                      },
-                    )
-                    .catch((err: Error) => {
-                      this.appLogger.error('Error updating job status to failed:' + err.message, err.stack || '');
-                    });
-                }
-              });
-            });
-          }
-        });
-      })
-      .catch((err) => {
-        this.appLogger.error('Error in onServerReady:', err);
-      });
+    await registreDecorators.onServerReady?.(container, app);
   }
 
   /**
    * 在应用停止的时候执行
    */
   async onStop?(container: IMidwayContainer, app: IMidwayApplication) {
-    registreDecorators.onStop?.(container, app).catch((err: Error) => {
-      this.appLogger.error('Error in onStop:' + err.message, err.stack || '');
-    });
+    await registreDecorators.onStop?.(container, app);
   }
 
   /**
    * 在健康检查时执行
    */
   async onHealthCheck?(container: IMidwayContainer) {
-    registreDecorators.onHealthCheck?.(container).catch((err) => {
-      this.appLogger.error('Error in onHealthCheck:', err);
-    });
+    await registreDecorators.onHealthCheck?.(container);
   }
 }

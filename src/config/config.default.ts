@@ -173,6 +173,7 @@ export default {
     },
     // 可选，队列前缀
     defaultPrefix: '[meadmin-bullmq]',
+    clearRepeatJobWhenStart: false, //启动后不清除定时任务
   },
   // ...
 } as MidwayConfig;

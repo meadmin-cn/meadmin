@@ -1,6 +1,6 @@
 import { InjectRepository } from '@/decorators/index.js';
 import { SystemMenu } from '@/entities/systemMenu.entity.js';
-import { NormalWhereOptions } from '@/types/entity.js';
+import { NormalWhereOptions } from '@meadmin/core/types/entity';
 import { Inject, Provide } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { MidwayI18nService } from '@midwayjs/i18n';

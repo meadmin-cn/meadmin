@@ -11,7 +11,7 @@ export class ExampleDemoQueryDto extends IntersectionType(
   PartialType(
     OmitDtoType(
       ExampleDemo as new () => InferAttributesLoose<ExampleDemo>,
-      ['books', 'user', 'avatar', 'files', 'createdAdmin', 'updatedAdmin'], //移除关联字段和虚拟属性
+      ['createdAdmin', 'updatedAdmin', 'books', 'user', 'avatar', 'files'], //排除关联字段、虚拟属性(如果想更加简洁可以省略OmitDtoType，用InferAttributes替换InferAttributesLoose，不过需注意对应字段不创建rule，否则会行为不一致)
     ),
   ),
 ) {

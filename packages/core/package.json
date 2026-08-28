@@ -13,8 +13,13 @@
   "files": [
     "dist/**/*.js",
     "dist/**/*.d.ts",
+    "types/**/*.ts",
     "index.d.ts"
   ],
+  "exports": {
+    "./types/*": "./types/*.d.ts",
+    ".": "./dist/index.js"
+  },
   "bugs": {
     "url": "https://github.com/meadmin-cn/meadmin"
   },

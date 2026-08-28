@@ -1,6 +1,6 @@
 {
-  "创建者": "Created admin",
-  "最后更新者": "Updated admin",
+  "创建者(管理员)": "Created admin",
+  "最后更新者(管理员)": "Updated admin",
   "ID": "Id",
   "手机号": "Mobile",
   "类型": "Type",

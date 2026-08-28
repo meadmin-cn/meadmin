@@ -11,7 +11,7 @@ export class {{@ replaceNames.QueryDto}} extends IntersectionType(
   PartialType(
     OmitDtoType(
       {{@ replaceNames.Name}} as new () => InferAttributesLoose<{{@ replaceNames.Name}}>,
-      ['{{@ entity.noSearchAttributes.join("','")}}'], //排除关联字段、虚拟属性、自动生成的属性(如果想更加简洁可以省略OmitDtoType，用InferAttributes替换InferAttributesLoose，不过需注意对应字段不创建rule，否则会行为不一致)
+      ['{{@ entity.noSearchAttributes.join("','")}}'], //排除关联字段、虚拟属性(如果想更加简洁可以省略OmitDtoType，用InferAttributes替换InferAttributesLoose，不过需注意对应字段不创建rule，否则会行为不一致)
     )
   )
 ) {

@@ -226,9 +226,8 @@ function tableInfo(entityName: string, noBelongs = false) {
       }
     }
     const noSearchAttributes = [
-      ...Object.keys(modelDefinition.associations), //关联key
+      ...Object.keys(modelDefinition.associations).filter((v) => !v.endsWith(modelDefinition.options.name.plural) && !v.endsWith(modelDefinition.options.name.singular)), //关联key
       ...modelDefinition.virtualAttributeNames, //虚拟属性
-      ...modelDefinition.readOnlyAttributeNames, //只读属性
     ] as string[]; //不需要搜索的字段
 
     tableInfos[entityName] = {

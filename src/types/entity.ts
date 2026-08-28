@@ -24,10 +24,8 @@ import {
   HasOneGetAssociationMixin,
   HasOneSetAssociationMixin,
   InferAttributesOptions,
-  Model,
-  Op,
+  Model
 } from '@sequelize/core';
-import { WhereAttributeHash } from '@sequelize/core/_non-semver-use-at-your-own-risk_/abstract-dialect/where-sql-builder-types.js';
 import { AnyFunction } from '@sequelize/utils';
 
 export type HasOneModel<
@@ -209,12 +207,3 @@ type InternalInferAttributeKeysFromFieldsLoose<M extends Model, Key extends keyo
 export type InferAttributesLoose<M extends Model, Options extends InferAttributesOptions<keyof M | ''> = { omit: never }> = {
   [Key in keyof M as InternalInferAttributeKeysFromFieldsLoose<M, Key, Options>]: M[Key];
 };
-
-type AllowNotOrAndWithImplicitAndArrayRecursive<T> = T & {
-  [Op.or]: any;
-} & {
-  [Op.and]: any;
-} & {
-  [Op.not]: any;
-};
-export type NormalWhereOptions<TAttributes> = AllowNotOrAndWithImplicitAndArrayRecursive<WhereAttributeHash<TAttributes>>; //seqlize 对应的where类型过于复杂，无法使用，使用自定义类型表示常用的where类型

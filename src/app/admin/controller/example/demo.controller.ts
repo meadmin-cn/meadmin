@@ -68,7 +68,7 @@ export class ExampleDemoController extends BaseController {
     responseType: ExampleDemo,
     summary: '根据id获取示例_Demo详情',
   })
-  @AdminPermission('example_demo_edit')
+  @AdminPermission('example_demo_info')
   async findOne(@Param('id') id: string) {
     const entity = await this.exampleDemoService.findOne(id);
     return this.success(entity);
@@ -80,7 +80,7 @@ export class ExampleDemoController extends BaseController {
     responseType: ExampleDemo,
     summary: '根据id更新示例_Demo信息',
   })
-  @AdminPermission('example_demo_info')
+  @AdminPermission('example_demo_edit')
   async update(@Param('id') id: string, @Body() updateDto: ExampleDemoUpdateDto) {
     return this.success(await this.exampleDemoService.update(id, updateDto));
   }

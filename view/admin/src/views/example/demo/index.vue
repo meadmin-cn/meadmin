@@ -63,14 +63,14 @@
       </vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column field="updatedAt" :title="t('最后更新时间')" :formatter="formatterAt"></vxe-column>
-      <vxe-column field="createdAdmin" :title="t('创建者')" :formatter="formatterObjectFn((obj) => `${obj.nickname}(${obj.username})`)"></vxe-column>
-      <vxe-column field="updatedAdmin" :title="t('最后更新者')" :formatter="formatterObjectFn((obj) => `${obj.nickname}(${obj.username})`)"></vxe-column>
-      <vxe-column v-if="permission(['example_demo_add', 'example_demo_edit', 'exampleDemo_del'])" :title="t('操作')" fixed="right" min-width="150px">
+      <vxe-column field="createdAdmin" :title="t('创建者(管理员)')" :formatter="formatterObjectFn((obj) => `${obj.nickname}(${obj.username})`)"></vxe-column>
+      <vxe-column field="updatedAdmin" :title="t('最后更新者(管理员)')" :formatter="formatterObjectFn((obj) => `${obj.nickname}(${obj.username})`)"></vxe-column>
+      <vxe-column v-if="permission(['example_demo_add', 'example_demo_edit', 'example_demo_del'])" :title="t('操作')" fixed="right" min-width="150px">
         <template #default="{ row }: { row: ExampleDemoInfo }">
-          <me-button v-if="permission('example_demo_info')" link :title="t('详情')" @click="showInfo(row.id)">
+          <me-button v-if="permission('example_demo_info')" :title="t('详情')" link @click="showInfo(row.id)">
             <mel-icon-memo />
           </me-button>
-          <me-button v-if="permission('example_demo_edit')" link :title="t('编辑')" @click="showAddOrUp(row.id)">
+          <me-button v-if="permission('example_demo_edit')" :title="t('编辑')" link @click="showAddOrUp(row.id)">
             <mel-icon-edit />
           </me-button>
           <el-popconfirm v-if="permission('example_demo_del')" :title="t('确认删除？')" placement="left" @confirm="del(row.id)">
@@ -87,7 +87,7 @@
 </template>
 
 <script setup lang="ts" name="ExampleDemo">
-import type { ExampleDemoInfo} from '@/api/example/demo';
+import type { ExampleDemoInfo } from '@/api/example/demo';
 import { delExampleDemoApi, exampleDemoListApi, ExampleDemoListParam } from '@/api/example/demo';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';

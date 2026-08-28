@@ -11,6 +11,7 @@ import { WhereAttributeHash } from '@sequelize/core/_non-semver-use-at-your-own-
 import { InferAttributes, Op, WhereOperators } from '@sequelize/core';{{each $imports.objectKeys(entity.belongsToEntity)}}<% const valueEntity = entity.belongsToEntity[$value]; %>{{if ['File'].includes(valueEntity.entityName)}}<% return; %>{{/if}}
 import { {{@ valueEntity.entityName}} } from '{{@ paths.entityPath.replace(replaceNames.name,valueEntity.entityFileName)}}';{{/each}}{{each $imports.objectKeys(entity.belongsToManyEntity)}}<% const valueEntity = entity.belongsToManyEntity[$value]; %>{{if ['File'].includes(valueEntity.entityName)}}<% return; %>{{/if}}
 import { {{@ valueEntity.entityName}} } from '{{@ paths.entityPath.replace(replaceNames.name,valueEntity.entityFileName)}}';{{/each}}
+import { NormalWhereOptions } from '@meadmin/core/types/entity';
 
 {{if entity.pk.length > 1}}type PK = {
   {{each entity.pk}}
@@ -38,7 +39,7 @@ export class {{@ replaceNames.Service}} {
    */
   @Transaction()
   async get{{@ valueEntity.entityName}}(page:number,pageSize:number,{{@ valueEntity.pk[0]}}:{{@ swaggerSchemas[valueEntity.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}}{{if valueEntity.nameKeys.length}},{{@ valueEntity.nameKeys[0]}}: string = '', {{/if}}) {
-    const where = {};
+    const where = {} as NormalWhereOptions<InferAttributes<{{@ valueEntity.entityName}}>>;
     if({{@ valueEntity.pk[0]}}){
       where['{{@ valueEntity.pk[0]}}'] = {{@ valueEntity.pk[0]}};
     }
@@ -70,7 +71,7 @@ export class {{@ replaceNames.Service}} {
    */
   @Transaction()
   async get{{@ valueEntity.entityName}}(page:number,pageSize:number,{{@ valueEntity.pk[0]}}:{{@ swaggerSchemas[valueEntity.entityName]?.properties?.[entity.pk[0]]?.type || 'string'}}{{if valueEntity.nameKeys.length}},{{@ valueEntity.nameKeys[0]}}: string = '', {{/if}}) {
-    const where = {};
+    const where = {} as NormalWhereOptions<InferAttributes<{{@ valueEntity.entityName}}>>;
     if({{@ valueEntity.pk[0]}}){
       where['{{@ valueEntity.pk[0]}}'] = {{@ valueEntity.pk[0]}};
     }
@@ -118,7 +119,7 @@ export class {{@ replaceNames.Service}} {
    */
   @Transaction()
   async list(queryDto: {{@ replaceNames.QueryDto}}) {
-    const where = {} as WhereAttributeHash<InferAttributes<{{@ replaceNames.Name}}, { omit: never }>>;
+    const where = {} as NormalWhereOptions<InferAttributes<{{@ replaceNames.Name}}>>;
     (Object.keys(queryDto) as Array<keyof {{@ replaceNames.QueryDto}}>).forEach((key) => {
       if ('page' === key || 'pageSize' === key) {
         return;

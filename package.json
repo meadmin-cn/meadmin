@@ -64,7 +64,8 @@
     "node": ">=22.14.0"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=prod node ./bootstrap.js",
+    "start": "cross-env NODE_ENV=prod MODE=ONLY_API node ./bootstrap.js",
+    "worker_start": "cross-env NODE_ENV=prod MODE=ONLY_WORKER node ./bootstrap.js",
     "dev": "cross-env NODE_ENV=local  npx me-devBootstrap --cleanOutDir --watch --run @midwayjs/mock/app",
     "test": "cross-env NODE_ENV=unittest TSX_TSCONFIG_PATH=./test/tsconfig.json mocha",
     "cov": "cross-env c8 --all --reporter=text --reporter=lcovonly npm run test",

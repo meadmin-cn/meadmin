@@ -10,6 +10,7 @@ import { Job } from '../../../entities/job.entity.js';
 import { JobCreateDto } from '../dto/jobCreate.dto.js';
 import { JobQueryDto } from '../dto/jobQuery.dto.js';
 import { JobStartDto } from '../dto/jobStart.dto.js';
+import { processorOptions } from '../processor/default.options.js';
 
 //任务
 @Provide()
@@ -73,8 +74,9 @@ export class JobService {
       //执行策略:1=立即执行;2=延时执行;3=定时执行;4=放弃执行,
       jobOptions.delay = entity.delay;
     }
+    const queue = this.bullmqFramework.getQueue(queueName) ?? this.bullmqFramework.createQueue(queueName, processorOptions[queueName]?.queueOptions);
     if (entity.strategy === 3) {
-      await this.bullmqFramework.getQueue(queueName).upsertJobScheduler(
+      await queue.upsertJobScheduler(
         this.getSchedulerId(entity.name),
         {
           pattern: entity.cron,
@@ -87,7 +89,7 @@ export class JobService {
       );
     } else {
       jobOptions.jobId = this.getJobId(entity.name);
-      await this.bullmqFramework.getQueue(queueName).add(entity.name, queueOptions, jobOptions);
+      await queue.add(entity.name, queueOptions, jobOptions);
     }
   }
 

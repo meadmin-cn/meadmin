@@ -1,12 +1,4 @@
-import {
-  IMiddleware
-} from '@midwayjs/core';
-import {
-  HttpServerResponse,
-  Init,
-  Inject,
-  Middleware,
-} from '@midwayjs/core';
+import { HttpServerResponse, IMiddleware, Init, Inject, Middleware } from '@midwayjs/core';
 import { IMidwayKoaContext, NextFunction } from '@midwayjs/koa';
 import { MiddlewareArr, ViteService } from '../service/vite.service.js';
 
@@ -24,13 +16,11 @@ export class ViteMiddleware implements IMiddleware<IMidwayKoaContext, NextFuncti
 
   resolve() {
     return async (ctx: IMidwayKoaContext, next: NextFunction) => {
-      if (
-        ctx.originalUrl === '/.well-known/appspecific/com.chrome.devtools.json'
-      ) {
+      if (ctx.originalUrl === '/.well-known/appspecific/com.chrome.devtools.json') {
         return new HttpServerResponse(ctx).status(404);
       }
       for (let i = 0; i < this.viteMiddlewareArr.length; i++) {
-        if (ctx.originalUrl.startsWith(this.viteMiddlewareArr[i].prefix)) {
+        if (ctx.originalUrl?.startsWith(this.viteMiddlewareArr[i].prefix)) {
           return await this.viteMiddlewareArr[i].middleware(ctx, next);
         }
       }

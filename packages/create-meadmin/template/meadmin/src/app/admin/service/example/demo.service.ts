@@ -1,9 +1,9 @@
 import { InjectRepository, Transaction } from '@/decorators/index.js';
+import { NormalWhereOptions } from '@meadmin/core/types/entity';
 import { Inject, Provide } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { InferAttributes, Op, WhereOperators } from '@sequelize/core';
-import { WhereAttributeHash } from '@sequelize/core/_non-semver-use-at-your-own-risk_/abstract-dialect/where-sql-builder-types.js';
 import { ExampleBook } from '../../../../entities/exampleBook.entity.js';
 import { ExampleDemo } from '../../../../entities/exampleDemo.entity.js';
 import { User } from '../../../../entities/user.entity.js';
@@ -31,7 +31,7 @@ export class ExampleDemoService {
    */
   @Transaction()
   async getUser(page: number, pageSize: number, id: string, username: string = '') {
-    const where = {} as WhereAttributeHash<InferAttributes<User, { omit: never }>>;
+    const where = {} as NormalWhereOptions<InferAttributes<User>>;
     if (id) {
       where['id'] = id;
     }
@@ -62,7 +62,7 @@ export class ExampleDemoService {
    */
   @Transaction()
   async getExampleBook(page: number, pageSize: number, id: string, name: string = '') {
-    const where = {} as WhereAttributeHash<InferAttributes<ExampleBook, { omit: never }>>;
+    const where = {} as NormalWhereOptions<InferAttributes<ExampleBook>>;
     if (id) {
       where['id'] = id;
     }
@@ -121,7 +121,7 @@ export class ExampleDemoService {
    */
   @Transaction()
   async list(queryDto: ExampleDemoQueryDto) {
-    const where = {} as WhereAttributeHash<InferAttributes<ExampleDemo, { omit: never }>>;
+    const where = {} as NormalWhereOptions<InferAttributes<ExampleDemo>>;
     (Object.keys(queryDto) as Array<keyof ExampleDemoQueryDto>).forEach((key) => {
       if ('page' === key || 'pageSize' === key) {
         return;
@@ -130,28 +130,27 @@ export class ExampleDemoService {
         return;
       }
       if (key === 'startCreatedAt') {
-        where['createdAt'] = (where['createdAt'] ?? {}) as WhereOperators<ExampleDemo['createdAt']>;
-        where['createdAt'] = { ...where['createdAt'], [Op.gte]: queryDto[key] };
+        where['createdAt'] = (where['createdAt'] ?? {}) as WhereOperators<NonNullable<ExampleDemo['createdAt']>>;
+        where['createdAt'][Op.gte] = queryDto[key];
         return;
       }
       if (key === 'endCreatedAt') {
-        where['createdAt'] = (where['createdAt'] ?? {}) as WhereOperators<ExampleDemo['createdAt']>;
+        where['createdAt'] = (where['createdAt'] ?? {}) as WhereOperators<NonNullable<ExampleDemo['createdAt']>>;
         where['createdAt'][Op.lte] = queryDto[key];
         return;
       }
       if (key === 'startUpdatedAt') {
-        where['updatedAt'] = (where['updatedAt'] ?? {}) as WhereOperators<ExampleDemo['updatedAt']>;
+        where['updatedAt'] = (where['updatedAt'] ?? {}) as WhereOperators<NonNullable<ExampleDemo['updatedAt']>>;
         where['updatedAt'][Op.gte] = queryDto[key];
         return;
       }
       if (key === 'endUpdatedAt') {
-        where['updatedAt'] = (where['updatedAt'] ?? {}) as WhereOperators<ExampleDemo['updatedAt']>;
+        where['updatedAt'] = (where['updatedAt'] ?? {}) as WhereOperators<NonNullable<ExampleDemo['updatedAt']>>;
         where['updatedAt'][Op.lte] = queryDto[key];
         return;
       }
       (where as Record<keyof typeof where, any>)[key] = queryDto[key]; //因为 where[key as Exclude<typeof key,'page'|'pageSize'>] = queryDto[key]; 赋值会触发 TS2590: Expression produces a union type that is too complex to represent.
     });
-
     const { count, rows } = await this.exampleDemoRepository.findAndCountAll({
       where,
       offset: (queryDto.page - 1) * queryDto.pageSize,

@@ -1,14 +1,15 @@
 {
   "name": "meadmin",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "description": "",
   "private": true,
   "type": "module",
   "dependencies": {
-    "@meadmin/cli": "~1.3.4",
-    "@meadmin/core": "~1.3.4",
-    "@meadmin/midway-vite-view": "~1.3.4",
+    "@meadmin/cli": "~1.3.5",
+    "@meadmin/core": "~1.3.5",
+    "@meadmin/midway-vite-view": "~1.3.5",
     "@midwayjs/bootstrap": "^3.20.22",
+    "@midwayjs/bullmq": "^3.20.24",
     "@midwayjs/busboy": "^3.20.22",
     "@midwayjs/cache-manager": "^3.20.22",
     "@midwayjs/captcha": "^3.20.22",
@@ -21,9 +22,9 @@
     "@midwayjs/static-file": "^3.20.22",
     "@midwayjs/swagger": "^3.20.22",
     "@midwayjs/validate": "^3.20.22",
-    "@sequelize/core": "7.0.0-alpha.47",
-    "@sequelize/postgres": "7.0.0-alpha.47",
-    "@sequelize/utils": "7.0.0-alpha.47",
+    "@sequelize/core": "7.0.0-alpha.48",
+    "@sequelize/postgres": "7.0.0-alpha.48",
+    "@sequelize/utils": "7.0.0-alpha.48",
     "dayjs": "^1.11.19",
     "dotenv": "^16.6.1",
     "lodash-es": "^4.17.21",
@@ -55,7 +56,7 @@
     "prettier-plugin-organize-imports": "^4.3.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "8.58.0",
-    "vite": "~8.0.13"
+    "vite": "~8.2.0"
   },
   "engines": { "node": ">=22.14.0" },
   "scripts": {

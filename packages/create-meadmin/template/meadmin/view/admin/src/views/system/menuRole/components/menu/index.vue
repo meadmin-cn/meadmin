@@ -29,7 +29,7 @@
       <vxe-column field="isLink" :title="t('外链')" :formatter="formatterDict"></vxe-column>
       <vxe-column field="component" :title="t('组件路径')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="orderNum" :title="t('排序(降序)')" :formatter="formatterStr"></vxe-column>
-      <vxe-column v-if="permission(['system_menu_info', 'system_menu_edit', 'system_menu_del'])" title="操作" fixed="right">
+      <vxe-column v-if="permission(['system_menu_info', 'system_menu_edit', 'system_menu_del'])" title="操作" fixed="right" min-width="100px">
         <template #default="{ row }">
           <me-button v-if="permission('system_menu_info')" link :title="t('详情')" @click="showInfo(row.id)">
             <mel-icon-memo />
@@ -62,7 +62,7 @@
   </div>
 </template>
 <script setup lang="ts" name="Menu">
-import type { SystemMenuInfo, SystemMenuTreeAll} from '@/api/system/menu';
+import type { SystemMenuInfo, SystemMenuTreeAll } from '@/api/system/menu';
 import { delSystemMenuApi, systemMenuTreeAllApi } from '@/api/system/menu';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';

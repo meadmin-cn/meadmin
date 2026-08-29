@@ -11,7 +11,7 @@ export class SystemAdminQueryDto extends IntersectionType(
   PartialType(
     OmitDtoType(
       SystemAdmin as new () => InferAttributesLoose<SystemAdmin>,
-      ['_roleMenus', 'roleMenus', 'avatar', 'roles', 'createdAdmin', 'updatedAdmin'], //移除关联字段和虚拟属性
+      ['_roleMenus', 'roleMenus', 'avatar', 'roles', 'organizations', 'createdAdmin', 'updatedAdmin'], //移除关联字段和虚拟属性
     ),
   ),
 ) {
@@ -35,4 +35,13 @@ export class SystemAdminQueryDto extends IntersectionType(
 
   @ApiPropertyRule({ description: '手机号', rule: RuleType.string() })
   mobile?: string;
+
+  @ApiPropertyRule({ description: '模糊查询字段，查询username、nickname、mobile', rule: RuleType.string() })
+  query?: string; //模糊查询字段，查询username、nickname、mobile
+
+  @ApiPropertyRule({ description: '具有的角色id', rule: RuleType.array().items(RuleType.string()) })
+  roleIds?: Array<string>; //具有的角色id
+
+  @ApiPropertyRule({ description: '具有的组织Id', rule: RuleType.array().items(RuleType.string()) })
+  orgIds?: Array<string>;
 }

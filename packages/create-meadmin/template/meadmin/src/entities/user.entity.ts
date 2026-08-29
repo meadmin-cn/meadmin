@@ -3,8 +3,7 @@ import { uuid } from '@/helper/snowflake.js';
 import { RuleType } from '@/ruleType/index.js';
 import { BelongsToModel } from '@/types/entity.js';
 import { getSchemaPath } from '@midwayjs/swagger';
-import { CreationOptional, NonAttribute } from '@sequelize/core';
-import { DataTypes, Op } from '@sequelize/core';
+import { CreationOptional, DataTypes, NonAttribute, Op } from '@sequelize/core';
 import { Attribute, BelongsTo, Default, DeletedAt, Index, PrimaryKey, Table } from '@sequelize/core/decorators-legacy';
 import { BaseModel } from './abstract/base.entity.js';
 import { SystemAdmin } from './systemAdmin.entity.js';
@@ -59,7 +58,7 @@ export class User extends BaseModel<User> {
     allowNull: false,
     defaultValue: 0,
   })
-  @ApiPropertyRule({ description: '登录失败次数' })
+  @ApiPropertyRule({ description: '登录失败次数', type: 'number' })
   loginFailure: CreationOptional<number>;
 
   @Attribute({

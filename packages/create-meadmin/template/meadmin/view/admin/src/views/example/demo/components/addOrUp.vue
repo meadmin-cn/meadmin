@@ -33,9 +33,8 @@
 </template>
 
 <script setup lang="ts" name="AddOrUpExampleDemo">
-import { ExampleDemo, addExampleDemoApi, exampleDemoInfoApi, updateExampleDemoApi } from '@/api/example/demo';
+import { ExampleDemo, type ExampleDemoInfo, addExampleDemoApi, exampleDemoInfoApi, updateExampleDemoApi } from '@/api/example/demo';
 import { useLocalesI18n } from '@/locales/i18n';
-import { resetObj } from '@/utils/helper';
 import { isMobile } from '@/utils/validate.js';
 import type { FormInstance, FormRules } from 'element-plus';
 //接口需要现在setup顶层初始化（如果是异步setup需要在异步调用之前初始化），否则会有unMounted，非法调用警告，因为vueRequest使用了unMounted
@@ -76,14 +75,14 @@ const emit = defineEmits<{
   (e: 'closed'): void;
 }>();
 
-const info = reactive(new ExampleDemo());
+const info = ref<ExampleDemo | ExampleDemoInfo>(new ExampleDemo());
 const loading = ref(false);
 watch(
   () => props.id,
   async (id?: string) => {
     if (id) {
       loading.value = true;
-      resetObj(info, await infoRunAsync(id));
+      info.value = await infoRunAsync(id);
       loading.value = false;
     }
   },
@@ -92,7 +91,7 @@ watch(
 const rules: FormRules = {
   mobile: [
     { required: true, message: t('{label} 必须填写', { label: t('手机号') }), trigger: 'blur' },
-    { validator: (_rule, value: string | number) => isMobile(value), message: t('{label} 必须是正确的手机号', { label: t('手机号') }), trigger: 'blur' },
+    { validator: (rule, value: string | number) => isMobile(value), message: t('{label} 必须是正确的手机号', { label: t('手机号') }), trigger: 'blur' },
   ],
   type: [{ required: true, message: t('{label} 必须填写', { label: t('类型') }), trigger: 'blur' }],
   name: [
@@ -108,9 +107,9 @@ const submit = async () => {
     return formEl.value!.scrollToField(Object.keys(invalidFields!)[0]);
   }
   if (props.id) {
-    await updateRunAsync(props.id, info);
+    await updateRunAsync(props.id, info.value);
   } else {
-    await addRunAsync(info);
+    await addRunAsync(info.value);
   }
   show.value = false;
   emit('success');

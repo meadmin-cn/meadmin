@@ -1,6 +1,6 @@
 <template>
-  <me-dialog v-model="show" :title="t('详情')" :close-on-click-modal="false" @closed="emit('closed')">
-    <el-descriptions v-loading="loading" class="info" :border="true">
+  <me-dialog v-model="show" v-loading="loading" :title="t('详情')" :close-on-click-modal="false" @closed="emit('closed')">
+    <el-descriptions class="info" :border="true">
       <el-descriptions-item :label="t('ID')"> {{ formatterStrExec(data?.id) }} </el-descriptions-item>
       <el-descriptions-item :label="t('手机号')"> {{ formatterStrExec(data?.mobile) }} </el-descriptions-item>
       <el-descriptions-item :label="t('类型')"> {{ formatterDictExec(dict, 'type', data?.type) }} </el-descriptions-item>
@@ -15,8 +15,8 @@
       </el-descriptions-item>
       <el-descriptions-item :label="t('创建时间')"> {{ formatterAtExec(data?.createdAt) }} </el-descriptions-item>
       <el-descriptions-item :label="t('最后更新时间')"> {{ formatterAtExec(data?.updatedAt) }} </el-descriptions-item>
-      <el-descriptions-item :label="t('创建者')"> {{ formatterObjectExecFn((obj) => `${obj.nickname}(${obj.username})`)(data?.createdAdmin) }} </el-descriptions-item>
-      <el-descriptions-item :label="t('最后更新者')"> {{ formatterObjectExecFn((obj) => `${obj.nickname}(${obj.username})`)(data?.updatedAdmin) }} </el-descriptions-item>
+      <el-descriptions-item :label="t('创建者(管理员)')"> {{ formatterObjectExecFn((obj) => `${obj.nickname}(${obj.username})`)(data?.createdAdmin) }} </el-descriptions-item>
+      <el-descriptions-item :label="t('最后更新者(管理员)')"> {{ formatterObjectExecFn((obj) => `${obj.nickname}(${obj.username})`)(data?.updatedAdmin) }} </el-descriptions-item>
     </el-descriptions>
     <template #footer>
       <me-button @click="() => (show = false)">{{ t('关闭') }}</me-button>

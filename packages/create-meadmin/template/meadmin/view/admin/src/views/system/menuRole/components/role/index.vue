@@ -44,7 +44,7 @@
   </div>
 </template>
 <script setup lang="ts" name="Group">
-import type { SystemRoleInfo, SystemRoleTreeAll} from '@/api/system/role';
+import type { SystemRoleInfo, SystemRoleTreeAll } from '@/api/system/role';
 import { delSystemRoleApi, systemRoleTreeAllApi, updateSystemRoleApi } from '@/api/system/role';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';

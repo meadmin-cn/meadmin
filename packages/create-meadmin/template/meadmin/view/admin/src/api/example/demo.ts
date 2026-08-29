@@ -18,8 +18,8 @@ export class ExampleDemo {
 
 //示例_书籍
 export type ExampleBook = {
-  createdAdmin: SystemAdminInfo | null; //创建者
-  updatedAdmin: SystemAdminInfo | null; //最后更新者
+  createdAdmin: SystemAdminInfo | null; //创建者(管理员)
+  updatedAdmin: SystemAdminInfo | null; //最后更新者(管理员)
   id: string; //ID
   name: string; //名称
   createdAt: string; //创建时间
@@ -39,18 +39,22 @@ export type User = {
   lastLoginAt: string | null; //最后登录时间
   lastLoginIp: string; //最后登录ip
   status: 1 | 0; //状态:1=启用;0=禁用
-  createdUserId: string | null; //创建者Id
-  createdUser: User | null; //创建者
-  updatedUser: User | null; //最后更新者
+  createdUserId: string | null; //创建者(用户)Id
+  createdUser: User | null; //创建者(用户)
+  updatedUser: User | null; //最后更新者(用户)
+  createdAdmin: SystemAdminInfo | null; //创建者(管理员)
+  updatedAdmin: SystemAdminInfo | null; //最后更新者(管理员)
   createdAt: string; //创建时间
   updatedAt: string; //最后更新时间
 };
 
 //用户附件表(前台)
 export type UserFile = {
-  createdUserId: string | null; //创建者Id
-  createdUser: User | null; //创建者
-  updatedUser: User | null; //最后更新者
+  createdAdmin: SystemAdminInfo | null; //创建者(管理员)
+  updatedAdmin: SystemAdminInfo | null; //最后更新者(管理员)
+  createdUserId: string | null; //创建者(用户)Id
+  createdUser: User | null; //创建者(用户)
+  updatedUser: User | null; //最后更新者(用户)
   id: string; //ID
   name: string; //文件名
   path: string; //路径
@@ -111,8 +115,8 @@ export type ExampleDemoInfo = ExampleDemo & {
   id: string; //ID
   createdAt: string; //创建时间
   updatedAt: string; //最后更新时间
-  createdAdmin: SystemAdminInfo | null; //创建者
-  updatedAdmin: SystemAdminInfo | null; //最后更新者
+  createdAdmin: SystemAdminInfo | null; //创建者(管理员)
+  updatedAdmin: SystemAdminInfo | null; //最后更新者(管理员)
 };
 //添加示例_Demo信息
 export function addExampleDemoApi() {
@@ -128,8 +132,8 @@ export function addExampleDemoApi() {
 
 export type ExampleDemoListResult = PageResult<ExampleDemoInfo>;
 export class ExampleDemoListParam extends PageParam {
-  createdAdmin?: SystemAdminInfo | null; //创建者
-  updatedAdmin?: SystemAdminInfo | null; //最后更新者
+  createdAdmin?: SystemAdminInfo | null; //创建者(管理员)
+  updatedAdmin?: SystemAdminInfo | null; //最后更新者(管理员)
   id?: string; //ID
   mobile?: string | null; //手机号
   type?: 0 | 1 | 2; //类型:0=书籍;1=电子产品;2=卡片

@@ -1,9 +1,6 @@
 <template>
   <me-dialog v-model="show" :title="t(id ? '编辑' : '新增')" :close-on-click-modal="false" @closed="emit('closed')">
     <el-form ref="formEl" v-loading="loading" :model="info" :rules="rules" class="add" label-width="auto">
-      <el-form-item :label="t('角色组')" prop="roleIds">
-        <el-tree-select v-model="info.roleIds" :data="treeAllList || []" check-strictly node-key="id" multiple filterable :props="{ label: 'roleName' }" :render-after-expand="false" />
-      </el-form-item>
       <el-form-item :label="t('用户名')" prop="username">
         <el-input v-model="info.username" clearable></el-input>
       </el-form-item>
@@ -27,6 +24,12 @@
           <el-option v-for="val in dict.status" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
       </el-form-item>
+      <el-form-item :label="t('角色组')" prop="roleIds">
+        <el-tree-select v-model="info.roleIds" :data="treeAllList || []" check-strictly node-key="id" multiple filterable :props="{ label: 'roleName' }" :render-after-expand="false" />
+      </el-form-item>
+      <el-form-item :label="t('组织')" prop="orgIds">
+        <el-tree-select v-model="info.orgIds" :data="orgTreeAllList || []" check-strictly node-key="id" multiple filterable :props="{ label: 'orgName' }" :render-after-expand="false" />
+      </el-form-item>
     </el-form>
     <template #footer>
       <me-button @click="() => (show = false)">{{ t('取消') }}</me-button>
@@ -37,6 +40,7 @@
 
 <script setup lang="ts" name="AddOrUpSystemAdmin">
 import { SystemAdmin, addSystemAdminApi, systemAdminInfoApi, updateSystemAdminApi } from '@/api/system/admin';
+import { systemOrganizationTreeAllApi } from '@/api/system/organization.js';
 import { systemRoleTreeAllApi } from '@/api/system/role';
 import { useLocalesI18n } from '@/locales/i18n';
 import { resetObj } from '@/utils/helper';
@@ -44,11 +48,12 @@ import { isMobile } from '@/utils/validate.js';
 import type { FormInstance, FormRules } from 'element-plus';
 import { getDict } from '../dict.js';
 const { data: treeAllList, runAsync: getTreeAllAsync } = systemRoleTreeAllApi();
+const { data: orgTreeAllList, runAsync: getOrgTreeAllAsync } = systemOrganizationTreeAllApi();
 const { runAsync: systemAdminInfoApiRunAsync } = systemAdminInfoApi();
 const { runAsync: updateSystemAdminApiRunsync } = updateSystemAdminApi();
 const { runAsync: addSystemAdminApiRunsync } = addSystemAdminApi();
 let { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../lang/${locale}.json`), 'systemAdmin']);
-await Promise.all([loadRes, getTreeAllAsync()]);
+await Promise.all([loadRes, getTreeAllAsync(), getOrgTreeAllAsync()]);
 const dict = getDict(t);
 const show = defineModel<boolean>();
 const props = defineProps<{
@@ -66,7 +71,7 @@ watch(
     if (id) {
       loading.value = true;
       const enitity = await systemAdminInfoApiRunAsync(id);
-      resetObj(info, Object.assign({ roleIds: enitity.roles.map((item) => item.id) }, enitity));
+      resetObj(info, Object.assign({ roleIds: enitity.roles.map((item) => item.id), orgIds: enitity.organizations.map((item) => item.id) }, enitity));
       loading.value = false;
     }
   },

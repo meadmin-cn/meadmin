@@ -24,7 +24,7 @@ import {
   HasOneGetAssociationMixin,
   HasOneSetAssociationMixin,
   InferAttributesOptions,
-  Model,
+  Model
 } from '@sequelize/core';
 import { AnyFunction } from '@sequelize/utils';
 

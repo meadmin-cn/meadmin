@@ -1,5 +1,55 @@
 
 
+## [1.3.6](https://github.com/meadmin-cn/meadmin/compare/main-1.3.4...main-1.3.6) (2026-08-29)
+
+
+### 新功能[feat]
+
+* 加上电话校验，后端校验多语言放到语言json文件中 ([ce67c9e](https://github.com/meadmin-cn/meadmin/commit/ce67c9e079fcec037a60f58c81bc064c7c8fbf36))
+* 加上任务队列 ([39c6862](https://github.com/meadmin-cn/meadmin/commit/39c68620e2ea26361e37a981522b6865b9d89419))
+* 加上组织表 ([81fcfb4](https://github.com/meadmin-cn/meadmin/commit/81fcfb4157f40d18a346a2ef5e71733a8bd94882))
+* 设置create 最新模版 ([845c3b1](https://github.com/meadmin-cn/meadmin/commit/845c3b136eda732840fcd90c05b45d5720645fd4))
+* **cli:** 加上归档部署文件命令compose ([afaa858](https://github.com/meadmin-cn/meadmin/commit/afaa8585a67515a484a151915e459dc2a11a0519))
+* **cli:** 优化where类型 ([639f439](https://github.com/meadmin-cn/meadmin/commit/639f439d420bd8c9adda3d75654784d9a2278780))
+* **meadmin:** 加上组织管理 ([722132a](https://github.com/meadmin-cn/meadmin/commit/722132ae3a698045adaafead3d2ebdb740ab45a1))
+* **meadmin:** 加上组织相关文件 ([8bc82c6](https://github.com/meadmin-cn/meadmin/commit/8bc82c69a62e674b1c3aa722ef773a702ae35776))
+
+
+### Bug 修复[fix]
+
+* 修复类型错误，加上压缩函数 ([c9ebc3e](https://github.com/meadmin-cn/meadmin/commit/c9ebc3e37ec19c9a9d7702d8600ff541482970f5))
+* 修复启动顺序导致单例命名空间冲突问题，设置队列启动不清楚定时任务 ([c5e920b](https://github.com/meadmin-cn/meadmin/commit/c5e920bc44b8db5137f65146e14210ddf55af360))
+* 修复未排除关联属性导致ts报错bug ([390e07b](https://github.com/meadmin-cn/meadmin/commit/390e07b7ab78e576f556972bace32e7d9e803086))
+* meadmin sql删除多余的菜单 ([c28cb97](https://github.com/meadmin-cn/meadmin/commit/c28cb97d6672c32eafb1c57da432c8cb7fa92107))
+* **meadmin-view-admin:** 修复json组件渲染错误 ([0a8000c](https://github.com/meadmin-cn/meadmin/commit/0a8000c4e130cc792a980512b9c1effc0ef9a35b))
+* **meadmin-view-admin:** 修复vite hmr端口占用冲突问题 ([684c4d0](https://github.com/meadmin-cn/meadmin/commit/684c4d02d10e02e5fd462a92f0c1a47686efa9a1))
+* **meadmin-view-admin:** 修复vxetable 翻译错误问题 ([748922c](https://github.com/meadmin-cn/meadmin/commit/748922cc04623b039726f319976e0d77dbe39369))
+* **meadmin:** 修复分开部署队列和网站时错误bug ([ba6de2d](https://github.com/meadmin-cn/meadmin/commit/ba6de2d95dec1207412482cd3eeb1249dbe71a4e))
+
+
+### 其他[chore]
+
+* 版本设置为1.3.5 ([5c9f657](https://github.com/meadmin-cn/meadmin/commit/5c9f657e0788519e28face0eca666b41b845c6ff))
+* **meadmin:** seqlize 升级为 7.0.0-alpha.47 ([f65273b](https://github.com/meadmin-cn/meadmin/commit/f65273bd82f67fff36fbc757c24a8427e4f93b6d))
+* **meadmin:** vite升级到8.2 ([5dbcf6d](https://github.com/meadmin-cn/meadmin/commit/5dbcf6d33a4b85d509580e7ba4f43129d604fb7b))
+
+
+### 重构[refactor]
+
+* 创建/更新组件 info类型写法优化 ([01680af](https://github.com/meadmin-cn/meadmin/commit/01680af58fdaaeec0486c4c80f503134ac41d3ef))
+
+
+### 性能改进[perf]
+
+* 升级vaxetable版本 优化可以取消选中组织 ([347cc10](https://github.com/meadmin-cn/meadmin/commit/347cc10979649eea023a80bd08c27447262177cf))
+
+
+### CI发版[ci]
+
+* 版本设置为1.3.6 ([7446ea3](https://github.com/meadmin-cn/meadmin/commit/7446ea33d0f17e3f11b33c2abda732f58a096ffd))
+* **create-meadmin:** 更新1.3.5模板 ([bd66326](https://github.com/meadmin-cn/meadmin/commit/bd66326c9f301a29cdeeab112f2b92d89f36a2df))
+* **create-meadmin:** 更新模板 ([a2ce4f5](https://github.com/meadmin-cn/meadmin/commit/a2ce4f5e415a26225fdc9c1f6992e64086047bc8))
+
 ## [1.3.4](https://github.com/meadmin-cn/meadmin/compare/main-1.3.3...main-1.3.4) (2026-05-20)
 
 

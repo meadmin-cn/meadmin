@@ -22,17 +22,13 @@ import { Job } from './entities/job.entity.js';
 import { filters } from './filter/index.js';
 import { initLogger } from './logger.js';
 import { SequelizeDataSourceManagerService } from './service/dataSourceManager.service.js';
-
 const registreDecorators = new RegistreDecorators();
-
 const imports = [];
 if (process.env.MODE !== 'ONLY_WORKER') {
   imports.push(koa);
 }
-
-@Configuration({
-  imports: [
-    ...imports,
+imports.push(
+  ...[
     i18n,
     meadmin, //必须放在swagger之前引入
     validate,
@@ -45,13 +41,13 @@ if (process.env.MODE !== 'ONLY_WORKER') {
       enabledEnvironment: ['local', 'dev'],
     },
     staticFile,
-    viteView,
-    redis,
-    cacheManager,
-    captcha,
-    busboy,
-    bullmq,
   ],
+);
+if (process.env.MODE !== 'ONLY_WORKER') {
+  imports.push(viteView);
+}
+@Configuration({
+  imports: [...imports, redis, cacheManager, captcha, busboy, bullmq],
   detector: new ESModuleFileDetector({
     ignore: process.env.MODE === 'ONLY_API' ? ['**/processor/**'] : [],
   }),
@@ -102,10 +98,11 @@ export class MainConfiguration {
     if (!jobRepository) {
       return this.appLogger.error('设置队列任务监听失败，jobRepository创建失败');
     }
-    //监听队列状态
-    this.bullmqFramework.getQueueList().forEach((queue) => {
-      if (process.env.MODE !== 'ONLY_WORKER') {
+    setTimeout(() => {
+      //监听队列状态,放到下一个宏任务才能监听到，在生命周期内监听不到
+      this.bullmqFramework.getQueueList().forEach((queue) => {
         queue.on('waiting', (job) => {
+          //TODO::midway更新为可设置独立执行worker后待优化为仅在投递进程监听
           // Job is waiting to be processed.
           jobRepository
             .update(
@@ -124,71 +121,12 @@ export class MainConfiguration {
               this.appLogger.error('Error updating job status to active:', err.stack || '');
             });
         });
-      }
-      if (process.env.MODE !== 'ONLY_API') {
-        this.bullmqFramework.getWorkers(queue.name).forEach((worker) => {
-          worker.on('active', (job) => {
-            jobRepository
-              .update(
-                { status: 'active', jobId: job.id },
-                {
-                  where: {
-                    name: job.name,
-                  },
-                  transaction: null,
-                },
-              )
-              .catch((err: Error) => {
-                this.appLogger.error('Error updating job status to active:', err.stack || '');
-              });
-          });
-          worker.on('progress', (job, progress) => {
-            jobRepository
-              .update(
-                { status: 'active', progress: Number(progress), jobId: job.id },
-                {
-                  where: {
-                    name: job.name,
-                  },
-                  transaction: null,
-                },
-              )
-              .catch((err: Error) => {
-                this.appLogger.error('Error updating job progress:', err.stack || '');
-              });
-          });
-          worker.on('completed', (job, result) => {
-            const successResult = JSON.stringify({
-              result: result,
-              jobId: job.id,
-              time: dayjs().format('YYYY-MM-DD HH:mm:ss.SSS'),
-            });
-            jobRepository
-              .update(
-                { status: 'completed', progress: 100, result: sql`${sql.attribute(jobRepository.modelDefinition.getColumnName('result'))} || ${successResult}::jsonb`, sucessedNum: sql` ${sql.attribute(jobRepository.modelDefinition.getColumnName('sucessedNum'))} + 1 `, jobId: job.id },
-                {
-                  where: {
-                    name: job.name,
-                  },
-                  transaction: null,
-                },
-              )
-              .catch((err: Error) => {
-                this.appLogger.error('Error updating job status to completed:' + err.message, err.stack || '');
-              });
-          });
-          worker.on('failed', (job, error) => {
-            if (job) {
-              const jobRepository = dataSourceManager.getDataSource(dataSourceManager.getDataSourceNameByModel(Job) || dataSourceManager.getDefaultDataSourceName()).models.get<Job>(Job.name)!;
-              const failedResponse = JSON.stringify({
-                message: error?.message || '',
-                stack: error?.stack || '',
-                jobId: job?.id || '',
-                time: dayjs().format('YYYY-MM-DD HH:mm:ss.SSS'),
-              });
+        if (process.env.MODE !== 'ONLY_API') {
+          this.bullmqFramework.getWorkers(queue.name).forEach((worker) => {
+            worker.on('active', (job) => {
               jobRepository
                 .update(
-                  { status: 'failed', failedResponse: sql`${sql.attribute(jobRepository.modelDefinition.getColumnName('failedResponse'))} || ${failedResponse}::jsonb`, failedNum: sql`${sql.attribute(jobRepository.modelDefinition.getColumnName('failedNum'))} + 1`, jobId: job?.id || undefined },
+                  { status: 'active', jobId: job.id },
                   {
                     where: {
                       name: job.name,
@@ -197,13 +135,74 @@ export class MainConfiguration {
                   },
                 )
                 .catch((err: Error) => {
-                  this.appLogger.error('Error updating job status to failed:' + err.message, err.stack || '');
+                  this.appLogger.error('Error updating job status to active:', err.stack || '');
                 });
-            }
+            });
+            worker.on('progress', (job, progress) => {
+              jobRepository
+                .update(
+                  { status: 'active', progress: Number(progress), jobId: job.id },
+                  {
+                    where: {
+                      name: job.name,
+                    },
+                    transaction: null,
+                  },
+                )
+                .catch((err: Error) => {
+                  this.appLogger.error('Error updating job progress:', err.stack || '');
+                });
+            });
+            worker.on('completed', (job, result) => {
+              console.log(333, job.name);
+
+              const successResult = JSON.stringify({
+                result: result,
+                jobId: job.id,
+                time: dayjs().format('YYYY-MM-DD HH:mm:ss.SSS'),
+              });
+              jobRepository
+                .update(
+                  { status: 'completed', progress: 100, result: sql`${sql.attribute(jobRepository.modelDefinition.getColumnName('result'))} || ${successResult}::jsonb`, sucessedNum: sql` ${sql.attribute(jobRepository.modelDefinition.getColumnName('sucessedNum'))} + 1 `, jobId: job.id },
+                  {
+                    where: {
+                      name: job.name,
+                    },
+                    transaction: null,
+                  },
+                )
+                .catch((err: Error) => {
+                  this.appLogger.error('Error updating job status to completed:' + err.message, err.stack || '');
+                });
+            });
+            worker.on('failed', (job, error) => {
+              if (job) {
+                const jobRepository = dataSourceManager.getDataSource(dataSourceManager.getDataSourceNameByModel(Job) || dataSourceManager.getDefaultDataSourceName()).models.get<Job>(Job.name)!;
+                const failedResponse = JSON.stringify({
+                  message: error?.message || '',
+                  stack: error?.stack || '',
+                  jobId: job?.id || '',
+                  time: dayjs().format('YYYY-MM-DD HH:mm:ss.SSS'),
+                });
+                jobRepository
+                  .update(
+                    { status: 'failed', failedResponse: sql`${sql.attribute(jobRepository.modelDefinition.getColumnName('failedResponse'))} || ${failedResponse}::jsonb`, failedNum: sql`${sql.attribute(jobRepository.modelDefinition.getColumnName('failedNum'))} + 1`, jobId: job?.id || undefined },
+                    {
+                      where: {
+                        name: job.name,
+                      },
+                      transaction: null,
+                    },
+                  )
+                  .catch((err: Error) => {
+                    this.appLogger.error('Error updating job status to failed:' + err.message, err.stack || '');
+                  });
+              }
+            });
           });
-        });
-      }
-    });
+        }
+      });
+    }, 0);
   }
 
   /**

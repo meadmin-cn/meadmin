@@ -1,3 +1,4 @@
+@use './fonts.scss';
 @use './element-plus.scss';
 @use './transition.scss';
 
@@ -108,7 +109,7 @@ a {
   background-color: rgb(86, 88, 91);
 }
 
-.page-100{
+.page-100 {
   position: absolute;
   left: 0;
   right: 0;
@@ -117,6 +118,6 @@ a {
   display: flex;
   flex-direction: column;
 }
-.page-padding{
+.page-padding {
   padding: calc($page-padding - 10px);
 }

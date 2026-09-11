@@ -12,11 +12,11 @@
         </a>
         <!-- 桌面端：悬停下拉（任意层级向右展开） -->
         <div v-if="mode === 'desktop'" class="nv-drop" :class="{ side: depth > 0 }">
-          <nav-menu :items="kids(item)" :depth="depth + 1" mode="desktop" @navigate="emit('navigate')" />
+          <nav-menu :items="kids(item)" :depth="depth + 1" mode="desktop" :active="active" @navigate="emit('navigate')" />
         </div>
         <!-- 移动端：手风琴展开 -->
         <div v-else-if="expanded.has(item.path)" class="nv-sub">
-          <nav-menu :items="kids(item)" :depth="depth + 1" mode="mobile" @navigate="emit('navigate')" />
+          <nav-menu :items="kids(item)" :depth="depth + 1" mode="mobile" :active="active" @navigate="emit('navigate')" />
         </div>
       </div>
       <!-- 叶子菜单 -->
@@ -31,9 +31,10 @@
 import { reactive } from 'vue';
 import type { RouteRecordRaw } from 'vue-router';
 
-const props = withDefaults(defineProps<{ items: RouteRecordRaw[]; mode?: 'desktop' | 'mobile'; depth?: number }>(), {
+const props = withDefaults(defineProps<{ items: RouteRecordRaw[]; mode?: 'desktop' | 'mobile'; depth?: number; active?: string }>(), {
   mode: 'desktop',
   depth: 0,
+  active: '',
 });
 const emit = defineEmits<{ navigate: [] }>();
 
@@ -52,7 +53,8 @@ const canMenu = (menu: RouteRecordRaw): boolean => {
   }
   return false;
 };
-const visibleItems = props.items.filter(canMenu).map(normalize);
+//保持响应式：items 可能由外部接口数据驱动（如 doc 插件切换版本后菜单整体替换）
+const visibleItems = computed(() => props.items.filter(canMenu).map(normalize));
 const kids = (item: RouteRecordRaw): RouteRecordRaw[] => (item.children ?? []).filter(canMenu).map(normalize);
 
 //仅有一个可见子菜单时，父级折叠为该子菜单（与框架原 menuItem 行为一致，meta.alwaysShow 可强制保留父级）
@@ -67,10 +69,16 @@ function normalize(item: RouteRecordRaw): RouteRecordRaw {
   return { ...item, children };
 }
 
+//当前激活路径：优先使用外部传入的 active（如 doc 插件按路由参数计算），缺省取当前路由
+const currentPath = computed(() => props.active || route.path);
 const isActive = (item: RouteRecordRaw): boolean => {
-  if (route.path === item.path) return true;
+  const path = currentPath.value;
+  if (!path) return false;
+  if (path === item.path) return true;
   //父级菜单：当前路由位于其子树内时高亮
-  return route.path.startsWith(item.path.endsWith('/') ? item.path : item.path + '/');
+  if (path.startsWith(item.path.endsWith('/') ? item.path : item.path + '/')) return true;
+  //子孙菜单与激活路径匹配时父级同步高亮（适配 doc 插件这类扁平路径菜单）
+  return kids(item).some((child) => isActive(child));
 };
 
 const go = (item: RouteRecordRaw) => {
@@ -217,7 +225,12 @@ const onGroupClick = (item: RouteRecordRaw) => {
   color: #2b5cff;
   background: #f0f4ff;
 }
+/* 父级组选中：仅文字高亮不加背景，与子项的背景选中态区分开，避免两块背景粘连 */
+.nv-list.mobile .nv-item > .nv-link.is-active {
+  background: none;
+}
 .nv-list.mobile .nv-sub {
+  margin-top: 4px;
   padding-left: 14px;
 }
 </style>

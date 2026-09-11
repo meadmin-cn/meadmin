@@ -1,7 +1,15 @@
 <template>
   <div class="layout">
     <div class="layout-header">
-      <Header></Header>
+      <Header :menus="menus" :active="active">
+        <!-- 头部右侧扩展插槽按需透传（不提供时保留 Header 内默认的更新日志） -->
+        <template v-if="$slots['header-right']" #right>
+          <slot name="header-right"></slot>
+        </template>
+        <template v-if="$slots['header-mobile-right']" #mobile-right>
+          <slot name="header-mobile-right"></slot>
+        </template>
+      </Header>
     </div>
     <div class="layout-page">
       <div class="page-body" :class="{ full: isFullWidth }">
@@ -15,9 +23,14 @@
 </template>
 
 <script setup lang="ts" name="Layout">
+import type { RouteRecordRaw } from 'vue-router';
 import Footer from './components/footer.vue';
 import Header from './components/header/index.vue';
 import Page from './page.vue';
+
+// menus 可由外部（如插件页面）通过 props 传入，替换头部导航菜单；缺省时使用站点动态路由菜单
+// active 可传入当前激活菜单路径（如 doc 插件按路由参数计算），缺省时取当前路由 path
+defineProps<{ menus?: RouteRecordRaw[]; active?: string }>();
 
 const route = useRoute();
 // 首页等落地页需要通栏（整屏背景），由路由 meta.fullWidth 控制

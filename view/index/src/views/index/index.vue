@@ -35,6 +35,15 @@ const info = await indexApi().runAsync();
 </script>
 <style lang="scss" scoped>
 .index {
+  font-family: 'Plus Jakarta Sans', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
+
+  /* ---------- Banner ---------- */
+  .header-banner {
+    margin-top: 16px;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 16px 40px -16px rgba(24, 36, 88, 0.25);
+  }
   .banner {
     position: relative;
     width: 100%;
@@ -47,90 +56,183 @@ const info = await indexApi().runAsync();
 
     .content {
       position: absolute;
-      top: 15%;
-      left: 10%;
-      color: #f5f3f3;
-      background-color: rgba(0, 0, 0, 0.3);
-      padding: 50px 15px;
-      max-width: 50%;
-      width: 500px;
-      border-radius: 5px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      height: 70%;
+      top: 50%;
+      left: 6%;
+      transform: translateY(-50%);
+      max-width: 460px;
+      padding: 32px 36px;
+      color: #fff;
+      background: rgba(16, 20, 34, 0.45);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 16px;
+      box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.35);
 
       .title {
-        margin-bottom: 20px;
-        font-size: 30px;
-        font-weight: bolder;
+        margin-bottom: 14px;
+        font-size: 34px;
+        font-weight: 800;
+        line-height: 1.25;
+        letter-spacing: -0.01em;
       }
 
-      .content {
-        font-size: 14px;
-        line-height: 1.2em;
+      .text {
+        font-size: 15px;
+        line-height: 1.8;
+        color: rgba(255, 255, 255, 0.88);
       }
     }
   }
 
+  /* 轮播指示器/箭头：胶囊指示条 + 毛玻璃箭头 */
+  .header-banner :deep(.el-carousel__button) {
+    width: 18px;
+    height: 4px;
+    border-radius: 999px;
+    opacity: 0.5;
+    transition: all 0.25s;
+  }
+  .header-banner :deep(.el-carousel__indicator.is-active .el-carousel__button) {
+    width: 28px;
+    opacity: 1;
+  }
+  .header-banner :deep(.el-carousel__arrow) {
+    background: rgba(16, 20, 34, 0.35);
+    backdrop-filter: blur(6px);
+    &:hover {
+      background: rgba(16, 20, 34, 0.55);
+    }
+  }
+
+  /* ---------- 内容区块 ---------- */
   .body {
     .item {
       display: flex;
       flex-direction: column;
-      padding-top: 30px;
+      padding: 56px 0 8px;
       align-items: center;
 
       .title {
-        font-size: 32px;
-        font-weight: bolder;
+        position: relative;
+        padding-bottom: 14px;
+        font-size: 30px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        color: #181c28;
+        /* 标题下装饰条 */
+        &::after {
+          content: '';
+          position: absolute;
+          left: 50%;
+          bottom: 0;
+          transform: translateX(-50%);
+          width: 44px;
+          height: 4px;
+          border-radius: 999px;
+          background: #2b5cff;
+        }
       }
 
       .desc {
-        padding-top: 5px;
-        font-size: 16px;
-        color: #4e6e8e;
+        padding-top: 14px;
+        font-size: 15.5px;
+        color: #6b7280;
       }
 
       .content {
         display: grid;
-        grid-template-columns: repeat(auto-fit, 30%);
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 24px;
         width: 100%;
-        justify-content: space-between;
-        padding: 25px;
+        padding: 36px 8px 24px;
 
         .card {
           background-color: #fff;
-          border-radius: 2px;
-          box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2);
-          height: 200px;
-          transition: all 0.3s;
-          padding: 0 10px;
+          border: 1px solid #e8ebf2;
+          border-radius: 14px;
+          box-shadow: 0 4px 16px -8px rgba(24, 36, 88, 0.08);
+          min-height: 180px;
+          padding: 28px 24px;
+          box-sizing: border-box;
+          transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease,
+            border-color 0.25s ease;
 
           .card-title {
-            font-size: 22px;
-            font-weight: bolde;
-            line-height: 80px;
-            border-bottom: 1px solid #f6eeee;
+            font-size: 19px;
+            font-weight: 700;
+            color: #181c28;
             text-align: center;
+            padding-bottom: 14px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid #f0f2f7;
           }
 
           .card-content {
-            padding-top: 20px;
-            padding-left: 15px;
-            padding-right: 15px;
-            color: #4e6e8e;
-            font-size: 16px;
+            color: #6b7280;
+            font-size: 14.5px;
+            line-height: 1.8;
             text-align: center;
           }
         }
 
         .card:hover {
-          margin-top: -5px;
-          box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.3);
+          transform: translateY(-6px);
+          border-color: rgba(43, 92, 255, 0.35);
+          box-shadow: 0 18px 36px -14px rgba(43, 92, 255, 0.25);
         }
       }
     }
 
     .item:nth-child(n + 2) {
       margin-top: 20px;
+    }
+  }
+
+  /* ---------- 移动端 ---------- */
+  @media (max-width: 720px) {
+    .header-banner {
+      margin-top: 10px;
+      border-radius: 12px;
+    }
+    .banner {
+      min-height: 220px;
+      .content {
+        left: 5%;
+        right: 5%;
+        max-width: none;
+        padding: 20px 22px;
+        border-radius: 12px;
+        .title {
+          margin-bottom: 8px;
+          font-size: 22px;
+        }
+        .text {
+          font-size: 13.5px;
+          line-height: 1.6;
+        }
+      }
+    }
+    .body .item {
+      padding: 40px 0 4px;
+      .title {
+        font-size: 24px;
+      }
+      .desc {
+        font-size: 14px;
+        text-align: center;
+      }
+      .content {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 24px 0 8px;
+        .card {
+          min-height: 0;
+          padding: 22px 20px;
+        }
+      }
     }
   }
 }

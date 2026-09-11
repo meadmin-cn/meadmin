@@ -4,9 +4,14 @@
       <me-icon-logo :size="30" style="fill: none" />
       <span class="brand-name">{{ globalStore.websiteName }}</span>
     </router-link>
-    <nav-menu class="menu" :items="menus" mode="desktop" />
+    <nav-menu class="menu" :items="menus" mode="desktop" :active="active" />
     <div class="right">
-      <a class="nav-ext" :href="changelogUrl" rel="noopener"> 更新日志<span class="new">New</span> </a>
+      <!-- 右侧扩展区：默认更新日志，可通过 right 插槽整体替换（移动端隐藏） -->
+      <div class="right-ext">
+        <slot name="right">
+          <a class="nav-ext" :href="changelogUrl" rel="noopener"> 更新日志<span class="new">New</span> </a>
+        </slot>
+      </div>
       <User></User>
       <button class="hamburger" aria-label="打开菜单" @click="mobileOpen = !mobileOpen">
         <me-icon-menu :size="22" />
@@ -14,8 +19,11 @@
     </div>
     <!-- 移动端折叠菜单 -->
     <div class="mobile-menu" :class="{ open: mobileOpen }">
-      <nav-menu :items="menus" mode="mobile" @navigate="mobileOpen = false" />
-      <a class="mm-ext" :href="changelogUrl" rel="noopener"> 更新日志 </a>
+      <nav-menu :items="menus" mode="mobile" :active="active" @navigate="mobileOpen = false" />
+      <!-- 移动端右侧扩展区：默认更新日志，可通过 mobile-right 插槽整体替换 -->
+      <slot name="mobile-right">
+        <a class="mm-ext" :href="changelogUrl" rel="noopener"> 更新日志 </a>
+      </slot>
     </div>
   </div>
 </template>
@@ -24,18 +32,23 @@
 import { PageEnum } from '@/dict/pageEnum';
 import { useGlobalStore, useRouteStore } from '@/store';
 import { ref } from 'vue';
+import type { RouteRecordRaw } from 'vue-router';
 import NavMenu from './components/navMenu.vue';
 import User from './components/user.vue';
 
 // TODO: 替换为真实的更新日志地址
-const changelogUrl = 'https://www.meadmin.cn/aon/doc';
+const changelogUrl = 'https://github.com/meadmin-cn/meadmin/blob/master/CHANGELOG.md';
+
+// menus 可由外部（如插件页面）通过 props 传入，缺省时使用站点动态路由菜单
+// active 可传入当前激活菜单路径（如 doc 插件按路由参数计算），缺省时取当前路由 path
+const props = defineProps<{ menus?: RouteRecordRaw[]; active?: string }>();
 
 const globalStore = useGlobalStore();
 const routeStore = useRouteStore();
 const mobileOpen = ref(false);
 
 const menus = computed(() => {
-  return routeStore.routes;
+  return props.menus ?? routeStore.routes;
 });
 </script>
 <style lang="scss" scoped>
@@ -69,6 +82,10 @@ const menus = computed(() => {
   align-items: center;
   gap: 10px;
   margin-left: auto;
+}
+.right-ext {
+  display: flex;
+  align-items: center;
 }
 .nav-ext {
   display: flex;
@@ -139,7 +156,7 @@ const menus = computed(() => {
 }
 @media (max-width: 960px) {
   .menu,
-  .nav-ext {
+  .right-ext {
     display: none;
   }
   .hamburger {

@@ -1,28 +1,30 @@
 <template>
   <div class="tag-bar">
     <a class="icon pointer" :class="{ 'is-disabled': scrollLeft <= 0 }" @click="back">
-      <mel-icon-d-arrow-left></mel-icon-d-arrow-left>
+      <me-icon-arrow-double-left></me-icon-arrow-double-left>
     </a>
     <el-scrollbar ref="scrollbarRef" view-class="list-parent" style="flex-grow: 1" @scroll="({ scrollLeft: left }: any) => (scrollLeft = left)">
       <div ref="listRef" class="list">
         <div v-for="tag in tags" :key="tag.fullPath" ref="tagsRef" class="item pointer" :class="{ active: tag.fullPath === currentTag?.fullPath }" @click="push(tag)" @contextmenu.prevent="setContextmenu($event.currentTarget as any, tag)">
+          <!-- 设计稿 .tag .dot：6px 灰色圆点（选中态变白） -->
+          <i class="dot"></i>
           {{ $t(tag.meta.title!) }}
           <div v-if="!tag.meta.affix" class="del-icon" @click.stop="close($event.currentTarget as any, tag)">
             <mel-icon-close />
           </div>
-          <div></div>
         </div>
       </div>
     </el-scrollbar>
     <div class="right">
       <div class="icon pointer" :class="{ 'is-disabled': Math.ceil(scrollLeft) >= max }" @click="go">
-        <mel-icon-d-arrow-right></mel-icon-d-arrow-right>
+        <me-icon-arrow-double-right></me-icon-arrow-double-right>
       </div>
       <div v-if="themeConfig.tagBarRefresh" class="icon pointer" @click="reload">
-        <mel-icon-refresh :class="{ rotate: reoadUrl }"></mel-icon-refresh>
+        <me-icon-refresh :class="{ rotate: reoadUrl }"></me-icon-refresh>
       </div>
-      <div v-if="themeConfig.tagBarMenu" class="icon pointer" @click.stop="setContextmenu($event.currentTarget as any, currentTag)">
-        <mel-icon-menu></mel-icon-menu>
+      <div v-if="themeConfig.tagBarMenu" class="icon tag-menu-icon pointer" @click.stop="setContextmenu($event.currentTarget as any, currentTag)">
+        <!-- 设计稿 v1.4 tag-tools：☰ 三线菜单图标 -->
+        <me-icon-tag-menu></me-icon-tag-menu>
       </div>
     </div>
   </div>
@@ -205,6 +207,7 @@ watch(route, () => {
   display: flex;
   align-items: center;
   background-color: var(--el-bg-color);
+  padding: 0 8px;
 
   .is-disabled {
     color: var(--el-disabled-text-color) !important;
@@ -212,12 +215,21 @@ watch(route, () => {
   }
 
   .icon {
-    padding: 0 10px;
-    height: 100%;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
     display: flex;
     align-items: center;
-    border-right: 1px solid var(--el-border-color);
+    justify-content: center;
+    padding: 0;
+    flex-shrink: 0;
+    font-size: 15px;
     color: var(--el-text-color-regular);
+
+    :deep(svg) {
+      width: 16px;
+      height: 16px;
+    }
 
     .rotate {
       animation: loading-rotate 1s linear infinite;
@@ -225,89 +237,105 @@ watch(route, () => {
   }
 
   .icon:hover {
+    background-color: var(--el-fill-color-light);
     color: var(--el-text-color-primary);
+  }
+
+  .tag-menu-icon {
+    background-color: transparent;
+    color: var(--el-text-color-regular);
   }
 
   .right {
     display: flex;
+    align-items: center;
     flex-shrink: 0;
     flex-grow: 0;
     justify-self: right;
     height: 100%;
-    border-left: 1px solid var(--el-border-color);
+    gap: 2px;
   }
 
   :deep(.list-parent) {
     height: 100%;
   }
 
+  // 标签 chip 化：圆角小胶囊，选中实心主题色白字
   :deep(.list) {
     display: flex;
     height: 100%;
     align-items: center;
     width: max-content;
+    gap: 6px;
+    padding: 0 8px;
 
     .item {
-      border-right: 1px solid var(--el-border-color);
-      height: 100%;
+      height: 28px;
       align-items: center;
       display: flex;
-      padding-left: 16px;
-      padding-right: 16px;
+      gap: 6px;
+      padding: 0 13px;
       flex-shrink: 0;
       flex-grow: 0;
       position: relative;
+      border-radius: 7px;
+      background-color: var(--el-fill-color-light);
+      border: 1px solid var(--el-border-color-lighter);
+      font-size: 12.5px;
+      color: var(--el-text-color-regular);
+      transition: all 0.2s;
+
+      // 设计稿 .tag .dot：6px 圆点、currentColor 70% 透明（选中态白点）
+      .dot {
+        display: none;
+        position: absolute;
+        left: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: currentColor;
+        opacity: 0.85;
+        pointer-events: none;
+      }
 
       .del-icon {
-        height: 100%;
-        width: 22px;
+        width: 12px;
+        height: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 12px;
-        margin-right: -16px;
-        visibility: hidden;
+        font-size: 11px;
+        line-height: 1;
+        opacity: 0.6;
+        transition:
+          opacity 0.2s,
+          transform 0.2s;
       }
 
       .del-icon:hover {
-        font-size: 14px;
+        opacity: 1;
+        transform: scale(1.1);
       }
-    }
-
-    .item:first-child {
-      margin-left: 0;
     }
 
     .item:hover {
-      // background-color: rgba(var(--el-color-primary-rgb), 0.5);
-      background-color: rgba(var(--el-color-primary-rgb), 0.1);
       color: var(--el-color-primary);
-
-      .del-icon {
-        visibility: unset;
-      }
+      border-color: rgba(var(--el-color-primary-rgb), 0.4);
     }
 
-    .item.active {
-      // color: var(--el-color-primary);
-      background-color: rgba(var(--el-color-primary-rgb), 0.1);
-      color: var(--el-color-primary);
-    }
-
-    .item::after {
-      position: absolute;
-      content: '';
-      height: 2px;
-      bottom: 0;
-      left: 0;
+    .item.active,
+    .item.active:hover {
       background-color: var(--el-color-primary);
-      width: 0;
-    }
+      border-color: var(--el-color-primary);
+      color: var(--el-color-white);
+      font-weight: 600;
+      box-shadow: 0 3px 8px rgba(var(--el-color-primary-rgb), 0.25);
 
-    .item:hover::after,
-    .item.active::after {
-      width: 100%;
-      transition: width 0.45s;
+      .dot {
+        display: block;
+      }
     }
   }
 }

@@ -1,8 +1,8 @@
 <template>
   <el-dropdown class="me-size-select" trigger="click" max-height="500px">
     <div class="flex-center pointer" v-bind="$attrs">
-      <el-avatar size="small" class="avatar" :src="userStore.user?.avatar?.url" />
-      <span v-if="!globalStore.isMobile" class="ellipsis-2">{{ userStore.user.nickname }}</span>
+      <el-avatar :size="28" class="avatar" :src="userStore.user?.avatar?.url" />
+      <span v-if="!globalStore.isMobile" class="ellipsis-2 nickname">{{ userStore.user.nickname }}</span>
     </div>
     <template #dropdown>
       <el-dropdown-menu>
@@ -36,13 +36,33 @@ const globalStore = useGlobalStore();
 </script>
 <style lang="scss" scoped>
 .flex-center {
-  max-width: 120px;
-  padding: 0 10px;
-  line-height: 120%;
+  max-width: 160px;
+  gap: 9px;
 
   .avatar {
-    margin-right: 5px;
     flex-shrink: 0;
+  }
+
+  // 设计稿 .tb-avatar：linear-gradient(135deg,#2b5cff,#6f9bff) 白字首字母
+  .avatar-initials {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--el-color-primary), color-mix(in srgb, var(--el-color-primary) 55%, #fff));
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // 设计稿 .tb-user span：13px、600
+  .nickname {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--el-text-color-primary);
+    margin-left: 0;
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="me-setting pointer" @click="setting.showSettingMenu = true">
-    <mel-icon-setting class="icon"></mel-icon-setting>
+    <me-icon-setting class="icon"></me-icon-setting>
   </div>
 </template>
 <script setup lang="ts" name="MeSetting">

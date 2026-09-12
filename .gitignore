@@ -32,3 +32,5 @@ tsconfig.node.tsbuildinfo
 !uploadFile/index/c99e23ad65db6db5bea03d828fb6166e.png
 !uploadFile/index/dac00cfc094a2b9acefeb67be311e1f5.png
 .workbuddy/
+.playwright-cli/
+

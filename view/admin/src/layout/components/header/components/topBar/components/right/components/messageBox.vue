@@ -2,7 +2,7 @@
   <el-dropdown class="message-box" max-height="500px" trigger="click">
     <div class="flex-center pointer">
       <el-badge :is-dot="isDot">
-        <mel-icon-bell class="message-icon"></mel-icon-bell>
+        <me-icon-bell class="message-icon"></me-icon-bell>
       </el-badge>
     </div>
     <template #dropdown>
@@ -46,7 +46,7 @@ const isDot = ref(true);
     .message-icon {
       height: 25px;
       line-height: 25px;
-      font-size: 1.3em;
+      font-size: 17px;
     }
   }
 }

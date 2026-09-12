@@ -116,7 +116,7 @@ export function systemOrganizationInfoApi(options?: RequestOptions<SystemOrganiz
 }
 
 export type UpdateSystemOrganizationInfoParam = Omit<Partial<SystemOrganizationInfo>, 'id' | 'createdAt' | 'updatedAt' | 'createdAdmin' | 'updatedAdmin'> & {
-  adminIds: string[]; //关联管理员id
+  adminIds?: string[]; //关联管理员id
 };
 //修改组织信息
 export function updateSystemOrganizationApi(options?: RequestOptions<SystemOrganizationInfo, [string, UpdateSystemOrganizationInfoParam]>) {

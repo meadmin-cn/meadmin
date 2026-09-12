@@ -59,7 +59,7 @@ const toggleFullscreen = () => {
   .item {
     width: 30px;
     height: 30px;
-    border-radius: 8px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -103,7 +103,7 @@ const toggleFullscreen = () => {
   .user-item {
     width: auto;
     padding: 4px 10px 4px 4px;
-    border-radius: 9px;
+    border-radius: 6px;
     gap: 9px;
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="menus.length" class="layout-menu" :class="{ 'has-title': menuType === 'sidebar' || globalStore.isMobile, 'has-expand': menuType !== 'sidebar' && !globalStore.isMobile, 'collapse': !globalStore.isMobile && themeConfig.menuCollapse }">
+  <div v-if="menus.length" class="layout-menu" :class="{ 'has-title': menuType === 'sidebar' || globalStore.isMobile, 'has-expand': menuType !== 'sidebar' && !globalStore.isMobile, 'collapse': !globalStore.isMobile && themeConfig.menuCollapse, 'is-animating': menuAnimating }">
     <div v-if="menuType !== 'sidebar' && !globalStore.isMobile" class="side-foot" @click="toggleCollapse">
       <!-- 设计稿 .collapse-btn：« 收起 / » 展开（双尖括号） -->
       <mel-icon-d-arrow-left v-if="!themeConfig.menuCollapse" class="collapse-icon"></mel-icon-d-arrow-left>
@@ -8,7 +8,7 @@
     <Title v-else class="layout-title"></Title>
     <div class="menu-box">
       <el-scrollbar view-class="layout-menu-content">
-        <el-menu class="el-menu-vertical-demo" :default-active="activeMenu" :collapse="!globalStore.isMobile && themeConfig.menuCollapse" :collapse-transition="false">
+        <el-menu ref="menuRef" class="el-menu-vertical-demo" :default-active="activeMenu" :default-openeds="defaultOpeneds" :unique-opened="true" :collapse="!globalStore.isMobile && themeConfig.menuCollapse" :collapse-transition="false">
           <menu-item v-for="item in menus" :key="item.path" :item="item" />
         </el-menu>
       </el-scrollbar>
@@ -26,6 +26,9 @@ const routeStore = useRouteStore();
 const globalStore = useGlobalStore();
 const route = useRoute();
 let activeMenu = ref('');
+const menuAnimating = ref(false);
+let menuAnimatingTimer: ReturnType<typeof setTimeout> | undefined;
+const menuRef = ref<{ open: (index: string) => void; close: (index: string) => void }>();
 watch(
   route,
   (route) => {
@@ -43,6 +46,66 @@ watch(
 );
 const toggleCollapse = () => {
   themeConfig.value.menuCollapse = !themeConfig.value.menuCollapse;
+};
+const getRenderedMenu = (item: RouteRecordRaw): RouteRecordRaw | undefined => {
+  if (item.meta?.hideMenu) {
+    return undefined;
+  }
+  const children = item.children?.filter((v) => v.meta && !v.meta.hideMenu) ?? [];
+  if (!children.length) {
+    return item;
+  }
+  const res = { ...item, children };
+  if (!item.meta?.alwaysShow && children.length === 1) {
+    return getRenderedMenu(children[0]);
+  }
+  return res;
+};
+const findOpeneds = (list: RouteRecordRaw[], path: string, parents: string[] = []): string[] => {
+  for (const item of list) {
+    const menu = getRenderedMenu(item);
+    if (!menu) {
+      continue;
+    }
+    const children = menu.children?.filter((v) => v.meta && !v.meta.hideMenu) ?? [];
+    if (menu.path === path) {
+      return parents;
+    }
+    if (children.length) {
+      const childOpeneds = findOpeneds(children, path, [...parents, menu.path]);
+      if (childOpeneds.length) {
+        return childOpeneds;
+      }
+    }
+  }
+  return [];
+};
+const collectSubMenuPaths = (list: RouteRecordRaw[], paths: string[] = []): string[] => {
+  list.forEach((item) => {
+    const menu = getRenderedMenu(item);
+    if (!menu) {
+      return;
+    }
+    const children = menu.children?.filter((v) => v.meta && !v.meta.hideMenu) ?? [];
+    if (children.length) {
+      paths.push(menu.path);
+      collectSubMenuPaths(children, paths);
+    }
+  });
+  return paths;
+};
+const syncOpeneds = async () => {
+  await nextTick();
+  if (themeConfig.value.menuCollapse) {
+    return;
+  }
+  const openeds = new Set(defaultOpeneds.value);
+  collectSubMenuPaths(menus.value).forEach((path) => {
+    if (!openeds.has(path)) {
+      menuRef.value?.close(path);
+    }
+  });
+  defaultOpeneds.value.forEach((path) => menuRef.value?.open(path));
 };
 const menuBg1 = computed(() => mixColor(themeConfig.value.menuBg, getColorLuma(themeConfig.value.menuBg) < 100 ? '#ffffff' : '#303133', 0.1));
 const menuActiveColor = computed(() => (getColorLuma(themeConfig.value.menuBg) < 100 ? '#ffffff' : '#303133'));
@@ -73,6 +136,24 @@ const menus = computed(() => {
   const topSeg = '/' + segments[0];
   return visibleChilds(routeStore.routes.find((r) => r.path === topSeg));
 });
+const defaultOpeneds = computed(() => findOpeneds(menus.value, activeMenu.value));
+watch(
+  () => themeConfig.value.menuCollapse,
+  () => {
+    menuAnimating.value = true;
+    clearTimeout(menuAnimatingTimer);
+    menuAnimatingTimer = setTimeout(() => {
+      menuAnimating.value = false;
+    }, 340);
+    syncOpeneds();
+  },
+);
+watch(defaultOpeneds, () => {
+  syncOpeneds();
+});
+onBeforeUnmount(() => {
+  clearTimeout(menuAnimatingTimer);
+});
 </script>
 <style lang="scss" scoped>
 .layout-menu {
@@ -85,11 +166,41 @@ const menus = computed(() => {
   position: relative;
 
   :deep(.horizontal-collapse-transition),
-  :deep(.horizontal-collapse-transition .el-sub-menu__title),
-  :deep(.collapse-transition),
+  :deep(.horizontal-collapse-transition .el-sub-menu__title) {
+    transition: none !important;
+  }
+
   :deep(.el-collapse-transition-enter-active),
   :deep(.el-collapse-transition-leave-active) {
-    transition: none !important;
+    transition:
+      height 0.32s cubic-bezier(0.2, 0, 0, 1),
+      max-height 0.32s cubic-bezier(0.2, 0, 0, 1),
+      opacity 0.24s ease !important;
+  }
+
+  &.is-animating {
+    :deep(.menu) {
+      opacity: 0 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: clip !important;
+      transition: none !important;
+    }
+    .menu-box :deep(.layout-menu-content) .el-menu {
+      .el-menu-item,
+      .el-sub-menu__title {
+        height: 34px !important;
+        min-height: 34px !important;
+        line-height: 34px !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        align-items: center !important;
+        overflow: hidden;
+      }
+      .el-menu--inline {
+        overflow: hidden;
+      }
+    }
   }
 
   .layout-title {
@@ -112,7 +223,7 @@ const menus = computed(() => {
       width: v-bind('themeConfig.menuWidth');
       color: var(--el-menu-text-color);
       contain: layout paint;
-      transition: width 0.22s cubic-bezier(0.2, 0, 0, 1);
+      transition: width 0.28s cubic-bezier(0.2, 0, 0, 1);
       // 设计稿 v1.4 .smenu：padding 12px 12px 8px（上12 左右12 下8）
       padding: 12px 12px 8px;
       box-sizing: border-box;
@@ -151,17 +262,16 @@ const menus = computed(() => {
           height: 0;
           border: 4.5px solid transparent;
           border-left-color: color-mix(in srgb, var(--el-menu-text-color) 75%, transparent);
-          top: 17px;
+          top: 1.2em;
           margin-top: 0;
-          transform: translateY(-50%);
-          transition: transform 0.25s;
+          transition: translateY(-50%) transform 0.25s;
           svg {
             display: none;
           }
         }
         .el-sub-menu.is-opened > .el-sub-menu__title .el-sub-menu__icon-arrow {
           // el-sub-menu 组件给箭头写了内联 transform: rotateZ(180deg)，必须 !important 才能覆盖
-          transform: translateY(-50%) rotate(90deg) !important;
+          transform: rotate(90deg) !important;
           border-left-color: var(--el-menu-active-color);
         }
         // 设计稿 .leaf:hover / .grp:hover：白色 6% 微光 + 文字高亮（深色菜单为白字，浅色菜单自动反色）
@@ -178,7 +288,10 @@ const menus = computed(() => {
 
         // 设计稿 .sub：展开子菜单无衬底（仅缩进），子项直接落在菜单底色上
         .el-menu--inline {
-          background-color: transparent;
+          background-color: color-mix(in srgb, var(--el-menu-active-color) 4%, transparent);
+          border-radius: 6px;
+          overflow: hidden;
+          padding: 4px 0;
           .el-menu-item,
           .el-sub-menu__title {
             background-color: transparent;
@@ -200,11 +313,19 @@ const menus = computed(() => {
           .el-icon:not(.el-sub-menu__icon-arrow),
           > svg,
           .default-icon {
-            width: 16px;
-            height: 16px;
-            font-size: 16px;
+            width: 18px;
+            height: 18px;
+            font-size: 18px;
             margin-left: 0;
             margin-right: 10px;
+            flex: 0 0 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .el-icon:not(.el-sub-menu__icon-arrow) > svg {
+            width: 18px;
+            height: 18px;
           }
         }
       }
@@ -226,7 +347,7 @@ const menus = computed(() => {
       align-items: center;
       justify-content: center;
       height: 32px;
-      border-radius: 8px;
+      border-radius: 6px;
       color: var(--el-menu-text-color);
       font-size: 15px;
     }
@@ -243,7 +364,7 @@ const menus = computed(() => {
       .el-menu-item,
       .el-sub-menu__title {
         margin: 6px 0;
-        border-radius: 8px;
+        border-radius: 6px;
         height: auto;
         min-height: 34px;
         line-height: 1.35;
@@ -269,7 +390,7 @@ const menus = computed(() => {
       }
       // 展开箭头按整项高度垂直居中，菜单名换行时不贴近第一行
       .el-sub-menu__title .el-sub-menu__icon-arrow {
-        top: 17px;
+        top: 1.2em;
         margin-top: 0;
       }
       // 覆盖默认的 nowrap 省略号，长文字换行展示
@@ -277,11 +398,23 @@ const menus = computed(() => {
         white-space: normal;
         overflow: visible;
         text-overflow: clip;
+        opacity: 1;
+        transition: opacity 0.12s ease 0.18s;
       }
       // 选中胶囊：实心主题色 + 柔和投影（设计稿 0 6px 14px rgba(43,92,255,.4)）
       .el-menu-item.is-active {
         font-weight: 600;
-        box-shadow: 0 6px 14px rgba(var(--el-color-primary-rgb), 0.4);
+        box-shadow: 0 4px 10px rgba(var(--el-color-primary-rgb), 0.22);
+      }
+      .el-menu--inline {
+        margin: 0 0 6px;
+        .el-menu-item,
+        .el-sub-menu__title {
+          margin: 4px 0;
+        }
+      }
+      .el-sub-menu.is-opened > .el-sub-menu__title {
+        margin-bottom: 4px;
       }
     }
   }
@@ -301,10 +434,7 @@ const menus = computed(() => {
 }
 .layout-menu.collapse {
   :deep(.horizontal-collapse-transition),
-  :deep(.horizontal-collapse-transition .el-sub-menu__title),
-  :deep(.collapse-transition),
-  :deep(.el-collapse-transition-enter-active),
-  :deep(.el-collapse-transition-leave-active) {
+  :deep(.horizontal-collapse-transition .el-sub-menu__title) {
     transition: none !important;
   }
 
@@ -354,17 +484,18 @@ const menus = computed(() => {
 
   .menu-box :deep(.layout-menu-content) {
     width: 64px !important;
-    padding: 0 !important;
+    padding: 12px 0 8px !important;
     // 收起态菜单项 4px 内收 + 圆角：选中蓝胶囊不贴边，与展开态视觉语言一致
     .el-menu-item,
     .el-sub-menu__title {
       width: calc(100% - 8px);
       min-width: 0;
-      height: 42px;
-      line-height: 42px;
-      margin: 4px;
+      height: 34px;
+      min-height: 34px;
+      line-height: 34px;
+      margin: 6px 4px;
       padding: 0 !important;
-      border-radius: 8px;
+      border-radius: 6px;
       justify-content: center;
       box-sizing: border-box;
       background-color: transparent;
@@ -386,9 +517,9 @@ const menus = computed(() => {
     }
     .el-menu-item.is-active,
     .el-sub-menu.is-active > .el-sub-menu__title {
-      background-color: rgba(var(--el-color-primary-rgb), 0.95);
+      background-color: var(--el-color-primary);
       color: var(--el-color-white);
-      box-shadow: 0 6px 14px rgba(var(--el-color-primary-rgb), 0.32);
+      box-shadow: 0 4px 10px rgba(var(--el-color-primary-rgb), 0.2);
     }
     .el-menu--collapse > .el-menu-item > .el-icon,
     .el-menu--collapse > .el-sub-menu > .el-sub-menu__title > .el-icon,
@@ -438,6 +569,7 @@ const menus = computed(() => {
     }
     span {
       opacity: 0;
+      transition: opacity 0.08s ease;
     }
     // .title {
     //   width: calc(var(--el-menu-icon-width) + var(--el-menu-base-level-padding) * 2);

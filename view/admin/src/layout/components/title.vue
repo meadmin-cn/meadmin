@@ -50,8 +50,8 @@ const logoSize = computed(() => (globalStore.isMobile ? 22 : 28));
   gap: v-bind(titleGap);
   flex-shrink: 0;
   transition:
-    width 0.22s cubic-bezier(0.2, 0, 0, 1),
-    padding 0.22s cubic-bezier(0.2, 0, 0, 1);
+    width 0.28s cubic-bezier(0.2, 0, 0, 1),
+    padding 0.28s cubic-bezier(0.2, 0, 0, 1);
   .logo {
     flex-shrink: 0;
   }

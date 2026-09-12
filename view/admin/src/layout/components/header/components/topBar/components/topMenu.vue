@@ -54,7 +54,7 @@ const activeMenu = computed(() => {
     line-height: 30px;
     margin: 0 2px;
     padding: 0 13px;
-    border-radius: 8px;
+    border-radius: 6px;
     border-bottom: none !important;
     font-size: 13.5px;
     font-weight: 500;
@@ -70,7 +70,7 @@ const activeMenu = computed(() => {
     background-color: var(--el-color-primary);
     color: var(--el-color-white) !important;
     font-weight: 600;
-    box-shadow: 0 4px 10px rgba(var(--el-color-primary-rgb), 0.28);
+    box-shadow: 0 4px 10px rgba(var(--el-color-primary-rgb), 0.2);
   }
   :deep(.el-menu-item.is-active:hover),
   :deep(.el-sub-menu.is-active .el-sub-menu__title:hover) {
@@ -128,12 +128,12 @@ const activeMenu = computed(() => {
 // 顶部菜单下拉弹层（teleport 到 body，需全局样式，设计稿 v1.4 .fly-panel）
 .el-menu--horizontal .el-menu--popup,
 .el-menu--popup-container .el-menu--popup {
-  border-radius: 10px;
+  border-radius: 8px;
   padding: 5px;
   min-width: 150px;
 
   .el-menu {
-    border-radius: 8px;
+    border-radius: 6px;
   }
   .el-menu-item,
   .el-sub-menu .el-sub-menu__title {

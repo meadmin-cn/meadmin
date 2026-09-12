@@ -20,7 +20,7 @@
         <me-icon-arrow-double-right></me-icon-arrow-double-right>
       </div>
       <div v-if="themeConfig.tagBarRefresh" class="icon pointer" @click="reload">
-        <me-icon-refresh :class="{ rotate: reoadUrl }"></me-icon-refresh>
+        <mel-icon-refresh :class="{ rotate: reoadUrl }"></mel-icon-refresh>
       </div>
       <div v-if="themeConfig.tagBarMenu" class="icon tag-menu-icon pointer" @click.stop="setContextmenu($event.currentTarget as any, currentTag)">
         <!-- 设计稿 v1.4 tag-tools：☰ 三线菜单图标 -->
@@ -217,7 +217,7 @@ watch(route, () => {
   .icon {
     width: 28px;
     height: 28px;
-    border-radius: 7px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -278,7 +278,7 @@ watch(route, () => {
       flex-shrink: 0;
       flex-grow: 0;
       position: relative;
-      border-radius: 7px;
+      border-radius: 6px;
       background-color: var(--el-fill-color-light);
       border: 1px solid var(--el-border-color-lighter);
       font-size: 12.5px;
@@ -322,7 +322,7 @@ watch(route, () => {
 
     .item:hover {
       color: var(--el-color-primary);
-      border-color: rgba(var(--el-color-primary-rgb), 0.4);
+      border-color: rgba(var(--el-color-primary-rgb), 0.3);
     }
 
     .item.active,
@@ -331,7 +331,7 @@ watch(route, () => {
       border-color: var(--el-color-primary);
       color: var(--el-color-white);
       font-weight: 600;
-      box-shadow: 0 3px 8px rgba(var(--el-color-primary-rgb), 0.25);
+      box-shadow: 0 4px 10px rgba(var(--el-color-primary-rgb), 0.18);
 
       .dot {
         display: block;

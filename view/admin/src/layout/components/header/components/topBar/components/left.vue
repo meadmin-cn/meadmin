@@ -50,7 +50,7 @@ mitter.on(event.BEFORE_ROUTE_CHANGE, ({ to }) => setBreadcrumbList(to), true);
   :deep(.expand-wrap) {
     width: 30px;
     height: 30px;
-    border-radius: 8px;
+    border-radius: 6px;
     font-size: 16px;
     flex-shrink: 0;
     color: var(--el-text-color-regular);

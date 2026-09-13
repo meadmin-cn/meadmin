@@ -45,7 +45,7 @@
 </template>
 <script setup lang="ts" name="Group">
 import type { SystemRoleInfo, SystemRoleTreeAll } from '@/api/system/role';
-import { delSystemRoleApi, systemRoleTreeAllApi, updateSystemRoleApi } from '@/api/system/role';
+import { delSystemRoleApi, systemRoleInfoApi, systemRoleTreeAllApi, updateSystemRoleApi } from '@/api/system/role';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { searchTreeTable } from '@/utils/helper.js';
@@ -60,12 +60,10 @@ const emit = defineEmits<{
   currentChange: [menuIds: string[], isSuper: 0 | 1];
 }>();
 
-const roleChange: VxeTableEvents.CurrentRowChange<SystemRoleInfo> = ({ row }) => {
-  emit(
-    'currentChange',
-    row.menus.map((menu) => menu.id),
-    row.isSuper,
-  );
+const { runAsync: getRoleInfoRunAsync } = systemRoleInfoApi();
+const roleChange: VxeTableEvents.CurrentRowChange<SystemRoleInfo> = async ({ row }) => {
+  const roleInfo = await getRoleInfoRunAsync(row.id);
+  emit('currentChange', roleInfo.menus?.map((menu) => menu.id) ?? [], roleInfo.isSuper);
 };
 const { open } = useActionModel(AddOrUp);
 const { open: openInfo } = useActionModel(Info);
@@ -105,7 +103,8 @@ const setRoleMenu = async (menuIds?: string[]) => {
   const row = roleRef.value!.vxeTableRef!.getCurrentRecord();
   if (row) {
     await updateSystemRoleApiRunAsync(row.id, { menuIds });
-    row.menus = menuIds.map((id) => ({ id }));
+    // 权限提交后只刷新当前角色详情，保留左侧角色组的当前行和选中状态。
+    await refreshCurrentRole();
     return true;
   }
   ElMessage.error(t('请先选择角色'));
@@ -113,7 +112,14 @@ const setRoleMenu = async (menuIds?: string[]) => {
 const showInfo = (id?: string) => {
   openInfo({ id });
 };
-defineExpose({ setRoleMenu });
+const refreshCurrentRole = async () => {
+  const row = roleRef.value?.vxeTableRef?.getCurrentRecord();
+  if (!row) return;
+  // 只请求当前角色详情，不重新加载左侧角色树，避免当前选中行丢失。
+  const roleInfo = await getRoleInfoRunAsync(row.id);
+  emit('currentChange', roleInfo.menus?.map((menu) => menu.id) ?? [], roleInfo.isSuper);
+};
+defineExpose({ setRoleMenu, refreshCurrentRole });
 await Promise.all([loadRes, getRole()]);
 </script>
 <style lang="scss" scoped>

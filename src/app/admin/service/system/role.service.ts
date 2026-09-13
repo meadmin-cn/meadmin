@@ -4,11 +4,11 @@ import { Inject, Provide } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { InferAttributes, Op, WhereOperators } from '@sequelize/core';
+import { WhereAttributeHash } from '@sequelize/core/_non-semver-use-at-your-own-risk_/abstract-dialect/where-sql-builder-types.js';
 import { SystemRole } from '../../../../entities/systemRole.entity.js';
 import { SystemRoleCreateDto } from '../../dto/system/roleCreate.dto.js';
 import { SystemRoleQueryDto } from '../../dto/system/roleQuery.dto.js';
 import { SystemRoleUpdateDto } from '../../dto/system/roleUpdate.dto.js';
-import { WhereAttributeHash } from '@sequelize/core/_non-semver-use-at-your-own-risk_/abstract-dialect/where-sql-builder-types.js';
 
 //角色
 @Provide()
@@ -117,11 +117,27 @@ export class SystemRoleService {
    * @returns
    */
   async findOne(id: string) {
-    const entity = await this.SystemRoleRepository.findByPk(id, { include: ['parent', 'createdAdmin', 'updatedAdmin'] });
+    const entity = await this.SystemRoleRepository.findByPk(id, {
+      include: [
+        'createdAdmin',
+        'updatedAdmin',
+        {
+          //关联查询菜单
+          association: 'menus',
+        },
+      ],
+    });
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
-    return entity;
+    entity.parent = (await this.SystemRoleRepository.findByPk(entity.parentId, { attributes: ['id', 'roleName'] }))!;
+    //entity.get({ plain: true })转普通对象，防止循环引用
+    const result = entity.get({ plain: true }) as Record<string, any>;
+    if (result.isSuper) {
+      result.menus = await this.SystemMenuRepository.findAll({ attributes: ['id'] });
+    }
+    result.menus = (result.menus ?? []).map(({ id }: { id: string }) => ({ id }));
+    return result;
   }
 
   /**

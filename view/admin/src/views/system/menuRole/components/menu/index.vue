@@ -45,18 +45,7 @@
         </template>
       </vxe-column>
       <template #toolsButton>
-        <me-button
-          type="success"
-          :disabled="isSuper !== 0"
-          @click="
-            isSuper === 0 &&
-            emit(
-              'subMenus',
-              menuRef!.vxeTableRef!.getCheckboxRecords(true).map((item) => item.id),
-            )
-          "
-          >保存</me-button
-        >
+        <me-button type="success" :disabled="isSuper !== 0" @click="isSuper === 0 && emit('subMenus', submitMenuIds())">保存</me-button>
       </template>
     </me-vxe-table>
   </div>
@@ -86,6 +75,7 @@ const { open: openInfo } = useActionModel(Info);
 const { checkedMenuIds = [], isSuper = 0 } = defineProps<{ checkedMenuIds: string[]; isSuper: 0 | 1 }>();
 const emit = defineEmits<{
   subMenus: [menuIds: string[]]; //提交菜单选中
+  refresh: []; //菜单新增或修改后刷新角色详情
 }>();
 const { loading, data, runAsync } = systemMenuTreeAllApi();
 onMounted(() => {
@@ -113,6 +103,21 @@ onMounted(() => {
 });
 
 const searchText = ref('');
+const submitMenuIds = () => {
+  const selectedIds = new Set(menuRef.value!.vxeTableRef!.getCheckboxRecords(true).map((item) => item.id));
+  const parentIds = new Set<string>();
+  const collectParentIds = (menus: SystemMenuTreeAll): boolean => {
+    let hasSelected = false;
+    menus.forEach((menu) => {
+      const selected = selectedIds.has(menu.id) || (!!menu.children?.length && collectParentIds(menu.children));
+      if (selected && menu.children?.length && !selectedIds.has(menu.id)) parentIds.add(menu.id);
+      hasSelected = hasSelected || selected;
+    });
+    return hasSelected;
+  };
+  collectParentIds(data.value ?? []);
+  return [...new Set([...selectedIds, ...parentIds])];
+};
 const search = (searchText: string) => {
   data.value = searchTreeTable(searchText, ['title', 'id', 'rule'] as const, menuDataCopy);
   nextTick(() => menuRef.value?.vxeTableRef?.setAllTreeExpand(true));
@@ -130,12 +135,14 @@ const del = async (id: string) => {
   delId.value = id;
   await delRun(id);
   await getMenu();
+  emit('refresh');
 };
 const showAddOrUp = (id?: string) => {
   open({
     id,
     onSuccess: async () => {
       await getMenu();
+      emit('refresh');
     },
   });
 };

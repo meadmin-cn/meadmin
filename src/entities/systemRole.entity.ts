@@ -1,9 +1,8 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
-import { BelongsManyModel } from '@/types/entity.js';
 import { RuleType } from '@/ruleType/index.js';
-import { CreationOptional, NonAttribute } from '@sequelize/core';
-import { DataTypes } from '@sequelize/core';
+import { BelongsManyModel } from '@/types/entity.js';
+import { CreationOptional, DataTypes, NonAttribute } from '@sequelize/core';
 import { Attribute, BelongsTo, BelongsToMany, Default, PrimaryKey, Table, Unique } from '@sequelize/core/decorators-legacy';
 import { AdminTreeModel } from './abstract/adminTree.entity.js';
 import { SystemAdmin } from './systemAdmin.entity.js';
@@ -95,6 +94,15 @@ export class SystemRole extends AdminTreeModel<SystemRole> {
   })
   @ApiPropertyRule({ description: '超级管理员:1=是;0=不是', rule: RuleType.number().equal(1, 0).required() })
   isSuper: number;
+
+  @Attribute({
+    comment: '数据权限:1=全部;2=组织;3=组织及以下;4=仅本人',
+    defaultValue: 3,
+    allowNull: false,
+    type: DataTypes.TINYINT.UNSIGNED,
+  })
+  @ApiPropertyRule({ description: '数据权限', rule: RuleType.number().valid(1, 2, 3, 4).default(3) })
+  dataScope: number;
 }
 //扩展BelongsManyModel方法，应只声明在一侧，避免ts 循环引用错误
 export declare interface SystemRole extends BelongsManyModel<'menus', 'menu', 'menus', SystemMenu> {}

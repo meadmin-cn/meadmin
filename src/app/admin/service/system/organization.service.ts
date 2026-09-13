@@ -1,4 +1,5 @@
 import { InjectRepository, Transaction } from '@/decorators/index.js';
+import { getDataScopeWhere } from '@/helper/dataScope.js';
 import { Inject, Provide } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
@@ -30,7 +31,9 @@ export class SystemOrganizationService {
    */
   @Transaction()
   async getSystemAdmin(page: number, pageSize: number, id: string, username: string = '') {
-    const where = {} as WhereAttributeHash<InferAttributes<SystemAdmin, { omit: never }>>;
+    const where = (await getDataScopeWhere({
+      orgField: 'id',
+    })) as WhereAttributeHash<InferAttributes<SystemAdmin, { omit: never }>>;
     if (id) {
       where['id'] = id;
     }
@@ -125,6 +128,7 @@ export class SystemOrganizationService {
    */
   async treeAll() {
     const list = await this.systemOrganizationRepository.getTree({
+      where: await getDataScopeWhere({ orgField: 'id' }),
       order: [['orderNum', 'DESC']],
       include: {
         //关联查询管理员

@@ -2,12 +2,14 @@ import { Transaction } from '@/decorators/index.js';
 import { InjectRepository } from '@/decorators/sequelize.js';
 import { SystemAdmin } from '@/entities/systemAdmin.entity.js';
 import { SystemMenu } from '@/entities/systemMenu.entity.js';
+import { SystemOrganization } from '@/entities/systemOrganization.entity.js';
 import { SystemRole } from '@/entities/systemRole.entity.js';
 import { CachingFactory, MidwayCache } from '@midwayjs/cache-manager';
 import { Config, Init, Inject, Singleton } from '@midwayjs/core';
 import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { Context } from '@midwayjs/koa';
+import { Op } from '@sequelize/core';
 import dayjs from 'dayjs';
 import { pbkdf2Sync, randomBytes } from 'node:crypto';
 
@@ -17,6 +19,9 @@ export const adminPrefix = 'Admin:Admin:';
 export class LoginService {
   @InjectRepository(SystemAdmin)
   adminRepository: typeof SystemAdmin;
+
+  @InjectRepository(SystemOrganization)
+  organizationRepository: typeof SystemOrganization;
 
   @InjectRepository(SystemMenu)
   menuRepository: typeof SystemMenu;
@@ -142,11 +147,31 @@ export class LoginService {
         },
       ],
     });
-    if (admin?.roles?.some((item) => item.isSuper === 1)) {
+    if (!admin) return admin;
+
+    if (admin.roles?.some((item) => item.isSuper === 1)) {
       admin.roleMenus = await this.menuRepository.findAll({
         where: { status: 1 },
       });
     }
+
+    const organizations = admin.organizations ?? [];
+    await Promise.all(
+      organizations.map(async (organization) => {
+        if (organization.left == null || organization.right == null) {
+          (organization as SystemOrganization & { descendants: SystemOrganization[] }).descendants = [];
+          return;
+        }
+        (organization as SystemOrganization & { descendants: SystemOrganization[] }).descendants = await this.organizationRepository.findAll({
+          where: {
+            status: 1,
+            left: { [Op.gt]: organization.left },
+            right: { [Op.lt]: organization.right },
+          },
+        });
+      }),
+    );
+
     return admin;
   }
 

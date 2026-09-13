@@ -3,10 +3,10 @@ import { Body, Controller, Get, Inject, Param, Post } from '@midwayjs/core';
 import { SystemOrganization } from '../../../../entities/systemOrganization.entity.js';
 import { SystemOrganizationCreateDto } from '../../dto/system/organizationCreate.dto.js';
 import { SystemOrganizationQueryDto } from '../../dto/system/organizationQuery.dto.js';
+import { SystemOrganizationTreeAllResultDto } from '../../dto/system/organizationTreeAllResult.dto.js';
 import { SystemOrganizationUpdateDto } from '../../dto/system/organizationUpdate.dto.js';
 import { SystemOrganizationService } from '../../service/system/organization.service.js';
 import { BaseController } from '../base.controller.js';
-import { SystemOrganizationTreeAllResultDto } from '../../dto/system/organizationTreeAllResult.dto.js';
 
 /**
  * 为了防止防火墙禁止PUT、DELETE请求，方便传参，除详情外统一使用post请求。
@@ -80,7 +80,7 @@ export class SystemOrganizationController extends BaseController {
     responseType: SystemOrganization,
     summary: '根据id更新组织信息',
   })
-  @AdminPermission('system_organization_edit')
+  @AdminPermission(['system_organization_edit', 'system_organization_add_user'])
   async update(@Param('id') id: string, @Body() updateDto: SystemOrganizationUpdateDto) {
     return this.success(await this.systemOrganizationService.update(id, updateDto));
   }

@@ -35,7 +35,7 @@ export class SystemRoleController extends BaseController {
     responsePage: SystemRole,
     summary: '获取角色列表',
   })
-  @AdminPermission('system_menu_role')
+  @AdminPermission(['system_menu_role', 'system_admin_list', 'system_organization_add_user'])
   async list(@Body() queryDto: SystemRoleQueryDto) {
     return this.success(await this.systemRoleService.list(queryDto));
   }
@@ -69,7 +69,7 @@ export class SystemRoleController extends BaseController {
     responseType: SystemRole,
     summary: '根据id更新角色信息',
   })
-  @AdminPermission('system_role_edit')
+  @AdminPermission(['system_role_edit'])
   async update(@Param('id') id: string, @Body() updateDto: SystemRoleUpdateDto) {
     return this.success(await this.systemRoleService.update(id, updateDto));
   }

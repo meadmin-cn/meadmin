@@ -192,6 +192,10 @@ export class SystemMenuService {
     if (!entity) {
       throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
     }
+    const roles = await this.SystemRoleRepository.findAll({
+      include: [{ association: 'menus', attributes: ['id'], where: { id }, required: true }],
+    });
+    await Promise.all(roles.map((role) => role.removeMenus([id])));
     await entity.destroy();
   }
 }

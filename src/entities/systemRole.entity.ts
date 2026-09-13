@@ -56,6 +56,8 @@ export class SystemRole extends AdminTreeModel<SystemRole> {
     through: 'admin_role', //中间表名称 或者 对应的Model
     inverse: {
       as: 'roles',
+      // 反向关联也禁用外键约束
+      foreignKeyConstraints: false, 
     },
     foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
   })
@@ -73,6 +75,8 @@ export class SystemRole extends AdminTreeModel<SystemRole> {
     inverse: {
       //对向模型的反向关联declare字段
       as: 'roles',
+      // 反向关联也禁用外键约束
+      foreignKeyConstraints: false, 
     },
     foreignKeyConstraints: false, //数据库不创建外键，外键应用层解决
   })

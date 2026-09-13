@@ -139,6 +139,10 @@ export class SystemOrganizationService {
     return list;
   }
 
+  async perfectTree() {
+    return await this.systemOrganizationRepository.perfectTree();
+  }
+
   /**
    * 根据主键获取一条信息
    * @param id 主键

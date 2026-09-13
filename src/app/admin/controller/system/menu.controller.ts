@@ -40,6 +40,14 @@ export class SystemMenuController extends BaseController {
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post('/perfectTree')
+  @ApiOperationResponse({ summary: '根据父级id修复菜单树关系' })
+  @AdminPermission('system_menu_perfect_tree')
+  async perfectTree() {
+    await this.systemMenuService.perfectTree();
+    return this.success();
+  }
+
   @Get('/treeAll')
   @ApiOperationResponse({
     responseList: SystemMenuTreeAllResultDto,

@@ -111,6 +111,10 @@ export class SystemRoleService {
     return list;
   }
 
+  async perfectTree() {
+    return await this.SystemRoleRepository.perfectTree();
+  }
+
   /**
    * 根据主键获取一条信息
    * @param id 主键

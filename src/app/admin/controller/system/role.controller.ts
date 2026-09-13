@@ -41,6 +41,14 @@ export class SystemRoleController extends BaseController {
   }
 
   //接口方法必须加async 方法的接口装饰器值必须/开头
+  @Post('/perfectTree')
+  @ApiOperationResponse({ summary: '根据父级id修复角色树关系' })
+  @AdminPermission('system_role_perfect_tree')
+  async perfectTree() {
+    await this.systemRoleService.perfectTree();
+    return this.success();
+  }
+
   @Get('/treeAll')
   @ApiOperationResponse({
     responseList: SystemRoleTreeAllResultDto,

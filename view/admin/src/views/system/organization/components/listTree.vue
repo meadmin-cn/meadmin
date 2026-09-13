@@ -21,6 +21,13 @@
       @refresh="getOrg"
       @quick-search="search"
     >
+      <template #toolsButton>
+        <el-popconfirm :title="t('根据父级id修复树关系，确认操作？')" @confirm="perfectTree">
+          <template #reference
+            ><me-button v-if="permission('system_organization_perfect_tree')">{{ t('修复树关系') }}</me-button></template
+          >
+        </el-popconfirm>
+      </template>
       <vxe-column field="name" :title="t('组织')" tree-node>
         <template #default="{ row }">
           <div class="role-item">
@@ -45,7 +52,7 @@
 
 <script setup lang="ts" name="OrgListTree">
 import type { SystemOrganizationInfo, SystemOrganizationTreeAll } from '@/api/system/organization';
-import { delSystemOrganizationApi, systemOrganizationTreeAllApi } from '@/api/system/organization';
+import { delSystemOrganizationApi, perfectSystemOrganizationTreeApi, systemOrganizationTreeAllApi } from '@/api/system/organization';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { searchTreeTable } from '@/utils/helper.js';
@@ -67,6 +74,7 @@ const { open } = useActionModel(AddOrUp);
 const { open: openInfo } = useActionModel(Info);
 const { loading, runAsync } = systemOrganizationTreeAllApi();
 const { runAsync: delRun } = delSystemOrganizationApi();
+const { runAsync: perfectTree } = perfectSystemOrganizationTreeApi();
 let dataCopy = [] as SystemOrganizationTreeAll;
 const data = ref<SystemOrganizationTreeAll>([]);
 const searchText = ref('');

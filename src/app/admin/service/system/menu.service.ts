@@ -93,6 +93,10 @@ export class SystemMenuService {
     });
   }
 
+  async perfectTree() {
+    return await this.SystemMenuRepository.perfectTree();
+  }
+
   /**
    * 根据主键获取一条信息
    * @param id 主键

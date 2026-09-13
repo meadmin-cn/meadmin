@@ -16,5 +16,7 @@
   "恒定展示(只有一个子元素时不隐藏)": "Always show",
   "面包屑": "Breadcrumb",
   "创建时间": "Created time",
-  "最后更新时间": "Updated time"
+  "最后更新时间": "Updated time",
+  "修复树关系": "Repair tree relationships",
+  "根据父级id修复树关系，确认操作？": "Repair tree relationships based on parent IDs. Continue?"
 }

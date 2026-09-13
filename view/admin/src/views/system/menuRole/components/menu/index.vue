@@ -29,7 +29,7 @@
       <vxe-column field="isLink" :title="t('外链')" :formatter="formatterDict"></vxe-column>
       <vxe-column field="component" :title="t('组件路径')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="orderNum" :title="t('排序(降序)')" :formatter="formatterStr"></vxe-column>
-      <vxe-column v-if="permission(['system_menu_info', 'system_menu_edit', 'system_menu_del'])" title="操作" fixed="right" min-width="100px">
+      <vxe-column v-if="permission(['system_menu_info', 'system_menu_edit', 'system_menu_del'])" :title="t('操作')" fixed="right" min-width="100px">
         <template #default="{ row }">
           <me-button v-if="permission('system_menu_info')" link :title="t('详情')" @click="showInfo(row.id)">
             <mel-icon-memo />
@@ -45,14 +45,19 @@
         </template>
       </vxe-column>
       <template #toolsButton>
-        <me-button type="success" :disabled="isSuper !== 0" @click="isSuper === 0 && emit('subMenus', submitMenuIds())">保存</me-button>
+        <el-popconfirm :title="t('根据父级id修复树关系，确认操作？')" @confirm="perfectTree">
+          <template #reference
+            ><me-button v-if="permission('system_menu_perfect_tree')">{{ t('修复树关系') }}</me-button></template
+          >
+        </el-popconfirm>
+        <me-button type="success" :disabled="isSuper !== 0" @click="isSuper === 0 && emit('subMenus', submitMenuIds())">{{ t('保存') }}</me-button>
       </template>
     </me-vxe-table>
   </div>
 </template>
 <script setup lang="ts" name="Menu">
 import type { SystemMenuInfo, SystemMenuTreeAll } from '@/api/system/menu';
-import { delSystemMenuApi, systemMenuTreeAllApi } from '@/api/system/menu';
+import { delSystemMenuApi, perfectSystemMenuTreeApi, systemMenuTreeAllApi } from '@/api/system/menu';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { formatterStr, searchTreeTable } from '@/utils/helper.js';
@@ -130,6 +135,7 @@ const getMenu = async () => {
 };
 
 const { runAsync: delRun, loading: delLoading } = delSystemMenuApi();
+const { runAsync: perfectTree } = perfectSystemMenuTreeApi();
 const delId = ref<string>();
 const del = async (id: string) => {
   delId.value = id;

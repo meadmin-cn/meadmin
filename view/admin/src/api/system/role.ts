@@ -54,6 +54,11 @@ export class SystemRoleListParam extends PageParam {
   startUpdatedAt?: string; //最后更新时间(起)
   endUpdatedAt?: string; //最后更新时间(止)
 }
+//修复角色树关系
+export function perfectSystemRoleTreeApi() {
+  return request<null, []>(() => ({ url: 'system/role/perfectTree', method: 'post' }), { success: true });
+}
+
 //获取角色列表
 export function systemRoleListApi(options?: RequestOptions<SystemRoleListResult, [SystemRoleListParam]>) {
   return request<SystemRoleListResult, [SystemRoleListParam]>(

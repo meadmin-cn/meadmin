@@ -20,6 +20,13 @@
       @refresh="getRole"
       @quick-search="search"
     >
+      <template #toolsButton>
+        <el-popconfirm :title="t('根据父级id修复树关系，确认操作？')" @confirm="perfectTree">
+          <template #reference
+            ><me-button v-if="permission('system_role_perfect_tree')">{{ t('修复树关系') }}</me-button></template
+          >
+        </el-popconfirm>
+      </template>
       <vxe-column field="name" :title="t('角色组')" tree-node>
         <template #default="{ row }">
           <div class="role-item">
@@ -45,7 +52,7 @@
 </template>
 <script setup lang="ts" name="Group">
 import type { SystemRoleInfo, SystemRoleTreeAll } from '@/api/system/role';
-import { delSystemRoleApi, systemRoleInfoApi, systemRoleTreeAllApi, updateSystemRoleApi } from '@/api/system/role';
+import { delSystemRoleApi, perfectSystemRoleTreeApi, systemRoleInfoApi, systemRoleTreeAllApi, updateSystemRoleApi } from '@/api/system/role';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { searchTreeTable } from '@/utils/helper.js';
@@ -69,6 +76,7 @@ const { open } = useActionModel(AddOrUp);
 const { open: openInfo } = useActionModel(Info);
 const { loading, runAsync } = systemRoleTreeAllApi();
 const { runAsync: delRun } = delSystemRoleApi();
+const { runAsync: perfectTree } = perfectSystemRoleTreeApi();
 const { runAsync: updateSystemRoleApiRunAsync } = updateSystemRoleApi();
 let dataCopy = [] as SystemRoleTreeAll;
 const data = ref<SystemRoleTreeAll>([]);

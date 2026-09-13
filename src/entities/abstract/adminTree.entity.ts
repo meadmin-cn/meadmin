@@ -2,8 +2,7 @@ import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { listToTree } from '@/helper/utils.js';
 import { RuleType } from '@midwayjs/validate';
-import { Attributes, CreateOptions, CreationOptional, FindOptions, InferAttributes, InferCreationAttributes, InstanceDestroyOptions, InstanceUpdateOptions, Model, ModelStatic } from '@sequelize/core';
-import { DataTypes, Op, sql } from '@sequelize/core';
+import { Attributes, CreateOptions, CreationOptional, DataTypes, FindOptions, InferAttributes, InferCreationAttributes, InstanceDestroyOptions, InstanceUpdateOptions, Model, ModelStatic, Op, sql } from '@sequelize/core';
 import { AfterDestroy, AfterUpdate, Attribute, BeforeCreate, Table } from '@sequelize/core/decorators-legacy';
 import { AdminBaseModel } from './adminBase.entity.js';
 
@@ -21,13 +20,13 @@ export class AdminTreeModel<M extends AdminTreeModel<any> = any> extends AdminBa
     comment: '左树边界',
     type: DataTypes.INTEGER.UNSIGNED,
   })
-  left: CreationOptional<number>;//CreationOptional标记在模型创建过程中可以省略的属性。用于具有默认值或标记为自动生成的属性。
+  left: CreationOptional<number>; //CreationOptional标记在模型创建过程中可以省略的属性。用于具有默认值或标记为自动生成的属性。
 
   @Attribute({
     comment: '右树边界',
     type: DataTypes.INTEGER.UNSIGNED,
   })
-  right: CreationOptional<number>;//  
+  right: CreationOptional<number>; //
 
   @Attribute({
     comment: '锁版本号',
@@ -35,7 +34,7 @@ export class AdminTreeModel<M extends AdminTreeModel<any> = any> extends AdminBa
     allowNull: false,
     defaultValue: '',
   })
-  lockVersion: CreationOptional<string>;//CreationOptional标记在模型创建过程中可以省略的属性。用于具有默认值或标记为自动生成的属性。
+  lockVersion: CreationOptional<string>; //CreationOptional标记在模型创建过程中可以省略的属性。用于具有默认值或标记为自动生成的属性。
 
   @BeforeCreate()
   static async setLeftRightByCreate<M extends AdminTreeModel>(this: ModelStatic<M>, info: M, options: CreateOptions<any>) {
@@ -235,6 +234,35 @@ export class AdminTreeModel<M extends AdminTreeModel<any> = any> extends AdminBa
     return listToTree(list.map((item) => item.dataValues));
   }
 
-  //TODO::根据parentId重置树形参数，尚未实现
-  static async perfectTree() {}
+  /**
+   * 根据 parentId 和 id 重新生成整棵嵌套集树的 left/right 值。
+   * 遍历规则是：进入节点时写 left，完成全部子节点后写 right。
+   * 因此每个节点都满足 left < right，子孙节点完全位于父级范围内；
+   * 当父级只有一个直接子级时，父级 left 与子级 left、父级 right 与子级 right 的差值均为 1。
+   * 使用 hooks: false 更新，避免触发移动节点的左右边界增删逻辑。
+   */
+  static async perfectTree(this: ModelStatic<any>) {
+    const nodes = (await this.findAll({ attributes: ['id', 'parentId'] })) as Array<{ id: string; parentId?: string | null }>;
+    const children = new Map<string | null, Array<{ id: string; parentId?: string | null }>>();
+    nodes.forEach((node) => {
+      const parentId = node.parentId || null;
+      const list = children.get(parentId) ?? [];
+      list.push(node);
+      children.set(parentId, list);
+    });
+
+    let position = 1;
+    const updates = new Map<string, { left: number; right: number }>();
+    const visit = (node: { id: string; parentId?: string | null }) => {
+      const left = position++;
+      (children.get(node.id) ?? []).forEach(visit);
+      updates.set(node.id, { left, right: position++ });
+    };
+
+    (children.get(null) ?? []).forEach(visit);
+    nodes.filter((node) => !updates.has(node.id)).forEach(visit);
+
+    await Promise.all([...updates].map(([id, values]) => this.update(values, { where: { id }, hooks: false })));
+    return this.findAll();
+  }
 }

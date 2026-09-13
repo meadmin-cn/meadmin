@@ -2,7 +2,7 @@ import { SizeEnum } from '@/dict/configEnum';
 export default {
   primaryColor: '#409eff', // 主题颜色
   menuType: 'sidebar' as 'top' | 'sidebar' | 'mix', //菜单模式，顶部模式/侧边栏模式/头部+左侧混合模式
-  menuBg: '#101233', // 菜单背景颜色
+  menuBg: '#141414', // 菜单背景颜色
   menuWidth: '212px', // 菜单展开宽度
   menuCollapse: true, // 菜单是否折叠
   size: SizeEnum.DEFAULT, // 默认大小

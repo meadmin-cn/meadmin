@@ -11,11 +11,13 @@
 <script setup lang="ts" name="TopBar">
 import Title from '@/layout/components/title.vue';
 import { useGlobalStore, useSettingStore } from '@/store';
+import { getColorLuma, mixColor } from '@/utils/helper';
 import Left from './components/left.vue';
 import Right from './components/right/index.vue';
 import TopMenu from './components/topMenu.vue';
-const { menuType } = storeToRefs(useSettingStore());
+const { themeConfig, menuType } = storeToRefs(useSettingStore());
 const globalStore = useGlobalStore();
+const menuBg1 = computed(() => mixColor(themeConfig.value.menuBg, getColorLuma(themeConfig.value.menuBg) < 100 ? '#ffffff' : '#303133', 0.1));
 </script>
 <style lang="scss" scoped>
 .top-bar {
@@ -23,10 +25,14 @@ const globalStore = useGlobalStore();
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--el-border-color);
+  margin-bottom: 1px;
+  box-shadow: 0 1px var(--el-border-color);
   overflow: hidden;
   padding: 0 16px 0 14px;
   gap: 10px;
+  @at-root .dark #{&} {
+    box-shadow: 0 1px v-bind(menuBg1);
+  }
   .menu {
     flex: 1;
     min-width: 0;

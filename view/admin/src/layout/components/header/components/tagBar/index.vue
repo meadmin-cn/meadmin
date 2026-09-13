@@ -46,6 +46,7 @@
 <script setup lang="ts" name="TagBar">
 import { event, mitter } from '@/event';
 import { useRouteStore, useSettingStore } from '@/store';
+import { getColorLuma, mixColor } from '@/utils/helper';
 import { isExternal } from '@/utils/validate';
 import { ElScrollbar } from 'element-plus';
 import $ from 'jquery';
@@ -199,16 +200,21 @@ watch(route, () => {
     }, 500);
   }
 });
+const menuBg1 = computed(() => mixColor(themeConfig.value.menuBg, getColorLuma(themeConfig.value.menuBg) < 100 ? '#ffffff' : '#303133', 0.1));
 </script>
 <style lang="scss" scoped>
 .tag-bar {
-  border-bottom: 1px solid var(--el-border-color);
+  // border-bottom: 1px solid var(--el-border-color);
+  box-shadow: 0 1px var(--el-border-color);
+
   height: $header-tag-height;
   display: flex;
   align-items: center;
   background-color: var(--el-bg-color);
   padding: 0 8px;
-
+  @at-root .dark #{&} {
+    box-shadow: 0 1px v-bind(menuBg1);
+  }
   .is-disabled {
     color: var(--el-disabled-text-color) !important;
     cursor: not-allowed;
@@ -312,6 +318,7 @@ watch(route, () => {
         transition:
           opacity 0.2s,
           transform 0.2s;
+        margin-right: -6px;
       }
 
       .del-icon:hover {
@@ -331,7 +338,7 @@ watch(route, () => {
       border-color: var(--el-color-primary);
       color: var(--el-color-white);
       font-weight: 600;
-      box-shadow: 0 4px 10px rgba(var(--el-color-primary-rgb), 0.18);
+      box-shadow: 0 2px 6px rgba(var(--el-color-primary-rgb), 0.18);
 
       .dot {
         display: block;

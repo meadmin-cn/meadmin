@@ -164,6 +164,7 @@ onBeforeUnmount(() => {
   background-color: v-bind('themeConfig.menuBg');
   height: 100%;
   position: relative;
+  border-right: 1px solid v-bind(menuBg1);
 
   :deep(.horizontal-collapse-transition),
   :deep(.horizontal-collapse-transition .el-sub-menu__title) {

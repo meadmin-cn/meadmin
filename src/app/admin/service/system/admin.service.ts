@@ -225,6 +225,9 @@ export class SystemAdminService {
     if (updateDto.roleIds) {
       await entity.setRoles(updateDto.roleIds);
     }
+    if(updateDto.orgIds) {
+      await entity.setOrganizations(updateDto.orgIds);
+    }
     if (updateDto.avatar !== undefined) {
       //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例
       await entity.setAvatar(updateDto.avatar?.id ?? null);

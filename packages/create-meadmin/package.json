@@ -25,8 +25,8 @@
   "keywords": [],
   "packageManager": "pnpm@10.7.0",
   "dependencies": {
-    "@sequelize/core": "7.0.0-alpha.47",
-    "@sequelize/postgres": "7.0.0-alpha.47",
+    "@sequelize/core": "7.0.0-alpha.48",
+    "@sequelize/postgres": "7.0.0-alpha.48",
     "commander": "^14.0.0",
     "cross-spawn": "^7.0.6",
     "dotenv": "^16.6.1",

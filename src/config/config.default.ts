@@ -153,6 +153,7 @@ export default {
   },
   midwayLogger: {
     default: {
+      level: 'debug',
       transports: {
         file: {
           dir: resolve(import.meta.dirname, '../../logs'),

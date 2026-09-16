@@ -106,10 +106,10 @@ export const setI18nLanguage = async (locale: string, isLoading = true, i18n?: G
   isLoading && loading();
   if (i18n === useGlobalStore().i18n) {
     useSettingStore().locale = locale;
-    const messageArr = [setLocaleMessage(i18n, locale, [async (locale) => await import(`./lang/${locale}/index.ts`)]), loadMessage<{ default: Language }>([async (locale) => await import(`../../node_modules/element-plus/es/locale/lang/${locale}.mjs`), 'element-plus'], locale), ...mitter.emit(event.BEFORE_LOCAL_CHANGE, { locale, i18n })];
+    const messageArr = [loadMessage<{ default: Language }>([async (locale) => await import(`../../node_modules/element-plus/es/locale/lang/${locale}.mjs`), 'element-plus'], locale), setLocaleMessage(i18n, locale, [async (locale) => await import(`./lang/${locale}/index.ts`)]), ...mitter.emit(event.BEFORE_LOCAL_CHANGE, { locale, i18n })];
     const res = await Promise.allSettled(messageArr);
-    if (res[1].status === 'fulfilled' && res[1].value) {
-      useSettingStore().elLocale = res[1].value.default;
+    if (res[0].status === 'fulfilled' && res[0].value) {
+      useSettingStore().elLocale = res[0].value.default;
     }
     document?.querySelector('html')?.setAttribute('lang', locale);
   }

@@ -122,7 +122,8 @@ export class SystemConfigController extends BaseController {
 
   @Post('/dict/list')
   @ApiOperationResponse({ responsePage: SystemConfig, summary: '分页获取字典项' })
-  @AdminPermission('system_config_list')
+  // 字典列表同时服务配置页签与字典管理，持有任一权限即可访问。
+  @AdminPermission(['system_config_list', 'system_config_dict_list'])
   async listDictConfigs(@Body() queryDto: SystemConfigQueryDto) {
     return this.success(await this.systemConfigService.listDictConfigs(queryDto));
   }

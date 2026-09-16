@@ -4,7 +4,7 @@
       <div class="tabs-header">
         <el-tabs v-model="activeTab" class="config-tabs" @tab-change="handleTabChange">
           <template v-for="group in groups" :key="group.id">
-            <el-tab-pane v-if="group.groupName !== 'dict' || $permission('system_config_dict_list')" :name="group.id">
+            <el-tab-pane v-if="$permission(group.groupCode === 'dict' ? 'system_config_dict_list' : 'system_config_list')" :name="group.id">
               <template #label>
                 <span class="tab-label"
                   >{{ group.groupName }}<el-tag v-if="group.isBuiltin" size="small" type="info">{{ t('内置') }}</el-tag
@@ -21,7 +21,7 @@
         <me-button v-if="activeTab === manageTab && $permission('system_config_group_add')" type="primary" @click="showGroupDialog()"><mel-icon-plus />{{ t('新增配置组') }}</me-button>
       </div>
 
-      <div v-if="activeTab !== manageTab && selectedGroup" :key="activeTab + '-selectedGroup'">
+      <div v-if="activeTab !== manageTab && selectedGroup" :key="activeTab + '-selectedGroup'" class="config-panel">
         <div class="content-header">
           <div class="title-wrap">
             <span>{{ selectedGroup.groupName }}</span>
@@ -509,6 +509,14 @@ await loadGroups();
   border: 1px solid var(--el-border-color-lighter);
   border-radius: 8px;
   background: var(--el-bg-color);
+}
+/* 包裹分组内容的容器：接替 .config-card 的纵向 flex 布局，
+   保证内部滚动区 flex:1 生效、分页栏与底部按钮始终固定可见。 */
+.config-panel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 .config-content-scroll {
   flex: 1;

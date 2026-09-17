@@ -13,14 +13,15 @@ import { omit } from 'lodash-es';
 import type { ComponentPublicInstance } from 'vue';
 const { loading = undefined } = defineProps<{ loading?: boolean }>();
 const btnLoading = ref(false);
-const attrs = snakeToCamelCaseObj(useAttrs());
+const rawAttrs = useAttrs();
+const attrs = computed(() => snakeToCamelCaseObj(rawAttrs));
 defineOptions({ inheritAttrs: false });
 async function handleClick(event: MouseEvent) {
   if (loading === undefined) {
     btnLoading.value = true;
   }
   try {
-    await (attrs.onClick as (...args: any[]) => any)?.(event);
+    await (attrs.value.onClick as (...args: any[]) => any)?.(event);
   } finally {
     if (loading === undefined) {
       btnLoading.value = false;

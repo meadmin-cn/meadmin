@@ -5,6 +5,7 @@
       <span v-if="!globalStore.isMobile" class="ellipsis-2 nickname">{{ userStore.user.nickname }}</span>
     </div>
     <template #dropdown>
+      <el-dropdown-item @click="openProfile()">{{ $t('个人中心') }}</el-dropdown-item>
       <el-dropdown-menu>
         <router-link to="/">
           <el-dropdown-item>
@@ -30,7 +31,10 @@
 </template>
 
 <script setup lang="ts" name="User">
+import { useActionModel } from '@/hooks/actionModel.js';
 import { useGlobalStore, useUserStore } from '@/store';
+import Profile from './profile.vue';
+const { open: openProfile } = useActionModel(Profile);
 const userStore = useUserStore();
 const globalStore = useGlobalStore();
 </script>

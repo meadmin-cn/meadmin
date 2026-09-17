@@ -3,7 +3,7 @@ import request from '@/utils/request.js';
 export type PublicConfigValue = unknown;
 export type PublicDictOption = { value: string | number; label: string };
 
-const cacheTime = 1000 * 60 * 5;
+const staleTime = 1000 * 60 * 5;
 
 /** 公开读取启用配置；path 支持点号路径，省略时返回配置项数组。 */
 export function getConfigApi<T = PublicConfigValue>() {
@@ -17,7 +17,7 @@ export function getConfigApi<T = PublicConfigValue>() {
     }),
     {
       noLoading: true,
-      cacheTime,
+      staleTime,
       cacheKey: (params) => 'admin:getConfigApi|' + JSON.stringify(params),
     },
   );
@@ -34,7 +34,7 @@ export function getDictApi() {
     }),
     {
       noLoading: true,
-      cacheTime,
+      staleTime,
       cacheKey: (params) => 'admin:getDictApi|' + JSON.stringify(params),
     },
   );

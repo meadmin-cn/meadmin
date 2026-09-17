@@ -3,7 +3,7 @@
     <el-form ref="formRef" v-loading="loading" :model="form" :rules="rules" label-width="auto" class="profile-form">
       <div class="profile-grid">
         <el-form-item :label="t('头像')" class="avatar-item">
-          <me-upload list-type="picture" :limit="1" :model-value="form.avatar ? [form.avatar] : []" @update:model-value="(files) => (form.avatar = files.length ? files[0] : null)" />
+          <me-upload list-type="picture" :limit="1" :model-value="avatarFileList" @update:model-value="(files) => (form.avatar = files.length ? files[0] : null)"></me-upload>
         </el-form-item>
         <el-form-item :label="t('用户名')">
           <el-input v-model="form.username" disabled />
@@ -67,6 +67,8 @@ const form = reactive({
   oldPassword: '',
   newPassword: '',
 });
+// 缓存受控列表，避免其他表单状态更新时反复生成新数组。
+const avatarFileList = computed(() => (form.avatar ? [form.avatar] : []));
 const roleNames = ref('');
 const organizationNames = ref('');
 const roles = computed(() => roleNames.value || t('暂无'));

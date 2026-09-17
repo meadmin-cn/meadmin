@@ -3,14 +3,17 @@ import { useGlobalStore, useRouteStore } from '@/store';
 import type { RouteRecordRaw } from 'vue-router';
 
 import { debounce } from 'lodash-es';
-const menuList = [] as { path: string; isLink?: boolean; title: string[] }[];
+type SearchMenuItem = { path: string; isLink?: boolean; title: string[] };
 
-const createMenuList = (routes: RouteRecordRaw[], baseTitle: string[] = [], basePath = '') => {
+const createMenuList = (routes: RouteRecordRaw[], baseTitle: string[] = [], basePath = ''): SearchMenuItem[] => {
+  const menuList: SearchMenuItem[] = [];
   routes.forEach((item) => {
     if (item.meta?.title) {
       const path = resolvePath(item.path, basePath);
       const title = [...baseTitle, item.meta.title];
-      if (!item.meta.hideMenu && (item.redirect || !item.children?.length)) {
+      // 隐藏的权限分组不算可见子菜单，与侧栏的叶子判断保持一致。
+      const hasVisibleChildren = item.children?.some((child) => child.meta && !child.meta.hideMenu);
+      if (!item.meta.hideMenu && (item.redirect || !hasVisibleChildren)) {
         menuList.push({
           path,
           title,
@@ -18,25 +21,27 @@ const createMenuList = (routes: RouteRecordRaw[], baseTitle: string[] = [], base
         });
       }
       if (item.children) {
-        createMenuList(item.children, title, path);
+        menuList.push(...createMenuList(item.children, title, path));
       }
     }
   });
+  return menuList;
 };
 
 export const useSearchMenu = (debounceTime = 500) => {
   const { i18n } = useGlobalStore();
-  const { routes } = useRouteStore();
-  !menuList.length && createMenuList(routes);
+  const routeStore = useRouteStore();
+  // 每次搜索读取当前授权路由，避免首次索引缓存导致新菜单缺失。
+  const menuList = computed(() => createMenuList(routeStore.routes));
   const filteredMenu = ref<{ path: string; meta: { isLink?: boolean; title: string } }[]>([]);
   const activeIndex = ref(0);
   const search = debounce((searchText: string) => {
     filteredMenu.value = [];
     activeIndex.value = 0;
     searchText &&
-      menuList.forEach((item) => {
+      menuList.value.forEach((item) => {
         const title = item.title.map((v) => i18n.t(v)).join(' > ');
-        if (title.search(searchText) > -1) {
+        if (title.toLocaleLowerCase().includes(searchText.toLocaleLowerCase())) {
           filteredMenu.value.push({
             path: item.path,
             meta: {

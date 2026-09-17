@@ -11,7 +11,7 @@ export function getConfigApi<T = PublicConfigValue>() {
       method: 'get',
       params: deepPath ? { path: deepPath } : undefined,
     }),
-    { noLoading: true, staleTime: 1000 * 60 * 5, cacheKey: (params: any) => 'getConfigApi|' + JSON.stringify(params) },
+    { noLoading: true, cacheTime: 1000 * 60 * 5, staleTime: 1000 * 60 * 5, cacheKey: (params: any) => 'getConfigApi|' + JSON.stringify(params) },
   );
 }
 
@@ -22,6 +22,6 @@ export function getDictApi() {
       url: `config/dict/${encodeURIComponent(code)}`,
       method: 'get',
     }),
-    { noLoading: true, staleTime: 1000 * 60 * 5, cacheKey: (params: any) => 'getDictApi|' + JSON.stringify(params) },
+    { noLoading: true, cacheTime: 1000 * 60 * 5, staleTime: 1000 * 60 * 5, cacheKey: (params: any) => 'getDictApi|' + JSON.stringify(params) },
   );
 }

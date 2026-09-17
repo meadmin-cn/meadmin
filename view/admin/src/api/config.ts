@@ -17,6 +17,7 @@ export function getConfigApi<T = PublicConfigValue>() {
     }),
     {
       noLoading: true,
+      cacheTime: staleTime,
       staleTime,
       cacheKey: (params) => 'admin:getConfigApi|' + JSON.stringify(params),
     },
@@ -34,6 +35,7 @@ export function getDictApi() {
     }),
     {
       noLoading: true,
+      cacheTime: staleTime,
       staleTime,
       cacheKey: (params) => 'admin:getDictApi|' + JSON.stringify(params),
     },

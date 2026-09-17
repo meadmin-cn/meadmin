@@ -1,23 +1,18 @@
 <template>
-  <div class="footer">
+  <div class="footer" :class="{ 'show-mobile-links': mobileLinks }">
     <div class="footer-inner">
       <div class="footer-grid">
         <div class="footer-brand">
-          <router-link :to="PageEnum.HOME" class="brand">
+          <a :href="brandUrl" class="brand">
             <me-icon-logo :size="30" style="fill: none" />
-            <span class="brand-name">{{ globalStore.websiteName }}</span>
-          </router-link>
-          <p class="copyright">© 2025 - {{ year }}. All Rights Reserved. Power by MeAdmin</p>
+            <span class="brand-name">{{ brandName }}</span>
+          </a>
+          <p v-if="copyright" class="copyright">{{ copyright }}</p>
+          <a v-if="icpNumber" class="copyright" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44031002000255" rel="nofollow" target="_blank">{{ icpNumber }}</a>
         </div>
-        <div class="footer-col">
-          <h5>支持</h5>
-          <a href="https://github.com/meadmin-cn/meadmin/issues" rel="noopener">反馈</a>
-          <a href="https://github.com/meadmin-cn/meadmin/issues" rel="noopener">加入社区</a>
-        </div>
-        <div class="footer-col">
-          <h5>联系</h5>
-          <a href="https://jq.qq.com/?_wv=1027&k=zSjWSant" rel="noopener">QQ 交流群</a>
-          <a href="https://github.com/meadmin-cn/meadmin/issues" rel="noopener">商务合作</a>
+        <div v-for="(column, index) in columns" :key="index" class="footer-col">
+          <h5 v-if="column.title">{{ column.title }}</h5>
+          <a v-for="(link, linkIndex) in column.links" :key="linkIndex" :href="link.url" :target="link.target" rel="noopener noreferrer">{{ link.text }}</a>
         </div>
       </div>
     </div>
@@ -25,12 +20,58 @@
 </template>
 
 <script setup lang="ts" name="LayoutFooter">
-import { PageEnum } from '@/dict/pageEnum';
 import { useGlobalStore } from '@/store';
+import { getConfig } from '@/utils/helper';
 import dayjs from 'dayjs';
 
-const year = dayjs().year();
+type FooterLink = { text: string; url: string; target: '_self' | '_blank' };
+type FooterColumn = { title: string; links: FooterLink[] };
 const globalStore = useGlobalStore();
+// 在 setup 内调用，沿用请求封装的 SSR 地址和服务端数据缓存。
+const items = await getConfig<{ variableCode: string; value: unknown }[]>('site_footer').catch(() => []);
+const values = Object.fromEntries(items.map((item) => [item.variableCode, item.value]));
+const brandName = typeof values.brand_name === 'string' ? values.brand_name : globalStore.websiteName;
+const safeUrl = (value: unknown) => {
+  if (typeof value !== 'string') return '';
+  const url = value.trim();
+  if (
+    [...url].some((char) => {
+      const code = char.charCodeAt(0);
+      return (code >= 0 && code <= 32) || char === '\\';
+    })
+  ) {
+    return '';
+  }
+  return /^(https?:\/\/|mailto:|tel:|\/(?!\/)|#)/i.test(url) ? url : '';
+};
+const brandUrl = safeUrl(values.brand_url) || '/';
+const copyright = typeof values.copyright === 'string' ? values.copyright.replaceAll('{year}', String(dayjs().year())).replaceAll('{siteName}', brandName) : '';
+const mobileLinks = values.mobile_links === 1;
+const icpNumber = await getConfig<string>('base', 'icp_number');
+// 多行文本存储 JSON，兼容现有后台编辑器；空数组表示主动隐藏所有栏目。
+let rawColumns: unknown = values.columns;
+if (typeof rawColumns === 'string') {
+  try {
+    rawColumns = JSON.parse(rawColumns);
+  } catch {
+    rawColumns = [];
+  }
+}
+const isObject = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value);
+const columns: FooterColumn[] = Array.isArray(rawColumns)
+  ? rawColumns
+      .filter(isObject)
+      .filter((column) => column.enabled !== false && column.enabled !== 0)
+      .map((column) => ({
+        title: typeof column.title === 'string' ? column.title : '',
+        links: Array.isArray(column.links)
+          ? column.links
+              .filter(isObject)
+              .filter((link) => link.enabled !== false && link.enabled !== 0 && typeof link.text === 'string' && link.text && safeUrl(link.url))
+              .map((link) => ({ text: link.text as string, url: safeUrl(link.url), target: link.target === '_blank' ? ('_blank' as const) : ('_self' as const) }))
+          : [],
+      }))
+  : [];
 </script>
 <style lang="scss" scoped>
 .footer {
@@ -47,9 +88,15 @@ const globalStore = useGlobalStore();
   box-sizing: border-box;
 }
 .footer-grid {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 24px;
+  .footer-brand {
+    flex: 1.6 1 260px;
+  }
+  .footer-col {
+    flex: 1 1 160px;
+  }
 }
 .footer-brand {
   .brand {
@@ -88,11 +135,13 @@ const globalStore = useGlobalStore();
 @media (max-width: 720px) {
   /* 手机端：只保留品牌与版权信息，隐藏链接列 */
   .footer-grid {
-    grid-template-columns: 1fr;
     gap: 16px;
   }
   .footer-col {
     display: none;
+  }
+  .show-mobile-links .footer-col {
+    display: block;
   }
 }
 @media (max-width: 520px) {

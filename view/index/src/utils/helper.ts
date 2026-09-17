@@ -1,6 +1,7 @@
+import { getConfigApi, getDictApi, type PublicConfigValue } from '@/api/config.ts';
 import dayjs from 'dayjs';
 import { clone, cloneDeep } from 'lodash-es';
-import type { SearchTreeOptions} from 'xe-utils';
+import type { SearchTreeOptions } from 'xe-utils';
 import { default as XEUtils } from 'xe-utils';
 
 /**
@@ -249,4 +250,14 @@ export function isImage(filename: string) {
   const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
   const fileExtension = filename.split('.').pop()?.toLowerCase();
   return fileExtension ? imageExtensions.includes(fileExtension) : false;
+}
+
+/** 获取启用配置；传入 path 时按点号读取嵌套值。 */
+export function getConfig<T = PublicConfigValue>(groupCode: string, path?: string) {
+  return getConfigApi<T>().runAsync(groupCode, path);
+}
+
+/** 获取启用字典选项；服务端已过滤禁用项并按 sort 升序排列。 */
+export function getDict(code: string) {
+  return getDictApi().runAsync(code);
 }

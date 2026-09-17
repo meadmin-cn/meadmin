@@ -4,7 +4,7 @@ import type { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
 import qs from 'qs';
-import type { Options} from 'vue-request';
+import type { Options } from 'vue-request';
 import { setGlobalOptions, useRequest } from 'vue-request';
 import { clearEmptyParam } from './helper.js';
 import log from './log';
@@ -22,7 +22,8 @@ service.interceptors.request.use(
       config.headers = {} as AxiosRequestHeaders;
     }
     const userStore = useUserStore();
-    if (userStore.token) {
+    // 显式 Authorization: false 的公开请求不携带后台 Token。
+    if (userStore.token && config.headers['Authorization'] !== false) {
       config.headers['Authorization'] = 'Bearer ' + userStore.token;
     }
     return config;

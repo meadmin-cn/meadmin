@@ -10,7 +10,7 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
     root: import.meta.dirname,
     base: process.env.VIEW_INDEX_PATH_PRE,
     envPrefix: 'VIEW_INDEX_',
-    plugins: await plugins(configEnv),
+    plugins: plugins(),
     css: {
       preprocessorOptions: {
         scss: {

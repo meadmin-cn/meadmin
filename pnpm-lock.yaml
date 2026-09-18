@@ -223,6 +223,9 @@ importers:
       fflate:
         specifier: ^0.8.3
         version: 0.8.3
+      jsonc-parser:
+        specifier: 3.2.0
+        version: 3.2.0
       prettier:
         specifier: 3.8.1
         version: 3.8.1
@@ -235,6 +238,9 @@ importers:
       typescript:
         specifier: ^5.9.2
         version: 5.9.3
+      yaml:
+        specifier: 2.8.2
+        version: 2.8.2
     devDependencies:
       '@types/mocha':
         specifier: ^10.0.10

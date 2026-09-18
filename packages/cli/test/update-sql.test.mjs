@@ -342,7 +342,7 @@ test('未知列、重复列、缺键、值数错误与非法尾部不能部分�
   ]) rejected(`CREATE TABLE t (id int PRIMARY KEY, body text); ${statement}`);
 });
 
-test('非 INSERT 移除，函数体和 COPY 数据中伪装的 INSERT 不会被提取', () => {
+test('保留 UPDATE，其他非 INSERT 移除，函数体和 COPY 数据中伪装的 INSERT 不会被提取', () => {
   const source = `CREATE TABLE t (id int PRIMARY KEY);
     COMMENT ON TABLE t IS 'INSERT INTO t (id) VALUES (90);';
     UPDATE t SET id = 91;
@@ -360,10 +360,158 @@ INSERT INTO t (id) VALUES (95);
   const result = generate(source);
   assert.deepEqual(result.tables, [{ table: 't', rows: 1, keys: ['id'] }]);
   assert.equal((result.content.match(/^INSERT /gm) ?? []).length, 1);
-  assert.doesNotMatch(result.content, /\b(?:CREATE|DROP|UPDATE|DELETE|COPY|COMMENT|DO \$\$)\b/);
-  assert.doesNotMatch(result.content, /setval|9[0-5]/);
-  for (const command of ['UPDATE', 'DELETE', 'SELECT', 'CREATE', 'DO', 'COPY', 'DROP']) {
-    assert.ok(result.manual.some(message => message.includes(`非 INSERT 语句 ${command}`)), command);
+  assert.match(result.content, /^UPDATE t SET id = 91;$/m);
+  assert.match(result.manual.join('\n'), /第 3 行：警告：UPDATE 无顶层 WHERE/);
+  assert.doesNotMatch(result.content, /^(?:CREATE|DROP|DELETE|COPY|COMMENT|DO)\b/m);
+  assert.doesNotMatch(result.content, /setval|90|9[2-5]/);
+  for (const command of ['DELETE', 'SELECT', 'CREATE', 'DO', 'COPY', 'DROP']) {
+    assert.ok(result.manual.some(message => message.includes(`非 INSERT / UPDATE 语句 ${command}`)), command);
+  }
+});
+
+test('UPDATE 与逐行 INSERT 保持源顺序，锁和 tables 仅属于有效 INSERT', () => {
+  const first = 'UPDATE app.t SET n = n + 1 WHERE id = 1';
+  const middle = 'UPDATE ONLY app.t AS target SET n = 3 WHERE target.id = 1';
+  const last = 'UPDATE other.t SET n = 4 WHERE id = 2';
+  const result = generate(`${first};
+    CREATE TABLE app.t (id int PRIMARY KEY, n int);
+    INSERT INTO app.t (id, n) VALUES (1, 0), (2, 0);
+    ${middle};
+    INSERT INTO app.t (id, n) VALUES (3, 0);
+    ${last}`);
+  assert.deepEqual(result.manual, []);
+  assert.deepEqual(result.tables, [{ table: 'app.t', rows: 3, keys: ['id'] }]);
+  assert.deepEqual(result.content.slice(result.content.indexOf('BEGIN;')).split('\n\n'), [
+    'BEGIN;',
+    first + ';',
+    'LOCK TABLE "app"."t" IN SHARE ROW EXCLUSIVE MODE;',
+    ...[1, 2].map(id => `INSERT INTO "app"."t" ("id", "n") SELECT ${id}, 0\nWHERE NOT EXISTS (SELECT 1 FROM "app"."t" AS existing WHERE existing."id" IS NOT DISTINCT FROM ${id});`),
+    middle + ';',
+    'INSERT INTO "app"."t" ("id", "n") SELECT 3, 0\nWHERE NOT EXISTS (SELECT 1 FROM "app"."t" AS existing WHERE existing."id" IS NOT DISTINCT FROM 3);',
+    last + ';',
+    'COMMIT;\n',
+  ]);
+});
+
+test('UPDATE 保留大小写、schema、ONLY、别名、FROM、子查询及 RETURNING 原文，无需 CREATE TABLE', () => {
+  const statements = [
+    'uPdAtE "S;()"."T""x" AS target\nSET "Value" = other.n\nFROM app.other AS other\nWHERE target.id = other.id RETURNING target.*',
+    'UPDATE ONLY (app.t) AS target SET (n, body) = (SELECT 2, \'new\') WHERE target.id = 1',
+    'UPDATE "app.t" target SET n = n + 1 WHERE CURRENT OF current_cursor',
+    'UPDATE app.t * SET n = 2 WHERE id = 1',
+  ];
+  const result = generate('  ' + statements.join(';\n\n  ') + '  ; ;');
+  assert.deepEqual(result.tables, []);
+  assert.deepEqual(result.manual, []);
+  assert.equal(result.content.slice(result.content.indexOf('BEGIN;')), `BEGIN;\n\n${statements.join(';\n\n')};\n\nCOMMIT;\n`);
+});
+
+test('UPDATE 多行字符串、转义、分号及内部注释不改变 SQL 整体语句边界', () => {
+  const update = String.raw`UPDATE /* 外层 ; /* 内层 UPDATE */ 注释 */ "S;"."T""x"
+SET body = 'first;
+UPDATE fake SET body = ''not a statement'';',
+    escaped = E'it\'s; \\ path',
+    tagged = $tag$;
+DELETE FROM fake; -- WHERE
+$tag$, plain = $$;
+UPDATE fake SET n = 99;$$
+WHERE id = 1`;
+  const result = generate(`-- UPDATE fake SET n = 90;\n${update};\nUPDATE real SET n = 2 WHERE id = 2;`);
+  assert.deepEqual(result.manual, []);
+  assert.deepEqual(result.tables, []);
+  assert.equal(result.content.slice(result.content.indexOf('BEGIN;')), `BEGIN;\n\n${update};\n\nUPDATE real SET n = 2 WHERE id = 2;\n\nCOMMIT;\n`);
+});
+
+test('UPDATE 尾部行注释和块注释原样保留，恢复分号不会吞掉下一语句或 COMMIT', () => {
+  for (const tail of [' -- 尾部 ; UPDATE fake SET n = 9;', '\n-- 尾部', ' /* 尾部 ; */', ' -- 第一条\n/* 第二条 */']) {
+    for (const ending of ['', '\n;']) {
+      const update = `UPDATE t SET n = 1 WHERE id = 1${tail}`;
+      const next = ending ? '\nUPDATE t SET n = 2 WHERE id = 2;' : '';
+      const result = generate(update + ending + next);
+      assert.deepEqual(result.manual, []);
+      assert.equal(result.content.slice(result.content.indexOf('BEGIN;')), `BEGIN;\n\n${update}\n;${next ? '\n\n' + next.trim() : ''}\n\nCOMMIT;\n`);
+    }
+  }
+});
+
+test('UPDATE 无顶层 WHERE 警告但保留，注释、字面量、列名和子查询 WHERE 不冒充筛选条件', () => {
+  for (const assignment of [
+    'n = n + 1',
+    "body = 'WHERE id = 1'",
+    'body = $where$WHERE id = 1$where$',
+    '"WHERE" = 1',
+    'n = 1 /* WHERE id = 1 */',
+    'n = (SELECT n FROM other WHERE id = 1)',
+    'n = 1 RETURNING (SELECT n FROM other WHERE id = 1)',
+  ]) {
+    const update = `UPDATE t SET ${assignment}`;
+    const result = generate('-- 前导\n\n' + update + ';');
+    assert.deepEqual(result.tables, []);
+    assert.equal(result.manual.length, 1);
+    assert.match(result.manual[0], /^第 3 行：警告：UPDATE 无顶层 WHERE.*可能更新全表.*已原样保留.*备份.*人工审阅.*不保证业务幂等/);
+    assert.ok(result.content.includes(update));
+  }
+});
+
+test('UPDATE 不被缺失、不支持或无法定位的元数据及会话设置拦截', () => {
+  for (const metadata of [
+    '',
+    'CREATE TABLE t (id int);',
+    'CREATE TABLE t (id custom_type PRIMARY KEY);',
+    'CREATE TABLE IF NOT EXISTS t (id int PRIMARY KEY);',
+    'ALTER TABLE missing ADD PRIMARY KEY (id);',
+    'CREATE UNIQUE INDEX CONCURRENTLY uq ON t (id);',
+    'SET search_path = app;',
+    'RESET search_path;',
+  ]) {
+    const update = 'UPDATE t SET id = id + 1 WHERE id > 0;';
+    const result = generate(`${metadata}\n${update}\nINSERT INTO t (id) VALUES (1);`);
+    assert.deepEqual(result.tables, []);
+    assert.equal(result.content.slice(result.content.indexOf('BEGIN;')), `BEGIN;\n\n${update}\n\nCOMMIT;\n`);
+    assert.ok(result.manual.some(message => message.includes('整条 INSERT 转人工')));
+    assert.ok(!result.manual.some(message => message.includes('已移除非 INSERT / UPDATE 语句 UPDATE')));
+  }
+});
+
+test('只放行真正顶层 UPDATE，DELETE/TRUNCATE/DO/COPY/WITH 及注释和字面量不放行', () => {
+  const result = generate(String.raw`-- UPDATE fake SET n = 1;
+/* UPDATE fake SET n = 2; */
+'UPDATE fake SET n = 3;';
+"UPDATE" fake SET n = 4;
+$body$UPDATE fake SET n = 5;$body$;
+SELECT 'UPDATE fake SET n = 6;';
+DO $$ BEGIN UPDATE fake SET n = 7; END $$;
+CREATE FUNCTION f() RETURNS void AS $fn$ BEGIN UPDATE fake SET n = 8; END; $fn$ LANGUAGE plpgsql;
+COPY fake FROM STDIN;
+UPDATE fake SET n = 9;
+\.
+WITH data AS (SELECT 1) UPDATE fake SET n = 10;
+WITH changed AS (UPDATE fake SET n = 11 RETURNING *) SELECT * FROM changed;
+DELETE FROM fake;
+TRUNCATE fake;
+COMMENT ON TABLE fake IS 'UPDATE fake SET n = 12;';
+UPDATE real SET n = 13 WHERE id = 1;`);
+  assert.deepEqual(result.tables, []);
+  assert.equal(result.content.slice(result.content.indexOf('BEGIN;')), 'BEGIN;\n\nUPDATE real SET n = 13 WHERE id = 1;\n\nCOMMIT;\n');
+  for (const command of ['DELETE', 'TRUNCATE', 'DO', 'COPY', 'WITH', 'CREATE', 'SELECT']) {
+    assert.ok(result.manual.some(message => message.includes(`非 INSERT / UPDATE 语句 ${command}`)), command);
+  }
+  assert.equal(result.manual.filter(message => message.includes('语句 WITH')).length, 2);
+});
+
+test('UPDATE 遵循全文件词法失败关闭规则，不在损坏或 BEGIN ATOMIC 函数体后提取语句', () => {
+  for (const tail of [
+    "UPDATE t SET body = 'unclosed;",
+    'UPDATE t SET body = $tag$unclosed;',
+    'UPDATE t SET n = (1;',
+    'UPDATE t SET n = 1);',
+    '/* 未闭合',
+    'CREATE FUNCTION f() RETURNS void LANGUAGE SQL BEGIN ATOMIC UPDATE t SET n = 2; END;',
+    'COPY t FROM STDIN;\nUPDATE t SET n = 3;\n',
+    String.raw`\i other.sql`,
+  ]) {
+    const result = rejected(`UPDATE t SET n = 1 WHERE id = 1; ${tail}`, /整个源文件未生成 INSERT \/ UPDATE/);
+    assert.equal(result.content.slice(result.content.indexOf('BEGIN;')), 'BEGIN;\n\nCOMMIT;\n');
   }
 });
 
@@ -493,6 +641,10 @@ test('SQL 头按顺序提示备份、编译、同步、比较执行和手动修�
   assert.match(header, /pnpm exec meadmin sync '\*'/);
   assert.match(header, /谨慎比较 update\.sql 和 manual 清单，确认后再手动执行 update\.sql/);
   assert.match(header, /其他唯一冲突由数据库抛错/);
+  assert.match(header, /独立 UPDATE 按源顺序原样保留.*修改已有数据.*不保证业务幂等.*备份.*审阅/);
+  assert.match(header, /UPDATE 不验证完整语法或目标表元数据.*数据库执行 UPDATE 时自动获取的锁/);
+  assert.match(header, /无顶层 WHERE.*保留.*manual 警告/);
+  assert.match(header, /tables \/ rows 仅统计候选 INSERT 源行数，不含 UPDATE/);
   assert.match(header, /实际库没有对应 PRIMARY KEY \/ UNIQUE 约束也可补齐数据，不输出 DDL/);
   assert.match(header, /缺表或字段时仍须先/);
   assert.match(header, /SHARE ROW EXCLUSIVE 锁.*持有至事务结束.*短暂阻塞写入.*谨慎比较执行/);
@@ -524,18 +676,21 @@ test('空文件、注释、无结尾分号，以及版本中的换行注入', ()
 test('真实 meadmin.sql：id 和复合主键保留，普通/partial 唯一索引不阻断主键插入', () => {
   const source = readFileSync(new URL('../../create-meadmin/template/meadmin/meadmin.sql', import.meta.url), 'utf8');
   const result = generate(source);
-  const summaries = new Map(result.tables.map(table => [table.table, table]));
-  assert.deepEqual(summaries.get('example_book'), { table: 'example_book', rows: 7, keys: ['id'] });
-  assert.deepEqual(summaries.get('example_demo_books'), { table: 'example_demo_books', rows: 1, keys: ['example_book_id', 'example_demo_id'] });
-  assert.deepEqual(summaries.get('example_demo_files'), { table: 'example_demo_files', rows: 7, keys: ['file_id', 'example_demo_id'] });
+  const schema = /^CREATE TABLE "([^"]+)"\."example_book"/m.exec(source)?.[1];
+  const prefix = schema ? schema + '.' : '';
+  const sqlPrefix = schema ? `"${schema}".` : '';
+  const summaries = new Map(result.tables.map(table => [table.table.slice(prefix.length), table]));
+  assert.deepEqual(summaries.get('example_book'), { table: prefix + 'example_book', rows: 7, keys: ['id'] });
+  assert.deepEqual(summaries.get('example_demo_books'), { table: prefix + 'example_demo_books', rows: 1, keys: ['example_book_id', 'example_demo_id'] });
+  assert.deepEqual(summaries.get('example_demo_files'), { table: prefix + 'example_demo_files', rows: 7, keys: ['file_id', 'example_demo_id'] });
   assert.deepEqual(summaries.get('organization_admin').keys, ['system_admin_id', 'system_organization_id']);
   assert.deepEqual(summaries.get('role_menu').keys, ['system_menu_id', 'system_role_id']);
   for (const name of ['example_demo', 'system_admin', 'system_menu', 'system_role', 'user']) {
     assert.deepEqual(summaries.get(name)?.keys, ['id'], name);
     assert.ok(summaries.get(name).rows > 0, name);
-    const insert = result.content.split('\n\n').find(sql => sql.startsWith(`INSERT INTO "${name}" (`));
+    const insert = result.content.split('\n\n').find(sql => sql.startsWith(`INSERT INTO ${sqlPrefix}"${name}" (`));
     assert.ok(insert, `${name} 必须生成 INSERT`);
-    assert.ok(insert.includes(`\nWHERE NOT EXISTS (SELECT 1 FROM "${name}" AS existing WHERE existing."id" IS NOT DISTINCT FROM `));
+    assert.ok(insert.includes(`\nWHERE NOT EXISTS (SELECT 1 FROM ${sqlPrefix}"${name}" AS existing WHERE existing."id" IS NOT DISTINCT FROM `));
     assert.ok(insert.endsWith(');'));
     assert.ok(!result.manual.some(message => message.includes(`${name}：整条 INSERT 转人工`)), name);
   }
@@ -544,12 +699,12 @@ test('真实 meadmin.sql：id 和复合主键保留，普通/partial 唯一索�
   }
   assert.deepEqual(summaries.get('admin_role')?.keys, ['system_admin_id', 'system_role_id']);
   assert.ok(!result.manual.some(message => message.includes('admin_role：整条 INSERT 转人工')));
-  assert.doesNotMatch(result.content, /^(?:CREATE|ALTER|COMMENT|SELECT|COPY|UPDATE|DELETE|DROP)\b/m);
+  assert.doesNotMatch(result.content, /^(?:CREATE|ALTER|COMMENT|SELECT|COPY|DELETE|DROP)\b/m);
   assert.equal((result.content.match(/^INSERT /gm) ?? []).length, result.tables.reduce((sum, table) => sum + table.rows, 0));
   assert.equal((result.content.match(/^LOCK TABLE /gm) ?? []).length, result.tables.length);
   assert.doesNotMatch(result.content, /ON CONFLICT|\bVALUES\b/);
   for (const line of source.split('\n').filter(line => line.startsWith('INSERT INTO '))) {
-    const name = /^INSERT INTO "([^"]+)"/.exec(line)[1];
+    const name = /^INSERT INTO (?:"[^"]+"\.)?"([^"]+)"/.exec(line)[1];
     assert.ok(summaries.has(name) || result.manual.some(message => message.includes(`${name}：整条 INSERT 转人工`)), `${name} 不可静默漏掉`);
   }
 });

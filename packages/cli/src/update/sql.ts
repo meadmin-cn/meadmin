@@ -5,7 +5,7 @@ type Token = {
   end: number;
 };
 
-type Statement = { tokens: Token[]; start: number };
+type Statement = { tokens: Token[]; start: number; end: number };
 type Key = { columns: string[]; primary: boolean };
 type Table = {
   parts: string[];
@@ -43,7 +43,7 @@ function scan(source: string): Statement[] {
     tokens.push({ kind, text: source.slice(start, i), start, end: i });
   };
   const finish = () => {
-    if (tokens.length) statements.push({ tokens, start: tokens[0].start });
+    if (tokens.length) statements.push({ tokens, start: tokens[0].start, end: i });
     tokens = [];
   };
   if (source.includes('\0')) fail('源文件含 NUL 字符');
@@ -396,7 +396,11 @@ export function generateUpdateSql(source: string, version: string): UpdateSql {
 -- 1. 先备份数据库，再编译更新后的后端代码。
 -- 2. 缺表或字段时仍须先手动执行 pnpm exec meadmin sync '*' 同步表结构（默认读取 dist，alter:true）。
 -- 3. 对照现有数据库谨慎比较 update.sql 和 manual 清单，确认后再手动执行 update.sql。
--- 按模板已解析的可靠键逐行判重，实际库没有对应 PRIMARY KEY / UNIQUE 约束也可补齐数据，不输出 DDL。
+-- INSERT 按模板已解析的可靠键逐行判重，实际库没有对应 PRIMARY KEY / UNIQUE 约束也可补齐数据，不输出 DDL。
+-- 独立 UPDATE 按源顺序原样保留，执行可能修改已有数据，不保证业务幂等；执行前务必先备份并逐条审阅。
+-- UPDATE 不验证完整语法或目标表元数据，依赖数据库执行 UPDATE 时自动获取的锁，不额外解析目标表加锁。
+-- 无顶层 WHERE 的 UPDATE 可能更新全表，仍保留并列入 manual 警告；有 WHERE 也需审阅影响范围。
+-- tables / rows 仅统计候选 INSERT 源行数，不含 UPDATE，也不代表数据库实际新增或更新行数。
 -- 模板判重优先使用 id 主键或其他主键（含复合主键），仅无主键时使用非空简单唯一键。
 -- 仅跳过所选判重键已存在的行；其他唯一冲突由数据库抛错，请人工核对处理。
 -- 每张插入表在首次插入前获取 SHARE ROW EXCLUSIVE 锁，持有至事务结束，会短暂阻塞写入，请谨慎比较执行。
@@ -408,7 +412,7 @@ BEGIN;
   try {
     statements = scan(source);
   } catch (error) {
-    manual.push(`SQL 词法扫描失败：${(error as Error).message}；整个源文件未生成 INSERT，请人工检查全部数据。`);
+    manual.push(`SQL 词法扫描失败：${(error as Error).message}；整个源文件未生成 INSERT / UPDATE，请人工检查全部数据。`);
     return result();
   }
   const report = (statement: Statement, message: string) => {
@@ -481,10 +485,24 @@ BEGIN;
   for (const statement of statements) {
     if (definitions.has(statement)) continue;
     const cursor = new Cursor(statement.tokens);
+    if (word(statement.tokens[0], 'UPDATE')) {
+      let depth = 0;
+      const hasWhere = statement.tokens.some((token) => {
+        if (symbol(token, '(')) depth++;
+        if (symbol(token, ')')) depth--;
+        return depth === 0 && word(token, 'WHERE');
+      });
+      const lastToken = statement.tokens[statement.tokens.length - 1];
+      // 尾部注释原样保留；另起一行恢复分号，避免行注释吞掉分号或后续语句。
+      const trailingComment = source.slice(lastToken.end, statement.end).trim();
+      output.push(source.slice(statement.start, statement.end).trim() + (trailingComment ? '\n;' : ';'));
+      if (!hasWhere) report(statement, '警告：UPDATE 无顶层 WHERE，可能更新全表；已原样保留，执行前务必备份并人工审阅，不保证业务幂等。');
+      continue;
+    }
     if (!cursor.take('INSERT')) {
       if (word(statement.tokens[0], 'COMMENT') && word(statement.tokens[1], 'ON')) continue;
       if (statement.tokens.length === 1 && (word(statement.tokens[0], 'BEGIN') || word(statement.tokens[0], 'COMMIT'))) continue;
-      report(statement, `已移除非 INSERT 语句 ${statement.tokens[0].text.toUpperCase()}，需人工检查（含 COPY / INSERT SELECT / 嵌套执行的内容不会提取）。`);
+      report(statement, `已移除非 INSERT / UPDATE 语句 ${statement.tokens[0].text.toUpperCase()}，需人工检查（含 COPY / INSERT SELECT / 嵌套执行的内容不会提取）。`);
       continue;
     }
     let parts: string[] | undefined;

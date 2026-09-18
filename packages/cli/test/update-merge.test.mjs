@@ -38,17 +38,210 @@ test('entity: RuleType不同来源时仅为新增字段引入别名，不改本�
  assert.equal(mergeEntity(result.content,target,local).content,result.content);
 });
 
-test('entity: 既有字段更新装饰器及类型，复用别名且重复合并幂等', () => {
+test('entity: 既有字段更新装饰器及类型，回收无引用的 RuleType 并幂等', () => {
  const local = `import { RuleType } from '@midwayjs/validate'; import { ApiPropertyRule } from './api'; export class SystemRole { @ApiPropertyRule({rule: RuleType.number().default(1)}) dataScope?: string; custom = true; }`;
  const target = `import { RuleType } from '@/ruleType/index.js'; import { ApiPropertyRule } from './api'; export class SystemRole { @ApiPropertyRule({rule: RuleType.number().valid(1,2,3,4).default(3)}) dataScope: number; }`;
  const result = mergeEntity(local, target, target);
  syntax(result.content);
- assert.match(result.content, /RuleType as RuleTypeMeadmin/);
- assert.match(result.content, /RuleTypeMeadmin.number\(\).valid\(1,2,3,4\).default\(3\)/);
+ assert.doesNotMatch(result.content, /@midwayjs\/validate|RuleTypeMeadmin/);
+ assert.match(result.content, /import \{ RuleType \} from "@\/ruleType\/index.js"/);
+ assert.match(result.content, /RuleType.number\(\).valid\(1,2,3,4\).default\(3\)/);
  assert.match(result.content, /dataScope: number/);
  assert.match(result.content, /custom = true/);
  assert.deepEqual(result.manual, []);
  assert.equal(mergeEntity(result.content, target, target).content, result.content);
+});
+
+const ruleTypeLocal = "import { RuleType } from '@midwayjs/validate';";
+const ruleTypeTarget = "import { RuleType } from '@/ruleType/index.js';";
+
+function importEntries(content, module) {
+  return syntax(content).statements.filter(statement => ts.isImportDeclaration(statement) && statement.moduleSpecifier.text === module)
+    .flatMap(statement => {
+      const clause = statement.importClause;
+      if (!clause) return [];
+      const entries = clause.name ? [{ name: clause.name.text, imported: 'default', typeOnly: clause.isTypeOnly }] : [];
+      if (clause.namedBindings && ts.isNamespaceImport(clause.namedBindings)) entries.push({ name: clause.namedBindings.name.text, imported: '*', typeOnly: clause.isTypeOnly });
+      else for (const entry of clause.namedBindings?.elements ?? []) entries.push({ name: entry.name.text, imported: (entry.propertyName ?? entry.name).text, typeOnly: clause.isTypeOnly || entry.isTypeOnly });
+      return entries;
+    });
+}
+
+function ruleTypeMerge(local, target) {
+  const result = mergeEntity(local, target);
+  syntax(result.content);
+  assert.deepEqual(result.manual, []);
+  assert.deepEqual(mergeEntity(result.content, target), result);
+  return result.content;
+}
+
+test('entity: RuleType 字段文本相同但来源不同仍替换绑定，单一导入删除且幂等', () => {
+  const body = 'export class User { value = RuleType.number(); }';
+  const content = ruleTypeMerge(ruleTypeLocal + body, ruleTypeTarget + body);
+  assert.deepEqual(importEntries(content, '@midwayjs/validate'), []);
+  assert.deepEqual(importEntries(content, '@/ruleType/index.js'), [{ name: 'RuleType', imported: 'RuleType', typeOnly: false }]);
+  assert.equal(fields(content)[0].initializer.getText(), 'RuleType.number()');
+});
+
+test('entity: RuleType 混合导入只删旧绑定，保留 default、type-only、别名及尾逗号', () => {
+  for (const [clause, expected] of [
+    ['{ RuleType, Rule, type Shape }', ['Rule', 'Shape']],
+    ['{ Rule, RuleType, type Shape }', ['Rule', 'Shape']],
+    ['{ Rule, type Shape, RuleType, }', ['Rule', 'Shape']],
+    ['Validator, { RuleType, Rule as Validate, type Shape }', ['Validator', 'Validate', 'Shape']],
+    ['Validator, { RuleType, }', ['Validator']],
+    ['type { RuleType, Shape }', ['Shape']],
+    ['{ type RuleType, type Shape }', ['Shape']],
+    ['type { RuleType }', []],
+    ['RuleType, { Rule, type Shape }', ['Rule', 'Shape']],
+    ['RuleType, * as Validate', ['Validate']],
+    ['* as RuleType', []],
+  ]) {
+    const local = `import ${clause} from '@midwayjs/validate'; export class User { value!: RuleType; }`;
+    const target = `${ruleTypeTarget} export class User { value = RuleType.number(); }`;
+    const content = ruleTypeMerge(local, target);
+    const entries = importEntries(content, '@midwayjs/validate');
+    assert.deepEqual(entries.map(entry => entry.name), expected, clause);
+    for (const entry of entries) {
+      assert.equal(entry.typeOnly, entry.name === 'Shape', clause);
+      if (entry.name === 'Validate') assert.ok(['Rule', '*'].includes(entry.imported));
+      if (entry.name === 'Validator') assert.equal(entry.imported, 'default');
+    }
+    assert.equal(importEntries(content, '@/ruleType/index.js')[0].name, 'RuleType', clause);
+  }
+});
+
+test('entity: RuleType 仍被本地字段、方法、类型、简写、计算键或导出使用时保留双导入', () => {
+  for (const [member, outside] of [
+    ['custom = RuleType.string();', ''],
+    ['method() { return RuleType.number(); }', ''],
+    ['custom!: RuleType;', ''],
+    ['custom!: typeof RuleType;', ''],
+    ['custom = { RuleType };', ''],
+    ['custom = { [RuleType.key]: true };', ''],
+    ['', 'type Custom = RuleType;'],
+    ['', 'export { RuleType };'],
+    ['', 'export { RuleType as LocalRule };'],
+    ['', 'export default RuleType;'],
+    ['', 'export declare interface User extends RuleType {}'],
+  ]) {
+    const local = `${ruleTypeLocal} export class User { value = RuleType.number(); ${member} } ${outside}`;
+    const content = ruleTypeMerge(local, `${ruleTypeTarget} export class User { value = RuleType.string(); }`);
+    assert.equal(importEntries(content, '@midwayjs/validate')[0].name, 'RuleType', member + outside);
+    assert.equal(importEntries(content, '@/ruleType/index.js')[0].name, 'RuleTypeMeadmin', member + outside);
+    assert.equal(fields(content)[0].initializer.getText(), 'RuleTypeMeadmin.string()');
+    assert.ok(content.includes(member) && content.includes(outside));
+  }
+});
+
+test('entity: RuleType 注释、字符串、属性键、成员访问和 shadow 变量不计作旧导入引用', () => {
+  const custom = `// RuleType 和 RuleTypeMeadmin 保持原文
+    text = 'RuleType RuleTypeMeadmin';
+    object = { RuleType: 'RuleType', RuleTypeMeadmin: 'RuleTypeMeadmin' };
+    RuleType = '属性';
+    method(RuleType: { RuleType: string }) { return RuleType.RuleType; }
+    shadow() { const RuleType = 1; return { RuleType }; }`;
+  const outside = `type Other = { RuleType: string }; type Property = Other['RuleType'];
+    namespace Names { export type RuleType = string; } type Nested = Names.RuleType;
+    export { RuleType } from './unrelated';`;
+  const local = `${ruleTypeLocal} export class User { value = RuleType.number(); ${custom} } ${outside}`;
+  const content = ruleTypeMerge(local, `${ruleTypeTarget} export class User { value = RuleType.string(); }`);
+  assert.deepEqual(importEntries(content, '@midwayjs/validate'), []);
+  assert.equal(importEntries(content, '@/ruleType/index.js')[0].name, 'RuleType');
+  assert.ok(content.includes(custom) && content.includes(outside));
+});
+
+test('entity: RuleType 目标绑定引用安全恢复，内部同名变量和属性键不改名', () => {
+  const target = `${ruleTypeTarget} export class User {
+    value = () => { const RuleTypeMeadmin = '局部'; const object = { RuleTypeMeadmin: '键' }; return [RuleType.number(), RuleTypeMeadmin, object.RuleTypeMeadmin]; };
+  }`;
+  const content = ruleTypeMerge(`${ruleTypeLocal} export class User { value = RuleType.string(); }`, target);
+  assert.equal(importEntries(content, '@/ruleType/index.js')[0].name, 'RuleType');
+  assert.match(content, /return \[RuleType.number\(\), RuleTypeMeadmin, object.RuleTypeMeadmin\]/);
+  assert.match(content, /const RuleTypeMeadmin = '局部'/);
+  assert.match(content, /\{ RuleTypeMeadmin: '键' \}/);
+});
+
+test('entity: RuleType 回收会被字段内部参数或类型参数捕获时保守保留别名', () => {
+  for (const [expression, expected] of [
+    ['(RuleType: unknown) => null as RuleType', '(RuleType: unknown) => null as RuleTypeMeadmin'],
+    ['<RuleType>() => RuleType.number()', '<RuleType>() => RuleTypeMeadmin.number()'],
+  ]) {
+    const target = `${ruleTypeTarget} export class User { value = ${expression}; }`;
+    const local = `${ruleTypeLocal} export class User { value = RuleType.string(); }`;
+    const content = ruleTypeMerge(local, target);
+    assert.equal(importEntries(content, '@/ruleType/index.js')[0].name, 'RuleTypeMeadmin');
+    assert.equal(importEntries(content, '@midwayjs/validate')[0].name, 'RuleType');
+    assert.equal(fields(content)[0].initializer.getText(), expected);
+  }
+});
+
+test('entity: RuleType 目标简写属性保留属性键，回收别名后重复合并幂等', () => {
+  const local = `${ruleTypeLocal} export class User { value = RuleType.number(); }`;
+  const target = `${ruleTypeTarget} export class User { value = { RuleType }; }`;
+  const content = ruleTypeMerge(local, target);
+  assert.equal(fields(content)[0].initializer.getText(), '{ RuleType: RuleType }');
+  assert.equal(importEntries(content, '@/ruleType/index.js')[0].name, 'RuleType');
+});
+
+test('entity: RuleType 多个字段替换并追加，别名复用后一次恢复全部引用', () => {
+  const local = `${ruleTypeLocal} export class User { first = RuleType.number(); second = RuleType.number(); }`;
+  const target = `${ruleTypeTarget} export class User { first = RuleType.string(); second = RuleType.boolean(); third = RuleType.number(); }`;
+  const content = ruleTypeMerge(local, target);
+  assert.deepEqual(importEntries(content, '@midwayjs/validate'), []);
+  assert.deepEqual(importEntries(content, '@/ruleType/index.js'), [{ name: 'RuleType', imported: 'RuleType', typeOnly: false }]);
+  assert.deepEqual(fields(content).map(field => field.initializer.getText()), ['RuleType.string()', 'RuleType.boolean()', 'RuleType.number()']);
+});
+
+test('entity: RuleType type-only 目标和 default、namespace 目标均安全恢复', () => {
+  for (const [targetImport, field, imported, typeOnly] of [
+    ["import type { RuleType } from '@/ruleType/index.js';", 'value!: RuleType;', 'RuleType', true],
+    ["import RuleType from '@/ruleType/index.js';", 'value = RuleType.number();', 'default', false],
+    ["import * as RuleType from '@/ruleType/index.js';", 'value = RuleType.number();', '*', false],
+  ]) {
+    const content = ruleTypeMerge(`${ruleTypeLocal} export class User { value = RuleType.string(); }`, `${targetImport} export class User { ${field} }`);
+    assert.deepEqual(importEntries(content, '@midwayjs/validate'), []);
+    assert.deepEqual(importEntries(content, '@/ruleType/index.js'), [{ name: 'RuleType', imported, typeOnly }]);
+  }
+});
+
+test('entity: RuleType 已存在用户别名（含 Meadmin 后缀）不会被任意重命名', () => {
+  for (const alias of ['CustomRule', 'RuleTypeMeadmin']) {
+    const local = `${ruleTypeLocal} import { RuleType as ${alias} } from '@/ruleType/index.js'; export class User { value = RuleType.number(); }`;
+    const content = ruleTypeMerge(local, `${ruleTypeTarget} export class User { value = RuleType.string(); }`);
+    assert.equal(importEntries(content, '@/ruleType/index.js')[0].name, alias);
+    assert.equal(fields(content)[0].initializer.getText(), `${alias}.string()`);
+  }
+});
+
+test('entity: RuleType 两个目标来源均导出同名符号时不会混淆绑定，重复合并幂等', () => {
+  const local = `${ruleTypeLocal} import { RuleType as OtherRule } from './local-other'; export class User { first = RuleType.number(); second = OtherRule.number(); }`;
+  const target = `${ruleTypeTarget} import { RuleType as OtherRule } from './target-other'; export class User { first = RuleType.string(); second = OtherRule.string(); }`;
+  const content = ruleTypeMerge(local, target);
+  assert.deepEqual(importEntries(content, '@midwayjs/validate'), []);
+  assert.deepEqual(importEntries(content, './local-other'), []);
+  assert.equal(importEntries(content, '@/ruleType/index.js')[0].name, 'RuleType');
+  assert.equal(importEntries(content, './target-other')[0].name, 'OtherRule');
+  assert.equal(fields(content)[0].initializer.getText(), 'RuleType.string()');
+  assert.equal(fields(content)[1].initializer.getText(), 'OtherRule.string()');
+});
+
+test('entity: RuleType 生成别名避开第二目标来源的导入名，回收后不串来源', () => {
+  const local = `${ruleTypeLocal} export class User { first = RuleType.number(); }`;
+  const target = `${ruleTypeTarget} import { RuleType as RuleTypeMeadmin } from './second-target'; export class User { first = RuleType.string(); second = RuleTypeMeadmin.number(); }`;
+  const content = ruleTypeMerge(local, target);
+  assert.deepEqual(importEntries(content, '@midwayjs/validate'), []);
+  assert.equal(importEntries(content, '@/ruleType/index.js')[0].name, 'RuleType');
+  assert.equal(importEntries(content, './second-target')[0].name, 'RuleTypeMeadmin');
+  assert.deepEqual(fields(content).map(field => field.initializer.getText()), ['RuleType.string()', 'RuleTypeMeadmin.number()']);
+});
+
+test('entity: RuleType interface 追加产生的旧绑定引用也纳入最终分析', () => {
+  const local = `${ruleTypeLocal} export class User { value = RuleType.number(); }`;
+  const target = `${ruleTypeLocal} import { RuleType as NewRule } from '@/ruleType/index.js'; export class User { value = NewRule.string(); } export declare interface User extends RuleType {}`;
+  const content = ruleTypeMerge(local, target);
+  assert.equal(importEntries(content, '@midwayjs/validate')[0].name, 'RuleType');
+  assert.match(content, /interface User extends RuleType/);
 });
 
 function syntax(content) {
@@ -461,8 +654,8 @@ test('entity: 引用缺失时不追加字段且不留下部分 import', () => {
   }
 });
 
-test('entity: type-only导入保留并为新增装饰器补运行时别名', () => {
-  const local = 'import type {Column} from "orm"; export class User {}';
+test('entity: 仍被类型引用的 type-only 导入保留并为新增装饰器补运行时别名', () => {
+  const local = 'import type {Column} from "orm"; type LocalColumn = Column; export class User {}';
   const result = mergeEntity(local, 'import {Column} from "orm"; export class User {@Column() added = 1; safe = 2;}');
   assert.equal(fields(result.content).length, 2);
   assert.match(result.content, /Column as ColumnMeadmin/);

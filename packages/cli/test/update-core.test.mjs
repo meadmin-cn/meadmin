@@ -150,9 +150,23 @@ test('预览后修改阻止写入，回滚不覆盖升级后修改',()=>{
  f.put('root','a','new user');assert.throws(()=>applyPlan(f.root,plan,'1.3.6','1.4.0'));
  f.put('root','a','old');const dir=applyPlan(f.root,plan,'1.3.6','1.4.0');f.put('root','a','after');assert.throws(()=>rollback(f.root,dir));assert.equal(readFileSync(join(f.root,'a'),'utf8'),'after');
 });
-test('SQL改名与数据脚本生成不覆盖原始meadmin.sql',()=>{
- const f=fixture();f.put('target','meadmin.sql','CREATE TABLE t (id text PRIMARY KEY); INSERT INTO t(id) VALUES (\'a\');');f.put('root','meadmin.sql','local');
- const plan=makePlan(f.root,f.base,f.target,'1.4.0',{});assert(plan.changes.some(c=>c.path==='meadmin-1.4.0.sql'));assert(!plan.changes.some(c=>c.path==='meadmin.sql'));assert.match(plan.changes.find(c=>c.path==='update.sql').content.toString(),/WHERE NOT EXISTS \(SELECT 1 FROM "t" AS existing WHERE existing\."id" IS NOT DISTINCT FROM 'a'\)/);
+test('SQL改名与数据脚本生成不覆盖原始meadmin.sql，UPDATE 保留到 update.sql 且不计入插入统计',()=>{
+ const f=fixture();
+ const update='UPDATE ONLY app.missing AS target SET n = n + 1;';
+ const source='CREATE TABLE t (id text PRIMARY KEY); INSERT INTO t(id) VALUES (\'a\');\n'+update;
+ f.put('target','meadmin.sql',source);f.put('root','meadmin.sql','local');
+ const plan=makePlan(f.root,f.base,f.target,'1.4.0',{});
+ assert.equal(plan.changes.find(c=>c.path==='meadmin-1.4.0.sql').content.toString(),source);
+ assert(!plan.changes.some(c=>c.path==='meadmin.sql'));
+ const script=plan.changes.find(c=>c.path==='update.sql').content.toString();
+ assert.match(script,/WHERE NOT EXISTS \(SELECT 1 FROM "t" AS existing WHERE existing\."id" IS NOT DISTINCT FROM 'a'\)/);
+ assert.ok(script.includes('\n\n'+update+'\n\nCOMMIT;'));
+ assert.deepEqual(plan.sqlTables,[{table:'t',rows:1,keys:['id']}]);
+ assert.match(plan.manual.join('\n'),/SQL: 第 2 行：警告：UPDATE 无顶层 WHERE.*已原样保留/);
+ applyPlan(f.root,plan,'1.3.6','1.4.0');
+ assert.equal(readFileSync(join(f.root,'meadmin.sql'),'utf8'),'local');
+ assert.equal(readFileSync(join(f.root,'meadmin-1.4.0.sql'),'utf8'),source);
+ assert.equal(readFileSync(join(f.root,'update.sql'),'utf8'),script);
 });
 function archive(name,type='0') {const h=Buffer.alloc(512);h.write(name);h.write('00000000001\0',124);h.write(type,156);h.fill(32,148,156);const sum=h.reduce((a,b)=>a+b,0);h.write(sum.toString(8).padStart(6,'0')+'\0 ',148);return gzipSync(Buffer.concat([h,Buffer.from('x'),Buffer.alloc(511),Buffer.alloc(1024)]));}
 test('压缩包拒绝越界路径及符号链接',()=>{const f=fixture();assert.throws(()=>unpackTemplate(archive('package/../../oops'),f.root));assert.throws(()=>unpackTemplate(archive('package/link','2'),f.root));unpackTemplate(archive('package/a'),f.root);assert.equal(readFileSync(join(f.root,'package/a'),'utf8'),'x');});

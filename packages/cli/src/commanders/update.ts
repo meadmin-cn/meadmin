@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { basename, join, resolve } from 'node:path';
 import { stdin, stdout } from 'node:process';
 import { createInterface } from 'node:readline/promises';
-import { applyPlan, rollback, saveRecord, validBackupId, type UpgradeRecord } from '../update/backup.js';
+import { applyPlan, clearHistory, rollback, saveRecord, validBackupId, type UpgradeRecord } from '../update/backup.js';
 import { makePlan } from '../update/planner.js';
 import { validateConfig } from '../update/rules.js';
 import { currentVersion, downloadTemplate, registryManifest, selectVersion } from '../update/template.js';
@@ -38,17 +38,27 @@ function readHistory(root: string) {
     if (!existsSync(location)) return { directory, entries: [] };
     if (lstatSync(location).isSymbolicLink() || !lstatSync(location).isDirectory()) throw new Error('升级历史目录不安全');
   }
-  const entries = readdirSync(directory, { withFileTypes: true }).filter(entry => entry.isDirectory() && validBackupId(entry.name)).map(entry => {
-    const file = join(directory, entry.name, 'record.json');
-    let from = '未知', to = '未知', phase = '记录缺失或损坏', installation = '未知';
-    try {
-      if (existsSync(file) && !lstatSync(file).isSymbolicLink()) {
-        const record = JSON.parse(readFileSync(file, 'utf8')) as UpgradeRecord;
-        from = record.from ?? from; to = record.to ?? to; phase = record.phase ?? phase; installation = record.installation ?? installation;
+  const entries = readdirSync(directory, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && validBackupId(entry.name))
+    .map((entry) => {
+      const file = join(directory, entry.name, 'record.json');
+      let from = '未知',
+        to = '未知',
+        phase = '记录缺失或损坏',
+        installation = '未知';
+      try {
+        if (existsSync(file) && !lstatSync(file).isSymbolicLink()) {
+          const record = JSON.parse(readFileSync(file, 'utf8')) as UpgradeRecord;
+          from = record.from ?? from;
+          to = record.to ?? to;
+          phase = record.phase ?? phase;
+          installation = record.installation ?? installation;
+        }
+      } catch {
+        /* 单个损坏记录只展示警告，不阻止新的升级。 */
       }
-    } catch { /* 单个损坏记录只展示警告，不阻止新的升级。 */ }
-    return { id: entry.name, from, to, phase, installation };
-  });
+      return { id: entry.name, from, to, phase, installation };
+    });
   return { directory, entries };
 }
 
@@ -62,10 +72,16 @@ export function updateInit(program: Command) {
     .option('--dry-run', '仅预览，不写入项目')
     .option('--history', '列出历史备份目录、版本和恢复命令，不执行升级')
     .option('--rollback <id>', '恢复升级批次的文件（不恢复数据库）')
-    .action(async (options: { version?: string; config?: string; registry?: string; dryRun?: boolean; rollback?: string; history?: boolean }) => {
+    .option('--clear-history <id|all>', '交互确认后永久删除指定或全部历史备份，删除后不可回滚')
+    .action(async (options: { version?: string; config?: string; registry?: string; dryRun?: boolean; rollback?: string; history?: boolean; clearHistory?: string }) => {
       try {
         const root = process.cwd();
         if (!existsSync(join(root, 'package.json'))) throw new Error('请在目标项目根目录运行');
+        if (options.clearHistory !== undefined) {
+          if (Object.keys(options).some((key) => key !== 'clearHistory')) throw new Error('--clear-history 请单独使用，不能与 history/rollback/version/dry-run/config/registry 等选项组合');
+          await clearHistory(root, options.clearHistory, { confirm });
+          return;
+        }
         if (options.history) {
           if (options.rollback || options.version || options.config || options.registry || options.dryRun) throw new Error('--history 请单独使用');
           const history = readHistory(root);
@@ -87,7 +103,7 @@ export function updateInit(program: Command) {
         const from = currentVersion(root);
         const history = readHistory(root);
         if (history.entries.length > 3) console.warn(`升级备份过多：已有 ${history.entries.length} 个批次。请确认不再需要后，手动到 ${history.directory} 删除旧备份文件夹；删除后无法恢复对应批次。本次升级继续，不自动清理。`);
-        if (history.entries.some(entry => !['files-complete', 'rolled-back'].includes(entry.phase) || ['failed', 'running'].includes(entry.installation))) console.warn('历史中存在未完成或损坏的记录，请用 update --history 核对。本次升级不会因此被阻止。');
+        if (history.entries.some((entry) => !['files-complete', 'rolled-back'].includes(entry.phase) || ['failed', 'running'].includes(entry.installation))) console.warn('历史中存在未完成或损坏的记录，请用 update --history 核对。本次升级不会因此被阻止。');
         const npmRegistry = spawnSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['config', 'get', 'registry'], { encoding: 'utf8', shell: process.platform === 'win32' });
         const registry = options.registry || process.env.npm_config_registry || (npmRegistry.status === 0 ? npmRegistry.stdout.trim() : '') || 'https://registry.npmjs.org';
         const manifest = await registryManifest(registry);
@@ -115,7 +131,7 @@ export function updateInit(program: Command) {
         for (const item of plan.changes) console.log(`${item.action}${item.conflict ? ' [本地冲突]' : ''}: ${item.path}`);
         for (const item of plan.skipped) console.log('跳过: ' + item);
         for (const item of plan.manual) console.warn('人工处理: ' + item);
-        console.log('SQL候选插入（不代表数据库实际新增）:', plan.sqlTables);
+        console.log('SQL候选插入（仅统计 INSERT 源行，不含 UPDATE，不代表数据库实际新增）:', plan.sqlTables);
         Log.log(`参考模板保留于：${workspace}`);
         Log.log(databaseReminder);
         if (options.dryRun) return;

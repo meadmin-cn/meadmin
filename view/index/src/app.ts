@@ -1,7 +1,6 @@
 import '@/styles/index.scss';
 import nProgress from 'nprogress';
 import type { App } from 'vue';
-import { initVxeTable } from './components/meVxeTable/install.js';
 import { event, mitter } from './event';
 import { installIcon } from './icons/index.js';
 import { setupRouterGuard } from './router/guard/index.js';
@@ -23,9 +22,11 @@ export async function bootscrapt(app: App, ssrVersion: string = '') {
   app.use(router);
   setApp(app);
   setupRouterGuard(router, store);
-  initVxeTable(app);
   installIcon(app);
   if (!import.meta.env.SSR) {
+    // VXE 依赖浏览器 DOM，必须在客户端分支动态导入，避免 SSR 求值时访问 Element。
+    const { initVxeTable } = await import('./components/meVxeTable/install.js');
+    initVxeTable(app);
     window.addEventListener('resize', () => mitter.emit(event.RESIZE));
     // 进度条配置
     nProgress.configure({

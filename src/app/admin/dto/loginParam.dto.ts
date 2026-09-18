@@ -1,5 +1,5 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
-import { RuleType } from '@midwayjs/validate';
+import { RuleType } from '@/ruleType/index.js';
 
 export class LoginParamDto {
   @ApiPropertyRule({ description: '用户名', rule: RuleType.string().max(10).min(1).required().empty('') })

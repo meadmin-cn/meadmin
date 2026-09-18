@@ -1,7 +1,7 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
 import { uuid } from '@/helper/snowflake.js';
 import { listToTree } from '@/helper/utils.js';
-import { RuleType } from '@midwayjs/validate';
+import { RuleType } from '@/ruleType/index.js';
 import { Attributes, CreateOptions, CreationOptional, DataTypes, FindOptions, InferAttributes, InferCreationAttributes, InstanceDestroyOptions, InstanceUpdateOptions, Model, ModelStatic, Op, sql } from '@sequelize/core';
 import { AfterDestroy, AfterUpdate, Attribute, BeforeCreate, Table } from '@sequelize/core/decorators-legacy';
 import { AdminBaseModel } from './adminBase.entity.js';

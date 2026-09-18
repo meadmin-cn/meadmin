@@ -4,7 +4,6 @@ import { getKeyInfo } from '@meadmin/cli/utils/formatting';
 import { createCustomMethodDecorator } from '@midwayjs/core';
 import { ApiOperationOptions, ApiPropertyOptions, Type } from '@midwayjs/swagger';
 import { ApiExtraModel, ApiOperation, ApiProperty, ApiResponse, getSchemaPath } from '@midwayjs/swagger';
-import { RuleType } from '@midwayjs/validate';
 import { Rule } from '@midwayjs/validate';
 
 // 装饰器内部的唯一 id

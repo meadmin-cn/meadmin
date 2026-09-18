@@ -1,5 +1,5 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
-import { RuleType } from '@midwayjs/validate';
+import { RuleType } from '@/ruleType/index.js';
 
 export class FileUpDto {
   @ApiPropertyRule({ description: '文件名', rule: RuleType.string().required() })

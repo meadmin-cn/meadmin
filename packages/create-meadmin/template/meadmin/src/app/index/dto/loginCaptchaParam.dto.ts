@@ -1,5 +1,5 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
-import { RuleType } from '@midwayjs/validate';
+import { RuleType } from '@/ruleType/index.js';
 
 export class LoginCaptchaParamDto {
   @ApiPropertyRule({ description: '宽度', rule: RuleType.number().default(100) })

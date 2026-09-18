@@ -2,9 +2,7 @@ import { ApiPageRes, PageRes } from '@/response/apiPage.res.js';
 import { ApiSuccessRes, ApiSuccessResArr } from '@/response/apiSuccess.res.js';
 import { getKeyInfo } from '@meadmin/cli/utils/formatting';
 import { createCustomMethodDecorator } from '@midwayjs/core';
-import { ApiOperationOptions, ApiPropertyOptions, Type } from '@midwayjs/swagger';
-import { ApiExtraModel, ApiOperation, ApiProperty, ApiResponse, getSchemaPath } from '@midwayjs/swagger';
-import { RuleType } from '@midwayjs/validate';
+import { ApiExtraModel, ApiOperation, ApiOperationOptions, ApiProperty, ApiPropertyOptions, ApiResponse, getSchemaPath, Type } from '@midwayjs/swagger';
 import { Rule } from '@midwayjs/validate';
 
 // 装饰器内部的唯一 id
@@ -138,22 +136,22 @@ export function ApiPropertyRule(options?: ApiPropertyOptions & { rule?: RuleType
       options.rule = options.rule.allow(null);
     }
     if (options.rule.type === 'number') {
-       if(!options.type )options.type = 'number';
+      if (!options.type) options.type = 'number';
       if (options.maximum !== undefined) {
-        options.maximum = options.rule.$_getRule('max')?.args?.limit as number| undefined;
+        options.maximum = options.rule.$_getRule('max')?.args?.limit as number | undefined;
       }
       if (options.minimum !== undefined) {
-        options.minimum = options.rule.$_getRule('min')?.args?.limit as number| undefined;
+        options.minimum = options.rule.$_getRule('min')?.args?.limit as number | undefined;
       }
     }
     if (options.rule.type === 'string') {
-      if(!options.type )options.type = 'string';
+      if (!options.type) options.type = 'string';
       options.rule.empty(''); //将 空串视为空而不是无效值,否则空串会被 stripUnknown 配置 视为无效值处理掉
       if (options.maxLength !== undefined) {
-        options.maxLength = options.rule.$_getRule('max')?.args?.limit as number| undefined;
+        options.maxLength = options.rule.$_getRule('max')?.args?.limit as number | undefined;
       }
       if (options.minLength !== undefined) {
-        options.minLength = options.rule.$_getRule('min')?.args?.limit as number| undefined;
+        options.minLength = options.rule.$_getRule('min')?.args?.limit as number | undefined;
       }
       if (!options.required && !(options.rule as any)._invalids?._values.has('')) {
         //如果不是必填值，允许空串

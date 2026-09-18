@@ -1,5 +1,5 @@
 import { ApiPropertyRule } from '@/decorators/index.js';
-import { RuleType } from '@midwayjs/validate';
+import { RuleType } from '@/ruleType/index.js';
 
 export class AdminProfileUpdateDto {
   @ApiPropertyRule({ description: '昵称', rule: RuleType.string().min(1).max(20).required() })

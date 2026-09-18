@@ -1,0 +1,29 @@
+{
+  "skipExisting": {
+    "view/index/src/views/index/**": true,
+    "view/admin/src/views/index/**": true,
+    "public/**": true,
+    ".env*": true,
+    "view/*/public/**": true,
+    "view/*/.env*": true,
+    "addons/**": true,
+    "src/app/*/addons/**": true,
+    "view/*/src/addons/**": true
+  },
+  "mergeSource": {
+    "src/api/**/*.ts": "functions",
+    "src/utils/**/*.ts": "functions",
+    "src/helper/**/*.ts": "functions",
+    "src/decorators/index.ts": "exports",
+    "view/admin/src/store/module.ts": "exports",
+    "view/index/src/store/module.ts": "exports",
+    "view/admin/src/event/module.ts": "exports",
+    "view/admin/src/api/**/*.ts": "functions",
+    "view/admin/src/utils/**/*.ts": "functions",
+    "view/admin/src/helper/**/*.ts": "functions",
+    "view/index/src/api/**/*.ts": "functions",
+    "view/index/src/utils/**/*.ts": "functions",
+    "view/index/src/helper/**/*.ts": "functions",
+    "src/filter/index.ts": "exports"
+  }
+}

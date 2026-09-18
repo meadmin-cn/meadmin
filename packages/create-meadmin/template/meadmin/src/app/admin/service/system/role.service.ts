@@ -138,6 +138,7 @@ export class SystemRoleService {
     //entity.get({ plain: true })转普通对象，防止循环引用
     const result = entity.get({ plain: true }) as Record<string, any>;
     if (result.isSuper) {
+      result.dataScope = 1;
       result.menus = await this.SystemMenuRepository.findAll({ attributes: ['id'] });
     }
     result.menus = (result.menus ?? []).map(({ id }: { id: string }) => ({ id }));

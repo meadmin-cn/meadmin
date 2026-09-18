@@ -60,7 +60,7 @@
           <div class="login-options">
             <el-checkbox v-model="rememberUsername">{{ t('记住用户名') }}</el-checkbox>
           </div>
-          <el-button class="submit" type="primary" native-type="submit" :loading="submitting">{{ t('登录') }}<span class="button-arrow">→</span></el-button>
+          <el-button class="submit" type="primary" native-type="submit" :loading="submitting">{{ t('登录') }}</el-button>
         </el-form>
       </div>
       <div class="page-footer">meadmin <span>·</span> {{ t('全栈一站式解决方案') }}</div>

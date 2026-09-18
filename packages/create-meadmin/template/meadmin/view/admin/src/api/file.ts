@@ -17,8 +17,8 @@ export class UpFile {
 
 export type FileInfo = Required<UpFile> & {
   id: string; //ID
-  createdAdmin: Omit<SystemAdminInfo, 'roles' | 'roleMenus'>;
-  updatedAdmin: Omit<SystemAdminInfo, 'roles' | 'roleMenus'>;
+  createdAdmin?: Omit<SystemAdminInfo, 'roles' | 'roleMenus'>;
+  updatedAdmin?: Omit<SystemAdminInfo, 'roles' | 'roleMenus'>;
   size: number;
   createdAt: string; //创建时间
   updatedAt: string; //最后更新时间
@@ -101,7 +101,7 @@ export function fileInfoApi(options?: RequestOptions<FileInfo, [string]>) {
   );
 }
 
-export type UpdateFileInfoParam = Omit<Partial<FileInfo>, 'id' | 'createdAt' | 'updatedAt' | 'createdAdmin'>;
+export type UpdateFileInfoParam = Omit<Partial<FileInfo>, 'id' | 'createdAt' | 'updatedAt' | 'createdAdmin' | 'updatedAdmin'>;
 //修改附件信息
 export function updateFileApi(options?: RequestOptions<FileInfo, [string, UpdateFileInfoParam]>) {
   return request<FileInfo, [string, UpdateFileInfoParam]>(

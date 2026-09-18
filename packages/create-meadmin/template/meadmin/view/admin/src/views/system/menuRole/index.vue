@@ -5,7 +5,7 @@
         <Role ref="role" @current-change="setChecked"></Role>
       </div>
       <div class="index-menu">
-        <Menu :checked-menu-ids="checkedMenuIds" :is-super="roleIsSuper" @sub-menus="role!.setRoleMenu($event)"></Menu>
+        <Menu :checked-menu-ids="checkedMenuIds" :is-super="roleIsSuper" @sub-menus="role!.setRoleMenu($event)" @refresh="role?.refreshCurrentRole()"></Menu>
       </div>
     </el-scrollbar>
   </div>

@@ -1,4 +1,4 @@
-import { InjectRepository } from '@/decorators/index.js';
+import { InjectRepository, Transaction } from '@/decorators/index.js';
 import { SystemMenu } from '@/entities/systemMenu.entity.js';
 import { NormalWhereOptions } from '@meadmin/core/types/entity';
 import { Inject, Provide } from '@midwayjs/core';
@@ -6,6 +6,7 @@ import { BadRequestError } from '@midwayjs/core/dist/error/http.js';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { Includeable, InferAttributes, Op, WhereOperators } from '@sequelize/core';
 import { SystemAdmin } from '../../../../entities/systemAdmin.entity.js';
+import { AdminProfileUpdateDto } from '../../dto/profileUpdate.dto.js';
 import { SystemAdminCreateDto } from '../../dto/system/adminCreate.dto.js';
 import { SystemAdminQueryDto } from '../../dto/system/adminQuery.dto.js';
 import { SystemAdminUpdateDto } from '../../dto/system/adminUpdate.dto.js';
@@ -208,6 +209,42 @@ export class SystemAdminService {
    * @param updateDto 数据对象
    * @returns
    */
+  /** 个人中心仅返回展示字段，不暴露密码、盐及角色菜单等内部数据。 */
+  async findProfile(id: string): Promise<Record<string, unknown>> {
+    const entity = await this.findOne(id);
+    return {
+      id: entity.id,
+      username: entity.username,
+      nickname: entity.nickname,
+      mobile: entity.mobile,
+      email: entity.email,
+      status: entity.status,
+      avatar: entity.avatar ?? null,
+      roles: entity.roles?.map((role) => ({ id: role.id, roleName: role.roleName })) ?? [],
+      organizations: entity.organizations?.map((org) => ({ id: org.id, orgName: org.orgName })) ?? [],
+    };
+  }
+
+  /** 个人资料只允许更新白名单字段，不复用管理员管理的授权字段。 */
+  @Transaction()
+  async updateProfile(id: string, updateDto: AdminProfileUpdateDto): Promise<Record<string, unknown>> {
+    const entity = await this.SystemAdminRepository.findByPk(id);
+    if (!entity) throw new BadRequestError(this.i18nService.translate('没有对应的信息'));
+    const { oldPassword, newPassword, avatar } = updateDto;
+    if (newPassword) {
+      if (!oldPassword || !this.loginService.checkPassword(oldPassword, entity.salt, entity.password)) {
+        throw new BadRequestError(this.i18nService.translate('原始密码错误'));
+      }
+      Object.assign(entity, this.loginService.entityPassword(newPassword));
+    }
+    entity.nickname = updateDto.nickname;
+    entity.mobile = updateDto.mobile;
+    if (updateDto.email !== undefined) entity.email = updateDto.email;
+    if (avatar !== undefined) entity.set('avatarFileId', avatar?.id ?? null);
+    await entity.save();
+    return await this.findProfile(id);
+  }
+
   async update(id: string, updateDto: SystemAdminUpdateDto) {
     const entity = await this.SystemAdminRepository.findByPk(id);
     if (!entity) {
@@ -224,6 +261,9 @@ export class SystemAdminService {
     }
     if (updateDto.roleIds) {
       await entity.setRoles(updateDto.roleIds);
+    }
+    if (updateDto.orgIds) {
+      await entity.setOrganizations(updateDto.orgIds);
     }
     if (updateDto.avatar !== undefined) {
       //关联模型用主键进行设置，用对象设置时必须确保对象为模型model的实例

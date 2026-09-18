@@ -1,6 +1,6 @@
 <template>
   <div class="user">
-    <el-dropdown>
+    <el-dropdown trigger="click" placement="bottom-end">
       <span class="el-dropdown-link">
         <el-avatar v-if="userStore.user.id" size="default" class="avatar" :src="userStore.user?.avatar?.url ?? avatar" />
         <template v-else> 会员中心<mel-icon-arrow-down class="icon"></mel-icon-arrow-down> </template>

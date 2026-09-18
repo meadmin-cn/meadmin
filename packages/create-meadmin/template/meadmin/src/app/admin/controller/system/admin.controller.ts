@@ -32,7 +32,7 @@ export class SystemAdminController extends BaseController {
     responsePage: SystemAdmin,
     summary: '获取管理员列表',
   })
-  @AdminPermission('system_admin_list')
+  @AdminPermission(['system_admin_list', 'system_organization_add_user'])
   async list(@Body() queryDto: SystemAdminQueryDto) {
     return this.success(await this.systemAdminService.list(queryDto));
   }

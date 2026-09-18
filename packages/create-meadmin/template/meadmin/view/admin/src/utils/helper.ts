@@ -1,8 +1,19 @@
+import { getConfigApi, getDictApi, type PublicConfigValue } from '@/api/config.js';
 import dayjs from 'dayjs';
 import { clone, cloneDeep } from 'lodash-es';
 import type { VxeColumnDefines } from 'vxe-pc-ui/types/components/column';
 import type { SearchTreeOptions } from 'xe-utils';
 import { default as XEUtils } from 'xe-utils';
+
+/** 获取启用配置，支持点号路径；相同参数缓存 5 分钟。 */
+export function getConfig<T = PublicConfigValue>(groupCode: string, path?: string): Promise<T> {
+  return getConfigApi<T>().runAsync(groupCode, path);
+}
+
+/** 获取启用且排好序的字典选项；相同编码缓存 5 分钟。 */
+export function getDict(code: string) {
+  return getDictApi().runAsync(code);
+}
 
 /**
  * 对象中的每个可便利元素按序执行一个由您提供的 reducer 函数，

@@ -91,6 +91,11 @@ export function systemMenuTreeAllApi(options?: RequestOptions<SystemMenuTreeAll,
   );
 }
 
+//修复菜单树关系
+export function perfectSystemMenuTreeApi() {
+  return request<null, []>(() => ({ url: 'system/menu/perfectTree', method: 'post' }), { success: true });
+}
+
 //根据id获取菜单详情
 export function systemMenuInfoApi(options?: RequestOptions<SystemMenuInfo, [string]>) {
   return request<SystemMenuInfo & { parent?: SystemMenuInfo | null }, [string]>(

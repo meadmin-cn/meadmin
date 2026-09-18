@@ -1,6 +1,6 @@
 <template>
-  <el-container class="layout">
-    <el-aside v-if="!globalStore.isMobile && menuType !== 'top'" width="max-content">
+  <el-container class="layout" :class="{ 'is-mix': menuType === 'mix' }">
+    <el-aside v-if="!globalStore.isMobile && menuType === 'sidebar'" width="max-content">
       <layout-menu></layout-menu>
     </el-aside>
     <el-container>
@@ -8,7 +8,7 @@
         <layout-header></layout-header>
       </el-header>
       <el-main class="main">
-        <el-aside v-if="menuType === 'top'" width="max-content">
+        <el-aside v-if="menuType === 'mix'" width="max-content">
           <layout-menu></layout-menu>
         </el-aside>
         <el-main class="right-main">
@@ -58,6 +58,7 @@ onMounted(() => {
     background-color: var(--el-bg-color-page);
     display: flex;
     flex-direction: column;
+    min-width: 0;
   }
 }
 
@@ -79,6 +80,12 @@ onMounted(() => {
     flex-direction: column;
     padding: $page-padding;
     position: relative;
+  }
+}
+
+.is-mix {
+  :deep(.me-right-main-view .me-main) {
+    padding: 18px;
   }
 }
 

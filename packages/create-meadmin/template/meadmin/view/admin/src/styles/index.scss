@@ -1,6 +1,11 @@
 @use './element-plus.scss';
 @use './transition.scss';
 
+:root {
+  // 设计稿 v1.4：页面底色（暗黑模式由 element-plus dark 变量覆盖）
+  --el-bg-color-page: #f3f5fa;
+}
+
 html {
   body {
     color: var(--el-text-color-primary);
@@ -108,7 +113,7 @@ a {
   background-color: rgb(86, 88, 91);
 }
 
-.page-100{
+.page-100 {
   position: absolute;
   left: 0;
   right: 0;
@@ -117,6 +122,6 @@ a {
   display: flex;
   flex-direction: column;
 }
-.page-padding{
+.page-padding {
   padding: calc($page-padding - 10px);
 }

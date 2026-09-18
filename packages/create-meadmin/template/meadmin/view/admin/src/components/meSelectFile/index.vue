@@ -32,7 +32,7 @@
       <vxe-column field="size" :title="t('文件大小')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="storage" :title="t('存储引擎')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="createdAdmin" :title="t('创建者')" :formatter="formatterStr">
-        <template #default="{ row }: { row: FileInfo }"> {{ row.createdAdmin.nickname }}({{ row.createdAdmin.username }}) </template>
+        <template #default="{ row }: { row: FileInfo }"> {{ row.createdAdmin ? `${row.createdAdmin.nickname}(${row.createdAdmin.username})` : '-' }} </template>
       </vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column :title="t('操作')" fixed="right">
@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts" name="MeSelectFile">
-import type { FileInfo} from '@/api/file';
+import type { FileInfo } from '@/api/file';
 import { FileListParam, fileMyListApi } from '@/api/file';
 import { useLocalesI18n } from '@/locales/i18n';
 import { isImage } from '@/utils/helper';

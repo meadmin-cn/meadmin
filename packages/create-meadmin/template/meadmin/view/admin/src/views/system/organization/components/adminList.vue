@@ -60,7 +60,7 @@
         </template>
       </vxe-column>
       <template #buttons>
-        <me-button type="success" @click="showSelectAdmin"> {{ t('添加关联用户') }} </me-button>
+        <me-button v-if="$permission('system_organization_add_user')" type="success" @click="showSelectAdmin"> {{ t('添加关联用户') }} </me-button>
       </template>
     </me-vxe-table>
   </div>

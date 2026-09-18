@@ -13,5 +13,7 @@
   "邮箱": "Email",
   "关联管理员": "Admins",
   "创建时间": "Created time",
-  "最后更新时间": "Updated time"
+  "最后更新时间": "Updated time",
+  "修复树关系": "Repair tree relationships",
+  "根据父级id修复树关系，确认操作？": "Repair tree relationships based on parent IDs. Continue?"
 }

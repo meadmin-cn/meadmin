@@ -18,6 +18,11 @@
           <el-option v-for="val in dict.status" :key="val.value" :value="val.value" :label="val.label" />
         </el-select>
       </el-form-item>
+      <el-form-item :label="t('数据权限')" prop="dataScope">
+        <el-radio-group v-model="info.dataScope">
+          <el-radio v-for="val in dict.dataScope" :key="val.value" :value="val.value">{{ val.label }}</el-radio>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item :label="t('备注')" prop="remark">
         <el-input v-model="info.remark"></el-input>
       </el-form-item>

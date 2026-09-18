@@ -15,6 +15,7 @@ export class SystemRole {
   orderNum = 999 as number | undefined; //排序(降序)
   status = 1 as 1 | 0 | undefined; //状态:1=启用;0=禁用
   remark = '' as string; //备注
+  dataScope = 3 as 1 | 2 | 3 | 4; //数据权限:1=全部;2=组织;3=组织及以下;4=仅本人
   menus = [] as Array<SystemMenuInfo>; //具有权限菜单
   createdAt = '' as string; //创建时间
   updatedAt = '' as string; //最后更新时间
@@ -53,6 +54,11 @@ export class SystemRoleListParam extends PageParam {
   startUpdatedAt?: string; //最后更新时间(起)
   endUpdatedAt?: string; //最后更新时间(止)
 }
+//修复角色树关系
+export function perfectSystemRoleTreeApi() {
+  return request<null, []>(() => ({ url: 'system/role/perfectTree', method: 'post' }), { success: true });
+}
+
 //获取角色列表
 export function systemRoleListApi(options?: RequestOptions<SystemRoleListResult, [SystemRoleListParam]>) {
   return request<SystemRoleListResult, [SystemRoleListParam]>(

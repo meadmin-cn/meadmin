@@ -1,7 +1,6 @@
 // src/decorator/logging.decorator.ts
 import { RegistreDecorator } from '@/types/decorator.js';
-import { JoinPoint, MidwayDecoratorService } from '@midwayjs/core';
-import { createCustomMethodDecorator, REQUEST_OBJ_CTX_KEY } from '@midwayjs/core';
+import { createCustomMethodDecorator, JoinPoint, MidwayDecoratorService, REQUEST_OBJ_CTX_KEY } from '@midwayjs/core';
 import { ForbiddenError, UnauthorizedError } from '@midwayjs/core/dist/error/http.js';
 import { Context } from '@midwayjs/koa';
 
@@ -28,7 +27,7 @@ export class AdminPermissionRegistreDecorators implements RegistreDecorator {
           if (!ctx.adminInfo) {
             throw new UnauthorizedError('请登录后再访问！');
           }
-          if (!ctx.adminInfo.roles?.some((item) => item.isSuper === 1) && !ctx.adminInfo.roleMenus.some((item) => options.metadata.rules.include(item.rule))) {
+          if (!ctx.adminInfo.roles?.some((item) => item.isSuper === 1) && !ctx.adminInfo.roleMenus.some((item) => options.metadata.rules?.includes(item.rule))) {
             throw new ForbiddenError('无权限访问！');
           }
           // 执行原方法

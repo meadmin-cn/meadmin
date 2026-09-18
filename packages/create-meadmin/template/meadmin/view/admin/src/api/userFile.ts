@@ -24,8 +24,8 @@ export type UserFileInfo = UserFile & {
   size: number;
   createdAt: string; //创建时间
   updatedAt: string; //最后更新时间
-  createdAdmin: SystemAdminInfo | null; //创建者
-  updatedAdmin: SystemAdminInfo | null; //最后更新者
+  createdAdmin?: SystemAdminInfo | null; //创建者
+  updatedAdmin?: SystemAdminInfo | null; //最后更新者
 };
 /**
  * 上传文件

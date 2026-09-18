@@ -7,6 +7,7 @@
       <el-descriptions-item :label="t('角色标识')">{{ formatterStrExec(data?.roleKey) }}</el-descriptions-item>
       <el-descriptions-item :label="t('排序(降序)')">{{ formatterStrExec(data?.orderNum) }}</el-descriptions-item>
       <el-descriptions-item :label="t('状态')">{{ formatterDictExec(dict, 'status', data?.status) }}</el-descriptions-item>
+      <el-descriptions-item :label="t('数据权限')">{{ formatterDictExec(dict, 'dataScope', data?.dataScope) }}</el-descriptions-item>
       <el-descriptions-item :label="t('备注')">{{ formatterStrExec(data?.remark) }}</el-descriptions-item>
       <el-descriptions-item :label="t('创建时间')">
         {{ formatterAtExec(data?.createdAt) }}

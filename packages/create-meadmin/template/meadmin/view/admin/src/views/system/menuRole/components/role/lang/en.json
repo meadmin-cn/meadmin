@@ -5,10 +5,17 @@
   "角色标识": "Role key",
   "排序(降序)": "Order num",
   "状态": "Status",
+  "数据权限": "Data permission",
+  "全部数据权限": "All data",
+  "组织数据权限": "Organization data",
+  "组织及以下数据权限": "Organization and descendants",
+  "仅本人数据权限": "Own data only",
   "备注": "Remark",
   "关联用户": "Admins",
   "具有权限菜单": "Menus",
   "创建时间": "Created time",
   "最后更新时间": "Updated time",
-  "角色组": "Role Group"
+  "角色组": "Role Group",
+  "修复树关系": "Repair tree relationships",
+  "根据父级id修复树关系，确认操作？": "Repair tree relationships based on parent IDs. Continue?"
 }

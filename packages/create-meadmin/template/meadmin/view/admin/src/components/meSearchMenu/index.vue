@@ -1,6 +1,6 @@
 <template>
   <div class="me-search-menu pointer" @click="showSearch = true">
-    <mel-icon-search class="icon"></mel-icon-search>
+    <me-icon-search class="icon"></me-icon-search>
     <el-dialog
       v-model="showSearch"
       :show-close="false"

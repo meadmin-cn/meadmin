@@ -80,6 +80,11 @@ export class SystemOrganizationListParam extends PageParam {
   startUpdatedAt?: string; //最后更新时间(起)
   endUpdatedAt?: string; //最后更新时间(止)
 }
+//修复组织树关系
+export function perfectSystemOrganizationTreeApi() {
+  return request<null, []>(() => ({ url: 'system/organization/perfectTree', method: 'post' }), { success: true });
+}
+
 //获取组织列表
 export function systemOrganizationListApi(options?: RequestOptions<SystemOrganizationListResult, [SystemOrganizationListParam]>) {
   return request<SystemOrganizationListResult, [SystemOrganizationListParam]>(
@@ -116,7 +121,7 @@ export function systemOrganizationInfoApi(options?: RequestOptions<SystemOrganiz
 }
 
 export type UpdateSystemOrganizationInfoParam = Omit<Partial<SystemOrganizationInfo>, 'id' | 'createdAt' | 'updatedAt' | 'createdAdmin' | 'updatedAdmin'> & {
-  adminIds: string[]; //关联管理员id
+  adminIds?: string[]; //关联管理员id
 };
 //修改组织信息
 export function updateSystemOrganizationApi(options?: RequestOptions<SystemOrganizationInfo, [string, UpdateSystemOrganizationInfoParam]>) {

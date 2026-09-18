@@ -29,7 +29,7 @@
       <vxe-column field="isLink" :title="t('外链')" :formatter="formatterDict"></vxe-column>
       <vxe-column field="component" :title="t('组件路径')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="orderNum" :title="t('排序(降序)')" :formatter="formatterStr"></vxe-column>
-      <vxe-column v-if="permission(['system_menu_info', 'system_menu_edit', 'system_menu_del'])" title="操作" fixed="right" min-width="100px">
+      <vxe-column v-if="permission(['system_menu_info', 'system_menu_edit', 'system_menu_del'])" :title="t('操作')" fixed="right" min-width="100px">
         <template #default="{ row }">
           <me-button v-if="permission('system_menu_info')" link :title="t('详情')" @click="showInfo(row.id)">
             <mel-icon-memo />
@@ -45,25 +45,19 @@
         </template>
       </vxe-column>
       <template #toolsButton>
-        <me-button
-          type="success"
-          :disabled="isSuper !== 0"
-          @click="
-            isSuper === 0 &&
-            emit(
-              'subMenus',
-              menuRef!.vxeTableRef!.getCheckboxRecords(true).map((item) => item.id),
-            )
-          "
-          >保存</me-button
-        >
+        <el-popconfirm :title="t('根据父级id修复树关系，确认操作？')" @confirm="perfectTree">
+          <template #reference
+            ><me-button v-if="permission('system_menu_perfect_tree')">{{ t('修复树关系') }}</me-button></template
+          >
+        </el-popconfirm>
+        <me-button type="success" :disabled="isSuper !== 0" @click="isSuper === 0 && emit('subMenus', submitMenuIds())">{{ t('保存') }}</me-button>
       </template>
     </me-vxe-table>
   </div>
 </template>
 <script setup lang="ts" name="Menu">
 import type { SystemMenuInfo, SystemMenuTreeAll } from '@/api/system/menu';
-import { delSystemMenuApi, systemMenuTreeAllApi } from '@/api/system/menu';
+import { delSystemMenuApi, perfectSystemMenuTreeApi, systemMenuTreeAllApi } from '@/api/system/menu';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';
 import { formatterStr, searchTreeTable } from '@/utils/helper.js';
@@ -86,6 +80,7 @@ const { open: openInfo } = useActionModel(Info);
 const { checkedMenuIds = [], isSuper = 0 } = defineProps<{ checkedMenuIds: string[]; isSuper: 0 | 1 }>();
 const emit = defineEmits<{
   subMenus: [menuIds: string[]]; //提交菜单选中
+  refresh: []; //菜单新增或修改后刷新角色详情
 }>();
 const { loading, data, runAsync } = systemMenuTreeAllApi();
 onMounted(() => {
@@ -113,6 +108,21 @@ onMounted(() => {
 });
 
 const searchText = ref('');
+const submitMenuIds = () => {
+  const selectedIds = new Set(menuRef.value!.vxeTableRef!.getCheckboxRecords(true).map((item) => item.id));
+  const parentIds = new Set<string>();
+  const collectParentIds = (menus: SystemMenuTreeAll): boolean => {
+    let hasSelected = false;
+    menus.forEach((menu) => {
+      const selected = selectedIds.has(menu.id) || (!!menu.children?.length && collectParentIds(menu.children));
+      if (selected && menu.children?.length && !selectedIds.has(menu.id)) parentIds.add(menu.id);
+      hasSelected = hasSelected || selected;
+    });
+    return hasSelected;
+  };
+  collectParentIds(data.value ?? []);
+  return [...new Set([...selectedIds, ...parentIds])];
+};
 const search = (searchText: string) => {
   data.value = searchTreeTable(searchText, ['title', 'id', 'rule'] as const, menuDataCopy);
   nextTick(() => menuRef.value?.vxeTableRef?.setAllTreeExpand(true));
@@ -125,17 +135,20 @@ const getMenu = async () => {
 };
 
 const { runAsync: delRun, loading: delLoading } = delSystemMenuApi();
+const { runAsync: perfectTree } = perfectSystemMenuTreeApi();
 const delId = ref<string>();
 const del = async (id: string) => {
   delId.value = id;
   await delRun(id);
   await getMenu();
+  emit('refresh');
 };
 const showAddOrUp = (id?: string) => {
   open({
     id,
     onSuccess: async () => {
       await getMenu();
+      emit('refresh');
     },
   });
 };

@@ -61,7 +61,7 @@
       <vxe-column field="size" :title="t('文件大小')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="storage" :title="t('存储引擎')" :formatter="formatterStr"></vxe-column>
       <vxe-column field="createdAdmin" :title="t('创建者(管理员))')" :formatter="formatterStr">
-        <template #default="{ row }: { row: FileInfo }"> {{ row.createdAdmin.nickname }}({{ row.createdAdmin.username }}) </template>
+        <template #default="{ row }: { row: FileInfo }"> {{ row.createdAdmin ? `${row.createdAdmin.nickname}(${row.createdAdmin.username})` : '-' }} </template>
       </vxe-column>
       <vxe-column field="createdAt" :title="t('创建时间')" :formatter="formatterAt"></vxe-column>
       <vxe-column v-if="permission(['file_info', 'file_edit', 'file_del'])" :title="t('操作')" fixed="right" min-width="150px">
@@ -86,7 +86,7 @@
 </template>
 
 <script setup lang="ts" name="File">
-import type { FileInfo} from '@/api/file';
+import type { FileInfo } from '@/api/file';
 import { delFileApi, fileListApi, FileListParam } from '@/api/file';
 import { useActionModel } from '@/hooks/index.js';
 import { useLocalesI18n } from '@/locales/i18n';

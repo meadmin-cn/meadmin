@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { basename, join, resolve } from 'node:path';
 import { stdin, stdout } from 'node:process';
 import { createInterface } from 'node:readline/promises';
-import { applyPlan, rollback, saveRecord, type UpgradeRecord } from '../update/backup.js';
+import { applyPlan, rollback, saveRecord, validBackupId, type UpgradeRecord } from '../update/backup.js';
 import { makePlan } from '../update/planner.js';
 import { validateConfig } from '../update/rules.js';
 import { compareVersions, currentVersion, downloadTemplate, registryManifest, selectVersion } from '../update/template.js';
@@ -29,6 +29,7 @@ export const databaseReminder = `
 5. 刷新/重新登录并核对菜单授权、组织数据范围和业务功能。
 本工具不自动同步表结构、执行SQL或修复树关系。原始版本SQL不能直接完整导入已有业务库。
 文件回滚不回滚数据库。新增授权关联也可能影响已有角色权限。
+升级历史和备份存放在 node_modules/.meadmin；清理 node_modules 前请另行备份，否则无法回滚。
 `;
 export function updateInit(program: Command) {
   program
@@ -45,12 +46,12 @@ export function updateInit(program: Command) {
         if (!existsSync(join(root, 'package.json'))) throw new Error('请在目标项目根目录运行');
         if (options.rollback) {
           if (options.version || options.config || options.dryRun) throw new Error('--rollback 不能与升级选项组合');
-          if (!/^[a-f0-9-]{36}$/.test(options.rollback)) throw new Error('备份ID无效');
-          if (await confirm('将恢复本批次文件，数据库不会恢复，是否继续？')) rollback(root, join(root, '.meadmin/updates', options.rollback));
+          if (!validBackupId(options.rollback)) throw new Error('备份ID无效');
+          if (await confirm(`将恢复批次 ${options.rollback} 的升级前文件，数据库不会恢复，是否继续？`)) rollback(root, join(root, 'node_modules/.meadmin/updates', options.rollback));
           return;
         }
         const from = currentVersion(root);
-        const updates = join(root, '.meadmin/updates');
+        const updates = join(root, 'node_modules/.meadmin/updates');
         if (existsSync(updates))
           for (const id of readdirSync(updates)) {
             const file = join(updates, id, 'record.json');
@@ -63,8 +64,7 @@ export function updateInit(program: Command) {
         const manifest = await registryManifest(registry);
         const to = selectVersion(from, manifest.versions, options.version);
         if (from === to) {
-          console.log(`已是目标版本 ${to}，不重置本地文件`);
-          return;
+          console.log(`已安装目标版本 ${to}，继续检查依赖声明和 .gitignore；其他模板未变化的本地文件保持不变`);
         }
         const rulePath = options.config ? resolve(root, options.config) : join(root, 'meadmin.update.json');
         if (options.config && !existsSync(rulePath)) throw new Error('指定规则文件不存在');
@@ -74,6 +74,12 @@ export function updateInit(program: Command) {
         const workspace = mkdtempSync(join(tmpdir(), 'meadmin-update-'));
         const [oldTemplate, targetTemplate] = await Promise.all([downloadTemplate(manifest, from, join(workspace, 'old')), downloadTemplate(manifest, to, join(workspace, 'target'))]);
         const plan = makePlan(root, oldTemplate, targetTemplate, to, rules, sourceRules);
+        if (from === to) {
+          // 同版本仅修正依赖声明和忽略规则，不重建SQL或补写其他业务文件。
+          plan.changes = plan.changes.filter((item) => /(^|\/)(package\.json|\.gitignore)$/.test(item.path));
+          plan.sqlTables = [];
+          plan.manual = plan.manual.filter((message) => !message.startsWith('SQL:') && !message.includes('未生成数据升级脚本'));
+        }
         const git = spawnSync('git', ['status', '--porcelain'], { cwd: root, encoding: 'utf8' });
         Log.log(`升级 ${from} → ${to}${from.split('.')[0] !== to.split('.')[0] ? '（跨主版本）' : ''}`);
         if (git.status === 0 && git.stdout.trim()) console.warn('工作区存在未提交修改，请先审查或提交。');
@@ -87,6 +93,7 @@ export function updateInit(program: Command) {
         if (!(await confirm('警告：将覆盖上述文件，可能丢失业务修改；特殊文件仅按规则合并。是否继续？'))) return;
         const directory = applyPlan(root, plan, from, to);
         Log.log(`文件处理完成${plan.manual.length ? '，存在人工处理项' : ''}。备份：${directory}；批次：${basename(directory)}`);
+        Log.log(`恢复本批次升级前文件：pnpm exec meadmin update --rollback ${basename(directory)}`);
         Log.log('依赖清单已合并（包含目标模板新增依赖），请执行 pnpm install 安装。');
         if (await confirm('是否现在执行 pnpm install？可能运行生命周期脚本；选择否后请手动执行。')) {
           const record = JSON.parse(readFileSync(join(directory, 'record.json'), 'utf8')) as UpgradeRecord;

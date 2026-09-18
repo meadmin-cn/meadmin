@@ -4,7 +4,7 @@ import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync } from 
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { makePlan } from '../dist/update/planner.js';
-import { applyPlan, rollback } from '../dist/update/backup.js';
+import { applyPlan, rollback, validBackupId } from '../dist/update/backup.js';
 import { skipExisting, validateRules, validateConfig, sourceMode, excluded } from '../dist/update/rules.js';
 import { currentVersion, selectVersion, unpackTemplate } from '../dist/update/template.js';
 import { gzipSync } from 'node:zlib';
@@ -28,6 +28,33 @@ test('缺少本地core时不回退到cli',()=>{
  f.put('root','node_modules/@meadmin/cli/package.json',JSON.stringify({name:'@meadmin/cli',version:'1.0.0',main:'index.js'}));
  f.put('root','node_modules/@meadmin/cli/index.js','');
  assert.throws(()=>currentVersion(f.root),/@meadmin\/core/);
+});
+test('清单与旧模板相同时仍将本地1.3.6对齐1.3.8，gitignore追加并幂等',()=>{
+ const f=fixture();
+ const target=JSON.stringify({dependencies:{'@meadmin/cli':'~1.3.8','@meadmin/core':'~1.3.8'}});
+ f.put('base','packageTemplate.json',target);f.put('target','packageTemplate.json',target);
+ f.put('root','package.json',JSON.stringify({name:'business',scripts:{dev:'custom'},dependencies:{'@meadmin/cli':'~1.3.6','@meadmin/core':'~1.3.6',custom:'1.0.0'}}));
+ f.put('base','.gitignore','dist/\n.env\n');f.put('target','.gitignore','dist/\n.env\n');f.put('root','.gitignore','# local\r\ncustom/\r\n!keep\r\ndist/');
+ const plan=makePlan(f.root,f.base,f.target,'1.3.8',{});
+ const pkg=JSON.parse(plan.changes.find(c=>c.path==='package.json').content.toString());
+ assert.equal(pkg.dependencies['@meadmin/cli'],'~1.3.8');assert.equal(pkg.dependencies['@meadmin/core'],'~1.3.8');assert.equal(pkg.dependencies.custom,'1.0.0');assert.equal(pkg.scripts.dev,'custom');
+ const ignore=plan.changes.find(c=>c.path==='.gitignore');assert.equal(ignore.action,'merge');assert.equal(ignore.content.toString(),'# local\r\ncustom/\r\n!keep\r\ndist/\r\n.env\r\n');
+ applyPlan(f.root,plan,'1.3.6','1.3.8');assert.equal(makePlan(f.root,f.base,f.target,'1.3.8',{}).changes.length,0);
+});
+test('历史备份仅位于node_modules内且可回滚',()=>{
+ const f=fixture();f.put('root','a.ts','old');f.put('base','a.ts','old');f.put('target','a.ts','new');
+ const directory=applyPlan(f.root,makePlan(f.root,f.base,f.target,'1.3.8',{}),'1.3.6','1.3.8');
+ assert.ok(directory.startsWith(join(f.root,'node_modules/.meadmin/updates')));
+ assert.equal(existsSync(join(f.root,'.meadmin')),false);
+ assert.ok(existsSync(join(directory,'record.json')));
+ rollback(f.root,directory);assert.equal(readFileSync(join(f.root,'a.ts'),'utf8'),'old');
+});
+test('批次目录包含版本，同版本重复升级互不覆盖，兼容旧UUID',()=>{
+ const f=fixture();const empty={changes:[],skipped:[],manual:[],sqlTables:[]};
+ const a=applyPlan(f.root,empty,'1.3.6','1.3.8');const b=applyPlan(f.root,empty,'1.3.6','1.3.8');
+ assert.notEqual(a,b);assert.ok(a.includes('v1.3.6_to_v1.3.8_'));rollback(f.root,a);rollback(f.root,b);
+ assert.ok(validBackupId('12345678-1234-1234-1234-123456789abc'));
+ assert.ok(!validBackupId('../v1.3.6_to_v1.3.8_x'));assert.ok(!validBackupId('v1.3.8'));
 });
 test('同主版本最新稳定，指定跨主版本，拒绝降级',()=>{
  const versions={'1.3.6':{},'1.4.0':{},'1.5.0':{deprecated:'bad'},'1.6.0-beta.1':{},'2.0.0':{}};

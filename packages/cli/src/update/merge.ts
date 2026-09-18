@@ -130,11 +130,7 @@ export function mergePackage(local: string, target: string, base?: string): Merg
         manual.push(`${path}: 特殊协议或非普通版本，需人工合并`);
         continue;
       }
-      if (base === undefined || !Object.hasOwn(baseGroup, name)) {
-        manual.push(`${path}: 缺少基线依赖，无法安全更新`);
-        continue;
-      }
-      if (baseGroup[name] === version) continue;
+      // package.json 按目标声明对齐已有依赖，不以旧模板的版本变化为前提。
       if (localGroup[name] !== baseGroup[name]) {
         manual.push(`${path}: 本地和目标均修改版本，确认后采用目标版本 ${String(version)}`);
       }

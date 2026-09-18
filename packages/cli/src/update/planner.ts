@@ -59,9 +59,29 @@ export function makePlan(root: string, oldTemplate: string, targetTemplate: stri
       plan.skipped.push(`${path}: 存在时跳过`);
       continue;
     }
-    if (local?.equals(content) || (old?.equals(content) && local)) continue;
+    const dependencyManifest = path === 'package.json' || path.endsWith('/package.json');
+    const gitignore = path === '.gitignore' || path.endsWith('/.gitignore');
+    if (local?.equals(content) || (old?.equals(content) && local && !dependencyManifest && !gitignore)) continue;
     if (!local) {
       add(path, content, 'create');
+      continue;
+    }
+    if (gitignore) {
+      const text = local.toString('utf8');
+      const seen = new Set(text.split(/\r?\n/));
+      const additions = content
+        .toString('utf8')
+        .split(/\r?\n/)
+        .filter((line) => {
+          if (!line.trim() || seen.has(line)) return false;
+          seen.add(line);
+          return true;
+        });
+      if (additions.length) {
+        const newline = text.includes('\r\n') ? '\r\n' : '\n';
+        add(path, Buffer.from(text + (text && !text.endsWith('\n') ? newline : '') + additions.join(newline) + newline), 'merge', local);
+        plan.manual.push(`${path}: 已追加缺失忽略规则，请检查 ! 否定规则的顺序语义`);
+      }
       continue;
     }
     const conflict = !old || !old.equals(local);

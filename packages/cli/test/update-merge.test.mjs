@@ -32,11 +32,11 @@ test('package: 仅更新同组且基线发生变化的依赖，保留原始格�
   const merged = JSON.parse(result.content);
   assert.equal(merged.dependencies.changed, '^2.0.0');
   assert.equal(merged.dependencies.added, '^1.0.0');
-  assert.equal(merged.dependencies.unchanged, '3.0.0');
+  assert.equal(merged.dependencies.unchanged, '2.0.0');
   assert.equal(merged.name, 'custom');
   assert.deepEqual(merged.scripts, { dev: 'custom' });
   assert.ok(result.content.includes('\r\n'));
-  assert.deepEqual(result.manual, []);
+  assert.match(result.manual.join(), /unchanged/);
 });
 
 test('package: 缺少依赖分组时创建，保留其他字段且可重复合并', () => {
@@ -61,12 +61,11 @@ test('package: 空依赖分组和连续新增保持合法JSON', () => {
   }
 });
 
-test('package: 无基线或基线缺少依赖不猜测版本', () => {
+test('package: 无基线或基线缺少依赖也按明确目标声明更新', () => {
   for (const base of [undefined, '{}']) {
     const local = '{"dependencies":{"a":"1.0.0"}}';
     const result = mergePackage(local, '{"dependencies":{"a":"2.0.0"}}', base);
-    assert.equal(result.content, local);
-    assert.ok(result.manual.length);
+    assert.equal(JSON.parse(result.content).dependencies.a, '2.0.0');
   }
 });
 

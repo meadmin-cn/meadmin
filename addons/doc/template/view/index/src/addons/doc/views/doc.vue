@@ -10,9 +10,9 @@
 <script setup lang="ts" name="Doc">
 import { MdCatalog, MdPreview } from 'meadmin-addons-doc';
 import 'meadmin-addons-doc/dist/preview.js';
-import type { AonDocMenuTree} from '../api/aonDoc';
+import type { AonDocMenuTree } from '../api/aonDoc';
 import { aonDocGetContentApi, aonDocmenuTreeApi } from '../api/aonDoc';
-import Layout from './components/layout.vue';
+import Layout from './components/pageLayout.vue';
 const props = defineProps<{
   version?: string;
   aonDocLabel?: string; //文档标识（文档id）
@@ -75,6 +75,15 @@ await init();
     position: sticky;
     top: 0;
     overflow-y: auto;
+  }
+  /* 手机端：隐藏右侧快捷定位目录，文档内容全宽 */
+  @media (max-width: 960px) {
+    .view {
+      width: 100%;
+    }
+    .catalog {
+      display: none;
+    }
   }
 }
 </style>

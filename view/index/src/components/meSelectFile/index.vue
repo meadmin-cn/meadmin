@@ -1,51 +1,53 @@
 <template>
   <me-dialog v-model="show" class="me-select-file-da0344ese" title="选择文件" :close-on-click-modal="false" @closed="emit('closed')">
-    <me-vxe-table
-      v-model:quick-search="params.filename"
-      :loading="loading"
-      :data="data?.list"
-      :pagination-options="{
-        currentPage: params.page,
-        pageSize: params.pageSize,
-        total: data?.total ?? 0,
-        layout: 'sizes, prev, pager, next, jumper, ->, total',
-        change: search,
-      }"
-      align="center"
-      border
-      @refresh="search(1)"
-      @quick-search="search(1)"
-      @add="() => {}"
-    >
-      <template #buttons>
-        <div style="display: inline-block; margin-left: 12px; vertical-align: middle">
-          <me-upload :show-file-list="false" @success="search(1)"></me-upload>
-        </div>
-      </template>
-      <vxe-column field="id" title="ID" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="name" title="文件名" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="url" title="预览">
-        <template #default="{ row }: { row: FileInfo }">
-          <el-image v-if="isImage(row.url)" class="view-img" :src="row.url" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :preview-src-list="[row.url]" show-progress preview-teleported fit="scale-down" />
-          <a v-else :href="row.url" target="_blank" title="点击下载">
-            <mel-icon-download size="20px"></mel-icon-download>
-          </a>
+    <client-only>
+      <me-vxe-table
+        v-model:quick-search="params.filename"
+        :loading="loading"
+        :data="data?.list"
+        :pagination-options="{
+          currentPage: params.page,
+          pageSize: params.pageSize,
+          total: data?.total ?? 0,
+          layout: 'sizes, prev, pager, next, jumper, ->, total',
+          change: search,
+        }"
+        align="center"
+        border
+        @refresh="search(1)"
+        @quick-search="search(1)"
+        @add="() => {}"
+      >
+        <template #buttons>
+          <div style="display: inline-block; margin-left: 12px; vertical-align: middle">
+            <me-upload :show-file-list="false" @success="search(1)"></me-upload>
+          </div>
         </template>
-      </vxe-column>
-      <vxe-column field="path" title="路径" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="mimeType" title="mime类型" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="size" title="文件大小" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="storage" title="存储引擎" :formatter="formatterStr"></vxe-column>
-      <vxe-column field="createdAdmin" title="创建者" :formatter="formatterStr">
-        <template #default="{ row }: { row: FileInfo }"> {{ row.createdUser.nickname }}({{ row.createdUser.username }}) </template>
-      </vxe-column>
-      <vxe-column field="createdAt" title="创建时间" :formatter="formatterAt"></vxe-column>
-      <vxe-column title="操作" fixed="right">
-        <template #default="{ row }: { row: FileInfo }">
-          <el-button @click="select(row)"> <mel-icon-select />选择 </el-button>
-        </template>
-      </vxe-column>
-    </me-vxe-table>
+        <vxe-column field="id" title="ID" :formatter="formatterStr"></vxe-column>
+        <vxe-column field="name" title="文件名" :formatter="formatterStr"></vxe-column>
+        <vxe-column field="url" title="预览">
+          <template #default="{ row }: { row: FileInfo }">
+            <el-image v-if="isImage(row.url)" class="view-img" :src="row.url" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :preview-src-list="[row.url]" show-progress preview-teleported fit="scale-down" />
+            <a v-else :href="row.url" target="_blank" title="点击下载">
+              <mel-icon-download size="20px"></mel-icon-download>
+            </a>
+          </template>
+        </vxe-column>
+        <vxe-column field="path" title="路径" :formatter="formatterStr"></vxe-column>
+        <vxe-column field="mimeType" title="mime类型" :formatter="formatterStr"></vxe-column>
+        <vxe-column field="size" title="文件大小" :formatter="formatterStr"></vxe-column>
+        <vxe-column field="storage" title="存储引擎" :formatter="formatterStr"></vxe-column>
+        <vxe-column field="createdAdmin" title="创建者" :formatter="formatterStr">
+          <template #default="{ row }: { row: FileInfo }"> {{ row.createdUser.nickname }}({{ row.createdUser.username }}) </template>
+        </vxe-column>
+        <vxe-column field="createdAt" title="创建时间" :formatter="formatterAt"></vxe-column>
+        <vxe-column title="操作" fixed="right">
+          <template #default="{ row }: { row: FileInfo }">
+            <el-button @click="select(row)"> <mel-icon-select />选择 </el-button>
+          </template>
+        </vxe-column>
+      </me-vxe-table>
+    </client-only>
   </me-dialog>
 </template>
 

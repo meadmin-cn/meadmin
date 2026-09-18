@@ -124,6 +124,7 @@ const copyFiles = {
   'README_EN.md': {},
   'tsconfig.json': {},
   'meadmin.sql': {},
+  'compose.config.js': {},
   'uploadFile/admin/3832e40249f4eb6c4feca1c257718907.png': {},
   'uploadFile/admin/b51e6a53459859d203041f8c0dffcd92.png': {},
   'uploadFile/admin/c99e23ad65db6db5bea03d828fb6166e.png': {},

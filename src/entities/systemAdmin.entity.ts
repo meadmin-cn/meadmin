@@ -39,7 +39,7 @@ export class SystemAdmin extends BaseModel<SystemAdmin> {
   salt: string;
 
   @Attribute({ type: DataTypes.STRING(20), comment: '头像附件id' })
-  avatarFileId: string | null;
+  avatarFileId: string;
 
   @ApiPropertyRule({ description: '头像', $ref: getSchemaPath('File'), rule: RuleType.object({ id: RuleType.string().required() }) })
   // @BelongsTo(() => File, /* foreign key */ 'avatarFileId')避免循环引用，将外键配置放在file表中

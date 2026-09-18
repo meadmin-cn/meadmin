@@ -16,27 +16,27 @@ export function compareVersions(a: string, b: string): number {
   return av[0] - bv[0] || av[1] - bv[1] || av[2] - bv[2];
 }
 export function currentVersion(root: string): string {
-  if (!existsSync(join(root, 'node_modules/@meadmin/cli/package.json'))) throw new Error('目标项目尚未安装本地 @meadmin/cli，请先安装项目依赖');
+  if (!existsSync(join(root, 'node_modules/@meadmin/core/package.json'))) throw new Error('目标项目尚未安装本地 @meadmin/core，请先安装项目依赖');
   const require = createRequire(join(root, 'package.json'));
   let location: string;
   try {
-    location = require.resolve('@meadmin/cli');
+    location = require.resolve('@meadmin/core');
   } catch {
-    throw new Error('项目尚未安装 @meadmin/cli，请先安装项目依赖。');
+    throw new Error('项目尚未安装 @meadmin/core，请先安装项目依赖。');
   }
   let directory = dirname(location);
   while (directory !== dirname(directory)) {
     const file = join(directory, 'package.json');
     if (existsSync(file)) {
       const pkg = JSON.parse(readFileSync(file, 'utf8'));
-      if (pkg.name === '@meadmin/cli') {
+      if (pkg.name === '@meadmin/core') {
         versionParts(pkg.version);
         return pkg.version;
       }
     }
     directory = dirname(directory);
   }
-  throw new Error('无法读取项目本地 @meadmin/cli 版本');
+  throw new Error('无法读取项目本地 @meadmin/core 版本');
 }
 export function selectVersion(current: string, versions: Record<string, { deprecated?: string }>, requested?: string): string {
   versionParts(current);

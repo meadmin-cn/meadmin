@@ -6,13 +6,29 @@ import { join } from 'node:path';
 import { makePlan } from '../dist/update/planner.js';
 import { applyPlan, rollback } from '../dist/update/backup.js';
 import { skipExisting, validateRules, validateConfig, sourceMode, excluded } from '../dist/update/rules.js';
-import { selectVersion, unpackTemplate } from '../dist/update/template.js';
+import { currentVersion, selectVersion, unpackTemplate } from '../dist/update/template.js';
 import { gzipSync } from 'node:zlib';
 function fixture() {
  const dir=mkdtempSync(join(tmpdir(),'meadmin-update-test-'));
  const paths={root:join(dir,'project'),base:join(dir,'base'),target:join(dir,'target')};Object.values(paths).forEach(p=>mkdirSync(p));
  const put=(where,path,text)=>{mkdirSync(join(paths[where],path,'..'),{recursive:true});writeFileSync(join(paths[where],path),text);};return {...paths,put};
 }
+test('当前版本读取本地core，不受cli或业务版本影响',()=>{
+ const f=fixture();
+ f.put('root','package.json',JSON.stringify({version:'9.0.0',dependencies:{'@meadmin/core':'^1.0.0','@meadmin/cli':'^2.0.0'}}));
+ for(const [name,version] of [['core','1.3.6'],['cli','2.0.0']]) {
+  f.put('root',`node_modules/@meadmin/${name}/package.json`,JSON.stringify({name:`@meadmin/${name}`,version,main:'index.js'}));
+  f.put('root',`node_modules/@meadmin/${name}/index.js`,'');
+ }
+ assert.equal(currentVersion(f.root),'1.3.6');
+});
+test('缺少本地core时不回退到cli',()=>{
+ const f=fixture();
+ f.put('root','package.json','{}');
+ f.put('root','node_modules/@meadmin/cli/package.json',JSON.stringify({name:'@meadmin/cli',version:'1.0.0',main:'index.js'}));
+ f.put('root','node_modules/@meadmin/cli/index.js','');
+ assert.throws(()=>currentVersion(f.root),/@meadmin\/core/);
+});
 test('同主版本最新稳定，指定跨主版本，拒绝降级',()=>{
  const versions={'1.3.6':{},'1.4.0':{},'1.5.0':{deprecated:'bad'},'1.6.0-beta.1':{},'2.0.0':{}};
  assert.equal(selectVersion('1.3.6',versions),'1.4.0');assert.equal(selectVersion('1.3.6',versions,'2.0.0'),'2.0.0');assert.throws(()=>selectVersion('2.0.0',versions,'1.4.0'));

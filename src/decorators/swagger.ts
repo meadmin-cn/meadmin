@@ -3,8 +3,7 @@ import { ApiSuccessRes, ApiSuccessResArr } from '@/response/apiSuccess.res.js';
 import { getKeyInfo } from '@meadmin/cli/utils/formatting';
 import { createCustomMethodDecorator } from '@midwayjs/core';
 import { ApiExtraModel, ApiOperation, ApiOperationOptions, ApiProperty, ApiPropertyOptions, ApiResponse, getSchemaPath, Type } from '@midwayjs/swagger';
-import { Rule } from '@midwayjs/validate';
-
+import { Rule, RuleType } from '@midwayjs/validate';
 // 装饰器内部的唯一 id
 export const API_OPERATIN_RESONSE_KEY = 'meadmin:swagger:api_operation_respose';
 /**

@@ -240,7 +240,7 @@ export class SystemAdminService {
     entity.nickname = updateDto.nickname;
     entity.mobile = updateDto.mobile;
     if (updateDto.email !== undefined) entity.email = updateDto.email;
-    if (avatar !== undefined) entity.set('avatarFileId', avatar?.id ?? '');
+    if (avatar !== undefined) entity.set('avatarFileId', avatar?.id ?? null);
     await entity.save();
     return await this.findProfile(id);
   }

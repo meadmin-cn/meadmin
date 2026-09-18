@@ -1,13 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { makePlan } from '../dist/update/planner.js';
-import { applyPlan, rollback, validBackupId } from '../dist/update/backup.js';
+import { applyPlan, rollback, safePath, validBackupId } from '../dist/update/backup.js';
 import { skipExisting, validateRules, validateConfig, sourceMode, excluded } from '../dist/update/rules.js';
 import { currentVersion, selectVersion, unpackTemplate } from '../dist/update/template.js';
 import { gzipSync } from 'node:zlib';
+import ts from 'typescript';
 function fixture() {
  const dir=mkdtempSync(join(tmpdir(),'meadmin-update-test-'));
  const paths={root:join(dir,'project'),base:join(dir,'base'),target:join(dir,'target')};Object.values(paths).forEach(p=>mkdirSync(p));
@@ -104,15 +105,132 @@ test('同主版本最新稳定，指定跨主版本，拒绝降级',()=>{
  const versions={'1.3.6':{},'1.4.0':{},'1.5.0':{deprecated:'bad'},'1.6.0-beta.1':{},'2.0.0':{}};
  assert.equal(selectVersion('1.3.6',versions),'1.4.0');assert.equal(selectVersion('1.3.6',versions,'2.0.0'),'2.0.0');assert.throws(()=>selectVersion('2.0.0',versions,'1.4.0'));
 });
-test('跳过存在文件规则和false精确覆盖、永久排除',()=>{
+test('跳过存在文件规则和false精确覆盖、JSON默认排除',()=>{
  assert.equal(skipExisting('view/admin/src/views/index/index.vue'),true);
  assert.equal(skipExisting('view/admin/src/views/index/index.vue',{'view/admin/src/views/index/index.vue':false}),false);
- assert.equal(excluded('.workbuddy/memory/a.md'),true);
- assert.equal(excluded('.GIT/config'),true);
+ for(const path of ['.workbuddy/memory/a.md','.GIT/config','node_modules/a','dist/a','logs/a','.meadmin/a','nested/DIST/a','pnpm-lock.yaml','nested/package-lock.json','yarn.lock','build.tsbuildinfo']) assert.equal(excluded(path),true,path);
+ for(const path of ['uploadFile','uploadFile/default.png','nested/uploadFile/default.png','uploadfile/default.png','nested/UPLOADFILE/default.png']) assert.equal(excluded(path),false,path);
  assert.equal(skipExisting('view/admin/src/views/index/components/a.vue',{'view/admin/src/views/index/components/**':false}),false);
- assert.throws(()=>skipExisting('view/admin/src/views/index/index.vue',{'view/admin/src/views/*/index.vue':false}));
+ assert.equal(skipExisting('view/admin/src/views/index/index.vue',{'view/admin/src/views/*/index.vue':false}),false);
+ assert.throws(()=>skipExisting('view/admin/src/views/index/index.vue',{'view/admin/src/views/*/index.vue':false,'view/admin/src/views/index/*.vue':true}),/冲突/);
  assert.throws(()=>validateRules({skipExisting:{'../x':false}}));
 });
+test('uploadFile 默认仅保护项目根路径，用户 false 沿用同模式、子目录及精确规则优先级', () => {
+  assert.equal(skipExisting('uploadFile/default.png'), true);
+  assert.equal(skipExisting('uploadFile/images/default.png'), true);
+  assert.equal(skipExisting('nested/uploadFile/default.png'), false);
+  assert.equal(skipExisting('uploadfile/default.png'), false);
+  for (const pattern of ['uploadFile/**', 'uploadFile/images/**', 'uploadFile/images/default.png']) {
+    assert.equal(skipExisting('uploadFile/images/default.png', { [pattern]: false }), false);
+  }
+  assert.equal(skipExisting('uploadFile/default.png', { 'uploadFile/images/**': false }), true);
+});
+
+test('uploadFile 缺失二进制逐字节创建，包含新目录及已有目录中的缺失文件', t => {
+  const f = fixture();
+  t.after(() => rmSync(join(f.root, '..'), { recursive: true, force: true }));
+  const binary = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0, 0xff, 0x80, 0xc3, 0x28, 13, 10]);
+  const paths = ['uploadFile/default.png', 'uploadFile/images/nested/default.png'];
+  for (const path of paths) { f.put('base', path, binary); f.put('target', path, binary); }
+  for (const path of paths) assert.equal(safePath(f.root, path), join(f.root, path));
+  const plan = makePlan(f.root, f.base, f.target, '1.3.11', {});
+  assert.equal(plan.changes.length, 2);
+  for (const change of plan.changes) {
+    assert.equal(change.action, 'create');
+    assert.equal(change.previous, null);
+    assert.deepEqual(change.content, binary);
+    assert.equal(existsSync(join(f.root, change.path)), false);
+  }
+  applyPlan(f.root, plan, '1.3.11', '1.3.11');
+  for (const path of paths) assert.deepEqual(readFileSync(join(f.root, path)), binary);
+  f.put('target', 'uploadFile/images/added.png', binary);
+  const added = makePlan(f.root, f.base, f.target, '1.3.11', {});
+  assert.deepEqual(added.changes.map(change => [change.path, change.action]), [['uploadFile/images/added.png', 'create']]);
+  applyPlan(f.root, added, '1.3.11', '1.3.11');
+  assert.deepEqual(readFileSync(join(f.root, 'uploadFile/images/added.png')), binary);
+  assert.equal(makePlan(f.root, f.base, f.target, '1.3.11', {}).changes.length, 0);
+});
+
+test('uploadFile 已存在的不同二进制和空文件默认跳过，内容不变', t => {
+  const f = fixture();
+  t.after(() => rmSync(join(f.root, '..'), { recursive: true, force: true }));
+  const target = Buffer.from([0, 0xff, 0x80, 1]);
+  const files = [['uploadFile/default.png', Buffer.from([0xfe, 0, 0x81, 2])], ['uploadFile/images/empty.png', Buffer.alloc(0)]];
+  for (const [path, local] of files) {
+    f.put('root', path, local); f.put('base', path, target); f.put('target', path, target);
+  }
+  const plan = makePlan(f.root, f.base, f.target, '1.3.11', {});
+  assert.deepEqual(plan.changes, []);
+  assert.deepEqual(plan.skipped.sort(), files.map(([path]) => path + ': 存在时跳过').sort());
+  applyPlan(f.root, plan, '1.3.11', '1.3.11');
+  for (const [path, local] of files) assert.deepEqual(readFileSync(join(f.root, path)), local);
+});
+
+test('uploadFile 本地独有及模板已移除文件不删除，不误匹配其他目录同名文件', t => {
+  const f = fixture();
+  t.after(() => rmSync(join(f.root, '..'), { recursive: true, force: true }));
+  const local = Buffer.from([0xff, 0, 0x81]), target = Buffer.from([0x80, 1, 0]);
+  const preserved = ['uploadFile/local-only.png', 'uploadFile/removed.png', 'other/default.png'];
+  for (const path of preserved) f.put('root', path, local);
+  f.put('base', 'uploadFile/removed.png', target);
+  f.put('target', 'uploadFile/default.png', target);
+  const plan = makePlan(f.root, f.base, f.target, '1.3.11', {});
+  assert.deepEqual(plan.changes.map(change => [change.path, change.action]), [['uploadFile/default.png', 'create']]);
+  assert.ok(plan.manual.includes('uploadFile/removed.png: 目标模板已移除，本地不会删除'));
+  applyPlan(f.root, plan, '1.3.11', '1.3.11');
+  for (const path of preserved) assert.deepEqual(readFileSync(join(f.root, path)), local);
+  assert.deepEqual(readFileSync(join(f.root, 'uploadFile/default.png')), target);
+});
+
+for (const pattern of ['uploadFile/**', 'uploadFile/images/**', 'uploadFile/images/default.png']) test(`uploadFile 显式 false 允许二进制覆盖：${pattern}`, t => {
+  const f = fixture();
+  t.after(() => rmSync(join(f.root, '..'), { recursive: true, force: true }));
+  const path = 'uploadFile/images/default.png';
+  const local = Buffer.from([0xff, 0, 0x81]), target = Buffer.from([0x80, 1, 0]);
+  f.put('root', path, local); f.put('base', path, target); f.put('target', path, target);
+  f.put('root', 'uploadFile/local-only.png', local);
+  const rules = validateRules({ skipExisting: { [pattern]: false } });
+  const plan = makePlan(f.root, f.base, f.target, '1.3.11', rules);
+  assert.equal(plan.changes.length, 1);
+  assert.equal(plan.changes[0].action, 'overwrite');
+  assert.equal(plan.changes[0].conflict, true);
+  assert.deepEqual(plan.changes[0].content, target);
+  assert.deepEqual(plan.skipped, []);
+  applyPlan(f.root, plan, '1.3.11', '1.3.11');
+  assert.deepEqual(readFileSync(join(f.root, path)), target);
+  assert.deepEqual(readFileSync(join(f.root, 'uploadFile/local-only.png')), local);
+  assert.equal(makePlan(f.root, f.base, f.target, '1.3.11', rules).changes.length, 0);
+});
+
+test('uploadFile 备份保留原始二进制，rollback 恢复覆盖项并移除新增项，保护项及本地独有不变', t => {
+  const f = fixture();
+  t.after(() => rmSync(join(f.root, '..'), { recursive: true, force: true }));
+  const local = Buffer.from([0xff, 0, 0x81]), target = Buffer.from([0x80, 1, 0]);
+  for (const path of ['uploadFile/overwrite.png', 'uploadFile/protected.png', 'uploadFile/local-only.png']) f.put('root', path, local);
+  for (const path of ['uploadFile/overwrite.png', 'uploadFile/protected.png', 'uploadFile/new/image.png']) {
+    f.put('base', path, target); f.put('target', path, target);
+  }
+  const plan = makePlan(f.root, f.base, f.target, '1.3.11', { 'uploadFile/overwrite.png': false });
+  assert.equal(plan.changes.length, 2);
+  assert.deepEqual(plan.skipped, ['uploadFile/protected.png: 存在时跳过']);
+  const directory = applyPlan(f.root, plan, '1.3.11', '1.3.11');
+  const record = JSON.parse(readFileSync(join(directory, 'record.json'), 'utf8'));
+  assert.equal(record.phase, 'files-complete');
+  assert.deepEqual(record.files.map(file => file.path).sort(), ['uploadFile/new/image.png', 'uploadFile/overwrite.png']);
+  assert.ok(record.files.every(file => file.state === 'written'));
+  assert.equal(record.files.find(file => file.path === 'uploadFile/new/image.png').before, null);
+  assert.deepEqual(readFileSync(join(directory, 'original/uploadFile/overwrite.png')), local);
+  for (const path of ['uploadFile/overwrite.png', 'uploadFile/new/image.png']) {
+    assert.deepEqual(readFileSync(join(directory, 'target', path)), target);
+    assert.deepEqual(readFileSync(join(f.root, path)), target);
+  }
+  for (const path of ['uploadFile/protected.png', 'uploadFile/local-only.png']) assert.deepEqual(readFileSync(join(f.root, path)), local);
+  rollback(f.root, directory);
+  assert.equal(existsSync(join(f.root, 'uploadFile/new/image.png')), false);
+  for (const path of ['uploadFile/overwrite.png', 'uploadFile/protected.png', 'uploadFile/local-only.png']) assert.deepEqual(readFileSync(join(f.root, path)), local);
+  assert.equal(JSON.parse(readFileSync(join(directory, 'record.json'), 'utf8')).phase, 'rolled-back');
+});
+
 test('源码策略由配置读取，精确false优先，不把实现目录误认导出集成',()=>{
  assert.equal(sourceMode('src/filter/badRequest.filter.ts'),undefined);
  assert.equal(sourceMode('src/filter/index.ts'),'exports');
@@ -133,7 +251,129 @@ test('planner集成函数合并和静态注册识别，关闭规则才整文件�
  assert.equal(result.action,'merge');assert.match(result.content.toString(),/mine/);assert.match(result.content.toString(),/ b /);
  assert.equal(makePlan(f.root,f.base,f.target,'1.4.0',{}, {[index]:false}).changes.find(c=>c.path===index).action,'overwrite');
 });
-test('三方比较、缺失首页创建、本地独有保留、配置只增',()=>{
+test('同版本 planner 的 API/utils/helper 全部默认路径按函数合并且重复幂等',()=>{
+ const f=fixture();
+ const paths=['src','view/admin/src','view/index/src'].flatMap(root=>['api','utils','helper'].flatMap(kind=>[`${root}/${kind}/helper.ts`,`${root}/${kind}/nested/helper.ts`]));
+ const target='export function same(){return 1;} export const added=()=>2; export class Demo { run(){return 3;} }';
+ const local='export function same(){return 10;} export const localOnly=()=>20; export class Demo { run(){return 30;} localOnly(){return 40;} }';
+ for(const path of paths) { assert.equal(sourceMode(path),'functions'); f.put('base',path,target); f.put('target',path,target); f.put('root',path,local); }
+ const plan=makePlan(f.root,f.base,f.base,'1.3.11',{});
+ assert.equal(plan.changes.length,paths.length);
+ for(const change of plan.changes) {
+  assert.equal(change.action,'merge');assert.equal(change.conflict,true);
+  assert.match(change.content.toString(),/same\(\)\{return 1;\}/);assert.match(change.content.toString(),/added=\(\)=>2/);
+  assert.match(change.content.toString(),/run\(\)\{return 3;\}/);assert.match(change.content.toString(),/localOnly=\(\)=>20/);assert.match(change.content.toString(),/localOnly\(\)\{return 40;\}/);
+ }
+ applyPlan(f.root,plan,'1.3.11','1.3.11');
+ assert.equal(makePlan(f.root,f.base,f.base,'1.3.11',{}).changes.length,0);
+});
+test('真实前后台 helper、配置 API 和后端 utils 在临时副本中同版本覆盖并幂等',()=>{
+ const f=fixture();
+ const cases=[
+  ['view/admin/src/utils/helper.ts',['isImage','fileToHump','statusToBoolean','concatObjectValue','listToTree','proxyValue','getDict']],
+  ['view/index/src/utils/helper.ts',['isImage','fileToHump','statusToBoolean','concatObjectValue','listToTree','proxyValue','getDict']],
+  ['src/helper/utils.ts',['extractBracesContent','formatText']],
+  ['view/admin/src/api/config.ts',['getConfigApi','getDictApi']],
+  ['view/index/src/api/config.ts',['getConfigApi','getDictApi']],
+ ];
+ const units=text=>{
+  const file=ts.createSourceFile('fixture.ts',text,ts.ScriptTarget.Latest,true);
+  assert.equal(file.parseDiagnostics.length,0);
+  return new Map(file.statements.flatMap(node=>ts.isFunctionDeclaration(node)?[[node.name.text,node]]:ts.isVariableStatement(node)?[...node.declarationList.declarations].filter(item=>item.initializer&&(ts.isArrowFunction(item.initializer)||ts.isFunctionExpression(item.initializer))).map(item=>[item.name.text,item]):[]));
+ };
+ const targets=new Map();
+ for(const [path,names] of cases) {
+  const target=readFileSync(new URL('../../../'+path,import.meta.url),'utf8');targets.set(path,target);
+  let local=target;
+  for(const name of names) {
+   const node=units(local).get(name);assert.ok(node,`${path}: ${name}`);
+   const body=ts.isFunctionDeclaration(node)?node.body:node.initializer.body;
+   local=local.slice(0,body.getStart())+'{ throw new Error("本地定制"); }'+local.slice(body.end);
+  }
+  const added=units(local).get(names.at(-1));assert.ok(ts.isFunctionDeclaration(added));local=local.slice(0,added.getStart())+local.slice(added.end);
+  local+='\n// 本地独有\nexport function localOnly(){ return 789; }\n';
+  f.put('root',path,local);f.put('base',path,target);f.put('target',path,target);
+ }
+ const plan=makePlan(f.root,f.base,f.target,'1.3.11',{});
+ assert.equal(plan.changes.length,cases.length,plan.manual.join('\n'));
+ for(const [path,names] of cases) {
+  const change=plan.changes.find(item=>item.path===path);assert.equal(change.action,'merge');
+  const output=units(change.content.toString()),target=units(targets.get(path));
+  for(const name of names) assert.equal(output.get(name)?.getText(),target.get(name).getText(),`${path}: ${name}\n${plan.manual.join('\n')}`);
+  assert.equal(output.get('localOnly').getText(),'export function localOnly(){ return 789; }');
+  assert.doesNotMatch(change.content.toString(),/本地定制/);
+ }
+ applyPlan(f.root,plan,'1.3.11','1.3.11');
+ assert.equal(makePlan(f.root,f.base,f.target,'1.3.11',{}).changes.length,0);
+});
+test('planner 函数同文本但 import 来源改变必须报告人工，不能无声跳过',()=>{
+ const f=fixture(),path='view/admin/src/utils/helper.ts';
+ const local="import { dep } from './local.js'; export function f(){return dep;}";
+ const target="import { dep } from './target.js'; export function f(){return dep;}";
+ f.put('root',path,local);f.put('base',path,target);f.put('target',path,target);
+ const plan=makePlan(f.root,f.base,f.target,'1.3.11',{});
+ assert.equal(plan.changes.length,0);assert.match(plan.manual.join(),/函数 f.*import dep.*冲突/);
+ assert.equal(readFileSync(join(f.root,path),'utf8'),local);
+});
+test('planner 旧目标相同或缺失无效基线时，各专用策略和人工提示均按本地目标判定',()=>{
+ const validation=readFileSync(new URL('../../../src/ruleType/string.ts',import.meta.url),'utf8');
+ const localValidation=validation.replace('mobile(): this;', 'mobile(legacy?: boolean): this;').replace("'string.mobile': '{{#label}} must be a true mobile'", "'string.mobile': 'local mobile'");
+ const cases=[
+  ['ordinary.txt','本地','目标','overwrite'],
+  ['src/utils/helper.ts','export const limit = 10; export type Shape = string; export class Demo<T> { value = 10; run(){return 20;} } export function f(){return 30;}','export const limit = 1; export type Shape = number; export class Demo { value = 1; run(){return 2;} } export function f(){return 3;}','merge'],
+  ['src/entities/user.ts','@Table("local") export class User { value = 10; localOnly = 20; }','@Table("target") export class User { value = 1; added = 2; }','merge'],
+  ['src/ruleType/string.ts',localValidation,validation,'merge'],
+  ['src/config/default.ts','export default { port: 10, nested: { local: true } };','export default { port: 1, nested: { added: true } };','merge'],
+  ['pnpm-workspace.yaml','packages: [local]\noverrides: { old: "10" }\n','packages: [target]\noverrides: { old: "1", added: "2" }\n','merge'],
+  ['tsconfig.json','{"compilerOptions":{"strict":false}}','{"compilerOptions":{"strict":true,"skipLibCheck":true}}','merge'],
+  ['.env','VALUE=local\n','VALUE=target\nADDED=yes\n','merge'],
+  ['view/index/src/router/routes.ts','export const routes = [{path: "/same", meta: {value: "local"}}]; function helper(){return 10;}','export const routes = [{path: "/same", meta: {value: "target"}}, {path: "/added"}]; function helper(){return 1;}','merge'],
+  ['src/filter/index.ts',"export { local } from './local.js';", "export { target } from './target.js';",'merge'],
+ ];
+ for(const baseline of ['target','invalid','missing']) {
+  const f=fixture();
+  for(const [path,local,target] of cases) {
+   f.put('root',path,local);f.put('target',path,target);
+   if(baseline!=='missing') f.put('base',path,baseline==='target'?target:'export class {');
+  }
+  f.put('root','identical.txt','相同');f.put('target','identical.txt','相同');
+  f.put('root','only-local.txt','独有');f.put('root','removed.txt','保留');f.put('base','removed.txt','旧');
+  f.put('root','different/created.txt','同名不同路径保留');f.put('target','created.txt','创建');f.put('base','created.txt','创建');
+  f.put('root','protected.txt','受保护');f.put('target','protected.txt','目标');f.put('base','protected.txt','目标');
+  f.put('target','protected-new.txt','缺失仍创建');
+  const rules={'protected*.txt':true};
+  const plan=makePlan(f.root,f.base,f.target,'1.3.11',rules);
+  assert.equal(plan.changes.length,cases.length+2,plan.manual.join('\n'));
+  for(const [path,,target,action] of cases) {
+   const change=plan.changes.find(item=>item.path===path);assert.ok(change,path);assert.equal(change.action,action,path);
+   if(action==='overwrite') assert.equal(change.content.toString(),target);
+  }
+  const content=path=>plan.changes.find(item=>item.path===path).content.toString();
+  const helper=content('src/utils/helper.ts');
+  assert.match(helper,/limit = 10/);assert.match(helper,/type Shape = string/);assert.match(helper,/class Demo<T>/);assert.match(helper,/value = 10/);assert.match(helper,/run\(\)\{return 2;/);assert.match(helper,/f\(\)\{return 3;/);
+  for(const label of ['声明 limit','类型 Shape','类 Demo','instance:field:value','entity.User: 类装饰器']) assert.ok(plan.manual.some(message=>message.includes(label)),label+'\n'+plan.manual.join('\n'));
+  assert.match(content('src/entities/user.ts'),/value = 1;/);assert.match(content('src/entities/user.ts'),/localOnly = 20/);assert.match(content('src/entities/user.ts'),/@Table\("local"\)/);
+  assert.doesNotMatch(content('src/ruleType/string.ts'),/legacy|local mobile/);
+  assert.match(content('src/config/default.ts'),/port: 10/);assert.match(content('src/config/default.ts'),/added: true/);
+  assert.match(content('pnpm-workspace.yaml'),/packages: \[\s*local\s*\]/);assert.match(content('pnpm-workspace.yaml'),/old: "10"/);assert.match(content('pnpm-workspace.yaml'),/added/);
+  assert.deepEqual(JSON.parse(content('tsconfig.json')).compilerOptions,{strict:false,skipLibCheck:true});
+  assert.equal(content('.env'),'VALUE=local\nADDED=yes\n');
+  assert.match(content('view/index/src/router/routes.ts'),/value: "local"/);assert.match(content('view/index/src/router/routes.ts'),/path: "\/added"/);assert.match(content('view/index/src/router/routes.ts'),/return 10/);
+  assert.match(content('src/filter/index.ts'),/export \{ local \}/);assert.match(content('src/filter/index.ts'),/export \{ target \}/);
+  assert.deepEqual(plan.skipped,['protected.txt: 存在时跳过']);
+  const protectedPlan=makePlan(f.root,f.base,f.target,'1.3.11',{...rules,...Object.fromEntries(cases.map(([path])=>[path,true]))});
+  assert.equal(protectedPlan.changes.length,2);assert.equal(protectedPlan.skipped.length,cases.length+1);
+  assert.ok(!protectedPlan.manual.some(message=>cases.some(([path])=>message.startsWith(path+':'))));
+  applyPlan(f.root,plan,'1.3.11','1.3.11');
+  for(const [path,text] of [['identical.txt','相同'],['only-local.txt','独有'],['removed.txt','保留'],['different/created.txt','同名不同路径保留'],['protected.txt','受保护'],['created.txt','创建'],['protected-new.txt','缺失仍创建']]) assert.equal(readFileSync(join(f.root,path),'utf8'),text);
+  const repeated=makePlan(f.root,f.base,f.target,'1.3.11',rules);
+  assert.equal(repeated.changes.length,0,repeated.manual.join('\n'));
+  assert.ok(repeated.manual.some(message=>message.includes('声明 limit')));
+  assert.ok(repeated.manual.some(message=>message.includes('entity.User: 类装饰器')));
+ }
+});
+
+test('本地目标比较、缺失首页创建、本地独有保留、配置只增',()=>{
  const f=fixture();f.put('base','same.ts','old');f.put('target','same.ts','old');f.put('root','same.ts','custom');
  f.put('base','changed.ts','old');f.put('target','changed.ts','new');f.put('root','changed.ts','old');
  f.put('base','conflict.ts','old');f.put('target','conflict.ts','new');f.put('root','conflict.ts','custom');

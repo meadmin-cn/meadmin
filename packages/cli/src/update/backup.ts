@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { stdin, stdout } from 'node:process';
+import { assertTreePath, assertUpdatePath, pathsOverlap } from './paths.js';
 import { hash, readLocal, type Plan } from './planner.js';
 import { versionParts } from './template.js';
 
@@ -125,7 +126,7 @@ export async function clearHistory(root: string, id: string, interaction: ClearH
 type RecordFile = { path: string; before: string | null; after: string; state: 'pending' | 'writing' | 'written' };
 export type UpgradeRecord = { root: string; from: string; to: string; phase: string; files: RecordFile[]; manual: string[]; installation: string };
 export function safePath(root: string, path: string): string {
-  if (!path || path.includes('\\') || path.includes(':') || path.startsWith('/') || path.split('/').some((x) => x === '..' || x === '.' || !x || ['.git', 'node_modules', '.meadmin', '.workbuddy'].includes(x.toLowerCase()))) throw new Error('恢复清单路径无效');
+  assertUpdatePath(path);
   readLocal(root, path);
   return join(root, path);
 }
@@ -143,6 +144,11 @@ export function saveRecord(directory: string, record: UpgradeRecord) {
   atomic(join(directory, 'record.json'), JSON.stringify(record, null, 2));
 }
 export function applyPlan(root: string, plan: Plan, from: string, to: string): string {
+  assertTreePath(root);
+  for (const [index, change] of plan.changes.entries()) {
+    safePath(root, change.path);
+    if (plan.changes.slice(0, index).some((other) => pathsOverlap(other.path, change.path))) throw new Error(`规划产物路径冲突：${change.path}`);
+  }
   for (const part of ['node_modules', 'node_modules/.meadmin', 'node_modules/.meadmin/updates']) {
     const location = join(root, part);
     if (existsSync(location) && (lstatSync(location).isSymbolicLink() || !lstatSync(location).isDirectory())) throw new Error('升级备份目录不安全');
@@ -193,6 +199,8 @@ export function applyPlan(root: string, plan: Plan, from: string, to: string): s
   return directory;
 }
 export function rollback(root: string, directory: string): void {
+  assertTreePath(root);
+  assertTreePath(directory);
   const rel = relative(resolve(root), resolve(directory)).replaceAll('\\', '/');
   const segments = rel.split('/');
   if (segments.length !== 4 || segments.slice(0, 3).join('/') !== 'node_modules/.meadmin/updates' || !validBackupId(segments[3])) throw new Error('备份路径不在项目升级目录');

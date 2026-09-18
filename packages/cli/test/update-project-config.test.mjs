@@ -237,7 +237,10 @@ test('planner: bullmq 同版本修复走局部 AST 合并，保留本地且再�
   }
   assert.equal(projectConfigKind('src/config/config.default.ts'), undefined);
   assert.equal(projectConfigKind('tools/tool.config.ts'), 'script');
-  const plan = makePlan(f.root, f.target, f.target, '1.3.9', {}, { 'src/config/config.default.ts': 'overwrite' });
+  const overwritten = makePlan(f.root, f.target, f.target, '1.3.9', {}, { 'src/config/config.default.ts': 'overwrite' });
+  assert.equal(overwritten.changes.find(change => change.path === 'src/config/config.default.ts').content.toString(), target);
+  assert.equal(overwritten.changes.find(change => change.path === 'src/config/config.default.ts').action, 'overwrite');
+  const plan = makePlan(f.root, f.target, f.target, '1.3.9', {});
   assert.equal(plan.changes.length, 3);
   assert.deepEqual(plan.skipped, []);
   for (const change of plan.changes) {
@@ -303,18 +306,18 @@ test('planner: 工程配置 skipExisting 优先，动态配置不进入源码或
     const target = readFileSync(new URL(path, templateRoot), 'utf8');
     f.put('base', path, target); f.put('target', path, target); f.put('root', path, '// local\nexport default {}');
   }
-  const plan = makePlan(f.root, f.base, f.target, '1.3.9', { 'pnpm-workspace.yaml': true }, { 'view/admin/vite.config.ts': 'functions' });
+  const plan = makePlan(f.root, f.base, f.target, '1.3.9', { 'pnpm-workspace.yaml': true });
   assert.deepEqual(plan.changes, []);
   assert.ok(plan.skipped.some(message => message.startsWith('pnpm-workspace.yaml:')));
   for (const path of ['view/admin/vite.config.ts', 'view/index/eslint.config.js', '.prettierrc.js', '.editorconfig']) assert.ok(plan.manual.some(message => message.startsWith(path + ':')));
 });
 
-test('env: 本地原文、注释、空值及 BOM 保留，只追加目标缺失条目，不扩展变量', () => {
+test('env: 本地原文、注释、空值及 BOM 保留，只插入目标缺失条目，不扩展变量', () => {
   const local = '\uFEFF# 本地注释\r\nexport KEEP = "LOCAL_SECRET" # 保留\r\nEMPTY=\r\nLOCAL_ONLY=yes';
   const target = '# 不复制目标独立注释\nKEEP=TARGET_SECRET\nEMPTY=filled\nexport NEW = \'#x=y\' # 条目注释\nRAW=${KEEP}\nCOMMAND=$(touch ENV_EXECUTED)\nNEW_EMPTY=\n';
   const environment = { ...process.env };
   const result = mergeProjectConfig('.env', local, target);
-  assert.equal(result.content, local + '\r\nexport NEW = \'#x=y\' # 条目注释\r\nRAW=${KEEP}\r\nCOMMAND=$(touch ENV_EXECUTED)\r\nNEW_EMPTY=\r\n');
+  assert.equal(result.content, local.replace('LOCAL_ONLY=yes', 'export NEW = \'#x=y\' # 条目注释\r\nRAW=${KEEP}\r\nCOMMAND=$(touch ENV_EXECUTED)\r\nNEW_EMPTY=\r\nLOCAL_ONLY=yes'));
   assert.deepEqual(result.manual, []);
   assert.equal(JSON.stringify(process.env) === JSON.stringify(environment), true, '合并不得修改进程环境');
   assert.equal(parseEnv(result.content).EMPTY, '');
@@ -339,12 +342,111 @@ ESCAPED="one\ntwo\rthree"
 `;
   const result = mergeProjectConfig('view/admin/.env.production', local, target);
   assert.deepEqual(result.manual, []);
-  assert.equal(result.content, local + '\r\n' + target.slice(target.indexOf('export MULTI')).replaceAll('\n', '\r\n'));
+  assert.equal(result.content, local + '\r\n' + target.slice(target.indexOf('export MULTI')).trimEnd().replaceAll('\n', '\r\n'));
   assert.deepEqual(parseEnv(result.content), { ...parseEnv(target), EXISTING: parseEnv(local).EXISTING });
   assert.equal(mergeProjectConfig('.env', result.content, target).content, result.content);
   const targetCrlf = 'MULTI="a\r\n#b=c"\r\nOTHER=ok\r\n';
   const lf = mergeProjectConfig('.env', '# 本地\n', targetCrlf);
-  assert.equal(lf.content, '# 本地\nMULTI="a\n#b=c"\nOTHER=ok\n');
+  assert.equal(lf.content, '# 本地\n\nMULTI="a\n#b=c"\nOTHER=ok\n');
+});
+
+test('env: 新增首中尾及连续变量按目标顺序携带完整注释块，本地条目原文保留', () => {
+  const local = '# 本地文件头\n\n# 本地 A 第一行\n  # 本地 A 第二行\nexport A = "local" # 行尾\n\n# 本地独有\nONLY=\n\n# 本地 B\nB=\n';
+  const target = '# 目标独立文件头\n\n# 首项第一行\n  # 首项第二行\nFIRST=first\n# 目标 A 注释不复制\nA=target\n# 中间第一项\nMIDDLE=middle\n# 中间第二项\nNEXT=next\n# 目标 B 注释不复制\nB=target\n# 尾项\nLAST=last\n';
+  const expected = '# 本地文件头\n\n# 首项第一行\n  # 首项第二行\nFIRST=first\n# 本地 A 第一行\n  # 本地 A 第二行\nexport A = "local" # 行尾\n\n# 本地独有\nONLY=\n\n# 中间第一项\nMIDDLE=middle\n# 中间第二项\nNEXT=next\n# 本地 B\nB=\n# 尾项\nLAST=last\n';
+  const result = mergeProjectConfig('.env', local, target);
+  assert.deepEqual(result, { content: expected, manual: [] });
+  assert.deepEqual(parseEnv(result.content), { ...parseEnv(target), ...parseEnv(local) });
+  assert.deepEqual(mergeProjectConfig('.env', result.content, target), result);
+});
+
+test('env: 反序锚点优先后继、无后继紧随前驱，不移动本地独有变量或其注释', () => {
+  const local = '# 本地 B\nB=local\n# 本地独有\nONLY=local\n# 本地 A\nA=local\n# 独立尾注';
+  const target = '# 首项\nFIRST=first\nA=target\n# 中间一\nMIDDLE=middle\n# 中间二\nNEXT=next\nB=target\n# 尾项\nLAST=last';
+  const expected = '# 中间一\nMIDDLE=middle\n# 中间二\nNEXT=next\n# 本地 B\nB=local\n# 尾项\nLAST=last\n# 本地独有\nONLY=local\n# 首项\nFIRST=first\n# 本地 A\nA=local\n# 独立尾注';
+  const result = mergeProjectConfig('.env', local, target);
+  assert.deepEqual(result, { content: expected, manual: [] });
+  assert.deepEqual(mergeProjectConfig('.env', result.content, target), result);
+});
+
+test('env: 相同插入位置按目标次序累积，不按重复注释文本去重', () => {
+  const local = '# 本地 B\nB=local\n# 本地 A\nA=local\n';
+  const target = 'A=target\n# 重复但分别说明变量\nX=x\nB=target\n# 重复但分别说明变量\nY=y\n';
+  const expected = '# 重复但分别说明变量\nX=x\n# 本地 B\nB=local\n# 重复但分别说明变量\nY=y\n# 本地 A\nA=local\n';
+  assert.deepEqual(mergeProjectConfig('.env', local, target), { content: expected, manual: [] });
+  const samePosition = 'A=target\n# 重复但分别说明变量\nX=x\nC=target\nB=target\n# 重复但分别说明变量\nY=y\n';
+  const inOrder = 'A=local\nB=local\n# 本地 C\nC=local\n';
+  const merged = mergeProjectConfig('.env', inOrder, samePosition);
+  assert.equal(merged.content, 'A=local\nB=local\n# 重复但分别说明变量\nX=x\n# 重复但分别说明变量\nY=y\n# 本地 C\nC=local\n');
+  assert.deepEqual(mergeProjectConfig('.env', merged.content, samePosition), merged);
+});
+
+test('env: 空行分隔独立注释、无共同锚点及仅 BOM 文件均保持边界', () => {
+  const cases = [
+    ['', '# 独立文件头\n \t\n# 所属一\n# 所属二\nA=a', '# 所属一\n# 所属二\nA=a'],
+    ['\uFEFF', '\uFEFF# 所属\r\nA=a\r\n', '\uFEFF# 所属\r\nA=a\r\n'],
+    ['# 本地文件头', '# 所属\nA=a\n', '# 本地文件头\n\n# 所属\nA=a'],
+    ['# 本地文件头\n\n', '# 独立头\n\nA=a\n', '# 本地文件头\n\nA=a\n'],
+    ['LOCAL=local\n# 独立尾注\n', '# 新注释\nA=a\n', 'LOCAL=local\n# 独立尾注\n\n# 新注释\nA=a\n'],
+    ['LOCAL=local', '\uFEFF# 新注释\nA=a\n# 不属于变量的尾注', 'LOCAL=local\n# 新注释\nA=a'],
+    ['# 本地 A\nA=local\n# 独立尾注', 'A=target\n# 新注释\nB=b\n', '# 本地 A\nA=local\n# 新注释\nB=b\n# 独立尾注'],
+    ['# 本地\nA=local', '# 目标修改注释\nA=target\n# 尾注', '# 本地\nA=local'],
+  ];
+  for (const [local, target, expected] of cases) {
+    const result = mergeProjectConfig('.env', local, target);
+    assert.deepEqual(result, { content: expected, manual: [] });
+    assert.deepEqual(mergeProjectConfig('.env', result.content, target), result);
+  }
+});
+
+test('env: CRLF、BOM 和末尾无换行保留，多行值内的 # 与伪 key 不属于前置注释', () => {
+  for (const newline of ['\n', '\r\n']) for (const ending of ['', newline]) {
+    const local = '\uFEFF' + ['# 本地头', '', '# 保留 A', 'export A="one', '# 值内注释', 'FAKE=inside', '"', '# 保留 B', 'B='].join(newline) + ending;
+    const target = '\uFEFF# 目标头\n\n# 新增第一行\n# 新增第二行\nexport FIRST="one\n#inside\nFAKE=inside\nlast"\nA=target\n# 中间注释\nSINGLE=\'one\n#inside\nlast\'\nB=target\n# 末尾注释\nLAST=last\n';
+    const first = ['# 新增第一行', '# 新增第二行', 'export FIRST="one', '#inside', 'FAKE=inside', 'last"'].join(newline);
+    const middle = ['# 中间注释', "SINGLE='one", '#inside', "last'"].join(newline);
+    const expected = local.replace('# 保留 A', first + newline + '# 保留 A').replace('# 保留 B', middle + newline + '# 保留 B') + (ending ? '' : newline) + '# 末尾注释' + newline + 'LAST=last' + ending;
+    const result = mergeProjectConfig('.env', local, target);
+    assert.deepEqual(result, { content: expected, manual: [] });
+    assert.deepEqual(parseEnv(result.content), { ...parseEnv(target), ...parseEnv(local) });
+    assert.deepEqual(mergeProjectConfig('.env', result.content, target), result);
+  }
+});
+
+test('env: 本地与目标换行不同时，无锚点追加保留尾注边界和末尾换行状态', () => {
+  for (const newline of ['\n', '\r\n']) for (const ending of ['', newline]) {
+    const targetNewline = newline === '\n' ? '\r\n' : '\n';
+    const local = '\uFEFF' + ['# 本地说明', 'LOCAL = "local" # 原文', '# 独立尾注'].join(newline) + ending;
+    const target = ['# 独立目标头', '', '# 新条目', 'NEW="first', '#inside=value', 'last"', '# 目标尾注', ''].join(targetNewline);
+    const expected = local + (ending ? '' : newline) + newline + ['# 新条目', 'NEW="first', '#inside=value', 'last"'].join(newline) + ending;
+    const result = mergeProjectConfig('.env', local, target);
+    assert.deepEqual(result, { content: expected, manual: [] });
+    assert.deepEqual(mergeProjectConfig('.env', result.content, target), result);
+  }
+});
+
+test('env: 本地锚点的所有排列保序，新增块按相邻后继或前驱稳定放置', () => {
+  const cases = [
+    [['A', 'B', 'C'], ['FIRST', 'A', 'X', 'Y', 'B', 'Z', 'C', 'LAST']],
+    [['A', 'C', 'B'], ['FIRST', 'A', 'Z', 'C', 'X', 'Y', 'LAST', 'B']],
+    [['B', 'A', 'C'], ['X', 'Y', 'B', 'FIRST', 'A', 'Z', 'C', 'LAST']],
+    [['B', 'C', 'A'], ['X', 'Y', 'B', 'Z', 'C', 'FIRST', 'LAST', 'A']],
+    [['C', 'A', 'B'], ['Z', 'C', 'FIRST', 'LAST', 'A', 'X', 'Y', 'B']],
+    [['C', 'B', 'A'], ['Z', 'C', 'X', 'Y', 'LAST', 'B', 'FIRST', 'A']],
+  ];
+  const blocks = {
+    FIRST: '# 首\nFIRST=first\n', X: '# 中一\nX=x\n', Y: '# 中二\nY=y\n',
+    Z: '# 中三\nZ=z\n', LAST: '# 尾\nLAST=last\n',
+    A: '# 本地 A\nA=local\n', B: '# 本地 B\nB=local\n', C: '# 本地 C\nC=local\n',
+  };
+  const target = '# 首\nFIRST=first\nA=target\n# 中一\nX=x\n# 中二\nY=y\nB=target\n# 中三\nZ=z\nC=target\n# 尾\nLAST=last\n';
+  for (const [order, expectedOrder] of cases) {
+    const local = order.map(key => blocks[key]).join('');
+    const expected = expectedOrder.map(key => blocks[key]).join('');
+    const result = mergeProjectConfig('.env', local, target);
+    assert.deepEqual(result, { content: expected, manual: [] }, order.join(','));
+    assert.deepEqual(mergeProjectConfig('.env', result.content, target), result);
+  }
 });
 
 test('env: 重复键、复杂格式或未闭合 quote 任一侧出现均整份保留且提示不含值', () => {
@@ -377,8 +479,9 @@ test('env: 重复键、复杂格式或未闭合 quote 任一侧出现均整份�
 
 test('planner env: 同版本真实规划覆盖根目录和前后台，保留本地并安全创建，应用幂等可回滚', () => {
   const f = fixture();
-  const local = '# 本地\r\nKEEP=LOCAL_SECRET\r\nEMPTY=';
-  const target = '# 目标\nKEEP=TARGET_SECRET\nEMPTY=filled\nexport ADDED="first\n#inside=value\nlast"\n';
+  const local = '# 本地\r\nKEEP=LOCAL_SECRET\r\n# 本地空值\r\nEMPTY=';
+  const target = '# 目标文件头\n\n# 新增首项\nFIRST=first\n# 目标已有项\nKEEP=TARGET_SECRET\n# 新增中项\nMIDDLE=middle\nEMPTY=filled\n# 多行新增\n# 第二行说明\nexport ADDED="first\n#inside=value\nlast"\n';
+  const merged = '# 新增首项\r\nFIRST=first\r\n# 本地\r\nKEEP=LOCAL_SECRET\r\n# 新增中项\r\nMIDDLE=middle\r\n# 本地空值\r\nEMPTY=\r\n# 多行新增\r\n# 第二行说明\r\nexport ADDED="first\r\n#inside=value\r\nlast"';
   const paths = ['', 'view/admin/', 'view/index/'].flatMap(prefix => ['.env', '.env.local', '.env.production'].map(name => prefix + name));
   for (const [index, path] of paths.entries()) {
     f.put('base', path, target); f.put('target', path, target);
@@ -393,7 +496,7 @@ test('planner env: 同版本真实规划覆盖根目录和前后台，保留本�
   for (const [index, path] of paths.entries()) {
     const change = plan.changes.find(item => item.path === path);
     assert.equal(change.action, index % 2 === 0 ? 'merge' : 'create');
-    assert.equal(change.content.toString(), index % 2 === 0 ? local + '\r\nexport ADDED="first\r\n#inside=value\r\nlast"\r\n' : target);
+    assert.equal(change.content.toString(), index % 2 === 0 ? merged : target);
   }
   const directory = applyPlan(f.root, plan, '1.3.9', '1.3.9');
   assert.deepEqual(makePlan(f.root, f.target, f.target, '1.3.9', {}).changes, []);

@@ -2,28 +2,19 @@ import { parse as parseEnv } from 'dotenv';
 import { isAlias, isMap, isNode, isScalar, parseDocument, visit, type YAMLMap } from 'yaml';
 import { mergeConfig, mergeJsonConfig, type MergeResult } from './merge.js';
 
-type ConfigKind = 'env' | 'yaml' | 'json' | 'npmrc' | 'ignore' | 'script' | 'manual';
+import { sourceMode, type RuleGroup, type SourcePolicy } from './rules.js';
 
-export function projectConfigKind(path: string): ConfigKind | undefined {
-  const name = path.slice(path.lastIndexOf('/') + 1);
-  if (/^\.env(?:\..+)?$/.test(name)) return 'env';
-  if (isEnvironmentFile(path)) return 'manual';
-  if (/^pnpm-workspace\.ya?ml$/.test(name)) return 'yaml';
-  if (/^tsconfig[^/]*\.json$/.test(name) || ['nx.json', 'turbo.json', '.mocharc.json', '.prettierrc', '.prettierrc.json', '.eslintrc.json'].includes(name) || /(^|\/)\.vscode\/[^/]+\.json$/.test(path)) return 'json';
-  if (name === '.npmrc') return 'npmrc';
-  if (['.gitignore', '.npmignore', '.prettierignore', '.eslintignore'].includes(name)) return 'ignore';
-  if (/^(?:.+\.config|\.(?:prettier|eslint|mocha)rc)\.[cm]?[jt]s$/.test(name)) return 'script';
-  if (name === '.editorconfig' || /^\.(?:yarnrc|pnpmfile|eslintrc|mocharc)(?:\..*)?$/.test(name)) return 'manual';
-  return undefined;
-}
+export type ConfigKind = 'env' | 'yaml' | 'json' | 'npmrc' | 'ignore' | 'script' | 'manual';
 
-export function isEnvironmentFile(path: string): boolean {
-  return /(^|\/)\.env[^/]*$/.test(path);
+export function projectConfigKind(path: string, rules: RuleGroup<SourcePolicy> = {}): ConfigKind | undefined {
+  const mode = sourceMode(path, rules);
+  return mode && ['env', 'yaml', 'json', 'npmrc', 'ignore', 'script', 'manual'].includes(mode) ? (mode as ConfigKind) : undefined;
 }
 
 // planner 与同版本命令共享分类，防止新增合并类型再次被过滤掉。
 export function isRepairableConfig(path: string): boolean {
-  return /(^|\/)package\.json$/.test(path) || projectConfigKind(path) !== undefined || /(^|\/)src\/config\/.*\.ts$/.test(path);
+  const mode = sourceMode(path);
+  return mode === 'package' || mode === 'config' || projectConfigKind(path) !== undefined;
 }
 
 function mergeYaml(local: string, target: string): MergeResult {
@@ -75,13 +66,16 @@ function mergeEnv(local: string, target: string): MergeResult {
   const read = (text: string) => {
     // 逐条保留原文；引号内的换行、#、= 都属于值，不作为新键或注释扫描。
     const assignment = /[\t ]*(?:export[\t ]+)?([\w.-]+)[\t ]*=[\t ]*('(?:\\'|[^'\\]|\\(?!'))*'|"(?:\\"|[^"\\]|\\(?!"))*"|[^'"`#\r\n]*?)[\t ]*(?:#[^\r\n]*)?(?=\r?\n|$)/y;
-    const entries = new Map<string, string>();
+    const entries = new Map<string, { text: string; start: number; end: number }>();
     let offset = text.startsWith('\uFEFF') ? 1 : 0;
+    let commentStart: number | undefined;
     if (text.includes('\0') || text.includes('\uFFFD') || /\r(?!\n)/.test(text)) return undefined;
     while (offset < text.length) {
       const end = text.indexOf('\n', offset);
       const line = text.slice(offset, end < 0 ? text.length : end).replace(/\r$/, '');
       if (/^[\t ]*(?:#.*)?$/.test(line)) {
+        // 空行隔开的文件头/段落独立保留，只有紧邻赋值的连续注释属于条目。
+        commentStart = /^[\t ]*#/.test(line) ? (commentStart ?? offset) : undefined;
         offset = end < 0 ? text.length : end + 1;
         continue;
       }
@@ -90,16 +84,19 @@ function mergeEnv(local: string, target: string): MergeResult {
       if (!match || entries.has(match[1]) || match[1] === '__proto__') return undefined;
       // shell 续行和反引号语法不猜测；dotenv 的容错解析不能替代完整语法校验。
       if (!/^['"]/.test(match[2]) && /\\[\t ]*$/.test(match[2])) return undefined;
-      entries.set(match[1], match[0]);
+      const start = commentStart ?? offset;
       offset = assignment.lastIndex;
+      const block = text.slice(start, offset);
       if (text[offset] === '\r') offset++;
       if (text[offset] === '\n') offset++;
+      entries.set(match[1], { text: block, start, end: offset });
+      commentStart = undefined;
     }
     // 只用 parse 核对识别结果，不执行 config/变量扩展，也不重新序列化值。
     const parsed = parseEnv(text);
     if (Object.keys(parsed).length !== entries.size) return undefined;
     for (const [name, entry] of entries) {
-      const single = parseEnv(entry);
+      const single = parseEnv(entry.text);
       if (Object.keys(single).length !== 1 || !Object.hasOwn(single, name) || !Object.hasOwn(parsed, name) || parsed[name] !== single[name]) return undefined;
     }
     return entries;
@@ -108,9 +105,40 @@ function mergeEnv(local: string, target: string): MergeResult {
     next = read(target);
   if (!current || !next) return { content: local, manual: ['环境文件含复杂格式、重复键或未闭合引号，整份保留，需人工合并'] };
   const newline = /\r?\n/.exec(local)?.[0] ?? /\r?\n/.exec(target)?.[0] ?? '\n';
-  const additions = [...next].filter(([name]) => !current.has(name)).map(([, entry]) => entry.replace(/\r?\n/g, newline));
-  if (!additions.length) return { content: local, manual: [] };
-  return { content: local + (local && !local.endsWith('\n') ? newline : '') + additions.join(newline) + newline, manual: [] };
+  const entries = [...next];
+  const insertions = new Map<number, string[]>();
+  let predecessor: { end: number } | undefined;
+  for (let index = 0; index < entries.length; ) {
+    const existing = current.get(entries[index][0]);
+    if (existing) {
+      predecessor = existing;
+      index++;
+      continue;
+    }
+    const blocks: string[] = [];
+    while (index < entries.length && !current.has(entries[index][0])) {
+      blocks.push(entries[index][1].text.replace(/\r?\n/g, newline));
+      index++;
+    }
+    const successor = index < entries.length ? current.get(entries[index][0]) : undefined;
+    // 相邻目标锚点正序时位于两者之间；反序时仍优先后继，绝不重排本地条目。
+    // 使用整个注释块的起点，避免插进已有变量的前置注释；同位置按目标顺序累积。
+    const position = successor?.start ?? predecessor?.end ?? local.length;
+    insertions.set(position, [...(insertions.get(position) ?? []), ...blocks]);
+  }
+  if (!insertions.size) return { content: local, manual: [] };
+  const bomLength = local.startsWith('\uFEFF') ? 1 : 0;
+  const trailingStart = [...current.values()].at(-1)?.end ?? bomLength;
+  const endsWithNewline = (local.length > bomLength ? local : target).endsWith('\n');
+  let content = local;
+  for (const [position, blocks] of [...insertions].sort(([left], [right]) => right - left)) {
+    let separator = position > bomLength && local[position - 1] !== '\n' ? newline : '';
+    // 无锚点追加时，不让本地末尾独立注释变成新增变量的前置注释。
+    if (position === local.length && local.slice(trailingStart).trim() && !/\n[\t ]*\r?\n$/.test(local)) separator += newline;
+    const ending = position < local.length || endsWithNewline ? newline : '';
+    content = content.slice(0, position) + separator + blocks.join(newline) + ending + content.slice(position);
+  }
+  return { content, manual: [] };
 }
 
 function mergeNpmrc(local: string, target: string): MergeResult {
@@ -143,9 +171,9 @@ function mergeNpmrc(local: string, target: string): MergeResult {
   return { content: appendLines(local, additions), manual };
 }
 
-export function mergeProjectConfig(path: string, local: string, target: string): MergeResult {
+export function mergeProjectConfig(path: string, local: string, target: string, kind = projectConfigKind(path)): MergeResult {
   try {
-    switch (projectConfigKind(path)) {
+    switch (kind) {
       case 'env':
         return mergeEnv(local, target);
       case 'yaml':

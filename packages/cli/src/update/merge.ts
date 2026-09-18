@@ -509,11 +509,10 @@ export function mergeEntity(local: string, target: string, base?: string): Merge
   const edits: Edit[] = [];
   const current = parse(local, 'local.ts');
   const next = parse(target, 'target.ts');
-  const previous = base === undefined ? undefined : parse(base, 'base.ts');
-  if (!current || !next || (base !== undefined && !previous)) return { content: local, manual: ['entity: TypeScript 语法无效，需人工合并'] };
+  void base;
+  if (!current || !next) return { content: local, manual: ['entity: TypeScript 语法无效，需人工合并'] };
   const localClasses = exportedClasses(current.file);
   const targetClasses = exportedClasses(next.file);
-  const baseClasses = previous && exportedClasses(previous.file);
   if (!targetClasses.size) manual.push('entity: 未找到具名导出 class，需人工合并');
   const references = referenceMerger(current, next, manual, true);
   for (const [name, right] of targetClasses) {
@@ -522,8 +521,7 @@ export function mergeEntity(local: string, target: string, base?: string): Merge
       manual.push(`entity.${name}: 本地缺少同名导出 class，需人工合并`);
       continue;
     }
-    const baseline = baseClasses?.get(name);
-    if (classHeader(left) !== classHeader(right) && (!baseline || classHeader(baseline) !== classHeader(right))) manual.push(`entity.${name}: 类装饰器、修饰器、继承或类型参数变化，需人工合并`);
+    if (classHeader(left) !== classHeader(right)) manual.push(`entity.${name}: 类装饰器、修饰器、继承或类型参数变化，需人工合并`);
     if (left.members.some((member) => member.name && key(member.name) === undefined) || right.members.some((member) => member.name && key(member.name) === undefined)) {
       manual.push(`entity.${name}: 计算键或私有名称无法安全匹配，需人工合并`);
       continue;

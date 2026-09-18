@@ -265,7 +265,7 @@ function fields(content, name = 'User') {
   return syntax(content).statements.find(statement => ts.isClassDeclaration(statement) && statement.name?.text === name).members;
 }
 
-test('package: 仅更新同组且基线发生变化的依赖，保留原始格式及元数据', () => {
+test('package: 同组普通依赖按目标更新且不要求基线变化，保留原始格式及元数据', () => {
   const local = '{\r\n  "name": "custom", "version": "9.0.0",\r\n  "scripts": {"dev": "custom"},\r\n  "dependencies": {"changed": "^1.0.0", "unchanged": "3.0.0", "local": "1.0.0"}\r\n}\r\n';
   const base = JSON.stringify({ dependencies: { changed: '^1.0.0', unchanged: '2.0.0' } });
   const target = JSON.stringify({ name: 'template', version: '10.0.0', dependencies: { changed: '^2.0.0', unchanged: '2.0.0', added: '^1.0.0' } });
@@ -615,12 +615,23 @@ test('entity: 方法、访问器及类装饰器变化转人工，安全字段照
   assert.equal(result.manual.length, 4);
 });
 
-test('entity: 基线未修改的类装饰器不覆盖本地，也不重复提示', () => {
-  const local = '@Table("local") export class User {}';
-  const base = '@Table("base") export class User {}';
-  const result = mergeEntity(local, '@Table("base") export class User { added = 1; }', base);
-  assert.deepEqual(result.manual, []);
-  assert.match(result.content, /@Table\("local"\)/);
+test('entity: 旧目标相同或旧语法无效时仍提示类头差异并更新同名字段', () => {
+  const local = '@Table("local") export class User<T> { value = 10; localOnly = 20; run() { return 30; } }';
+  const target = '@Table("target") export class User { value = 1; added = 2; run() { return 3; } }';
+  for (const base of [target, undefined, '', 'export class {']) {
+    const result = mergeEntity(local, target, base);
+    assert.match(result.manual.join(), /类装饰器、修饰器、继承或类型参数/);
+    assert.match(result.manual.join(), /方法、访问器或复杂成员/);
+    assert.match(result.content, /@Table\("local"\)/);
+    assert.match(result.content, /class User<T>/);
+    assert.match(result.content, /value = 1;/);
+    assert.match(result.content, /added = 2;/);
+    assert.match(result.content, /localOnly = 20;/);
+    assert.match(result.content, /return 30/);
+    assert.deepEqual(result, mergeEntity(local, target));
+    assert.equal(mergeEntity(result.content, target, base).content, result.content);
+  }
+  assert.deepEqual(mergeEntity(target, target, 'export class {').manual, []);
 });
 
 test('entity: 目标新增类、本地成员类型冲突、计算键与重复字段转人工', () => {

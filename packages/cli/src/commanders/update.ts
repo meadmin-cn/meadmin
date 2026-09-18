@@ -2,12 +2,12 @@ import type { Command } from 'commander';
 import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { basename, join, resolve } from 'node:path';
+import { basename, join } from 'node:path';
 import { stdin, stdout } from 'node:process';
 import { createInterface } from 'node:readline/promises';
 import { applyPlan, clearHistory, rollback, saveRecord, validBackupId, type UpgradeRecord } from '../update/backup.js';
 import { makePlan } from '../update/planner.js';
-import { validateConfig } from '../update/rules.js';
+import { loadConfig } from '../update/rules.js';
 import { currentVersion, downloadTemplate, registryManifest, selectVersion } from '../update/template.js';
 import { Log } from '../utils/log.js';
 
@@ -67,7 +67,7 @@ export function updateInit(program: Command) {
     .command('update')
     .description('基于官方模板升级框架（需确认覆盖，不自动操作数据库）')
     .option('--version <version>', '指定准确的目标稳定版本')
-    .option('--config <path>', '自定义跳过规则文件')
+    .option('--config <path>', '自定义升级策略文件（默认 update.json，兼容 meadmin.update.json）')
     .option('--registry <url>', 'npm registry 地址')
     .option('--dry-run', '仅预览，不写入项目')
     .option('--history', '列出历史备份目录、版本和恢复命令，不执行升级')
@@ -100,6 +100,7 @@ export function updateInit(program: Command) {
           if (await confirm(`将恢复批次 ${options.rollback} 的升级前文件，数据库不会恢复，是否继续？`)) rollback(root, join(root, 'node_modules/.meadmin/updates', options.rollback));
           return;
         }
+        const config = loadConfig(root, options.config);
         const from = currentVersion(root);
         const history = readHistory(root);
         if (history.entries.length > 3) console.warn(`升级备份过多：已有 ${history.entries.length} 个批次。请确认不再需要后，手动到 ${history.directory} 删除旧备份文件夹；删除后无法恢复对应批次。本次升级继续，不自动清理。`);
@@ -111,17 +112,13 @@ export function updateInit(program: Command) {
         if (from === to) {
           console.log(`已安装目标版本 ${to}，继续比较本地与目标模板内容，内容不同的文件按配置规则处理`);
         }
-        const rulePath = options.config ? resolve(root, options.config) : join(root, 'meadmin.update.json');
-        if (options.config && !existsSync(rulePath)) throw new Error('指定规则文件不存在');
-        const config = existsSync(rulePath) ? validateConfig(JSON.parse(readFileSync(rulePath, 'utf8'))) : { skipExisting: {}, mergeSource: {} };
-        const rules = config.skipExisting;
-        const sourceRules = config.mergeSource;
         const workspace = mkdtempSync(join(tmpdir(), 'meadmin-update-'));
         const [oldTemplate, targetTemplate] = await Promise.all([downloadTemplate(manifest, from, join(workspace, 'old')), downloadTemplate(manifest, to, join(workspace, 'target'))]);
-        const plan = makePlan(root, oldTemplate, targetTemplate, to, rules, sourceRules);
-        if (from === to) {
-          // 同版本同样处理内容差异，仅不重新交付数据库脚本。
-          plan.changes = plan.changes.filter((item) => item.path !== 'update.sql' && item.path !== `meadmin-${to}.sql`);
+        const plan = makePlan(root, oldTemplate, targetTemplate, to, config.skipExisting, config.mergeSource, config);
+        if (from === to && config.sql.enabled && !config.sql.generateOnSameVersion) {
+          // 默认同版本不重新交付数据库产物，用户可显式开启；名称沿用配置。
+          const outputs = [config.sql.output, config.sql.originalName === false ? false : config.sql.originalName.replaceAll('{version}', to)];
+          plan.changes = plan.changes.filter((item) => !outputs.includes(item.path));
           plan.sqlTables = [];
           plan.manual = plan.manual.filter((message) => !message.startsWith('SQL:') && !message.includes('未生成数据升级脚本'));
         }

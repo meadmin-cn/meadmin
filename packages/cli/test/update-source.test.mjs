@@ -43,13 +43,13 @@ function evaluate(text, modules = {}) {
 const numberModule = 'export const a = 1; export const b = 2; export const c = 3; export default a; export type Shape = { value: number };';
 const modules = { './a.js': numberModule, './b.js': numberModule, './other.js': numberModule };
 
-test('函数基线按函数粒度判断，保留本地函数和注释', () => {
+test('同名函数采用目标实现，即使旧模板未变，保留本地独有函数和注释', () => {
   const base = 'export function keep() { return 1; }\nexport function change() { return 0; }';
   const local = '// 本地说明\nexport function keep() { return 9; }\nexport function change() { return 3; }\nexport const localOnly = () => 7;';
   const target = 'export function keep() { return 1; }\nexport function change() { return 2; }\nexport const added = () => 4;';
   const result = checked(local, target, base);
   const output = evaluate(result.content);
-  assert.equal(output.keep(), 9);
+  assert.equal(output.keep(), 1);
   assert.equal(output.change(), 2);
   assert.equal(output.localOnly(), 7);
   assert.equal(output.added(), 4);
@@ -63,7 +63,7 @@ test('多变量声明逐个匹配 arrow/function，不覆盖同句常量和兄�
   const result = checked(local, target, base);
   const output = evaluate(result.content);
   assert.equal(output.a(), 2);
-  assert.equal(output.b(), 9);
+  assert.equal(output.b(), 1);
   assert.equal(output.added(), 3);
   assert.equal(output.constant, 20);
 });
@@ -73,8 +73,119 @@ test('不同声明顺序及源码长度不会用错 SourceFile', () => {
   const local = '// 一段很长的本地说明，打乱节点坐标\nexport function b() { return 20; }\nexport function a() { return 10; }';
   const target = 'export function a() { return 1; }\nexport function b() { return 3; }';
   const output = evaluate(checked(local, target, base).content);
-  assert.equal(output.a(), 10);
+  assert.equal(output.a(), 1);
   assert.equal(output.b(), 3);
+});
+
+test('base 等于 target 仍覆盖普通、arrow、多声明及类方法，新增与本地独有均保留', () => {
+  const target = 'export function f() { return 1; } export const arrow = () => 2, expression = function () { return 3; }, added = () => 4; export class Demo { run() { return 5; } arrow = () => 6; added() { return 7; } }';
+  const local = '// 本地注释\nexport function f() { return 10; } export const arrow = () => 20, expression = function () { return 30; }, localOnly = () => 40; export class Demo { value = 9; run() { return 50; } arrow = () => 60; localOnly() { return 70; } }';
+  for (const base of [target, undefined, '']) {
+    const result = checked(local, target, base);
+    const output = evaluate(result.content), instance = new output.Demo();
+    assert.deepEqual([output.f(), output.arrow(), output.expression(), output.added(), output.localOnly()], [1, 2, 3, 4, 40]);
+    assert.deepEqual([instance.run(), instance.arrow(), instance.added(), instance.localOnly(), instance.value], [5, 6, 7, 70, 9]);
+    assert.ok(result.content.startsWith('// 本地注释\n'));
+  }
+});
+
+test('旧目标相同仍提示常量、类型、类字段及类头差异，非函数内容保留本地', () => {
+  const local = 'export const constant = 10; export type Shape = string; export interface Item { value: string; } export enum Kind { Value = 10 } export class Demo<T> { value = 10; static shared = 20; constructor() { this.value = 30; } run() { return 40; } }';
+  const target = 'export const constant = 1; export const missing = 2; export type Shape = number; export interface Item { value: number; } export enum Kind { Value = 1 } export class Demo { value = 1; static shared = 2; missing = 3; constructor() { this.value = 4; } run() { return 5; } }';
+  for (const base of [target, undefined, '', 'export class {']) {
+    const result = checked(local, target, base);
+    const output = evaluate(result.content), instance = new output.Demo();
+    assert.equal(output.constant, 10);
+    assert.equal(output.missing, undefined);
+    assert.equal(output.Kind.Value, 10);
+    assert.deepEqual([instance.value, output.Demo.shared, instance.missing, instance.run()], [30, 20, undefined, 5]);
+    assert.match(result.content, /type Shape = string/);
+    assert.match(result.content, /interface Item \{ value: string/);
+    assert.match(result.content, /class Demo<T>/);
+    for (const label of ['声明 constant', '声明 missing', '类型 Shape', '类型 Item', '类型 Kind', '类 Demo', 'instance:field:value', 'static:field:shared', 'instance:field:missing', '构造函数']) assert.ok(result.manual.some(message => message.includes(label)), label + '\n' + result.manual.join('\n'));
+    assert.deepEqual(result, mergeSource(local, target, undefined, 'functions'));
+  }
+  assert.deepEqual(mergeSource(target, target, 'export class {', 'functions').manual, []);
+});
+
+test('无效旧模板不阻断函数、类方法或 exports 增量合并', () => {
+  const target = 'export function f() { return 1; } export class Demo { run() { return 2; } }';
+  const local = 'export function f() { return 10; } export class Demo { run() { return 20; } }';
+  const result = checked(local, target, 'export class {');
+  const output = evaluate(result.content);
+  assert.equal(output.f(), 1);
+  assert.equal(new output.Demo().run(), 2);
+  assert.deepEqual(result.manual, []);
+  const exports = checked("export { a } from './a.js';", "export { b } from './b.js';", 'export {', 'exports', modules);
+  assert.match(exports.content, /export \{ a \}/);
+  assert.match(exports.content, /export \{ b \}/);
+});
+
+test('函数及方法同文本仍检查 import 来源、导出符号和 type-only 冲突', () => {
+  const body = 'export function f() { return dep; } export const arrow = () => dep; export class Demo { run() { return dep; } }';
+  const local = `import { a as dep } from './a.js'; ${body}`;
+  for (const head of ["import { a as dep } from './b.js';", "import { b as dep } from './a.js';", "import type { a as dep } from './a.js';"]) {
+    const target = `${head} ${body}`;
+    const result = checked(local, target, target, 'functions', modules);
+    assert.equal(result.content, local);
+    assert.match(result.manual.join(), /函数 f.*import dep/);
+    assert.match(result.manual.join(), /函数 arrow.*import dep/);
+    assert.match(result.manual.join(), /Demo.*import dep/);
+  }
+});
+
+test('同文本函数缺少必要 import 仍补齐，重复合并不重复导入', () => {
+  const local = 'export function f() { return a; }';
+  const target = `import { a } from './a.js'; ${local}`;
+  const result = checked(local, target, target, 'functions', modules);
+  assert.equal(evaluate(result.content, { './a.js': { a: 7 } }).f(), 7);
+  assert.equal(semantic(result.content, modules).statements.filter(ts.isImportDeclaration).length, 1);
+});
+
+test('同名依赖函数被 import 冲突阻断时，调用链明确转人工，独立函数仍更新', () => {
+  const local = `import { a as dep } from './a.js'; export function dependency() { return dep; } export function caller() { return 8; } export class Demo { run() { return 9; } }`;
+  const target = `import { b as dep } from './b.js'; export function dependency() { return dep; } export function caller() { return dependency() + 1; } export function chain() { return caller(); } export function good() { return 4; } export class Demo { run() { return caller(); } }`;
+  const result = checked(local, target, target, 'functions', modules);
+  const output = evaluate(result.content, { './a.js': { a: 3 } });
+  assert.equal(output.dependency(), 3);
+  assert.equal(output.caller(), 8);
+  assert.equal(new output.Demo().run(), 9);
+  assert.equal(output.chain, undefined);
+  assert.equal(output.good(), 4);
+  assert.match(result.manual.join(), /caller: 依赖 dependency 未安全合并/);
+  assert.match(result.manual.join(), /chain: 依赖 caller 未安全合并/);
+});
+
+test('导出函数和类型解析真实导出符号，as const 不误认成缺失依赖', () => {
+  const target = 'export type Item = { value: number }; export function dependency(): Item { return { value: 2 }; } export function caller(key = "value" as const) { return dependency()[key]; }';
+  const local = 'export type Item = { value: number }; export function dependency(): Item { return { value: 10 }; } export function caller() { return 20; }';
+  const result = checked(local, target, target);
+  assert.equal(evaluate(result.content).caller(), 2);
+  assert.deepEqual(result.manual, []);
+});
+
+test('新增全局量引用不被 noLib 诊断误拦截，本地遮蔽 setTimeout 仍转人工', () => {
+  const local = 'export function f() { return "local"; }';
+  const target = 'export function f() { return JSON.stringify([encodeURIComponent("a b"), Math.max(1, 2)]); } export function later() { return setTimeout(() => {}, 0); }';
+  const result = checked(local, target, target);
+  assert.equal(evaluate(result.content).f(), '["a%20b",2]');
+  assert.match(result.content, /function later/);
+  const shadowed = 'const setTimeout = () => 7; export function later() { return 9; }';
+  const blocked = checked(shadowed, 'export function later() { return setTimeout(() => {}, 0); }', undefined);
+  assert.equal(blocked.content, shadowed);
+  assert.match(blocked.manual.join(), /setTimeout/);
+});
+
+test('类方法同文本 import 冲突时 this 调用链也明确转人工', () => {
+  const local = `import { a as dep } from './a.js'; export class Demo { dependency() { return dep; } caller() { return 8; } static dependency() { return dep; } static caller() { return 9; } }`;
+  const target = `import { b as dep } from './b.js'; export class Demo { dependency() { return dep; } caller() { return this.dependency() + 1; } static dependency() { return dep; } static caller() { return this.dependency() + 2; } good() { return 4; } }`;
+  const result = checked(local, target, target, 'functions', modules);
+  const { Demo } = evaluate(result.content, { './a.js': { a: 3 } });
+  assert.equal(new Demo().caller(), 8);
+  assert.equal(Demo.caller(), 9);
+  assert.equal(new Demo().good(), 4);
+  assert.match(result.manual.join(), /依赖 Demo.instance:method:dependency 未安全合并/);
+  assert.match(result.manual.join(), /依赖 Demo.static:method:dependency 未安全合并/);
 });
 
 test('按导入符号追加，命名导出按导出名去重，保留本地混杂代码', () => {
@@ -221,11 +332,11 @@ test('类分别匹配 getter/setter/static/method/arrow，保留字段和构造�
   assert.equal(instance.value, 10);
   assert.equal(instance.item, 11);
   instance.item = 2;
-  assert.equal(instance.value, 20);
+  assert.equal(instance.value, 2);
   assert.equal(instance.run(), 3);
   assert.equal(Demo.run(), 2);
-  assert.equal(instance.arrow(), 24);
-  assert.equal(instance.added(), 25);
+  assert.equal(instance.arrow(), 6);
+  assert.equal(instance.added(), 7);
   assert.equal(instance.localOnly(), 8);
   assert.match(result.manual.join(), /构造函数/);
 });
@@ -276,12 +387,12 @@ test('类装饰器及字段不被整类覆盖，方法可局部替换', () => {
   assert.equal(new (evaluate(result.content).Demo)().f(), 2);
 });
 
-test('目标未改变的方法保留本地修改，类之间相同方法名互不干扰', () => {
+test('目标未改变的方法仍覆盖同名本地实现，类之间相同方法名互不干扰', () => {
   const base = 'export class A { run() { return 1; } } export class B { run() { return 2; } }';
   const local = 'export class B { run() { return 20; } } export class A { run() { return 10; } }';
   const target = 'export class A { run() { return 1; } } export class B { run() { return 3; } }';
   const output = evaluate(checked(local, target, base).content);
-  assert.equal(new output.A().run(), 10);
+  assert.equal(new output.A().run(), 1);
   assert.equal(new output.B().run(), 3);
 });
 
@@ -293,14 +404,14 @@ test('同名本地常量不可被新增函数重复绑定，独立函数照常�
   assert.equal(output.good(), 3);
 });
 
-test('缺少函数基线时不覆盖本地同名实现，新函数仍可添加', () => {
+test('缺少函数基线仍覆盖本地同名实现并添加新函数', () => {
   const local = 'export function f() { return 8; }';
   const target = 'export function f() { return 2; } export function added() { return 3; }';
   for (const base of [undefined, '']) {
     const result = checked(local, target, base);
-    assert.equal(evaluate(result.content).f(), 8);
+    assert.equal(evaluate(result.content).f(), 2);
     assert.equal(evaluate(result.content).added(), 3);
-    assert.match(result.manual.join(), /基线/);
+    assert.doesNotMatch(result.manual.join(), /基线/);
   }
 });
 

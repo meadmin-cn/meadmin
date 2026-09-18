@@ -1,8 +1,9 @@
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, lstatSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join } from 'node:path';
 import { gunzipSync } from 'node:zlib';
+import { assertTreePath, checkedPath } from './paths.js';
 
 export function versionParts(version: string): number[] {
   if (!/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(version)) throw new Error(`仅支持准确的 x.y.z 稳定版本号：${version}`);
@@ -62,6 +63,7 @@ export async function registryManifest(registry: string): Promise<RegistryManife
 }
 /** 安全的 npm tar 子集解包；不支持的扩展和链接直接拒绝，不跟随符号链接。 */
 export function unpackTemplate(archive: Buffer, destination: string): void {
+  assertTreePath(destination);
   const tar = gunzipSync(archive, { maxOutputLength: 256 * 1024 * 1024 });
   const seen = new Set<string>();
   for (let offset = 0; offset + 512 <= tar.length; ) {
@@ -85,7 +87,7 @@ export function unpackTemplate(archive: Buffer, destination: string): void {
     const key = name.toLowerCase();
     if (seen.has(key)) throw new Error(`压缩包路径重复：${name}`);
     seen.add(key);
-    const path = resolve(destination, name);
+    const path = checkedPath(destination, name);
     if (type === '5') mkdirSync(path, { recursive: true });
     else {
       mkdirSync(dirname(path), { recursive: true });
@@ -119,6 +121,7 @@ export async function downloadTemplate(manifest: RegistryManifest, version: stri
   const pkg = JSON.parse(readFileSync(join(destination, 'package/package.json'), 'utf8'));
   if (pkg.name !== 'create-meadminjs' || pkg.version !== version) throw new Error('模板包名称或版本不匹配');
   const template = join(destination, 'package/template/meadmin');
-  if (!existsSync(join(template, 'packageTemplate.json'))) throw new Error('模板根目录无效');
+  if (!lstatSync(template, { throwIfNoEntry: false })?.isDirectory()) throw new Error('模板根目录无效');
+  assertTreePath(template);
   return template;
 }

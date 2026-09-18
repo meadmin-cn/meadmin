@@ -1,6 +1,6 @@
 import ts from 'typescript';
-import { planValidation, type ValidationChange } from './validation.js';
 import { planRoutes } from './routes.js';
+import { planValidation, type ValidationChange } from './validation.js';
 
 export type SourceMergeMode = 'functions' | 'exports' | 'validation' | 'routes';
 export type SourceMergeResult = { content: string; manual: string[]; changed: boolean };
@@ -218,6 +218,7 @@ function isReference(node: ts.Identifier): boolean {
   const parent = node.parent;
   if ((ts.isPropertyAccessExpression(parent) && parent.name === node) || (ts.isQualifiedName(parent) && parent.right === node)) return false;
   if (ts.isBindingElement(parent) && parent.propertyName === node) return false;
+  if (node.text === 'const' && ts.isTypeReferenceNode(parent) && (ts.isAsExpression(parent.parent) || ts.isTypeAssertionExpression(parent.parent))) return false;
   if (ts.isLabeledStatement(parent) || ts.isBreakStatement(parent) || ts.isContinueStatement(parent)) return false;
   return !('name' in parent && parent.name === node && !ts.isShorthandPropertyAssignment(parent));
 }
@@ -236,8 +237,9 @@ function importLine(binding: ImportBinding): string {
 export function mergeSource(localText: string, targetText: string, baseText: string | undefined, mode: SourceMergeMode, path = 'source.ts'): SourceMergeResult {
   const local = parse(localText, 'local.ts');
   const target = parse(targetText, 'target.ts');
-  const base = baseText === undefined ? undefined : parse(baseText, 'base.ts');
-  if (!local || !target || (baseText !== undefined && !base)) return { content: localText, manual: [`${path}: TypeScript 语法无效，保留本地文件`], changed: false };
+  // 保留调用签名；旧模板内容及其语法不参与合并或人工提示判定。
+  void baseText;
+  if (!local || !target) return { content: localText, manual: [`${path}: TypeScript 语法无效，保留本地文件`], changed: false };
   const edits: Edit[] = [];
   const manual: string[] = [];
   const report = (message: string) => manual.push(`${path}: ${message}`);
@@ -248,6 +250,7 @@ export function mergeSource(localText: string, targetText: string, baseText: str
     targetBindings = topBindings(target);
   const pendingImports = new Map<string, ImportBinding>();
   const available = new Set(localBindings.keys());
+  const knownGlobal = (name: string) => globals.has(name) || (mode === 'functions' && name === 'setTimeout');
   const appended: string[] = [];
   const append = (text: string) => appended.push(text);
   const localVariables = variables(local.file),
@@ -278,6 +281,11 @@ export function mergeSource(localText: string, targetText: string, baseText: str
         let scope: ts.Node | undefined = child.parent;
         while (scope && !nodes.includes(scope) && !(ts.isFunctionLike(scope) && !ts.isArrowFunction(scope)) && !ts.isClassExpression(scope) && !ts.isClassDeclaration(scope)) scope = scope.parent;
         if (!owner || !scope || !nodes.includes(scope) || access === undefined || !hasMember(access, isStatic)) problems.add(`this.${access ?? '?'} 在本地缺失或作用域不明确`);
+        else if (mode === 'functions') {
+          for (const [key, member] of members(owner)) {
+            if (!key.includes(':field:') && members(destination!).has(key) && nameOf(member.nodes[0] as ts.NamedDeclaration) === access && hasModifier(member.nodes[0], ts.SyntaxKind.StaticKeyword) === isStatic) dependencies.add(`${owner.name!.text}.${key}`);
+          }
+        }
       }
       if (ts.isIdentifier(child) && isReference(child)) {
         const symbol = ts.isShorthandPropertyAssignment(child.parent) ? target!.checker.getShorthandAssignmentValueSymbol(child.parent) : target!.checker.getSymbolAtLocation(child);
@@ -297,22 +305,23 @@ export function mergeSource(localText: string, targetText: string, baseText: str
           if (scope && scope !== localBindings.get(binding.name)) problems.add(`import ${binding.name} 被本地类作用域遮蔽`);
           if (problem) problems.add(problem);
           else if (!localImports.has(binding.name) && !pendingImports.has(binding.name)) needed.set(binding.name, binding);
-        } else if (routeDestination && (declarations.length || !globals.has(child.text) || local!.checker.getSymbolsInScope(routeDestination, ts.SymbolFlags.Value | ts.SymbolFlags.Type | ts.SymbolFlags.Namespace | ts.SymbolFlags.Alias).some(symbol => symbol.name === child.text))) {
+        } else if (routeDestination && (declarations.length || !globals.has(child.text) || local!.checker.getSymbolsInScope(routeDestination, ts.SymbolFlags.Value | ts.SymbolFlags.Type | ts.SymbolFlags.Namespace | ts.SymbolFlags.Alias).some((symbol) => symbol.name === child.text))) {
           problems.add(`路由引用 ${child.text} 的外部依赖无法安全确认`);
         } else if (validation && declarations.some((node) => ts.isTypeParameterDeclaration(node) && node.parent === validation.owner)) {
           // 接口头已严格匹配，方法可引用相同的接口泛型。
-        } else if (validation && (declarations.length || !globals.has(child.text) || local!.checker.getSymbolsInScope(validation.destination, ts.SymbolFlags.Value | ts.SymbolFlags.Type | ts.SymbolFlags.Namespace | ts.SymbolFlags.Alias).some(symbol => symbol.name === child.text))) {
+        } else if (validation && (declarations.length || !globals.has(child.text) || local!.checker.getSymbolsInScope(validation.destination, ts.SymbolFlags.Value | ts.SymbolFlags.Type | ts.SymbolFlags.Namespace | ts.SymbolFlags.Alias).some((symbol) => symbol.name === child.text))) {
           problems.add(`引用 ${child.text} 的外部依赖或本地作用域无法安全确认`);
         } else if (owner && declarations.some((node) => ts.isTypeParameterDeclaration(node) && node.parent === owner)) {
           const parameter = owner.typeParameters?.find((node) => node.name.text === child.text);
           if (!destination?.typeParameters?.some((node) => node.getText() === parameter?.getText())) problems.add(`类类型参数 ${child.text} 不兼容`);
         } else if (symbol && (targetBindings.get(child.text) === symbol || declarations.some((declaration) => targetBindings.get(child.text)?.declarations?.includes(declaration)))) {
           const existing = localBindings.get(child.text);
-          if (existing && !localImports.has(child.text) && existing.flags & symbol.flags & (ts.SymbolFlags.Value | ts.SymbolFlags.Type | ts.SymbolFlags.Namespace)) {
+          if (mode === 'functions' && candidates.has(child.text)) dependencies.add(child.text);
+          if (existing && !localImports.has(child.text) && local!.checker.getExportSymbolOfSymbol(existing).flags & target!.checker.getExportSymbolOfSymbol(symbol).flags & (ts.SymbolFlags.Value | ts.SymbolFlags.Type | ts.SymbolFlags.Namespace)) {
             // 本地同名依赖保持原实现，不能借机覆盖字段、常量或类型。
           } else if (candidates.has(child.text) && !existing) dependencies.add(child.text);
           else if (!available.has(child.text) || localImports.has(child.text) || existing) problems.add(`引用 ${child.text} 在本地缺失或绑定不兼容`);
-        } else if (declarations.length || !globals.has(child.text) || available.has(child.text)) {
+        } else if (declarations.length || !knownGlobal(child.text) || available.has(child.text)) {
           problems.add(`引用 ${child.text} 在本地缺失或无法解析`);
         }
       }
@@ -378,21 +387,16 @@ export function mergeSource(localText: string, targetText: string, baseText: str
 
   if (mode === 'functions') {
     const localFunctions = functions(local.file),
-      targetFunctions = functions(target.file),
-      baseFunctions = base ? functions(base.file) : new Map<string, Unit>();
+      targetFunctions = functions(target.file);
     const localClasses = classes(local.file),
-      targetClasses = classes(target.file),
-      baseClasses = base ? classes(base.file) : new Map<string, ts.ClassDeclaration>();
+      targetClasses = classes(target.file);
     const changes: Change[] = [];
     const candidates = new Set(targetFunctions.keys());
-    const plan = (unit: Unit, previous?: Unit, baseline?: Unit, destination?: ts.ClassDeclaration) => {
+    const plan = (unit: Unit, previous?: Unit, destination?: ts.ClassDeclaration) => {
       const label = unit.owner ? `${unit.owner.name!.text}.${unit.name}` : `函数 ${unit.name}`;
-      if ((baseline && unitText(unit) === unitText(baseline)) || (previous && unitText(unit) === unitText(previous))) return;
-      if (previous && !baseline) {
-        report(`${label}: 缺少该函数的基线，保留本地并转人工`);
-        return;
-      }
+      const identical = previous && unitText(unit) === unitText(previous);
       if (unit.name === 'instance:constructor') {
+        if (identical) return;
         report(`${label}: 构造函数保留，需人工合并`);
         return;
       }
@@ -435,8 +439,9 @@ export function mergeSource(localText: string, targetText: string, baseText: str
       const checked = references(unit.nodes, label, unit.owner, destination, candidates);
       if (!checked) return;
       const unitEdits: Edit[] = [];
-      if (previous) unitEdits.push({ start: previous.nodes[0].getStart(), end: previous.nodes[0].end, text: node.getText() });
-      else if (destination) {
+      if (previous) {
+        if (!identical) unitEdits.push({ start: previous.nodes[0].getStart(), end: previous.nodes[0].end, text: node.getText() });
+      } else if (destination) {
         const last = destination.members[destination.members.length - 1];
         if (last && ts.isPropertyDeclaration(last) && !last.getText().trimEnd().endsWith(';')) unitEdits.push({ start: last.end, end: last.end, text: ';' });
         unitEdits.push({ start: destination.end - 1, end: destination.end - 1, text: `${newline}  ${node.getText().replace(/;?\s*$/, ';')}${newline}` });
@@ -447,38 +452,37 @@ export function mergeSource(localText: string, targetText: string, baseText: str
       changes.push({ unit, previous, edits: unitEdits, imports: checked.needed, dependencies: checked.dependencies });
     };
     // 目录采用函数合并不代表常量、类型变化可以静默忽略。
-    const priorVariables = base ? variables(base.file) : new Map<string, ts.VariableDeclaration>();
     for (const [name, declaration] of targetVariables) {
       if (targetFunctions.has(name)) continue;
-      const old = priorVariables.get(name),
-        current = localVariables.get(name);
-      if (declaration.getText() !== old?.getText() && declaration.getText() !== current?.getText()) report(`声明 ${name}: 非函数变化保留本地，需人工合并`);
+      const current = localVariables.get(name);
+      if (declaration.getText() !== current?.getText()) report(`声明 ${name}: 非函数变化保留本地，需人工合并`);
     }
     for (const statement of target.file.statements)
       if (ts.isInterfaceDeclaration(statement) || ts.isTypeAliasDeclaration(statement) || ts.isEnumDeclaration(statement)) {
-        const equivalent = (file?: ts.SourceFile) => file?.statements.find((node) => node.kind === statement.kind && (ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node) || ts.isEnumDeclaration(node)) && node.name.text === statement.name.text)?.getText();
-        if (statement.getText() !== equivalent(base?.file) && statement.getText() !== equivalent(local.file)) report(`类型 ${statement.name.text}: 保留本地，需人工合并`);
+        const current = local.file.statements.find((node) => node.kind === statement.kind && (ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node) || ts.isEnumDeclaration(node)) && node.name.text === statement.name.text);
+        if (statement.getText() !== current?.getText()) report(`类型 ${statement.name.text}: 保留本地，需人工合并`);
       }
-    for (const [name, unit] of targetFunctions) plan(unit, localFunctions.get(name), baseFunctions.get(name));
+    for (const [name, unit] of targetFunctions) plan(unit, localFunctions.get(name));
     for (const [name, owner] of targetClasses) {
       const destination = localClasses.get(name);
       if (!destination) {
         report(`新增类 ${name} 未自动添加，类结构需人工确认`);
         continue;
       }
-      const oldMembers = members(destination),
-        baseMembers = baseClasses.has(name) ? members(baseClasses.get(name)!) : new Map<string, Unit>();
+      const header = (node: ts.ClassDeclaration) => [...(node.modifiers ?? []), ...(node.heritageClauses ?? []), ...(node.typeParameters ?? [])].map((part) => part.getText()).join(' ');
+      if (header(destination) !== header(owner)) report(`类 ${name}: 类装饰器、修饰器、继承或类型参数不同，保留本地并转人工`);
+      const localMembers = members(destination);
       for (const [key, unit] of members(owner)) {
-        if (!key.includes(':field:')) plan(unit, oldMembers.get(key), baseMembers.get(key), destination);
-        else if (unitText(unit) !== (baseMembers.get(key) ? unitText(baseMembers.get(key)!) : undefined) && unitText(unit) !== (oldMembers.get(key) ? unitText(oldMembers.get(key)!) : undefined)) {
+        if (!key.includes(':field:')) plan(unit, localMembers.get(key), destination);
+        else if (unitText(unit) !== (localMembers.get(key) ? unitText(localMembers.get(key)!) : undefined)) {
           report(`${name}.${key}: 非函数字段发生变化，保留本地并转人工`);
         }
       }
     }
-    // 先检查整个依赖图，再提交编辑，避免被阻断的新增函数留下悬空调用。
+    // 同名函数合并被阻断时，调用方也不能静默沿用不兼容的本地实现。
     let accepted = changes;
     while (true) {
-      const names = new Set([...available, ...accepted.filter((change) => !change.unit.owner).map((change) => change.unit.name)]);
+      const names = new Set(accepted.map(({ unit }) => (unit.owner ? `${unit.owner.name!.text}.${unit.name}` : unit.name)));
       const next = accepted.filter((change) => {
         const missing = [...change.dependencies].filter((name) => !names.has(name));
         if (missing.length) report(`${change.unit.name}: 依赖 ${missing.join(', ')} 未安全合并，转人工`);
@@ -728,7 +732,12 @@ export function mergeSource(localText: string, targetText: string, baseText: str
   const diagnostics = (parsed: Parsed) =>
     parsed.program
       .getSemanticDiagnostics(parsed.file)
-      .filter((item) => bindingDiagnostics.has(item.code))
+      .filter((item) => {
+        if (!bindingDiagnostics.has(item.code)) return false;
+        // noLib 会把已检查过的运行环境全局量也报告为未声明，不能因此撤销安全编辑。
+        const name = item.start === undefined ? '' : parsed.file.text.slice(item.start, item.start + (item.length ?? 0));
+        return !(mode === 'functions' && item.code === 2304 && knownGlobal(name) && !topBindings(parsed).has(name));
+      })
       .map((item) => `${item.code}:${ts.flattenDiagnosticMessageText(item.messageText, '\n')}`);
   const before = diagnostics(local);
   const remaining = [...before];

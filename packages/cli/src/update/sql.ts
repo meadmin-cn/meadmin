@@ -364,9 +364,7 @@ function parseInsert(cursor: Cursor, table: Table, keys: string[], source: strin
   const positions = keys.map((key) => columns.indexOf(key));
   if (positions.includes(-1)) fail('INSERT 缺少判重键列');
   cursor.expect('VALUES');
-  const start = cursor.tokens[cursor.pos]?.start;
-  let end: number;
-  let rows = 0;
+  const rows: string[] = [];
   do {
     const values = groups(parenthesized(cursor));
     if (values.length !== columns.length) fail('VALUES 值数量与 INSERT 列数量不一致');
@@ -377,14 +375,14 @@ function parseInsert(cursor: Cursor, table: Table, keys: string[], source: strin
       return isNull;
     });
     if (positions.some((position) => nulls[position])) fail('VALUES 判重键含 NULL，整条批量 INSERT 转人工');
-    rows++;
-    end = cursor.tokens[cursor.pos - 1].end;
+    // 复用 token 范围保留字面量和转换；不带入可能吞掉后续 SQL 的尾部行注释。
+    const expressions = values.map((value) => source.slice(value[0].start, value[value.length - 1].end));
+    const predicate = keys.map((key, index) => `existing.${quote(key)} IS NOT DISTINCT FROM ${expressions[positions[index]]}`).join(' AND ');
+    // 逐行执行使后续源行可见前面插入的数据；直接 SELECT 保留裸字符串的目标列类型上下文。
+    rows.push(`INSERT INTO ${sqlName(table.parts)} (${columns.map(quote).join(', ')}) SELECT ${expressions.join(', ')}\nWHERE NOT EXISTS (SELECT 1 FROM ${sqlName(table.parts)} AS existing WHERE ${predicate});`);
   } while (cursor.take(','));
   cursor.end();
-  return {
-    sql: `INSERT INTO ${sqlName(table.parts)} (${columns.map(quote).join(', ')}) VALUES ${source.slice(start, end)}\nON CONFLICT (${keys.map(quote).join(', ')}) DO NOTHING;`,
-    rows,
-  };
+  return { sql: rows.join('\n\n'), rows: rows.length };
 }
 
 /** 仅生成待人工审阅的 SQL 文本；不连接数据库，不执行 SQL。 */
@@ -396,10 +394,12 @@ export function generateUpdateSql(source: string, version: string): UpdateSql {
   const header = `-- 更新 SQL，版本 ${JSON.stringify(version).replace(/[\u2028\u2029]/g, ' ')}
 -- 仅生成文本，不自动执行。请按以下顺序操作：
 -- 1. 先备份数据库，再编译更新后的后端代码。
--- 2. 手动执行 pnpm exec meadmin sync '*' 同步表结构（默认读取 dist，alter:true）。
+-- 2. 缺表或字段时仍须先手动执行 pnpm exec meadmin sync '*' 同步表结构（默认读取 dist，alter:true）。
 -- 3. 对照现有数据库谨慎比较 update.sql 和 manual 清单，确认后再手动执行 update.sql。
--- 判重优先使用 id 主键或其他主键（含复合主键），仅无主键时使用非空简单唯一键。
--- 仅跳过所选判重键的冲突；其他唯一冲突由数据库抛错，请人工核对处理。
+-- 按模板已解析的可靠键逐行判重，实际库没有对应 PRIMARY KEY / UNIQUE 约束也可补齐数据，不输出 DDL。
+-- 模板判重优先使用 id 主键或其他主键（含复合主键），仅无主键时使用非空简单唯一键。
+-- 仅跳过所选判重键已存在的行；其他唯一冲突由数据库抛错，请人工核对处理。
+-- 每张插入表在首次插入前获取 SHARE ROW EXCLUSIVE 锁，持有至事务结束，会短暂阻塞写入，请谨慎比较执行。
 -- 4. 数据更新后，手动修复菜单、组织、角色及其关联与权限。
 BEGIN;
 `;
@@ -497,8 +497,9 @@ BEGIN;
       if (!table) fail('找不到完全匹配（包括 schema）的 CREATE TABLE');
       const keys = chooseKey(table, unknownIndexProblems);
       const insert = parseInsert(cursor, table, keys, source);
-      output.push(insert.sql);
       const id = tableId(parts);
+      if (!summaries.has(id)) output.push(`LOCK TABLE ${sqlName(parts)} IN SHARE ROW EXCLUSIVE MODE;`);
+      output.push(insert.sql);
       const summary = summaries.get(id) ?? { table: label(parts), rows: 0, keys: [...keys] };
       summary.rows += insert.rows;
       summaries.set(id, summary);

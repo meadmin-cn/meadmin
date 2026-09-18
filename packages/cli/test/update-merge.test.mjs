@@ -3,6 +3,54 @@ import test from 'node:test';
 import ts from 'typescript';
 import { mergeConfig, mergeEntity, mergePackage } from '../dist/update/merge.js';
 
+test('entity: 追加Sequelize关联interface及import，保留本地声明并幂等', () => {
+  const local = `import type { BelongsManyModel } from './types.js';\nimport type { SystemRole } from './role.js';\nexport class SystemAdmin {}\nexport declare interface SystemAdmin extends BelongsManyModel<'roles', 'role', 'roles', SystemRole> {}\n`;
+  const target = `import type { BelongsManyModel } from './types.js';\nimport type { SystemOrganization } from './org.js';\nexport class SystemAdmin {}\nexport declare interface SystemAdmin extends BelongsManyModel<'organizations', 'organization', 'organizations', SystemOrganization> {}\n`;
+  const result = mergeEntity(local, target, local);
+  syntax(result.content);
+  assert.match(result.content, /extends BelongsManyModel<'organizations', 'organization', 'organizations', SystemOrganization>/);
+  assert.match(result.content, /extends BelongsManyModel<'roles'/);
+  assert.match(result.content, /import type.*SystemOrganization/);
+  assert.equal(mergeEntity(result.content, target, local).content, result.content);
+  const doubleQuotes = target.replaceAll("'", '"');
+  assert.equal(mergeEntity(result.content, doubleQuotes, local).content, result.content);
+});
+
+test('entity: interface导入冲突不生成悬空关联声明', () => {
+ const local="import type { Link } from './custom'; export class User {}";
+ const target="import type { Link } from './official'; export class User {} export declare interface User extends Link {}";
+ const result=mergeEntity(local,target,local);
+ assert.equal(result.content,local);assert.match(result.manual.join(),/冲突/);
+});
+
+test('entity: RuleType不同来源时仅为新增字段引入别名，不改本地字段', () => {
+ const head="import { Attribute } from './attr'; import { DataTypes } from './data'; import { ApiPropertyRule } from './api';";
+ const local=head+"import { RuleType } from '@midwayjs/validate'; export class SystemRole { @ApiPropertyRule({rule:RuleType.number()}) status: number; }";
+ const field="@Attribute({comment:'数据权限:1=全部;2=组织;3=组织及以下;4=仅本人',defaultValue:3,allowNull:false,type:DataTypes.TINYINT.UNSIGNED}) @ApiPropertyRule({description:'数据权限',rule:RuleType.number().valid(1,2,3,4).default(3)}) dataScope: number;";
+ const target=head+"import { RuleType } from '@/ruleType/index.js'; export class SystemRole { "+field+" }";
+ const result=mergeEntity(local,target,local);
+ syntax(result.content);
+ assert.match(result.content,/RuleType as RuleTypeMeadmin/);
+ assert.match(result.content,/rule:RuleTypeMeadmin.number\(\).valid\(1,2,3,4\).default\(3\)/);
+ assert.match(result.content,/rule:RuleType.number\(\)\}\) status/);
+ assert.match(result.content,/dataScope: number/);
+ assert.deepEqual(result.manual,[]);
+ assert.equal(mergeEntity(result.content,target,local).content,result.content);
+});
+
+test('entity: 既有字段更新装饰器及类型，复用别名且重复合并幂等', () => {
+ const local = `import { RuleType } from '@midwayjs/validate'; import { ApiPropertyRule } from './api'; export class SystemRole { @ApiPropertyRule({rule: RuleType.number().default(1)}) dataScope?: string; custom = true; }`;
+ const target = `import { RuleType } from '@/ruleType/index.js'; import { ApiPropertyRule } from './api'; export class SystemRole { @ApiPropertyRule({rule: RuleType.number().valid(1,2,3,4).default(3)}) dataScope: number; }`;
+ const result = mergeEntity(local, target, target);
+ syntax(result.content);
+ assert.match(result.content, /RuleType as RuleTypeMeadmin/);
+ assert.match(result.content, /RuleTypeMeadmin.number\(\).valid\(1,2,3,4\).default\(3\)/);
+ assert.match(result.content, /dataScope: number/);
+ assert.match(result.content, /custom = true/);
+ assert.deepEqual(result.manual, []);
+ assert.equal(mergeEntity(result.content, target, target).content, result.content);
+});
+
 function syntax(content) {
   const file = ts.createSourceFile('merged.ts', content, ts.ScriptTarget.Latest, true);
   assert.deepEqual(file.parseDiagnostics.map(diagnostic => diagnostic.messageText), []);
@@ -126,6 +174,130 @@ test('config: 递归追加缺失键，保留数组和值以及源码注释', () 
   assert.deepEqual(result.manual, []);
 });
 
+const bullmq = `bullmq: {
+  defaultConnection: {
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
+    password: process.env.REDIS_PASS,
+    db: process.env.REDIS_MQ ?? 1,
+  },
+  defaultPrefix: '[meadmin-bullmq]',
+  clearRepeatJobWhenStart: false,
+}`;
+
+const bullmqTarget = `export default { ${bullmq} };`;
+
+test('config: 精确 bullmq 整块原样追加 process.env 与 ??，不读取环境且幂等', () => {
+  const local = '// 合成本地配置\nexport default { custom: true, list: ["local"] };';
+  const environment = process.env;
+  let result;
+  try {
+    process.env = new Proxy(environment, {
+      get(target, name) {
+        if (typeof name === 'string' && /^REDIS_/.test(name)) throw new Error('不得读取配置环境变量');
+        return Reflect.get(target, name);
+      },
+    });
+    result = mergeConfig(local, bullmqTarget);
+  } finally {
+    process.env = environment;
+  }
+  const root = properties(object(result.content));
+  assert.equal(root.get('bullmq').parent.getText(), bullmq);
+  assert.equal(root.get('custom').getText(), 'true');
+  assert.equal(root.get('list').getText(), '["local"]');
+  assert.deepEqual(result.manual, []);
+  assert.deepEqual(mergeConfig(result.content, bullmqTarget), result);
+});
+
+test('config: bullmq 嵌套缺失对象和叶子只增，既有连接值与注释保留', () => {
+  for (const local of [
+    'export default { bullmq: { defaultPrefix: "local-prefix" } };',
+    'export default { bullmq: { defaultConnection: { host: "fixture-host" /* 本地注释 */, db: 9 }, defaultPrefix: "local-prefix" } };',
+  ]) {
+    const result = mergeConfig(local, bullmqTarget);
+    const queue = properties(properties(object(result.content)).get('bullmq'));
+    const connection = properties(queue.get('defaultConnection'));
+    assert.equal(queue.get('defaultPrefix').getText(), '"local-prefix"');
+    assert.equal(queue.get('clearRepeatJobWhenStart').getText(), 'false');
+    assert.equal(connection.get('port').getText(), 'process.env.REDIS_PORT');
+    assert.equal(connection.get('password').getText(), 'process.env.REDIS_PASS');
+    assert.equal(connection.get('host').getText(), local.includes('fixture-host') ? '"fixture-host"' : 'process.env.REDIS_HOST');
+    assert.equal(connection.get('db').getText(), local.includes('fixture-host') ? '9' : 'process.env.REDIS_MQ ?? 1');
+    if (local.includes('fixture-host')) assert.match(result.content, /\/\* 本地注释 \*\//);
+    assert.deepEqual(result.manual, []);
+    assert.deepEqual(mergeConfig(result.content, bullmqTarget), result);
+  }
+});
+
+test('config: 完整本地 bullmq、数组及数组内对象逐字保留', () => {
+  const local = `export default {
+    bullmq: { defaultConnection: { host: 'fixture-host', port: 6380, password: 'fixture-only', db: process.env.LOCAL_MQ ?? 9 }, defaultPrefix: 'local', clearRepeatJobWhenStart: true },
+    list: [{ local: true }],
+  };`;
+  const result = mergeConfig(local, `export default { ${bullmq}, list: [{ added: process.env.REDIS_MQ ?? 1 }] };`);
+  assert.equal(result.content, local);
+  assert.deepEqual(result.manual, []);
+});
+
+test('config: ?? 不放宽未知依赖、调用、赋值或不安全对象，仅追加安全兄弟键', () => {
+  for (const value of [
+    'process.env.REDIS_MQ ?? missing',
+    'missing.env.REDIS_MQ ?? 1',
+    'process.env.REDIS_MQ ?? call()',
+    'process.env.REDIS_MQ ?? (counter = 1)',
+    'process.env.REDIS_MQ ?? {...defaults}',
+    'process.env.REDIS_MQ ?? {__proto__: {}}',
+    'process.cwd',
+    'process',
+  ]) {
+    const result = mergeConfig('export default {}', `export default { bullmq: { db: ${value} }, safe: true }`);
+    const root = properties(object(result.content));
+    assert.equal(root.has('bullmq'), false, value);
+    assert.equal(root.get('safe').getText(), 'true');
+    assert.equal(result.manual.length, 1);
+    assert.match(result.manual[0], /config.bullmq:/);
+  }
+});
+
+test('config: process 被本地声明或导入遮蔽时整块转人工且不留下 import', () => {
+  for (const prefix of [
+    'const process = { env: {} };',
+    'import process from "custom-process";',
+    'import type { process } from "custom-process";',
+  ]) {
+    const local = `${prefix} export default {};`;
+    const result = mergeConfig(local, bullmqTarget);
+    assert.equal(result.content, local);
+    assert.match(result.manual.join(), /config.bullmq:.*process/);
+  }
+  const result = mergeConfig('export default {}', `import { option } from 'settings'; export default { bullmq: { option: option, db: process.env.REDIS_MQ ?? missing } };`);
+  assert.equal(result.content, 'export default {}');
+  assert.match(result.manual.join(), /missing/);
+});
+
+test('config: import 冲突只阻止对应新增项，环境配置仍合并', () => {
+  const local = 'import { option } from "local"; export default {};';
+  const result = mergeConfig(local, `import { option } from "target"; export default { ${bullmq}, other: { value: option ?? 1 } };`);
+  const root = properties(object(result.content));
+  assert.equal(root.get('bullmq').parent.getText(), bullmq);
+  assert.equal(root.has('other'), false);
+  assert.match(result.manual.join(), /config.other:.*冲突/);
+  assert.doesNotMatch(result.content, /from "target"/);
+});
+
+test('config: 未知 defineConfig 与函数导出仍不执行且转人工', () => {
+  for (const target of [
+    `export default defineConfig({ ${bullmq} });`,
+    `export default () => ({ ${bullmq} });`,
+  ]) {
+    const local = 'export default {}';
+    const result = mergeConfig(local, target);
+    assert.equal(result.content, local);
+    assert.ok(result.manual.length);
+  }
+});
+
 test('config: 支持括号、as 和 satisfies 外壳，保留 CRLF', () => {
   const local = 'type Shape = object;\r\nexport default ({ x: { a: 1 } as const } satisfies Shape);\r\n';
   const result = mergeConfig(local, 'export default ({ x: { b: 2 }, y: 3 } as const);');
@@ -207,12 +379,13 @@ test('config: 可复用本地声明、同源 import；重复合并保持幂等',
   assert.equal(mergeConfig(result.content, target).content, result.content);
 });
 
-test('entity: 按导出类名追加完整字段，已有字段原文不变', () => {
+test('entity: 同名字段按目标更新，本地独有字段不删除', () => {
   const local = '// 自定义实体\nexport class User {\n  id: string = "local"; // 保留\n}\nexport class Other { own = true; }\n';
   const target = 'import {Column} from "orm"; import type {Value} from "types"; export class User { id: number = 2; @Column({nullable: true}) added!: Value; flag = true; } export class Other { count: number = 1; }';
   const result = mergeEntity(local, target);
   const members = fields(result.content);
-  assert.equal(members[0].getText(), 'id: string = "local";');
+  assert.equal(members[0].getText(), 'id: number = 2;');
+  assert.equal(fields(result.content, 'Other')[0].name.text, 'own');
   assert.match(members[1].getText(), /@Column\(\{nullable: true\}\) added!: Value;/);
   assert.equal(members[2].getText(), 'flag = true;');
   assert.equal(fields(result.content, 'Other').at(-1).name.text, 'count');
@@ -227,7 +400,7 @@ test('entity: 按导出类名追加完整字段，已有字段原文不变', () 
 test('entity: 无分号字段和方括号数组类型边界不会误解析', () => {
   const result = mergeEntity('export class User { value = 1}', 'export class User { value = 2; next: string[] = [] }');
   assert.equal(fields(result.content).length, 2);
-  assert.equal(fields(result.content)[0].initializer.getText(), '1');
+  assert.equal(fields(result.content)[0].initializer.getText(), '2');
 });
 
 test('entity: 支持默认及命名空间导入，只添加实际依赖', () => {
@@ -288,12 +461,13 @@ test('entity: 引用缺失时不追加字段且不留下部分 import', () => {
   }
 });
 
-test('entity: import 别名冲突和类型冲突拒绝写入，其他安全字段继续追加', () => {
+test('entity: type-only导入保留并为新增装饰器补运行时别名', () => {
   const local = 'import type {Column} from "orm"; export class User {}';
   const result = mergeEntity(local, 'import {Column} from "orm"; export class User {@Column() added = 1; safe = 2;}');
-  assert.equal(fields(result.content).length, 1);
-  assert.equal(fields(result.content)[0].name.text, 'safe');
-  assert.match(result.manual.join('\n'), /冲突/);
+  assert.equal(fields(result.content).length, 2);
+  assert.match(result.content, /Column as ColumnMeadmin/);
+  assert.match(result.content, /@ColumnMeadmin\(\)/);
+  assert.deepEqual(result.manual, []);
 });
 
 test('entity: 字段内部箭头函数作用域可解析，外部缺失引用转人工', () => {

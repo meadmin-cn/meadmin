@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { matchesGlob } from 'node:path';
 
-export type SourcePolicy = 'functions' | 'exports' | false;
+export type SourcePolicy = 'functions' | 'exports' | 'validation' | 'routes' | 'overwrite' | false;
 export type UpdateRules = { skipExisting: Record<string, boolean>; mergeSource: Record<string, SourcePolicy> };
 const builtin: UpdateRules = JSON.parse(readFileSync(new URL('../../template/update.defaults.json', import.meta.url), 'utf8'));
 export const defaults = builtin.skipExisting;
@@ -46,6 +46,6 @@ export function validateConfig(value: unknown): UpdateRules {
     }
     return rules;
   };
-  return { skipExisting: check('skipExisting', [true, false]) as UpdateRules['skipExisting'], mergeSource: check('mergeSource', ['functions', 'exports', false]) as UpdateRules['mergeSource'] };
+  return { skipExisting: check('skipExisting', [true, false]) as UpdateRules['skipExisting'], mergeSource: check('mergeSource', ['functions', 'exports', 'validation', 'routes', 'overwrite', false]) as UpdateRules['mergeSource'] };
 }
 export const validateRules = (value: unknown) => validateConfig(value).skipExisting;

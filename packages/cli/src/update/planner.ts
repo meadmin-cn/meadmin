@@ -2,7 +2,8 @@ import { createHash } from 'node:crypto';
 import { existsSync, lstatSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { mergeConfig, mergeEntity, mergePackage } from './merge.js';
-import { excluded, skipExisting, sourceMode } from './rules.js';
+import { mergeProjectConfig, projectConfigKind } from './project-config.js';
+import { excluded, skipExisting, sourceMode, type SourcePolicy } from './rules.js';
 import { isIntegrationSource, mergeSource } from './source.js';
 import { generateUpdateSql } from './sql.js';
 
@@ -39,7 +40,7 @@ function templateFiles(root: string): Map<string, Buffer> {
   visit(root);
   return files;
 }
-export function makePlan(root: string, oldTemplate: string, targetTemplate: string, targetVersion: string, rules: Record<string, boolean>, sourceRules: Record<string, 'functions' | 'exports' | false> = {}): Plan {
+export function makePlan(root: string, oldTemplate: string, targetTemplate: string, targetVersion: string, rules: Record<string, boolean>, sourceRules: Record<string, SourcePolicy> = {}): Plan {
   const base = templateFiles(oldTemplate),
     target = templateFiles(targetTemplate);
   const plan: Plan = { changes: [], skipped: [], manual: [], sqlTables: [] };
@@ -59,37 +60,31 @@ export function makePlan(root: string, oldTemplate: string, targetTemplate: stri
       plan.skipped.push(`${path}: 存在时跳过`);
       continue;
     }
-    const dependencyManifest = path === 'package.json' || path.endsWith('/package.json');
-    const gitignore = path === '.gitignore' || path.endsWith('/.gitignore');
-    if (local?.equals(content) || (old?.equals(content) && local && !dependencyManifest && !gitignore)) continue;
+    const explicitMode = sourceMode(path, sourceRules);
+    // 只比较本地与目标内容；旧模板用于冲突提示，不用于跳过普通文件。
+    if (local?.equals(content) && projectConfigKind(path) !== 'env') continue;
+    if (projectConfigKind(path)) {
+      const kind = projectConfigKind(path);
+      const initial = kind === 'yaml' || kind === 'json' ? '{}\n' : '';
+      const result = mergeProjectConfig(path, local?.toString('utf8') ?? initial, content.toString('utf8'));
+      plan.manual.push(...result.manual.map(message => `${path}: ${message}`));
+      if (kind === 'env' && !local && !result.manual.length) add(path, content, 'create');
+      else if (local || result.content !== initial) add(path, Buffer.from(result.content), 'merge', local, !!local && (!old || !old.equals(local)));
+      continue;
+    }
     if (!local) {
       add(path, content, 'create');
       continue;
     }
-    if (gitignore) {
-      const text = local.toString('utf8');
-      const seen = new Set(text.split(/\r?\n/));
-      const additions = content
-        .toString('utf8')
-        .split(/\r?\n/)
-        .filter((line) => {
-          if (!line.trim() || seen.has(line)) return false;
-          seen.add(line);
-          return true;
-        });
-      if (additions.length) {
-        const newline = text.includes('\r\n') ? '\r\n' : '\n';
-        add(path, Buffer.from(text + (text && !text.endsWith('\n') ? newline : '') + additions.join(newline) + newline), 'merge', local);
-        plan.manual.push(`${path}: 已追加缺失忽略规则，请检查 ! 否定规则的顺序语义`);
-      }
-      continue;
-    }
     const conflict = !old || !old.equals(local);
-    const explicitMode = sourceMode(path, sourceRules);
     const sourceFile = /\.[cm]?[jt]s$/.test(path);
     const builtinMerge = path === 'package.json' || path.endsWith('/package.json') || /(^|\/)entities\//.test(path) || /(^|\/)src\/config\//.test(path);
     // 显式 false 关闭自动识别；默认不扩大到有运行时初始化逻辑的入口。
-    const mode = sourceFile && !builtinMerge ? (explicitMode === undefined && isIntegrationSource(content.toString('utf8')) ? 'exports' : explicitMode) : undefined;
+    const mode = sourceFile && (!builtinMerge || explicitMode === 'routes') ? (explicitMode === undefined && isIntegrationSource(content.toString('utf8')) ? 'exports' : explicitMode) : undefined;
+    if (mode === 'overwrite') {
+      add(path, content, 'overwrite', local, conflict);
+      continue;
+    }
     if (mode) {
       const result = mergeSource(local.toString('utf8'), content.toString('utf8'), old?.toString('utf8'), mode, path);
       plan.manual.push(...result.manual.map((message) => `${path}: ${message}`));
@@ -105,8 +100,6 @@ export function makePlan(root: string, oldTemplate: string, targetTemplate: stri
       } catch (error) {
         plan.manual.push(`${path}: 合并失败，需人工处理：${String(error)}`);
       }
-    } else if (/(^|\/)(vite\.config\.[^/]+|eslint\.config\.[^/]+|tsconfig[^/]*\.json|pnpm-workspace\.yaml)$/.test(path)) {
-      plan.manual.push(`${path}: 工程配置变化，保留本地，需人工对照目标模板`);
     } else add(path, content, 'overwrite', local, conflict);
   }
   for (const path of base.keys()) if (!target.has(path) && !excluded(path)) plan.manual.push(`${path}: 目标模板已移除，本地不会删除`);

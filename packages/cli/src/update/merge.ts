@@ -1,4 +1,5 @@
 import ts from 'typescript';
+import { applyEdits, getNodeValue, modify, parseTree, type Node as JsonNode, type ParseError } from 'jsonc-parser';
 
 export type MergeResult = { content: string; manual: string[] };
 
@@ -68,6 +69,44 @@ function record(value: unknown): value is Record<string, unknown> {
 
 function ordinaryVersion(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0 && /^[\d\s.vxX*~^<>=|+-]+(?:[a-zA-Z0-9.+\s~^<>=|-]*)$/.test(value) && /^(?:[~^<>=\s]*v?(?:\d|[xX*]))/.test(value);
+}
+
+// 通过语法树识别键，不将配置展开到普通对象，避免原型键和重复键歧义。
+export function mergeJsonConfig(local: string, target: string, rootKeys?: readonly string[]): MergeResult {
+  const manual: string[] = [];
+  const read = (text: string) => {
+    const errors: ParseError[] = [];
+    const node = parseTree(text, errors, { allowTrailingComma: true });
+    const safe = (value: JsonNode): boolean => {
+      if (value.type === 'object') {
+        const seen = new Set<string>();
+        for (const property of value.children ?? []) {
+          const name = property.children![0].value as string;
+          if (['__proto__', 'constructor', 'prototype'].includes(name) || seen.has(name)) return false;
+          seen.add(name);
+        }
+      }
+      return (value.children ?? []).every(safe);
+    };
+    return !errors.length && node?.type === 'object' && safe(node) ? node : undefined;
+  };
+  const current = read(local), next = read(target);
+  if (!current || !next) return { content: local, manual: ['JSON/JSONC: 语法、根对象、重复键或不安全键需人工处理'] };
+  let content = local;
+  const merge = (left: JsonNode, right: JsonNode, path: string[]) => {
+    const entries = new Map((left.children ?? []).map(property => [property.children![0].value as string, property.children![1]]));
+    for (const property of right.children ?? []) {
+      const name = property.children![0].value as string;
+      if (!path.length && rootKeys && !rootKeys.includes(name)) continue;
+      const value = property.children![1], existing = entries.get(name), location = [...path, name];
+      if (!existing) {
+        content = applyEdits(content, modify(content, location, getNodeValue(value), {}));
+      } else if (existing.type === 'object' && value.type === 'object') merge(existing, value, location);
+      else if (existing.type !== value.type) manual.push(`${location.join('.')}: 结构变化，保留本地值，需人工确认`);
+    }
+  };
+  merge(current, next, []);
+  return { content, manual };
 }
 
 export function mergePackage(local: string, target: string, base?: string): MergeResult {
@@ -145,7 +184,8 @@ export function mergePackage(local: string, target: string, base?: string): Merg
     }
   }
   appendJson(root!, newGroups);
-  return { content: apply(local, edits), manual };
+  const config = mergeJsonConfig(apply(local, edits), target, ['pnpm', 'overrides', 'resolutions', 'engines', 'packageManager', 'workspaces']);
+  return { content: config.content, manual: [...manual, ...config.manual] };
 }
 
 function indentAt(text: string, position: number): string {
@@ -165,7 +205,7 @@ function appendMembers(text: string, node: ts.ObjectLiteralExpression | ts.Class
   if (ts.isObjectLiteralExpression(node) && last && !node.properties.hasTrailingComma) {
     edits.push({ start: last.end, end: last.end, text: ',' });
   }
-  if (ts.isClassDeclaration(node) && last && ts.isPropertyDeclaration(last) && !text.slice(last.getStart(), last.end).trimEnd().endsWith(';')) {
+  if (ts.isClassDeclaration(node) && last && ts.isPropertyDeclaration(last) && !text.slice(last.getStart(), last.end).trimEnd().endsWith(';') && !edits.some(edit => edit.start === last.getStart() && edit.end === last.end && edit.text.trimEnd().endsWith(';'))) {
     edits.push({ start: last.end, end: last.end, text: ';' });
   }
   const separator = ts.isObjectLiteralExpression(node) ? `,${newline}` : newline;
@@ -211,14 +251,16 @@ function isReference(node: ts.Identifier): boolean {
   return true;
 }
 
-function referenceMerger(local: Parsed, target: Parsed, manual: string[]) {
+function referenceMerger(local: Parsed, target: Parsed, manual: string[], aliasConflicts = false, allowEnvironmentReferences = false) {
   const localImports = imports(local.file);
   const targetImports = imports(target.file);
   const localBindings = topBindings(local);
   const pending = new Map<string, ImportBinding>();
+  const rendered = new Map<ts.Node, string>();
   function safe(node: ts.Node, path: string, destination: ts.Node): boolean {
     const scope = new Map(local.checker.getSymbolsInScope(destination, ts.SymbolFlags.Value | ts.SymbolFlags.Type | ts.SymbolFlags.Namespace | ts.SymbolFlags.Alias).map((symbol) => [symbol.name, symbol]));
     const needed = new Map<string, ImportBinding>();
+    const renames: Edit[] = [];
     const problems = new Set<string>();
     function visit(child: ts.Node): void {
       if (child.kind === ts.SyntaxKind.ThisKeyword || child.kind === ts.SyntaxKind.SuperKeyword || ts.isPrivateIdentifier(child)) {
@@ -236,7 +278,19 @@ function referenceMerger(local: Parsed, target: Parsed, manual: string[]) {
             if (shadow && shadow !== localBindings.get(binding.name)) {
               problems.add(`import ${binding.name} 被本地作用域声明遮蔽`);
             } else if (existing && (existing.module !== binding.module || existing.imported !== binding.imported || (existing.typeOnly && !binding.typeOnly))) {
-              problems.add(`import ${binding.name} 命名或类型冲突`);
+              if (!aliasConflicts || !ts.isPropertyDeclaration(node) || binding.declaration.attributes) {
+                problems.add(`import ${binding.name} 命名或类型冲突`);
+              } else {
+                const compatible = [...localImports.values(), ...pending.values(), ...needed.values()].find(candidate => candidate.module === binding.module && candidate.imported === binding.imported && (!candidate.typeOnly || binding.typeOnly) && (!scope.has(candidate.name) || scope.get(candidate.name) === localBindings.get(candidate.name)));
+                let alias = compatible?.name;
+                if (!alias) {
+                  let suffix = 1;
+                  alias = `${binding.name}Meadmin`;
+                  while (localBindings.has(alias) || targetImports.has(alias) || scope.has(alias) || pending.has(alias) || needed.has(alias) || node.getText().includes(alias)) alias = `${binding.name}Meadmin${suffix++}`;
+                  needed.set(alias, { ...binding, name: alias });
+                }
+                renames.push({ start: child.getStart() - node.getStart(), end: child.end - node.getStart(), text: ts.isShorthandPropertyAssignment(child.parent) ? `${child.text}: ${alias}` : alias });
+              }
             } else if (!existing && localBindings.has(binding.name)) {
               problems.add(`import ${binding.name} 与本地声明冲突`);
             } else if (!existing && binding.declaration.attributes) {
@@ -244,12 +298,16 @@ function referenceMerger(local: Parsed, target: Parsed, manual: string[]) {
             } else if (!existing) needed.set(binding.name, binding);
           } else {
             const existing = localBindings.get(child.text);
+            // 仅允许未被声明或遮蔽的 process.env.KEY，不放行其他 process API。
+            const environmentReference = allowEnvironmentReferences && child.text === 'process' && !declarations.length && !scope.has(child.text) && !pending.has(child.text) && !needed.has(child.text)
+              && ts.isPropertyAccessExpression(child.parent) && child.parent.expression === child && child.parent.name.text === 'env'
+              && ts.isPropertyAccessExpression(child.parent.parent) && child.parent.parent.expression === child.parent;
             if (scope.get(child.text) && scope.get(child.text) !== existing) {
               problems.add(`引用 ${child.text} 被本地作用域声明遮蔽`);
             } else if (declarations.length && existing && !localImports.has(child.text) && existing.flags & symbol!.flags & (ts.SymbolFlags.Value | ts.SymbolFlags.Type | ts.SymbolFlags.Namespace)) {
               const targetParameter = declarations.find(ts.isTypeParameterDeclaration);
               if (targetParameter) problems.add(`类型参数 ${child.text} 的作用域需人工确认`);
-            } else if (declarations.length || !globals.has(child.text)) {
+            } else if (declarations.length || (!globals.has(child.text) && !environmentReference)) {
               problems.add(`引用 ${child.text} 在本地缺失或无法解析`);
             }
           }
@@ -263,6 +321,7 @@ function referenceMerger(local: Parsed, target: Parsed, manual: string[]) {
       return false;
     }
     for (const [name, binding] of needed) pending.set(name, binding);
+    rendered.set(node, apply(node.getText(target.file), renames));
     return true;
   }
   function finish(text: string, edits: Edit[]): void {
@@ -276,7 +335,7 @@ function referenceMerger(local: Parsed, target: Parsed, manual: string[]) {
     const position = last ? last.end : text.startsWith('#!') ? (text.indexOf('\n') < 0 ? text.length : text.indexOf('\n') + 1) : 0;
     edits.push({ start: position, end: position, text: `${position ? newline : ''}${lines.join(newline)}${newline}` });
   }
-  return { safe, finish };
+  return { safe, finish, text: (node: ts.Node) => rendered.get(node) ?? node.getText(target.file) };
 }
 
 function defaultObject(file: ts.SourceFile): ts.ObjectLiteralExpression | undefined {
@@ -295,6 +354,7 @@ function staticValue(node: ts.Expression): boolean {
   if (ts.isArrayLiteralExpression(node)) return node.elements.every((element) => !ts.isSpreadElement(element) && staticValue(element));
   if (ts.isIdentifier(node) || ts.isLiteralExpression(node) || [ts.SyntaxKind.TrueKeyword, ts.SyntaxKind.FalseKeyword, ts.SyntaxKind.NullKeyword].includes(node.kind)) return true;
   if (ts.isPropertyAccessExpression(node)) return staticValue(node.expression);
+  if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken) return staticValue(node.left) && staticValue(node.right);
   if (ts.isPrefixUnaryExpression(node) && [ts.SyntaxKind.PlusToken, ts.SyntaxKind.MinusToken, ts.SyntaxKind.ExclamationToken, ts.SyntaxKind.TildeToken].includes(node.operator)) return staticValue(node.operand);
   return false;
 }
@@ -310,7 +370,7 @@ export function mergeConfig(local: string, target: string, base?: string): Merge
   if (!current || !next || !localObject || !targetObject) {
     return { content: local, manual: ['config: 无法解析静态 export default 对象，需人工合并'] };
   }
-  const references = referenceMerger(current, next, manual);
+  const references = referenceMerger(current, next, manual, false, true);
   function merge(left: ts.ObjectLiteralExpression, right: ts.ObjectLiteralExpression, path: string): void {
     const localProperties = objectProperties(left);
     const targetProperties = objectProperties(right);
@@ -366,7 +426,7 @@ export function mergeEntity(local: string, target: string, base?: string): Merge
   const targetClasses = exportedClasses(next.file);
   const baseClasses = previous && exportedClasses(previous.file);
   if (!targetClasses.size) manual.push('entity: 未找到具名导出 class，需人工合并');
-  const references = referenceMerger(current, next, manual);
+  const references = referenceMerger(current, next, manual, true);
   for (const [name, right] of targetClasses) {
     const left = localClasses.get(name);
     if (!left) {
@@ -406,12 +466,59 @@ export function mergeEntity(local: string, target: string, base?: string): Merge
         continue;
       }
       if (existing) {
-        if (!ts.isPropertyDeclaration(existing) || !!existing.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.StaticKeyword) !== !!member.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.StaticKeyword)) manual.push(`${path}: 与本地成员类型或静态修饰冲突，需人工合并`);
+        if (!ts.isPropertyDeclaration(existing) || !!existing.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.StaticKeyword) !== !!member.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.StaticKeyword)) {
+          manual.push(`${path}: 与本地成员类型或静态修饰冲突，需人工合并`);
+          continue;
+        }
+        // 同名字段采用目标声明（包含装饰器、类型和初始值），本地独有字段不删除。
+        if (existing.getText(current.file) === member.getText(next.file)) continue;
+        if (references.safe(member, path, left)) {
+          const text = references.text(member).replace(/;?\s*$/, ';');
+          if (text !== existing.getText(current.file)) edits.push({ start: existing.getStart(current.file), end: existing.end, text });
+        }
         continue;
       }
-      if (references.safe(member, path, left)) additions.push(member.getText(next.file).replace(/;?\s*$/, ';'));
+      if (references.safe(member, path, left)) additions.push(references.text(member).replace(/;?\s*$/, ';'));
     }
     appendMembers(local, left, additions, edits);
+  }
+  // Sequelize 关联方法通过同名 interface 声明合并扩展，不属于 class 字段。
+  const typeKey = (node: ts.ExpressionWithTypeArguments, file: ts.SourceFile) => {
+    const scanner = ts.createScanner(ts.ScriptTarget.Latest, true, ts.LanguageVariant.Standard, node.getText(file));
+    const tokens: [number, string][] = [];
+    for (let token = scanner.scan(); token !== ts.SyntaxKind.EndOfFileToken; token = scanner.scan()) {
+      tokens.push([token, token === ts.SyntaxKind.StringLiteral ? scanner.getTokenValue() : scanner.getTokenText()]);
+    }
+    return JSON.stringify(tokens);
+  };
+  const known = new Map<string, Set<string>>();
+  for (const statement of current.file.statements) {
+    if (!ts.isInterfaceDeclaration(statement)) continue;
+    const types = known.get(statement.name.text) ?? new Set<string>();
+    for (const clause of statement.heritageClauses ?? []) for (const type of clause.types) types.add(typeKey(type, current.file));
+    known.set(statement.name.text, types);
+  }
+  const interfaceAdditions: string[] = [];
+  for (const statement of next.file.statements) {
+    if (!ts.isInterfaceDeclaration(statement) || !localClasses.has(statement.name.text)) continue;
+    const name = statement.name.text;
+    const types = known.get(name) ?? new Set<string>();
+    if (!statement.modifiers?.some(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword) || statement.members.length || statement.typeParameters?.length) {
+      manual.push(`entity.${name}: 非空或泛型接口声明需人工合并，保留本地声明`);
+      continue;
+    }
+    for (const clause of statement.heritageClauses ?? []) for (const type of clause.types) {
+      const identity = typeKey(type, next.file);
+      if (types.has(identity)) continue;
+      if (!references.safe(type, `entity.${name} interface`, current.file)) continue;
+      interfaceAdditions.push(`export declare interface ${name} extends ${type.getText(next.file)} {}`);
+      types.add(identity);
+    }
+    known.set(name, types);
+  }
+  if (interfaceAdditions.length) {
+    const newline = local.includes('\r\n') ? '\r\n' : '\n';
+    edits.push({ start: local.length, end: local.length, text: newline + interfaceAdditions.join(newline) + newline });
   }
   references.finish(local, edits);
   return { content: apply(local, edits), manual };

@@ -7,24 +7,132 @@ const generate = source => generateUpdateSql(source, '1.3.7');
 const rejected = (source, reason) => {
   const result = generate(source);
   assert.deepEqual(result.tables, []);
-  assert.doesNotMatch(result.content, /^INSERT /m);
+  assert.doesNotMatch(result.content, /^(?:INSERT|LOCK TABLE) /m);
   assert.ok(result.manual.length, '拒绝时必须记录 manual');
   if (reason) assert.match(result.manual.join('\n'), reason);
   return result;
 };
 
-test('id 主键：保留批量 VALUES 原文，汇总多条 INSERT，输出事务与明确冲突目标', () => {
+test('id 主键：逐行保留 VALUES 表达式，汇总多条 INSERT，按列顺序映射判重值', () => {
   const values = "(1, 'a;(),''b'),\n  (2, '中文')";
   const result = generate(`CREATE TABLE public.demo (id bigint PRIMARY KEY, body text);
     INSERT INTO public.demo (id, body) VALUES ${values};
     INSERT INTO public.demo (body, id) VALUES ('c', 3);`);
   assert.deepEqual(result.manual, []);
   assert.deepEqual(result.tables, [{ table: 'public.demo', rows: 3, keys: ['id'] }]);
-  assert.ok(result.content.includes(`VALUES ${values}\nON CONFLICT ("id") DO NOTHING;`));
-  assert.match(result.content, /INSERT INTO "public"\."demo" \("body", "id"\) VALUES \('c', 3\)/);
-  assert.equal((result.content.match(/ON CONFLICT \("id"\) DO NOTHING;/g) ?? []).length, 2);
+  assert.ok(result.content.includes(`INSERT INTO "public"."demo" ("id", "body") SELECT 1, 'a;(),''b'\nWHERE NOT EXISTS (SELECT 1 FROM "public"."demo" AS existing WHERE existing."id" IS NOT DISTINCT FROM 1);`));
+  assert.ok(result.content.includes(`INSERT INTO "public"."demo" ("id", "body") SELECT 2, '中文'\nWHERE NOT EXISTS (SELECT 1 FROM "public"."demo" AS existing WHERE existing."id" IS NOT DISTINCT FROM 2);`));
+  assert.ok(result.content.includes(`INSERT INTO "public"."demo" ("body", "id") SELECT 'c', 3\nWHERE NOT EXISTS (SELECT 1 FROM "public"."demo" AS existing WHERE existing."id" IS NOT DISTINCT FROM 3);`));
+  assert.equal((result.content.match(/^INSERT /gm) ?? []).length, 3);
+  assert.equal((result.content.match(/^LOCK TABLE "public"\."demo" IN SHARE ROW EXCLUSIVE MODE;/gm) ?? []).length, 1);
+  assert.doesNotMatch(result.content, /ON CONFLICT|\bVALUES\b/);
   assert.match(result.content, /\nBEGIN;\n/);
   assert.ok(result.content.endsWith('\nCOMMIT;\n'));
+});
+
+test('目标库无唯一约束：admin_role 仅按模板复合主键生成补齐 SQL，不输出 DDL', () => {
+  const result = generate(`CREATE TABLE public.admin_role (
+    system_admin_id uuid, system_role_id uuid, PRIMARY KEY (system_admin_id, system_role_id));
+    INSERT INTO public.admin_role (system_role_id, system_admin_id)
+    VALUES ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000001');`);
+  assert.deepEqual(result.manual, []);
+  assert.deepEqual(result.tables, [{ table: 'public.admin_role', rows: 1, keys: ['system_admin_id', 'system_role_id'] }]);
+  assert.equal(result.content.slice(result.content.indexOf('BEGIN;')), `BEGIN;
+
+LOCK TABLE "public"."admin_role" IN SHARE ROW EXCLUSIVE MODE;
+
+INSERT INTO "public"."admin_role" ("system_role_id", "system_admin_id") SELECT '00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000001'
+WHERE NOT EXISTS (SELECT 1 FROM "public"."admin_role" AS existing WHERE existing."system_admin_id" IS NOT DISTINCT FROM '00000000-0000-0000-0000-000000000001' AND existing."system_role_id" IS NOT DISTINCT FROM '00000000-0000-0000-0000-000000000002');
+
+COMMIT;
+`);
+  assert.doesNotMatch(result.content, /ON CONFLICT|^(?:CREATE|ALTER|DROP)\b/m);
+});
+
+for (const composite of [false, true]) {
+  test(`${composite ? '复合' : '单 id'}主键：同批源重复、跨 INSERT 重复及重跑均逐行查询目标表`, () => {
+    const definition = composite ? 'a int, b int, body text, PRIMARY KEY (a, b)' : 'id int PRIMARY KEY, body text';
+    const columns = composite ? 'b, body, a' : 'body, id';
+    const first = composite ? "2, 'first', 1" : "'first', 1";
+    const later = composite ? "2, 'later', 1" : "'later', 1";
+    const predicate = composite ? 'existing."a" IS NOT DISTINCT FROM 1 AND existing."b" IS NOT DISTINCT FROM 2' : 'existing."id" IS NOT DISTINCT FROM 1';
+    const source = `CREATE TABLE t (${definition});
+      INSERT INTO t (${columns}) VALUES (${first}), (${later});
+      INSERT INTO t (${columns}) VALUES (${later});`;
+    const result = generate(source);
+    const statements = result.content.split('\n\n').filter(sql => sql.startsWith('INSERT '));
+    assert.deepEqual(result.manual, []);
+    assert.equal(result.tables[0].rows, 3, '汇总统计源行数，不宣称实际插入行数');
+    assert.equal(statements.length, 3, '源重复行必须拆成独立语句，顺序执行时后行可见前行');
+    for (const statement of statements) {
+      assert.ok(statement.endsWith(`WHERE NOT EXISTS (SELECT 1 FROM "t" AS existing WHERE ${predicate});`));
+    }
+    assert.ok(statements[0].includes(`SELECT ${first}\n`));
+    assert.ok(statements[1].includes(`SELECT ${later}\n`));
+    assert.equal(statements[1], statements[2]);
+    assert.equal((result.content.match(/^LOCK TABLE /gm) ?? []).length, 1);
+    assert.equal(generate(source).content, result.content, '重跑生成同一脚本，每一行仍按目标现有数据判重');
+    assert.doesNotMatch(result.content, /ON CONFLICT|\bVALUES\b|UNION|DISTINCT ON/);
+  });
+}
+
+test('uuid/date 裸字符串直接位于 INSERT SELECT，保留目标类型上下文和显式转换', () => {
+  const uuid = "'00000000-0000-0000-0000-000000000001'";
+  const result = generate(`CREATE TABLE app.typed (id uuid PRIMARY KEY, day date, stamp timestamp, amount numeric);
+    INSERT INTO app.typed (day, id, stamp, amount) VALUES ('2026-09-18', ${uuid}, '2026-09-18 10:20:30', '12.50');
+    INSERT INTO app.typed (id, day) VALUES (${uuid}::uuid, '2026-09-19'::date);`);
+  assert.deepEqual(result.manual, []);
+  assert.ok(result.content.includes(`INSERT INTO "app"."typed" ("day", "id", "stamp", "amount") SELECT '2026-09-18', ${uuid}, '2026-09-18 10:20:30', '12.50'\nWHERE NOT EXISTS`));
+  assert.ok(result.content.includes(`existing."id" IS NOT DISTINCT FROM ${uuid});`));
+  assert.ok(result.content.includes(`SELECT ${uuid}::uuid, '2026-09-19'::date\nWHERE NOT EXISTS`));
+  assert.ok(result.content.includes(`existing."id" IS NOT DISTINCT FROM ${uuid}::uuid);`));
+  assert.doesNotMatch(result.content, /\bVALUES\b|::text|FROM\s*\(/);
+});
+
+test('键的复杂字符串及转换内部注释原样复用，尾部行注释不会吞掉判重 SQL', () => {
+  const expressions = [
+    "'O''Reilly; -- /* (,) */'",
+    String.raw`E'it\'s; \\ path'`,
+    `$tag$); DROP TABLE x; ' " -- /* $other$ $tag$`,
+    '$$换行\n;(),$$',
+    "'key' -- 转换前注释\n :: /* 类型注释 */ pg_catalog.text",
+  ];
+  const result = generate(`CREATE TABLE app.keys (code text PRIMARY KEY);
+    INSERT INTO app.keys (code) VALUES ${expressions.map(expression => `(${expression} -- 尾部注释\n)`).join(', ')};`);
+  assert.deepEqual(result.manual, []);
+  assert.equal(result.tables[0].rows, expressions.length);
+  for (const expression of expressions) {
+    assert.ok(result.content.includes(`SELECT ${expression}\nWHERE NOT EXISTS (SELECT 1 FROM "app"."keys" AS existing WHERE existing."code" IS NOT DISTINCT FROM ${expression});`));
+  }
+  assert.doesNotMatch(result.content, /尾部注释/);
+});
+
+test('事务内各表首次有效插入前仅加一次锁，拒绝语句不输出锁或部分行', () => {
+  const result = generate(`CREATE TABLE first.t (id int PRIMARY KEY);
+    CREATE TABLE second.t (id int PRIMARY KEY);
+    CREATE TABLE rejected (id int PRIMARY KEY);
+    INSERT INTO first.t (id) VALUES (90), (NULL);
+    INSERT INTO rejected (id) VALUES (91), (dangerous());
+    INSERT INTO first.t (id) VALUES (1);
+    INSERT INTO second.t (id) VALUES (2);
+    INSERT INTO first.t (id) VALUES (3);
+    INSERT INTO second.t (id) VALUES (4), (NULL);`);
+  assert.equal(result.manual.length, 3);
+  assert.deepEqual(result.tables, [
+    { table: 'first.t', rows: 2, keys: ['id'] },
+    { table: 'second.t', rows: 1, keys: ['id'] },
+  ]);
+  assert.deepEqual(result.content.match(/^LOCK TABLE .*$/gm), [
+    'LOCK TABLE "first"."t" IN SHARE ROW EXCLUSIVE MODE;',
+    'LOCK TABLE "second"."t" IN SHARE ROW EXCLUSIVE MODE;',
+  ]);
+  for (const schema of ['first', 'second']) {
+    const lock = result.content.indexOf(`LOCK TABLE "${schema}"."t"`);
+    assert.ok(lock > result.content.indexOf('\nBEGIN;'));
+    assert.ok(lock < result.content.indexOf(`INSERT INTO "${schema}"."t"`));
+    assert.ok(lock < result.content.indexOf('\nCOMMIT;'));
+  }
+  assert.doesNotMatch(result.content, /rejected|dangerous|SELECT (?:90|91|4)\b/);
 });
 
 test('词法扫描：单双引号转义、E 字符串、嵌套注释、dollar quoting 和分隔符', () => {
@@ -40,7 +148,17 @@ test('词法扫描：单双引号转义、E 字符串、嵌套注释、dollar qu
     INSERT /* 注释 */ INTO "S;()"."T""x" ("I""d", "V,;") VALUES ${values}; -- 最后注释`);
   assert.deepEqual(result.manual, []);
   assert.deepEqual(result.tables, [{ table: '"S;()"."T""x"', rows: 5, keys: ['I"d'] }]);
-  assert.ok(result.content.includes(`VALUES ${values}\nON CONFLICT ("I""d") DO NOTHING;`));
+  for (const [index, expression] of [
+    "'O''Reilly; -- /* (,) */'",
+    String.raw`E'it\'s; \\ path'`,
+    `$tag$); DROP TABLE x; ' " -- /* $other$ $tag$`,
+    '$$换行\n;(),$$',
+    'NULL',
+  ].entries()) {
+    assert.ok(result.content.includes(`INSERT INTO "S;()"."T""x" ("I""d", "V,;") SELECT ${index + 1}, ${expression}\nWHERE NOT EXISTS (SELECT 1 FROM "S;()"."T""x" AS existing WHERE existing."I""d" IS NOT DISTINCT FROM ${index + 1});`));
+  }
+  assert.equal((result.content.match(/^LOCK TABLE "S;\(\)"\."T""x" IN SHARE ROW EXCLUSIVE MODE;/gm) ?? []).length, 1);
+  assert.doesNotMatch(result.content, /尾部注释|外层|内层/);
 });
 
 test('无 id：内联与 ALTER TABLE 复合主键，包括约束出现在 INSERT 之后', () => {
@@ -52,7 +170,8 @@ test('无 id：内联与 ALTER TABLE 复合主键，包括约束出现在 INSERT
     const result = generate(`${definition} INSERT INTO app.link (b, a) VALUES ('B', 'A'), ('D', 'C'); ${alter}`);
     assert.deepEqual(result.manual, []);
     assert.deepEqual(result.tables, [{ table: 'app.link', rows: 2, keys: ['a', 'b'] }]);
-    assert.match(result.content, /ON CONFLICT \("a", "b"\) DO NOTHING;/);
+    assert.match(result.content, /existing\."a" IS NOT DISTINCT FROM 'A' AND existing\."b" IS NOT DISTINCT FROM 'B'\);/);
+    assert.match(result.content, /existing\."a" IS NOT DISTINCT FROM 'C' AND existing\."b" IS NOT DISTINCT FROM 'D'\);/);
   }
 });
 
@@ -95,7 +214,7 @@ test('id 主键优先于普通唯一索引和可空 UNIQUE，缺主键值不回�
     const result = generate(`${definition} INSERT INTO t (id, code) VALUES (1, 'a');`);
     assert.deepEqual(result.manual, [], definition);
     assert.deepEqual(result.tables, [{ table: 't', rows: 1, keys: ['id'] }]);
-    assert.match(result.content, /ON CONFLICT \("id"\) DO NOTHING;/);
+    assert.match(result.content, /WHERE NOT EXISTS \(SELECT 1 FROM "t" AS existing WHERE existing\."id" IS NOT DISTINCT FROM 1\);/);
     rejected(`${definition} INSERT INTO t (code) VALUES ('a');`, /缺少判重键列/);
   }
 });
@@ -106,7 +225,7 @@ test('复合主键优先于 id 唯一键和其他唯一索引，保留全部主�
     INSERT INTO t (id, a, b, code) VALUES (1, 2, 3, NULL);`);
   assert.deepEqual(result.manual, []);
   assert.deepEqual(result.tables, [{ table: 't', rows: 1, keys: ['a', 'b'] }]);
-  assert.match(result.content, /ON CONFLICT \("a", "b"\) DO NOTHING;/);
+  assert.match(result.content, /WHERE NOT EXISTS \(SELECT 1 FROM "t" AS existing WHERE existing\."a" IS NOT DISTINCT FROM 2 AND existing\."b" IS NOT DISTINCT FROM 3\);/);
 });
 
 test('无主键时多个不同唯一候选键、无键、仅有名为 id 的列均转人工', () => {
@@ -126,7 +245,14 @@ test('可空唯一键与 NULL 键值拒绝；非键 NULL 正常保留', () => {
   for (const value of ['NULL', 'NULL::integer', 'NULL /* x */']) {
     rejected(`CREATE TABLE t (id int PRIMARY KEY); INSERT INTO t (id) VALUES (1), (${value});`, /NULL/);
   }
-  assert.deepEqual(generate('CREATE TABLE t (id int PRIMARY KEY, body text); INSERT INTO t (id, body) VALUES (1, NULL);').manual, []);
+  for (const value of ['NULL', 'NULL::integer', 'NULL /* x */']) {
+    for (const row of [`${value}, 2`, `1, ${value}`]) {
+      rejected(`CREATE TABLE t (a int, b int, PRIMARY KEY (a, b)); INSERT INTO t (b, a) VALUES (2, 1), (${row});`, /NULL/);
+    }
+  }
+  const result = generate('CREATE TABLE t (id int PRIMARY KEY, body text); INSERT INTO t (id, body) VALUES (1, NULL);');
+  assert.deepEqual(result.manual, []);
+  assert.match(result.content, /SELECT 1, NULL\nWHERE NOT EXISTS/);
 });
 
 test('复杂唯一索引保留报告：有效主键继续生成，无主键时阻断', () => {
@@ -198,7 +324,9 @@ test('支持白名单数字、布尔、E 字符串及内建标量类型转换', 
   const result = generate(`CREATE TABLE t (id int PRIMARY KEY, n numeric(10,2), enabled boolean, body jsonb);
     INSERT INTO t (id,n,enabled,body) VALUES ${values};`);
   assert.deepEqual(result.manual, []);
-  assert.ok(result.content.includes(values));
+  assert.ok(result.content.includes(`SELECT 1, -1.25e+2, TRUE, '{"a": [1,2]}'::jsonb\nWHERE NOT EXISTS`));
+  assert.ok(result.content.includes(`SELECT +2, .5, false, 'abc'::pg_catalog.text\nWHERE NOT EXISTS`));
+  assert.match(result.content, /existing\."id" IS NOT DISTINCT FROM \+2\);/);
 });
 
 test('未知列、重复列、缺键、值数错误与非法尾部不能部分输出', () => {
@@ -232,7 +360,8 @@ INSERT INTO t (id) VALUES (95);
   const result = generate(source);
   assert.deepEqual(result.tables, [{ table: 't', rows: 1, keys: ['id'] }]);
   assert.equal((result.content.match(/^INSERT /gm) ?? []).length, 1);
-  assert.doesNotMatch(result.content, /\b(?:CREATE|DROP|UPDATE|DELETE|COPY|SELECT|COMMENT|DO \$\$)\b/);
+  assert.doesNotMatch(result.content, /\b(?:CREATE|DROP|UPDATE|DELETE|COPY|COMMENT|DO \$\$)\b/);
+  assert.doesNotMatch(result.content, /setval|9[0-5]/);
   for (const command of ['UPDATE', 'DELETE', 'SELECT', 'CREATE', 'DO', 'COPY', 'DROP']) {
     assert.ok(result.manual.some(message => message.includes(`非 INSERT 语句 ${command}`)), command);
   }
@@ -364,6 +493,9 @@ test('SQL 头按顺序提示备份、编译、同步、比较执行和手动修�
   assert.match(header, /pnpm exec meadmin sync '\*'/);
   assert.match(header, /谨慎比较 update\.sql 和 manual 清单，确认后再手动执行 update\.sql/);
   assert.match(header, /其他唯一冲突由数据库抛错/);
+  assert.match(header, /实际库没有对应 PRIMARY KEY \/ UNIQUE 约束也可补齐数据，不输出 DDL/);
+  assert.match(header, /缺表或字段时仍须先/);
+  assert.match(header, /SHARE ROW EXCLUSIVE 锁.*持有至事务结束.*短暂阻塞写入.*谨慎比较执行/);
   assert.match(header, /数据更新后，手动修复菜单、组织、角色及其关联与权限/);
   const steps = ['先备份', "sync '*'", '谨慎比较', '数据更新后'].map(text => header.indexOf(text));
   assert.deepEqual(steps, [...steps].sort((a, b) => a - b));
@@ -403,7 +535,8 @@ test('真实 meadmin.sql：id 和复合主键保留，普通/partial 唯一索�
     assert.ok(summaries.get(name).rows > 0, name);
     const insert = result.content.split('\n\n').find(sql => sql.startsWith(`INSERT INTO "${name}" (`));
     assert.ok(insert, `${name} 必须生成 INSERT`);
-    assert.match(insert, /\nON CONFLICT \("id"\) DO NOTHING;$/);
+    assert.ok(insert.includes(`\nWHERE NOT EXISTS (SELECT 1 FROM "${name}" AS existing WHERE existing."id" IS NOT DISTINCT FROM `));
+    assert.ok(insert.endsWith(');'));
     assert.ok(!result.manual.some(message => message.includes(`${name}：整条 INSERT 转人工`)), name);
   }
   for (const name of ['example_demo', 'system_admin', 'user']) {
@@ -412,7 +545,9 @@ test('真实 meadmin.sql：id 和复合主键保留，普通/partial 唯一索�
   assert.deepEqual(summaries.get('admin_role')?.keys, ['system_admin_id', 'system_role_id']);
   assert.ok(!result.manual.some(message => message.includes('admin_role：整条 INSERT 转人工')));
   assert.doesNotMatch(result.content, /^(?:CREATE|ALTER|COMMENT|SELECT|COPY|UPDATE|DELETE|DROP)\b/m);
-  assert.equal((result.content.match(/^INSERT /gm) ?? []).length, result.tables.length);
+  assert.equal((result.content.match(/^INSERT /gm) ?? []).length, result.tables.reduce((sum, table) => sum + table.rows, 0));
+  assert.equal((result.content.match(/^LOCK TABLE /gm) ?? []).length, result.tables.length);
+  assert.doesNotMatch(result.content, /ON CONFLICT|\bVALUES\b/);
   for (const line of source.split('\n').filter(line => line.startsWith('INSERT INTO '))) {
     const name = /^INSERT INTO "([^"]+)"/.exec(line)[1];
     assert.ok(summaries.has(name) || result.manual.some(message => message.includes(`${name}：整条 INSERT 转人工`)), `${name} 不可静默漏掉`);

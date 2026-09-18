@@ -1,6 +1,6 @@
 import type { Command } from 'commander';
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync } from 'node:fs';
+import { copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, join, resolve } from 'node:path';
 import { stdin, stdout } from 'node:process';
@@ -8,7 +8,7 @@ import { createInterface } from 'node:readline/promises';
 import { applyPlan, rollback, saveRecord, validBackupId, type UpgradeRecord } from '../update/backup.js';
 import { makePlan } from '../update/planner.js';
 import { validateConfig } from '../update/rules.js';
-import { compareVersions, currentVersion, downloadTemplate, registryManifest, selectVersion } from '../update/template.js';
+import { currentVersion, downloadTemplate, registryManifest, selectVersion } from '../update/template.js';
 import { Log } from '../utils/log.js';
 
 async function confirm(message: string): Promise<boolean> {
@@ -31,6 +31,27 @@ export const databaseReminder = `
 文件回滚不回滚数据库。新增授权关联也可能影响已有角色权限。
 升级历史和备份存放在 node_modules/.meadmin；清理 node_modules 前请另行备份，否则无法回滚。
 `;
+function readHistory(root: string) {
+  const directory = join(root, 'node_modules/.meadmin/updates');
+  for (const part of ['node_modules', 'node_modules/.meadmin', 'node_modules/.meadmin/updates']) {
+    const location = join(root, part);
+    if (!existsSync(location)) return { directory, entries: [] };
+    if (lstatSync(location).isSymbolicLink() || !lstatSync(location).isDirectory()) throw new Error('升级历史目录不安全');
+  }
+  const entries = readdirSync(directory, { withFileTypes: true }).filter(entry => entry.isDirectory() && validBackupId(entry.name)).map(entry => {
+    const file = join(directory, entry.name, 'record.json');
+    let from = '未知', to = '未知', phase = '记录缺失或损坏', installation = '未知';
+    try {
+      if (existsSync(file) && !lstatSync(file).isSymbolicLink()) {
+        const record = JSON.parse(readFileSync(file, 'utf8')) as UpgradeRecord;
+        from = record.from ?? from; to = record.to ?? to; phase = record.phase ?? phase; installation = record.installation ?? installation;
+      }
+    } catch { /* 单个损坏记录只展示警告，不阻止新的升级。 */ }
+    return { id: entry.name, from, to, phase, installation };
+  });
+  return { directory, entries };
+}
+
 export function updateInit(program: Command) {
   program
     .command('update')
@@ -39,11 +60,24 @@ export function updateInit(program: Command) {
     .option('--config <path>', '自定义跳过规则文件')
     .option('--registry <url>', 'npm registry 地址')
     .option('--dry-run', '仅预览，不写入项目')
+    .option('--history', '列出历史备份目录、版本和恢复命令，不执行升级')
     .option('--rollback <id>', '恢复升级批次的文件（不恢复数据库）')
-    .action(async (options: { version?: string; config?: string; registry?: string; dryRun?: boolean; rollback?: string }) => {
+    .action(async (options: { version?: string; config?: string; registry?: string; dryRun?: boolean; rollback?: string; history?: boolean }) => {
       try {
         const root = process.cwd();
         if (!existsSync(join(root, 'package.json'))) throw new Error('请在目标项目根目录运行');
+        if (options.history) {
+          if (options.rollback || options.version || options.config || options.registry || options.dryRun) throw new Error('--history 请单独使用');
+          const history = readHistory(root);
+          console.log(`备份目录：${history.directory}`);
+          if (!history.entries.length) console.log('暂无升级历史备份');
+          for (const entry of history.entries) {
+            console.log(`\n${entry.id}\n版本：${entry.from} → ${entry.to}；文件状态：${entry.phase}；安装状态：${entry.installation}`);
+            console.log(`恢复命令：pnpm exec meadmin update --rollback ${entry.id}`);
+          }
+          console.log('恢复到对应批次升级前的文件，不恢复数据库；记录损坏的批次需人工核验。');
+          return;
+        }
         if (options.rollback) {
           if (options.version || options.config || options.dryRun) throw new Error('--rollback 不能与升级选项组合');
           if (!validBackupId(options.rollback)) throw new Error('备份ID无效');
@@ -51,20 +85,15 @@ export function updateInit(program: Command) {
           return;
         }
         const from = currentVersion(root);
-        const updates = join(root, 'node_modules/.meadmin/updates');
-        if (existsSync(updates))
-          for (const id of readdirSync(updates)) {
-            const file = join(updates, id, 'record.json');
-            if (!existsSync(file)) continue;
-            const record = JSON.parse(readFileSync(file, 'utf8')) as UpgradeRecord;
-            if (record.phase !== 'rolled-back' && (record.phase !== 'files-complete' || compareVersions(record.to, from) > 0 || ['failed', 'running'].includes(record.installation))) throw new Error(`存在待处理升级批次 ${id}，请先按报告完成依赖/人工处理或回滚`);
-          }
+        const history = readHistory(root);
+        if (history.entries.length > 3) console.warn(`升级备份过多：已有 ${history.entries.length} 个批次。请确认不再需要后，手动到 ${history.directory} 删除旧备份文件夹；删除后无法恢复对应批次。本次升级继续，不自动清理。`);
+        if (history.entries.some(entry => !['files-complete', 'rolled-back'].includes(entry.phase) || ['failed', 'running'].includes(entry.installation))) console.warn('历史中存在未完成或损坏的记录，请用 update --history 核对。本次升级不会因此被阻止。');
         const npmRegistry = spawnSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['config', 'get', 'registry'], { encoding: 'utf8', shell: process.platform === 'win32' });
         const registry = options.registry || process.env.npm_config_registry || (npmRegistry.status === 0 ? npmRegistry.stdout.trim() : '') || 'https://registry.npmjs.org';
         const manifest = await registryManifest(registry);
         const to = selectVersion(from, manifest.versions, options.version);
         if (from === to) {
-          console.log(`已安装目标版本 ${to}，继续检查依赖声明和 .gitignore；其他模板未变化的本地文件保持不变`);
+          console.log(`已安装目标版本 ${to}，继续比较本地与目标模板内容，内容不同的文件按配置规则处理`);
         }
         const rulePath = options.config ? resolve(root, options.config) : join(root, 'meadmin.update.json');
         if (options.config && !existsSync(rulePath)) throw new Error('指定规则文件不存在');
@@ -75,8 +104,8 @@ export function updateInit(program: Command) {
         const [oldTemplate, targetTemplate] = await Promise.all([downloadTemplate(manifest, from, join(workspace, 'old')), downloadTemplate(manifest, to, join(workspace, 'target'))]);
         const plan = makePlan(root, oldTemplate, targetTemplate, to, rules, sourceRules);
         if (from === to) {
-          // 同版本仅修正依赖声明和忽略规则，不重建SQL或补写其他业务文件。
-          plan.changes = plan.changes.filter((item) => /(^|\/)(package\.json|\.gitignore)$/.test(item.path));
+          // 同版本同样处理内容差异，仅不重新交付数据库脚本。
+          plan.changes = plan.changes.filter((item) => item.path !== 'update.sql' && item.path !== `meadmin-${to}.sql`);
           plan.sqlTables = [];
           plan.manual = plan.manual.filter((message) => !message.startsWith('SQL:') && !message.includes('未生成数据升级脚本'));
         }

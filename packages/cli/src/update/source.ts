@@ -1,6 +1,8 @@
 import ts from 'typescript';
+import { planValidation, type ValidationChange } from './validation.js';
+import { planRoutes } from './routes.js';
 
-export type SourceMergeMode = 'functions' | 'exports';
+export type SourceMergeMode = 'functions' | 'exports' | 'validation' | 'routes';
 export type SourceMergeResult = { content: string; manual: string[]; changed: boolean };
 type Edit = { start: number; end: number; text: string };
 type Parsed = { file: ts.SourceFile; checker: ts.TypeChecker; program: ts.Program };
@@ -259,7 +261,7 @@ export function mergeSource(localText: string, targetText: string, baseText: str
     return undefined;
   }
 
-  function references(nodes: ts.Node[], label: string, owner?: ts.ClassDeclaration, destination?: ts.ClassDeclaration, candidates = new Set<string>()): { needed: Map<string, ImportBinding>; dependencies: Set<string> } | undefined {
+  function references(nodes: ts.Node[], label: string, owner?: ts.ClassDeclaration, destination?: ts.ClassDeclaration, candidates = new Set<string>(), validation?: ValidationChange, routeDestination?: ts.Node): { needed: Map<string, ImportBinding>; dependencies: Set<string> } | undefined {
     const needed = new Map<string, ImportBinding>();
     const dependencies = new Set<string>();
     const problems = new Set<string>();
@@ -290,10 +292,17 @@ export function mergeSource(localText: string, targetText: string, baseText: str
           while (context.parent && !ts.isTypeNode(context) && !ts.isExpression(context.parent) && !ts.isStatement(context.parent)) context = context.parent;
           if (binding.typeOnly && (!ts.isTypeNode(context) || ts.isTypeQueryNode(context))) problems.add(`import ${binding.name} 是 type-only，不能用于值引用`);
           const problem = importProblem(binding);
-          const scope = destination && local!.checker.getSymbolsInScope(destination.members[0] ?? destination, ts.SymbolFlags.Value | ts.SymbolFlags.Type | ts.SymbolFlags.Namespace | ts.SymbolFlags.Alias).find((symbol) => symbol.name === binding.name);
+          const contextNode = routeDestination ?? validation?.destination ?? (destination && (destination.members[0] ?? destination));
+          const scope = contextNode && local!.checker.getSymbolsInScope(contextNode, ts.SymbolFlags.Value | ts.SymbolFlags.Type | ts.SymbolFlags.Namespace | ts.SymbolFlags.Alias).find((symbol) => symbol.name === binding.name);
           if (scope && scope !== localBindings.get(binding.name)) problems.add(`import ${binding.name} 被本地类作用域遮蔽`);
           if (problem) problems.add(problem);
           else if (!localImports.has(binding.name) && !pendingImports.has(binding.name)) needed.set(binding.name, binding);
+        } else if (routeDestination && (declarations.length || !globals.has(child.text) || local!.checker.getSymbolsInScope(routeDestination, ts.SymbolFlags.Value | ts.SymbolFlags.Type | ts.SymbolFlags.Namespace | ts.SymbolFlags.Alias).some(symbol => symbol.name === child.text))) {
+          problems.add(`路由引用 ${child.text} 的外部依赖无法安全确认`);
+        } else if (validation && declarations.some((node) => ts.isTypeParameterDeclaration(node) && node.parent === validation.owner)) {
+          // 接口头已严格匹配，方法可引用相同的接口泛型。
+        } else if (validation && (declarations.length || !globals.has(child.text) || local!.checker.getSymbolsInScope(validation.destination, ts.SymbolFlags.Value | ts.SymbolFlags.Type | ts.SymbolFlags.Namespace | ts.SymbolFlags.Alias).some(symbol => symbol.name === child.text))) {
+          problems.add(`引用 ${child.text} 的外部依赖或本地作用域无法安全确认`);
         } else if (owner && declarations.some((node) => ts.isTypeParameterDeclaration(node) && node.parent === owner)) {
           const parameter = owner.typeParameters?.find((node) => node.name.text === child.text);
           if (!destination?.typeParameters?.some((node) => node.getText() === parameter?.getText())) problems.add(`类类型参数 ${child.text} 不兼容`);
@@ -315,6 +324,32 @@ export function mergeSource(localText: string, targetText: string, baseText: str
       return undefined;
     }
     return { needed, dependencies };
+  }
+
+  if (mode === 'routes') {
+    const plan = planRoutes(local.file, target.file, (node, destination) => {
+      const checked = references([node], 'routes', undefined, undefined, new Set(), undefined, destination);
+      if (!checked) return false;
+      for (const [name, binding] of checked.needed) pendingImports.set(name, binding);
+      return true;
+    });
+    edits.push(...plan.edits);
+    plan.manual.forEach(report);
+  }
+
+  if (mode === 'validation') {
+    try {
+      const plan = planValidation(local.file, target.file);
+      for (const check of plan.checks) {
+        const checked = references([check.node], 'validation', undefined, undefined, new Set(), check);
+        if (!checked) return { content: localText, manual, changed: false };
+        for (const [name, binding] of checked.needed) pendingImports.set(name, binding);
+      }
+      edits.push(...plan.edits);
+    } catch (error) {
+      report(`validation: ${error instanceof Error ? error.message : String(error)}，保留本地并转人工`);
+      return { content: localText, manual, changed: false };
+    }
   }
 
   const exportNames = new Map<string, string>();
@@ -462,7 +497,7 @@ export function mergeSource(localText: string, targetText: string, baseText: str
       }
       if (!change.previous) report(`新增${change.unit.owner ? '方法' : '函数'} ${change.unit.name}`);
     }
-  } else {
+  } else if (mode === 'exports') {
     for (const binding of targetImports.values()) {
       const problem = importProblem(binding);
       if (problem) report(`${problem}，保留本地并转人工`);
@@ -582,7 +617,7 @@ export function mergeSource(localText: string, targetText: string, baseText: str
       .map((node) => `${node.isTypeOnly}:${node.moduleSpecifier && ts.isStringLiteral(node.moduleSpecifier) ? node.moduleSpecifier.text : ''}:${node.attributes?.getText() ?? ''}`),
   );
   for (const statement of target.file.statements) {
-    if (!ts.isExportDeclaration(statement)) continue;
+    if (mode === 'validation' || mode === 'routes' || !ts.isExportDeclaration(statement)) continue;
     if (!statement.exportClause) {
       const key = `${statement.isTypeOnly}:${statement.moduleSpecifier && ts.isStringLiteral(statement.moduleSpecifier) ? statement.moduleSpecifier.text : ''}:${statement.attributes?.getText() ?? ''}`;
       if (!stars.has(key)) {

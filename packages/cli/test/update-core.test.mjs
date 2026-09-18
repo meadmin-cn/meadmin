@@ -56,6 +56,50 @@ test('批次目录包含版本，同版本重复升级互不覆盖，兼容旧UU
  assert.ok(validBackupId('12345678-1234-1234-1234-123456789abc'));
  assert.ok(!validBackupId('../v1.3.6_to_v1.3.8_x'));assert.ok(!validBackupId('v1.3.8'));
 });
+test('旧模板已包含dataScope时仍补齐本地缺失字段与完整装饰器',()=>{
+ const f=fixture();const path='src/entities/systemRole.entity.ts';
+ const head="import { Attribute } from '@sequelize/core/decorators-legacy';\nimport { DataTypes } from '@sequelize/core';\nimport { ApiPropertyRule } from '@/decorators/index.js';\nimport { RuleType } from '@/ruleType/index.js';\n";
+ const field="@Attribute({comment:'数据权限:1=全部;2=组织;3=组织及以下;4=仅本人',defaultValue:3,allowNull:false,type:DataTypes.TINYINT.UNSIGNED})\n@ApiPropertyRule({description:'数据权限',rule:RuleType.number().valid(1,2,3,4).default(3)})\ndataScope: number;";
+ const target=head+'export class SystemRole { '+field+' }';
+ f.put('base',path,target);f.put('target',path,target);f.put('root',path,head+'export class SystemRole { custom = 1; }');
+ const plan=makePlan(f.root,f.base,f.target,'1.3.8',{});const change=plan.changes.find(c=>c.path===path);assert.ok(change);assert.equal(change.action,'merge');
+ assert.ok(change.content.toString().includes(field));assert.match(change.content.toString(),/custom = 1/);
+ applyPlan(f.root,plan,'1.3.8','1.3.8');assert.equal(makePlan(f.root,f.base,f.target,'1.3.8',{}).changes.length,0);
+});
+test('ruleType默认按validation合并，同版本目标未变仍更新，false与skipExisting可覆盖',()=>{
+ const f=fixture(),path='src/ruleType/string.ts';
+ const target=readFileSync(new URL('../../../src/ruleType/string.ts',import.meta.url),'utf8');
+ const local=target.replace('mobile(): this;', 'mobile(legacy?: boolean): this; custom(): this;').replace('rules: {', 'rules: { custom: { validate(value) { return value; } },').replace("'string.mobile': '{{#label}} must be a true mobile'", "'string.mobile': 'custom mobile'")+'\nexport const localOnly = 1;';
+ f.put('base',path,target);f.put('target',path,target);f.put('root',path,local);
+ const plan=makePlan(f.root,f.base,f.target,'1.3.8',{});const item=plan.changes.find(x=>x.path===path);
+ assert.equal(item.action,'merge');assert.match(item.content.toString(),/phone\(\): this/);assert.match(item.content.toString(),/custom\(\): this/);assert.match(item.content.toString(),/localOnly/);assert.doesNotMatch(item.content.toString(),/legacy|custom mobile/);
+ for(const mode of [false,'overwrite']) assert.equal(makePlan(f.root,f.base,f.target,'1.3.8',{}, {[path]:mode}).changes.find(c=>c.path===path).content.toString(),target);
+ assert.equal(makePlan(f.root,f.base,f.target,'1.3.8',{[path]:true}).changes.length,0);
+ applyPlan(f.root,plan,'1.3.8','1.3.8');assert.equal(makePlan(f.root,f.base,f.target,'1.3.8',{}).changes.length,0);
+});
+test('validation默认通配、index精确false、用户策略覆盖和配置校验',()=>{
+ assert.equal(sourceMode('src/ruleType/string.ts'),'validation');
+ assert.equal(sourceMode('src/ruleType/nested/number.ts'),'validation');
+ assert.equal(sourceMode('src/ruleType/index.ts'),false);
+ assert.equal(sourceMode('src/ruleType/string.ts',{'src/ruleType/**/*.ts':'functions'}),'functions');
+ assert.equal(sourceMode('src/ruleType/index.ts',{'src/ruleType/index.ts':'exports'}),'exports');
+ assert.deepEqual(validateConfig({mergeSource:{'src/custom.ts':'validation'}}).mergeSource,{'src/custom.ts':'validation'});
+ const f=fixture(),path='src/ruleType/index.ts';
+ const target="export { phone } from './string.js';";
+ f.put('target',path,target);f.put('base',path,target);f.put('root',path,"export { custom } from './custom.js';");
+ const plan=makePlan(f.root,f.base,f.target,'1.3.8',{});
+ assert.equal(plan.changes[0].action,'overwrite');assert.equal(plan.changes[0].content.toString(),target);
+ assert.equal(makePlan(f.root,f.base,f.target,'1.3.8',{}, {[path]:'exports'}).changes[0].action,'merge');
+});
+test('validation动态结构仅提示人工，不回退覆盖；新增文件直接创建',()=>{
+ const f=fixture(),path='src/ruleType/string.ts';
+ const target=readFileSync(new URL('../../../src/ruleType/string.ts',import.meta.url),'utf8');
+ f.put('target',path,target);f.put('root',path,'export const initRuleType = () => null;');
+ const plan=makePlan(f.root,f.base,f.target,'1.3.8',{});
+ assert.equal(plan.changes.length,0);assert.match(plan.manual.join(),/validation/);
+ f.put('target','src/ruleType/nested/string.ts',target);
+ assert.equal(makePlan(f.root,f.base,f.target,'1.3.8',{}).changes[0].action,'create');
+});
 test('同主版本最新稳定，指定跨主版本，拒绝降级',()=>{
  const versions={'1.3.6':{},'1.4.0':{},'1.5.0':{deprecated:'bad'},'1.6.0-beta.1':{},'2.0.0':{}};
  assert.equal(selectVersion('1.3.6',versions),'1.4.0');assert.equal(selectVersion('1.3.6',versions,'2.0.0'),'2.0.0');assert.throws(()=>selectVersion('2.0.0',versions,'1.4.0'));
@@ -96,7 +140,7 @@ test('三方比较、缺失首页创建、本地独有保留、配置只增',()=
  f.put('target','view/admin/src/views/index/index.vue','new homepage');f.put('root','mine.ts','mine');
  f.put('base','src/config/config.default.ts','export default { port: 1 };');f.put('root','src/config/config.default.ts','export default { port: 9 };');f.put('target','src/config/config.default.ts','export default { port: 2, added: true };');
  const plan=makePlan(f.root,f.base,f.target,'1.4.0',{});
- assert(!plan.changes.some(c=>c.path==='same.ts'));assert(plan.changes.find(c=>c.path==='conflict.ts').conflict);
+ assert.equal(plan.changes.find(c=>c.path==='same.ts').content.toString(),'old');assert(plan.changes.find(c=>c.path==='conflict.ts').conflict);
  assert.equal(plan.changes.find(c=>c.path.endsWith('index.vue')).action,'create');
  const dir=applyPlan(f.root,plan,'1.3.6','1.4.0');assert.equal(readFileSync(join(f.root,'changed.ts'),'utf8'),'new');assert.match(readFileSync(join(f.root,'src/config/config.default.ts'),'utf8'),/port: 9/);assert.equal(readFileSync(join(f.root,'mine.ts'),'utf8'),'mine');
  rollback(f.root,dir);assert.equal(readFileSync(join(f.root,'changed.ts'),'utf8'),'old');assert(!existsSync(join(f.root,'view/admin/src/views/index/index.vue')));
@@ -108,7 +152,7 @@ test('预览后修改阻止写入，回滚不覆盖升级后修改',()=>{
 });
 test('SQL改名与数据脚本生成不覆盖原始meadmin.sql',()=>{
  const f=fixture();f.put('target','meadmin.sql','CREATE TABLE t (id text PRIMARY KEY); INSERT INTO t(id) VALUES (\'a\');');f.put('root','meadmin.sql','local');
- const plan=makePlan(f.root,f.base,f.target,'1.4.0',{});assert(plan.changes.some(c=>c.path==='meadmin-1.4.0.sql'));assert(!plan.changes.some(c=>c.path==='meadmin.sql'));assert.match(plan.changes.find(c=>c.path==='update.sql').content.toString(),/ON CONFLICT/);
+ const plan=makePlan(f.root,f.base,f.target,'1.4.0',{});assert(plan.changes.some(c=>c.path==='meadmin-1.4.0.sql'));assert(!plan.changes.some(c=>c.path==='meadmin.sql'));assert.match(plan.changes.find(c=>c.path==='update.sql').content.toString(),/WHERE NOT EXISTS \(SELECT 1 FROM "t" AS existing WHERE existing\."id" IS NOT DISTINCT FROM 'a'\)/);
 });
 function archive(name,type='0') {const h=Buffer.alloc(512);h.write(name);h.write('00000000001\0',124);h.write(type,156);h.fill(32,148,156);const sum=h.reduce((a,b)=>a+b,0);h.write(sum.toString(8).padStart(6,'0')+'\0 ',148);return gzipSync(Buffer.concat([h,Buffer.from('x'),Buffer.alloc(511),Buffer.alloc(1024)]));}
 test('压缩包拒绝越界路径及符号链接',()=>{const f=fixture();assert.throws(()=>unpackTemplate(archive('package/../../oops'),f.root));assert.throws(()=>unpackTemplate(archive('package/link','2'),f.root));unpackTemplate(archive('package/a'),f.root);assert.equal(readFileSync(join(f.root,'package/a'),'utf8'),'x');});

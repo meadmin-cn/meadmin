@@ -16,21 +16,23 @@ import { delFileSync, recursionWriteFileSync } from '../utils/file.js';
 import { getKeyInfo, lowerFirstCase, normalizeToKebabOrSnakeCase, relativePath, resovePath, toHump, upFirstCase } from '../utils/formatting.js';
 import { Log } from '../utils/log.js';
 const require = createRequire(import.meta.url);
-//加载运行项目的配置
 let prettierrc = {} as Record<string, any>;
-try {
-  prettierrc = require(process.cwd() + '/.prettierrc.cjs') ?? {};
-} catch (eCjs) {
+// 仅在执行 crud 时加载，避免 update/--dry-run 导入并执行项目配置。
+async function loadPrettierConfig() {
   try {
-    prettierrc = (await import(pathToFileURL(process.cwd() + '/.prettierrc.js').href))?.default ?? {};
-  } catch (eJs) {
-    Log.warn('prettier配置加载失败', [eJs, eCjs]);
+    prettierrc = require(process.cwd() + '/.prettierrc.cjs') ?? {};
+  } catch (eCjs) {
+    try {
+      prettierrc = (await import(pathToFileURL(process.cwd() + '/.prettierrc.js').href))?.default ?? {};
+    } catch (eJs) {
+      Log.warn('prettier配置加载失败', [eJs, eCjs]);
+    }
   }
-}
-if (!prettierrc.plugins) {
-  prettierrc.plugins = ['prettier-plugin-organize-imports']; //让 Prettier 可以整理你的导入语句（例如排序、合并和移除未使用的导入语句）organizeImports。这与在 VS Code 中使用“Organize Imports”操作的效果相同。
-} else if (!prettierrc.plugins.includes('prettier-plugin-organize-imports')) {
-  prettierrc.plugins.push('prettier-plugin-organize-imports');
+  if (!prettierrc.plugins) {
+    prettierrc.plugins = ['prettier-plugin-organize-imports'];
+  } else if (!prettierrc.plugins.includes('prettier-plugin-organize-imports')) {
+    prettierrc.plugins.push('prettier-plugin-organize-imports');
+  }
 }
 
 let swaggerSchemas = {} as Record<string, SchemaObject>;
@@ -529,6 +531,7 @@ export const crudInit = (program: Command) => {
     .option('--cov, --coverage <char>', '生成代码发覆盖范围：b后端代码、a前端api接口代码、v前端view 代码、p后台权限校验，默认值bavp', 'bavp')
     .option('-a --addons <char>', '插件名称，相关文件会被放到插件对应文件夹下')
     .action(async (file: string, options) => {
+      await loadPrettierConfig();
       sequelize = new Sequelize(await getConfig(options.dbConfig, options.name));
       const noSuffixEntityPath = relativePath('', file, ['.entity', '.ts']);
       const entityFileName = lowerFirstCase(toHump(relativePath('', noSuffixEntityPath, []).split('/').pop()!));

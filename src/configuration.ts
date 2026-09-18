@@ -100,7 +100,7 @@ export class MainConfiguration {
     }
     setTimeout(() => {
       //监听队列状态,放到下一个宏任务才能监听到，在生命周期内监听不到
-      this.bullmqFramework.getQueueList().forEach((queue) => {
+      this.bullmqFramework.getQueueList()?.forEach((queue) => {
         queue.on('waiting', (job) => {
           //TODO::midway更新为可设置独立执行worker后待优化为仅在投递进程监听
           // Job is waiting to be processed.
@@ -122,7 +122,7 @@ export class MainConfiguration {
             });
         });
         if (process.env.MODE !== 'ONLY_API') {
-          this.bullmqFramework.getWorkers(queue.name).forEach((worker) => {
+          this.bullmqFramework.getWorkers(queue.name)?.forEach((worker) => {
             worker.on('active', (job) => {
               jobRepository
                 .update(
@@ -154,8 +154,6 @@ export class MainConfiguration {
                 });
             });
             worker.on('completed', (job, result) => {
-              console.log(333, job.name);
-
               const successResult = JSON.stringify({
                 result: result,
                 jobId: job.id,

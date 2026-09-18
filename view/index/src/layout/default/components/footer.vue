@@ -7,6 +7,7 @@
             <me-icon-logo :size="30" style="fill: none" />
             <span class="brand-name">{{ brandName }}</span>
           </a>
+          <p v-if="description">{{ description }}</p>
           <p v-if="copyright" class="copyright">{{ copyright }}</p>
           <a v-if="icpNumber" class="copyright" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44031002000255" rel="nofollow" target="_blank">{{ icpNumber }}</a>
         </div>
@@ -31,6 +32,7 @@ const globalStore = useGlobalStore();
 const items = await getConfig<{ variableCode: string; value: unknown }[]>('site_footer').catch(() => []);
 const values = Object.fromEntries(items.map((item) => [item.variableCode, item.value]));
 const brandName = typeof values.brand_name === 'string' ? values.brand_name : globalStore.websiteName;
+const description = values.description;
 const safeUrl = (value: unknown) => {
   if (typeof value !== 'string') return '';
   const url = value.trim();
@@ -109,10 +111,21 @@ const columns: FooterColumn[] = Array.isArray(rawColumns)
       letter-spacing: -0.02em;
     }
   }
+  p {
+    margin: 16px 0 0;
+    max-width: 38ch;
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: #6b7280;
+  }
   .copyright {
     margin: 6px 0 0;
+    max-width: 50ch;
     font-size: 13px;
     color: #9aa1af;
+  }
+  a.copyright:hover {
+    color: #000;
   }
 }
 .footer-col {

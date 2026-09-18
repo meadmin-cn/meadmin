@@ -61,7 +61,7 @@ meadmin 是基于 Node.js + Vue 3 的全栈一站式中后台解决方案，不�
 `view/index/src/` 是前台应用，除拥有类似的 API、组件、配置、字典和状态目录外，还包含 `entry-client.ts`、`entry-server.ts`、SSR 页面和插件路由。前台插件页面通常放在 `addons/` 对应插件中，并通过插件自己的上下文共享跨组件数据。
 
 ### 2.4 核心能力与开发判断
-
+- 除了`ruleType`文件夹的扩展定义文件 所有引入的`RuleType` 使用，import { RuleType } from '@/ruleType/index.js';
 - 菜单树支持无限父子级；菜单权限和按钮权限都由菜单记录表达，按钮菜单使用项目约定的 `menuType = 3`。
 - 页面路由是动态生成的，不能凭经验猜 URL 或静态路由文件；应从实际菜单树、管理员信息或页面导航确认路由。
 - 角色、组织和菜单均使用项目既有的树模型；涉及树关系时优先检查 `parentId` 与 `left/right`，不要用普通平面列表逻辑替代。

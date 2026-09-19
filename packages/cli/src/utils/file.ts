@@ -1,6 +1,8 @@
-import { AsyncZipDeflate, Zip, type DeflateOptions } from 'fflate';
-import { cpSync, createReadStream, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, WriteFileOptions, writeFileSync } from 'node:fs';
-import { dirname, join, relative, resolve } from 'node:path';
+import { Zip, ZipDeflate, ZipPassThrough, type DeflateOptions, type ZipInputFile } from 'fflate';
+import { createReadStream, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, WriteFileOptions, writeFileSync } from 'node:fs';
+import { copyFile as copyFileAsync, lstat, open, opendir, realpath, rm } from 'node:fs/promises';
+import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { finished, pipeline } from 'node:stream/promises';
 
 /**
  * 写入文件【当文件所在文件夹不存在时会递归创建】
@@ -54,13 +56,14 @@ export async function copyFile(fromFile: string, toFile: string, fileSetFunction
   if (!existsSync(fromFile)) {
     return;
   }
-  let content = readFileSync(fromFile, 'utf-8');
+  const target = encodePackageFileName(toFile, isEncodePackage);
   if (fileSetFunction) {
-    content = await fileSetFunction(content);
-    return recursionWriteFileSync(encodePackageFileName(toFile, isEncodePackage), content);
-  } else {
-    return cpSync(fromFile, encodePackageFileName(toFile, isEncodePackage));
+    // 转换 API 接收完整字符串，内存边界为单个待转换文件及其结果。
+    const content = await fileSetFunction(readFileSync(fromFile, 'utf-8'));
+    return recursionWriteFileSync(target, content);
   }
+  mkdirSync(dirname(target), { recursive: true });
+  return copyFileAsync(fromFile, target);
 }
 
 /**
@@ -77,41 +80,48 @@ export async function copyPath(pathFile: string, toPath: string, relativePath = 
   if (!existsSync(pathFile)) {
     return;
   }
-  const fileList = readdirSync(pathFile);
-  return Promise.all(
-    fileList.map(async (file) => {
-      const relativeFilePath = join(relativePath, file).replaceAll('\\', '/');
-      for (let i = 0; i < ignoreFile.length; i++) {
-        const item = ignoreFile[i];
-        if (item instanceof RegExp) {
-          if (item.test(relativeFilePath)) {
-            return;
-          }
-        } else if (item === relativeFilePath) {
-          return;
+  const targetRoot = await resolveRealPath(toPath);
+  const ancestors = new Set<string>();
+  async function copyDirectory(source: string, target: string, prefix: string): Promise<Array<boolean | void>> {
+    const sourceReal = await realpath(source);
+    if (isPathInside(sourceReal, targetRoot) || isPathInside(targetRoot, sourceReal) || ancestors.has(sourceReal)) {
+      throw new Error(`复制目录不能相互包含或形成循环: ${source} -> ${targetRoot}`);
+    }
+    ancestors.add(sourceReal);
+    mkdirSync(target, { recursive: true });
+    const results: Array<boolean | void> = [];
+    try {
+      for await (const file of await opendir(source)) {
+        const relativeFilePath = join(prefix, file.name).replaceAll('\\', '/');
+        const ignored = ignoreFile.some((item) => {
+          if (typeof item === 'string') return item === relativeFilePath;
+          item.lastIndex = 0;
+          return item.test(relativeFilePath);
+        });
+        if (ignored) {
+          results.push(undefined);
+          continue;
+        }
+        const path = join(source, file.name);
+        const toSetPath = join(target, file.name);
+        const stats = statSync(path);
+        if (stats.isDirectory()) {
+          await copyDirectory(path, toSetPath, relativeFilePath);
+          results.push(true);
+        } else if (stats.isFile()) {
+          const transform = fileSetFunctions && Object.hasOwn(fileSetFunctions, relativeFilePath) ? fileSetFunctions[relativeFilePath] : undefined;
+          const result = await copyFile(path, toSetPath, transform, isEncodePackage);
+          results.push(transform ? result : true);
+        } else {
+          throw new Error(`不支持复制特殊文件: ${path}`);
         }
       }
-      const path = resolve(pathFile, file);
-      const toSetPath = resolve(toPath, file);
-      const stats = statSync(path);
-      if (stats.isDirectory()) {
-        mkdirSync(toSetPath, { recursive: true });
-        //文件夹递归处理
-        await copyPath(path, toSetPath, relativeFilePath, ignoreFile, fileSetFunctions, isEncodePackage);
-      } else {
-        if (fileSetFunctions) {
-          const files = Object.keys(fileSetFunctions);
-          for (let i = 0; i < files.length; i++) {
-            if (files[i] === relativeFilePath) {
-              return await copyFile(path, toSetPath, fileSetFunctions[files[i]], isEncodePackage);
-            }
-          }
-        }
-        await copyFile(path, toSetPath, undefined, isEncodePackage);
-      }
-      return true;
-    }),
-  );
+      return results;
+    } finally {
+      ancestors.delete(sourceReal);
+    }
+  }
+  return copyDirectory(pathFile, toPath, relativePath);
 }
 
 /**
@@ -146,119 +156,127 @@ export function checkPathFile(pathFile: string, toPath: string, relativePath = '
   return hasFiles;
 }
 
+function isPathInside(parent: string, child: string) {
+  const path = relative(parent, child);
+  return path === '' || (path !== '..' && !path.startsWith(`..${sep}`) && !isAbsolute(path));
+}
+
+// 解析尚不存在的目标路径，同时识别已有父目录中的软链接/junction。
+async function resolveRealPath(path: string): Promise<string> {
+  try {
+    return await realpath(path);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+    const parent = dirname(resolve(path));
+    if (parent === resolve(path)) throw error;
+    return join(await resolveRealPath(parent), relative(parent, resolve(path)));
+  }
+}
+
 /**
- * 异步地将指定文件夹压缩为 ZIP 文件，使用流式 API 以优化性能和内存使用。
- *
- * 此函数使用 fflate 库的 Zip 和 AsyncZipDeflate 类来流式构建 ZIP 归档。
- * 它会启动一个后台线程池来并行压缩多个文件，从而提高效率，尤其是在处理多个大文件时。
- * 文件内容通过流的方式读取和处理，避免一次性将所有文件加载到内存。
- *
- * @param {string} folderPath - 要压缩的源文件夹的路径。
- * @param {string} outputPath - 输出 ZIP 文件的目标路径。
- * @param {ZipOptions} [globalOptions={ level: 6 }] - 应用于所有文件的全局压缩选项。
- * @returns {Promise<void>} 一个 Promise，当 ZIP 文件成功写入磁盘时 resolve，
- *                          如果过程中发生错误则 reject。
+ * 逐文件、逐块生成 ZIP，pipeline 将写盘背压传递到文件读取端。
+ * 仅保留当前块和 ZIP 中央目录元数据；fflate 不支持 ZIP64，超限明确报错。
  */
 export async function zipFolderAsyncOptimized(folderPath: string, outputPath: string, globalOptions: DeflateOptions = { level: 6 }): Promise<void> {
-  //开始优化压缩文件夹: ${folderPath} -> ${outputPath}`;
-
-  // 获取文件列表的辅助函数
-  function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
-    const files = readdirSync(dirPath);
-    files.forEach((file) => {
-      const filePath = join(dirPath, file);
-      if (statSync(filePath).isDirectory()) {
-        getAllFiles(filePath, arrayOfFiles);
-      } else {
-        arrayOfFiles.push(filePath);
-      }
-    });
-    return arrayOfFiles;
-  }
-
-  const filePaths = getAllFiles(folderPath);
-  // console.log(`找到 ${filePaths.length} 个文件进行压缩。`);
-
-  return new Promise<void>((resolve, reject) => {
-    // 1. 创建主 ZIP 流实例
-    const zipStream = new Zip();
-
-    // 用于收集最终 ZIP 文件数据的数组
-    const zipChunks: Uint8Array[] = [];
-
-    // 2. 设置 ZIP 流的数据处理函数
-    zipStream.ondata = (err: Error | null, chunk: Uint8Array, final: boolean) => {
-      if (err) {
-        // console.error("ZIP 流处理出错:", err);
-        // 如果出现错误，终止 ZIP 流并拒绝 Promise
-        zipStream.terminate();
-        reject(err);
-        return;
-      }
-      // 将接收到的数据块添加到数组中
-      zipChunks.push(chunk);
-
-      if (final) {
-        // 当收到最后一个数据块时，合并所有块并写入文件
-        // console.log("所有 ZIP 数据块接收完毕，正在写入文件...");
-        try {
-          const fullZipData = new Uint8Array(zipChunks.reduce((acc, chunk) => acc + chunk.length, 0));
-          let offset = 0;
-          for (const chunk of zipChunks) {
-            fullZipData.set(chunk, offset);
-            offset += chunk.length;
-          }
-          writeFileSync(outputPath, fullZipData);
-          resolve(); // 压缩成功
-        } catch (writeErr) {
-          reject(writeErr instanceof Error ? writeErr : new Error(String(writeErr)));
-        }
-      }
-    };
-
-    // 3. 遍历文件，为每个文件创建 AsyncZipDeflate 流并添加到主 ZIP 流
-    const addPromises = filePaths.map((filePath) => {
-      return new Promise<void>((fileResolve, fileReject) => {
-        const relativePath = relative(folderPath, filePath).replace(/\\/g, '/');
-        // 3a. 创建针对单个文件的压缩流
-        // 使用 ZipOptions 作为构造函数的选项类型
-        const fileDeflater = new AsyncZipDeflate(relativePath, globalOptions);
-        zipStream.add(fileDeflater);
-        // 3c. 开始读取文件并推送到压缩流
-        const fileReadStream = createReadStream(relativePath);
-        fileReadStream.on('data', (buffer: string | Buffer<ArrayBufferLike>) => {
-          // 将读取到的 Buffer 推送到 AsyncZipDeflate 流进行压缩
-          // 注意：push 的第二个参数 'false' 表示这不是最后一个数据块
-          fileDeflater.push(buffer as Buffer<ArrayBufferLike>, false);
-        });
-        fileReadStream.on('end', () => {
-          // 文件读取完毕，向 AsyncZipDeflate 流推送最后一个数据块标记
-          // 传入空的 Uint8Array 并标记 final=true
-          fileDeflater.push(new Uint8Array(), true);
-          fileResolve(); // 当前文件处理完成，继续下一个文件
-        });
-        fileReadStream.on('error', (err: Error) => {
-          console.error(`读取文件 ${filePath} 时出错:`, err);
-          fileDeflater.terminate();
-          zipStream.terminate(); // 终止整个 ZIP 过程
-          fileReject(err);
-        });
-      });
-    });
-
-    // 4. 等待所有文件都处理完毕
-    Promise.all(addPromises)
-      .then(() => {
-        // 所有文件的读取和压缩流都已启动并标记结束
-        // 现在通知主 ZIP 流结束归档
-        // console.log('所有文件流已添加，正在结束 ZIP 归档...');
-        zipStream.end();
-      })
-      .catch((err) => {
-        // 如果任何一个文件处理失败，则整个过程失败
-        // console.error('处理某个文件时失败，终止 ZIP 流:', err);
-        zipStream.terminate();
-        reject(err as Error);
-      });
+  const root = await realpath(folderPath);
+  const output = await resolveRealPath(outputPath);
+  if (isPathInside(root, output)) throw new Error('ZIP 输出不能位于源目录内');
+  // 独占创建失败时不进入清理分支，绝不覆盖或删除已有文件。
+  const handle = await open(outputPath, 'wx');
+  const destination = handle.createWriteStream({ highWaterMark: 64 * 1024 });
+  let activeRead: ReturnType<typeof createReadStream> | undefined;
+  let chunks: Uint8Array[] = [];
+  let zipError: Error | null = null;
+  let bytes = 0;
+  let entries = 0;
+  const zip = new Zip((error, chunk) => {
+    if (error) {
+      zipError = error;
+      return;
+    }
+    bytes += chunk.length;
+    if (bytes >= 0xffffffff) {
+      zipError = new Error('ZIP 大小超出 ZIP32 限制，需要 ZIP64');
+      return;
+    }
+    chunks.push(chunk);
   });
+  function* drainChunks() {
+    if (zipError) throw zipError;
+    const ready = chunks;
+    chunks = [];
+    yield* ready;
+  }
+  const ancestors = new Set<string>();
+  async function* walk(path: string): AsyncGenerator<{ path: string; name: string; directory: boolean }> {
+    const source = await realpath(path);
+    if (isPathInside(source, output) || ancestors.has(source)) throw new Error(`压缩目录包含输出或形成循环: ${path}`);
+    ancestors.add(source);
+    try {
+      for await (const file of await opendir(path)) {
+        const fullPath = join(path, file.name);
+        const stats = await lstat(fullPath);
+        const name = relative(root, fullPath).replaceAll('\\', '/');
+        if (name.split('/').some((part) => part === '..' || part === '') || isAbsolute(name)) throw new Error(`无效 ZIP 路径: ${name}`);
+        if (stats.isSymbolicLink()) throw new Error(`压缩源不能包含软链接: ${fullPath}`);
+        if (!stats.isFile() && !stats.isDirectory()) throw new Error(`不支持压缩特殊文件: ${fullPath}`);
+        if (stats.size >= 0xffffffff) throw new Error(`文件超出 ZIP32 限制: ${fullPath}`);
+        yield { path: fullPath, name: name + (stats.isDirectory() ? '/' : ''), directory: stats.isDirectory() };
+        if (stats.isDirectory()) yield* walk(fullPath);
+      }
+    } finally {
+      ancestors.delete(source);
+    }
+  }
+  try {
+    await pipeline(async function* ({ signal }: { signal?: AbortSignal } = {}) {
+      for await (const file of walk(root)) {
+        signal?.throwIfAborted();
+        if (++entries >= 0xffff) throw new Error('ZIP 条目数超出 ZIP32 限制，需要 ZIP64');
+        const deflater = file.directory ? new ZipPassThrough(file.name) : new ZipDeflate(file.name, globalOptions);
+        // Zip 会保留条目至中央目录写完，不能让条目引用每个文件的压缩器及其缓冲。
+        const entry: ZipInputFile = { filename: file.name, compression: deflater.compression, size: 0, crc: 0 };
+        if (deflater instanceof ZipDeflate) entry.flag = deflater.flag;
+        if (file.directory) entry.attrs = 0x10;
+        zip.add(entry);
+        deflater.ondata = (error, chunk, final) => {
+          entry.size = deflater.size;
+          entry.crc = deflater.crc;
+          entry.ondata!(error, chunk, final);
+        };
+        yield* drainChunks();
+        if (!file.directory) {
+          const source = createReadStream(file.path, { highWaterMark: 64 * 1024, signal });
+          activeRead = source;
+          try {
+            for await (const chunk of source) {
+              signal?.throwIfAborted();
+              deflater.push(chunk as Buffer, false);
+              if (deflater.size >= 0xffffffff) throw new Error(`文件超出 ZIP32 限制: ${file.path}`);
+              // 同步 push 只产出当前块；yield 消耗完后才继续读取，绝不排队整个文件。
+              yield* drainChunks();
+            }
+          } finally {
+            source.destroy();
+            await finished(source).catch(() => {});
+            activeRead = undefined;
+          }
+        }
+        deflater.push(new Uint8Array(), true);
+        yield* drainChunks();
+      }
+      zip.end();
+      yield* drainChunks();
+    }, destination);
+  } catch (error) {
+    activeRead?.destroy();
+    destination.destroy();
+    await finished(destination).catch(() => {});
+    await handle.close();
+    await rm(outputPath, { force: true });
+    throw error;
+  } finally {
+    zip.terminate();
+    await handle.close();
+  }
 }

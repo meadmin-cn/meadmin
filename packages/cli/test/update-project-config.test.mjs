@@ -278,7 +278,7 @@ test('planner: bullmq 环境依赖被遮蔽或未知导出时保持原文并转�
   }
 });
 
-test('planner: 缺失工程配置与 env 安全创建，已有 env 本地值保留，envrc 转人工', () => {
+test('planner: 缺失工程配置、envrc 和锚点 YAML 原样创建，已有 env 本地值保留', () => {
   const f = fixture();
   f.put('target', 'pnpm-workspace.yaml', workspace);
   f.put('target', 'view/admin/tsconfig.json', '{"compilerOptions":{"strict":true}}');
@@ -288,18 +288,19 @@ test('planner: 缺失工程配置与 env 安全创建，已有 env 本地值保�
   f.put('target', 'nested/pnpm-workspace.yaml', 'x: &x {a: 1}\ny: *x');
   f.put('target', 'nested/vite.config.ts', 'export default () => ({ port: 3000 })');
   const plan = makePlan(f.root, f.base, f.target, '1.3.9', { '.env.local': false });
-  assert.deepEqual(new Set(plan.changes.map(change => change.path)), new Set(['pnpm-workspace.yaml', 'view/admin/tsconfig.json', '.npmrc', '.env', 'nested/apps/api/.env.production']));
+  assert.deepEqual(new Set(plan.changes.map(change => change.path)), new Set(['pnpm-workspace.yaml', 'view/admin/tsconfig.json', '.npmrc', '.env', '.envrc', 'nested/pnpm-workspace.yaml', 'nested/apps/api/.env.production', 'nested/vite.config.ts']));
   assert.ok(plan.changes.every(change => change.action === 'create'));
-  assert.equal(plan.changes.find(change => change.path === '.npmrc').content.toString(), 'auto-install-peers=false\n');
+  for (const change of plan.changes) assert.deepEqual(change.content, readFileSync(join(f.target, change.path)));
   assert.deepEqual(plan.skipped, []);
-  assert.ok(plan.manual.some(message => message.startsWith('.envrc:')));
+  assert.ok(!plan.manual.some(message => message.startsWith('.envrc:')));
   assert.equal(plan.changes.find(change => change.path === '.env').content.toString(), 'SECRET=template');
   assert.doesNotMatch(plan.manual.join(), /SECRET=|template/);
-  assert.ok(plan.manual.some(message => message.includes('nested/pnpm-workspace.yaml')));
-  assert.ok(plan.manual.some(message => message.includes('nested/vite.config.ts')));
+  assert.ok(!plan.manual.some(message => message.includes('nested/pnpm-workspace.yaml')));
+  assert.equal(plan.changes.find(change => change.path === 'nested/vite.config.ts').content.toString(), 'export default () => ({ port: 3000 })');
+  assert.ok(!plan.manual.some(message => message.includes('nested/vite.config.ts')));
 });
 
-test('planner: 工程配置 skipExisting 优先，动态配置不进入源码或整文件覆盖', () => {
+test('planner: 工程配置 skipExisting 优先，未知结构转人工，Vite 工厂仅补安全项', () => {
   const f = fixture();
   f.put('root', 'pnpm-workspace.yaml', 'custom: true'); f.put('target', 'pnpm-workspace.yaml', workspace);
   for (const path of ['view/admin/vite.config.ts', 'view/index/eslint.config.js', '.prettierrc.js', '.editorconfig']) {
@@ -307,9 +308,123 @@ test('planner: 工程配置 skipExisting 优先，动态配置不进入源码或
     f.put('base', path, target); f.put('target', path, target); f.put('root', path, '// local\nexport default {}');
   }
   const plan = makePlan(f.root, f.base, f.target, '1.3.9', { 'pnpm-workspace.yaml': true });
-  assert.deepEqual(plan.changes, []);
+  assert.deepEqual(plan.changes.map(change => change.path), ['view/admin/vite.config.ts']);
+  assert.equal(plan.changes[0].action, 'merge');
+  assert.match(plan.changes[0].content.toString(), /port: 3100/);
   assert.ok(plan.skipped.some(message => message.startsWith('pnpm-workspace.yaml:')));
   for (const path of ['view/admin/vite.config.ts', 'view/index/eslint.config.js', '.prettierrc.js', '.editorconfig']) assert.ok(plan.manual.some(message => message.startsWith(path + ':')));
+});
+
+test('planner: 缺失 compose 使用实际模板完整复制，保留回调和依赖且不执行，应用后幂等', () => {
+  const f = fixture();
+  const compose = readFileSync(new URL('compose.config.js', templateRoot));
+  const callback = `import { transform } from './transform.js';
+export default {
+  './dist/': { fileSetFunction: { 'entry.js': async content => { globalThis.__composeExecuted = true; return transform(content); } } }
+};\n`;
+  const files = {
+    'compose.config.js': compose,
+    'nested/compose.config.js': Buffer.from(callback),
+    'src/config/config.default.ts': Buffer.from(callback),
+    'view/admin/vite.config.ts': readFileSync(new URL('../../../view/admin/vite.config.ts', import.meta.url)),
+  };
+  globalThis.__composeExecuted = false;
+  try {
+    for (const [path, content] of Object.entries(files)) f.put('target', path, content);
+    const plan = makePlan(f.root, f.base, f.target, '1.3.13', {}, {}, { sql: false });
+    assert.equal(plan.changes.length, Object.keys(files).length);
+    assert.deepEqual(plan.manual, []);
+    for (const change of plan.changes) {
+      assert.equal(change.action, 'create');
+      assert.equal(change.previous, null);
+      assert.equal(change.conflict, false);
+      assert.ok(change.content.equals(files[change.path]));
+      assert.equal(existsSync(join(f.root, change.path)), false);
+    }
+    const backup = applyPlan(f.root, plan, '1.3.13', '1.3.13');
+    for (const [path, content] of Object.entries(files)) assert.ok(readFileSync(join(f.root, path)).equals(content));
+    assert.deepEqual(makePlan(f.root, f.base, f.target, '1.3.13', {}, {}, { sql: false }).changes, []);
+    rollback(f.root, backup);
+    for (const path of Object.keys(files)) assert.equal(existsSync(join(f.root, path)), false);
+    assert.equal(globalThis.__composeExecuted, false);
+  } finally { delete globalThis.__composeExecuted; }
+});
+
+test('planner: 已有 compose 递归补缺保留本地值、数组、回调与注释且幂等', () => {
+  const f = fixture();
+  const target = readFileSync(new URL('compose.config.js', templateRoot), 'utf8');
+  const local = `// 本地打包配置
+export default {
+  './addons/': { ignore: ['custom'], fileSetFunction: { 'entry.js': content => content } },
+  './dist/': { custom: true },
+  './local/': {}
+};\n`;
+  f.put('root', 'compose.config.js', local);
+  f.put('target', 'compose.config.js', target);
+  const plan = makePlan(f.root, f.base, f.target, '1.3.13', {}, {}, { sql: false });
+  assert.deepEqual(plan.manual, []);
+  assert.equal(plan.changes.length, 1);
+  const change = plan.changes[0];
+  assert.equal(change.action, 'merge');
+  assert.match(change.content.toString(), /ignore: \['custom'\], fileSetFunction: \{ 'entry.js': content => content \}/);
+  assert.match(change.content.toString(), /'\.\/dist\/': \{ custom: true \}/);
+  assert.match(change.content.toString(), /'\.\/pnpm-workspace.yaml': \{\}/);
+  assert.match(change.content.toString(), /^\/\/ 本地打包配置/);
+  f.put('root', change.path, change.content);
+  assert.deepEqual(makePlan(f.root, f.base, f.target, '1.3.13', {}, {}, { sql: false }).changes, []);
+});
+
+test('planner: script/config 缺失与已有时均尊重 manual、skip、exclude 和 skipExisting', () => {
+  const target = readFileSync(new URL('compose.config.js', templateRoot));
+  for (const path of ['compose.config.js', 'src/config/config.default.ts']) for (const present of [false, true]) {
+    for (const mode of ['manual', 'skip', 'exclude', 'skipExisting']) {
+      const f = fixture();
+      f.put('target', path, target);
+      if (present) f.put('root', path, 'export default { custom: true };');
+      const options = { sql: false };
+      if (mode === 'exclude') options.exclude = { [path]: true };
+      const source = ['manual', 'skip'].includes(mode) ? { [path]: mode } : {};
+      const rules = mode === 'skipExisting' ? { [path]: true } : {};
+      const plan = makePlan(f.root, f.base, f.target, '1.3.13', rules, source, options);
+      if (['manual', 'skipExisting'].includes(mode) && !present) {
+        assert.equal(plan.changes.length, 1);
+        assert.equal(plan.changes[0].action, 'create');
+        assert.ok(plan.changes[0].content.equals(target));
+      } else assert.deepEqual(plan.changes, [], `${path} ${mode} ${present}`);
+      if (mode === 'manual' && present) assert.ok(plan.manual.some(message => message.startsWith(path + ':')));
+      else assert.deepEqual(plan.manual, []);
+      if (mode === 'skip' || mode === 'skipExisting' && present) assert.ok(plan.skipped.some(message => message.startsWith(path + ':')));
+      assert.equal(existsSync(join(f.root, path)), present);
+    }
+  }
+});
+
+test('planner: 未知复杂 script/config 缺失时原样创建，已有时仍人工处理', () => {
+  for (const path of ['compose.config.js', 'src/config/config.default.ts']) for (const target of [
+    'export default makeConfig();',
+    'export default env => { if (env.mode) return {}; return { port: 3100 }; };',
+    'export default { ...defaults };',
+    'export default { nested: { ...defaults } };',
+    'export default { [key]: true };',
+    'export default { value: 1, value: 2 };',
+    'export default { __proto__: {} };',
+    'export default {',
+  ]) {
+    const f = fixture();
+    f.put('target', path, target);
+    for (const present of [false, true]) {
+      if (present) f.put('root', path, 'export default {};');
+      const plan = makePlan(f.root, f.base, f.target, '1.3.13', {}, {}, { sql: false });
+      if (present) {
+        assert.deepEqual(plan.changes, [], target);
+        assert.ok(plan.manual.some(message => message.startsWith(path + ':')), target);
+        assert.equal(readFileSync(join(f.root, path), 'utf8'), 'export default {};');
+      } else {
+        assert.deepEqual(plan.changes, [{ path, action: 'create', previous: null, content: Buffer.from(target), conflict: false }]);
+        assert.deepEqual(plan.manual, []);
+      }
+    }
+  }
 });
 
 test('env: 本地原文、注释、空值及 BOM 保留，只插入目标缺失条目，不扩展变量', () => {
@@ -507,7 +622,7 @@ test('planner env: 同版本真实规划覆盖根目录和前后台，保留本�
   }
 });
 
-test('planner env: 用户 skipExisting 优先，缺失仍创建，复杂文件及 envrc 不覆盖', () => {
+test('planner env: skipExisting 优先，缺失复杂 env 与 envrc 原样创建，已有异常仍人工', () => {
   const f = fixture();
   const rules = { '.env*': true, 'view/*/.env*': true, '.env.local': false };
   for (const path of ['.env', '.env.local', 'view/admin/.env.production', 'view/index/.env.local']) {
@@ -527,9 +642,16 @@ test('planner env: 用户 skipExisting 优先，缺失仍创建，复杂文件�
   const plan = makePlan(f.root, f.base, f.target, '1.3.9', rules);
   assert.ok(plan.manual.some(message => message.startsWith('identical/.env:')));
   assert.ok(!plan.manual.some(message => message.startsWith('skipped/.env:')));
-  assert.deepEqual(new Set(plan.changes.map(item => item.path)), new Set(['.env.local', 'view/admin/.env.local', '.env.production', 'view/index/.env']));
+  assert.deepEqual(new Set(plan.changes.map(item => item.path)), new Set(['.env.local', 'view/admin/.env.local', '.env.production', 'view/index/.env', 'nested/.env.local', 'nested/.envrc']));
   assert.equal(plan.skipped.length, 4);
-  for (const path of ['nested/.env', 'nested/.env.local', 'nested/.envrc']) assert.ok(plan.manual.some(message => message.startsWith(path + ':')));
+  assert.ok(plan.manual.some(message => message.startsWith('nested/.env:')));
+  assert.equal(readFileSync(join(f.root, 'nested/.env'), 'utf8'), 'LOCAL=LOCAL_SECRET\n');
+  for (const path of ['nested/.env.local', 'nested/.envrc']) {
+    assert.ok(!plan.manual.some(message => message.startsWith(path + ':')));
+    const change = plan.changes.find(item => item.path === path);
+    assert.equal(change.action, 'create');
+    assert.deepEqual(change.content, readFileSync(join(f.target, path)));
+  }
   assert.doesNotMatch([...plan.manual, ...plan.skipped].join(), /LOCAL_SECRET|TARGET_SECRET|PRIVATE_VALUE/);
   assert.equal(plan.changes.find(item => item.path === 'view/admin/.env.local').content.toString(), '# 完整新文件\r\nNEW=TARGET_SECRET');
   assert.equal(plan.changes.find(item => item.path === '.env.production').content.toString(), '# 空模板\r\n');

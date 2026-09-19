@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { readFileSync } from 'node:fs';
 import ts from 'typescript';
 import { mergeConfig, mergeEntity, mergePackage } from '../dist/update/merge.js';
 
@@ -479,16 +480,151 @@ test('config: import 冲突只阻止对应新增项，环境配置仍合并', ()
   assert.doesNotMatch(result.content, /from "target"/);
 });
 
-test('config: 未知 defineConfig 与函数导出仍不执行且转人工', () => {
+test('config: 未知 defineConfig 与间接函数返回仍不执行且转人工', () => {
   for (const target of [
     `export default defineConfig({ ${bullmq} });`,
-    `export default () => ({ ${bullmq} });`,
+    `export default () => config;`,
   ]) {
     const local = 'export default {}';
     const result = mergeConfig(local, target);
     assert.equal(result.content, local);
     assert.ok(result.manual.length);
   }
+});
+
+function factoryObject(content) {
+  const file = syntax(content);
+  const statement = file.statements.find(node => ts.isExportAssignment(node) || ts.isFunctionDeclaration(node) && node.modifiers?.some(modifier => modifier.kind === ts.SyntaxKind.DefaultKeyword));
+  let expression = ts.isExportAssignment(statement) ? statement.expression : statement;
+  if (ts.isCallExpression(expression)) expression = expression.arguments[0];
+  if (expression.body) expression = ts.isBlock(expression.body) ? expression.body.statements[0].expression : expression.body;
+  while (ts.isParenthesizedExpression(expression) || ts.isAsExpression(expression) || ts.isSatisfiesExpression(expression)) expression = expression.expression;
+  assert.ok(ts.isObjectLiteralExpression(expression));
+  return expression;
+}
+
+const realVite = readFileSync(new URL('../../../view/admin/vite.config.ts', import.meta.url), 'utf8');
+
+function withoutViteServerKeys(content, names) {
+  const server = properties(factoryObject(content)).get('server');
+  const members = server.properties.filter(property => names.includes(property.name.text));
+  assert.equal(members.length, names.length);
+  for (const member of members.reverse()) {
+    const start = content.lastIndexOf('\n', member.getStart()) + 1;
+    const end = content.indexOf('\n', member.end) + 1;
+    content = content.slice(0, start) + content.slice(end);
+  }
+  return content;
+}
+
+test('config: 真实 Vite async 工厂缺少三项时补齐并保留目标注释，不执行插件', () => {
+  const local = withoutViteServerKeys(realVite, ['port', 'strictPort', 'hmr']);
+  const result = mergeConfig(local, realVite);
+  const server = properties(properties(factoryObject(result.content)).get('server'));
+  assert.equal(server.get('port').getText(), '3100');
+  assert.equal(server.get('strictPort').getText(), 'false');
+  assert.equal(properties(server.get('hmr')).get('port').getText(), '3100');
+  for (const comment of ['// 首选端口', '// 端口被占用时自动尝试下一个可用端口', '// HMR WebSocket端口，默认与server.port相同']) assert.ok(result.content.includes(comment));
+  for (const name of ['root', 'plugins', 'css', 'resolve', 'define', 'build', 'optimizeDeps']) {
+    assert.equal(properties(factoryObject(result.content)).get(name).getText(), properties(factoryObject(local)).get(name).getText());
+  }
+  assert.equal(server.get('warmup').getText(), properties(properties(factoryObject(local)).get('server')).get('warmup').getText());
+  assert.deepEqual(result.manual, []);
+  assert.deepEqual(mergeConfig(result.content, realVite), result);
+});
+
+test('config: 真实 Vite 既有 port 3120 与嵌套 HMR、本地数组保持不变且幂等', () => {
+  const local = withoutViteServerKeys(realVite, ['strictPort', 'hmr']).replace('port: 3100', 'port: 3120').replace('port: 3120,', "port: 3120, hmr: { host: 'local', overlay: false },");
+  const result = mergeConfig(local, realVite);
+  const server = properties(properties(factoryObject(result.content)).get('server'));
+  assert.equal(server.get('port').getText(), '3120');
+  assert.equal(properties(server.get('hmr')).get('host').getText(), "'local'");
+  assert.equal(properties(server.get('hmr')).get('overlay').getText(), 'false');
+  assert.equal(properties(server.get('hmr')).get('port').getText(), '3100');
+  assert.deepEqual(result.manual, []);
+  assert.deepEqual(mergeConfig(result.content, realVite), result);
+  const existing = realVite.replaceAll('port: 3100', 'port: 3120');
+  assert.deepEqual(mergeConfig(existing, realVite), { content: existing, manual: [] });
+  const crlf = existing.replace(/\r?\n/g, '\r\n');
+  const lf = realVite.replaceAll('\r\n', '\n');
+  assert.deepEqual(mergeConfig(crlf, lf), { content: crlf, manual: [] });
+  assert.deepEqual(mergeConfig(lf, crlf), { content: lf, manual: [] });
+});
+
+test('config: 直接工厂和已验证 Vite defineConfig 字面对象或工厂均支持安全补缺', () => {
+  for (const wrap of [
+    value => `export default () => (${value});`,
+    value => `export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => { return ${value}; };`,
+    value => `export default function(configEnv) { return ${value}; }`,
+    value => `export default async function config(configEnv) { return (${value} as const); }`,
+    value => `import { defineConfig } from 'vite'; export default defineConfig(${value});`,
+    value => `import { defineConfig as config } from 'vite'; export default config(async () => { return ${value}; });`,
+  ]) {
+    const local = wrap('{ server: { port: 3120 }, list: ["local"] }');
+    const target = wrap('{ server: { port: 3100, strictPort: false, hmr: { port: 3100 } }, list: ["target"] }');
+    const result = mergeConfig(local, target);
+    const root = properties(factoryObject(result.content));
+    assert.equal(properties(root.get('server')).get('port').getText(), '3120');
+    assert.equal(properties(root.get('server')).get('strictPort').getText(), 'false');
+    assert.equal(root.get('list').getText(), '["local"]');
+    assert.deepEqual(result.manual, []);
+    assert.deepEqual(mergeConfig(result.content, target), result);
+  }
+});
+
+test('config: 工厂分支、多 return、动态返回和未知包装在任一侧均人工处理', () => {
+  const samples = [
+    'export default env => env.mode ? { port: 1 } : { port: 2 };',
+    'export default env => { if (env.mode) return {}; return { port: 1 }; };',
+    'export default () => { const config = {}; return config; };',
+    'export default () => { globalThis.__updateFactoryExecuted = true; return {}; };',
+    'export default () => loadConfig();',
+    'export default function*() { return {}; }',
+    'export default wrap(() => ({}));',
+    'const defineConfig = config => config; export default defineConfig({});',
+    'import { defineConfig } from "other"; export default defineConfig({});',
+    'import type { defineConfig } from "vite"; export default defineConfig({});',
+    'import { defineConfig } from "vite"; export default defineConfig({}, {});',
+  ];
+  globalThis.__updateFactoryExecuted = false;
+  try {
+    for (const sample of samples) for (const [local, target] of [[sample, 'export default { safe: true }'], ['export default {}', sample]]) {
+      const result = mergeConfig(local, target);
+      assert.equal(result.content, local, sample);
+      assert.ok(result.manual.length, sample);
+    }
+    assert.equal(globalThis.__updateFactoryExecuted, false);
+  } finally { delete globalThis.__updateFactoryExecuted; }
+});
+
+test('config: 工厂新增动态项与参数引用只阻止对应字段，安全端口仍合并', () => {
+  const local = 'export default (env) => ({ plugins: awaitPlugins(), root: import.meta.dirname, server: {} });';
+  const target = 'export default (env) => ({ plugins: awaitPlugins(), root: import.meta.dirname, server: { port: 3100 }, dynamic: load(), mode: env.mode });';
+  const result = mergeConfig(local, target);
+  assert.equal(properties(properties(factoryObject(result.content)).get('server')).get('port').getText(), '3100');
+  assert.equal(result.manual.length, 2);
+  assert.match(result.manual.join(), /config.dynamic:/);
+  assert.match(result.manual.join(), /config.mode:/);
+  assert.deepEqual(mergeConfig(result.content, target), result);
+});
+
+test('config: 新增项前置和尾注释保留，逗号位于注释之前且 CRLF 幂等', () => {
+  const local = 'export default () => ({ server: { port: 3120 } });\r\n';
+  const target = `export default () => ({ server: {
+    port: 3100, // 不复制已有项注释
+    // 严格端口说明
+    strictPort: false /* 逗号前说明 */, // 自动尝试
+    /* HMR 配置 */
+    hmr: { port: 3100 }, /* HMR 尾注 */
+    host: 'localhost' // 无尾逗号注释
+  } });`;
+  const result = mergeConfig(local, target);
+  syntax(result.content);
+  for (const comment of ['// 严格端口说明', '/* 逗号前说明 */', '// 自动尝试', '/* HMR 配置 */', '/* HMR 尾注 */', '// 无尾逗号注释']) assert.ok(result.content.includes(comment), comment);
+  assert.doesNotMatch(result.content, /不复制已有项注释/);
+  assert.equal(result.content.replaceAll('\r\n', '').includes('\n'), false);
+  assert.deepEqual(result.manual, []);
+  assert.deepEqual(mergeConfig(result.content, target), result);
 });
 
 test('config: 支持括号、as 和 satisfies 外壳，保留 CRLF', () => {

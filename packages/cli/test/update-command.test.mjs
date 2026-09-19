@@ -25,7 +25,18 @@ test('同版本命令补齐真实bullmq与嵌套配置，创建缺失文件但�
   const workspace = readFileSync(new URL('../../create-meadmin/template/meadmin/pnpm-workspace.yaml', import.meta.url), 'utf8');
   const validation = readFileSync(new URL('../../../src/ruleType/string.ts', import.meta.url), 'utf8');
   const localImage = Buffer.from([0xff, 0xd8, 0, 0x80, 0xfe]);
+  const missingFiles = {
+    'AI-README.md': readFileSync(new URL('../../create-meadmin/template/meadmin/AI-README.md', import.meta.url)),
+    'docs/arbitrary.md': Buffer.from('\uFEFF# 任意文档\r\n保留末尾空格  '),
+    'assets/data.bin': Buffer.from([0xff, 0, 0x80, 0xc3, 0x28]),
+    '.hidden/data': Buffer.from([0x81, 0, 0xfe]),
+    '.envrc': Buffer.from('source ./dynamic-env\r\n'),
+    'nested/pnpm-workspace.yaml': Buffer.from('packages: [\r\n'),
+    'nested/tsconfig.json': Buffer.from('{ "compilerOptions": '),
+    'nested/vite.config.ts': Buffer.from('export default makeConfig();\r\n'),
+  };
   const files = {
+    ...missingFiles,
     'uploadFile/default.png': Buffer.from([0x89, 0x50, 0x4e, 0x47, 0, 0xff, 0x80]),
     'uploadFile/images/existing.png': Buffer.from([0x89, 0x50, 0, 0xc3, 0x28]),
     'ordinary.txt': '目标普通内容',
@@ -94,7 +105,12 @@ test('同版本命令补齐真实bullmq与嵌套配置，创建缺失文件但�
     assert.match(result.text, /已安装目标版本 1.3.9/);
     const changes = result.text.split(/\r?\n/).filter(line => /^(create|merge|overwrite)( |:)/.test(line));
     for (const path of ['package.json', 'pnpm-workspace.yaml', 'apps/api/pnpm-workspace.yaml', 'view/admin/tsconfig.app.json', 'test/tsconfig.json', '.npmrc', 'view/index/.prettierignore', 'src/config/config.default.ts', 'src/entities/user.ts']) assert.ok(changes.some(line => line.endsWith(': ' + path)), path + '\n' + result.text);
-    assert.equal(changes.length, 21, result.text);
+    assert.equal(changes.length, 22 + Object.keys(missingFiles).length, result.text);
+    for (const path of Object.keys(missingFiles)) {
+      assert.ok(changes.includes('create: ' + path), result.text);
+      assert.equal(existsSync(join(root, path)), false);
+      assert.ok(!result.text.includes('人工处理: ' + path + ':'), result.text);
+    }
     assert.ok(changes.includes('create: uploadFile/default.png'), result.text);
     assert.match(result.text, /跳过: uploadFile\/images\/existing\.png: 存在时跳过/);
     assert.equal(existsSync(join(root, 'uploadFile/default.png')), false);
@@ -111,7 +127,8 @@ test('同版本命令补齐真实bullmq与嵌套配置，创建缺失文件但�
     assert.ok(changes.some(line => /^merge.*: \.env$/.test(line)));
     assert.ok(changes.includes('create: view/admin/.env.production'));
     assert.match(result.text, /跳过: view\/index\/\.env.local: 存在时跳过/);
-    assert.match(result.text, /人工处理: \.env.local:/);
+    assert.ok(changes.includes('create: .env.local'));
+    assert.doesNotMatch(result.text, /人工处理: \.env.local:/);
     assert.doesNotMatch(result.text, /LOCAL_SECRET|TEMPLATE_SECRET|TARGET_SECRET|PRIVATE_VALUE|inside=value/);
     assert.equal(readFileSync(join(root, '.env'), 'utf8'), localEnv);
     assert.equal(existsSync(join(root, 'view/admin/.env.production')), false);
@@ -123,6 +140,8 @@ test('同版本命令补齐真实bullmq与嵌套配置，创建缺失文件但�
     assert.equal(readFileSync(join(root, '.prettierrc.cjs'), 'utf8'), executableConfig);
     // 实际应用独立规划结果后再通过命令验证重复运行，避免把 CLI 过滤条件复制进测试。
     applyPlan(root, makePlan(root, template, template, '1.3.9', { 'view/index/.env.local': true }), '1.3.9', '1.3.9');
+    for (const [path, content] of Object.entries(missingFiles)) assert.deepEqual(readFileSync(join(root, path)), content);
+    assert.equal(readFileSync(join(root, '.env.local'), 'utf8'), files['.env.local']);
     assert.deepEqual(readFileSync(join(root, 'uploadFile/default.png')), files['uploadFile/default.png']);
     assert.deepEqual(readFileSync(join(root, 'uploadFile/images/existing.png')), localImage);
     assert.deepEqual(readFileSync(join(root, 'uploadFile/local-only.png')), localImage);

@@ -83,21 +83,25 @@ export function makePlan(root: string, oldTemplate: string, targetTemplate: stri
       plan.skipped.push(`${path}: 完全跳过`);
       return;
     }
-    if (local?.equals(content) && mode !== 'env') return;
+    // 缺失文件没有本地内容可合并：除显式排除/跳过外，按模板原始字节创建。
+    // 合并器和 manual 策略仅用于已有文件，不以内容是否可解析限制新增。
+    if (!local) {
+      add(path, content, 'create');
+      return;
+    }
+    if (local.equals(content) && mode !== 'env') return;
     if (mode === 'manual') {
       plan.manual.push(`${path}: 按配置保留本地，需人工处理`);
       return;
     }
     const conflict = !!local && (!old || !old.equals(local));
     if (mode && ['env', 'yaml', 'json', 'npmrc', 'ignore', 'script'].includes(mode)) {
-      const initial = mode === 'yaml' || mode === 'json' ? '{}\n' : '';
-      const result = mergeProjectConfig(path, local?.toString('utf8') ?? initial, content.toString('utf8'), mode as ConfigKind);
+      const result = mergeProjectConfig(path, local.toString('utf8'), content.toString('utf8'), mode as ConfigKind);
       plan.manual.push(...result.manual.map((message) => `${path}: ${message}`));
-      if (mode === 'env' && !local && !result.manual.length) add(path, content, 'create');
-      else if (local || result.content !== initial) add(path, Buffer.from(result.content), 'merge', local, conflict);
+      add(path, Buffer.from(result.content), 'merge', local, conflict);
       return;
     }
-    if (!local || mode === false || mode === 'overwrite') {
+    if (mode === false || mode === 'overwrite') {
       add(path, content, 'overwrite', local, conflict);
       return;
     }

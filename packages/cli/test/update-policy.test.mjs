@@ -118,19 +118,164 @@ for (const mode of [false, 'overwrite']) test(`所有默认特殊策略可被用
   assert.deepEqual(plan.manual.filter(x => !x.includes('SQL')), []);
 });
 
-test('skip 缺失也不创建，manual 留待人工，skipExisting 优先于所有合并和覆盖', t => {
+test('skip 缺失也不创建，manual 仅已有转人工，skipExisting 缺失仍创建', t => {
   const f = fixture(t);
-  for (const path of ['skip.txt', 'manual.txt', 'existing.txt', 'public/existing.txt', 'public/new.txt']) f.put('target', path, 'target');
-  f.put('root', 'existing.txt', 'local'); f.put('root', 'public/existing.txt', 'local');
-  const plan = f.plan({ skipExisting: { 'existing.txt': true }, mergeSource: { 'skip.txt': 'skip', 'manual.txt': 'manual', 'existing.txt': 'overwrite', 'public/**': 'overwrite' } });
-  assert.deepEqual(plan.changes.map(x => x.path), ['public/new.txt']);
+  for (const path of ['skip.txt', 'manual.txt', 'manual-existing.txt', 'existing.txt', 'public/existing.txt', 'public/new.txt']) f.put('target', path, 'target');
+  f.put('root', 'existing.txt', 'local'); f.put('root', 'public/existing.txt', 'local'); f.put('root', 'manual-existing.txt', 'local');
+  const plan = f.plan({ sql: false, skipExisting: { 'existing.txt': true }, mergeSource: { 'skip.txt': 'skip', 'manual*.txt': 'manual', 'existing.txt': 'overwrite', 'public/**': 'overwrite' } });
+  assert.deepEqual(plan.changes.map(x => x.path), ['manual.txt', 'public/new.txt']);
+  assert.ok(plan.changes.every(x => x.action === 'create' && x.previous === null && x.content.equals(Buffer.from('target'))));
   assert.deepEqual(plan.skipped.sort(), ['existing.txt: 存在时跳过', 'public/existing.txt: 存在时跳过', 'skip.txt: 完全跳过']);
-  assert.ok(plan.manual.some(x => x.startsWith('manual.txt:')));
+  assert.deepEqual(plan.manual, ['manual-existing.txt: 按配置保留本地，需人工处理']);
   for (const defaultPolicy of ['manual', 'skip']) {
-    const result = f.plan({ defaultPolicy, mergeSource: false, skipExisting: false });
-    assert.equal(result.changes.length, 0);
-    assert.equal(defaultPolicy === 'skip' ? result.skipped.length : result.manual.filter(x => !x.includes('未生成数据升级脚本')).length, 5);
+    const result = f.plan({ sql: false, defaultPolicy, mergeSource: false, skipExisting: false });
+    assert.deepEqual(result.changes.map(x => x.path), defaultPolicy === 'skip' ? [] : ['manual.txt', 'public/new.txt', 'skip.txt']);
+    assert.equal(result.skipped.length, defaultPolicy === 'skip' ? 6 : 0);
+    assert.equal(result.manual.length, defaultPolicy === 'manual' ? 3 : 0);
+    assert.ok(result.changes.every(x => x.action === 'create' && x.content.equals(Buffer.from('target'))));
   }
+  const backup = applyPlan(f.root, plan, '1.0.0', '1.1.0');
+  for (const path of ['manual.txt', 'public/new.txt']) assert.equal(readFileSync(join(f.root, path), 'utf8'), 'target');
+  assert.equal(readFileSync(join(f.root, 'manual-existing.txt'), 'utf8'), 'local');
+  assert.equal(existsSync(join(f.root, 'skip.txt')), false);
+  rollback(f.root, backup);
+  for (const path of ['manual.txt', 'public/new.txt']) assert.equal(existsSync(join(f.root, path)), false);
+});
+
+test('缺失真实 AI-README、任意 Markdown、二进制与隐藏文件逐字节创建，备份回滚且重复幂等', t => {
+  const f = fixture(t);
+  const template = new URL('../../create-meadmin/template/meadmin/AI-README.md', import.meta.url);
+  assert.ok(existsSync(template), '真实模板必须包含 AI-README.md');
+  const readme = readFileSync(template);
+  assert.ok(readme.length > 0);
+  const files = {
+    'AI-README.md': readme,
+    'docs/nested/任意说明.md': Buffer.from('\uFEFF# 任意文档\r\n\r\n保留末尾空格  '),
+    'assets/nested/data.bin': Buffer.from([0, 0xff, 0x80, 0xc3, 0x28, 13, 10]),
+    '.hidden': Buffer.from([0xff, 0, 0x81]),
+    '.settings/nested/.hidden': Buffer.from('隐藏内容\r\n'),
+    'empty.md': Buffer.alloc(0),
+  };
+  for (const [path, content] of Object.entries(files)) {
+    f.put('base', path, content); f.put('target', path, content);
+  }
+  const local = Buffer.from([0xfe, 0, 0x82]);
+  f.put('root', 'existing.bin', local); f.put('target', 'existing.bin', Buffer.from([1, 0xff]));
+  f.put('root', 'local-only.md', '本地独有');
+  const plan = f.plan({ sql: false });
+  assert.equal(plan.changes.length, Object.keys(files).length + 1);
+  assert.deepEqual(plan.manual, []); assert.deepEqual(plan.skipped, []);
+  for (const [path, content] of Object.entries(files)) {
+    assert.deepEqual(plan.changes.find(change => change.path === path), { path, action: 'create', previous: null, content, conflict: false });
+    assert.equal(existsSync(join(f.root, path)), false);
+  }
+  const backup = applyPlan(f.root, plan, '1.1.0', '1.1.0');
+  const record = JSON.parse(readFileSync(join(backup, 'record.json'), 'utf8'));
+  assert.equal(record.phase, 'files-complete');
+  assert.equal(record.files.length, plan.changes.length);
+  for (const [path, content] of Object.entries(files)) {
+    assert.deepEqual(readFileSync(join(f.root, path)), content);
+    assert.deepEqual(readFileSync(join(backup, 'target', path)), content);
+    assert.equal(existsSync(join(backup, 'original', path)), false);
+    const saved = record.files.find(file => file.path === path);
+    assert.equal(saved.before, null); assert.equal(saved.state, 'written');
+  }
+  assert.deepEqual(readFileSync(join(backup, 'original/existing.bin')), local);
+  assert.deepEqual(f.plan({ sql: false }).changes, []);
+  rollback(f.root, backup);
+  for (const path of Object.keys(files)) assert.equal(existsSync(join(f.root, path)), false);
+  assert.deepEqual(readFileSync(join(f.root, 'existing.bin')), local);
+  assert.equal(readFileSync(join(f.root, 'local-only.md'), 'utf8'), '本地独有');
+  assert.equal(JSON.parse(readFileSync(join(backup, 'record.json'), 'utf8')).phase, 'rolled-back');
+  assert.deepEqual(f.plan({ sql: false }), plan);
+});
+
+const unparsedFiles = [
+  ['.env', Buffer.from('\uFEFF# 独立头\r\n\r\nBAD="PRIVATE_VALUE\r\n'), 'LOCAL=local\n'],
+  ['pnpm-workspace.yaml', Buffer.from('packages: [\r\n'), 'custom: true\n'],
+  ['nested/pnpm-workspace.yaml', Buffer.from('# 锚点\r\nx: &x {a: 1}\r\ny: *x'), 'custom: true\n'],
+  ['tsconfig.json', Buffer.from('{ "compilerOptions": '), '{}'],
+  ['vite.config.ts', Buffer.from('export default makeConfig();\r\n'), 'export default {};'],
+  ['src/config/default.ts', Buffer.from('export default { ...defaults };\r\n'), 'export default {};'],
+  ['.envrc', Buffer.from('source ./dynamic-env\r\n'), '本地配置'],
+];
+for (const [path, content, local] of unparsedFiles) test(`不解析缺失文件原样创建，已有不安全配置仍转人工：${path}`, t => {
+  const f = fixture(t);
+  f.put('base', path, content); f.put('target', path, content);
+  const plan = f.plan({ sql: false });
+  assert.deepEqual(plan.changes, [{ path, action: 'create', previous: null, content, conflict: false }]);
+  assert.deepEqual(plan.manual, []); assert.deepEqual(plan.skipped, []);
+  const backup = applyPlan(f.root, plan, '1.1.0', '1.1.0');
+  assert.deepEqual(readFileSync(join(f.root, path)), content);
+  assert.deepEqual(readFileSync(join(backup, 'target', path)), content);
+  assert.deepEqual(f.plan({ sql: false }).changes, []);
+  rollback(f.root, backup);
+  assert.equal(existsSync(join(f.root, path)), false);
+  f.put('root', path, local);
+  const existing = f.plan({ sql: false });
+  assert.deepEqual(existing.changes, []);
+  assert.ok(existing.manual.some(message => message.startsWith(path + ':')));
+  assert.doesNotMatch(existing.manual.join(), /PRIVATE_VALUE/);
+  assert.equal(readFileSync(join(f.root, path), 'utf8'), local);
+});
+
+for (const mode of ['manual', 'default-manual', 'skip', 'default-skip', 'exclude', 'skipExisting']) test(`缺失文件策略适用于文档、二进制、隐藏和特殊配置：${mode}`, t => {
+  const f = fixture(t);
+  const files = {
+    'AI-README.md': readFileSync(new URL('../../create-meadmin/template/meadmin/AI-README.md', import.meta.url)),
+    'arbitrary/nested.md': Buffer.from('# 文档\r\n'),
+    'assets/data.bin': Buffer.from([0xff, 0, 0x80]),
+    '.hidden/data': Buffer.from('隐藏文件'),
+    ...Object.fromEntries(unparsedFiles.map(([path, content]) => [path, content])),
+  };
+  const options = { sql: false };
+  const rules = value => Object.fromEntries(Object.keys(files).map(path => [path, value]));
+  if (mode === 'exclude') options.exclude = rules(true);
+  else if (mode === 'skipExisting') options.skipExisting = rules(true);
+  else if (mode.startsWith('default-')) {
+    options.defaultPolicy = mode.slice('default-'.length);
+    options.mergeSource = false; options.autoIntegration = false;
+  } else options.mergeSource = rules(mode);
+  for (const [path, content] of Object.entries(files)) f.put('target', path, content);
+  const create = ['manual', 'default-manual', 'skipExisting'].includes(mode);
+  const plan = f.plan(options);
+  assert.equal(plan.changes.length, create ? Object.keys(files).length : 0);
+  assert.deepEqual(plan.manual, []);
+  for (const change of plan.changes) assert.deepEqual(change, { path: change.path, action: 'create', previous: null, content: files[change.path], conflict: false });
+  const backup = applyPlan(f.root, plan, '1.1.0', '1.1.0');
+  for (const [path, content] of Object.entries(files)) {
+    assert.equal(existsSync(join(f.root, path)), create, path);
+    if (create) assert.deepEqual(readFileSync(join(f.root, path)), content);
+  }
+  assert.deepEqual(f.plan(options).changes, []);
+  rollback(f.root, backup);
+  for (const path of Object.keys(files)) {
+    assert.equal(existsSync(join(f.root, path)), false);
+    f.put('root', path, Buffer.alloc(0));
+  }
+  const existing = f.plan(options);
+  assert.deepEqual(existing.changes, []);
+  assert.equal(existing.manual.length, ['manual', 'default-manual'].includes(mode) ? Object.keys(files).length : 0);
+  for (const path of Object.keys(files)) assert.deepEqual(readFileSync(join(f.root, path)), Buffer.alloc(0));
+});
+
+test('缺失动态 script/config 仅复制，规划、应用、幂等和回滚均不执行配置', t => {
+  const f = fixture(t);
+  const marker = '__missingConfigExecuted';
+  const before = Object.getOwnPropertyDescriptor(globalThis, marker);
+  t.after(() => { if (before) Object.defineProperty(globalThis, marker, before); else delete globalThis[marker]; });
+  globalThis[marker] = false;
+  const content = Buffer.from(`globalThis.${marker} = true;\r\nexport default (() => ({ dynamic: Date.now() }))();\r\n`);
+  const paths = ['dynamic.config.ts', 'src/config/dynamic.ts'];
+  for (const path of paths) f.put('target', path, content);
+  const plan = f.plan({ sql: false });
+  assert.equal(plan.changes.length, paths.length); assert.deepEqual(plan.manual, []);
+  const backup = applyPlan(f.root, plan, '1.1.0', '1.1.0');
+  for (const path of paths) assert.deepEqual(readFileSync(join(f.root, path)), content);
+  assert.deepEqual(f.plan({ sql: false }).changes, []);
+  rollback(f.root, backup);
+  assert.equal(globalThis[marker], false);
+  for (const path of paths) assert.equal(existsSync(join(f.root, path)), false);
 });
 
 test('用户通配压过默认精确，用户精确优先且模糊冲突拒绝猜测', () => {

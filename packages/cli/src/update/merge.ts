@@ -195,7 +195,7 @@ function indentAt(text: string, position: number): string {
   return /^[\t ]*/.exec(text.slice(text.lastIndexOf('\n', position - 1) + 1, position))![0];
 }
 
-function appendMembers(text: string, node: ts.ObjectLiteralExpression | ts.ClassDeclaration, additions: string[], edits: Edit[]): void {
+function appendMembers(text: string, node: ts.ObjectLiteralExpression | ts.ClassDeclaration, additions: string[], edits: Edit[], separated = false): void {
   if (!additions.length) return;
   const newline = text.includes('\r\n') ? '\r\n' : '\n';
   const members = ts.isObjectLiteralExpression(node) ? node.properties : node.members;
@@ -211,7 +211,7 @@ function appendMembers(text: string, node: ts.ObjectLiteralExpression | ts.Class
   if (ts.isClassDeclaration(node) && last && ts.isPropertyDeclaration(last) && !text.slice(last.getStart(), last.end).trimEnd().endsWith(';') && !edits.some((edit) => edit.start === last.getStart() && edit.end === last.end && edit.text.trimEnd().endsWith(';'))) {
     edits.push({ start: last.end, end: last.end, text: ';' });
   }
-  const separator = ts.isObjectLiteralExpression(node) ? `,${newline}` : newline;
+  const separator = ts.isObjectLiteralExpression(node) && !separated ? `,${newline}` : newline;
   edits.push({ start: node.end - 1, end: node.end - 1, text: `${newline}${values.join(separator)}${newline}${closingIndent}` });
 }
 
@@ -427,11 +427,68 @@ function referenceMerger(local: Parsed, target: Parsed, manual: string[], aliasC
   return { safe, finish, changedImports, reclaim: (text: string) => reclaimImportAliases(text, generated), text: (node: ts.Node) => rendered.get(node) ?? node.getText(target.file) };
 }
 
-function defaultObject(file: ts.SourceFile): ts.ObjectLiteralExpression | undefined {
-  const exports = file.statements.filter(ts.isExportAssignment);
-  if (exports.length !== 1 || exports[0].isExportEquals) return undefined;
-  const expression = unwrap(exports[0].expression);
-  return ts.isObjectLiteralExpression(expression) ? expression : undefined;
+function defaultObject(parsed: Parsed): ts.ObjectLiteralExpression | undefined {
+  const { file, checker } = parsed;
+  const exports = file.statements.filter((statement) => ts.isExportAssignment(statement) || (ts.canHaveModifiers(statement) && ts.getModifiers(statement)?.some((modifier) => modifier.kind === ts.SyntaxKind.DefaultKeyword)));
+  if (exports.length !== 1) return undefined;
+  const statement = exports[0];
+  const returnedObject = (node: ts.Expression | ts.FunctionDeclaration): ts.ObjectLiteralExpression | undefined => {
+    if (!ts.isFunctionDeclaration(node)) node = unwrap(node);
+    if (ts.isObjectLiteralExpression(node)) return node;
+    if (!ts.isArrowFunction(node) && !ts.isFunctionExpression(node) && !ts.isFunctionDeclaration(node)) return undefined;
+    if (node.asteriskToken || !node.body) return undefined;
+    let body: ts.Node = node.body;
+    // 只识别直接表达式或唯一 return，不推断分支、局部变量及副作用。
+    if (ts.isBlock(body)) {
+      if (body.statements.length !== 1 || !ts.isReturnStatement(body.statements[0]) || !body.statements[0].expression) return undefined;
+      body = body.statements[0].expression;
+    }
+    const expression = unwrap(body as ts.Expression);
+    return ts.isObjectLiteralExpression(expression) ? expression : undefined;
+  };
+  if (ts.isFunctionDeclaration(statement)) return returnedObject(statement);
+  if (!ts.isExportAssignment(statement) || statement.isExportEquals) return undefined;
+  let expression = unwrap(statement.expression);
+  if (ts.isCallExpression(expression)) {
+    const callee = unwrap(expression.expression);
+    if (!ts.isIdentifier(callee) || expression.arguments.length !== 1 || expression.questionDotToken) return undefined;
+    const binding = imports(file).get(callee.text);
+    const symbol = checker.getSymbolAtLocation(callee);
+    if (!binding || binding.module !== 'vite' || binding.imported !== 'defineConfig' || binding.typeOnly || symbol?.declarations?.length !== 1 || checker.getSymbolAtLocation(binding.identifier) !== symbol) return undefined;
+    expression = unwrap(expression.arguments[0]);
+  }
+  return returnedObject(expression);
+}
+
+// 缺失文件复制整个已识别的配置模块，不执行或删减其中的回调与依赖。
+export function canCreateConfig(text: string): boolean {
+  const parsed = parse(text, 'target.ts');
+  const root = parsed && defaultObject(parsed);
+  const safeStructure = (node: ts.Expression): boolean => {
+    node = unwrap(node);
+    if (ts.isObjectLiteralExpression(node)) {
+      const properties = objectProperties(node);
+      return !!properties && [...properties.values()].every((property) => safeStructure(property.initializer));
+    }
+    if (ts.isArrayLiteralExpression(node)) return node.elements.every((element) => !ts.isSpreadElement(element) && safeStructure(element));
+    return true;
+  };
+  return !!root && safeStructure(root);
+}
+
+function configPropertyText(property: ts.PropertyAssignment, file: ts.SourceFile): string {
+  const text = file.text;
+  const leading = ts.getLeadingCommentRanges(text, property.pos) ?? [];
+  const prefix = leading.length ? text.slice(leading[0].pos, property.getStart(file)) : '';
+  const scanner = ts.createScanner(ts.ScriptTarget.Latest, true, ts.LanguageVariant.Standard, text);
+  scanner.setTextPos(property.end);
+  const hasComma = scanner.scan() === ts.SyntaxKind.CommaToken;
+  const beforeComma = hasComma ? text.slice(property.end, scanner.getTokenPos()) : '';
+  const end = hasComma ? scanner.getTextPos() : property.end;
+  const trailing = ts.getTrailingCommentRanges(text, end) ?? [];
+  const suffix = trailing.length ? text.slice(end, trailing[trailing.length - 1].end) : '';
+  // 逗号必须位于行尾注释之前，防止下一项被注释吞掉。
+  return prefix + property.getText(file) + beforeComma + ',' + suffix;
 }
 
 function staticValue(node: ts.Expression): boolean {
@@ -454,10 +511,10 @@ export function mergeConfig(local: string, target: string, base?: string): Merge
   const edits: Edit[] = [];
   const current = parse(local, 'local.ts');
   const next = parse(target, 'target.ts');
-  const localObject = current && defaultObject(current.file);
-  const targetObject = next && defaultObject(next.file);
+  const localObject = current && defaultObject(current);
+  const targetObject = next && defaultObject(next);
   if (!current || !next || !localObject || !targetObject) {
-    return { content: local, manual: ['config: 无法解析静态 export default 对象，需人工合并'] };
+    return { content: local, manual: ['config: 无法识别 export default 对象或直接返回对象的配置工厂，需人工合并'] };
   }
   const references = referenceMerger(current, next, manual, false, true);
   function merge(left: ts.ObjectLiteralExpression, right: ts.ObjectLiteralExpression, path: string): void {
@@ -474,16 +531,17 @@ export function mergeConfig(local: string, target: string, base?: string): Merge
       const value = unwrap(property.initializer);
       if (!existing) {
         if (!staticValue(value)) manual.push(`${propertyPath}: 动态或复杂值，需人工合并`);
-        else if (references.safe(property, propertyPath, left)) additions.push(property.getText(next!.file));
+        else if (references.safe(property, propertyPath, left)) additions.push(configPropertyText(property, next!.file));
       } else {
         const localValue = unwrap(existing.initializer);
+        if (!ts.isObjectLiteralExpression(value) && localValue.getText(current!.file).replaceAll('\r\n', '\n') === value.getText(next!.file).replaceAll('\r\n', '\n') && !references.changedImports(property)) continue;
         if (ts.isObjectLiteralExpression(localValue) && ts.isObjectLiteralExpression(value)) merge(localValue, value, propertyPath);
         else if (!staticValue(localValue) || !staticValue(value) || ts.isObjectLiteralExpression(localValue) !== ts.isObjectLiteralExpression(value)) {
           manual.push(`${propertyPath}: 动态值或结构变化，保留本地值并需人工确认`);
         }
       }
     }
-    appendMembers(local, left, additions, edits);
+    appendMembers(local, left, additions, edits, true);
   }
   merge(localObject, targetObject, 'config');
   references.finish(local, edits);

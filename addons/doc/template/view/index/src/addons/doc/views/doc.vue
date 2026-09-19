@@ -8,8 +8,7 @@
 </template>
 
 <script setup lang="ts" name="Doc">
-import { MdCatalog, MdPreview } from 'meadmin-addons-doc';
-import 'meadmin-addons-doc/dist/preview.js';
+import { MdCatalog, MdPreview } from 'meadmin-addons-doc/dist/preview.js';
 import type { AonDocMenuTree } from '../api/aonDoc';
 import { aonDocGetContentApi, aonDocmenuTreeApi } from '../api/aonDoc';
 import Layout from './components/pageLayout.vue';

@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router';
-import Layout from '../views/components/layout.vue';
-import Doc from '../views/doc.vue';
+const Layout = () => import('../views/components/layout.vue');
+const Doc = () => import('../views/doc.vue');
 export const routes: RouteRecordRaw[] = [
   {
     path: '/aon/doc',

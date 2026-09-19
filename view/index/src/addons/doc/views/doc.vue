@@ -21,36 +21,49 @@ const { runAsync: menuApiRun } = aonDocmenuTreeApi();
 const { runAsync, data, loading } = aonDocGetContentApi();
 const viewId = 'view-md_' + useId();
 const mdviewId = 'mdp_' + useId();
-const init = async () => {
-  if (!props.aonDocLabel) {
-    const menus = await menuApiRun(props.version);
-    const getFirstMenu = (menus: AonDocMenuTree) => {
-      let menu = '/';
-      for (let i = 0; i < menus.length; i++) {
-        if (menus[i].children?.length) {
-          menu = getFirstMenu(menus[i].children);
-        } else if (menus[i].contentType === 0) {
-          return `/aon/doc/${menus[i].version}/${menus[i]?.label || menus[i].id}`;
-        }
-        if (menu !== '/') {
-          return menu;
-        }
-      }
+const getFirstMenu = (menus: AonDocMenuTree): AonDocMenuTree[number] | undefined => {
+  for (const menu of menus) {
+    if (menu.children?.length) {
+      const first = getFirstMenu(menu.children);
+      if (first) return first;
+    } else if (menu.contentType === 0) {
       return menu;
-    };
-    router.replace(getFirstMenu(menus));
-  } else {
-    await runAsync(props.version!, props.aonDocLabel!);
+    }
   }
 };
-const immediate = !props.aonDocLabel;
+let loadedKey = '';
+let defaultTarget: { version: string; label: string } | undefined;
+const init = async (navigate = false) => {
+  const requestedVersion = props.version;
+  const requestedLabel = props.aonDocLabel;
+  let version = requestedVersion;
+  let label = requestedLabel;
+  if (!label) {
+    if (!defaultTarget || (version && defaultTarget.version !== version)) {
+      const first = getFirstMenu(await menuApiRun(version));
+      // 空菜单或只有外链时保持入口，不误跳到首页。
+      if (!first) return;
+      defaultTarget = { version: first.version, label: first.label || first.id };
+    }
+    ({ version, label } = defaultTarget);
+  }
+  if (props.version !== requestedVersion || props.aonDocLabel !== requestedLabel) return;
+  if (!version || !label) return;
+  const key = `${version}/${label}`;
+  if (loadedKey !== key) {
+    await runAsync(version, label);
+    loadedKey = key;
+  }
+  // 初次 SSR/水合先加载正文；挂载并注册监听后才规范化地址，避免漏掉参数变化。
+  if (navigate && !requestedLabel && props.version === requestedVersion && props.aonDocLabel === requestedLabel) {
+    await router.replace(`/aon/doc/${encodeURIComponent(version)}/${encodeURIComponent(label)}`);
+  }
+};
 onMounted(() => {
   watch(
     () => [props.aonDocLabel, props.version],
-    async () => {
-      await init();
-    },
-    { immediate },
+    () => init(true),
+    { immediate: true },
   );
 });
 await init();

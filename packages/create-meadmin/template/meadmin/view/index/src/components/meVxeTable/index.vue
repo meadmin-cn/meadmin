@@ -1,5 +1,5 @@
 <template>
-  <div v-resize="getTableHeight" class="me-vxe-table" :class="meClass">
+  <div v-if="vxeReady" v-resize="getTableHeight" class="me-vxe-table" :class="meClass">
     <div v-if="toolbar" ref="meVxeToolbarRef" class="me-vxe-toolbar">
       <div v-if="$slots.search" v-show="showSearch" class="me-vxe-toolbar-search">
         <slot name="search"></slot>
@@ -71,6 +71,7 @@ import { useTemplateRef } from 'vue';
 import type { VxeTableDefines, VxeTableInstance, VxeTableListeners, VxeTableProps, VxeTablePropTypes } from 'vxe-table';
 import pagination from './components/pagination.vue';
 import resize from './directives/resize';
+import { useVxeTableReady } from './install';
 import { getFullHight } from './util';
 const props = {
   meClass: [String, Array] as PropType<string[] | string>,
@@ -147,10 +148,12 @@ export default defineComponent({
       data.visible = is;
       refreshColumn();
     };
-    onMounted(async () => {
+    const vxeReady = useVxeTableReady();
+    watch(vxeTableRef, async (table) => {
+      if (!table) return;
       await nextTick();
-      await nextTick(); //等两次渲染完成才能获取到列
-      const { collectColumn: origionCollectColumn, fullColumn } = vxeTableRef.value!.getTableColumn();
+      if (vxeTableRef.value !== table) return;
+      const { collectColumn: origionCollectColumn, fullColumn } = table.getTableColumn();
       collectColumn.value = origionCollectColumn;
       defaultChecked.value = fullColumn.reduce((previousValue, currentValue) => {
         if (currentValue.visible) {
@@ -169,6 +172,7 @@ export default defineComponent({
       }
     };
     return {
+      vxeReady,
       elTreeProps: {
         label: (item: TreeNodeData) => (item.type === 'seq' ? '#' : item.title),
         children: 'children',

@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import autoComponents from './autoComponents.js';
 import autoImport from './autoImport.js';
 import autoImportApi from './autoImportApi.js';
+import lazyIcons from './lazyIcons.js';
 import svgLoader from './svgLoader.js';
 import vueSetUpExtend from './vueSetUpExtend.js';
 // import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
@@ -15,6 +16,7 @@ export default () =>
   // _configEnv: ConfigEnv
   {
     return [
+      lazyIcons(),
       vue(),
       // VueI18nPlugin({
       //   /* options */

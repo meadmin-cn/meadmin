@@ -29,9 +29,9 @@
         <el-input v-model="filterText" placeholder="搜索图标" clearable @input="filterIcons" />
         <el-tabs v-model="activeTab" @tab-click="handleTabClick">
           <el-tab-pane label="Svg 图标" name="svg">
-            <el-scrollbar height="300px">
+            <el-scrollbar v-if="popoverVisible && activeTab === 'svg'" height="300px">
               <div class="icon-grid">
-                <div v-for="icon in filteredSvgIcons" :key="icon" class="icon-grid-item" @click="selectIcon(icon)">
+                <div v-for="icon in pagedSvgIcons" :key="icon" class="icon-grid-item" @click="selectIcon(icon)">
                   <component :is="icon" />
                   <div class="name">{{ icon.replace('MeIcon', '') }}</div>
                 </div>
@@ -39,9 +39,9 @@
             </el-scrollbar>
           </el-tab-pane>
           <el-tab-pane label="Element 图标" name="element">
-            <el-scrollbar height="300px">
+            <el-scrollbar v-if="popoverVisible && activeTab === 'element'" height="300px">
               <div class="icon-grid">
-                <div v-for="icon in filteredElementIcons" :key="icon" class="icon-grid-item" @click="selectIcon(icon)">
+                <div v-for="icon in pagedElementIcons" :key="icon" class="icon-grid-item" @click="selectIcon(icon)">
                   <component :is="icon" />
                   <div class="name">{{ icon.replace('MelIcon', '') }}</div>
                 </div>
@@ -49,6 +49,7 @@
             </el-scrollbar>
           </el-tab-pane>
         </el-tabs>
+        <el-pagination v-if="filteredCount > pageSize" v-model:current-page="currentPage" :page-size="pageSize" :total="filteredCount" layout="prev, pager, next" :pager-count="5" size="small" />
       </div>
     </el-popover>
   </div>
@@ -73,6 +74,13 @@ const displayIcon = computed(() => selectedIcon.value);
 const filterText = ref('');
 const filteredSvgIcons = ref<string[]>([...svgIconNames]);
 const filteredElementIcons = ref<string[]>([...elIConNames]);
+const pageSize = 24;
+const currentPage = ref(1);
+const pagedSvgIcons = computed(() => filteredSvgIcons.value.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize));
+const pagedElementIcons = computed(() => filteredElementIcons.value.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize));
+const filteredCount = computed(() => (activeTab.value === 'svg' ? filteredSvgIcons.value.length : filteredElementIcons.value.length));
+
+watch(activeTab, filterIcons);
 
 function handleTabClick(tabPane: any) {
   activeTab.value = tabPane.props.name;
@@ -80,6 +88,7 @@ function handleTabClick(tabPane: any) {
 }
 
 function filterIcons() {
+  currentPage.value = 1;
   if (activeTab.value === 'svg') {
     filteredSvgIcons.value = filterText.value ? svgIconNames.filter((icon) => icon.toLowerCase().includes(filterText.value.toLowerCase())) : svgIconNames;
   } else {

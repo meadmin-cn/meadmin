@@ -1,12 +1,12 @@
-import * as elementPlusIconsVue from '@element-plus/icons-vue';
-import { upperFirst } from 'lodash-es';
-import path from 'path-browserify';
+import elementIconLoaders from 'virtual:me-element-icons';
 import type { App, Component } from 'vue';
-import { h } from 'vue';
+import { defineAsyncComponent, defineComponent, h } from 'vue';
+
 export const elIConNames = [] as string[];
 export const svgIconNames = [] as string[];
 export function installIcon(app: App) {
-  function componentIcon(name: string, iconComponent: Component) {
+  function componentIcon(name: string, loader: () => Promise<Component>) {
+    const iconComponent = defineAsyncComponent(loader);
     app.component(
       name,
       defineComponent({
@@ -15,21 +15,13 @@ export function installIcon(app: App) {
           color: String,
         },
         setup(props) {
-          let fontSize: string | undefined;
-          if (props.size) {
-            if (typeof props.size === 'string') {
-              fontSize = props.size;
-            } else if (typeof props.size === 'number') {
-              fontSize = `${props.size}px`;
-            }
-          }
           return () =>
             h(
               'i',
               {
                 class: 'el-icon',
                 style: {
-                  fontSize,
+                  fontSize: typeof props.size === 'number' ? `${props.size}px` : props.size,
                   color: props.color,
                 },
               },
@@ -39,18 +31,16 @@ export function installIcon(app: App) {
       }),
     );
   }
-  // 注册element icons
-  for (const [key, component] of Object.entries(elementPlusIconsVue)) {
-    componentIcon(`MelIcon${key}`, component);
-    elIConNames.push(`MelIcon${key}`);
+  // 保留完整名称供动态菜单及选择器使用，组件代码仅在渲染时加载。
+  for (const name of Object.keys(elementIconLoaders).sort()) {
+    componentIcon(`MelIcon${name}`, elementIconLoaders[name as keyof typeof elementIconLoaders]);
+    elIConNames.push(`MelIcon${name}`);
   }
-  // 注册自定义的svg icons
-  const svgModules = import.meta.glob('./svg/*.svg', {
-    import: 'default',
-    eager: true,
-  });
-  for (const [key, component] of Object.entries(<Record<string, Component>>svgModules)) {
-    componentIcon('MeIcon' + upperFirst(path.parse(key).name), component);
-    svgIconNames.push('MeIcon' + upperFirst(path.parse(key).name));
+  const svgModules = import.meta.glob<Component>('./svg/*.svg', { import: 'default' });
+  for (const [file, loader] of Object.entries(svgModules)) {
+    const name = file.slice(file.lastIndexOf('/') + 1, -4);
+    const componentName = 'MeIcon' + name.charAt(0).toUpperCase() + name.slice(1);
+    componentIcon(componentName, loader);
+    svgIconNames.push(componentName);
   }
 }

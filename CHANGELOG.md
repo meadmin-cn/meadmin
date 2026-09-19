@@ -1,5 +1,32 @@
 
 
+## [1.3.14](https://github.com/meadmin-cn/meadmin/compare/main-1.3.13...main-1.3.14) (2026-09-19)
+
+
+### 新功能[feat]
+
+* **midway-vite-view:** 前端指定端口 ([294b296](https://github.com/meadmin-cn/meadmin/commit/294b296f85c21b4f0b4ff291653645b00f4268ed))
+
+
+### Bug 修复[fix]
+
+* 修复 压缩命令占用内存过多问题 ([8165610](https://github.com/meadmin-cn/meadmin/commit/8165610e8a0ed9875e34224ae6c24f03bdd341e7))
+* 修复doc插件首次加载问题 ([fd45cda](https://github.com/meadmin-cn/meadmin/commit/fd45cdacfebc4fd614f97756d52f99663f23d180))
+* 修复update命令自动跳过部分模板文件的问题 ([a2df7e2](https://github.com/meadmin-cn/meadmin/commit/a2df7e21e55428b52353ca2b0ffaf4207d9ee475))
+
+
+### 性能改进[perf]
+
+* 优化前台加载速度 ([0e5c75d](https://github.com/meadmin-cn/meadmin/commit/0e5c75db1b6b8e6a4b0d30f3418f7ea00812459a))
+* 优化doc组件前台加载性能 ([27f363e](https://github.com/meadmin-cn/meadmin/commit/27f363e6f9d143456e2c139c9f66eb08a6ee9203))
+* **meadmin-view-admin:** 后台组件改成动态加载优化包大小 ([978adc8](https://github.com/meadmin-cn/meadmin/commit/978adc863a9ef7aa87a294960c9ef6b3bd4002e8))
+
+
+### CI发版[ci]
+
+* 版本设置为1.3.14 ([d87e205](https://github.com/meadmin-cn/meadmin/commit/d87e2054facf36d51d04230219551ef5a757665c))
+* **create-meadmin:** 模板覆盖 ([8ef1fcb](https://github.com/meadmin-cn/meadmin/commit/8ef1fcb91a8cb555358f2463d6833a28ce76751f))
+
 ## [1.3.13](https://github.com/meadmin-cn/meadmin/compare/main-1.3.6...main-1.3.13) (2026-09-19)
 
 

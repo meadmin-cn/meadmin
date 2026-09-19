@@ -9,6 +9,7 @@
   },
   "scripts": {
     "test": "pnpm build && node --test test/update-*.test.mjs",
+    "test:compress": "pnpm build && node --test test/compress.test.mjs",
     "build": "rimraf dist && tsc --build",
     "prepublishOnly": "pnpm build"
   },

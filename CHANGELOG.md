@@ -1,5 +1,106 @@
 
 
+## [1.3.13](https://github.com/meadmin-cn/meadmin/compare/main-1.3.6...main-1.3.13) (2026-09-19)
+
+
+### 新功能[feat]
+
+* 加上头像 ([3a7f878](https://github.com/meadmin-cn/meadmin/commit/3a7f878beae61cbfcdb145954002ad498f515fe7))
+* 前台底部样式加上说明 ([a38033b](https://github.com/meadmin-cn/meadmin/commit/a38033b049e7071d5f6d81b7e53a432c1b3a7845))
+* 首页样式优化 ([0cfa1a4](https://github.com/meadmin-cn/meadmin/commit/0cfa1a49efee949c359984b689d2c42df6454473))
+* **aon-doc:** doc插件优化样式展示 ([a93b6ac](https://github.com/meadmin-cn/meadmin/commit/a93b6acdc7f97488f8c1fe985f4bb7deaa1266f6))
+* **cli:** 加上清楚历史功能，加上sql保留update语句 ([8a86229](https://github.com/meadmin-cn/meadmin/commit/8a8622929f7ff14939b6fd6894f0c2406f5b72e8))
+* **create-meadmin:** 更新meadmin 模板 ([f8fca38](https://github.com/meadmin-cn/meadmin/commit/f8fca3890d1b9e3394e43ab34de232c9aa5a1b08))
+* **index:** 加上仅客户端渲染组件 ([68592b1](https://github.com/meadmin-cn/meadmin/commit/68592b1a2f4fc2cd0fe7a18b186cbcb1fb2e359e))
+* **meadmin-view-admin:** 加上修复树关系 ([af2cd56](https://github.com/meadmin-cn/meadmin/commit/af2cd56632dbce73746a0ec4f71fdf90acb526d1))
+* **meadmin:** 加上个人中心 ([b55602b](https://github.com/meadmin-cn/meadmin/commit/b55602bbdc59fea0910587b6ceb7d703294c6735))
+* **meadmin:** 加上更新cli命令 ([1ffc4fb](https://github.com/meadmin-cn/meadmin/commit/1ffc4fb504466ae3c85f0e6e56ee44de1a3cfb17))
+* **meadmin:** 加上数据权限 ([e19332b](https://github.com/meadmin-cn/meadmin/commit/e19332b04225c9e1070060514525cf270e9f04cf))
+* **meadmin:** 加上系统配置管理 ([869ebe0](https://github.com/meadmin-cn/meadmin/commit/869ebe03f5ac7aa7290c6b42ecf75457fc3c82ee))
+* **meadmin:** header 和footer 放到配置项 ([bffb30e](https://github.com/meadmin-cn/meadmin/commit/bffb30e1346abb3d0e6b6a0ad1f76b2d0127c4ac))
+* **midway-vite-view:** 前台页面优化样式 ([2584caf](https://github.com/meadmin-cn/meadmin/commit/2584caf2b719b83cc253fa273d6bcf5d526a6a26))
+* **midway-vite-view:** 修改前台样式 ([09b29e1](https://github.com/meadmin-cn/meadmin/commit/09b29e1b4c10c29d83cc305bbed77d2c825f4010))
+
+
+### Bug 修复[fix]
+
+* 版本设置为1.3.13 ([9a2ba2a](https://github.com/meadmin-cn/meadmin/commit/9a2ba2abc460f753ca75159d4387a0fedbac1eaf))
+* 当前版本号用@meadmin/core判断 ([a255429](https://github.com/meadmin-cn/meadmin/commit/a255429f4d0309ccc39602e26a27a65f31acf25c))
+* 模版加上打包命令默认文件 ([20a24ee](https://github.com/meadmin-cn/meadmin/commit/20a24ee672413c473c870cff68e09688ad2bb84b))
+* 修复 update 命令更新问题，修复缓存文件夹 ([a9a0813](https://github.com/meadmin-cn/meadmin/commit/a9a0813fee40f52a0c22ae51be76b4efe5487415))
+* 修复反省关联导致的外键约束问题 ([2fde3dd](https://github.com/meadmin-cn/meadmin/commit/2fde3ddd0b501c7426d6b267dba6aa706497058f))
+* 修复类型错误 ([3964b24](https://github.com/meadmin-cn/meadmin/commit/3964b24148792857efc5ab6369024b246734712c))
+* 修复无任务报错 ([f834ae8](https://github.com/meadmin-cn/meadmin/commit/f834ae87f4effc865723a3872d2efa8c5860b6d2))
+* 修复update命令错误文件问题 ([50f5e86](https://github.com/meadmin-cn/meadmin/commit/50f5e86c3818d9f82c43b0f4dd4417dee99a68e6))
+* **cli:** update命令修复更新bug ([203d7d1](https://github.com/meadmin-cn/meadmin/commit/203d7d174fa5379dc7551092d67ee4cdd06829a8))
+* **create-meadmin:** 修复设置模版错误 ([66a7807](https://github.com/meadmin-cn/meadmin/commit/66a7807e8ae715b4a541e44b7ba114e1d5e157c7))
+* **index:** 修复最新版vxe-tabe不支持服务端渲染问题 ([4d7ffab](https://github.com/meadmin-cn/meadmin/commit/4d7ffab5aff40b53799d25ac2f88a2775299c10f))
+* **meadmin-view-admin:** 加上首页多语言翻译 ([e1e02b2](https://github.com/meadmin-cn/meadmin/commit/e1e02b23a2df73f6b0ee9083edfac0b3af711d80))
+* **meadmin-view-admin:** 修复菜单搜索不出来存在按钮子级的菜单问题 ([a05704e](https://github.com/meadmin-cn/meadmin/commit/a05704ec76c5d45b9ebb486b771ea2175c1b7c80))
+* **meadmin-view-admin:** 修复登录页回显bug ([fbcd8ba](https://github.com/meadmin-cn/meadmin/commit/fbcd8ba2cb904620b58892c71a64b6dd45f0d132))
+* **meadmin-view-admin:** 修复个人中心回显问题 ([81fc2ec](https://github.com/meadmin-cn/meadmin/commit/81fc2ec42713346439893486b83368759f02d88a))
+* **meadmin-view-admin:** 修复类型错误 ([945f2f9](https://github.com/meadmin-cn/meadmin/commit/945f2f9cfb5473fcdc6d8cc4b8a2cc018ed6c484))
+* **meadmin-view-admin:** 移除多余的箭头 ([c1e15ed](https://github.com/meadmin-cn/meadmin/commit/c1e15ed7ffa3b7bab3b0de2b180ddf97230a8fd7))
+* **meadmin-view-admin:** logo更改 ([5c6a2bb](https://github.com/meadmin-cn/meadmin/commit/5c6a2bb76ead4f2cf3f0112c7af088a37241fcff))
+* **meadmin:** 菜单更新时重新设置组级，并且修复更新后不刷新选中状态问题 ([d36a545](https://github.com/meadmin-cn/meadmin/commit/d36a545a71aa34e2962c949b6ae644895f0bb2ab))
+* **meadmin:** 超级管理员数据权限，返回全部权限 ([9248aed](https://github.com/meadmin-cn/meadmin/commit/9248aed20b29578790d5f0be8ea8d9364b9bfd75))
+* **meadmin:** 修复错误的RuleType引入 ([aa43e0f](https://github.com/meadmin-cn/meadmin/commit/aa43e0f78d61f3a1da2db8b20008d7fdd9df81b5))
+* **meadmin:** 修复管理员页面无法设置组织的bug ([3bf954c](https://github.com/meadmin-cn/meadmin/commit/3bf954ccb5afc9b856dcd6de2e59b588a3309c46))
+* **meadmin:** 修复后台权限校验错误 ([4549998](https://github.com/meadmin-cn/meadmin/commit/4549998447c0d5273ec5037440c23d05f82cd836))
+* **meadmin:** 修复缓存时间配置 ([d6a1b10](https://github.com/meadmin-cn/meadmin/commit/d6a1b103fecfd5b9bcf73145b4bbf957588cd0a7))
+* **meadmin:** 修复设置组织用户丢失的权限问题 ([8b2983d](https://github.com/meadmin-cn/meadmin/commit/8b2983d80106e31502595311c01af7f4b0499e14))
+* **meadmin:** 修复设置组织用户权限问题 ([6e316c7](https://github.com/meadmin-cn/meadmin/commit/6e316c7a1e30ab25bf230902dc60cda008fafa3c))
+* **meadmin:** 修复字典配置样式和权限问题 ([8e4a4a0](https://github.com/meadmin-cn/meadmin/commit/8e4a4a07feda7e221a8fd9749bc44c295f600199))
+* **meadmin:** 修复file 设置类型问题 ([06d79be](https://github.com/meadmin-cn/meadmin/commit/06d79befa0c6f262cf23bab80c50736ae66a5c6c))
+* **midway-vite-view:** 修复右上角登录、注册下拉方式 ([3ec932a](https://github.com/meadmin-cn/meadmin/commit/3ec932a2554385355e76bb540f3db53c44a66a92))
+* **midway-vite-view:** 修复config为缓存保鲜，而非预加载 ([cea9bb7](https://github.com/meadmin-cn/meadmin/commit/cea9bb704001c6e8a95d8068c200717f2cabe8bc))
+* **midway-vite-view:** 修复vxetable语言包冲突问题 ([63f0e1e](https://github.com/meadmin-cn/meadmin/commit/63f0e1ebda68aef00d5b5091d725f22d296dd7b4))
+
+
+### 其他[chore]
+
+* 更新新版sql和锁文件 ([2d5cea7](https://github.com/meadmin-cn/meadmin/commit/2d5cea781588511765c51f24ca951206f84a0472))
+* 缓存底部文件 ([efba2d7](https://github.com/meadmin-cn/meadmin/commit/efba2d74e7a99217c54a4da8a005c172df1cf2ca))
+* 加上ai开发文档约束 ([bbd339e](https://github.com/meadmin-cn/meadmin/commit/bbd339eed412bbcfc2bee87d03a5073518065394))
+* 适配新版本头部和尾部 ([87404ee](https://github.com/meadmin-cn/meadmin/commit/87404eef791c93429e5b9afe4e2c21cd699e224c))
+* **create-meadmin:** 同步seqlize版本 ([94c4287](https://github.com/meadmin-cn/meadmin/commit/94c428775a11d98f0b5d030d924619f625692d24))
+* sql文件更新 ([9e0304c](https://github.com/meadmin-cn/meadmin/commit/9e0304cfbcf4728f3cda182ffe5d60cf50c9e13e))
+
+
+### 文档更改[docs]
+
+* 优化ai文档说明 ([0717ffb](https://github.com/meadmin-cn/meadmin/commit/0717ffbdca203b554ca36396f72eba40c723c380))
+
+
+### 重构[refactor]
+
+* 优化后台首页 ([5a22c4c](https://github.com/meadmin-cn/meadmin/commit/5a22c4c998cbe676a27908d604c40cb8c97e797d))
+* **meadmin-view-admin:** 登录页重构 ([09d027e](https://github.com/meadmin-cn/meadmin/commit/09d027e270ad66d0a4d6f639e8f31782cdb4cab3))
+* **meadmin-view-admin:** 上传文件类型优化 ([c28dc9a](https://github.com/meadmin-cn/meadmin/commit/c28dc9abd96818951952b5997864104053bc7e95))
+
+
+### 性能改进[perf]
+
+* **meadmin-view-admin:** 样式及效果优化 ([09a41b0](https://github.com/meadmin-cn/meadmin/commit/09a41b04e162dd76f8353e6b99ddc19bec7ab961))
+* **meadmin-view-admin:** 优化设置图标样式 ([9394267](https://github.com/meadmin-cn/meadmin/commit/9394267dce491173b5bb6a388f0fad9c92ddc9ea))
+
+
+### CI发版[ci]
+
+* 版本号设置为1.3.8 ([599abff](https://github.com/meadmin-cn/meadmin/commit/599abffc53ec6a294e95665b75a9efc22292f9f8))
+* 版本号设置为1.3.9 ([c86f5ea](https://github.com/meadmin-cn/meadmin/commit/c86f5eaff9f064ca7ab3a7f21fe0c18818b73a33))
+* 版本设置为1.3.12 ([51fbc4d](https://github.com/meadmin-cn/meadmin/commit/51fbc4d5b4d3f0c61f24c5b52fe81b8082d5d168))
+* 版本设置为13.11 ([bbc5576](https://github.com/meadmin-cn/meadmin/commit/bbc55763ad1e3d795a59fed4d614c826b5266ea7))
+* 更新模版 ([72cdb17](https://github.com/meadmin-cn/meadmin/commit/72cdb1787ef8a658ef799296cab2c8d2bff99e42))
+* 更新模版加上缺少的配置项 ([b664639](https://github.com/meadmin-cn/meadmin/commit/b6646394d7e565ce39affe9a210a590295d2d41d))
+* 更新sql文件 ([db7819a](https://github.com/meadmin-cn/meadmin/commit/db7819abb37995bfb1a14448fd2ed0e0d97f6a80))
+* **create-meadmin:** 更新模版 ([ae74876](https://github.com/meadmin-cn/meadmin/commit/ae748763d0823cb82e422b0c9610247d4a10ccb7))
+* **create-meadmin:** 更新模版 ([81436fe](https://github.com/meadmin-cn/meadmin/commit/81436fe5942ee732151f8bc14bb92ed304bb1263))
+* **create-meadmin:** 更新template ([3c78629](https://github.com/meadmin-cn/meadmin/commit/3c78629abf6543844d8bd35714198728c6e11083))
+* **meadmin:** 版本发布到1.3.7 ([c38af68](https://github.com/meadmin-cn/meadmin/commit/c38af686842e236756eaf3897f636924e6f305ac))
+* **meadmin:** 加上发布地址 ([6ccff3a](https://github.com/meadmin-cn/meadmin/commit/6ccff3a67ebc05004cd883d46716fae179b9e5a6))
+* **meadmin:** 设置版本号1.3.10 ([d7376d6](https://github.com/meadmin-cn/meadmin/commit/d7376d68c87205e9bdab57db52cb15c30ebc82cf))
+
 ## [1.3.6](https://github.com/meadmin-cn/meadmin/compare/main-1.3.4...main-1.3.6) (2026-08-29)
 
 

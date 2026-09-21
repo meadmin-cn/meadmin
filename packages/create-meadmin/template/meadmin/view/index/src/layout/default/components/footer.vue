@@ -9,7 +9,7 @@
           </a>
           <p v-if="description">{{ description }}</p>
           <p v-if="copyright" class="copyright">{{ copyright }}</p>
-          <a v-if="icpNumber" class="copyright" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44031002000255" rel="nofollow" target="_blank">{{ icpNumber }}</a>
+          <a v-if="icpNumber" class="copyright" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=" rel="nofollow" target="_blank">{{ icpNumber }}</a>
         </div>
         <div v-for="(column, index) in columns" :key="index" class="footer-col">
           <h5 v-if="column.title">{{ column.title }}</h5>

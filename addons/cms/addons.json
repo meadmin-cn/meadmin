@@ -1,0 +1,10 @@
+{
+  "name": "cms",
+  "chineseName": "CMS 内容管理",
+  "version": "1.0.0",
+  "description": "栏目树、文章与单页审核发布、标签、专题、区块轮播广告、仅后台录入的评论审核、真实统计及公开列表详情搜索。编辑内容自动退回草稿。公开内容必须已发布且到达发布时间。Markdown 使用 md-editor-v3 与 DOMPurify，不依赖 doc 插件。前台首页展示 position=home 的区块，其他位置可通过公开区块接口使用。SEO 元信息当前在客户端设置，未实现搜索引擎专用 SSR。未实现支付订单、短信、移动原生端、动态建表、自助评论、文章多专题归属、独立审核日志和 FastAdmin 全量扩展能力。install.sql 默认使用 doc 示例的 meadmin schema，执行前核实部署 schema 并单独授权新表和菜单写入；不会自动赋予角色权限。",
+  "keywords": ["CMS", "Markdown", "内容审核"],
+  "author": "",
+  "installShells": ["pnpm -F meadmin-template add meadmin-addons-cms@workspace:*", "pnpm -F index-template add meadmin-addons-cms@workspace:*"],
+  "uninstallShells": ["pnpm -F meadmin-template rm meadmin-addons-cms", "pnpm -F index-template rm meadmin-addons-cms"]
+}

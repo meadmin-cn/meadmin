@@ -76,7 +76,7 @@ export class JobService {
     }
     const queue = this.bullmqFramework.getQueue(queueName) ?? this.bullmqFramework.createQueue(queueName, processorOptions[queueName]?.queueOptions);
     if (entity.strategy === 3) {
-      await queue.upsertJobScheduler(
+      await (queue as any).upsertJobScheduler(
         this.getSchedulerId(entity.name),
         {
           pattern: entity.cron,
@@ -89,7 +89,7 @@ export class JobService {
       );
     } else {
       jobOptions.jobId = this.getJobId(entity.name);
-      await queue.add(entity.name, queueOptions, jobOptions);
+      await (queue as any).add(entity.name, queueOptions, jobOptions);
     }
   }
 
@@ -212,9 +212,9 @@ export class JobService {
     }
     if (entity.strategy === 3) {
       //执行策略:1=立即执行;2=延时执行;3=定时执行;4=放弃执行,
-      await this.bullmqFramework.getQueue(queueName).removeJobScheduler(this.getSchedulerId(entity.name));
+      await (this.bullmqFramework.getQueue(queueName) as any).removeJobScheduler(this.getSchedulerId(entity.name));
     } else {
-      await this.bullmqFramework.getQueue(queueName).remove(this.getJobId(entity.name));
+      await (this.bullmqFramework.getQueue(queueName) as any).remove(this.getJobId(entity.name));
     }
     entity.strategy = 4;
     await entity.save();

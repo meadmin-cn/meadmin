@@ -4,7 +4,9 @@
       <me-icon-logo :size="30" style="fill: none" />
       <span class="brand-name">{{ globalStore.websiteName }}</span>
     </router-link>
-    <nav-menu class="menu" :items="menus" mode="desktop" :active="active" />
+    <div ref="menuRef" class="menu">
+      <nav-menu :items="desktopMenus" mode="desktop" :active="active" />
+    </div>
     <div class="right">
       <!-- 右侧扩展区：默认更新日志，可通过 right 插槽整体替换（移动端隐藏） -->
       <div class="right-ext">
@@ -31,7 +33,7 @@
 <script setup lang="ts" name="LayoutHeader">
 import { PageEnum } from '@/dict/pageEnum';
 import { useGlobalStore, useRouteStore } from '@/store';
-import { ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import type { RouteRecordRaw } from 'vue-router';
 import NavMenu from './components/navMenu.vue';
 import User from './components/user.vue';
@@ -46,9 +48,45 @@ const props = defineProps<{ menus?: RouteRecordRaw[]; active?: string }>();
 const globalStore = useGlobalStore();
 const routeStore = useRouteStore();
 const mobileOpen = ref(false);
+const viewportWidth = ref(1920);
+const menuRef = ref<HTMLElement>();
+const availableMenuWidth = ref(0);
 
-const menus = computed(() => {
-  return props.menus ?? routeStore.routes;
+const menus = computed(() => props.menus ?? routeStore.routes);
+const menuTitle = (item: RouteRecordRaw) => String(item.meta?.title ?? '');
+const estimateMenuWidth = (item: RouteRecordRaw) => Math.max(86, Array.from(menuTitle(item)).reduce((total, char) => total + (/[\u4e00-\u9fff]/.test(char) ? 15 : 8), 0) + 34 + (item.children?.length ? 18 : 0));
+const desktopMenus = computed<RouteRecordRaw[]>(() => {
+  const source = menus.value.filter((item) => !item.meta?.hideMenu && !item.meta?.overflowMenu && item.path !== '/__more__');
+  const available = Math.max(120, availableMenuWidth.value || viewportWidth.value - 560);
+  let used = 0;
+  let count = 0;
+  for (const item of source) {
+    const next = estimateMenuWidth(item);
+    const reserveMore = source.length > count + 1 ? 58 : 0;
+    if (used + next + reserveMore > available) break;
+    used += next;
+    count += 1;
+  }
+  if (count >= source.length) return source;
+  const visible = source.slice(0, Math.max(1, count));
+  const overflow = source.slice(visible.length);
+  return [...visible, { path: '/__more__', meta: { title: '…', alwaysShow: true, overflowMenu: true }, children: overflow } as RouteRecordRaw];
+});
+let resizeObserver: ResizeObserver | undefined;
+const updateViewport = () => {
+  viewportWidth.value = window.innerWidth;
+};
+onMounted(() => {
+  updateViewport();
+  window.addEventListener('resize', updateViewport);
+  resizeObserver = new ResizeObserver(([entry]) => {
+    availableMenuWidth.value = entry.contentRect.width;
+  });
+  if (menuRef.value) resizeObserver.observe(menuRef.value);
+});
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateViewport);
+  resizeObserver?.disconnect();
 });
 </script>
 <style lang="scss" scoped>
@@ -74,8 +112,13 @@ const menus = computed(() => {
   }
 }
 .menu {
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
+  overflow: visible;
+}
+.menu > :deep(.nv-list) {
+  min-width: 0;
+  overflow: visible;
 }
 .right {
   display: flex;
@@ -154,13 +197,57 @@ const menus = computed(() => {
     border-top: 1px solid #e8ebf2;
   }
 }
-@media (max-width: 960px) {
+@media (max-width: 1240px) {
+  .header {
+    gap: 10px;
+  }
+  .brand {
+    margin-right: 0;
+  }
+  .menu :deep(.nv-link) {
+    padding-right: 9px;
+    padding-left: 9px;
+    font-size: 14px;
+  }
+  .right-ext :deep(.cms-search-input) {
+    width: 190px;
+  }
+}
+@media (max-width: 980px) {
+  .header {
+    height: 62px;
+  }
   .menu,
   .right-ext {
     display: none;
   }
   .hamburger {
     display: flex;
+  }
+  .mobile-menu {
+    top: 62px;
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}
+@media (min-width: 981px) and (max-width: 1180px) {
+  .header {
+    gap: 8px;
+  }
+  .brand,
+  .right {
+    flex: 0 0 auto;
+  }
+  .brand-name {
+    font-size: 17px;
+  }
+  .right-ext :deep(.cms-search-input) {
+    width: 160px;
+  }
+  .menu :deep(.nv-link) {
+    padding-right: 8px;
+    padding-left: 8px;
+    font-size: 13px;
   }
 }
 </style>

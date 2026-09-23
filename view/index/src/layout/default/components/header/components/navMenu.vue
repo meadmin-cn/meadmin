@@ -2,8 +2,8 @@
   <div class="nv-list" :class="{ mobile: mode === 'mobile' }">
     <template v-for="item in visibleItems" :key="item.path">
       <!-- 有可见子菜单：递归渲染 -->
-      <div v-if="kids(item).length" class="nv-item" :class="{ top: depth === 0 && mode === 'desktop' }">
-        <a class="nv-link" :class="{ 'is-active': isActive(item) }" @click="onGroupClick(item)">
+      <div v-if="kids(item).length" class="nv-item" :class="{ top: depth === 0 && mode === 'desktop', overflow: mode === 'desktop' && depth === 0 && item.meta?.overflowMenu }">
+        <a class="nv-link" :class="{ 'is-active': isActive(item), 'is-overflow': item.meta?.overflowMenu }" @click="onGroupClick(item)">
           <span class="nv-text">{{ item.meta?.title }}</span>
           <svg v-if="mode === 'desktop' || kids(item).length" class="nv-caret" :class="{ side: mode === 'desktop' && depth > 0, open: mode === 'mobile' && expanded.has(item.path) }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path v-if="mode === 'desktop' && depth > 0" d="m9 6 6 6-6 6" />
@@ -75,9 +75,10 @@ const isActive = (item: RouteRecordRaw): boolean => {
   const path = currentPath.value;
   if (!path) return false;
   if (path === item.path) return true;
-  //父级菜单：当前路由位于其子树内时高亮
-  if (path.startsWith(item.path.endsWith('/') ? item.path : item.path + '/')) return true;
-  //子孙菜单与激活路径匹配时父级同步高亮（适配 doc 插件这类扁平路径菜单）
+  // 传入 active 时按精确路径判断，避免首页路径因前缀匹配在栏目页继续高亮。
+  if (props.active) return kids(item).some((child) => isActive(child));
+  if (item.path !== '/' && !item.path.endsWith('/') && path.startsWith(item.path + '/')) return true;
+  if (item.path.endsWith('/') && path.startsWith(item.path)) return true;
   return kids(item).some((child) => isActive(child));
 };
 
@@ -89,14 +90,20 @@ const go = (item: RouteRecordRaw) => {
   }
   emit('navigate');
 };
+const firstLeaf = (item: RouteRecordRaw): RouteRecordRaw => {
+  const children = kids(item);
+  return children.length ? firstLeaf(children[0]) : item;
+};
 const onGroupClick = (item: RouteRecordRaw) => {
-  if (props.mode === 'mobile') {
-    //移动端：展开/收起
-    if (expanded.has(item.path)) {
-      expanded.delete(item.path);
-    } else {
-      expanded.add(item.path);
-    }
+  if (props.mode === 'desktop') {
+    if (!item.meta?.overflowMenu) go(firstLeaf(item));
+    return;
+  }
+  // 移动端保留展开/收起，确保仍可选择其他子栏目。
+  if (expanded.has(item.path)) {
+    expanded.delete(item.path);
+  } else {
+    expanded.add(item.path);
   }
 };
 </script>
@@ -106,11 +113,23 @@ const onGroupClick = (item: RouteRecordRaw) => {
   display: flex;
   align-items: center;
   gap: 2px;
+  min-width: max-content;
+}
+.nv-list > .nv-item,
+.nv-list > .nv-link {
+  flex: 0 0 auto;
+}
+.nv-list > .nv-item.overflow {
+  display: flex;
+  min-width: 58px;
+  flex: 1 1 58px;
+  justify-content: flex-start;
 }
 .nv-item {
   position: relative;
 }
 .nv-link {
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -123,6 +142,32 @@ const onGroupClick = (item: RouteRecordRaw) => {
   white-space: nowrap;
   transition: 0.2s;
   user-select: none;
+}
+.nv-text {
+  display: inline-block;
+  white-space: nowrap;
+}
+.nv-link.is-overflow {
+  width: 46px;
+  height: 42px;
+  padding: 0;
+  justify-content: center;
+  font-size: 0;
+  line-height: 1;
+  box-sizing: border-box;
+}
+.nv-link.is-overflow .nv-text {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  font-size: 22px;
+  line-height: 1;
+  transform: translateY(-2px);
+}
+.nv-link.is-overflow .nv-caret {
+  display: none;
 }
 .nv-caret {
   width: 14px;
@@ -187,6 +232,10 @@ const onGroupClick = (item: RouteRecordRaw) => {
     transform: translateX(6px);
   }
 }
+.nv-item.overflow > .nv-drop {
+  left: 50%;
+  transform: translate(-50%, 6px);
+}
 .nv-item:hover > .nv-drop {
   opacity: 1;
   visibility: visible;
@@ -194,6 +243,9 @@ const onGroupClick = (item: RouteRecordRaw) => {
   &.side {
     transform: translateX(0);
   }
+}
+.nv-item.overflow:hover > .nv-drop {
+  transform: translate(-50%, 0);
 }
 /* 下拉内的行样式 */
 .nv-drop .nv-link {

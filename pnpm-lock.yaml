@@ -169,6 +169,15 @@ importers:
         specifier: ~8.2.0
         version: 8.2.0(@types/node@22.14.0)(esbuild@0.27.1)(sass@1.94.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
 
+  addons/cms:
+    dependencies:
+      dompurify:
+        specifier: 3.3.3
+        version: 3.3.3
+      md-editor-v3:
+        specifier: 6.3.1
+        version: 6.3.1(vue@3.5.25(typescript@5.9.3))
+
   addons/doc:
     dependencies:
       cropperjs:
@@ -395,6 +404,9 @@ importers:
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
+      meadmin-addons-cms:
+        specifier: workspace:*
+        version: link:../../addons/cms
       meadmin-addons-doc:
         specifier: workspace:*
         version: link:../../addons/doc
@@ -609,6 +621,9 @@ importers:
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
+      meadmin-addons-cms:
+        specifier: workspace:*
+        version: link:../../addons/cms
       meadmin-addons-doc:
         specifier: workspace:*
         version: link:../../addons/doc

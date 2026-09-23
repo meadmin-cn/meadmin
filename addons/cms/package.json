@@ -1,0 +1,29 @@
+{
+  "name": "meadmin-addons-cms",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "CMS 核心：栏目、文章审核、标签、专题、单页、区块、后台评论审核及真实统计",
+  "exports": {
+    "./preview": "./src/preview.ts"
+  },
+  "files": [
+    "src",
+    "template",
+    "addons.json",
+    "install.sql",
+    "scripts",
+    "tsconfig.json"
+  ],
+  "dependencies": {
+    "md-editor-v3": "6.3.1",
+    "dompurify": "3.3.3"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.22"
+  },
+  "scripts": {
+    "sync-template": "node scripts/sync-template.mjs",
+    "test": "node --import tsx --test test/*.test.ts"
+  },
+  "license": "MIT"
+}

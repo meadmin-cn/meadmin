@@ -38,6 +38,7 @@
     "js-cookie": "^3.0.5",
     "lodash-es": "^4.17.21",
     "meadmin-addons-doc": "workspace:*",
+    "meadmin-addons-cms": "workspace:*",
     "nprogress": "^0.2.0",
     "path-browserify": "^1.0.1",
     "pinia": "^2.3.1",

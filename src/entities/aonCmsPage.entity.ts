@@ -59,7 +59,14 @@ export class AonCmsPage extends AdminBaseModel<AonCmsPage> {
 
   // 外部链接
   @Attribute({ type: DataTypes.STRING(1000), allowNull: false, defaultValue: '' })
-  @ApiPropertyRule({ description: '外部链接', rule: RuleType.string().max(1000).pattern(/^https?:\/\/[^\s]+$/).allow('').default('') })
+  @ApiPropertyRule({
+    description: '外部链接',
+    rule: RuleType.string()
+      .max(1000)
+      .pattern(/^https?:\/\/[^\s]+$/)
+      .allow('')
+      .default(''),
+  })
   declare link: string;
 
   // 打开方式：0当前窗口 1新窗口

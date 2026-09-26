@@ -8,6 +8,7 @@ import DefaultConfig from '@/config/config.default.js';
 import * as meadmin from '@meadmin/core';
 import * as viteView from '@meadmin/midway-vite-view'; //引入view组件
 import * as bullmq from '@midwayjs/bullmq';
+import { BullMQ } from '@midwayjs/bullmq';
 import * as busboy from '@midwayjs/busboy';
 import * as cacheManager from '@midwayjs/cache-manager';
 import * as captcha from '@midwayjs/captcha';
@@ -17,7 +18,6 @@ import * as staticFile from '@midwayjs/static-file';
 import * as swagger from '@midwayjs/swagger';
 import { Op, sql } from '@sequelize/core';
 import dayjs from 'dayjs';
-import { BullMQ } from '@midwayjs/bullmq';
 import { RegistreDecorators } from './decorators/index.js';
 import { Job } from './entities/job.entity.js';
 import { filters } from './filter/index.js';

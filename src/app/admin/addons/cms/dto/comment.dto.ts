@@ -5,7 +5,9 @@ export class AonCmsCommentSaveDto extends PickDtoType(AonCmsComment, ['articleId
 export class CmsPublicCommentDto extends PickDtoType(AonCmsComment, ['content', 'parentId']) {}
 export const publicCommentSchema: ReturnType<typeof RuleType.object> = RuleType.object({
   content: RuleType.string().max(2000).trim().min(1).required(),
-  parentId: RuleType.string().pattern(/^[0-9]{1,20}$/).allow(null, ''),
+  parentId: RuleType.string()
+    .pattern(/^[0-9]{1,20}$/)
+    .allow(null, ''),
 }).unknown(false);
 
 export const publicCommentReportSchema: ReturnType<typeof RuleType.object> = RuleType.object({
@@ -13,8 +15,12 @@ export const publicCommentReportSchema: ReturnType<typeof RuleType.object> = Rul
 }).unknown(false);
 
 export const commentSchema: ReturnType<typeof RuleType.object> = RuleType.object({
-  articleId: RuleType.string().pattern(/^[0-9]{1,20}$/).required(),
+  articleId: RuleType.string()
+    .pattern(/^[0-9]{1,20}$/)
+    .required(),
   author: RuleType.string().max(80).trim().min(1).required(),
   content: RuleType.string().max(2000).trim().min(1).required(),
-  parentId: RuleType.string().pattern(/^[0-9]{1,20}$/).allow(null, ''),
+  parentId: RuleType.string()
+    .pattern(/^[0-9]{1,20}$/)
+    .allow(null, ''),
 }).unknown(false);

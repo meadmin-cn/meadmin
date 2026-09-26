@@ -38,7 +38,7 @@ export class AonCmsPublicOrderService {
   }
 
   async query(input: { orderNo: string; contactPhone: string }): Promise<Record<string, unknown>> {
-    const data = validateCms(orderQuerySchema, input) as { orderNo: string; contactPhone: string };
+    const data = validateCms(orderQuerySchema, input);
     const row = await this.repository.findOne({ where: { orderNo: data.orderNo, contactPhone: data.contactPhone } });
     if (!row) throw new NotFoundError('订单不存在或联系方式不匹配');
     return this.publicRow(row);

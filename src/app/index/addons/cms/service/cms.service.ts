@@ -10,8 +10,8 @@ import { Inject, Provide } from '@midwayjs/core';
 import { NotFoundError } from '@midwayjs/core/dist/error/http.js';
 import { Context } from '@midwayjs/koa';
 import { Attributes, Op, Order, WhereOptions } from '@sequelize/core';
-import { CmsQueryDto, querySchema } from '../../../../admin/addons/cms/dto/common.dto.js';
 import { CmsPublicCommentDto, publicCommentReportSchema, publicCommentSchema } from '../../../../admin/addons/cms/dto/comment.dto.js';
+import { CmsQueryDto, querySchema } from '../../../../admin/addons/cms/dto/common.dto.js';
 import { validateCms } from '../../../../admin/addons/cms/service/guard.js';
 
 const articleAttributes: Array<keyof Attributes<AonCmsArticle>> = ['id', 'title', 'slug', 'summary', 'coverUrl', 'categoryId', 'topicId', 'tagIds', 'publishAt', 'seoTitle', 'seoKeywords', 'seoDescription', 'views', 'likes', 'comments', 'orderEnabled'];
@@ -62,7 +62,7 @@ export class AonCmsPublicService {
       const current = queue.shift()!;
       if (seen.has(current)) continue;
       seen.add(current);
-      const row = rows.find(item => item.id === current);
+      const row = rows.find((item) => item.id === current);
       if (!row || row.status !== 1) continue;
       result.push(current);
       queue.push(...(children.get(current) ?? []));
@@ -71,7 +71,18 @@ export class AonCmsPublicService {
   }
   private articleOrder(sortBy: CmsQueryDto['sortBy']): Order {
     const metric = sortBy === 'likes' ? 'likes' : sortBy === 'comments' ? 'comments' : sortBy === 'views' ? 'views' : 'publishAt';
-    return sortBy === 'latest' || !sortBy ? [['orderNum', 'DESC'], [metric, 'DESC'], ['id', 'DESC']] : [[metric, 'DESC'], ['orderNum', 'DESC'], ['publishAt', 'DESC'], ['id', 'DESC']];
+    return sortBy === 'latest' || !sortBy
+      ? [
+          ['orderNum', 'DESC'],
+          [metric, 'DESC'],
+          ['id', 'DESC'],
+        ]
+      : [
+          [metric, 'DESC'],
+          ['orderNum', 'DESC'],
+          ['publishAt', 'DESC'],
+          ['id', 'DESC'],
+        ];
   }
 
   async articles(input: CmsQueryDto) {
@@ -139,7 +150,11 @@ export class AonCmsPublicService {
     const rows = await this.comment.findAll({
       attributes: ['id', 'userId', 'author', 'authorAvatar', 'content', 'parentId', 'createdAt', 'left', 'right', 'reportCount'],
       where: { articleId: article.id, status: 1 },
-      order: [['left', 'ASC'], ['createdAt', 'ASC'], ['id', 'ASC']],
+      order: [
+        ['left', 'ASC'],
+        ['createdAt', 'ASC'],
+        ['id', 'ASC'],
+      ],
     });
     return { list: rows, total: rows.length, page: q.page, pageSize: q.pageSize };
   }

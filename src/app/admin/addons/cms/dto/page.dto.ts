@@ -16,7 +16,11 @@ export const pageSchema: ReturnType<typeof RuleType.object> = RuleType.object({
     .allow('')
     .default(''),
   kind: RuleType.number().integer().valid(1, 2).default(1),
-  link: RuleType.string().max(1000).pattern(/^https?:\/\/[^\s]+$/).allow('').default(''),
+  link: RuleType.string()
+    .max(1000)
+    .pattern(/^https?:\/\/[^\s]+$/)
+    .allow('')
+    .default(''),
   target: RuleType.number().integer().valid(0, 1).default(0),
   seoTitle: RuleType.string().max(200).allow('').default(''),
   seoKeywords: RuleType.string().max(200).allow('').default(''),

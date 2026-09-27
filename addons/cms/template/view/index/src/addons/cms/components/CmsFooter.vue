@@ -39,17 +39,15 @@
       </div>
 
       <div class="cms-footer-bottom">
-        <p class="cms-footer-tech">
-          Powered by <a href="https://github.com/meadmin-cn/meadmin" target="_blank" rel="noopener">MeAdmin</a>
-        </p>
+        <p class="cms-footer-tech">Powered by <a href="https://github.com/meadmin-cn/meadmin" target="_blank" rel="noopener">MeAdmin</a></p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import { useGlobalStore } from '@/store';
+import { computed } from 'vue';
 
 const globalStore = useGlobalStore();
 
@@ -67,16 +65,16 @@ const friendLinks = [
 
 <style lang="scss" scoped>
 :root {
-  --cms-surface-0: #05070C;
-  --cms-surface-1: #0A0D12;
-  --cms-surface-2: #0F131C;
-  --cms-surface-3: #161D2B;
-  --cms-surface-4: #1E2636;
-  --cms-accent: #38BDF8;
-  --cms-accent-dim: #0EA5E9;
-  --cms-text-primary: #F1F5F9;
-  --cms-text-secondary: #94A3B8;
-  --cms-text-tertiary: #64748B;
+  --cms-surface-0: #05070c;
+  --cms-surface-1: #0a0d12;
+  --cms-surface-2: #0f131c;
+  --cms-surface-3: #161d2b;
+  --cms-surface-4: #1e2636;
+  --cms-accent: #38bdf8;
+  --cms-accent-dim: #0ea5e9;
+  --cms-text-primary: #f1f5f9;
+  --cms-text-secondary: #94a3b8;
+  --cms-text-tertiary: #64748b;
   --cms-border: rgba(148, 163, 184, 0.1);
   --cms-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
@@ -109,18 +107,18 @@ const friendLinks = [
     gap: 12px;
     text-decoration: none;
     transition: all 0.3s ease;
-    
+
     &:hover {
       transform: translateY(-3px);
       filter: brightness(1.1);
     }
   }
-  
+
   .cms-brand-icon {
     font-size: clamp(32px, 5vw, 40px);
     line-height: 1;
   }
-  
+
   .cms-brand-name {
     font-size: clamp(1.125rem, 2.6vw, 1.375rem);
     font-weight: 800;
@@ -151,7 +149,7 @@ const friendLinks = [
   color: var(--cms-text-tertiary);
   text-decoration: none;
   transition: all 0.2s ease;
-  
+
   &:hover {
     color: var(--cms-accent);
     text-decoration: underline;
@@ -169,7 +167,7 @@ const friendLinks = [
     position: relative;
     padding-left: 14px;
   }
-  
+
   h5::before {
     content: '';
     position: absolute;
@@ -181,7 +179,7 @@ const friendLinks = [
     background: linear-gradient(to bottom, var(--cms-accent), var(--cms-accent-dim));
     border-radius: 999px;
   }
-  
+
   a {
     display: block;
     padding: 8px 0;
@@ -189,7 +187,7 @@ const friendLinks = [
     color: var(--cms-text-secondary);
     text-decoration: none;
     transition: all 0.25s ease;
-    
+
     &:hover {
       color: var(--cms-accent);
       transform: translateX(6px);
@@ -207,13 +205,13 @@ const friendLinks = [
   margin: 0;
   font-size: clamp(0.8125rem, 1.7vw, 0.9375rem);
   color: var(--cms-text-tertiary);
-  
+
   a {
     color: var(--cms-accent);
     text-decoration: none;
     font-weight: 600;
     transition: all 0.2s ease;
-    
+
     &:hover {
       color: var(--cms-accent-dim);
       text-decoration: underline;
@@ -227,7 +225,7 @@ const friendLinks = [
     grid-template-columns: 1fr 1fr;
     gap: clamp(36px, 5vw, 40px) clamp(24px, 4vw, 28px);
   }
-  
+
   .cms-footer-brand {
     grid-column: 1 / -1;
   }
@@ -238,12 +236,12 @@ const friendLinks = [
     grid-template-columns: 1fr;
     gap: clamp(32px, 5vw, 36px);
   }
-  
+
   .cms-footer-col {
     h5 {
       margin-bottom: clamp(14px, 2.5vw, 16px);
     }
-    
+
     a {
       padding: 7px 0;
     }

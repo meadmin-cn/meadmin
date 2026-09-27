@@ -1,6 +1,8 @@
 import { InjectRepository, Transaction } from '@/decorators/index.js';
 import { AonCmsArticle } from '@/entities/aonCmsArticle.entity.js';
 import { AonCmsComment } from '@/entities/aonCmsComment.entity.js';
+import { AonCmsCommentReport } from '@/entities/aonCmsCommentReport.entity.js';
+import { AonCmsReviewLog } from '@/entities/aonCmsReviewLog.entity.js';
 import { Provide } from '@midwayjs/core';
 import { BadRequestError, NotFoundError } from '@midwayjs/core/dist/error/http.js';
 import { Attributes, Op, WhereOptions } from '@sequelize/core';
@@ -12,6 +14,8 @@ import { cmsId, validateCms } from './guard.js';
 export class AonCmsCommentService {
   @InjectRepository(AonCmsComment) repository: typeof AonCmsComment;
   @InjectRepository(AonCmsArticle) articleRepository: typeof AonCmsArticle;
+  @InjectRepository(AonCmsCommentReport) reportRepository: typeof AonCmsCommentReport;
+  @InjectRepository(AonCmsReviewLog) reviewLogRepository: typeof AonCmsReviewLog;
   async list(input: CmsQueryDto) {
     const q = validateCms<CmsQueryDto>(querySchema, input);
     const where: WhereOptions<Attributes<AonCmsComment>> = {};
@@ -23,10 +27,7 @@ export class AonCmsCommentService {
       where,
       offset: (q.page - 1) * q.pageSize,
       limit: q.pageSize,
-      order: [
-        ['createdAt', 'DESC'],
-        ['id', 'DESC'],
-      ],
+      order: q.status === 0 ? [['reportCount', 'DESC'], ['reportedAt', 'DESC'], ['createdAt', 'DESC'], ['id', 'DESC']] : [['createdAt', 'DESC'], ['id', 'DESC']],
     });
     return { list: rows, total: count, page: q.page, pageSize: q.pageSize };
   }
@@ -34,6 +35,25 @@ export class AonCmsCommentService {
     const row = await this.repository.findByPk(cmsId(id));
     if (!row) throw new NotFoundError('CMS 记录不存在');
     return row;
+  }
+  async reports(input: CmsQueryDto) {
+    const q = validateCms<CmsQueryDto>(querySchema, input);
+    const where: WhereOptions<any> = {};
+    if (q.commentId) where.commentId = q.commentId;
+    const { rows, count } = await this.reportRepository.findAndCountAll({
+      where,
+      offset: (q.page - 1) * q.pageSize,
+      limit: q.pageSize,
+      order: [['createdAt', 'DESC'], ['id', 'DESC']],
+    });
+    return { list: rows, total: count, page: q.page, pageSize: q.pageSize };
+  }
+  async reviewHistory(id: string) {
+    return this.reviewLogRepository.findAll({ where: { contentType: 'comment', contentId: cmsId(id) }, order: [['createdAt', 'DESC'], ['id', 'DESC']] });
+  }
+  private async logReview(contentId: string, fromStatus: number, toStatus: number, action: 'submit' | 'approve' | 'reject' | 'offline', reason = '') {
+    if (!this.reviewLogRepository) return;
+    await this.reviewLogRepository.create({ contentId, contentType: 'comment', fromStatus, toStatus, action, reason });
   }
   // 所有 CMS 写入共用事务锁，保证树移动、引用检查与删除之间不出现并发穿透。
   private async lock() {
@@ -86,7 +106,11 @@ export class AonCmsCommentService {
     const data = validateCms<CmsReviewDto>(reviewSchema, input);
     await this.lock();
     const row = await this.info(id);
-    const result = await row.update({ status: data.approve ? 1 : 2 });
+    if (!data.approve && !(data.reason ?? '').trim()) throw new BadRequestError('拒绝审核时必须填写原因');
+    const fromStatus = row.status;
+    const nextStatus = data.approve ? 1 : 2;
+    const result = await row.update({ status: nextStatus });
+    await this.logReview(row.id, fromStatus, nextStatus, data.approve ? 'approve' : 'reject', data.reason);
     await this.syncArticleCommentCount(row.articleId);
     return result;
   }

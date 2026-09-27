@@ -19,6 +19,11 @@ export class AonCmsCommentController extends BaseController {
   async info(@Param('id') id: string) {
     return this.success(await this.service.info(id));
   }
+  @Post('/reports')
+  @AdminPermission('aon_cms_comment_info')
+  async reports(@Body() query: CmsQueryDto) {
+    return this.success(await this.service.reports(query));
+  }
   @Post('/add')
   @AdminPermission('aon_cms_comment_add')
   async add(@Body() data: AonCmsCommentSaveDto) {
@@ -36,6 +41,11 @@ export class AonCmsCommentController extends BaseController {
     return this.success();
   }
 
+  @Get('/review-history/:id')
+  @AdminPermission(['aon_cms_comment_info', 'aon_cms_comment_review'])
+  async reviewHistory(@Param('id') id: string) {
+    return this.success(await this.service.reviewHistory(id));
+  }
   @Post('/review/:id')
   @AdminPermission('aon_cms_comment_review')
   async review(@Param('id') id: string, @Body() data: CmsReviewDto) {

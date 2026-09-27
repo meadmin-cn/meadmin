@@ -1,5 +1,6 @@
 import { InjectRepository, Transaction } from '@/decorators/index.js';
 import { AonCmsPage } from '@/entities/aonCmsPage.entity.js';
+import { AonCmsReviewLog } from '@/entities/aonCmsReviewLog.entity.js';
 import { Provide } from '@midwayjs/core';
 import { BadRequestError, NotFoundError } from '@midwayjs/core/dist/error/http.js';
 import { Attributes, Op, WhereOptions } from '@sequelize/core';
@@ -11,6 +12,7 @@ import { canSubmitCms, cmsId, validateCms } from './guard.js';
 @Provide()
 export class AonCmsPageService {
   @InjectRepository(AonCmsPage) repository: typeof AonCmsPage;
+  @InjectRepository(AonCmsReviewLog) reviewLogRepository: typeof AonCmsReviewLog;
 
   async list(input: CmsQueryDto) {
     const q = validateCms<CmsQueryDto>(querySchema, input);
@@ -33,6 +35,13 @@ export class AonCmsPageService {
     const row = await this.repository.findByPk(cmsId(id));
     if (!row) throw new NotFoundError('CMS 记录不存在');
     return row;
+  }
+  async reviewHistory(id: string) {
+    return this.reviewLogRepository.findAll({ where: { contentType: 'page', contentId: cmsId(id) }, order: [['createdAt', 'DESC'], ['id', 'DESC']] });
+  }
+  private async logReview(contentId: string, fromStatus: number, toStatus: number, action: 'submit' | 'approve' | 'reject' | 'offline', reason = '') {
+    if (!this.reviewLogRepository) return;
+    await this.reviewLogRepository.create({ contentId, contentType: 'page', fromStatus, toStatus, action, reason });
   }
   // 所有 CMS 写入共用事务锁，保证树移动、引用检查与删除之间不出现并发穿透。
   private async lock() {
@@ -65,14 +74,20 @@ export class AonCmsPageService {
     const row = await this.info(id);
     if (!canSubmitCms(row.status)) throw new BadRequestError('当前状态不能提交审核');
     if (!row.mdContent.trim()) throw new BadRequestError('内容不能为空');
-    return row.update({ status: 1 });
+    const fromStatus = row.status;
+    const result = await row.update({ status: 1 });
+    await this.logReview(row.id, fromStatus, 1, 'submit');
+    return result;
   }
   @Transaction()
   async offline(id: string) {
     await this.lock();
     const row = await this.info(id);
     if (row.status !== 2) throw new BadRequestError('仅发布内容可以下线');
-    return row.update({ status: 4 });
+    const fromStatus = row.status;
+    const result = await row.update({ status: 4 });
+    await this.logReview(row.id, fromStatus, 4, 'offline');
+    return result;
   }
   @Transaction()
   async review(id: string, input: CmsReviewDto) {
@@ -80,6 +95,10 @@ export class AonCmsPageService {
     await this.lock();
     const row = await this.info(id);
     if (row.status !== 1) throw new BadRequestError('仅待审核内容可以审核');
-    return row.update({ status: data.approve ? 2 : 3, publishAt: data.approve ? (row.publishAt ?? new Date()) : row.publishAt });
+    if (!data.approve && !(data.reason ?? '').trim()) throw new BadRequestError('拒绝审核时必须填写原因');
+    const nextStatus = data.approve ? 2 : 3;
+    const result = await row.update({ status: nextStatus, publishAt: data.approve ? (row.publishAt ?? new Date()) : row.publishAt });
+    await this.logReview(row.id, 1, nextStatus, data.approve ? 'approve' : 'reject', data.reason);
+    return result;
   }
 }

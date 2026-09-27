@@ -49,6 +49,11 @@ export class AonCmsArticleController extends BaseController {
   async offline(@Param('id') id: string) {
     return this.success(await this.service.offline(id));
   }
+  @Get('/review-history/:id')
+  @AdminPermission(['aon_cms_article_info', 'aon_cms_article_review'])
+  async reviewHistory(@Param('id') id: string) {
+    return this.success(await this.service.reviewHistory(id));
+  }
   @Post('/review/:id')
   @AdminPermission('aon_cms_article_review')
   async review(@Param('id') id: string, @Body() data: CmsReviewDto) {

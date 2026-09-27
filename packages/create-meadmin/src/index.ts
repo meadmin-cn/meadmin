@@ -77,7 +77,7 @@ try {
   // 同步生成子进程，运行npm命令
   const { error } = spawn.sync('pnpm', ['--version'], { stdio: 'inherit' });
   console.log(`创建成功，项目必须使用pnpm启动，请执行以下命令调试项目。
-${error ? '- npm install -g pnpm\n' : '\n'}- pnpm install
+${error ? '- npm install -g pnpm\n' : '\n'}- pnpm install --frozen-lockfile
 - pnpx husky install (可选，执行后会初始化git提交格代码式化钩子) 
 - pnpm dev
 - 访问地址和默认密码请查看 README.md 文件

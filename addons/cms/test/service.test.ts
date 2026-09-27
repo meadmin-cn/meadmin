@@ -11,14 +11,14 @@ import { ResponseService } from '../../../src/service/response.service.js';
 import { CmsNotFoundMiddleware } from '../../../src/app/index/addons/cms/controller/notfound.middleware.js';
 import { RuleType } from '../../../src/ruleType/index.js';
 import { assertCmsParent, canSubmitCms, cmsId, validateCms } from '../../../src/app/admin/addons/cms/service/guard.js';
-const rules = { querySchema: RuleType.object({ page: RuleType.number().integer().min(1).max(100000).default(1), pageSize: RuleType.number().integer().min(1).max(100).default(20), status: RuleType.number(), keyword: RuleType.string().allow(''), categoryId: RuleType.string(), topicId: RuleType.string(), tagId: RuleType.string() }), reviewSchema: RuleType.object({ approve: RuleType.boolean().required() }).unknown(false) };
+const rules = { querySchema: RuleType.object({ page: RuleType.number().integer().min(1).max(100000).default(1), pageSize: RuleType.number().integer().min(1).max(100).default(20), status: RuleType.number(), keyword: RuleType.string().allow(''), categoryId: RuleType.string(), topicId: RuleType.string(), tagId: RuleType.string() }), reviewSchema: RuleType.object({ approve: RuleType.boolean().required(), reason: RuleType.string().max(1000).allow('').default('') }).unknown(false) };
 const load = (relative: string, name: string, extras: Record<string, unknown> = {}) => {
   const filename = new URL('../../../' + relative, import.meta.url);
   const source = fs.readFileSync(filename, 'utf8');
   const output = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, experimentalDecorators: true, emitDecoratorMetadata: false } }).outputText;
   const exports: Record<string, any> = {};
   const noop = () => () => undefined;
-  const deps = { Op, Provide: noop, InjectRepository: noop, Transaction: noop, BadRequestError, NotFoundError, cmsId, validateCms, canSubmitCms, assertCmsParent, ...rules, ...extras };
+  const deps = { Op, Provide: noop, Inject: noop, InjectRepository: noop, Transaction: noop, BadRequestError, NotFoundError, cmsId, validateCms, canSubmitCms, assertCmsParent, ...rules, ...extras };
   vm.runInNewContext(output, { exports, require: () => deps, Date, Set, Map, console });
   return new exports[name]();
 };
@@ -52,7 +52,7 @@ test('文章审核按状态流转，发布时间为空时写入当前时间', as
   await service.offline('1');
   assert.equal(row.status, 4);
   await service.submit('1');
-  await service.review('1', { approve: false });
+  await service.review('1', { approve: false, reason: '内容需要补充来源说明' });
   assert.equal(row.status, 3);
 });
 test('隐藏文章的评论接口必须先失败，不读取评论仓储', async () => {
@@ -92,7 +92,7 @@ test('CMS 权限拒绝使用框架业务 403 且保留其他异常', async () =>
   const middleware = new CmsPermissionMiddleware();
   middleware.responseService = new ResponseService();
   const handler = middleware.resolve();
-  const ctx = {} as any;
+  const ctx = { requestContext: { getAsync: async () => middleware.responseService } } as any;
   const response = await handler(ctx, async () => { throw new ForbiddenError('内部权限细节'); });
   assert.deepEqual(response, { code: '403', msg: '无权限访问！', data: undefined });
   const error = new BadRequestError('非法字段');
@@ -107,4 +107,39 @@ test('CMS 不存在响应为 HTTP 404 及统一业务结构，不泄漏异常细
   const error = new BadRequestError('参数不合法');
   await assert.rejects(() => handler(ctx, async () => { throw error; }), (actual) => actual === error);
   assert.deepEqual(await handler(ctx, async () => ({ code: '200' })), { code: '200' });
+});
+
+test('公开评论按根评论分页并携带完整回复树，空页保留根评论总数', async () => {
+  const service = load('src/app/index/addons/cms/service/cms.service.ts', 'AonCmsPublicService');
+  const roots = [
+    { id: 'root-1', parentId: null, left: 1, right: 6 },
+    { id: 'root-2', parentId: null, left: 7, right: 8 },
+  ];
+  const descendants = [
+    ...roots,
+    { id: 'reply-1', parentId: 'root-1', left: 2, right: 3 },
+    { id: 'reply-2', parentId: 'reply-1', left: 4, right: 5 },
+  ];
+  const queries: any[] = [];
+  service.category = { findAll: async () => [] };
+  service.article = { findOne: async () => ({ id: 'article-1' }) };
+  service.comment = {
+    count: async (query: any) => {
+      assert.equal(query.where.parentId, null);
+      return 2;
+    },
+    findAll: async (query: any) => {
+      queries.push(query);
+      return query.limit ? [roots[query.offset ?? 0]] : descendants;
+    },
+  };
+  const result = await service.comments('article', { page: 2, pageSize: 1 });
+  assert.equal(result.total, 2);
+  assert.equal(result.page, 2);
+  assert.equal(queries[0].offset, 1);
+  assert.equal(queries[0].limit, 1);
+  assert.deepEqual(result.list.map((row: any) => row.id), ['root-2']);
+
+  const firstPage = await service.comments('article', { page: 1, pageSize: 1 });
+  assert.deepEqual(firstPage.list.map((row: any) => row.id), ['root-1', 'reply-1', 'reply-2']);
 });

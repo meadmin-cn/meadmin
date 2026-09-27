@@ -7,103 +7,136 @@
       </header>
 
       <div v-loading="loading" class="download-content">
+        <div class="download-toolbar">
+          <div>
+            <span class="toolbar-kicker">RESOURCE LIBRARY</span>
+            <h2>找到适合你的资源</h2>
+            <p>按标题、介绍或正文搜索，快速获取可下载内容。</p>
+          </div>
+          <el-input v-model="keyword" class="download-search" clearable placeholder="搜索下载内容" @keyup.enter="search" @clear="search">
+            <template #prefix><el-icon><Search /></el-icon></template>
+            <template #append><el-button type="primary" @click="search">搜索</el-button></template>
+          </el-input>
+        </div>
+
         <template v-if="downloads.length">
           <section class="featured-grid" aria-label="推荐下载">
-            <button v-if="featured[0]" class="featured-card featured-main" type="button" @click="handleDownload(featured[0].slug)">
+            <button v-if="featured[0]" class="featured-card featured-main" type="button" @click="openDetail(featured[0])">
               <span class="featured-media">
                 <img v-if="hasCover(featured[0])" :src="featured[0].coverUrl" :alt="featured[0].title" @error="markCoverFailed(featured[0].id)" />
                 <span v-else class="cover-fallback">{{ featured[0].title.slice(0, 1) }}</span>
               </span>
-              <span class="featured-caption"
-                ><strong>{{ featured[0].title }}</strong
-                ><small>{{ resourceMeta(featured[0]) }}</small></span
-              >
+              <span class="featured-caption"><strong>{{ featured[0].title }}</strong><small>{{ resourceMeta(featured[0]) }}</small></span>
             </button>
             <div class="featured-side" :class="`featured-side-${Math.max(featured.length - 1, 0)}`">
-              <button v-for="item in featured.slice(1, 5)" :key="item.id" class="featured-card featured-small" type="button" @click="handleDownload(item.slug)">
-                <span class="featured-media">
-                  <img v-if="hasCover(item)" :src="item.coverUrl" :alt="item.title" @error="markCoverFailed(item.id)" />
-                  <span v-else class="cover-fallback">{{ item.title.slice(0, 1) }}</span>
-                </span>
-                <span class="featured-caption"
-                  ><strong>{{ item.title }}</strong
-                  ><small>{{ resourceMeta(item) }}</small></span
-                >
+              <button v-for="item in featured.slice(1, 5)" :key="item.id" class="featured-card featured-small" type="button" @click="openDetail(item)">
+                <span class="featured-media"><img v-if="hasCover(item)" :src="item.coverUrl" :alt="item.title" @error="markCoverFailed(item.id)" /><span v-else class="cover-fallback">{{ item.title.slice(0, 1) }}</span></span>
+                <span class="featured-caption"><strong>{{ item.title }}</strong><small>{{ resourceMeta(item) }}</small></span>
               </button>
             </div>
           </section>
 
           <section v-for="group in groupedDownloads" :key="group.name" class="category-section">
             <header class="section-heading">
-              <h2>{{ group.name }}</h2>
-              <span>共 {{ group.items.length }} 项</span>
+              <div><h2>{{ group.name }}</h2><span>已展示 {{ group.items.length }} 项</span></div>
+              <el-button link type="primary" :loading="group.loading" :disabled="!group.hasMore" @click="loadMore(group)">{{ group.hasMore ? '展开更多' : '已加载全部' }}<el-icon v-if="group.hasMore"><ArrowDown /></el-icon></el-button>
             </header>
             <div class="resource-grid">
-              <button v-for="item in group.items" :key="item.id" class="resource-item" type="button" @click="handleDownload(item.slug)">
-                <span class="resource-cover">
-                  <img v-if="hasCover(item)" :src="item.coverUrl" :alt="item.title" loading="lazy" @error="markCoverFailed(item.id)" />
-                  <span v-else class="cover-fallback">{{ item.title.slice(0, 1) }}</span>
-                  <span class="download-mask">立即下载</span>
-                </span>
-                <strong :title="item.title">{{ item.title }}</strong>
-                <small>{{ resourceMeta(item) }}</small>
-              </button>
+              <article v-for="item in group.items" :key="item.id" class="resource-item" tabindex="0" @click="openDetail(item)" @keyup.enter="openDetail(item)">
+                <div class="resource-cover"><img v-if="hasCover(item)" :src="item.coverUrl" :alt="item.title" loading="lazy" @error="markCoverFailed(item.id)" /><span v-else class="cover-fallback">{{ item.title.slice(0, 1) }}</span></div>
+                <div class="resource-info"><strong :title="item.title">{{ item.title }}</strong><p>{{ item.summary || '暂无资源介绍' }}</p><small>{{ resourceMeta(item) }}</small></div>
+                <el-button class="resource-download" type="primary" plain @click.stop="confirmDownload(item)"><el-icon><Download /></el-icon>下载</el-button>
+              </article>
             </div>
           </section>
         </template>
 
-        <div v-else-if="!loading" class="empty-state"><strong>暂无下载资源</strong><span>资源发布后将在这里展示</span></div>
+        <div v-else-if="!loading" class="empty-state"><strong>{{ keyword ? '没有找到匹配资源' : '暂无下载资源' }}</strong><span>{{ keyword ? '请尝试其他关键词' : '资源发布后将在这里展示' }}</span></div>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ElMessage } from 'element-plus';
-import { computed, ref } from 'vue';
+import { ArrowDown, Download, Search } from '@element-plus/icons-vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { computed, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import type { CmsDownload } from '../api/cms';
 import { downloadApi, downloadsApi } from '../api/cms';
 
+const router = useRouter();
+
+interface DownloadGroup {
+  name: string;
+  items: CmsDownload[];
+  page: number;
+  total: number;
+  loading: boolean;
+  hasMore: boolean;
+}
+const pageSize = 8;
 const loading = ref(false);
+const keyword = ref('');
 const failedCovers = ref(new Set<string>());
+const groupState = reactive(new Map<string, DownloadGroup>());
+const featuredItems = ref<CmsDownload[]>([]);
 const { data, runAsync } = downloadsApi();
 const { runAsync: download } = downloadApi();
-const downloads = computed(() => data.value?.list ?? []);
+const downloads = computed(() => featuredItems.value);
 const featured = computed(() => downloads.value.slice(0, 5));
-const groupedDownloads = computed(() => {
-  const groups = new Map<string, CmsDownload[]>();
-  downloads.value.forEach((item) => {
-    const name = item.category?.trim() || '其他资源';
-    groups.set(name, [...(groups.get(name) ?? []), item]);
-  });
-  return [...groups.entries()].map(([name, items]) => ({ name, items }));
-});
+const groupedDownloads = computed(() => [...groupState.values()]);
 
 const hasCover = (item: CmsDownload) => Boolean(item.coverUrl && !failedCovers.value.has(item.id));
 const markCoverFailed = (id: string) => {
   failedCovers.value = new Set([...failedCovers.value, id]);
 };
-const resourceMeta = (item: CmsDownload) => {
-  const version = item.version?.trim();
-  if (version) return /^v/i.test(version) ? version : `v${version}`;
-  return `${item.downloads ?? 0} 次下载`;
+const resourceMeta = (item: CmsDownload) => `${item.version ? `v${item.version.replace(/^v/i, '')} · ` : ''}${item.downloads ?? 0} 次下载`;
+const rebuildGroups = (items: CmsDownload[], total: number) => {
+  const grouped = new Map<string, CmsDownload[]>();
+  items.forEach((item) => {
+    const name = item.category?.trim() || '其他资源';
+    grouped.set(name, [...(grouped.get(name) ?? []), item]);
+  });
+  groupState.clear();
+  grouped.forEach((items, name) => groupState.set(name, { name, items, page: 1, total: items.length, loading: false, hasMore: items.length < total }));
 };
 const load = async () => {
   loading.value = true;
   try {
-    await runAsync({ page: 1, pageSize: 50 });
+    await runAsync({ page: 1, pageSize, keyword: keyword.value.trim() || undefined });
+    featuredItems.value = [...(data.value?.list ?? [])];
+    rebuildGroups(featuredItems.value, data.value?.total ?? featuredItems.value.length);
   } finally {
     loading.value = false;
   }
 };
-const handleDownload = async (slug: string) => {
-  const result = await download(slug);
-  if (!result.url) {
-    ElMessage.warning('资源暂未配置下载地址');
-    return;
+const search = () => void load();
+const openDetail = (item: CmsDownload) => router.push(`/aon/cms/download/${encodeURIComponent(item.slug)}`);
+const loadMore = async (group: DownloadGroup) => {
+  group.loading = true;
+  try {
+    const result = await runAsync({ page: group.page + 1, pageSize, keyword: keyword.value.trim() || undefined, category: group.name === '其他资源' ? undefined : group.name });
+    const nextItems = result.list.filter((item) => item.category?.trim() === group.name || (!item.category?.trim() && group.name === '其他资源'));
+    group.items.push(...nextItems.filter((item) => !group.items.some((old) => old.id === item.id)));
+    group.page += 1;
+    group.total = result.total;
+    group.hasMore = group.items.length < result.total;
+  } finally {
+    group.loading = false;
   }
-  window.open(result.url, '_blank', 'noopener,noreferrer');
-  ElMessage.success('已开始下载');
+};
+const confirmDownload = async (item: CmsDownload) => {
+  try {
+    await ElMessageBox.confirm(`确认下载“${item.title}”吗？`, '确认下载', { confirmButtonText: '确认下载', cancelButtonText: '取消', type: 'info' });
+    const result = await download(item.slug);
+    if (!result.url) return ElMessage.warning('资源暂未配置下载地址');
+    window.open(result.url, '_blank', 'noopener,noreferrer');
+    item.downloads = result.downloads ?? item.downloads + 1;
+    ElMessage.success('已开始下载');
+  } catch {
+    // 用户取消下载时不提示错误。
+  }
 };
 
 await load();
@@ -274,29 +307,68 @@ await load();
   content: '';
   background: #2789e8;
 }
+.section-heading > div {
+  min-width: 0;
+}
 .section-heading span {
+  display: block;
+  margin-top: 3px;
   color: #a4aab3;
   font-size: 11px;
 }
+.download-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 8px 0 18px;
+  padding: 22px 24px;
+  background: #fff;
+  border: 1px solid #edf0f4;
+}
+.toolbar-kicker {
+  color: #2789e8;
+  font-size: 10px;
+  letter-spacing: 1.2px;
+}
+.download-toolbar h2 {
+  margin: 5px 0 4px;
+  color: #303846;
+  font-size: 20px;
+  font-weight: 600;
+}
+.download-toolbar p {
+  margin: 0;
+  color: #929aa7;
+  font-size: 12px;
+}
+.download-search {
+  width: min(100%, 340px);
+}
 .resource-grid {
   display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
-  gap: 18px 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
   padding-top: 18px;
 }
 .resource-item {
+  display: flex;
   min-width: 0;
-  padding: 0;
-  text-align: center;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
+  flex-direction: column;
+  padding: 10px;
+  border: 1px solid #edf0f4;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.resource-item:hover {
+  border-color: #b8d9f7;
+  box-shadow: 0 5px 18px rgba(44, 93, 140, 0.08);
 }
 .resource-cover {
   position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 1.12 / 1;
+  aspect-ratio: 1.45 / 1;
   overflow: hidden;
   background: #eef1f5;
 }
@@ -333,29 +405,45 @@ await load();
   opacity: 1;
   transform: translateY(0);
 }
-.resource-item > strong {
+.resource-info {
+  min-width: 0;
+  flex: 1;
+  padding: 10px 2px 8px;
+  text-align: left;
+}
+.resource-info strong {
   display: block;
-  margin-top: 8px;
   overflow: hidden;
   color: #4a5361;
-  font-size: 12px;
-  font-weight: 400;
+  font-size: 13px;
+  font-weight: 500;
   line-height: 1.4;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.resource-item:hover > strong {
+.resource-item:hover .resource-info strong {
   color: #2789e8;
 }
-.resource-item > small {
-  display: block;
-  margin-top: 2px;
+.resource-info p {
+  display: -webkit-box;
+  height: 34px;
+  margin: 5px 0;
   overflow: hidden;
+  color: #8b93a0;
+  font-size: 11px;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.resource-info small {
   color: #a1a8b2;
   font-size: 10px;
-  line-height: 1.4;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+}
+.resource-download {
+  width: 100%;
+}
+.resource-download .el-icon {
+  margin-right: 4px;
 }
 .empty-state {
   display: flex;
@@ -377,7 +465,7 @@ await load();
     height: 230px;
   }
   .resource-grid {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 @media (max-width: 720px) {
@@ -405,9 +493,17 @@ await load();
   .featured-small {
     aspect-ratio: 1.55 / 1;
   }
+  .download-toolbar {
+    display: block;
+    padding: 18px;
+  }
+  .download-search {
+    width: 100%;
+    margin-top: 14px;
+  }
   .resource-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
   }
 }
 @media (max-width: 480px) {
@@ -443,13 +539,29 @@ await load();
   .section-heading {
     height: 46px;
   }
+  .download-toolbar h2 {
+    font-size: 18px;
+  }
   .resource-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 15px 10px;
+    grid-template-columns: 1fr;
+    gap: 10px;
     padding-top: 14px;
   }
-  .resource-item > strong {
-    font-size: 11px;
+  .resource-item {
+    display: grid;
+    grid-template-columns: 82px minmax(0, 1fr) 78px;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+  }
+  .resource-cover {
+    aspect-ratio: 1 / 1;
+  }
+  .resource-info {
+    padding: 0;
+  }
+  .resource-info p {
+    height: 31px;
   }
 }
 </style>

@@ -5,26 +5,15 @@
         <span class="cms-brand-icon">📰</span>
         <span class="cms-brand-name">内容中心</span>
       </router-link>
-      
+
       <nav class="cms-nav">
-        <router-link 
-          v-for="cat in categories" 
-          :key="cat.id" 
-          :to="`/aon/cms?category=${cat.id}`"
-          class="cms-nav-item"
-          :class="{ active: currentCategory === cat.id }"
-        >
+        <router-link v-for="cat in categories" :key="cat.id" :to="`/aon/cms?category=${cat.id}`" class="cms-nav-item" :class="{ active: currentCategory === cat.id }">
           {{ cat.name }}
         </router-link>
       </nav>
 
       <div class="cms-search">
-        <el-input
-          v-model="searchKeyword"
-          placeholder="搜索文章"
-          clearable
-          @keyup.enter="handleSearch"
-        >
+        <el-input v-model="searchKeyword" placeholder="搜索文章" clearable @keyup.enter="handleSearch">
           <template #prefix>
             <el-icon><Search /></el-icon>
           </template>
@@ -39,13 +28,7 @@
     </div>
 
     <div class="cms-mobile-menu" :class="{ open: mobileOpen }">
-      <router-link 
-        v-for="cat in categories" 
-        :key="cat.id" 
-        :to="`/aon/cms?category=${cat.id}`"
-        class="cms-mobile-item"
-        @click="mobileOpen = false"
-      >
+      <router-link v-for="cat in categories" :key="cat.id" :to="`/aon/cms?category=${cat.id}`" class="cms-mobile-item" @click="mobileOpen = false">
         {{ cat.name }}
       </router-link>
     </div>
@@ -53,10 +36,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import { Search } from '@element-plus/icons-vue';
+import { ref } from 'vue';
 
-const props = defineProps<{
+defineProps<{
   categories?: any[];
   currentCategory?: string;
 }>();
@@ -75,15 +58,15 @@ const handleSearch = () => {
 
 <style lang="scss" scoped>
 :root {
-  --cms-surface-0: #05070C;
-  --cms-surface-1: #0A0D12;
-  --cms-surface-2: #0F131C;
-  --cms-surface-3: #161D2B;
-  --cms-surface-4: #1E2636;
-  --cms-accent: #38BDF8;
-  --cms-accent-dim: #0EA5E9;
-  --cms-text-primary: #E2E8F0;
-  --cms-text-secondary: #94A3B8;
+  --cms-surface-0: #05070c;
+  --cms-surface-1: #0a0d12;
+  --cms-surface-2: #0f131c;
+  --cms-surface-3: #161d2b;
+  --cms-surface-4: #1e2636;
+  --cms-accent: #38bdf8;
+  --cms-accent-dim: #0ea5e9;
+  --cms-text-primary: #e2e8f0;
+  --cms-text-secondary: #94a3b8;
   --cms-border: rgba(255, 255, 255, 0.08);
 }
 
@@ -114,7 +97,7 @@ const handleSearch = () => {
   gap: 10px;
   text-decoration: none;
   transition: transform 0.2s;
-  
+
   &:hover {
     transform: translateY(-1px);
   }
@@ -149,12 +132,12 @@ const handleSearch = () => {
   border-radius: 999px;
   transition: all 0.2s;
   white-space: nowrap;
-  
+
   &:hover {
     color: var(--cms-accent);
     background: rgba(56, 189, 248, 0.08);
   }
-  
+
   &.active {
     color: var(--cms-accent);
     background: rgba(56, 189, 248, 0.12);
@@ -164,28 +147,28 @@ const handleSearch = () => {
 
 .cms-search {
   width: clamp(180px, 20vw, 280px);
-  
+
   :deep(.el-input__wrapper) {
     background: var(--cms-surface-3);
     border: 1px solid var(--cms-border);
     border-radius: 999px;
     box-shadow: none;
     transition: all 0.2s;
-    
+
     &:hover {
       border-color: var(--cms-accent-dim);
     }
   }
-  
+
   :deep(.el-input__inner) {
     color: var(--cms-text-primary);
     font-size: 14px;
-    
+
     &::placeholder {
       color: var(--cms-text-secondary);
     }
   }
-  
+
   :deep(.el-icon) {
     color: var(--cms-text-secondary);
   }
@@ -203,7 +186,7 @@ const handleSearch = () => {
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s;
-  
+
   &:hover {
     border-color: var(--cms-accent);
     background: var(--cms-surface-4);
@@ -228,8 +211,10 @@ const handleSearch = () => {
   padding: 0 clamp(16px, 4vw, 40px);
   background: var(--cms-surface-1);
   border-top: 1px solid var(--cms-border);
-  transition: max-height 0.3s, padding 0.3s;
-  
+  transition:
+    max-height 0.3s,
+    padding 0.3s;
+
   &.open {
     max-height: 500px;
     padding: 16px clamp(16px, 4vw, 40px);
@@ -244,7 +229,7 @@ const handleSearch = () => {
   text-decoration: none;
   border-radius: 10px;
   transition: all 0.2s;
-  
+
   &:hover {
     color: var(--cms-accent);
     background: var(--cms-surface-3);
@@ -255,12 +240,12 @@ const handleSearch = () => {
   .cms-header-container {
     grid-template-columns: auto 1fr auto;
   }
-  
+
   .cms-nav,
   .cms-search {
     display: none;
   }
-  
+
   .cms-hamburger,
   .cms-mobile-menu {
     display: flex;
@@ -272,7 +257,7 @@ const handleSearch = () => {
     height: 60px;
     gap: 12px;
   }
-  
+
   .cms-brand-name {
     font-size: 16px;
   }

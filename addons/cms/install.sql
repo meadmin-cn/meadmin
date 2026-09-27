@@ -124,6 +124,10 @@ CREATE INDEX IF NOT EXISTS aon_cms_block_created_idx ON aon_cms_block(created_at
 CREATE TABLE IF NOT EXISTS aon_cms_comment (
   id varchar(20) PRIMARY KEY,
   article_id varchar(20) NOT NULL,
+  parent_id varchar(20),
+  "left" integer,
+  "right" integer,
+  lock_version varchar(100) NOT NULL DEFAULT '',
   user_id varchar(20) NOT NULL DEFAULT '',
   author varchar(80) NOT NULL DEFAULT '',
   author_avatar varchar(1000) NOT NULL DEFAULT '',
@@ -135,9 +139,72 @@ CREATE TABLE IF NOT EXISTS aon_cms_comment (
   created_admin_id varchar(20),
   updated_admin_id varchar(20),
   created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+  updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CHECK (parent_id IS DISTINCT FROM id)
 );
 CREATE INDEX IF NOT EXISTS aon_cms_comment_created_idx ON aon_cms_comment(created_at);
+CREATE INDEX IF NOT EXISTS aon_cms_comment_tree_idx ON aon_cms_comment(article_id, "left", "right");
+CREATE INDEX IF NOT EXISTS aon_cms_comment_parent_idx ON aon_cms_comment(parent_id);
+CREATE TABLE IF NOT EXISTS aon_cms_comment_report (
+  id varchar(20) PRIMARY KEY,
+  comment_id varchar(20) NOT NULL,
+  article_id varchar(20) NOT NULL,
+  user_id varchar(20) NOT NULL DEFAULT '',
+  reason varchar(500) NOT NULL DEFAULT '',
+  created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS aon_cms_comment_report_comment_idx ON aon_cms_comment_report(comment_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS aon_cms_comment_report_article_idx ON aon_cms_comment_report(article_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS aon_cms_review_log (
+  id varchar(20) PRIMARY KEY,
+  content_id varchar(20) NOT NULL,
+  content_type varchar(20) NOT NULL CHECK (content_type IN ('article','page','comment')),
+  from_status smallint NOT NULL,
+  to_status smallint NOT NULL,
+  action varchar(20) NOT NULL CHECK (action IN ('submit','approve','reject','offline')),
+  reason varchar(1000) NOT NULL DEFAULT '',
+  created_admin_id varchar(20),
+  updated_admin_id varchar(20),
+  created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS aon_cms_review_log_content_idx ON aon_cms_review_log(content_type, content_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS aon_cms_download (
+  id varchar(20) PRIMARY KEY,
+  title varchar(200) NOT NULL DEFAULT '',
+  slug varchar(120) NOT NULL UNIQUE,
+  category varchar(80) NOT NULL DEFAULT '',
+  version varchar(50) NOT NULL DEFAULT '',
+  summary varchar(1000) NOT NULL DEFAULT '',
+  md_content text NOT NULL DEFAULT '',
+  cover_url varchar(1000) NOT NULL DEFAULT '',
+  file_url varchar(1000) NOT NULL DEFAULT '',
+  downloads integer NOT NULL DEFAULT 0 CHECK (downloads >= 0),
+  status smallint NOT NULL DEFAULT 1 CHECK (status IN (0,1)),
+  order_num smallint NOT NULL DEFAULT 0,
+  created_admin_id varchar(20),
+  updated_admin_id varchar(20),
+  created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS aon_cms_download_category_idx ON aon_cms_download(category, order_num DESC, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS aon_cms_message (
+  id varchar(20) PRIMARY KEY,
+  author varchar(80) NOT NULL DEFAULT '',
+  contact varchar(120) NOT NULL DEFAULT '',
+  content varchar(2000) NOT NULL DEFAULT '',
+  reply varchar(2000) NOT NULL DEFAULT '',
+  status smallint NOT NULL DEFAULT 0 CHECK (status IN (0,1,2)),
+  created_admin_id varchar(20),
+  updated_admin_id varchar(20),
+  created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS aon_cms_message_status_idx ON aon_cms_message(status, created_at DESC);
 
 CREATE TABLE IF NOT EXISTS aon_cms_order (
   id varchar(20) PRIMARY KEY,
@@ -172,8 +239,8 @@ LOCK TABLE system_menu IN SHARE ROW EXCLUSIVE MODE;
 DO $$
 DECLARE base bigint; existing integer;
 BEGIN
-  SELECT count(*) INTO existing FROM system_menu WHERE rule IN ('addons_cms','aon_cms_category','aon_cms_category_list','aon_cms_category_info','aon_cms_category_add','aon_cms_category_edit','aon_cms_category_del','aon_cms_tag','aon_cms_tag_list','aon_cms_tag_info','aon_cms_tag_add','aon_cms_tag_edit','aon_cms_tag_del','aon_cms_topic','aon_cms_topic_list','aon_cms_topic_info','aon_cms_topic_add','aon_cms_topic_edit','aon_cms_topic_del','aon_cms_article','aon_cms_article_list','aon_cms_article_info','aon_cms_article_add','aon_cms_article_edit','aon_cms_article_del','aon_cms_article_review','aon_cms_page','aon_cms_page_list','aon_cms_page_info','aon_cms_page_add','aon_cms_page_edit','aon_cms_page_del','aon_cms_page_review','aon_cms_block','aon_cms_block_list','aon_cms_block_info','aon_cms_block_add','aon_cms_block_edit','aon_cms_block_del','aon_cms_comment','aon_cms_comment_list','aon_cms_comment_info','aon_cms_comment_add','aon_cms_comment_edit','aon_cms_comment_del','aon_cms_comment_review','aon_cms_statistics','aon_cms_statistics_list');
-  IF existing = 48 THEN RETURN; END IF;
+  SELECT count(*) INTO existing FROM system_menu WHERE rule IN ('addons_cms','aon_cms_category','aon_cms_category_list','aon_cms_category_info','aon_cms_category_add','aon_cms_category_edit','aon_cms_category_del','aon_cms_tag','aon_cms_tag_list','aon_cms_tag_info','aon_cms_tag_add','aon_cms_tag_edit','aon_cms_tag_del','aon_cms_topic','aon_cms_topic_list','aon_cms_topic_info','aon_cms_topic_add','aon_cms_topic_edit','aon_cms_topic_del','aon_cms_article','aon_cms_article_list','aon_cms_article_info','aon_cms_article_add','aon_cms_article_edit','aon_cms_article_del','aon_cms_article_review','aon_cms_page','aon_cms_page_list','aon_cms_page_info','aon_cms_page_add','aon_cms_page_edit','aon_cms_page_del','aon_cms_page_review','aon_cms_block','aon_cms_block_list','aon_cms_block_info','aon_cms_block_add','aon_cms_block_edit','aon_cms_block_del','aon_cms_comment','aon_cms_comment_list','aon_cms_comment_info','aon_cms_comment_add','aon_cms_comment_edit','aon_cms_comment_del','aon_cms_comment_review','aon_cms_statistics','aon_cms_statistics_list','aon_cms_download','aon_cms_download_list','aon_cms_download_info','aon_cms_download_add','aon_cms_download_edit','aon_cms_download_del');
+  IF existing = 54 THEN RETURN; END IF;
   IF existing <> 0 THEN RAISE EXCEPTION 'CMS 菜单不完整，请人工检查后重试'; END IF;
   SELECT COALESCE(max("right"), 0) INTO base FROM system_menu;
   INSERT INTO system_menu(id,title,menu_type,status,rule,order_num,path,is_link,component,hide_menu,cache,icon,affix,always_show,breadcrumb,parent_id,"left","right",lock_version,created_at,updated_at) VALUES ('820260920000000000','CMS',1,1,'addons_cms',50,'/addons/cms',0,'',0,0,'',0,1,1,NULL,base+1,base+96,'',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
@@ -224,5 +291,11 @@ BEGIN
   INSERT INTO system_menu(id,title,menu_type,status,rule,order_num,path,is_link,component,hide_menu,cache,icon,affix,always_show,breadcrumb,parent_id,"left","right",lock_version,created_at,updated_at) VALUES ('820260920000000045','审核',3,1,'aon_cms_comment_review',50,'',0,'',0,0,'',0,0,1,'820260920000000039',base+89,base+90,'',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
   INSERT INTO system_menu(id,title,menu_type,status,rule,order_num,path,is_link,component,hide_menu,cache,icon,affix,always_show,breadcrumb,parent_id,"left","right",lock_version,created_at,updated_at) VALUES ('820260920000000046','统计',2,1,'aon_cms_statistics',50,'/addons/cms/statistics',0,'addons/cms/views/statistics/index',0,0,'',0,0,1,'820260920000000000',base+92,base+95,'',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
   INSERT INTO system_menu(id,title,menu_type,status,rule,order_num,path,is_link,component,hide_menu,cache,icon,affix,always_show,breadcrumb,parent_id,"left","right",lock_version,created_at,updated_at) VALUES ('820260920000000047','列表',3,1,'aon_cms_statistics_list',50,'',0,'',0,0,'',0,0,1,'820260920000000046',base+93,base+94,'',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+  INSERT INTO system_menu(id,title,menu_type,status,rule,order_num,path,is_link,component,hide_menu,cache,icon,affix,always_show,breadcrumb,parent_id,"left","right",lock_version,created_at,updated_at) VALUES ('820260920000000048','下载资源',2,1,'aon_cms_download',50,'/addons/cms/download',0,'addons/cms/views/download/index',0,0,'',0,0,1,'820260920000000000',base+96,base+109,'',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+  INSERT INTO system_menu(id,title,menu_type,status,rule,order_num,path,is_link,component,hide_menu,cache,icon,affix,always_show,breadcrumb,parent_id,"left","right",lock_version,created_at,updated_at) VALUES ('820260920000000049','列表',3,1,'aon_cms_download_list',50,'',0,'',0,0,'',0,0,1,'820260920000000048',base+97,base+98,'',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+  INSERT INTO system_menu(id,title,menu_type,status,rule,order_num,path,is_link,component,hide_menu,cache,icon,affix,always_show,breadcrumb,parent_id,"left","right",lock_version,created_at,updated_at) VALUES ('820260920000000050','详情',3,1,'aon_cms_download_info',50,'',0,'',0,0,'',0,0,1,'820260920000000048',base+99,base+100,'',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+  INSERT INTO system_menu(id,title,menu_type,status,rule,order_num,path,is_link,component,hide_menu,cache,icon,affix,always_show,breadcrumb,parent_id,"left","right",lock_version,created_at,updated_at) VALUES ('820260920000000051','新增',3,1,'aon_cms_download_add',50,'',0,'',0,0,'',0,0,1,'820260920000000048',base+101,base+102,'',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+  INSERT INTO system_menu(id,title,menu_type,status,rule,order_num,path,is_link,component,hide_menu,cache,icon,affix,always_show,breadcrumb,parent_id,"left","right",lock_version,created_at,updated_at) VALUES ('820260920000000052','编辑',3,1,'aon_cms_download_edit',50,'',0,'',0,0,'',0,0,1,'820260920000000048',base+103,base+104,'',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+  INSERT INTO system_menu(id,title,menu_type,status,rule,order_num,path,is_link,component,hide_menu,cache,icon,affix,always_show,breadcrumb,parent_id,"left","right",lock_version,created_at,updated_at) VALUES ('820260920000000053','删除',3,1,'aon_cms_download_del',50,'',0,'',0,0,'',0,0,1,'820260920000000048',base+105,base+106,'',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
 END $$;
 COMMIT;

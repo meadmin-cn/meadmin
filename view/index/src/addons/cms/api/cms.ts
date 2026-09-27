@@ -76,7 +76,7 @@ export interface CmsOrder {
   createdAt: string;
   updatedAt: string;
 }
-export const commentsApi = () => request<{ list: CmsComment[]; total: number }, [string, number]>((slug, page) => ({ url: 'addons/cms/comments/' + encodeURIComponent(slug), method: 'get', params: { page, pageSize: 20 } }), { noLoading: true });
+export const commentsApi = () => request<{ list: CmsComment[]; total: number; page: number; pageSize: number }, [string, number]>((slug, page) => ({ url: 'addons/cms/comments/' + encodeURIComponent(slug), method: 'get', params: { page, pageSize: 3 } }), { noLoading: true });
 export const createOrderApi = () => request<CmsOrder, [string, { contactName: string; contactPhone: string; shippingAddress: string; quantity: number; remark?: string }]>((slug, data) => ({ url: 'addons/cms/orders/' + encodeURIComponent(slug), method: 'post', data }), { noLoading: true });
 export const queryOrderApi = () => request<CmsOrder, [{ orderNo: string; contactPhone: string }]>((params) => ({ url: 'addons/cms/orders/query', method: 'get', params }), { noLoading: true });
 export interface CmsDownload {
@@ -88,11 +88,11 @@ export interface CmsDownload {
   summary: string;
   mdContent: string;
   coverUrl: string;
-  fileUrl: string;
   downloads: number;
 }
 export const downloadsApi = () => request<{ list: CmsDownload[]; total: number }, [{ page: number; pageSize: number; keyword?: string; category?: string }]>((params) => ({ url: 'addons/cms/download/', method: 'get', params }), { noLoading: true, clearEmpty: ['', undefined] });
-export const downloadApi = () => request<{ url: string; title: string }, [string]>((slug) => ({ url: 'addons/cms/download/download/' + encodeURIComponent(slug), method: 'post' }), { noLoading: true });
+export const downloadInfoApi = () => request<CmsDownload, [string]>((slug) => ({ url: 'addons/cms/download/info/' + encodeURIComponent(slug), method: 'get' }), { noLoading: true });
+export const downloadApi = () => request<{ url: string; title: string; downloads: number }, [string]>((slug) => ({ url: 'addons/cms/download/download/' + encodeURIComponent(slug), method: 'post' }), { noLoading: true });
 export interface CmsMessage {
   author: string;
   content: string;

@@ -6,7 +6,9 @@
         <span v-else>{{ avatarText(comment.author) }}</span>
       </div>
       <div class="comment-main">
-        <div class="comment-author"><strong>{{ comment.author }}</strong></div>
+        <div class="comment-author">
+          <strong>{{ comment.author }}</strong>
+        </div>
         <p class="comment-content">{{ comment.content }}</p>
         <div class="comment-actions">
           <span>{{ formatDate(comment.createdAt) }}</span>
@@ -29,7 +31,10 @@
           <span v-else>{{ avatarText(reply.author) }}</span>
         </div>
         <div class="comment-main">
-          <div class="comment-author"><strong>{{ reply.author }}</strong><span>回复</span><em>{{ reply.replyToAuthor }}</em></div>
+          <div class="comment-author">
+            <strong>{{ reply.author }}</strong
+            ><span>回复</span><em>{{ reply.replyToAuthor }}</em>
+          </div>
           <p class="comment-content">{{ reply.content }}</p>
           <div class="comment-actions">
             <span>{{ formatDate(reply.createdAt) }}</span>
@@ -60,8 +65,8 @@ const props = withDefaults(defineProps<{ comment: CommentNode; replyTargetId?: s
   submitting: false,
 });
 const emit = defineEmits<{
-  reply: [comment: CmsComment];
-  report: [comment: CmsComment];
+  'reply': [comment: CmsComment];
+  'report': [comment: CmsComment];
   'update:replyContent': [content: string];
   'submit-reply': [];
 }>();

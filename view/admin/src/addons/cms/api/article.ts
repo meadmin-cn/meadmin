@@ -21,4 +21,16 @@ export const listApi = () => request<{ list: CmsArticleInfo[]; total: number }, 
 export const infoApi = () => request<CmsArticleInfo, [string]>((id) => ({ url: 'addons/cms/article/info/' + id, method: 'get' }), { noLoading: true });
 export const saveApi = () => request<CmsArticleInfo, [string | undefined, CmsArticle]>((id, data) => ({ url: 'addons/cms/article/' + (id ? 'up/' + id : 'add'), method: 'post', data }), { success: true });
 export const deleteApi = () => request<null, [string]>((id) => ({ url: 'addons/cms/article/del/' + id, method: 'post' }), { success: true });
-export const actionApi = () => request<CmsArticleInfo, [string, 'review' | 'submit' | 'offline', boolean?]>((id, action, approve) => ({ url: 'addons/cms/article/' + action + '/' + id, method: 'post', data: action === 'review' ? { approve } : undefined }), { success: true });
+export interface CmsReviewLog {
+  id: string;
+  contentId: string;
+  contentType: string;
+  fromStatus: number;
+  toStatus: number;
+  action: string;
+  reason: string;
+  createdAdminId?: string;
+  createdAt: string;
+}
+export const actionApi = () => request<CmsArticleInfo, [string, 'review' | 'submit' | 'offline', boolean?, string?]>((id, action, approve, reason = '') => ({ url: 'addons/cms/article/' + action + '/' + id, method: 'post', data: action === 'review' ? { approve, reason } : undefined }), { success: true });
+export const reviewHistoryApi = () => request<CmsReviewLog[], [string]>((id) => ({ url: 'addons/cms/article/review-history/' + id, method: 'get' }), { noLoading: true });

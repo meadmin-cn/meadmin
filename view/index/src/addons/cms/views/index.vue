@@ -37,11 +37,26 @@
             <div v-else class="comment-login-gate">
               <div class="comment-login-avatar">访</div>
               <div><strong>登录后参与评论</strong><span>登录后可以发表评论</span></div>
-              <el-button type="primary" plain @click="goLogin">登录</el-button>
+              <el-button type="primary" plain @click="requireCommentLogin">登录</el-button>
             </div>
-            <div v-if="commentTree.length" class="comment-list"><comment-tree v-for="comment in commentTree" :key="comment.id" :comment="comment" :reply-target-id="replyTarget?.id" :reply-content="replyContent" :submitting="commentSubmitting" @reply="startReply" @report="openReport" @update:reply-content="replyContent = $event" @submit-reply="submitReply" /></div>
+            <div v-if="commentTree.length" class="comment-list"><CommentTree v-for="comment in commentTree" :key="comment.id" :comment="comment" :reply-target-id="replyTarget?.id" :reply-content="replyContent" :submitting="commentSubmitting" @reply="startReply" @report="openReport" @update:reply-content="replyContent = $event" @submit-reply="submitReply" /></div>
             <div v-else class="comment-empty"><strong>还没有评论</strong><span>来发表第一条友善的评论吧</span></div>
+            <el-pagination v-if="comments?.total" v-model:current-page="commentPage" :page-size="comments.pageSize || 3" :total="comments.total" layout="prev, pager, next" class="comment-pagination" @current-change="loadComments" />
           </section>
+          <el-dialog v-model="loginDialog" title="登录后操作" width="calc(100% - 32px)" style="max-width: 420px" class="comment-login-dialog">
+            <div class="comment-login-dialog-content">
+              <div class="comment-login-dialog-icon">评</div>
+              <div>
+                <strong>请登录后参与评论</strong>
+                <p>登录后即可发表评论、回复评论和举报评论。</p>
+              </div>
+            </div>
+            <template #footer>
+              <el-button @click="loginDialog = false">关闭</el-button>
+              <el-button @click="goRegister">去注册</el-button>
+              <el-button type="primary" @click="goLogin">去登录</el-button>
+            </template>
+          </el-dialog>
           <el-dialog v-model="reportDialog" title="举报评论" width="420px"
             ><p class="report-target">举报 {{ reportTarget?.author }} 的评论</p>
             <el-input v-model="reportReason" type="textarea" :rows="4" maxlength="500" show-word-limit placeholder="请说明举报原因" /><template #footer><el-button @click="reportDialog = false">取消</el-button><el-button type="primary" :loading="reportSubmitting" @click="submitReport">提交举报</el-button></template></el-dialog
@@ -197,6 +212,7 @@ import type { CmsComment, CmsContent, CmsOption, CmsOrder, CmsQuery } from '../a
 import { articlesApi, blocksApi, commentsApi, createCommentApi, createOrderApi, detailApi, navigationApi, queryOrderApi, reportCommentApi } from '../api/cms';
 import CmsArticleCard from '../components/cmsArticleCard.vue';
 import CmsPreview from '../components/cmsPreview.vue';
+import CommentTree from './components/commentTree.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -227,6 +243,7 @@ const orderQuery = reactive({ orderNo: '', contactPhone: '' });
 const orderResult = ref<CmsOrder>();
 const orderSubmitting = ref(false);
 const orderDialog = ref(false);
+const loginDialog = ref(false);
 const commentForm = reactive({ content: '' });
 const replyTarget = ref<CmsComment>();
 const replyContent = ref('');
@@ -291,9 +308,16 @@ const submitOrder = async () => {
     orderSubmitting.value = false;
   }
 };
-const goLogin = () => router.push({ path: PageEnum.LOGIN, query: { redirect: route.fullPath } });
+const goLogin = () => {
+  loginDialog.value = false;
+  return router.push({ path: PageEnum.LOGIN, query: { redirect: route.fullPath } });
+};
+const goRegister = () => {
+  loginDialog.value = false;
+  return router.push({ path: PageEnum.REGISTER, query: { redirect: route.fullPath } });
+};
 const requireCommentLogin = () => {
-  ElMessage.warning('请登录后操作');
+  loginDialog.value = true;
 };
 const startReply = (comment: CmsComment) => {
   if (!isLoggedIn.value) return requireCommentLogin();
@@ -326,7 +350,7 @@ const submitReport = async () => {
   }
 };
 const submitComment = async () => {
-  if (!isLoggedIn.value) return goLogin();
+  if (!isLoggedIn.value) return requireCommentLogin();
   if (!commentForm.content.trim()) {
     ElMessage.warning('请输入评论内容');
     return;
@@ -993,9 +1017,14 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
   display: grid;
   gap: 15px;
 }
-.pagination {
+.pagination,
+.comment-pagination {
   justify-content: center;
   margin-top: 24px;
+}
+.comment-pagination {
+  padding-top: 16px;
+  border-top: 1px solid #edf0f4;
 }
 .detail-container {
   max-width: 940px;
@@ -1129,6 +1158,37 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
   font-weight: 700;
   background: #5d73df;
   border-radius: 50%;
+}
+.comment-login-dialog-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 4px 0 12px;
+}
+.comment-login-dialog-icon {
+  display: flex;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  background: #5d73df;
+  border-radius: 50%;
+}
+.comment-login-dialog-content strong {
+  display: block;
+  margin: 2px 0 8px;
+  color: #24324a;
+  font-size: 16px;
+}
+.comment-login-dialog-content p {
+  margin: 0;
+  color: #8490a3;
+  font-size: 13px;
+  line-height: 1.7;
 }
 .comment-editor {
   margin: 18px 0 22px;

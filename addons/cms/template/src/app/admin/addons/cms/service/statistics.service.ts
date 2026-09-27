@@ -3,6 +3,7 @@ import { AonCmsArticle } from '@/entities/aonCmsArticle.entity.js';
 import { AonCmsBlock } from '@/entities/aonCmsBlock.entity.js';
 import { AonCmsCategory } from '@/entities/aonCmsCategory.entity.js';
 import { AonCmsComment } from '@/entities/aonCmsComment.entity.js';
+import { AonCmsDownload } from '@/entities/aonCmsDownload.entity.js';
 import { AonCmsPage } from '@/entities/aonCmsPage.entity.js';
 import { AonCmsTag } from '@/entities/aonCmsTag.entity.js';
 import { AonCmsTopic } from '@/entities/aonCmsTopic.entity.js';
@@ -18,11 +19,12 @@ export class AonCmsStatisticsService {
   @InjectRepository(AonCmsPage) page: typeof AonCmsPage;
   @InjectRepository(AonCmsBlock) block: typeof AonCmsBlock;
   @InjectRepository(AonCmsComment) comment: typeof AonCmsComment;
+  @InjectRepository(AonCmsDownload) download: typeof AonCmsDownload;
 
   @Transaction({ options: { isolationLevel: IsolationLevel.REPEATABLE_READ } })
   async summary() {
     const now = new Date();
-    const [article, category, tag, topic, page, block, comment, pendingArticles, pendingComments, published, scheduled] = await Promise.all([
+    const [article, category, tag, topic, page, block, comment, download, pendingArticles, pendingComments, published, scheduled] = await Promise.all([
       this.article.count(),
       this.category.count(),
       this.tag.count(),
@@ -30,6 +32,7 @@ export class AonCmsStatisticsService {
       this.page.count(),
       this.block.count(),
       this.comment.count(),
+      this.download.count(),
       this.article.count({ where: { status: 1 } }),
       this.comment.count({ where: { status: 0 } }),
       this.article.count({ where: { status: 2, publishAt: { [Op.lte]: now } } }),
@@ -43,6 +46,6 @@ export class AonCmsStatisticsService {
       const [articles, comments] = await Promise.all([this.article.count({ where: { createdAt: { [Op.gte]: start, [Op.lt]: end } } }), this.comment.count({ where: { createdAt: { [Op.gte]: start, [Op.lt]: end } } })]);
       trends.push({ date: start.toISOString().slice(0, 10), articles, comments });
     }
-    return { counts: { article, category, tag, topic, page, block, comment, pendingArticles, pendingComments, published, scheduled }, trends, timezone: 'UTC', generatedAt: now };
+    return { counts: { article, category, tag, topic, page, block, comment, download, pendingArticles, pendingComments, published, scheduled }, trends, timezone: 'UTC', generatedAt: now };
   }
 }

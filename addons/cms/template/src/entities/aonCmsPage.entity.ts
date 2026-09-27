@@ -52,6 +52,28 @@ export class AonCmsPage extends AdminBaseModel<AonCmsPage> {
   })
   declare coverUrl: string;
 
+  // 类型：1站内单页 2外部链接
+  @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 1 })
+  @ApiPropertyRule({ description: '类型：1站内单页 2外部链接', rule: RuleType.number().integer().valid(1, 2).default(1) })
+  declare kind: number;
+
+  // 外部链接
+  @Attribute({ type: DataTypes.STRING(1000), allowNull: false, defaultValue: '' })
+  @ApiPropertyRule({
+    description: '外部链接',
+    rule: RuleType.string()
+      .max(1000)
+      .pattern(/^https?:\/\/[^\s]+$/)
+      .allow('')
+      .default(''),
+  })
+  declare link: string;
+
+  // 打开方式：0当前窗口 1新窗口
+  @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 0 })
+  @ApiPropertyRule({ description: '打开方式', rule: RuleType.number().integer().valid(0, 1).default(0) })
+  declare target: number;
+
   // SEO 标题
   @Attribute({ type: DataTypes.STRING(200), allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: 'SEO 标题', rule: RuleType.string().max(200).allow('').default('') })

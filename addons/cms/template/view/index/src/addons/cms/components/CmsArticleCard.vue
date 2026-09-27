@@ -35,7 +35,9 @@ const formattedDate = computed(() => {
       <div v-if="showCategory && categoryName" class="meta-category">{{ categoryName }}</div>
       <h3 class="card-title">{{ article.title }}</h3>
       <p v-if="article.summary" class="card-summary">{{ article.summary }}</p>
-      <div v-if="tags?.length" class="card-tags"><span v-for="tag in tags" :key="tag.id">{{ tag.title }}</span></div>
+      <div v-if="tags?.length" class="card-tags">
+        <span v-for="tag in tags" :key="tag.id">{{ tag.title }}</span>
+      </div>
       <div v-if="showMeta" class="card-meta">
         <span>{{ formattedDate }}</span>
         <span>浏览 {{ article.views || 0 }}</span>
@@ -55,7 +57,10 @@ const formattedDate = computed(() => {
   border: 1px solid #e7eaf0;
   border-radius: 6px;
   cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 .cms-article-card:hover,
 .cms-article-card:focus-visible {
@@ -75,7 +80,9 @@ const formattedDate = computed(() => {
   object-fit: cover;
   transition: transform 0.3s ease;
 }
-.cms-article-card:hover .cover-image { transform: scale(1.04); }
+.cms-article-card:hover .cover-image {
+  transform: scale(1.04);
+}
 .cover-placeholder {
   display: flex;
   height: 100%;
@@ -120,8 +127,21 @@ const formattedDate = computed(() => {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
-.card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 12px; }
-.card-tags span { padding: 3px 8px; color: #51647f; font-size: 12px; line-height: 1.4; border: 1px solid #dfe6ef; border-radius: 999px; background: #f7f9fc; }
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: -4px 0 12px;
+}
+.card-tags span {
+  padding: 3px 8px;
+  color: #51647f;
+  font-size: 12px;
+  line-height: 1.4;
+  border: 1px solid #dfe6ef;
+  border-radius: 999px;
+  background: #f7f9fc;
+}
 .card-meta {
   display: flex;
   flex-wrap: wrap;
@@ -131,9 +151,20 @@ const formattedDate = computed(() => {
   font-size: 12px;
 }
 @media (max-width: 720px) {
-  .cms-article-card { min-height: 0; flex-direction: column; }
-  .card-cover { flex: none; width: 100%; aspect-ratio: 16 / 9; }
-  .card-content { padding: 16px; }
-  .card-title { white-space: normal; }
+  .cms-article-card {
+    min-height: 0;
+    flex-direction: column;
+  }
+  .card-cover {
+    flex: none;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+  .card-content {
+    padding: 16px;
+  }
+  .card-title {
+    white-space: normal;
+  }
 }
 </style>

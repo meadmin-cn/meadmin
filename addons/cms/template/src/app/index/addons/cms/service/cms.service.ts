@@ -3,6 +3,7 @@ import { AonCmsArticle } from '@/entities/aonCmsArticle.entity.js';
 import { AonCmsBlock } from '@/entities/aonCmsBlock.entity.js';
 import { AonCmsCategory } from '@/entities/aonCmsCategory.entity.js';
 import { AonCmsComment } from '@/entities/aonCmsComment.entity.js';
+import { AonCmsCommentReport } from '@/entities/aonCmsCommentReport.entity.js';
 import { AonCmsPage } from '@/entities/aonCmsPage.entity.js';
 import { AonCmsTag } from '@/entities/aonCmsTag.entity.js';
 import { AonCmsTopic } from '@/entities/aonCmsTopic.entity.js';
@@ -10,8 +11,8 @@ import { Inject, Provide } from '@midwayjs/core';
 import { NotFoundError } from '@midwayjs/core/dist/error/http.js';
 import { Context } from '@midwayjs/koa';
 import { Attributes, Op, Order, WhereOptions } from '@sequelize/core';
-import { CmsQueryDto, querySchema } from '../../../../admin/addons/cms/dto/common.dto.js';
 import { CmsPublicCommentDto, publicCommentReportSchema, publicCommentSchema } from '../../../../admin/addons/cms/dto/comment.dto.js';
+import { CmsQueryDto, querySchema } from '../../../../admin/addons/cms/dto/common.dto.js';
 import { validateCms } from '../../../../admin/addons/cms/service/guard.js';
 
 const articleAttributes: Array<keyof Attributes<AonCmsArticle>> = ['id', 'title', 'slug', 'summary', 'coverUrl', 'categoryId', 'topicId', 'tagIds', 'publishAt', 'seoTitle', 'seoKeywords', 'seoDescription', 'views', 'likes', 'comments', 'orderEnabled'];
@@ -24,6 +25,7 @@ export class AonCmsPublicService {
   @InjectRepository(AonCmsTopic) topic: typeof AonCmsTopic;
   @InjectRepository(AonCmsBlock) block: typeof AonCmsBlock;
   @InjectRepository(AonCmsComment) comment: typeof AonCmsComment;
+  @InjectRepository(AonCmsCommentReport) commentReport: typeof AonCmsCommentReport;
   @Inject() ctx: Context;
 
   private async visibleCategoryIds() {
@@ -62,7 +64,7 @@ export class AonCmsPublicService {
       const current = queue.shift()!;
       if (seen.has(current)) continue;
       seen.add(current);
-      const row = rows.find(item => item.id === current);
+      const row = rows.find((item) => item.id === current);
       if (!row || row.status !== 1) continue;
       result.push(current);
       queue.push(...(children.get(current) ?? []));
@@ -71,7 +73,18 @@ export class AonCmsPublicService {
   }
   private articleOrder(sortBy: CmsQueryDto['sortBy']): Order {
     const metric = sortBy === 'likes' ? 'likes' : sortBy === 'comments' ? 'comments' : sortBy === 'views' ? 'views' : 'publishAt';
-    return sortBy === 'latest' || !sortBy ? [['orderNum', 'DESC'], [metric, 'DESC'], ['id', 'DESC']] : [[metric, 'DESC'], ['orderNum', 'DESC'], ['publishAt', 'DESC'], ['id', 'DESC']];
+    return sortBy === 'latest' || !sortBy
+      ? [
+          ['orderNum', 'DESC'],
+          [metric, 'DESC'],
+          ['id', 'DESC'],
+        ]
+      : [
+          [metric, 'DESC'],
+          ['orderNum', 'DESC'],
+          ['publishAt', 'DESC'],
+          ['id', 'DESC'],
+        ];
   }
 
   async articles(input: CmsQueryDto) {
@@ -136,12 +149,60 @@ export class AonCmsPublicService {
   async comments(slug: string, input: CmsQueryDto) {
     const q = validateCms<CmsQueryDto>(querySchema, input);
     const article = await this.articleDetail(slug);
-    const rows = await this.comment.findAll({
-      attributes: ['id', 'userId', 'author', 'authorAvatar', 'content', 'parentId', 'createdAt', 'left', 'right', 'reportCount'],
-      where: { articleId: article.id, status: 1 },
-      order: [['left', 'ASC'], ['createdAt', 'ASC'], ['id', 'ASC']],
+    const attributes: Array<keyof Attributes<AonCmsComment>> = ['id', 'userId', 'author', 'authorAvatar', 'content', 'parentId', 'createdAt', 'left', 'right', 'reportCount'];
+    const rootWhere = { articleId: article.id, status: 1, parentId: null };
+    const total = await this.comment.count({ where: rootWhere });
+    const roots = await this.comment.findAll({
+      attributes,
+      where: rootWhere,
+      limit: q.pageSize,
+      offset: (q.page - 1) * q.pageSize,
+      order: [
+        ['left', 'ASC'],
+        ['createdAt', 'ASC'],
+        ['id', 'ASC'],
+      ],
     });
-    return { list: rows, total: rows.length, page: q.page, pageSize: q.pageSize };
+    if (!roots.length) return { list: [], total, page: q.page, pageSize: q.pageSize };
+
+    const hasTreeBounds = roots.every((root) => Number.isFinite(root.left) && Number.isFinite(root.right));
+    const rows = hasTreeBounds
+      ? await this.comment.findAll({
+          attributes,
+          where: {
+            articleId: article.id,
+            status: 1,
+            [Op.or]: roots.map((root) => ({ left: { [Op.gte]: root.left }, right: { [Op.lte]: root.right } })),
+          },
+          order: [
+            ['left', 'ASC'],
+            ['createdAt', 'ASC'],
+            ['id', 'ASC'],
+          ],
+        })
+      : await this.comment.findAll({
+          attributes,
+          where: { articleId: article.id, status: 1 },
+          order: [
+            ['createdAt', 'ASC'],
+            ['id', 'ASC'],
+          ],
+        });
+    const rootIds = new Set(roots.map((root) => root.id));
+    const children = new Map<string, string[]>();
+    for (const row of rows) {
+      if (!row.parentId) continue;
+      children.set(row.parentId, [...(children.get(row.parentId) ?? []), row.id]);
+    }
+    const included = new Set<string>();
+    const queue = [...rootIds];
+    while (queue.length) {
+      const id = queue.shift()!;
+      if (included.has(id)) continue;
+      included.add(id);
+      queue.push(...(children.get(id) ?? []));
+    }
+    return { list: rows.filter((row) => included.has(row.id)), total, page: q.page, pageSize: q.pageSize };
   }
 
   async createComment(slug: string, input: CmsPublicCommentDto) {
@@ -170,7 +231,10 @@ export class AonCmsPublicService {
     const article = await this.articleDetail(slug);
     const comment = await this.comment.findOne({ where: { id, articleId: article.id, status: 1 } });
     if (!comment) throw new NotFoundError('评论不存在');
-    await comment.update({ reportCount: (comment.reportCount ?? 0) + 1, reportReason: data.reason, reportedAt: new Date() });
+    const user = this.ctx.userInfo!;
+    await this.commentReport.create({ commentId: comment.id, articleId: article.id, userId: user.id, reason: data.reason });
+    await comment.increment('reportCount', { by: 1 });
+    await comment.update({ reportReason: data.reason, reportedAt: new Date() });
     return { reported: true };
   }
 }

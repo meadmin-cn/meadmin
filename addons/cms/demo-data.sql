@@ -34,17 +34,82 @@ SET comments = (
 )
 WHERE article.slug LIKE 'cms-demo-%';
 
--- 为演示文章补充可审核的主评论和回复，重复执行不会产生重复记录。
-INSERT INTO aon_cms_comment (id, article_id, parent_id, author, content, status, created_at, updated_at)
-SELECT LEFT(md5(article.id || ':demo-comment'), 20), article.id, NULL, '林晓', '这篇内容很实用，示例结构清晰，正好可以拿来参考。', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
-FROM aon_cms_article article
-WHERE article.slug = 'cms-demo-lesson-01'
-  AND NOT EXISTS (SELECT 1 FROM aon_cms_comment comment WHERE comment.id = LEFT(md5(article.id || ':demo-comment'), 20));
-INSERT INTO aon_cms_comment (id, article_id, parent_id, author, content, status, created_at, updated_at)
-SELECT LEFT(md5(article.id || ':demo-reply'), 20), article.id, LEFT(md5(article.id || ':demo-comment'), 20), 'CMS 管理员', '感谢反馈，后续还会继续补充更多案例。', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
-FROM aon_cms_article article
-WHERE article.slug = 'cms-demo-lesson-01'
-  AND NOT EXISTS (SELECT 1 FROM aon_cms_comment comment WHERE comment.id = LEFT(md5(article.id || ':demo-reply'), 20));
+-- 为演示文章补充可审核的多级评论和分页数据，重复执行不会产生重复记录。
+-- 每次生成 4 个根评论，每个根评论包含 5 层回复；前端 pageSize=3 时可直接看到分页。
+WITH demo_article AS (
+  SELECT id FROM aon_cms_article WHERE slug = 'cms-demo-lesson-01'
+), demo_roots AS (
+  SELECT demo_article.id AS article_id, n,
+         LEFT(md5(demo_article.id || ':demo-root-' || n), 20) AS id
+  FROM demo_article CROSS JOIN generate_series(1, 4) AS numbers(n)
+), inserted_roots AS (
+  INSERT INTO aon_cms_comment (id, article_id, parent_id, user_id, author, content, status, report_count, report_reason, created_at, updated_at)
+  SELECT id, article_id, NULL, '', '演示用户' || n,
+         '分页演示根评论 #' || n || '：这是第 ' || n || ' 条根评论，用于观察评论分页效果。',
+         1, 0, '', CURRENT_TIMESTAMP + (n || ' seconds')::interval, CURRENT_TIMESTAMP + (n || ' seconds')::interval
+  FROM demo_roots
+  ON CONFLICT (id) DO NOTHING
+  RETURNING id
+), levels AS (
+  SELECT demo_article.id AS article_id, root.n, root.id AS root_id, level,
+         LEFT(md5(demo_article.id || ':demo-root-' || root.n || '-level-' || level), 20) AS id,
+         CASE level
+           WHEN 1 THEN '内容编辑'
+           WHEN 2 THEN '产品体验官'
+           WHEN 3 THEN '前端观察者'
+           WHEN 4 THEN 'CMS 维护者'
+           ELSE '演示管理员'
+         END AS author
+  FROM demo_article
+  CROSS JOIN generate_series(1, 4) AS root(n)
+  CROSS JOIN generate_series(1, 5) AS level
+  WHERE level > 0
+), inserted_levels AS (
+  INSERT INTO aon_cms_comment (id, article_id, parent_id, user_id, author, content, status, report_count, report_reason, created_at, updated_at)
+  SELECT current.id, current.article_id,
+         CASE WHEN current.level = 1 THEN current.root_id ELSE previous.id END,
+         '', current.author,
+         '多级评论演示：第 ' || current.level || ' 层回复，根评论 #' || current.n || '。',
+         1, 0, '', CURRENT_TIMESTAMP + ((current.n * 10 + current.level) || ' seconds')::interval,
+         CURRENT_TIMESTAMP + ((current.n * 10 + current.level) || ' seconds')::interval
+  FROM levels current
+  LEFT JOIN levels previous ON previous.article_id = current.article_id
+    AND previous.n = current.n AND previous.level = current.level - 1
+  ON CONFLICT (id) DO NOTHING
+  RETURNING id
+)
+SELECT 1;
+
+-- 重新按 parent_id 计算嵌套集边界，保证多级树查询不会串到其他根评论。
+WITH RECURSIVE tree AS (
+  SELECT comment.id, comment.article_id, comment.created_at, ARRAY[comment.id]::varchar[] AS path
+  FROM aon_cms_comment comment
+  WHERE comment.article_id = (SELECT id FROM aon_cms_article WHERE slug = 'cms-demo-lesson-01')
+    AND comment.parent_id IS NULL AND comment.status = 1
+  UNION ALL
+  SELECT child.id, child.article_id, child.created_at, tree.path || child.id
+  FROM aon_cms_comment child
+  JOIN tree ON tree.id = child.parent_id AND tree.article_id = child.article_id
+  WHERE child.status = 1
+), numbered AS (
+  SELECT tree.*, ROW_NUMBER() OVER (ORDER BY path)::integer AS left_value
+  FROM tree
+), bounds AS (
+  SELECT current.id, current.left_value,
+         current.left_value + (COUNT(descendant.id)::integer * 2) + 1 AS right_value
+  FROM numbered current
+  JOIN numbered descendant ON descendant.article_id = current.article_id
+    AND descendant.path[1:cardinality(current.path)] = current.path
+  GROUP BY current.id, current.left_value
+)
+UPDATE aon_cms_comment comment
+SET "left" = bounds.left_value, "right" = bounds.right_value
+FROM bounds
+WHERE comment.id = bounds.id;
+
+UPDATE aon_cms_article article
+SET comments = (SELECT COUNT(*)::integer FROM aon_cms_comment comment WHERE comment.article_id = article.id AND comment.status = 1)
+WHERE article.slug = 'cms-demo-lesson-01';
 
 -- 更新专题封面。
 UPDATE aon_cms_topic

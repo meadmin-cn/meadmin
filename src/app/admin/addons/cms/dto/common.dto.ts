@@ -18,6 +18,8 @@ export class CmsQueryDto {
   tagId?: string;
   @ApiPropertyRule({ rule: RuleType.string().pattern(/^[0-9]{1,20}$/) })
   articleId?: string;
+  @ApiPropertyRule({ rule: RuleType.string().pattern(/^[0-9]{1,20}$/) })
+  commentId?: string;
   // 前台排序：latest=发布时间; likes=点赞数; comments=评论数; views=浏览量
   @ApiPropertyRule({ rule: RuleType.string().valid('latest', 'likes', 'comments', 'views').default('latest') })
   sortBy?: 'latest' | 'likes' | 'comments' | 'views';
@@ -25,7 +27,10 @@ export class CmsQueryDto {
 export class CmsReviewDto {
   @ApiPropertyRule({ rule: RuleType.boolean().required() })
   approve: boolean;
+  @ApiPropertyRule({ rule: RuleType.string().max(1000).allow('').default('') })
+  reason?: string;
 }
+
 export const querySchema: ReturnType<typeof RuleType.object> = RuleType.object({
   page: RuleType.number().integer().min(1).max(100000).default(1),
   pageSize: RuleType.number().integer().min(1).max(100).default(20),
@@ -35,6 +40,7 @@ export const querySchema: ReturnType<typeof RuleType.object> = RuleType.object({
   topicId: RuleType.string().pattern(/^[0-9]{1,20}$/),
   tagId: RuleType.string().pattern(/^[0-9]{1,20}$/),
   articleId: RuleType.string().pattern(/^[0-9]{1,20}$/),
+  commentId: RuleType.string().pattern(/^[0-9]{1,20}$/),
   sortBy: RuleType.string().valid('latest', 'likes', 'comments', 'views').default('latest'),
 }).unknown(false);
-export const reviewSchema: ReturnType<typeof RuleType.object> = RuleType.object({ approve: RuleType.boolean().required() }).unknown(false);
+export const reviewSchema: ReturnType<typeof RuleType.object> = RuleType.object({ approve: RuleType.boolean().required(), reason: RuleType.string().max(1000).allow('').default('') }).unknown(false);

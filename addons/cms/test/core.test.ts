@@ -43,5 +43,14 @@ test('所有写接口都有明确权限，公开端没有写接口', () => {
     for (const route of routes) assert.match(route.split(/async\s/)[0], /@AdminPermission\(/);
   }
   const source = fs.readFileSync(new URL('../../../src/app/index/addons/cms/controller/cms.controller.ts', import.meta.url), 'utf8');
-  assert.doesNotMatch(source, /@Post|@Put|@Delete/);
+  assert.match(source, /@Post\('\/comments\/:slug'\)/);
+  assert.match(source, /@Post\('\/orders\/:slug'\)/);
+  assert.doesNotMatch(source, /@AdminPermission\(/);
+});
+
+test('CMS 安装 SQL 覆盖评论树、下载和留言实体', () => {
+  const sql = fs.readFileSync(new URL('../../../addons/cms/install.sql', import.meta.url), 'utf8');
+  for (const fragment of ['parent_id varchar(20)', '"left" integer', '"right" integer', 'CREATE TABLE IF NOT EXISTS aon_cms_download', 'CREATE TABLE IF NOT EXISTS aon_cms_message']) {
+    assert.ok(sql.includes(fragment), `安装 SQL 缺少: ${fragment}`);
+  }
 });

@@ -3,8 +3,8 @@ import { AonCmsArticle } from '@/entities/aonCmsArticle.entity.js';
 import { AonCmsCategory } from '@/entities/aonCmsCategory.entity.js';
 import { Controller, Get, Param, Post, Query } from '@midwayjs/core';
 import { Op } from '@sequelize/core';
-import { BaseController } from '../../../controller/base.controller.js';
 import { isCmsVisible } from '../../../../admin/addons/cms/service/guard.js';
+import { BaseController } from '../../../controller/base.controller.js';
 
 // 下载中心不再单独维护资源表：直接复用「可下载」的文章（isDownload=true）作为数据源。
 @Controller('addons/cms/download')

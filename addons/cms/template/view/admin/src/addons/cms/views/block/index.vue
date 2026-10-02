@@ -13,7 +13,10 @@
       <vxe-column field="slug" :title="t('SEO 标识')" min-width="160" />
       <vxe-column field="position" :title="t('展示位置')" min-width="200"
         ><template #default="{ row }"
-          ><div class="position-cell"><span>{{ positionLabel(row.position) }}</span><em>{{ row.position }}</em></div></template
+          ><div class="position-cell">
+            <span>{{ positionLabel(row.position) }}</span
+            ><em>{{ row.position }}</em>
+          </div></template
         ></vxe-column
       >
       <vxe-column field="orderNum" :title="t('排序')" width="100" />

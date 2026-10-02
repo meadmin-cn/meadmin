@@ -145,8 +145,24 @@ export class AonCmsPublicService {
   async home() {
     const visible = await this.visibleArticles();
     const [hotTags, recommendCategories, gallery, rankingBlock] = await Promise.all([
-      this.tag.findAll({ attributes: ['id', 'title', 'slug', 'isHot'], where: { isHot: true, status: 1 }, order: [['orderNum', 'DESC'], ['id', 'ASC']], limit: 30 }),
-      this.category.findAll({ attributes: ['id', 'title', 'slug', 'coverUrl', 'isRecommend'], where: { isRecommend: true, status: 1 }, order: [['orderNum', 'DESC'], ['id', 'ASC']], limit: 30 }),
+      this.tag.findAll({
+        attributes: ['id', 'title', 'slug', 'isHot'],
+        where: { isHot: true, status: 1 },
+        order: [
+          ['orderNum', 'DESC'],
+          ['id', 'ASC'],
+        ],
+        limit: 30,
+      }),
+      this.category.findAll({
+        attributes: ['id', 'title', 'slug', 'coverUrl', 'isRecommend'],
+        where: { isRecommend: true, status: 1 },
+        order: [
+          ['orderNum', 'DESC'],
+          ['id', 'ASC'],
+        ],
+        limit: 30,
+      }),
       this.article.findAll({ attributes: articleAttributes, where: { ...visible, isGallery: true }, order: this.articleOrder('latest'), limit: 8 }),
       this.block.findOne({ where: { position: 'home-ranking', kind: 1, status: 1 } }),
     ]);

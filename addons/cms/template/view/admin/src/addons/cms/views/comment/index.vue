@@ -4,7 +4,8 @@
       ><me-search-form :model="params" @search="search(1)"
         ><el-form-item :label="t('搜索')"><el-input v-model="params.keyword" clearable /></el-form-item
         ><el-form-item :label="t('状态')"
-          ><el-select v-model="params.status" clearable style="width: 160px"><el-option v-for="(label, value) in states" :key="value" :value="value" :label="t(label)" /></el-select></el-form-item><el-form-item label="审查视图"><el-switch v-model="reportView" active-text="举报优先" @change="search(1)" /></el-form-item></me-search-form
+          ><el-select v-model="params.status" clearable style="width: 160px"><el-option v-for="(label, value) in states" :key="value" :value="value" :label="t(label)" /></el-select></el-form-item
+        ><el-form-item label="审查视图"><el-switch v-model="reportView" active-text="举报优先" @change="search(1)" /></el-form-item></me-search-form
     ></template>
     <me-vxe-table border :loading="loading" :data="data?.list ?? []" :on-add="permission('aon_cms_comment_add') ? () => openEditor() : undefined" :pagination-options="{ currentPage: params.page, pageSize: params.pageSize, total: data?.total ?? 0, change: search }" @refresh="search()">
       <vxe-column field="content" :title="t('评论内容')" min-width="220" />
@@ -45,15 +46,28 @@
     <el-dialog v-model="reportsVisible" title="举报明细" width="min(960px, calc(100% - 32px))" class="report-dialog">
       <el-descriptions v-if="reportComment" :column="1" border size="small" class="report-summary">
         <el-descriptions-item v-if="reportComment.articleTitle" label="所属文章">{{ reportComment.articleTitle }}</el-descriptions-item>
-        <el-descriptions-item label="被举报评论"><span class="report-author">{{ reportComment.author }}</span>{{ reportComment.content }}</el-descriptions-item>
-        <el-descriptions-item label="举报情况">共 {{ reportComment.reportCount ?? 0 }} 次举报<template v-if="reportComment.reportedAt"> · 最近 {{ formatterAtExec(reportComment.reportedAt) }}</template></el-descriptions-item>
+        <el-descriptions-item label="被举报评论"
+          ><span class="report-author">{{ reportComment.author }}</span
+          >{{ reportComment.content }}</el-descriptions-item
+        >
+        <el-descriptions-item label="举报情况"
+          >共 {{ reportComment.reportCount ?? 0 }} 次举报<template v-if="reportComment.reportedAt"> · 最近 {{ formatterAtExec(reportComment.reportedAt) }}</template></el-descriptions-item
+        >
       </el-descriptions>
       <el-alert v-if="reportMissing" title="该评论有举报计数但查不到举报记录（历史数据），请人工核对后处理。" type="warning" :closable="false" class="report-comment" />
       <el-table v-loading="reportsLoading" :data="reportsData?.list ?? []" border empty-text="暂无举报记录">
-        <el-table-column label="举报时间" width="170"><template #default="{ row }">{{ formatterAtExec(row.createdAt) }}</template></el-table-column>
-        <el-table-column label="举报人" width="150"><template #default="{ row }">{{ row.userName || (row.userId ? `用户 ${row.userId}` : '匿名访客') }}</template></el-table-column>
+        <el-table-column label="举报时间" width="170"
+          ><template #default="{ row }">{{ formatterAtExec(row.createdAt) }}</template></el-table-column
+        >
+        <el-table-column label="举报人" width="150"
+          ><template #default="{ row }">{{ row.userName || (row.userId ? `用户 ${row.userId}` : '匿名访客') }}</template></el-table-column
+        >
         <el-table-column prop="reason" label="举报原因" min-width="220" show-overflow-tooltip />
-        <el-table-column label="所属文章" min-width="220" show-overflow-tooltip><template #default="{ row }">{{ row.articleTitle || '—' }}<span v-if="row.articleSlug" class="report-slug">/{{ row.articleSlug }}</span></template></el-table-column>
+        <el-table-column label="所属文章" min-width="220" show-overflow-tooltip
+          ><template #default="{ row }"
+            >{{ row.articleTitle || '—' }}<span v-if="row.articleSlug" class="report-slug">/{{ row.articleSlug }}</span></template
+          ></el-table-column
+        >
       </el-table>
       <el-pagination v-if="reportsData?.total" v-model:current-page="reportsPage" :page-size="reportsPageSize" :total="reportsData.total" layout="total, prev, pager, next" class="reports-pagination" @current-change="loadReports" />
     </el-dialog>

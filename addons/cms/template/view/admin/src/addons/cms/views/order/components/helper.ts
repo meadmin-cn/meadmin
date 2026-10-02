@@ -1,8 +1,7 @@
 import type { CmsOrder, CmsOrderAction } from '../../../api/order';
 
 type StatusOption = { readonly value: number; readonly label: string; readonly type: string };
-export const statusOf = <T extends StatusOption>(list: readonly T[], value: number) =>
-  (list.find((item) => item.value === value) ?? { value, label: String(value), type: 'info' }) as { value: number; label: string; type: 'primary' | 'success' | 'warning' | 'info' | 'danger' };
+export const statusOf = <T extends StatusOption>(list: readonly T[], value: number) => (list.find((item) => item.value === value) ?? { value, label: String(value), type: 'info' }) as { value: number; label: string; type: 'primary' | 'success' | 'warning' | 'info' | 'danger' };
 
 const pad = (n: number) => String(n).padStart(2, '0');
 export const formatTime = (value?: string | null) => {

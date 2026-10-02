@@ -39,7 +39,13 @@ export class AonCmsPageService {
     return row;
   }
   async reviewHistory(id: string) {
-    const rows = await this.reviewLogRepository.findAll({ where: { contentType: 'page', contentId: cmsId(id) }, order: [['createdAt', 'DESC'], ['id', 'DESC']] });
+    const rows = await this.reviewLogRepository.findAll({
+      where: { contentType: 'page', contentId: cmsId(id) },
+      order: [
+        ['createdAt', 'DESC'],
+        ['id', 'DESC'],
+      ],
+    });
     const adminIds = [...new Set(rows.map((row) => row.createdAdminId).filter(Boolean))] as string[];
     const admins = adminIds.length ? await this.adminRepository.findAll({ where: { id: { [Op.in]: adminIds } } }) : [];
     const adminMap = new Map(admins.map((admin) => [admin.id, admin.nickname || admin.username]));

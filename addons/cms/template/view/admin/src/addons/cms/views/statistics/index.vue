@@ -15,7 +15,9 @@
 
     <div class="cms-counts">
       <el-card v-for="item in cards" :key="item.key" shadow="never" class="cms-counts__item" :style="{ '--accent': item.color, '--accent-soft': item.soft }">
-        <span class="cms-counts__icon"><el-icon><component :is="item.icon" /></el-icon></span>
+        <span class="cms-counts__icon"
+          ><el-icon><component :is="item.icon" /></el-icon
+        ></span>
         <div class="cms-counts__body">
           <div class="cms-counts__label">{{ item.label }}</div>
           <strong class="cms-counts__value">{{ item.value }}</strong>
@@ -26,23 +28,43 @@
 
     <div class="charts-grid">
       <el-card shadow="never" class="chart-card chart-card--wide">
-        <template #header><span class="chart-head"><el-icon><TrendCharts /></el-icon>{{ t('近14天新增趋势') }}</span></template>
+        <template #header
+          ><span class="chart-head"
+            ><el-icon><TrendCharts /></el-icon>{{ t('近14天新增趋势') }}</span
+          ></template
+        >
         <div ref="trendChartRef" class="chart chart--trend" />
       </el-card>
       <el-card shadow="never" class="chart-card">
-        <template #header><span class="chart-head"><el-icon><List /></el-icon>{{ t('订单状态分布') }}</span></template>
+        <template #header
+          ><span class="chart-head"
+            ><el-icon><List /></el-icon>{{ t('订单状态分布') }}</span
+          ></template
+        >
         <div ref="orderChartRef" class="chart" />
       </el-card>
       <el-card shadow="never" class="chart-card">
-        <template #header><span class="chart-head"><el-icon><Menu /></el-icon>{{ t('栏目文章分布') }}</span></template>
+        <template #header
+          ><span class="chart-head"
+            ><el-icon><Menu /></el-icon>{{ t('栏目文章分布') }}</span
+          ></template
+        >
         <div ref="categoryChartRef" class="chart" />
       </el-card>
       <el-card shadow="never" class="chart-card">
-        <template #header><span class="chart-head"><el-icon><Download /></el-icon>{{ t('下载资源排行') }}</span></template>
+        <template #header
+          ><span class="chart-head"
+            ><el-icon><Download /></el-icon>{{ t('下载资源排行') }}</span
+          ></template
+        >
         <div ref="downloadChartRef" class="chart" />
       </el-card>
       <el-card shadow="never" class="chart-card chart-card--wide">
-        <template #header><span class="chart-head"><el-icon><View /></el-icon>{{ t('热门文章排行') }}</span></template>
+        <template #header
+          ><span class="chart-head"
+            ><el-icon><View /></el-icon>{{ t('热门文章排行') }}</span
+          ></template
+        >
         <div ref="viewChartRef" class="chart" />
       </el-card>
     </div>
@@ -57,14 +79,14 @@
   </page>
 </template>
 <script setup lang="ts">
-import { CircleCheck, Clock, Document, Download, List, Menu, Refresh, Tickets, TrendCharts, View, Wallet, ChatLineRound } from '@element-plus/icons-vue';
 import { useLocalesI18n } from '@/locales/i18n';
-import * as echarts from 'echarts/core';
+import request from '@/utils/request';
+import { ChatLineRound, CircleCheck, Clock, Document, Download, List, Menu, Refresh, Tickets, TrendCharts, View, Wallet } from '@element-plus/icons-vue';
 import { BarChart, LineChart, PieChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TitleComponent, TooltipComponent } from 'echarts/components';
+import * as echarts from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import request from '@/utils/request';
 echarts.use([BarChart, LineChart, PieChart, GridComponent, LegendComponent, TitleComponent, TooltipComponent, CanvasRenderer]);
 
 // 统一色系：采用更柔和、低饱和的淡色，避免页面过于花哨
@@ -176,7 +198,14 @@ const renderCharts = () => {
     series: [{ type: 'bar', barWidth: '56%', itemStyle: { color: C.primary, borderRadius: [0, 6, 6, 0] }, data: vw.map((item) => item.total) }],
   });
 };
-watch(data, async () => { await nextTick(); renderCharts(); }, { deep: true });
+watch(
+  data,
+  async () => {
+    await nextTick();
+    renderCharts();
+  },
+  { deep: true },
+);
 const handleResize = () => Object.values(charts).forEach((chart) => chart.resize());
 // 初始渲染必须在组件挂载后执行，否则模板 ref 尚未就绪，图表无法初始化
 onMounted(async () => {
@@ -188,28 +217,116 @@ onBeforeUnmount(() => window.removeEventListener('resize', handleResize));
 await Promise.all([loadRes, runAsync()]);
 </script>
 <style scoped>
-.stat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.stat-header h2 { margin: 0; font-size: 18px; }
-.stat-subtitle { margin: 4px 0 0; color: var(--el-text-color-secondary); font-size: 13px; }
-.stat-tz { margin-left: 4px; color: var(--el-color-primary); }
-.cms-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin: 16px 0; }
-.cms-counts__item { --accent: var(--el-color-primary); position: relative; overflow: hidden; border: none; background: var(--accent-soft, #f5f7fa); }
-.cms-counts__item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent); }
-.cms-counts__icon { position: absolute; top: 14px; right: 14px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, #fff); }
-.cms-counts__icon .el-icon { font-size: 18px; }
-.cms-counts__body { padding-right: 44px; }
-.cms-counts__label { font-size: 13px; color: var(--el-text-color-secondary); }
-.cms-counts__value { display: block; font-size: 28px; margin-top: 10px; color: var(--accent); }
-.cms-counts__bar { display: block; margin-top: 10px; height: 4px; border-radius: 4px; background: color-mix(in srgb, var(--accent) 30%, transparent); }
-.charts-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr); gap: 16px; margin: 16px 0; }
-.chart-card { border: none; }
-.chart-card--wide { grid-column: 1 / -1; }
-.chart-head { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
-.chart-head .el-icon { color: var(--el-color-primary); }
-.chart { height: 300px; }
-.chart--trend { height: 280px; }
-h3 { margin: 20px 0 12px; font-size: 15px; }
+.stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.stat-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+.stat-subtitle {
+  margin: 4px 0 0;
+  color: var(--el-text-color-secondary);
+  font-size: 13px;
+}
+.stat-tz {
+  margin-left: 4px;
+  color: var(--el-color-primary);
+}
+.cms-counts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+.cms-counts__item {
+  --accent: var(--el-color-primary);
+  position: relative;
+  overflow: hidden;
+  border: none;
+  background: var(--accent-soft, #f5f7fa);
+}
+.cms-counts__item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--accent);
+}
+.cms-counts__icon {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 16%, #fff);
+}
+.cms-counts__icon .el-icon {
+  font-size: 18px;
+}
+.cms-counts__body {
+  padding-right: 44px;
+}
+.cms-counts__label {
+  font-size: 13px;
+  color: var(--el-text-color-secondary);
+}
+.cms-counts__value {
+  display: block;
+  font-size: 28px;
+  margin-top: 10px;
+  color: var(--accent);
+}
+.cms-counts__bar {
+  display: block;
+  margin-top: 10px;
+  height: 4px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.charts-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr);
+  gap: 16px;
+  margin: 16px 0;
+}
+.chart-card {
+  border: none;
+}
+.chart-card--wide {
+  grid-column: 1 / -1;
+}
+.chart-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+.chart-head .el-icon {
+  color: var(--el-color-primary);
+}
+.chart {
+  height: 300px;
+}
+.chart--trend {
+  height: 280px;
+}
+h3 {
+  margin: 20px 0 12px;
+  font-size: 15px;
+}
 @media (max-width: 900px) {
-  .charts-grid { grid-template-columns: 1fr; }
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

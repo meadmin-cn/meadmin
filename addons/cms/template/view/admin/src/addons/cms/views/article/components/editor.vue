@@ -2,7 +2,9 @@
   <me-dialog v-model="show" :title="t(readonly ? '详情' : id ? '编辑' : '新增')" :close-on-click-modal="false" class="article-editor-dialog" @closed="emit('closed')">
     <el-alert class="editor-alert" :title="t('保存后内容将回到草稿，需重新审核')" type="info" :closable="false" />
 
-    <el-form ref="formEl" class="article-editor-form" :model="form" :rules="rules" :disabled="readonly || loading" label-position="top">
+    <!-- 富文本编辑器在数据回填前挂载会因内容由空变有而抛错，进而中断本次补丁（后面的字段都不会更新），
+         因此等详情加载完成后再渲染整个表单 -->
+    <el-form v-if="ready" ref="formEl" class="article-editor-form" :model="form" :rules="rules" :disabled="readonly || loading" label-position="top">
       <div class="editor-main-column">
         <el-form-item :label="t('标题')" prop="title"><el-input v-model="form.title" size="large" placeholder="请输入文章标题" /></el-form-item>
         <el-form-item :label="t('摘要')" prop="summary"><el-input v-model="form.summary" type="textarea" :rows="3" placeholder="用于列表、搜索和 SEO 摘要展示" /></el-form-item>
@@ -21,8 +23,12 @@
         <section class="editor-side-section">
           <h4>发布设置</h4>
           <el-form-item :label="t('栏目')" prop="categoryId"><el-tree-select v-model="form.categoryId" :data="categories ?? []" :props="{ label: 'title' }" node-key="id" check-strictly clearable /></el-form-item>
-          <el-form-item :label="t('专题')" prop="topicId"><el-select v-model="form.topicId" clearable filterable remote :remote-method="lookupTopics"><el-option v-for="option in topics" :key="option.id" :value="option.id" :label="option.title" /></el-select></el-form-item>
-          <el-form-item :label="t('标签')" prop="tagIds"><el-select v-model="form.tagIds" multiple filterable remote :remote-method="lookupTags" :loading="tagsLoading"><el-option v-for="option in tags" :key="option.id" :value="option.id" :label="option.title" /></el-select></el-form-item>
+          <el-form-item :label="t('专题')" prop="topicId"
+            ><el-select v-model="form.topicId" clearable filterable remote :remote-method="lookupTopics"><el-option v-for="option in topics" :key="option.id" :value="option.id" :label="option.title" /></el-select
+          ></el-form-item>
+          <el-form-item :label="t('标签')" prop="tagIds"
+            ><el-select v-model="form.tagIds" multiple filterable remote :remote-method="lookupTags" :loading="tagsLoading"><el-option v-for="option in tags" :key="option.id" :value="option.id" :label="option.title" /></el-select
+          ></el-form-item>
           <el-form-item :label="t('发布时间')" prop="publishAt"><el-date-picker v-model="form.publishAt" type="datetime" value-format="YYYY-MM-DDTHH:mm:ssZ" clearable /></el-form-item>
           <el-form-item :label="t('排序')" prop="orderNum"><el-input-number :key="String(readonly || loading)" v-model="form.orderNum" :min="-9999" :max="9999" /></el-form-item>
         </section>
@@ -40,8 +46,19 @@
         <section v-if="form.isDownload" class="editor-side-section">
           <h4>下载文件</h4>
           <el-form-item label="关联文件" prop="fileUrl">
-            <me-upload accept="*" :limit="1" @update:model-value="(files: Array<{ url?: string; name?: string }>) => { form.fileUrl = files[0]?.url ?? ''; form.fileName = files[0]?.name ?? ''; }">
-              <template #tip><span class="up-tip">{{ form.fileName || '请上传下载关联文件' }}</span></template>
+            <me-upload
+              accept="*"
+              :limit="1"
+              @update:model-value="
+                (files: Array<{ url?: string; name?: string }>) => {
+                  form.fileUrl = files[0]?.url ?? '';
+                  form.fileName = files[0]?.name ?? '';
+                }
+              "
+            >
+              <template #tip
+                ><span class="up-tip">{{ form.fileName || '请上传下载关联文件' }}</span></template
+              >
             </me-upload>
           </el-form-item>
         </section>
@@ -55,16 +72,17 @@
 </template>
 <script setup lang="ts">
 import type { FileInfo } from '@/api/file';
+import MeWangEditor from '@/components/meWangEditor/index.vue';
 import { useLocalesI18n } from '@/locales/i18n';
 import type { FormInstance, FormRules } from 'element-plus';
 import { reactive, ref, watch } from 'vue';
 import { defaults, infoApi, saveApi } from '../../../api/article';
 import { treeApi } from '../../../api/category';
 import { lookupApi } from '../../../api/options';
-import MeWangEditor from '@/components/meWangEditor/index.vue';
 const editorConfig = { editor: { placeholder: '请输入文章正文内容...' } };
-// 回显已保存的图片：把 URL 还原成上传组件需要的文件对象，保证编辑时可见预览
-const uploadValue = (url: string): FileInfo[] => (url ? ([{ url, name: url.split('/').pop() ?? 'image' }] as FileInfo[]) : []);
+// el-upload 通过 TransitionGroup 渲染列表，key 取 uid || name，回显文件必须带上唯一 uid 才会渲染
+let uploadUid = 0;
+const uploadValue = (url: unknown): FileInfo[] => (typeof url === 'string' && url ? ([{ uid: -++uploadUid, url, name: url.split('/').pop() ?? 'image' }] as unknown as FileInfo[]) : []);
 const { runAsync: getCategories, data: categories } = treeApi();
 const { runAsync: getTags, loading: tagsLoading } = lookupApi();
 const { runAsync: getTopics } = lookupApi();
@@ -81,6 +99,8 @@ const props = defineProps<{ id?: string; readonly?: boolean }>();
 const emit = defineEmits<{ success: []; closed: [] }>();
 const show = defineModel<boolean>();
 const form = reactive(defaults());
+// 详情加载完成后才渲染表单（详见模板中的说明）
+const ready = ref(false);
 const formEl = ref<FormInstance>();
 const { runAsync: getInfo, loading } = infoApi();
 const { runAsync: saveInfo, loading: saving } = saveApi();
@@ -92,15 +112,18 @@ const save = async () => {
   show.value = false;
   emit('success');
 };
-await loadRes;
+// 不要在 setup 里 await 语言包：顶层 await 会让组件变成异步组件，未用 Suspense 包裹时弹窗内容失去响应式更新
+void loadRes;
 watch(
   () => props.id,
   async (id) => {
     Object.assign(form, defaults());
     if (id) {
+      ready.value = false;
       const data = await getInfo(id);
       for (const key of Object.keys(form) as Array<keyof typeof form>) Object.assign(form, { [key]: data[key] });
     }
+    ready.value = true;
 
     await Promise.all([getCategories(), lookupTags(), lookupTopics()]);
   },

@@ -83,8 +83,8 @@ import { computed, reactive, ref } from 'vue';
 import { actionApi, deleteApi, infoApi, listApi, parseSnapshot, reviewHistoryApi } from '../../api/page';
 import type { CmsConfirmAlertType, CmsConfirmButtonType, CmsConfirmItem } from '../../components/actionConfirm';
 import ActionConfirm from '../../components/actionConfirm.vue';
-import Editor from './components/editor.vue';
 import Detail from './components/detail.vue';
+import Editor from './components/editor.vue';
 import PageInfo from './components/pageInfo.vue';
 const { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../../lang/${locale}.json`), 'cms']);
 const states = ['草稿', '待审核', '发布', '拒绝', '下线'];
@@ -211,7 +211,7 @@ const openSnapshot = (item: any) => {
   snapshotTitle.value = `审核快照详情 · ${reviewActionLabel(item.action)} · ${formatterAtExec(item.createdAt)}`;
   snapshotVisible.value = true;
 };
-const reviewActionLabel = (actionName: string) => ({ submit: '提交审核', approve: '审核通过', reject: '审核拒绝', offline: '内容下线' }[actionName] ?? actionName);
+const reviewActionLabel = (actionName: string) => ({ submit: '提交审核', approve: '审核通过', reject: '审核拒绝', offline: '内容下线' })[actionName] ?? actionName;
 const reviewAction = async (approve: boolean) => {
   if (!reviewPage.value) return;
   if (!approve && !reviewReason.value.trim()) {

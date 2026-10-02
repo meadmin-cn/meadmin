@@ -5,20 +5,7 @@ import { AonCmsOrderLog, CmsOrderAction } from '@/entities/aonCmsOrderLog.entity
 import { Provide } from '@midwayjs/core';
 import { BadRequestError, NotFoundError } from '@midwayjs/core/dist/error/http.js';
 import { Attributes, Op, WhereOptions } from '@sequelize/core';
-import {
-  adminOrderListSchema,
-  CmsAdminOrderListDto,
-  CmsOrderEditDto,
-  CmsOrderFollowDto,
-  CmsOrderPayDto,
-  CmsOrderReasonDto,
-  CmsOrderShipDto,
-  orderEditSchema,
-  orderFollowSchema,
-  orderPaySchema,
-  orderReasonSchema,
-  orderShipSchema,
-} from '../dto/order.dto.js';
+import { adminOrderListSchema, CmsAdminOrderListDto, CmsOrderEditDto, CmsOrderFollowDto, CmsOrderPayDto, CmsOrderReasonDto, CmsOrderShipDto, orderEditSchema, orderFollowSchema, orderPaySchema, orderReasonSchema, orderShipSchema } from '../dto/order.dto.js';
 import { cmsId, validateCms } from './guard.js';
 
 /** 订单状态：0待处理 1处理中 2已完成 3已关闭 */
@@ -64,13 +51,7 @@ export class AonCmsOrderService {
   /** 顶部汇总：各状态数量与金额 */
   async summary() {
     const rows = (await this.repository.findAll({
-      attributes: [
-        'status',
-        'paymentStatus',
-        'shippingStatus',
-        [this.repository.sequelize.fn('COUNT', this.repository.sequelize.col('id')), 'total'],
-        [this.repository.sequelize.fn('COALESCE', this.repository.sequelize.fn('SUM', this.repository.sequelize.col('paid_amount')), 0), 'paid'],
-      ],
+      attributes: ['status', 'paymentStatus', 'shippingStatus', [this.repository.sequelize.fn('COUNT', this.repository.sequelize.col('id')), 'total'], [this.repository.sequelize.fn('COALESCE', this.repository.sequelize.fn('SUM', this.repository.sequelize.col('paid_amount')), 0), 'paid']],
       group: ['status', 'paymentStatus', 'shippingStatus'],
       raw: true,
     })) as unknown as Array<{ status: number; paymentStatus: number; shippingStatus: number; total: string; paid: string }>;
@@ -100,10 +81,7 @@ export class AonCmsOrderService {
   /** 详情：订单 + 关联文章 + 跟进日志 */
   async detail(id: string) {
     const order = await this.info(id);
-    const [article, logs] = await Promise.all([
-      this.articleRepository.findByPk(order.articleId, { attributes: ['id', 'title', 'slug'] }),
-      this.logs(order.id),
-    ]);
+    const [article, logs] = await Promise.all([this.articleRepository.findByPk(order.articleId, { attributes: ['id', 'title', 'slug'] }), this.logs(order.id)]);
     return { order, article, logs };
   }
 

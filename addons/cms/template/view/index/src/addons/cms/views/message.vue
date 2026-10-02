@@ -4,8 +4,8 @@
       <header class="page-heading">
         <div>
           <span class="page-kicker">交流反馈</span>
-          <h1>{{ form?.title || '留言板' }}</h1>
-          <p>{{ form?.description || '欢迎提出建议或反馈问题，公开留言会在审核后展示。' }}</p>
+          <h1>{{ form?.title || (diyname ? '表单' : '留言板') }}</h1>
+          <p>{{ form?.description || (diyname ? '请按表单要求填写内容，提交后由管理员处理。' : '欢迎提出建议或反馈问题，公开留言会在审核后展示。') }}</p>
         </div>
         <el-button v-if="fields.length" type="primary" @click="editorOpen = !editorOpen">{{ editorOpen ? '收起表单' : '填写表单' }}</el-button>
       </header>
@@ -43,7 +43,7 @@
           </div>
         </el-form>
       </section>
-      <el-alert v-if="!loading && !fields.length" class="message-alert" type="warning" :closable="false" title="留言板表单尚未配置" description="请在后台「CMS - 自定义表单」中新建表单并开启「作为前台留言板」。" />
+      <el-alert v-if="!loading && !fields.length" class="message-alert" type="warning" :closable="false" :title="diyname ? '表单不存在或已停用' : '留言板表单尚未配置'" :description="diyname ? '请在后台「CMS - 自定义表单」中确认表单标识并启用该表单。' : '请在后台「CMS - 自定义表单」中新建表单并开启「作为前台留言板」。'" />
 
       <section class="message-stream">
         <div class="stream-header">
@@ -64,7 +64,10 @@
               <p>{{ item.content }}</p>
               <!-- 其余字段按表单配置补充展示 -->
               <div v-if="extraEntries(item).length" class="message-extra">
-                <span v-for="entry in extraEntries(item)" :key="entry.label"><b>{{ entry.label }}</b>{{ entry.value }}</span>
+                <span v-for="entry in extraEntries(item)" :key="entry.label"
+                  ><b>{{ entry.label }}</b
+                  >{{ entry.value }}</span
+                >
               </div>
               <div v-if="item.reply" class="reply">
                 <span>管理员回复</span>
@@ -82,12 +85,16 @@
 
 <script setup lang="ts">
 import type { FileInfo } from '@/api/file';
+import { formatterAtExec } from '@/utils/helper';
 import { ElMessage } from 'element-plus';
 import { computed, reactive, ref } from 'vue';
-import { formatterAtExec } from '@/utils/helper';
+import { useRoute } from 'vue-router';
 import type { CmsDiyformField, CmsDiyformRecord } from '../api/cms';
-import { messageBoardApi, submitDiyformApi } from '../api/cms';
+import { diyformApi, messageBoardApi, submitDiyformApi } from '../api/cms';
 
+// 走 /aon/cms/form/{diyname} 时渲染指定表单，走 /aon/cms/message 时渲染留言板表单
+const route = useRoute();
+const diyname = computed(() => String(route.params.diyname ?? ''));
 const editorOpen = ref(false);
 const submitting = ref(false);
 const loading = ref(false);
@@ -95,13 +102,16 @@ const page = ref(1);
 const pageSize = 10;
 // 提交内容以字段名称为键，结构完全来自后台配置
 const formData = reactive<Record<string, unknown>>({});
-const { data, runAsync: fetchMessages } = messageBoardApi();
+const { data: boardData, runAsync: fetchBoard } = messageBoardApi();
+const { data: formDiyData, runAsync: fetchDiyform } = diyformApi();
 const { runAsync: submitForm } = submitDiyformApi();
+const data = computed(() => (diyname.value ? formDiyData.value : boardData.value));
 
 const form = computed(() => data.value?.form ?? null);
 const fields = computed<CmsDiyformField[]>(() => form.value?.fields ?? []);
-// 未上传图片时回显为空；已上传时还原成上传组件需要的文件对象
-const uploadValue = (url: unknown): FileInfo[] => (typeof url === 'string' && url ? ([{ url, name: url.split('/').pop() ?? 'image' }] as FileInfo[]) : []);
+// el-upload 通过 TransitionGroup 渲染列表，key 取 uid || name，回显文件必须带上唯一 uid 才会渲染
+let uploadUid = 0;
+const uploadValue = (url: unknown): FileInfo[] => (typeof url === 'string' && url ? ([{ uid: -++uploadUid, url, name: url.split('/').pop() ?? 'image' }] as unknown as FileInfo[]) : []);
 
 // 必填项校验：全部必填字段都有值才允许提交（未满足时按钮置灰）
 const canSubmit = computed(() =>
@@ -117,15 +127,14 @@ const canSubmit = computed(() =>
 // 公开数据里除正文外的其它字段，按表单配置展示
 const extraEntries = (item: CmsDiyformRecord) => {
   const contentField = fields.value.find((field) => field.type === 'textarea');
-  return fields.value
-    .filter((field) => field.name !== contentField?.name && !['text', 'number'].includes(field.type) && item.data?.[field.name])
-    .map((field) => ({ label: field.label, value: Array.isArray(item.data[field.name]) ? (item.data[field.name] as string[]).join('、') : String(item.data[field.name]) }));
+  return fields.value.filter((field) => field.name !== contentField?.name && !['text', 'number'].includes(field.type) && item.data?.[field.name]).map((field) => ({ label: field.label, value: Array.isArray(item.data[field.name]) ? (item.data[field.name] as string[]).join('、') : String(item.data[field.name]) }));
 };
 
 const load = async () => {
   loading.value = true;
   try {
-    await fetchMessages({ page: page.value, pageSize });
+    if (diyname.value) await fetchDiyform(diyname.value, { page: page.value, pageSize });
+    else await fetchBoard({ page: page.value, pageSize });
     // 首次拿到字段配置后初始化表单模型，避免输入后配置刷新导致内容丢失
     for (const field of fields.value) if (!(field.name in formData)) formData[field.name] = field.type === 'checkbox' ? [] : '';
   } finally {

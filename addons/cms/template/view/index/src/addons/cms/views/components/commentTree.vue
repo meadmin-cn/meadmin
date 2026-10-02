@@ -12,9 +12,7 @@
         <p class="comment-content">{{ comment.content }}</p>
         <div class="comment-actions">
           <span class="comment-time"><cms-icon name="clock" :size="13" />{{ formatDate(comment.createdAt) }}</span>
-          <button type="button" class="action-btn" :class="{ active: replyTargetId === comment.id, disabled }" :aria-disabled="disabled" @click="$emit('reply', comment)"
-            ><cms-icon name="reply" :size="14" />{{ replyTargetId === comment.id ? '取消回复' : '回复' }}</button
-          >
+          <button type="button" class="action-btn" :class="{ active: replyTargetId === comment.id, disabled }" :aria-disabled="disabled" @click="$emit('reply', comment)"><cms-icon name="reply" :size="14" />{{ replyTargetId === comment.id ? '取消回复' : '回复' }}</button>
           <button type="button" class="action-btn" :class="{ disabled }" :aria-disabled="disabled" @click="$emit('report', comment)"><cms-icon name="report" :size="14" />举报</button>
         </div>
         <div v-if="replyTargetId === comment.id" class="inline-reply-editor">
@@ -40,9 +38,7 @@
           <p class="comment-content">{{ reply.content }}</p>
           <div class="comment-actions">
             <span class="comment-time"><cms-icon name="clock" :size="13" />{{ formatDate(reply.createdAt) }}</span>
-            <button type="button" class="action-btn" :class="{ active: replyTargetId === reply.id, disabled }" :aria-disabled="disabled" @click="$emit('reply', reply)"
-              ><cms-icon name="reply" :size="14" />{{ replyTargetId === reply.id ? '取消回复' : '回复' }}</button
-            >
+            <button type="button" class="action-btn" :class="{ active: replyTargetId === reply.id, disabled }" :aria-disabled="disabled" @click="$emit('reply', reply)"><cms-icon name="reply" :size="14" />{{ replyTargetId === reply.id ? '取消回复' : '回复' }}</button>
             <button type="button" class="action-btn" :class="{ disabled }" :aria-disabled="disabled" @click="$emit('report', reply)"><cms-icon name="report" :size="14" />举报</button>
           </div>
           <div v-if="replyTargetId === reply.id" class="inline-reply-editor">
@@ -58,10 +54,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
 import { formatterAtExec } from '@/utils/helper';
-import CmsIcon from '../../components/cmsIcon.vue';
+import { computed } from 'vue';
 import type { CmsComment } from '../../api/cms';
+import CmsIcon from '../../components/cmsIcon.vue';
 
 type CommentNode = CmsComment & { children?: CommentNode[] };
 type FlatReply = CommentNode & { replyToAuthor: string };

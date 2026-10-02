@@ -4,9 +4,9 @@ import { Provide } from '@midwayjs/core';
 import { BadRequestError, NotFoundError } from '@midwayjs/core/dist/error/http.js';
 import { Attributes, Op, WhereOptions } from '@sequelize/core';
 
+import { cmsBlockPosition, cmsBlockPositions } from '../dict/blockPosition.dict.js';
 import { AonCmsBlockSaveDto, blockKindFromPosition, blockSchema } from '../dto/block.dto.js';
 import { CmsQueryDto, querySchema } from '../dto/common.dto.js';
-import { cmsBlockPositions, cmsBlockPosition } from '../dict/blockPosition.dict.js';
 import { cmsId, validateCms } from './guard.js';
 
 @Provide()

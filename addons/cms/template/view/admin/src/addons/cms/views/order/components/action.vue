@@ -18,14 +18,18 @@
       <template v-else-if="action === 'pay'">
         <el-form-item label="实收金额" prop="paidAmount"><el-input-number v-model="form.paidAmount" :min="0" :precision="2" :step="10" /></el-form-item>
         <el-form-item label="收款方式" prop="paymentMethod">
-          <el-radio-group v-model="form.paymentMethod"><el-radio-button v-for="item in PAYMENT_METHODS" :key="item.value" :value="item.value">{{ item.label }}</el-radio-button></el-radio-group>
+          <el-radio-group v-model="form.paymentMethod"
+            ><el-radio-button v-for="item in PAYMENT_METHODS" :key="item.value" :value="item.value">{{ item.label }}</el-radio-button></el-radio-group
+          >
         </el-form-item>
         <el-form-item label="流水号" prop="paymentNo"><el-input v-model="form.paymentNo" maxlength="80" placeholder="转账流水号/凭证号，可选" /></el-form-item>
         <el-form-item label="收款时间" prop="paidAt"><el-date-picker v-model="form.paidAt" type="datetime" value-format="YYYY-MM-DDTHH:mm:ssZ" placeholder="默认当前时间" /></el-form-item>
         <el-form-item label="备注" prop="content"><el-input v-model="form.content" type="textarea" :rows="2" maxlength="1000" /></el-form-item>
       </template>
       <template v-else-if="action === 'ship'">
-        <el-form-item label="收件信息"><div class="order-action-address">{{ order?.contactName }} {{ order?.contactPhone }}<br />{{ order?.shippingAddress }}</div></el-form-item>
+        <el-form-item label="收件信息"
+          ><div class="order-action-address">{{ order?.contactName }} {{ order?.contactPhone }}<br />{{ order?.shippingAddress }}</div></el-form-item
+        >
         <el-form-item label="快递公司" prop="expressCompany">
           <el-select v-model="form.expressCompany" filterable allow-create default-first-option placeholder="选择或输入快递公司" style="width: 100%">
             <el-option v-for="item in EXPRESS_COMPANIES" :key="item" :value="item" :label="item" />
@@ -51,11 +55,11 @@
   </me-dialog>
 </template>
 <script setup lang="ts">
+import dayjs from 'dayjs';
 import type { FormInstance, FormRules } from 'element-plus';
 import { computed, reactive, ref } from 'vue';
-import dayjs from 'dayjs';
-import { actionApi, EXPRESS_COMPANIES, PAYMENT_METHODS } from '../../../api/order';
 import type { CmsOrder, CmsOrderAction } from '../../../api/order';
+import { actionApi, EXPRESS_COMPANIES, PAYMENT_METHODS } from '../../../api/order';
 
 const props = defineProps<{ action: CmsOrderAction; order: CmsOrder }>();
 const emit = defineEmits<{ success: []; closed: [] }>();

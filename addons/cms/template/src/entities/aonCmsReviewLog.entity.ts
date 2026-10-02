@@ -14,7 +14,12 @@ export class AonCmsReviewLog extends AdminBaseModel<AonCmsReviewLog> {
   declare id: CreationOptional<string>;
 
   @Attribute({ type: DataTypes.STRING(20), allowNull: false })
-  @ApiPropertyRule({ description: '内容 ID', rule: RuleType.string().pattern(/^[0-9]{1,20}$/).required() })
+  @ApiPropertyRule({
+    description: '内容 ID',
+    rule: RuleType.string()
+      .pattern(/^[0-9]{1,20}$/)
+      .required(),
+  })
   declare contentId: string;
 
   @Attribute({ type: DataTypes.STRING(20), allowNull: false })

@@ -19,7 +19,10 @@
             <cms-preview :content="detail.mdContent ?? ''" />
             <div v-if="kind === 'article' && detail.orderEnabled" class="detail-actions"><el-button type="primary" @click="orderDialog = true">创建订单</el-button><span>线下支付，提交后可凭订单号查询处理进度</span></div>
             <div v-if="kind === 'article' && detail.isDownload && detail.fileUrl" class="detail-actions download-actions">
-              <div class="download-meta"><strong>{{ detail.fileName || detail.title }}</strong><span><cms-icon name="download" :size="14" />下载次数 {{ detail.downloads ?? 0 }}</span></div>
+              <div class="download-meta">
+                <strong>{{ detail.fileName || detail.title }}</strong
+                ><span><cms-icon name="download" :size="14" />下载次数 {{ detail.downloads ?? 0 }}</span>
+              </div>
               <el-button type="success" :loading="downloading" @click="downloadArticleFile">下载文件</el-button>
             </div>
             <!-- 后台「内容详情页底部」位置的区块投放点 -->
@@ -61,7 +64,9 @@
           <!-- 详情页右侧评论列表：只展示摘要，点击后弹窗展开完整评论列表组件 -->
           <section v-if="kind === 'article'" class="detail-side-card">
             <div class="section-header">
-              <h3 class="section-title">评论 <span class="count-badge">{{ comments?.total ?? 0 }}</span></h3>
+              <h3 class="section-title">
+                评论 <span class="count-badge">{{ comments?.total ?? 0 }}</span>
+              </h3>
               <button class="text-action" @click="() => openCommentDialog()">全部评论</button>
             </div>
             <p class="detail-side-hint">点击任意一条评论可查看对应内容信息与完整讨论。</p>
@@ -69,7 +74,10 @@
               <button v-for="comment in commentPreview" :key="comment.id" class="comment-preview" @click="openCommentDialog(comment)">
                 <span class="comment-preview-avatar">{{ (comment.author || '匿').slice(0, 1) }}</span>
                 <span class="comment-preview-body">
-                  <span class="comment-preview-top"><strong>{{ comment.author }}</strong><small>{{ formatDate(comment.createdAt) }}</small></span>
+                  <span class="comment-preview-top"
+                    ><strong>{{ comment.author }}</strong
+                    ><small>{{ formatDate(comment.createdAt) }}</small></span
+                  >
                   <span class="comment-preview-text">{{ comment.content }}</span>
                   <span v-if="comment.reportCount" class="comment-preview-flag">已举报 {{ comment.reportCount }} 次</span>
                 </span>
@@ -98,7 +106,9 @@
                 <p v-if="detail.summary" class="comment-article-summary" :title="detail.summary">{{ detail.summary }}</p>
               </div>
             </div>
-            <div class="comment-dialog-toolbar"><span>共 {{ comments?.total ?? 0 }} 条评论</span><span>友善交流，理性发言</span></div>
+            <div class="comment-dialog-toolbar">
+              <span>共 {{ comments?.total ?? 0 }} 条评论</span><span>友善交流，理性发言</span>
+            </div>
             <div v-if="commentTree.length" class="comment-list"><CommentTree v-for="comment in commentTree" :key="comment.id" :comment="comment" :reply-target-id="replyTarget?.id" :reply-content="replyContent" :submitting="commentSubmitting" @reply="startReply" @report="openReport" @update:reply-content="replyContent = $event" @submit-reply="submitReply" /></div>
             <div v-else class="comment-empty"><strong>还没有评论</strong><span>来发表第一条友善的评论吧</span></div>
             <el-pagination v-if="comments?.total" v-model:current-page="commentPage" :page-size="comments.pageSize || 3" :total="comments.total" layout="prev, pager, next" class="comment-pagination" @current-change="loadComments" />
@@ -204,7 +214,10 @@
                 <div class="cat-grid">
                   <router-link v-for="cat in recommendCategories" :key="cat.id" :to="`/aon/cms/category/${cat.slug}`" class="cat-card" tabindex="0">
                     <img v-if="safeUrl(cat.coverUrl)" :src="cat.coverUrl" :alt="cat.title" />
-                    <div class="cat-body"><h4>{{ cat.title }}</h4><span>进入栏目 →</span></div>
+                    <div class="cat-body">
+                      <h4>{{ cat.title }}</h4>
+                      <span>进入栏目 →</span>
+                    </div>
                   </router-link>
                 </div>
               </section>
@@ -276,7 +289,9 @@
               </section>
               <section class="sidebar-card filter-card">
                 <h3 class="sidebar-title">筛选内容</h3>
-                <el-select v-model="query.categoryId" clearable placeholder="全部分栏" class="filter-select" @change="search"><el-option-group v-for="group in categoryGroups" :key="group.label" :label="group.label"><el-option v-for="opt in group.options" :key="opt.value" :value="opt.value" :label="opt.label" /></el-option-group></el-select><el-select v-model="query.tagId" clearable placeholder="全部标签" class="filter-select" @change="search"><el-option v-for="tag in navigation?.tags" :key="tag.id" :value="tag.id" :label="tag.title" /></el-select>
+                <el-select v-model="query.categoryId" clearable placeholder="全部分栏" class="filter-select" @change="search"
+                  ><el-option-group v-for="group in categoryGroups" :key="group.label" :label="group.label"><el-option v-for="opt in group.options" :key="opt.value" :value="opt.value" :label="opt.label" /></el-option-group></el-select
+                ><el-select v-model="query.tagId" clearable placeholder="全部标签" class="filter-select" @change="search"><el-option v-for="tag in navigation?.tags" :key="tag.id" :value="tag.id" :label="tag.title" /></el-select>
               </section>
               <section class="sidebar-card">
                 <div class="section-header">
@@ -285,10 +300,10 @@
                 </div>
                 <router-link v-for="(article, index) in ranking.slice(0, 6)" :key="article.id" class="rank-item" :to="`/aon/cms/article/${article.slug}`"
                   ><span class="rank-number" :class="{ top: index < 3 }">{{ index + 1 }}</span
-                    ><span class="rank-copy"
-                      ><strong>{{ article.title }}</strong
-                      ><small><cms-icon name="view" :size="13" />{{ article.views }}</small></span
-                    ></router-link
+                  ><span class="rank-copy"
+                    ><strong>{{ article.title }}</strong
+                    ><small><cms-icon name="view" :size="13" />{{ article.views }}</small></span
+                  ></router-link
                 >
               </section>
               <section v-if="topCategories.length" class="sidebar-card">
@@ -327,7 +342,7 @@ import { ElMessage } from 'element-plus';
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { CmsComment, CmsContent, CmsOption, CmsOrder, CmsQuery } from '../api/cms';
-import { articlesApi, articleDownloadApi, blocksApi, commentsApi, createCommentApi, createOrderApi, detailApi, homeApi, navigationApi, queryOrderApi, relatedApi, reportCommentApi } from '../api/cms';
+import { articleDownloadApi, articlesApi, blocksApi, commentsApi, createCommentApi, createOrderApi, detailApi, homeApi, navigationApi, queryOrderApi, relatedApi, reportCommentApi } from '../api/cms';
 import CmsArticleCard from '../components/cmsArticleCard.vue';
 import CmsIcon from '../components/cmsIcon.vue';
 import CmsPreview from '../components/cmsPreview.vue';
@@ -462,7 +477,7 @@ const articleCategoryName = (article: CmsContent) => {
     }
     return '';
   };
-  return article.categoryId ? (find(navigation.value?.categories ?? []) || '') : '';
+  return article.categoryId ? find(navigation.value?.categories ?? []) || '' : '';
 };
 const articleTopicName = (article: CmsContent) => {
   if (!article.topicId) return '';
@@ -2143,10 +2158,25 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
 .comment-reply p {
   margin-bottom: 0;
 }
-/* 右侧评论列表需要额外 308px，不足时收起（评论仍可通过下方评论区与弹窗访问） */
-@media (max-width: 1620px) {
+/* 右侧评论列表需要额外 288px 空间，不足时收成正文上方的横向条，保证入口始终可见 */
+@media (max-width: 1560px) {
+  .detail-container.has-side {
+    padding-bottom: 0;
+  }
   .detail-side-card {
-    display: none;
+    position: static;
+    width: auto;
+    margin: 0 0 18px;
+  }
+  .comment-preview-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  }
+  .comment-preview-empty {
+    padding: 14px 6px;
+  }
+  .detail-side-footer {
+    margin-top: 14px;
   }
 }
 @media (max-width: 1024px) {

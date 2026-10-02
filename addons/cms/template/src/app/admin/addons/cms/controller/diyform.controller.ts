@@ -6,7 +6,11 @@ import { AonCmsDiyformService, CmsDiyformField } from '../service/diyform.servic
 import { CmsPermissionMiddleware } from './permission.middleware.js';
 
 /** CSV 单元格转义：包裹双引号并转义内部引号，避免逗号/换行破坏结构 */
-const csvCell = (value: unknown): string => `"${String(value ?? '').replace(/"/g, '""')}"`;
+const csvCell = (value: unknown): string => {
+  if (value === null || value === undefined) return '""';
+  const text = typeof value === 'string' ? value : typeof value === 'number' || typeof value === 'boolean' || typeof value === 'bigint' || typeof value === 'symbol' ? String(value) : (JSON.stringify(value) ?? '');
+  return `"${text.replace(/"/g, '""')}"`;
+};
 
 @Controller('addons/cms/diyform', { middleware: [CmsPermissionMiddleware] })
 export class AonCmsDiyformController extends BaseController {

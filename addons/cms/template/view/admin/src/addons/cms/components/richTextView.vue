@@ -2,8 +2,8 @@
   <div class="rich-text-view" v-html="sanitized"></div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
 import { sanitizeCmsHtml } from 'meadmin-addons-cms/preview';
+import { computed } from 'vue';
 const props = defineProps<{ content?: string | null }>();
 const sanitized = computed(() => sanitizeCmsHtml(props.content ?? ''));
 </script>

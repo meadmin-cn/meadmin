@@ -2,8 +2,8 @@ import { InjectRepository } from '@/decorators/index.js';
 import { AonCmsDiyform } from '@/entities/aonCmsDiyform.entity.js';
 import { AonCmsDiyformData } from '@/entities/aonCmsDiyformData.entity.js';
 import { Body, Controller, Get, Inject, Param, Post, Query } from '@midwayjs/core';
-import type { Context } from '@midwayjs/koa';
 import { BadRequestError, NotFoundError } from '@midwayjs/core/dist/error/http.js';
+import type { Context } from '@midwayjs/koa';
 import { BaseController } from '../../../controller/base.controller.js';
 
 /** 表单元数据（字段配置）结构，与后台一致 */
@@ -42,13 +42,11 @@ export class AonCmsPublicDiyformController extends BaseController {
     }
   }
 
-  /** 留言板：返回表单定义 + 已通过审核的公开数据 */
-  @Get('/message')
-  async message(@Query() query: { page?: number; pageSize?: number }): Promise<unknown> {
-    const form = await this.messageForm();
-    if (!form) return this.success({ form: null, list: [], total: 0, page: 1, pageSize: 10 });
-    const page = Math.max(Number(query.page) || 1, 1);
-    const pageSize = Math.min(Math.max(Number(query.pageSize) || 10, 1), 50);
+  /** 表单定义 + 已通过审核的公开数据（留言板与按标识访问共用同一套输出） */
+  private async publicPage(form: AonCmsDiyform | null, query: { page?: number; pageSize?: number }): Promise<unknown> {
+    const page = Math.max(Number(query?.page) || 1, 1);
+    const pageSize = Math.min(Math.max(Number(query?.pageSize) || 10, 1), 50);
+    if (!form) return this.success({ form: null, list: [], total: 0, page, pageSize });
     const { rows, count } = await this.dataRepository.findAndCountAll({ where: { formId: form.id, status: 1 }, offset: (page - 1) * pageSize, limit: pageSize, order: [['createdAt', 'DESC']] });
     const fields = this.parseFields(form.fields);
     const contentField = fields.find((field) => ['textarea', 'text'].includes(field.type) && !field.contact);
@@ -60,13 +58,31 @@ export class AonCmsPublicDiyformController extends BaseController {
         author: row.author,
         reply: row.reply,
         createdAt: row.createdAt,
-        content: String((JSON.parse(row.data || '{}') as Record<string, unknown>)[contentField?.name ?? 'content'] ?? ''),
+        content: (() => {
+          const value = (JSON.parse(row.data || '{}') as Record<string, unknown>)[contentField?.name ?? 'content'];
+          if (value == null) return '';
+          return typeof value === 'string' ? value : JSON.stringify(value);
+        })(),
         data: JSON.parse(row.data || '{}') as Record<string, unknown>,
       })),
       total: count,
       page,
       pageSize,
     });
+  }
+
+  /** 留言板：返回表单定义 + 已通过审核的公开数据 */
+  @Get('/message')
+  async message(@Query() query: { page?: number; pageSize?: number }): Promise<unknown> {
+    return this.publicPage(await this.messageForm(), query);
+  }
+
+  /** 按表单标识取表单定义与公开数据，供每个自定义表单的前台独立访问页使用 */
+  @Get('/:diyname')
+  async detail(@Param('diyname') diyname: string, @Query() query: { page?: number; pageSize?: number }): Promise<unknown> {
+    const form = await this.formRepository.findOne({ where: { diyname, status: 1 } });
+    if (!form) throw new NotFoundError('表单不存在或已停用');
+    return this.publicPage(form, query);
   }
 
   /** 按表单标识提交数据（前台自定义表单通用提交入口） */
@@ -82,7 +98,7 @@ export class AonCmsPublicDiyformController extends BaseController {
     for (const field of fields) {
       const raw = input?.[field.name];
       const isArrayField = field.type === 'checkbox';
-      const value = isArrayField ? (Array.isArray(raw) ? raw.map((item) => String(item).slice(0, 200)) : []) : typeof raw === 'string' ? raw.trim() : raw === undefined || raw === null ? '' : String(raw).trim();
+      const value = isArrayField ? (Array.isArray(raw) ? raw.map((item) => (typeof item === 'string' || typeof item === 'number' || typeof item === 'boolean' ? String(item).slice(0, 200) : '')).filter(Boolean) : []) : typeof raw === 'string' ? raw.trim() : typeof raw === 'number' || typeof raw === 'boolean' ? String(raw) : '';
       const isEmpty = isArrayField ? !value.length : !String(value ?? '').length;
       if (field.required && isEmpty) throw new BadRequestError(`请填写${field.label}`);
       if (field.maxlength && typeof value === 'string' && value.length > field.maxlength) throw new BadRequestError(`${field.label}长度不能超过 ${field.maxlength} 个字符`);
@@ -93,7 +109,9 @@ export class AonCmsPublicDiyformController extends BaseController {
     const nameField = fields.find((field) => !field.contact && ['text'].includes(field.type));
     // 来源记录便于后台区分提交入口
     const source = form.isMessageBoard ? '留言板' : form.title;
-    const row = await this.dataRepository.create({ formId: form.id, diyname: form.diyname, data: JSON.stringify(data), author: String(data[nameField?.name ?? 'author'] ?? ''), contact, reply: '', source, ip: String(this.ctx?.ip ?? ''), status: form.needReview ? 0 : 1 });
+    const authorValue = data[nameField?.name ?? 'author'];
+    const author = typeof authorValue === 'string' || typeof authorValue === 'number' || typeof authorValue === 'boolean' ? String(authorValue) : '';
+    const row = await this.dataRepository.create({ formId: form.id, diyname: form.diyname, data: JSON.stringify(data), author, contact, reply: '', source, ip: String(this.ctx?.ip ?? ''), status: form.needReview ? 0 : 1 });
     return this.success({ id: row.id, needReview: form.needReview });
   }
 }

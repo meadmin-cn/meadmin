@@ -4,7 +4,9 @@
       <vxe-column field="title" tree-node :title="t('栏目')" min-width="220" />
       <vxe-column field="slug" :title="t('SEO 标识')" />
       <vxe-column field="type" :title="t('类型')" width="100"
-        ><template #default="{ row }"><el-tag :type="row.type === 3 ? 'warning' : row.type === 2 ? 'info' : 'success'" disable-transitions>{{ cmsCategoryTypeLabel(row.type) }}</el-tag></template></vxe-column
+        ><template #default="{ row }"
+          ><el-tag :type="row.type === 3 ? 'warning' : row.type === 2 ? 'info' : 'success'" disable-transitions>{{ cmsCategoryTypeLabel(row.type) }}</el-tag></template
+        ></vxe-column
       >
       <vxe-column field="isNav" :title="t('导航')" width="80"
         ><template #default="{ row }">{{ t(row.isNav === false ? '否' : '是') }}</template></vxe-column
@@ -13,6 +15,10 @@
       <vxe-column field="status" :title="t('状态')"
         ><template #default="{ row }">{{ t(row.status ? '启用' : '禁用') }}</template></vxe-column
       >
+      <!-- 前台访问地址：跳转链接型栏目直接展示外链，其余为栏目列表页 -->
+      <vxe-column :title="t('访问地址')" min-width="230"
+        ><template #default="{ row }"><AccessUrl :url="cmsCategoryUrl(row)" :muted="!row.status" /></template
+      ></vxe-column>
       <vxe-column :title="t('操作')" min-width="200"
         ><template #default="{ row }">
           <el-button v-if="permission('aon_cms_category_info')" link @click="openEditor(row.id, true)">{{ t('详情') }}</el-button>
@@ -31,6 +37,8 @@ import { useLocalesI18n } from '@/locales/i18n';
 import { permission } from '@/utils/permission';
 import { computed, ref } from 'vue';
 import { cmsCategoryTypeLabel, deleteApi, treeApi } from '../../api/category';
+import { cmsCategoryUrl } from '../../components/accessUrl';
+import AccessUrl from '../../components/accessUrl.vue';
 import type { CmsConfirmItem } from '../../components/actionConfirm';
 import ActionConfirm from '../../components/actionConfirm.vue';
 import Editor from './components/editor.vue';

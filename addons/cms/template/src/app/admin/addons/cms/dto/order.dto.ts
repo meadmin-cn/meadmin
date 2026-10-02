@@ -92,7 +92,12 @@ export interface CmsOrderShipDto {
 }
 export const orderShipSchema: ReturnType<typeof RuleType.object> = RuleType.object({
   expressCompany: RuleType.string().max(60).trim().min(1).required(),
-  expressNo: RuleType.string().max(60).trim().min(3).pattern(/^[A-Za-z0-9-]+$/).required(),
+  expressNo: RuleType.string()
+    .max(60)
+    .trim()
+    .min(3)
+    .pattern(/^[A-Za-z0-9-]+$/)
+    .required(),
   shippedAt: date,
   content: RuleType.string().max(1000).allow('').default(''),
 }).unknown(false);

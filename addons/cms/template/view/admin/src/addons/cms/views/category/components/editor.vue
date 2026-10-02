@@ -50,8 +50,9 @@ const { runAsync: saveInfo, loading: saving } = saveApi();
 const { runAsync: getTree, data: treeData } = treeApi();
 // 类型说明随选择变化，帮助运营理解每种类型在前台的表现
 const typeDesc = computed(() => cmsCategoryTypes.find((item) => item.value === form.type)?.desc ?? '');
-// 回显已保存的图片：把 URL 还原成上传组件需要的文件对象，保证编辑时可见预览
-const uploadValue = (url: string): FileInfo[] => (url ? ([{ url, name: url.split('/').pop() ?? 'image' }] as FileInfo[]) : []);
+// el-upload 通过 TransitionGroup 渲染列表，key 取 uid || name，回显文件必须带上唯一 uid 才会渲染
+let uploadUid = 0;
+const uploadValue = (url: unknown): FileInfo[] => (typeof url === 'string' && url ? ([{ uid: -++uploadUid, url, name: url.split('/').pop() ?? 'image' }] as unknown as FileInfo[]) : []);
 const rules = computed<FormRules>(() => ({
   title: [{ required: true, message: t('必填'), trigger: 'blur' }],
   slug: [{ required: true, message: t('必填'), trigger: 'blur' }],
@@ -63,7 +64,8 @@ const save = async () => {
   show.value = false;
   emit('success');
 };
-await loadRes;
+// 不要在 setup 里 await 语言包：顶层 await 会让组件变成异步组件，未用 Suspense 包裹时弹窗内容失去响应式更新
+void loadRes;
 watch(
   () => props.id,
   async (id) => {

@@ -25,10 +25,14 @@
     </div>
     <me-vxe-table border :loading="loading" :data="data?.list ?? []" :pagination-options="{ currentPage: params.page, pageSize: params.pageSize, total: data?.total ?? 0, change: search }" @refresh="refresh()">
       <vxe-column field="orderNo" title="订单号" width="170" fixed="left">
-        <template #default="{ row }"><el-button link type="primary" @click="openDetail(row.id)">{{ row.orderNo }}</el-button></template>
+        <template #default="{ row }"
+          ><el-button link type="primary" @click="openDetail(row.id)">{{ row.orderNo }}</el-button></template
+        >
       </vxe-column>
       <vxe-column field="itemName" title="商品" min-width="180" show-overflow>
-        <template #default="{ row }">{{ row.itemName }} <span class="order-muted">× {{ row.quantity }}</span></template>
+        <template #default="{ row }"
+          >{{ row.itemName }} <span class="order-muted">× {{ row.quantity }}</span></template
+        >
       </vxe-column>
       <vxe-column field="amount" title="金额" width="110" align="right">
         <template #default="{ row }">
@@ -85,8 +89,8 @@
 import { useActionModel } from '@/hooks';
 import { permission } from '@/utils/permission';
 import { computed, reactive, ref } from 'vue';
-import { deleteApi, listApi, ORDER_STATUS, PAYMENT_STATUS, SHIPPING_STATUS, summaryApi } from '../../api/order';
 import type { CmsOrder, CmsOrderAction, CmsOrderQuery } from '../../api/order';
+import { deleteApi, listApi, ORDER_STATUS, PAYMENT_STATUS, SHIPPING_STATUS, summaryApi } from '../../api/order';
 import type { CmsConfirmItem } from '../../components/actionConfirm';
 import ActionConfirm from '../../components/actionConfirm.vue';
 import ActionDialog from './components/action.vue';
@@ -96,7 +100,7 @@ import { formatTime, statusOf } from './components/helper';
 
 defineOptions({ name: 'AonCmsOrder' });
 const params = reactive<CmsOrderQuery & { createdAt?: [string, string] }>({ page: 1, pageSize: 20, keyword: '', status: undefined, paymentStatus: undefined, shippingStatus: undefined, createdAt: undefined });
-const { data, loading, runAsync, } = listApi();
+const { data, loading, runAsync } = listApi();
 const { data: summary, runAsync: loadSummary } = summaryApi();
 const { runAsync: del } = deleteApi();
 const activeCard = ref('');

@@ -44,8 +44,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import RichTextView from '../../../components/richTextView.vue';
 import { formatterAtExec } from '@/utils/helper';
+import RichTextView from '../../../components/richTextView.vue';
 const states = ['草稿', '待审核', '发布', '拒绝', '下线'];
 withDefaults(defineProps<{ page: Record<string, any>; showTitle?: boolean; showCover?: boolean; showBody?: boolean; bodyMaxHeight?: string }>(), { showTitle: false, showCover: true, showBody: true, bodyMaxHeight: '52vh' });
 </script>

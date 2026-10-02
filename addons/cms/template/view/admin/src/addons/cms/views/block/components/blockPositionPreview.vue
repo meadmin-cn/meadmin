@@ -9,7 +9,10 @@
     <ul class="pos-legend">
       <li v-for="box in boxes" :key="box.key + '-l'" :class="{ active: actives.includes(box.key) }">
         <i />
-        <span><b>{{ box.label }}</b><em>{{ box.position }}</em></span>
+        <span
+          ><b>{{ box.label }}</b
+          ><em>{{ box.position }}</em></span
+        >
       </li>
     </ul>
   </div>
@@ -43,9 +46,7 @@ const boxes: Box[] = [
 
 const actives = computed(() => {
   const value = props.position ?? '';
-  return boxes
-    .filter((box) => box.targets.includes(value))
-    .map((box) => box.key);
+  return boxes.filter((box) => box.targets.includes(value)).map((box) => box.key);
 });
 </script>
 <style scoped>

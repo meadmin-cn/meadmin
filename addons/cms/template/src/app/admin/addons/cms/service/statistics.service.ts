@@ -73,11 +73,7 @@ export class AonCmsStatisticsService {
     for (let i = 13; i >= 0; i--) {
       const start = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
       const end = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i + 1);
-      const [articles, comments, orders] = await Promise.all([
-        this.article.count({ where: { createdAt: { [Op.gte]: start, [Op.lt]: end } } }),
-        this.comment.count({ where: { createdAt: { [Op.gte]: start, [Op.lt]: end } } }),
-        this.order.count({ where: { createdAt: { [Op.gte]: start, [Op.lt]: end } } }),
-      ]);
+      const [articles, comments, orders] = await Promise.all([this.article.count({ where: { createdAt: { [Op.gte]: start, [Op.lt]: end } } }), this.comment.count({ where: { createdAt: { [Op.gte]: start, [Op.lt]: end } } }), this.order.count({ where: { createdAt: { [Op.gte]: start, [Op.lt]: end } } })]);
       trends.push({ date: `${start.getFullYear()}-${pad(start.getMonth() + 1)}-${pad(start.getDate())}`, articles, comments, orders });
     }
 

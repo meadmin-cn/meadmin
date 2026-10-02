@@ -64,11 +64,7 @@ export class AonCmsArticleService {
       const topicIds = [...new Set(rows.map((r) => r.topicId).filter(Boolean))] as string[];
       const tagIdSet = new Set<string>();
       rows.forEach((r) => (r.tagIds || []).forEach((t) => tagIdSet.add(t)));
-      const [cats, topics, tags] = await Promise.all([
-        catIds.length ? this.categoryRepository.findAll({ where: { id: { [Op.in]: catIds } } }) : [],
-        topicIds.length ? this.topicRepository.findAll({ where: { id: { [Op.in]: topicIds } } }) : [],
-        tagIdSet.size ? this.tagRepository.findAll({ where: { id: { [Op.in]: [...tagIdSet] } } }) : [],
-      ]);
+      const [cats, topics, tags] = await Promise.all([catIds.length ? this.categoryRepository.findAll({ where: { id: { [Op.in]: catIds } } }) : [], topicIds.length ? this.topicRepository.findAll({ where: { id: { [Op.in]: topicIds } } }) : [], tagIdSet.size ? this.tagRepository.findAll({ where: { id: { [Op.in]: [...tagIdSet] } } }) : []]);
       const catMap = new Map(cats.map((c) => [c.id, c.title]));
       const topicMap = new Map(topics.map((t) => [t.id, t.title]));
       const tagMap = new Map(tags.map((t) => [t.id, t.title]));
@@ -105,12 +101,7 @@ export class AonCmsArticleService {
   // 补齐关联标题与统计，避免前端二次请求
   private async enrich(row: AonCmsArticle) {
     const data = row.toJSON() as Record<string, unknown> & { id: string; categoryId?: string | null; topicId?: string | null; tagIds?: string[] };
-    const [category, topic, tags, orderCount] = await Promise.all([
-      data.categoryId ? this.categoryRepository.findByPk(data.categoryId) : null,
-      data.topicId ? this.topicRepository.findByPk(data.topicId) : null,
-      data.tagIds?.length ? this.tagRepository.findAll({ where: { id: { [Op.in]: data.tagIds } } }) : [],
-      this.orderRepository.count({ where: { articleId: row.id } }),
-    ]);
+    const [category, topic, tags, orderCount] = await Promise.all([data.categoryId ? this.categoryRepository.findByPk(data.categoryId) : null, data.topicId ? this.topicRepository.findByPk(data.topicId) : null, data.tagIds?.length ? this.tagRepository.findAll({ where: { id: { [Op.in]: data.tagIds } } }) : [], this.orderRepository.count({ where: { articleId: row.id } })]);
     return {
       ...data,
       categoryTitle: category?.title ?? '',
@@ -143,7 +134,13 @@ export class AonCmsArticleService {
     });
   }
   async reviewHistory(id: string) {
-    const rows = await this.reviewLogRepository.findAll({ where: { contentType: 'article', contentId: cmsId(id) }, order: [['createdAt', 'DESC'], ['id', 'DESC']] });
+    const rows = await this.reviewLogRepository.findAll({
+      where: { contentType: 'article', contentId: cmsId(id) },
+      order: [
+        ['createdAt', 'DESC'],
+        ['id', 'DESC'],
+      ],
+    });
     const adminIds = [...new Set(rows.map((row) => row.createdAdminId).filter(Boolean))] as string[];
     const admins = adminIds.length ? await this.adminRepository.findAll({ where: { id: { [Op.in]: adminIds } } }) : [];
     const adminMap = new Map(admins.map((admin) => [admin.id, admin.nickname || admin.username]));
@@ -169,7 +166,30 @@ export class AonCmsArticleService {
     if (data.topicId && !(await this.topicRepository.findByPk(data.topicId))) throw new BadRequestError('专题不存在');
     if (data.tagIds.length && (await this.tagRepository.count({ where: { id: { [Op.in]: data.tagIds } } })) !== data.tagIds.length) throw new BadRequestError('标签不存在');
 
-    const values = { title: data.title, slug: data.slug, summary: data.summary, mdContent: data.mdContent, coverUrl: data.coverUrl, seoTitle: data.seoTitle, seoKeywords: data.seoKeywords, seoDescription: data.seoDescription, publishAt: data.publishAt, orderNum: data.orderNum, categoryId: data.categoryId, topicId: data.topicId, tagIds: data.tagIds, orderEnabled: data.orderEnabled, isDownload: data.isDownload, fileUrl: data.fileUrl, fileName: data.fileName, isGallery: data.isGallery, status: 0, views: 0, likes: 0, comments: 0 };
+    const values = {
+      title: data.title,
+      slug: data.slug,
+      summary: data.summary,
+      mdContent: data.mdContent,
+      coverUrl: data.coverUrl,
+      seoTitle: data.seoTitle,
+      seoKeywords: data.seoKeywords,
+      seoDescription: data.seoDescription,
+      publishAt: data.publishAt,
+      orderNum: data.orderNum,
+      categoryId: data.categoryId,
+      topicId: data.topicId,
+      tagIds: data.tagIds,
+      orderEnabled: data.orderEnabled,
+      isDownload: data.isDownload,
+      fileUrl: data.fileUrl,
+      fileName: data.fileName,
+      isGallery: data.isGallery,
+      status: 0,
+      views: 0,
+      likes: 0,
+      comments: 0,
+    };
     if (!row) return this.repository.create(values);
     return row.update(values);
   }

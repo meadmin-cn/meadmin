@@ -1,7 +1,7 @@
-import { cmsBlockKindOf, cmsBlockPositionValues } from '../dict/blockPosition.dict.js';
 import { AonCmsBlock } from '@/entities/aonCmsBlock.entity.js';
 import { PickDtoType } from '@/helper/dto.js';
 import { RuleType } from '@/ruleType/index.js';
+import { cmsBlockKindOf, cmsBlockPositionValues } from '../dict/blockPosition.dict.js';
 export class AonCmsBlockSaveDto extends PickDtoType(AonCmsBlock, ['title', 'displayTitle', 'slug', 'position', 'mdContent', 'coverUrl', 'link', 'status', 'startAt', 'endAt', 'orderNum', 'config']) {}
 export const blockSchema: ReturnType<typeof RuleType.object> = RuleType.object({
   title: RuleType.string().max(200).trim().min(1).required(),

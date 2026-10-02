@@ -37,7 +37,8 @@ const save = async () => {
   show.value = false;
   emit('success');
 };
-await loadRes;
+// 不要在 setup 里 await 语言包：顶层 await 会让组件变成异步组件，未用 Suspense 包裹时弹窗内容失去响应式更新
+void loadRes;
 watch(
   () => props.id,
   async (id) => {

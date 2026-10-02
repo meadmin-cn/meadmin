@@ -37,7 +37,8 @@ withDefaults(
   { alertType: 'warning', buttonType: 'primary', confirmText: '确认', items: () => [], loading: false },
 );
 const emit = defineEmits<{ confirm: [] }>();
-await loadRes;
+// 不要在 setup 里 await 语言包：顶层 await 会让组件变成异步组件，未用 Suspense 包裹时弹窗内容失去响应式更新
+void loadRes;
 </script>
 <style scoped>
 .cms-confirm-question {

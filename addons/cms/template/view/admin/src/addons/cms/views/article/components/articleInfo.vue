@@ -15,7 +15,9 @@
       <el-descriptions-item label="栏目">{{ categoryText }}</el-descriptions-item>
       <el-descriptions-item label="专题">{{ topicText }}</el-descriptions-item>
       <el-descriptions-item label="标签">
-        <template v-if="tagTexts.length"><el-tag v-for="(tag, i) in tagTexts" :key="i" size="small" effect="light" class="info-tag">{{ tag }}</el-tag></template>
+        <template v-if="tagTexts.length"
+          ><el-tag v-for="(tag, i) in tagTexts" :key="i" size="small" effect="light" class="info-tag">{{ tag }}</el-tag></template
+        >
         <span v-else class="info-empty">未设置</span>
       </el-descriptions-item>
       <el-descriptions-item label="发布时间">{{ article.publishAt ? formatterAtExec(article.publishAt) : '未发布' }}</el-descriptions-item>
@@ -64,9 +66,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import RichTextView from '../../../components/richTextView.vue';
 import { formatterAtExec } from '@/utils/helper';
 import { computed } from 'vue';
+import RichTextView from '../../../components/richTextView.vue';
 const states = ['草稿', '待审核', '发布', '拒绝', '下线'];
 const props = withDefaults(defineProps<{ article: Record<string, any>; categories?: any[]; tags?: any[]; showTitle?: boolean; showCover?: boolean; showBody?: boolean; bodyMaxHeight?: string }>(), { showTitle: false, showCover: true, showBody: true, bodyMaxHeight: '52vh' });
 const findTitle = (list: any[] | undefined, id?: string | null) => {

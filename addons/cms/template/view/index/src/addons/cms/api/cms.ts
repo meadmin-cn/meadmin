@@ -194,4 +194,6 @@ export interface CmsDiyformDetail {
 }
 /** 取前台留言板表单及其公开数据（表单字段由后台配置决定） */
 export const messageBoardApi = () => request<CmsDiyformDetail, [{ page: number; pageSize: number }]>((params) => ({ url: 'addons/cms/diyform/message', method: 'get', params }), { noLoading: true });
+/** 按表单标识取表单及其公开数据：每个自定义表单都有独立的前台访问页 /aon/cms/form/{diyname} */
+export const diyformApi = () => request<CmsDiyformDetail, [string, { page: number; pageSize: number }]>((diyname, params) => ({ url: 'addons/cms/diyform/' + encodeURIComponent(diyname), method: 'get', params }), { noLoading: true });
 export const submitDiyformApi = () => request<unknown, [string, Record<string, unknown>]>((diyname, data) => ({ url: 'addons/cms/diyform/' + encodeURIComponent(diyname), method: 'post', data }), { success: true });

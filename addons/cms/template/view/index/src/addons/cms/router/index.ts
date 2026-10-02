@@ -29,6 +29,8 @@ export const routes: RouteRecordRaw[] = [
       { path: 'download', name: 'cms-download', component: Download, meta: { title: '下载中心', hideMenu: true, fullWidth: true } },
       { path: 'download/:slug', name: 'cms-download-detail', component: DownloadDetail, meta: { title: '下载详情', hideMenu: true } },
       { path: 'message', name: 'cms-message', component: Message, meta: { title: '留言板', hideMenu: true } },
+      // 自定义表单独立访问页：表单标识由后台「自定义表单」配置，页面内容与留言板共用一套渲染
+      { path: 'form/:diyname', name: 'cms-diyform', component: Message, meta: { title: '表单', hideMenu: true } },
       {
         path: ':kind(article|page|topic)/:slug',
         component: Cms,

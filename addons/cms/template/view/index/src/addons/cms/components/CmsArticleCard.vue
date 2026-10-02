@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import CmsIcon from './cmsIcon.vue';
 import type { CmsContent } from '../api/cms';
+import CmsIcon from './cmsIcon.vue';
 
 interface Props {
   article: CmsContent;

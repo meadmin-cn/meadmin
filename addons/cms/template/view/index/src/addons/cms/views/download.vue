@@ -13,7 +13,9 @@
           <p>按标题、介绍搜索，点击进入详情即可下载。</p>
         </div>
         <el-input v-model="keyword" class="download-search" clearable placeholder="搜索下载内容" @keyup.enter="search" @clear="search">
-          <template #prefix><el-icon><Search /></el-icon></template>
+          <template #prefix
+            ><el-icon><Search /></el-icon
+          ></template>
           <template #append><el-button type="primary" @click="search">搜索</el-button></template>
         </el-input>
       </div>
@@ -22,8 +24,13 @@
         <template v-if="hasItems">
           <section v-for="group in groupedDownloads" :key="group.name" class="category-section">
             <header class="section-heading">
-              <div><h2>{{ group.name }}</h2><span>已展示 {{ group.items.length }} 项</span></div>
-              <el-button link type="primary" :loading="group.loading" :disabled="!group.hasMore" @click="loadMore(group)">{{ group.hasMore ? '展开更多' : '已加载全部' }}<el-icon v-if="group.hasMore"><ArrowDown /></el-icon></el-button>
+              <div>
+                <h2>{{ group.name }}</h2>
+                <span>已展示 {{ group.items.length }} 项</span>
+              </div>
+              <el-button link type="primary" :loading="group.loading" :disabled="!group.hasMore" @click="loadMore(group)"
+                >{{ group.hasMore ? '展开更多' : '已加载全部' }}<el-icon v-if="group.hasMore"><ArrowDown /></el-icon
+              ></el-button>
             </header>
             <ul class="resource-list">
               <li v-for="item in group.items" :key="item.id" class="resource-row" tabindex="0" @click="openDetail(item)" @keyup.enter="openDetail(item)">
@@ -37,7 +44,9 @@
                   <small>{{ resourceMeta(item) }}</small>
                 </span>
                 <span class="resource-actions">
-                  <el-button type="primary" plain @click.stop="confirmDownload(item)"><el-icon><Download /></el-icon>下载</el-button>
+                  <el-button type="primary" plain @click.stop="confirmDownload(item)"
+                    ><el-icon><Download /></el-icon>下载</el-button
+                  >
                 </span>
               </li>
             </ul>

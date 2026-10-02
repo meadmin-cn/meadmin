@@ -13,7 +13,10 @@
           <el-form-item :label="t('展示位置')" prop="position">
             <el-select v-model="form.position" filterable class="position-select" :disabled="readonly">
               <el-option v-for="item in positions" :key="item.value" :value="item.value" :label="item.label">
-                <span class="position-option"><b>{{ item.label }}</b><em>{{ item.value }}</em></span>
+                <span class="position-option"
+                  ><b>{{ item.label }}</b
+                  ><em>{{ item.value }}</em></span
+                >
               </el-option>
             </el-select>
             <span class="field-hint">位置决定区块在前台的渲染位置，选中后下方会同步说明内容怎么放。</span>
@@ -62,7 +65,9 @@
         <section class="editor-side-section">
           <h4>投放设置</h4>
           <el-form-item :label="t('排序')" prop="orderNum"><el-input-number :key="String(readonly || loading)" v-model="form.orderNum" :min="-9999" :max="9999" /><span class="field-hint">数值越大越靠前，同一位置内生效。</span></el-form-item>
-          <el-form-item :label="t('状态')" prop="status"><el-select v-model="form.status"><el-option :value="0" :label="t('禁用')" /><el-option :value="1" :label="t('启用')" /></el-select></el-form-item>
+          <el-form-item :label="t('状态')" prop="status"
+            ><el-select v-model="form.status"><el-option :value="0" :label="t('禁用')" /><el-option :value="1" :label="t('启用')" /></el-select
+          ></el-form-item>
           <el-form-item :label="t('开始时间')" prop="startAt"><el-date-picker v-model="form.startAt" type="datetime" value-format="YYYY-MM-DDTHH:mm:ssZ" clearable /><span class="field-hint">留空表示立即生效。</span></el-form-item>
           <el-form-item :label="t('结束时间')" prop="endAt"><el-date-picker v-model="form.endAt" type="datetime" value-format="YYYY-MM-DDTHH:mm:ssZ" clearable /><span class="field-hint">留空表示长期有效。</span></el-form-item>
         </section>
@@ -76,12 +81,12 @@
 </template>
 <script setup lang="ts">
 import type { FileInfo } from '@/api/file';
+import MeWangEditor from '@/components/meWangEditor/index.vue';
 import { useLocalesI18n } from '@/locales/i18n';
 import type { FormInstance, FormRules } from 'element-plus';
 import { computed, reactive, ref, watch } from 'vue';
-import { defaults, infoApi, positionsApi, saveApi } from '../../../api/block';
 import type { CmsBlockPosition } from '../../../api/block';
-import MeWangEditor from '@/components/meWangEditor/index.vue';
+import { defaults, infoApi, positionsApi, saveApi } from '../../../api/block';
 import BlockPositionPreview from './blockPositionPreview.vue';
 
 const { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../../../lang/${locale}.json`), 'cms']);
@@ -97,8 +102,9 @@ const positions = computed<CmsBlockPosition[]>(() => positionsData.value ?? []);
 const currentPosition = computed(() => positions.value.find((item) => item.value === form.position) ?? positions.value[0]);
 
 const editorConfig = { editor: { placeholder: '请输入区块正文...' } };
-// 回显已保存的图片：把 URL 还原成上传组件需要的文件对象，保证编辑时可见预览
-const uploadValue = (url: string): FileInfo[] => (url ? ([{ url, name: url.split('/').pop() ?? 'image' }] as FileInfo[]) : []);
+// el-upload 通过 TransitionGroup 渲染列表，key 取 uid || name，回显文件必须带上唯一 uid 才会渲染
+let uploadUid = 0;
+const uploadValue = (url: unknown): FileInfo[] => (typeof url === 'string' && url ? ([{ uid: -++uploadUid, url, name: url.split('/').pop() ?? 'image' }] as unknown as FileInfo[]) : []);
 
 const rules: FormRules = {
   title: [{ required: true, message: t('必填'), trigger: 'blur' }],
@@ -132,7 +138,8 @@ const save = async () => {
   show.value = false;
   emit('success');
 };
-await loadRes;
+// 不要在 setup 里 await 语言包：顶层 await 会让组件变成异步组件，未用 Suspense 包裹时弹窗内容失去响应式更新
+void loadRes;
 await getPositions();
 watch(
   () => props.id,

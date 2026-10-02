@@ -86,8 +86,8 @@
 import { useActionModel } from '@/hooks';
 import { ElMessage } from 'element-plus';
 import { computed, watch } from 'vue';
-import { infoApi, LOG_ACTIONS, ORDER_STATUS, PAYMENT_METHODS, PAYMENT_STATUS, SHIPPING_STATUS } from '../../../api/order';
 import type { CmsOrder, CmsOrderAction } from '../../../api/order';
+import { infoApi, LOG_ACTIONS, ORDER_STATUS, PAYMENT_METHODS, PAYMENT_STATUS, SHIPPING_STATUS } from '../../../api/order';
 import ActionDialog from './action.vue';
 import OrderButtons from './buttons.vue';
 import { formatTime, statusOf } from './helper';
@@ -97,7 +97,11 @@ const emit = defineEmits<{ closed: []; changed: [] }>();
 const show = defineModel<boolean>();
 const { data: detail, loading, runAsync } = infoApi();
 const load = () => runAsync(props.id);
-watch(() => props.id, (id) => id && load(), { immediate: true });
+watch(
+  () => props.id,
+  (id) => id && load(),
+  { immediate: true },
+);
 
 const methodLabel = computed(() => PAYMENT_METHODS.find((m) => m.value === detail.value?.order.paymentMethod)?.label ?? '');
 const stepActive = computed(() => {

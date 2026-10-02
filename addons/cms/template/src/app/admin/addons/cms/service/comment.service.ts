@@ -29,7 +29,18 @@ export class AonCmsCommentService {
       where,
       offset: (q.page - 1) * q.pageSize,
       limit: q.pageSize,
-      order: q.status === 0 ? [['reportCount', 'DESC'], ['reportedAt', 'DESC'], ['createdAt', 'DESC'], ['id', 'DESC']] : [['createdAt', 'DESC'], ['id', 'DESC']],
+      order:
+        q.status === 0
+          ? [
+              ['reportCount', 'DESC'],
+              ['reportedAt', 'DESC'],
+              ['createdAt', 'DESC'],
+              ['id', 'DESC'],
+            ]
+          : [
+              ['createdAt', 'DESC'],
+              ['id', 'DESC'],
+            ],
     });
     return { list: rows, total: count, page: q.page, pageSize: q.pageSize };
   }
@@ -52,15 +63,15 @@ export class AonCmsCommentService {
       where,
       offset: (q.page - 1) * q.pageSize,
       limit: q.pageSize,
-      order: [['createdAt', 'DESC'], ['id', 'DESC']],
+      order: [
+        ['createdAt', 'DESC'],
+        ['id', 'DESC'],
+      ],
     });
     // 举报记录只存 ID，明细页需要展示可读的文章标题与举报人昵称，这里补齐。
     const articleIds = [...new Set(rows.map((row) => row.articleId).filter(Boolean))];
     const userIds = [...new Set(rows.map((row) => row.userId).filter(Boolean))];
-    const [articles, users] = await Promise.all([
-      articleIds.length ? this.articleRepository.findAll({ attributes: ['id', 'title', 'slug'], where: { id: articleIds } }) : [],
-      userIds.length ? this.userRepository.findAll({ attributes: ['id', 'username', 'nickname'], where: { id: userIds } }) : [],
-    ]);
+    const [articles, users] = await Promise.all([articleIds.length ? this.articleRepository.findAll({ attributes: ['id', 'title', 'slug'], where: { id: articleIds } }) : [], userIds.length ? this.userRepository.findAll({ attributes: ['id', 'username', 'nickname'], where: { id: userIds } }) : []]);
     const articleMap = new Map(articles.map((row) => [row.id, row]));
     const userMap = new Map(users.map((row) => [row.id, row]));
     const list = rows.map((row) => ({
@@ -77,7 +88,13 @@ export class AonCmsCommentService {
     return { list, total: count, page: q.page, pageSize: q.pageSize };
   }
   async reviewHistory(id: string) {
-    return this.reviewLogRepository.findAll({ where: { contentType: 'comment', contentId: cmsId(id) }, order: [['createdAt', 'DESC'], ['id', 'DESC']] });
+    return this.reviewLogRepository.findAll({
+      where: { contentType: 'comment', contentId: cmsId(id) },
+      order: [
+        ['createdAt', 'DESC'],
+        ['id', 'DESC'],
+      ],
+    });
   }
   private async logReview(contentId: string, fromStatus: number, toStatus: number, action: 'submit' | 'approve' | 'reject' | 'offline', reason = '') {
     if (!this.reviewLogRepository) return;

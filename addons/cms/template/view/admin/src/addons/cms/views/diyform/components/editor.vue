@@ -13,8 +13,12 @@
           <el-form-item :label="t('排序')" prop="orderNum"><el-input-number :key="String(readonly || loading)" v-model="form.orderNum" :min="-9999" :max="9999" /></el-form-item>
         </div>
         <div class="form-grid">
-          <el-form-item :label="t('状态')" prop="status"><el-select v-model="form.status"><el-option :value="1" :label="t('启用')" /><el-option :value="0" :label="t('禁用')" /></el-select></el-form-item>
-          <el-form-item :label="t('提交后')" prop="needReview"><el-select v-model="form.needReview"><el-option :value="1" :label="t('需审核后展示')" /><el-option :value="0" :label="t('直接通过')" /></el-select></el-form-item>
+          <el-form-item :label="t('状态')" prop="status"
+            ><el-select v-model="form.status"><el-option :value="1" :label="t('启用')" /><el-option :value="0" :label="t('禁用')" /></el-select
+          ></el-form-item>
+          <el-form-item :label="t('提交后')" prop="needReview"
+            ><el-select v-model="form.needReview"><el-option :value="1" :label="t('需审核后展示')" /><el-option :value="0" :label="t('直接通过')" /></el-select
+          ></el-form-item>
         </div>
         <el-form-item label="前台留言板" prop="isMessageBoard">
           <el-switch v-model="form.isMessageBoard" active-text="作为前台留言板表单" inactive-text="普通表单" />
@@ -53,7 +57,19 @@
               <el-form-item label="最大长度"><el-input-number v-model="field.maxlength" :min="0" :max="20000" controls-position="right" /></el-form-item>
             </div>
             <el-form-item v-if="['select', 'radio', 'checkbox'].includes(field.type)" label="选项（每行一个）">
-              <el-input :model-value="(field.options ?? []).join('\n')" type="textarea" :rows="3" placeholder="选项一&#10;选项二" @update:model-value="(value: string) => (field.options = value.split('\n').map((item) => item.trim()).filter(Boolean))" />
+              <el-input
+                :model-value="(field.options ?? []).join('\n')"
+                type="textarea"
+                :rows="3"
+                placeholder="选项一&#10;选项二"
+                @update:model-value="
+                  (value: string) =>
+                    (field.options = value
+                      .split('\n')
+                      .map((item) => item.trim())
+                      .filter(Boolean))
+                "
+              />
             </el-form-item>
             <el-form-item label="作为联系方式">
               <el-switch v-model="field.contact" />
@@ -72,8 +88,8 @@
 </template>
 <script setup lang="ts">
 import { useLocalesI18n } from '@/locales/i18n';
-import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
+import { ElMessage } from 'element-plus';
 import { reactive, ref, watch } from 'vue';
 import type { CmsDiyformField } from '../../../api/diyform';
 import { cmsDiyformFieldTypes, defaults, infoApi, parseFields, saveApi } from '../../../api/diyform';
@@ -126,7 +142,8 @@ const save = async () => {
   show.value = false;
   emit('success');
 };
-await loadRes;
+// 不要在 setup 里 await 语言包：顶层 await 会让组件变成异步组件，未用 Suspense 包裹时弹窗内容失去响应式更新
+void loadRes;
 watch(
   () => props.id,
   async (id) => {

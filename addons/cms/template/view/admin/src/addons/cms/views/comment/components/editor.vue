@@ -4,14 +4,20 @@
     <el-alert v-if="error" :title="error" type="error" :closable="false" class="editor-alert" />
     <el-form ref="formEl" :model="form" :rules="rules" :disabled="readonly || loading" label-position="top">
       <el-form-item :label="t('文章')" prop="articleId"
-        ><el-input v-model="form.articleId" /><div v-if="detail?.articleTitle" class="editor-article">所属文章：{{ detail.articleTitle }}</div></el-form-item
+        ><el-input v-model="form.articleId" />
+        <div v-if="detail?.articleTitle" class="editor-article">所属文章：{{ detail.articleTitle }}</div></el-form-item
       >
       <el-form-item :label="t('显示名称')" prop="author"><el-input v-model="form.author" /></el-form-item>
       <el-form-item :label="t('评论内容')" prop="content"><el-input v-model="form.content" type="textarea" :rows="3" /></el-form-item>
     </el-form>
     <el-descriptions v-if="readonly && detail" :column="1" border size="small" class="editor-desc">
-      <el-descriptions-item label="状态"><el-tag size="small" :type="(['warning', 'success', 'danger'] as const)[detail.status] ?? 'info'">{{ t(states[detail.status] ?? '') }}</el-tag></el-descriptions-item>
-      <el-descriptions-item label="举报次数"><el-tag v-if="detail.reportCount" size="small" type="danger">{{ detail.reportCount }}</el-tag><span v-else>0</span></el-descriptions-item>
+      <el-descriptions-item label="状态"
+        ><el-tag size="small" :type="(['warning', 'success', 'danger'] as const)[detail.status] ?? 'info'">{{ t(states[detail.status] ?? '') }}</el-tag></el-descriptions-item
+      >
+      <el-descriptions-item label="举报次数"
+        ><el-tag v-if="detail.reportCount" size="small" type="danger">{{ detail.reportCount }}</el-tag
+        ><span v-else>0</span></el-descriptions-item
+      >
       <el-descriptions-item label="举报说明">{{ detail.reportReason || '—' }}</el-descriptions-item>
       <el-descriptions-item label="创建时间">{{ formatterAtExec(detail.createdAt) }}</el-descriptions-item>
     </el-descriptions>
@@ -54,7 +60,8 @@ const save = async () => {
   show.value = false;
   emit('success');
 };
-await loadRes;
+// 不要在 setup 里 await 语言包：顶层 await 会让组件变成异步组件，未用 Suspense 包裹时弹窗内容失去响应式更新
+void loadRes;
 watch(
   () => props.id,
   async (id) => {

@@ -4,10 +4,8 @@
       ><me-search-form :model="params" @search="search(1)"
         ><el-form-item :label="t('搜索')"><el-input v-model="params.keyword" clearable /></el-form-item
         ><el-form-item :label="t('状态')"
-          ><el-select v-model="params.status" clearable style="width: 160px"><el-option :value="1" :label="t('启用')" /><el-option :value="0" :label="t('禁用')" /></el-select></el-form-item
-        ></me-search-form
-      ></template
-    >
+          ><el-select v-model="params.status" clearable style="width: 160px"><el-option :value="1" :label="t('启用')" /><el-option :value="0" :label="t('禁用')" /></el-select></el-form-item></me-search-form
+    ></template>
     <me-vxe-table border :loading="loading" :data="data?.list ?? []" :on-add="permission('aon_cms_diyform_add') ? () => openEditor() : undefined" :pagination-options="{ currentPage: params.page, pageSize: params.pageSize, total: data?.total ?? 0, change: search }" @refresh="search()">
       <vxe-column field="title" :title="t('表单名称')" min-width="180" />
       <vxe-column field="diyname" :title="t('表单标识')" min-width="140" />
@@ -16,16 +14,22 @@
       >
       <vxe-column field="dataCount" :title="t('提交数据')" width="110"
         ><template #default="{ row }"
-          ><router-link class="data-link" :to="{ path: '/addons/cms/diyform/data', query: { formId: row.id } }">{{ row.dataCount ?? 0 }} 条</router-link></template
+          ><router-link class="data-link" :to="{ path: '/addons/cms/diyform-data', query: { formId: row.id } }">{{ row.dataCount ?? 0 }} 条</router-link></template
         ></vxe-column
       >
       <vxe-column field="isMessageBoard" :title="t('留言板')" width="100"
         ><template #default="{ row }"><el-tag v-if="row.isMessageBoard" type="success" disable-transitions>使用中</el-tag><span v-else>-</span></template></vxe-column
       >
       <vxe-column field="status" :title="t('状态')" width="100"
-        ><template #default="{ row }"><el-tag :type="row.status ? 'success' : 'info'" disable-transitions>{{ t(row.status ? '启用' : '禁用') }}</el-tag></template></vxe-column
+        ><template #default="{ row }"
+          ><el-tag :type="row.status ? 'success' : 'info'" disable-transitions>{{ t(row.status ? '启用' : '禁用') }}</el-tag></template
+        ></vxe-column
       >
       <vxe-column field="createdAt" :title="t('创建时间')" min-width="180" :formatter="formatterAt" />
+      <!-- 前台访问地址：每个表单都有独立的前台页，留言板表单同时保留 /aon/cms/message 入口 -->
+      <vxe-column :title="t('访问地址')" min-width="230" fixed="right"
+        ><template #default="{ row }"><AccessUrl :url="cmsDiyformUrl(row.diyname)" :muted="!row.status" /></template
+      ></vxe-column>
       <vxe-column :title="t('操作')" fixed="right" min-width="260"
         ><template #default="{ row }">
           <el-button v-if="permission('aon_cms_diyform_info')" link @click="openEditor(row.id, true)">{{ t('详情') }}</el-button>
@@ -46,6 +50,8 @@ import { permission } from '@/utils/permission';
 import { computed, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { deleteApi, listApi, parseFields } from '../../api/diyform';
+import { cmsDiyformUrl } from '../../components/accessUrl';
+import AccessUrl from '../../components/accessUrl.vue';
 import type { CmsConfirmItem } from '../../components/actionConfirm';
 import ActionConfirm from '../../components/actionConfirm.vue';
 import Editor from './components/editor.vue';
@@ -58,7 +64,7 @@ const { runAsync: del } = deleteApi();
 const search = (page = params.page, pageSize = params.pageSize) => runAsync(Object.assign(params, { page, pageSize }));
 const { open } = useActionModel(Editor);
 const openEditor = (id?: string, readonly = false) => open({ id, readonly, onSuccess: () => search() });
-const openData = (row: { id: string; title: string }) => router.push({ path: '/addons/cms/diyform/data', query: { formId: row.id } });
+const openData = (row: { id: string; title: string }) => router.push({ path: '/addons/cms/diyform-data', query: { formId: row.id } });
 const confirmVisible = ref(false);
 const confirmRow = ref<any>();
 const confirmActing = ref(false);

@@ -45,10 +45,12 @@ export class AonCmsCategoryService {
     const row = id ? await this.info(id) : null;
     const duplicate = await this.repository.findOne({ where: { slug: data.slug, ...(id ? { id: { [Op.ne]: id } } : {}) } });
     if (duplicate) throw new BadRequestError('SEO 标识已存在');
+    // 跳转链接栏目必须给出目标地址，否则前台菜单点击后无处可去。
+    if (data.type === 3 && !data.linkUrl) throw new BadRequestError('跳转链接类型的栏目必须填写跳转链接');
     const nodes = await this.repository.findAll({ attributes: ['id', 'parentId'] });
     assertCmsParent(id, data.parentId, nodes);
 
-    const values = { title: data.title, slug: data.slug, status: data.status, orderNum: data.orderNum, parentId: data.parentId };
+    const values = { title: data.title, slug: data.slug, status: data.status, orderNum: data.orderNum, parentId: data.parentId, type: data.type, linkUrl: data.type === 3 ? data.linkUrl : '', isNav: data.isNav, isRecommend: data.isRecommend, coverUrl: data.coverUrl };
     if (!row) return this.repository.create(values);
     return row.update(values);
   }

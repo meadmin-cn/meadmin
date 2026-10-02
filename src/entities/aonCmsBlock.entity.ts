@@ -13,10 +13,15 @@ export class AonCmsBlock extends AdminBaseModel<AonCmsBlock> {
   @ApiPropertyRule({ description: 'ID', rule: RuleType.string() })
   declare id: CreationOptional<string>;
 
-  // 名称
+  // 名称（后台识别用，前台不展示）
   @Attribute({ type: DataTypes.STRING(200), allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: '名称', rule: RuleType.string().max(200).trim().min(1).required() })
   declare title: string;
+
+  // 前台标题（前台渲染时以 title 属性的形式展示，鼠标移入可见；留空则不显示）
+  @Attribute({ type: DataTypes.STRING(200), allowNull: false, defaultValue: '' })
+  @ApiPropertyRule({ description: '前台标题', rule: RuleType.string().max(200).trim().allow('').default('') })
+  declare displayTitle: string;
 
   // SEO 标识
   @Attribute({ type: DataTypes.STRING(120), allowNull: false, defaultValue: '' })
@@ -94,4 +99,9 @@ export class AonCmsBlock extends AdminBaseModel<AonCmsBlock> {
   @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 0 })
   @ApiPropertyRule({ description: '排序', rule: RuleType.number().integer().min(-9999).max(9999).default(0) })
   declare orderNum: number;
+
+  // 配置（JSON，如热门排行规则 { sortBy, limit }）
+  @Attribute({ type: DataTypes.TEXT, allowNull: false, defaultValue: '' })
+  @ApiPropertyRule({ description: '配置(JSON)', rule: RuleType.string().max(20000).allow('').default('') })
+  declare config: string;
 }

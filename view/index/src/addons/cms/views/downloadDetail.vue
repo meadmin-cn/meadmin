@@ -3,15 +3,22 @@
     <div v-loading="loading" class="download-detail-shell">
       <el-alert v-if="failed" title="资源加载失败" type="error" :closable="false"><el-button @click="load">重试</el-button></el-alert>
       <template v-else-if="detail">
-        <nav class="detail-breadcrumb" aria-label="面包屑"><RouterLink to="/aon/cms">首页</RouterLink><span>/</span><RouterLink to="/aon/cms/download">下载中心</RouterLink><span>/</span><strong>{{ detail.title }}</strong></nav>
+        <nav class="detail-breadcrumb" aria-label="面包屑">
+          <RouterLink to="/aon/cms">首页</RouterLink><span>/</span><RouterLink to="/aon/cms/download">下载中心</RouterLink><span>/</span><strong>{{ detail.title }}</strong>
+        </nav>
         <article class="download-article">
           <header class="download-article-header">
             <div class="download-heading">
               <span class="download-kicker">{{ detail.category || '资源下载' }}</span>
               <h1>{{ detail.title }}</h1>
-              <div class="download-meta"><span v-if="detail.version">版本 {{ detail.version }}</span><span>{{ detail.downloads ?? 0 }} 次下载</span></div>
+              <div class="download-meta">
+                <span v-if="detail.version">版本 {{ detail.version }}</span
+                ><span>{{ detail.downloads ?? 0 }} 次下载</span>
+              </div>
             </div>
-            <el-button class="detail-download-button" type="primary" size="large" @click="confirmDownload"><el-icon><Download /></el-icon>下载资源</el-button>
+            <el-button class="detail-download-button" type="primary" size="large" @click="confirmDownload"
+              ><el-icon><Download /></el-icon>下载资源</el-button
+            >
           </header>
           <img v-if="safeUrl(detail.coverUrl)" class="download-detail-cover" :src="detail.coverUrl" :alt="detail.title" />
           <p v-if="detail.summary" class="download-summary">{{ detail.summary }}</p>
@@ -92,7 +99,7 @@ await load();
   text-decoration: none;
 }
 .detail-breadcrumb a:hover {
-  color: #2b5cff;
+  color: #181c28;
 }
 .download-article {
   padding: 36px;
@@ -115,9 +122,9 @@ await load();
   display: inline-block;
   margin-bottom: 8px;
   padding: 4px 9px;
-  color: #2b5cff;
+  color: #202b3d;
   font-size: 11px;
-  background: #eef2ff;
+  background: #eef1f5;
   border-radius: 4px;
 }
 .download-heading h1 {
@@ -148,7 +155,7 @@ await load();
   padding: 18px 20px;
   color: #5b6678;
   line-height: 1.8;
-  border-left: 3px solid #2b5cff;
+  border-left: 3px solid #202b3d;
   background: #f7f9fc;
 }
 .download-content-body {

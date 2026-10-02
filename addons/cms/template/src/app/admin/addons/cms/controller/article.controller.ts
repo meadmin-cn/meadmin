@@ -18,7 +18,7 @@ export class AonCmsArticleController extends BaseController {
   @Get('/info/:id')
   @AdminPermission(['aon_cms_article_info', 'aon_cms_article_edit'])
   async info(@Param('id') id: string) {
-    return this.success(await this.service.info(id));
+    return this.success(await this.service.detail(id));
   }
   @Post('/add')
   @Validate({ validationOptions: { stripUnknown: false, allowUnknown: false } })

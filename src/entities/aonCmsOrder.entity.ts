@@ -45,9 +45,53 @@ export class AonCmsOrder extends AdminBaseModel<AonCmsOrder> {
   @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 0 })
   declare status: number;
 
-  // 线下支付状态：0待线下支付 1已确认 2已取消
+  // 线下支付状态：0待收款 1已收款 2已退款/取消
   @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 0 })
   declare paymentStatus: number;
+
+  // 发货状态：0未发货 1已发货 2已签收
+  @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 0 })
+  declare shippingStatus: CreationOptional<number>;
+
+  @Attribute({ type: DataTypes.STRING(60), allowNull: false, defaultValue: '' })
+  declare expressCompany: CreationOptional<string>;
+
+  @Attribute({ type: DataTypes.STRING(60), allowNull: false, defaultValue: '' })
+  declare expressNo: CreationOptional<string>;
+
+  @Attribute({ type: DataTypes.DATE, allowNull: true })
+  declare shippedAt: CreationOptional<Date | null>;
+
+  @Attribute({ type: DataTypes.DATE, allowNull: true })
+  declare receivedAt: CreationOptional<Date | null>;
+
+  @Attribute({ type: DataTypes.DECIMAL(12, 2), allowNull: false, defaultValue: 0 })
+  declare paidAmount: CreationOptional<string>;
+
+  // 收款方式：bank/wechat/alipay/cash/other
+  @Attribute({ type: DataTypes.STRING(30), allowNull: false, defaultValue: '' })
+  declare paymentMethod: CreationOptional<string>;
+
+  @Attribute({ type: DataTypes.STRING(80), allowNull: false, defaultValue: '' })
+  declare paymentNo: CreationOptional<string>;
+
+  @Attribute({ type: DataTypes.DATE, allowNull: true })
+  declare paidAt: CreationOptional<Date | null>;
+
+  @Attribute({ type: DataTypes.DATE, allowNull: true })
+  declare completedAt: CreationOptional<Date | null>;
+
+  @Attribute({ type: DataTypes.DATE, allowNull: true })
+  declare closedAt: CreationOptional<Date | null>;
+
+  @Attribute({ type: DataTypes.DATE, allowNull: true })
+  declare lastFollowAt: CreationOptional<Date | null>;
+
+  @Attribute({ type: DataTypes.DATE, allowNull: true })
+  declare nextFollowAt: CreationOptional<Date | null>;
+
+  @Attribute({ type: DataTypes.STRING(1000), allowNull: false, defaultValue: '' })
+  declare adminRemark: CreationOptional<string>;
 
   @Attribute({ type: DataTypes.STRING(500), allowNull: false, defaultValue: '' })
   declare remark: string;

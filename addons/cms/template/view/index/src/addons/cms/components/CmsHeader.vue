@@ -7,7 +7,7 @@
       </router-link>
 
       <nav class="cms-nav">
-        <router-link v-for="cat in categories" :key="cat.id" :to="`/aon/cms?category=${cat.id}`" class="cms-nav-item" :class="{ active: currentCategory === cat.id }">
+        <router-link v-for="cat in categories" :key="cat.id" :to="`/aon/cms?categoryId=${cat.id}`" class="cms-nav-item" :class="{ active: currentCategory === cat.id }">
           {{ cat.name }}
         </router-link>
       </nav>
@@ -28,7 +28,7 @@
     </div>
 
     <div class="cms-mobile-menu" :class="{ open: mobileOpen }">
-      <router-link v-for="cat in categories" :key="cat.id" :to="`/aon/cms?category=${cat.id}`" class="cms-mobile-item" @click="mobileOpen = false">
+      <router-link v-for="cat in categories" :key="cat.id" :to="`/aon/cms?categoryId=${cat.id}`" class="cms-mobile-item" @click="mobileOpen = false">
         {{ cat.name }}
       </router-link>
     </div>

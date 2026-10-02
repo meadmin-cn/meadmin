@@ -7,9 +7,10 @@ export const validateCms = <T>(schema: ObjectSchema, data: unknown): T => {
   if (error) throw new BadRequestError(error.message);
   return value as T;
 };
+// CMS 主键统一为 STRING(20)：雪花 ID 是纯数字，演示数据/历史数据可能是 20 位十六进制，这里统一放行字母数字
 export const cmsId = (id: string) => {
   const { error } = RuleType.string()
-    .pattern(/^[0-9]{1,20}$/)
+    .pattern(/^[0-9a-zA-Z]{1,20}$/)
     .required()
     .validate(id);
   if (error) throw new BadRequestError('无效的 CMS ID');

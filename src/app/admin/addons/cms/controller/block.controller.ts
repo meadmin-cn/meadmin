@@ -9,6 +9,12 @@ import { CmsPermissionMiddleware } from './permission.middleware.js';
 @Controller('addons/cms/block', { middleware: [CmsPermissionMiddleware] })
 export class AonCmsBlockController extends BaseController {
   @Inject() service: AonCmsBlockService;
+  /** 展示位置字典：区块表单据此下拉选择，避免手工填写未知位置 */
+  @Get('/positions')
+  @AdminPermission(['aon_cms_block_info', 'aon_cms_block_add', 'aon_cms_block_edit'])
+  async positions() {
+    return this.success(await this.service.positions());
+  }
   @Post('/')
   @AdminPermission('aon_cms_block_list')
   async list(@Body() query: CmsQueryDto) {

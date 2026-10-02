@@ -17,11 +17,11 @@ export class AonCmsCommentController extends BaseController {
   @Get('/info/:id')
   @AdminPermission(['aon_cms_comment_info', 'aon_cms_comment_edit'])
   async info(@Param('id') id: string) {
-    return this.success(await this.service.info(id));
+    return this.success(await this.service.detail(id));
   }
   @Post('/reports')
   @AdminPermission('aon_cms_comment_info')
-  async reports(@Body() query: CmsQueryDto) {
+  async reports(@Body() query: CmsQueryDto): Promise<any> {
     return this.success(await this.service.reports(query));
   }
   @Post('/add')

@@ -4,52 +4,75 @@
       <header class="page-heading">
         <div>
           <span class="page-kicker">交流反馈</span>
-          <h1>留言板</h1>
-          <p>欢迎提出建议或反馈问题，公开留言会在审核后展示。</p>
+          <h1>{{ form?.title || '留言板' }}</h1>
+          <p>{{ form?.description || '欢迎提出建议或反馈问题，公开留言会在审核后展示。' }}</p>
         </div>
-        <el-button type="primary" @click="editorOpen = !editorOpen">{{ editorOpen ? '收起留言' : '发布留言' }}</el-button>
+        <el-button v-if="fields.length" type="primary" @click="editorOpen = !editorOpen">{{ editorOpen ? '收起表单' : '填写表单' }}</el-button>
       </header>
 
-      <section v-show="editorOpen" class="message-editor">
+      <!-- 表单字段完全由后台「自定义表单」配置驱动 -->
+      <section v-show="editorOpen && fields.length" class="message-editor">
         <div class="editor-heading">
           <div>
-            <h2>写下留言</h2>
-            <p>联系方式仅管理员可见，请尽量说明具体场景。</p>
+            <h2>填写{{ form?.title || '表单' }}</h2>
+            <p>带 * 的为必填项，联系方式仅管理员可见。</p>
           </div>
-          <button type="button" aria-label="关闭留言表单" @click="editorOpen = false">×</button>
+          <button type="button" aria-label="关闭表单" @click="editorOpen = false">×</button>
         </div>
         <el-form label-position="top" class="message-form">
-          <el-form-item label="称呼"><el-input v-model="form.author" maxlength="80" placeholder="怎么称呼你" /></el-form-item>
-          <el-form-item label="联系方式"><el-input v-model="form.contact" maxlength="160" placeholder="手机号或邮箱，仅管理员可见" /></el-form-item>
-          <el-form-item label="留言内容" class="content-field"><el-input v-model="form.content" type="textarea" :rows="4" maxlength="2000" show-word-limit placeholder="请输入具体问题或建议" /></el-form-item>
-          <div class="submit-row"><span>留言提交后需经管理员审核</span><el-button type="primary" :loading="submitting" @click="submit">提交留言</el-button></div>
+          <el-form-item v-for="field in fields" :key="field.name" :label="field.label + (field.required ? ' *' : '')" :class="{ 'content-field': field.type === 'textarea' }">
+            <el-input v-if="field.type === 'text'" v-model="formData[field.name] as string" :maxlength="field.maxlength || 200" :placeholder="field.placeholder" />
+            <el-input v-else-if="field.type === 'textarea'" v-model="formData[field.name] as string" type="textarea" :rows="4" :maxlength="field.maxlength || 2000" show-word-limit :placeholder="field.placeholder" />
+            <el-input-number v-else-if="field.type === 'number'" v-model="formData[field.name] as number" controls-position="right" />
+            <el-select v-else-if="field.type === 'select'" v-model="formData[field.name] as string" :placeholder="field.placeholder || '请选择'" clearable>
+              <el-option v-for="option in field.options ?? []" :key="option" :value="option" :label="option" />
+            </el-select>
+            <el-radio-group v-else-if="field.type === 'radio'" v-model="formData[field.name] as string">
+              <el-radio v-for="option in field.options ?? []" :key="option" :value="option">{{ option }}</el-radio>
+            </el-radio-group>
+            <el-checkbox-group v-else-if="field.type === 'checkbox'" v-model="formData[field.name] as string[]">
+              <el-checkbox v-for="option in field.options ?? []" :key="option" :value="option">{{ option }}</el-checkbox>
+            </el-checkbox-group>
+            <el-date-picker v-else-if="field.type === 'date'" v-model="formData[field.name] as string" type="date" value-format="YYYY-MM-DD" :placeholder="field.placeholder || '请选择日期'" />
+            <me-upload v-else-if="field.type === 'image'" accept=".png,.jpg,.jpeg,.webp" :limit="1" list-type="picture" :model-value="uploadValue(formData[field.name])" @update:model-value="(files) => (formData[field.name] = files[0]?.url ?? '')" />
+            <el-input v-else v-model="formData[field.name] as string" :maxlength="field.maxlength || 200" :placeholder="field.placeholder" />
+          </el-form-item>
+          <div class="submit-row">
+            <span>{{ form?.needReview ? '提交后需经管理员审核' : '提交后立即生效' }}</span>
+            <el-button type="primary" :loading="submitting" :disabled="!canSubmit" @click="submit">{{ form?.submitText || '提交' }}</el-button>
+          </div>
         </el-form>
       </section>
+      <el-alert v-if="!loading && !fields.length" class="message-alert" type="warning" :closable="false" title="留言板表单尚未配置" description="请在后台「CMS - 自定义表单」中新建表单并开启「作为前台留言板」。" />
 
       <section class="message-stream">
         <div class="stream-header">
           <div>
-            <h2>公开留言</h2>
+            <h2>公开数据</h2>
             <span>共 {{ data?.total ?? 0 }} 条</span>
           </div>
           <button type="button" @click="load">刷新列表</button>
         </div>
         <div v-loading="loading" class="stream-list">
-          <article v-for="item in data?.list" :key="`${item.author}-${item.createdAt}`" class="message-item">
-            <div class="message-avatar">{{ item.author.slice(0, 1) }}</div>
+          <article v-for="item in data?.list" :key="item.id" class="message-item">
+            <div class="message-avatar">{{ (item.author || '匿').slice(0, 1) }}</div>
             <div class="message-copy">
               <header>
-                <strong>{{ item.author }}</strong
-                ><time>{{ item.createdAt.slice(0, 10) }}</time>
+                <strong>{{ item.author || '匿名' }}</strong
+                ><time>{{ formatterAtExec(item.createdAt, 'YYYY-MM-DD') }}</time>
               </header>
               <p>{{ item.content }}</p>
+              <!-- 其余字段按表单配置补充展示 -->
+              <div v-if="extraEntries(item).length" class="message-extra">
+                <span v-for="entry in extraEntries(item)" :key="entry.label"><b>{{ entry.label }}</b>{{ entry.value }}</span>
+              </div>
               <div v-if="item.reply" class="reply">
                 <span>管理员回复</span>
                 <p>{{ item.reply }}</p>
               </div>
             </div>
           </article>
-          <div v-if="data && !data.total" class="empty-state"><strong>暂无公开留言</strong><span>点击右上角“发布留言”提交第一条建议</span></div>
+          <div v-if="data && !data.total" class="empty-state"><strong>暂无公开数据</strong><span>点击右上角按钮提交第一条</span></div>
         </div>
         <el-pagination v-if="data?.total" v-model:current-page="page" :page-size="pageSize" :total="data.total" layout="prev,pager,next" class="pagination" @current-change="load" />
       </section>
@@ -58,37 +81,71 @@
 </template>
 
 <script setup lang="ts">
+import type { FileInfo } from '@/api/file';
 import { ElMessage } from 'element-plus';
-import { reactive, ref } from 'vue';
-import { createMessageApi, messagesApi } from '../api/cms';
+import { computed, reactive, ref } from 'vue';
+import { formatterAtExec } from '@/utils/helper';
+import type { CmsDiyformField, CmsDiyformRecord } from '../api/cms';
+import { messageBoardApi, submitDiyformApi } from '../api/cms';
 
-const form = reactive({ author: '', contact: '', content: '' });
 const editorOpen = ref(false);
 const submitting = ref(false);
 const loading = ref(false);
 const page = ref(1);
 const pageSize = 10;
-const { data, runAsync: fetchMessages } = messagesApi();
-const { runAsync: create } = createMessageApi();
+// 提交内容以字段名称为键，结构完全来自后台配置
+const formData = reactive<Record<string, unknown>>({});
+const { data, runAsync: fetchMessages } = messageBoardApi();
+const { runAsync: submitForm } = submitDiyformApi();
+
+const form = computed(() => data.value?.form ?? null);
+const fields = computed<CmsDiyformField[]>(() => form.value?.fields ?? []);
+// 未上传图片时回显为空；已上传时还原成上传组件需要的文件对象
+const uploadValue = (url: unknown): FileInfo[] => (typeof url === 'string' && url ? ([{ url, name: url.split('/').pop() ?? 'image' }] as FileInfo[]) : []);
+
+// 必填项校验：全部必填字段都有值才允许提交（未满足时按钮置灰）
+const canSubmit = computed(() =>
+  fields.value.every((field) => {
+    if (!field.required) return true;
+    const value = formData[field.name];
+    if (Array.isArray(value)) return value.length > 0;
+    if (field.type === 'number') return typeof value === 'number';
+    return String(value ?? '').trim().length > 0;
+  }),
+);
+
+// 公开数据里除正文外的其它字段，按表单配置展示
+const extraEntries = (item: CmsDiyformRecord) => {
+  const contentField = fields.value.find((field) => field.type === 'textarea');
+  return fields.value
+    .filter((field) => field.name !== contentField?.name && !['text', 'number'].includes(field.type) && item.data?.[field.name])
+    .map((field) => ({ label: field.label, value: Array.isArray(item.data[field.name]) ? (item.data[field.name] as string[]).join('、') : String(item.data[field.name]) }));
+};
+
 const load = async () => {
   loading.value = true;
   try {
     await fetchMessages({ page: page.value, pageSize });
+    // 首次拿到字段配置后初始化表单模型，避免输入后配置刷新导致内容丢失
+    for (const field of fields.value) if (!(field.name in formData)) formData[field.name] = field.type === 'checkbox' ? [] : '';
   } finally {
     loading.value = false;
   }
 };
 const submit = async () => {
-  if (!form.author.trim() || !form.content.trim()) {
-    ElMessage.warning('请填写称呼和留言内容');
+  if (!canSubmit.value) {
+    ElMessage.warning('请先填写必填项');
     return;
   }
+  if (!form.value) return;
   submitting.value = true;
   try {
-    await create({ ...form });
-    form.content = '';
+    const payload: Record<string, unknown> = {};
+    for (const field of fields.value) payload[field.name] = formData[field.name];
+    await submitForm(form.value.diyname, payload);
+    for (const field of fields.value) formData[field.name] = field.type === 'checkbox' ? [] : '';
     editorOpen.value = false;
-    ElMessage.success('留言已提交，审核后公开展示');
+    ElMessage.success(form.value.needReview ? '已提交，审核后公开展示' : '提交成功');
   } finally {
     submitting.value = false;
   }
@@ -116,7 +173,7 @@ await load();
   padding: 4px 4px 22px;
 }
 .page-kicker {
-  color: #2b5cff;
+  color: #202b3d;
   font-size: 12px;
   font-weight: 700;
 }
@@ -141,6 +198,10 @@ await load();
 .message-editor {
   margin-bottom: 14px;
   padding: 18px 20px 20px;
+}
+.message-alert {
+  margin-bottom: 14px;
+  border-radius: 8px;
 }
 .editor-heading {
   display: flex;
@@ -229,11 +290,15 @@ await load();
 }
 .stream-header button {
   padding: 4px 0;
-  color: #2b5cff;
+  color: #454b5c;
   font-size: 12px;
   border: 0;
   background: transparent;
   cursor: pointer;
+  transition: color 0.2s;
+}
+.stream-header button:hover {
+  color: #181c28;
 }
 .message-item {
   display: flex;
@@ -269,6 +334,19 @@ await load();
 .message-copy time {
   color: #a0a8b5;
   font-size: 11px;
+}
+.message-extra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 8px;
+  color: #7a8597;
+  font-size: 12px;
+}
+.message-extra b {
+  margin-right: 4px;
+  color: #98a1af;
+  font-weight: 600;
 }
 .message-copy > p {
   margin: 7px 0 0;

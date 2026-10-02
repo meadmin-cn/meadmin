@@ -5,7 +5,11 @@
       <el-form-item :label="t('SEO 标识')" prop="slug"><el-input v-model="form.slug" /></el-form-item>
       <el-form-item :label="t('摘要')" prop="summary"><el-input v-model="form.summary" type="textarea" :rows="3" /></el-form-item>
       <el-form-item :label="t('Markdown 内容')" prop="mdContent"><el-input v-model="form.mdContent" type="textarea" :rows="14" maxlength="200000" /><cms-preview :content="form.mdContent" /></el-form-item>
-      <el-form-item :label="t('封面')" prop="coverUrl"><el-input v-model="form.coverUrl" maxlength="1000" /><me-upload accept=".png,.jpg,.jpeg,.webp" :limit="1" list-type="picture" @update:model-value="(files) => (form.coverUrl = files[0]?.url ?? '')" /></el-form-item>
+      <el-form-item :label="t('封面')" prop="coverUrl">
+        <!-- 图片统一由上传按钮产生，上传后可即时预览 -->
+        <me-upload accept=".png,.jpg,.jpeg,.webp" :limit="1" list-type="picture" :model-value="uploadValue(form.coverUrl)" @update:model-value="(files) => (form.coverUrl = files[0]?.url ?? '')" />
+        <el-alert class="cover-tip" title="建议上传 1200×800（3:2）图片，单张体积不超过 500MB" type="info" :closable="false" />
+      </el-form-item>
       <el-form-item :label="t('状态')" prop="status"
         ><el-select v-model="form.status"><el-option :value="0" :label="t('禁用')" /><el-option :value="1" :label="t('启用')" /></el-select
       ></el-form-item>
@@ -18,6 +22,7 @@
   </me-dialog>
 </template>
 <script setup lang="ts">
+import type { FileInfo } from '@/api/file';
 import { useLocalesI18n } from '@/locales/i18n';
 import type { FormInstance, FormRules } from 'element-plus';
 import { reactive, ref, watch } from 'vue';
@@ -33,6 +38,8 @@ const formEl = ref<FormInstance>();
 const { runAsync: getInfo, loading } = infoApi();
 const { runAsync: saveInfo, loading: saving } = saveApi();
 
+// 回显已保存的图片：把 URL 还原成上传组件需要的文件对象，保证编辑时可见预览
+const uploadValue = (url: string): FileInfo[] => (url ? ([{ url, name: url.split('/').pop() ?? 'image' }] as FileInfo[]) : []);
 const rules: FormRules = { title: [{ required: true, message: t('必填'), trigger: 'blur' }], slug: [{ required: true, message: t('必填'), trigger: 'blur' }] };
 const save = async () => {
   if (!(await formEl.value?.validate().catch(() => false))) return;

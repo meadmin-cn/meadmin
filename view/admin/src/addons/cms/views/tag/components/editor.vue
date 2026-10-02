@@ -7,6 +7,7 @@
         ><el-select v-model="form.status"><el-option :value="0" :label="t('禁用')" /><el-option :value="1" :label="t('启用')" /></el-select
       ></el-form-item>
       <el-form-item :label="t('排序')" prop="orderNum"><el-input-number :key="String(readonly || loading)" v-model="form.orderNum" :min="-9999" :max="9999" /></el-form-item>
+      <el-form-item label="热门标签" prop="isHot"><el-switch v-model="form.isHot" active-text="展示在首页热门标签" inactive-text="普通标签" /></el-form-item>
     </el-form>
     <template #footer
       ><el-button @click="show = false">{{ t('取消') }}</el-button
@@ -36,7 +37,8 @@ const save = async () => {
   show.value = false;
   emit('success');
 };
-await loadRes;
+// 不要在 setup 里 await 语言包：顶层 await 会让组件变成异步组件，未用 Suspense 包裹时弹窗内容失去响应式更新
+void loadRes;
 watch(
   () => props.id,
   async (id) => {

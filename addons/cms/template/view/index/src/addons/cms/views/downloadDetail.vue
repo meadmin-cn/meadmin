@@ -92,7 +92,7 @@ await load();
   text-decoration: none;
 }
 .detail-breadcrumb a:hover {
-  color: #2b5cff;
+  color: #181c28;
 }
 .download-article {
   padding: 36px;
@@ -115,9 +115,9 @@ await load();
   display: inline-block;
   margin-bottom: 8px;
   padding: 4px 9px;
-  color: #2b5cff;
+  color: #202b3d;
   font-size: 11px;
-  background: #eef2ff;
+  background: #eef1f5;
   border-radius: 4px;
 }
 .download-heading h1 {
@@ -148,7 +148,7 @@ await load();
   padding: 18px 20px;
   color: #5b6678;
   line-height: 1.8;
-  border-left: 3px solid #2b5cff;
+  border-left: 3px solid #202b3d;
   background: #f7f9fc;
 }
 .download-content-body {

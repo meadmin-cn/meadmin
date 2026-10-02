@@ -14,6 +14,8 @@ export default (el: HTMLDivElement & { fullscreen: boolean }) => {
   const minHeight = Math.min(nowHight, 300);
   //当前顶部高度
   let nowMarginTop = '0';
+  //最大化前的内边距，退出最大化时还原
+  let preFullscreenPadding = '';
   //获取弹框头部（这部分可双击全屏）
   const dialogHeaderEl = el.querySelector('.el-dialog__header') as HTMLDivElement;
   //弹窗
@@ -61,6 +63,10 @@ export default (el: HTMLDivElement & { fullscreen: boolean }) => {
   maxMin.innerHTML = el.fullscreen ? cropSvg : fullscreenSvg;
   dialogHeaderEl.appendChild(maxMinButton);
   const moveDown = (e: MouseEvent) => {
+    // 最大化状态下窗口已铺满视口，拖动会把错误坐标写进内联样式，导致退出最大化后无法还原
+    if (el.fullscreen) {
+      return;
+    }
     // 鼠标按下，计算当前元素距离可视区的距离
     const disX = e.clientX ?? 0 - dialogHeaderEl.offsetLeft;
     const disY = e.clientY ?? 0 - dialogHeaderEl.offsetTop;
@@ -97,6 +103,7 @@ export default (el: HTMLDivElement & { fullscreen: boolean }) => {
       maxMin.innerHTML = fullscreenSvg;
       setWidthHeight(nowWidth + 'px', nowHight + 'px');
       dragDom.style.marginTop = nowMarginTop;
+      dragDom.style.padding = preFullscreenPadding;
       dragDom.style.position = 'relative';
       el.fullscreen = false;
       dialogHeaderEl.style.cursor = 'move';
@@ -106,9 +113,13 @@ export default (el: HTMLDivElement & { fullscreen: boolean }) => {
       nowHight = dragDom.clientHeight;
       nowWidth = dragDom.clientWidth;
       nowMarginTop = dragDom.style.marginTop;
+      //el-dialog 默认用 padding 做垂直留白；固定定位后该留白会让底部超出视口被裁切，需一并清除
+      preFullscreenPadding = dragDom.style.padding;
       dragDom.style.left = '0';
       dragDom.style.top = '0';
-      setWidthHeight('100vw', '100vh');
+      dragDom.style.padding = '0';
+      //100% 相对视口定位，避免移动端浏览器地址栏收起/展开时 100vh 与实际视口不一致
+      setWidthHeight('100%', '100%');
       dragDom.style.marginTop = '0';
       dragDom.style.position = 'fixed';
       el.fullscreen = true;
@@ -137,6 +148,10 @@ export default (el: HTMLDivElement & { fullscreen: boolean }) => {
 
   //鼠标拉伸弹窗
   resizeEl.onmousedown = (e) => {
+    // 最大化状态下不允许拉伸，避免写入与全屏尺寸冲突的内联宽高
+    if (el.fullscreen) {
+      return;
+    }
     // 记录初始x位置
     const clientX = e.clientX;
     // 鼠标按下，计算当前元素距离可视区的距离

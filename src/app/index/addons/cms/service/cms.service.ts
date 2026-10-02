@@ -8,14 +8,14 @@ import { AonCmsPage } from '@/entities/aonCmsPage.entity.js';
 import { AonCmsTag } from '@/entities/aonCmsTag.entity.js';
 import { AonCmsTopic } from '@/entities/aonCmsTopic.entity.js';
 import { Inject, Provide } from '@midwayjs/core';
-import { NotFoundError } from '@midwayjs/core/dist/error/http.js';
+import { BadRequestError, NotFoundError } from '@midwayjs/core/dist/error/http.js';
 import { Context } from '@midwayjs/koa';
 import { Attributes, Op, Order, WhereOptions } from '@sequelize/core';
 import { CmsPublicCommentDto, publicCommentReportSchema, publicCommentSchema } from '../../../../admin/addons/cms/dto/comment.dto.js';
 import { CmsQueryDto, querySchema } from '../../../../admin/addons/cms/dto/common.dto.js';
 import { validateCms } from '../../../../admin/addons/cms/service/guard.js';
 
-const articleAttributes: Array<keyof Attributes<AonCmsArticle>> = ['id', 'title', 'slug', 'summary', 'coverUrl', 'categoryId', 'topicId', 'tagIds', 'publishAt', 'seoTitle', 'seoKeywords', 'seoDescription', 'views', 'likes', 'comments', 'orderEnabled'];
+const articleAttributes: Array<keyof Attributes<AonCmsArticle>> = ['id', 'title', 'slug', 'summary', 'coverUrl', 'categoryId', 'topicId', 'tagIds', 'publishAt', 'seoTitle', 'seoKeywords', 'seoDescription', 'views', 'likes', 'comments', 'orderEnabled', 'isDownload', 'fileUrl', 'fileName', 'downloads', 'isGallery'];
 @Provide()
 export class AonCmsPublicService {
   @InjectRepository(AonCmsArticle) article: typeof AonCmsArticle;
@@ -115,6 +115,13 @@ export class AonCmsPublicService {
     if (!row) throw new NotFoundError('内容不存在');
     return row;
   }
+  async downloadArticle(slug: string) {
+    const row = await this.article.findOne({ attributes: [...articleAttributes, 'mdContent'], where: { [Op.and]: [await this.visibleArticles(), { slug }] } });
+    if (!row) throw new NotFoundError('内容不存在');
+    if (!row.isDownload || !row.fileUrl) throw new BadRequestError('该内容不可下载');
+    await row.increment('downloads', { by: 1 });
+    return { url: row.fileUrl, title: row.fileName || row.title, downloads: (row.downloads ?? 0) + 1 };
+  }
   async pageDetail(slug: string) {
     const row = await this.page.findOne({ attributes: ['title', 'slug', 'mdContent', 'summary', 'coverUrl', 'kind', 'link', 'target', 'publishAt', 'seoTitle', 'seoKeywords', 'seoDescription'], where: { slug, status: 2, publishAt: { [Op.lte]: new Date() } } });
     if (!row) throw new NotFoundError('内容不存在');
@@ -122,8 +129,8 @@ export class AonCmsPublicService {
   }
   async navigation() {
     const [categories, tags, topics, pages] = await Promise.all([
-      this.category.getTree({ attributes: ['id', 'title', 'slug', 'parentId'], where: { id: { [Op.in]: await this.visibleCategoryIds() } }, order: [['orderNum', 'DESC']] }),
-      this.tag.findAll({ attributes: ['id', 'title', 'slug'], where: { status: 1 }, limit: 100, order: [['orderNum', 'DESC']] }),
+      this.category.getTree({ attributes: ['id', 'title', 'slug', 'parentId', 'type', 'linkUrl', 'isNav', 'isRecommend', 'coverUrl'], where: { id: { [Op.in]: await this.visibleCategoryIds() } }, order: [['orderNum', 'DESC']] }),
+      this.tag.findAll({ attributes: ['id', 'title', 'slug', 'isHot'], where: { status: 1 }, limit: 100, order: [['orderNum', 'DESC']] }),
       this.topic.findAll({ attributes: ['id', 'title', 'slug', 'summary', 'coverUrl'], where: { status: 1 }, limit: 100, order: [['orderNum', 'DESC']] }),
       this.page.findAll({ attributes: ['title', 'slug', 'kind', 'link', 'target'], where: { status: 2, publishAt: { [Op.lte]: new Date() } }, limit: 100, order: [['orderNum', 'DESC']] }),
     ]);
@@ -134,10 +141,63 @@ export class AonCmsPublicService {
     if (!row) throw new NotFoundError('专题不存在');
     return row;
   }
+  // 首页聚合数据：热门标签、推荐栏目、图集精选、热门排行（规则来自区块配置）。
+  async home() {
+    const visible = await this.visibleArticles();
+    const [hotTags, recommendCategories, gallery, rankingBlock] = await Promise.all([
+      this.tag.findAll({
+        attributes: ['id', 'title', 'slug', 'isHot'],
+        where: { isHot: true, status: 1 },
+        order: [
+          ['orderNum', 'DESC'],
+          ['id', 'ASC'],
+        ],
+        limit: 30,
+      }),
+      this.category.findAll({
+        attributes: ['id', 'title', 'slug', 'coverUrl', 'isRecommend'],
+        where: { isRecommend: true, status: 1 },
+        order: [
+          ['orderNum', 'DESC'],
+          ['id', 'ASC'],
+        ],
+        limit: 30,
+      }),
+      this.article.findAll({ attributes: articleAttributes, where: { ...visible, isGallery: true }, order: this.articleOrder('latest'), limit: 8 }),
+      this.block.findOne({ where: { position: 'home-ranking', kind: 1, status: 1 } }),
+    ]);
+    const rule: { sortBy: NonNullable<CmsQueryDto['sortBy']>; limit: number } = { sortBy: 'views', limit: 6 };
+    if (rankingBlock?.config) {
+      try {
+        const parsed = JSON.parse(rankingBlock.config) as { sortBy?: string; limit?: number };
+        if (parsed.sortBy && ['latest', 'likes', 'comments', 'views'].includes(parsed.sortBy)) rule.sortBy = parsed.sortBy as NonNullable<CmsQueryDto['sortBy']>;
+        if (typeof parsed.limit === 'number' && parsed.limit > 0 && parsed.limit <= 50) rule.limit = Math.floor(parsed.limit);
+      } catch {
+        // 忽略非法 JSON，使用默认规则
+      }
+    }
+    const ranking = await this.article.findAndCountAll({ attributes: articleAttributes, where: visible, order: this.articleOrder(rule.sortBy), limit: rule.limit });
+    return { hotTags, recommendCategories, gallery, ranking: ranking.rows, rankingRule: rule };
+  }
+  // 内容详情相关推荐：同栏目或共享标签，排除自身。
+  async relatedArticles(slug: string) {
+    const article = await this.articleDetail(slug);
+    const conditions: Record<string, unknown>[] = [];
+    if (article.categoryId) conditions.push({ categoryId: article.categoryId });
+    if ((article.tagIds ?? []).length) conditions.push({ tagIds: { [Op.overlap]: article.tagIds } });
+    if (!conditions.length) return [];
+    const rows = await this.article.findAll({
+      attributes: articleAttributes,
+      where: { ...(await this.visibleArticles()), id: { [Op.ne]: article.id }, [Op.or]: conditions },
+      order: this.articleOrder('views'),
+      limit: 6,
+    });
+    return rows;
+  }
   async blocks(position: string) {
     const now = new Date();
     return this.block.findAll({
-      attributes: ['id', 'title', 'kind', 'mdContent', 'coverUrl', 'link'],
+      attributes: ['id', 'title', 'displayTitle', 'kind', 'mdContent', 'coverUrl', 'link'],
       where: { position, status: 1, [Op.and]: [{ [Op.or]: [{ startAt: null }, { startAt: { [Op.lte]: now } }] }, { [Op.or]: [{ endAt: null }, { endAt: { [Op.gt]: now } }] }] },
       order: [
         ['orderNum', 'DESC'],

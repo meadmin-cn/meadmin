@@ -17,9 +17,9 @@
         <div class="cms-footer-col">
           <h5>快速导航</h5>
           <router-link to="/aon/cms">首页</router-link>
-          <router-link to="/aon/cms?sort=hot">热门文章</router-link>
-          <router-link to="/aon/cms?sort=latest">最新发布</router-link>
-          <router-link to="/aon/cms?sort=recommend">编辑推荐</router-link>
+          <router-link to="/aon/cms?sortBy=views">热门文章</router-link>
+          <router-link to="/aon/cms?sortBy=latest">最新发布</router-link>
+          <router-link to="/aon/cms?sortBy=comments">评论最多</router-link>
         </div>
 
         <div class="cms-footer-col">

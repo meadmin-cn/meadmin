@@ -14,7 +14,12 @@ export class AonCmsReviewLog extends AdminBaseModel<AonCmsReviewLog> {
   declare id: CreationOptional<string>;
 
   @Attribute({ type: DataTypes.STRING(20), allowNull: false })
-  @ApiPropertyRule({ description: '内容 ID', rule: RuleType.string().pattern(/^[0-9]{1,20}$/).required() })
+  @ApiPropertyRule({
+    description: '内容 ID',
+    rule: RuleType.string()
+      .pattern(/^[0-9]{1,20}$/)
+      .required(),
+  })
   declare contentId: string;
 
   @Attribute({ type: DataTypes.STRING(20), allowNull: false })
@@ -32,4 +37,8 @@ export class AonCmsReviewLog extends AdminBaseModel<AonCmsReviewLog> {
 
   @Attribute({ type: DataTypes.STRING(1000), allowNull: false, defaultValue: '' })
   declare reason: string;
+
+  @Attribute({ type: DataTypes.TEXT, allowNull: true })
+  @ApiPropertyRule({ description: '内容快照（审核时的完整内容 JSON，含名称/摘要/是否可下载等）', rule: RuleType.string().allow(null, '') })
+  declare snapshot: string | null;
 }

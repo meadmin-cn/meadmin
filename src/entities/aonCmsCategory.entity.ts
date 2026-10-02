@@ -39,4 +39,43 @@ export class AonCmsCategory extends AdminTreeModel<AonCmsCategory> {
   @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 0 })
   @ApiPropertyRule({ description: '排序', rule: RuleType.number().integer().min(-9999).max(9999).default(0) })
   declare orderNum: number;
+
+  // 栏目类型：1文章列表 2目录 3跳转链接（决定前台头部菜单的跳转行为）
+  @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 1 })
+  @ApiPropertyRule({ description: '类型：1文章列表 2目录 3跳转链接', rule: RuleType.number().integer().valid(1, 2, 3).default(1) })
+  declare type: number;
+
+  // 跳转链接（类型=3 跳转链接 时生效，支持外链与站内相对路径）
+  @Attribute({ type: DataTypes.STRING(1000), allowNull: false, defaultValue: '' })
+  @ApiPropertyRule({
+    description: '跳转链接',
+    rule: RuleType.string()
+      .max(1000)
+      .pattern(/^(?:https?:\/\/[^\s]+|\/(?!\/)[^\s]*)$/)
+      .allow('')
+      .default(''),
+  })
+  declare linkUrl: string;
+
+  // 是否在前台头部导航显示（前台头部菜单完全由栏目驱动）
+  @Attribute({ type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true })
+  @ApiPropertyRule({ description: '导航显示', rule: RuleType.boolean().default(true) })
+  declare isNav: boolean;
+
+  // 是否推荐栏目（前台「栏目推荐」展示）
+  @Attribute({ type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false })
+  @ApiPropertyRule({ description: '是否推荐栏目', rule: RuleType.boolean().default(false) })
+  declare isRecommend: boolean;
+
+  // 封面
+  @Attribute({ type: DataTypes.STRING(1000), allowNull: false, defaultValue: '' })
+  @ApiPropertyRule({
+    description: '封面',
+    rule: RuleType.string()
+      .max(1000)
+      .pattern(/^(?:https?:\/\/[^\s]+|\/(?!\/)[^\s]*)$/)
+      .allow('')
+      .default(''),
+  })
+  declare coverUrl: string;
 }

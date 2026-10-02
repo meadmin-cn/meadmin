@@ -1,6 +1,6 @@
 <template>
   <me-dialog v-model="show" :title="t(readonly ? '详情' : id ? '编辑' : '新增')" :close-on-click-modal="false" class="article-editor-dialog" @closed="emit('closed')">
-    <el-alert :title="t('保存后内容将回到草稿，需重新审核')" type="info" :closable="false" />
+    <el-alert class="editor-alert" :title="t('保存后内容将回到草稿，需重新审核')" type="info" :closable="false" />
 
     <el-form ref="formEl" class="article-editor-form" :model="form" :rules="rules" :disabled="readonly || loading" label-position="top">
       <div class="editor-main-column">
@@ -8,7 +8,6 @@
         <el-form-item :label="t('摘要')" prop="summary"><el-input v-model="form.summary" type="textarea" :rows="3" placeholder="用于列表、搜索和 SEO 摘要展示" /></el-form-item>
         <el-form-item :label="t('正文内容')" prop="mdContent">
           <me-wang-editor v-model="form.mdContent" :config="editorConfig" />
-          <el-alert class="editor-tip" title="正文使用 me-admin 内置富文本编辑器，保存为 HTML；历史 Markdown 内容仍可继续编辑。" type="info" :closable="false" />
         </el-form-item>
         <el-divider content-position="left">SEO 设置</el-divider>
         <el-form-item :label="t('SEO 标识')" prop="slug"><el-input v-model="form.slug" placeholder="例如：getting-started" /></el-form-item>
@@ -29,8 +28,22 @@
         </section>
         <section class="editor-side-section">
           <h4>内容设置</h4>
-          <el-form-item :label="t('封面')" prop="coverUrl"><el-input v-model="form.coverUrl" maxlength="1000" placeholder="图片 URL" /><me-upload accept=".png,.jpg,.jpeg,.webp" :limit="1" list-type="picture" @update:model-value="(files) => (form.coverUrl = files[0]?.url ?? '')" /></el-form-item>
+          <el-form-item :label="t('封面')" prop="coverUrl">
+            <!-- 图片统一由上传按钮产生，上传后可即时预览 -->
+            <me-upload accept=".png,.jpg,.jpeg,.webp" :limit="1" list-type="picture" :model-value="uploadValue(form.coverUrl)" @update:model-value="(files) => (form.coverUrl = files[0]?.url ?? '')" />
+            <el-alert class="cover-tip" title="建议上传 1200×800（3:2）图片，单张体积不超过 500MB" type="info" :closable="false" />
+          </el-form-item>
           <el-form-item label="详情页订单" prop="orderEnabled"><el-switch v-model="form.orderEnabled" active-text="启用创建订单" inactive-text="关闭" /></el-form-item>
+          <el-form-item label="可下载" prop="isDownload"><el-switch v-model="form.isDownload" active-text="作为下载内容" inactive-text="普通文章" /></el-form-item>
+          <el-form-item label="图集精选" prop="isGallery"><el-switch v-model="form.isGallery" active-text="展示在首页图集精选" inactive-text="普通文章" /></el-form-item>
+        </section>
+        <section v-if="form.isDownload" class="editor-side-section">
+          <h4>下载文件</h4>
+          <el-form-item label="关联文件" prop="fileUrl">
+            <me-upload accept="*" :limit="1" @update:model-value="(files: Array<{ url?: string; name?: string }>) => { form.fileUrl = files[0]?.url ?? ''; form.fileName = files[0]?.name ?? ''; }">
+              <template #tip><span class="up-tip">{{ form.fileName || '请上传下载关联文件' }}</span></template>
+            </me-upload>
+          </el-form-item>
         </section>
       </aside>
     </el-form>
@@ -41,6 +54,7 @@
   </me-dialog>
 </template>
 <script setup lang="ts">
+import type { FileInfo } from '@/api/file';
 import { useLocalesI18n } from '@/locales/i18n';
 import type { FormInstance, FormRules } from 'element-plus';
 import { reactive, ref, watch } from 'vue';
@@ -49,6 +63,8 @@ import { treeApi } from '../../../api/category';
 import { lookupApi } from '../../../api/options';
 import MeWangEditor from '@/components/meWangEditor/index.vue';
 const editorConfig = { editor: { placeholder: '请输入文章正文内容...' } };
+// 回显已保存的图片：把 URL 还原成上传组件需要的文件对象，保证编辑时可见预览
+const uploadValue = (url: string): FileInfo[] => (url ? ([{ url, name: url.split('/').pop() ?? 'image' }] as FileInfo[]) : []);
 const { runAsync: getCategories, data: categories } = treeApi();
 const { runAsync: getTags, loading: tagsLoading } = lookupApi();
 const { runAsync: getTopics } = lookupApi();
@@ -94,41 +110,69 @@ watch(
 <style scoped>
 .article-editor-form {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
-  gap: 24px;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 28px;
+  align-items: start;
+}
+.editor-alert {
+  margin-bottom: 18px;
+  border-radius: 8px;
 }
 .editor-main-column,
 .editor-side-column {
   min-width: 0;
 }
+/* 侧栏在长正文滚动时保持可见，避免“发布设置”被滚出视野 */
 .editor-side-column {
-  padding-left: 20px;
+  position: sticky;
+  top: 0;
+  align-self: start;
+  padding-left: 24px;
   border-left: 1px solid var(--el-border-color-lighter);
 }
 .editor-side-section + .editor-side-section {
-  margin-top: 22px;
-  padding-top: 20px;
+  margin-top: 20px;
+  padding-top: 18px;
   border-top: 1px solid var(--el-border-color-lighter);
 }
 .editor-side-section h4 {
-  margin: 0 0 16px;
+  position: relative;
+  margin: 0 0 14px;
+  padding-left: 10px;
   color: var(--el-text-color-primary);
   font-size: 14px;
+  line-height: 1.4;
 }
-.editor-tip {
-  margin-top: 10px;
+.editor-side-section h4::before {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  left: 0;
+  width: 3px;
+  content: '';
+  background: var(--el-color-primary);
+  border-radius: 2px;
+}
+.article-editor-form :deep(.el-form-item) {
+  margin-bottom: 16px;
+}
+.article-editor-form :deep(.el-form-item__label) {
+  margin-bottom: 4px;
+  line-height: 1.4;
 }
 .seo-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 0 16px;
 }
 @media (max-width: 900px) {
   .article-editor-form {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
   .editor-side-column {
-    padding-top: 20px;
+    position: static;
+    padding-top: 18px;
     padding-left: 0;
     border-top: 1px solid var(--el-border-color-lighter);
     border-left: 0;
@@ -137,7 +181,6 @@ watch(
 @media (max-width: 560px) {
   .seo-grid {
     grid-template-columns: 1fr;
-    gap: 0;
   }
 }
 </style>

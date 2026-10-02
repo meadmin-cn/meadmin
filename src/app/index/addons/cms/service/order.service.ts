@@ -1,6 +1,7 @@
 import { InjectRepository } from '@/decorators/index.js';
 import { AonCmsArticle } from '@/entities/aonCmsArticle.entity.js';
 import { AonCmsOrder } from '@/entities/aonCmsOrder.entity.js';
+import { AonCmsOrderLog } from '@/entities/aonCmsOrderLog.entity.js';
 import { Inject, Provide } from '@midwayjs/core';
 import { NotFoundError } from '@midwayjs/core/dist/error/http.js';
 import { Context } from '@midwayjs/koa';
@@ -14,6 +15,7 @@ const makeOrderNo = () => `CMS${Date.now().toString(36).toUpperCase()}${Math.flo
 export class AonCmsPublicOrderService {
   @InjectRepository(AonCmsOrder) repository: typeof AonCmsOrder;
   @InjectRepository(AonCmsArticle) article: typeof AonCmsArticle;
+  @InjectRepository(AonCmsOrderLog) log: typeof AonCmsOrderLog;
   @Inject() ctx: Context;
 
   async create(slug: string, input: CmsOrderCreateDto): Promise<Record<string, unknown>> {
@@ -34,6 +36,7 @@ export class AonCmsPublicOrderService {
       paymentStatus: 0,
       remark: data.remark ?? '',
     });
+    await this.log.create({ orderId: row.id, action: 'create', content: `${this.ctx.userInfo?.id ? '会员' : '访客'}提交订单：${article.title} × ${data.quantity}` });
     return this.publicRow(row);
   }
 
@@ -45,6 +48,28 @@ export class AonCmsPublicOrderService {
   }
 
   private publicRow(row: AonCmsOrder): Record<string, unknown> {
-    return { orderNo: row.orderNo, articleId: row.articleId, itemName: row.itemName, contactName: row.contactName, contactPhone: row.contactPhone, shippingAddress: row.shippingAddress, quantity: row.quantity, amount: row.amount, status: row.status, paymentStatus: row.paymentStatus, remark: row.remark, accountLinked: Boolean(row.userId), createdAt: row.createdAt, updatedAt: row.updatedAt };
+    return {
+      orderNo: row.orderNo,
+      articleId: row.articleId,
+      itemName: row.itemName,
+      contactName: row.contactName,
+      contactPhone: row.contactPhone,
+      shippingAddress: row.shippingAddress,
+      quantity: row.quantity,
+      amount: row.amount,
+      status: row.status,
+      paymentStatus: row.paymentStatus,
+      shippingStatus: row.shippingStatus,
+      expressCompany: row.expressCompany,
+      expressNo: row.expressNo,
+      shippedAt: row.shippedAt,
+      paidAmount: row.paidAmount,
+      paymentMethod: row.paymentMethod,
+      paidAt: row.paidAt,
+      remark: row.remark,
+      accountLinked: Boolean(row.userId),
+      createdAt: row.createdAt,
+      updatedAt: row.updatedAt,
+    };
   }
 }

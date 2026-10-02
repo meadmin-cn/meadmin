@@ -96,7 +96,10 @@ const firstLeaf = (item: RouteRecordRaw): RouteRecordRaw => {
 };
 const onGroupClick = (item: RouteRecordRaw) => {
   if (props.mode === 'desktop') {
-    if (!item.meta?.overflowMenu) go(firstLeaf(item));
+    // 分组自身带可访问页面时优先进入该页面（如 CMS 栏目聚合页），否则进入第一个子项
+    if (item.meta?.overflowMenu) return;
+    const groupPath = item.meta?.groupPath ? String(item.meta.groupPath) : '';
+    go(groupPath ? ({ ...item, path: groupPath } as RouteRecordRaw) : firstLeaf(item));
     return;
   }
   // 移动端保留展开/收起，确保仍可选择其他子栏目。

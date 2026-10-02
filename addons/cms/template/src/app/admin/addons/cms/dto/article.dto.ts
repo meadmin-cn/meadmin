@@ -1,7 +1,7 @@
 import { AonCmsArticle } from '@/entities/aonCmsArticle.entity.js';
 import { PickDtoType } from '@/helper/dto.js';
 import { RuleType } from '@/ruleType/index.js';
-export class AonCmsArticleSaveDto extends PickDtoType(AonCmsArticle, ['title', 'slug', 'summary', 'mdContent', 'coverUrl', 'seoTitle', 'seoKeywords', 'seoDescription', 'publishAt', 'orderNum', 'categoryId', 'topicId', 'tagIds', 'orderEnabled']) {}
+export class AonCmsArticleSaveDto extends PickDtoType(AonCmsArticle, ['title', 'slug', 'summary', 'mdContent', 'coverUrl', 'seoTitle', 'seoKeywords', 'seoDescription', 'publishAt', 'orderNum', 'categoryId', 'topicId', 'tagIds', 'orderEnabled', 'isDownload', 'fileUrl', 'fileName', 'isGallery']) {}
 export const articleSchema: ReturnType<typeof RuleType.object> = RuleType.object({
   title: RuleType.string().max(200).trim().min(1).required(),
   slug: RuleType.string()
@@ -34,4 +34,8 @@ export const articleSchema: ReturnType<typeof RuleType.object> = RuleType.object
     .max(30)
     .default([]),
   orderEnabled: RuleType.boolean().default(false),
+  isDownload: RuleType.boolean().default(false),
+  fileUrl: RuleType.string().max(1000).allow('').default(''),
+  fileName: RuleType.string().max(200).allow('').default(''),
+  isGallery: RuleType.boolean().default(false),
 }).unknown(false);

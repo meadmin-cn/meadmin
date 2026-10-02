@@ -39,4 +39,9 @@ export class AonCmsTag extends AdminBaseModel<AonCmsTag> {
   @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 0 })
   @ApiPropertyRule({ description: '排序', rule: RuleType.number().integer().min(-9999).max(9999).default(0) })
   declare orderNum: number;
+
+  // 是否热门标签（前台「热门标签」展示）
+  @Attribute({ type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false })
+  @ApiPropertyRule({ description: '是否热门标签', rule: RuleType.boolean().default(false) })
+  declare isHot: boolean;
 }

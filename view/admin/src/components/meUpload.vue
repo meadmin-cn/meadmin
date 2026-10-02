@@ -1,5 +1,7 @@
 <template>
-  <el-upload v-bind="omit($attrs, 'fileList', 'httpRequest', 'onPreview', 'onSuccess', 'onRemove')" :ref="changeRef" class="me-upload" :file-list="fileList" :http-request="handleHttpRequest" @preview="handlePictureCardPreview" @success="handleSuccess" @remove="handleRemove" @exceed="handleExceed">
+  <!-- el-upload 内部的 fileList 只在挂载时初始化，外部单向传入（如 :model-value）的文件不会刷新到列表，
+       这里用 key 在列表内容变化时重新挂载，保证回显、删除、替换都能即时生效 -->
+  <el-upload :key="listKey" v-bind="omit($attrs, 'fileList', 'httpRequest', 'onPreview', 'onSuccess', 'onRemove')" :ref="changeRef" class="me-upload" :file-list="fileList" :http-request="handleHttpRequest" @preview="handlePictureCardPreview" @success="handleSuccess" @remove="handleRemove" @exceed="handleExceed">
     <template v-for="(_, name) in $slots" #[name]="data">
       <slot :name="name" v-bind="data || {}"></slot>
     </template>
@@ -27,6 +29,8 @@ const { showSelect = true } = defineProps<{
   showSelect?: boolean;
 }>();
 const fileList = defineModel<(FileInfo & { uid?: number })[]>({ default: () => [] });
+//列表内容签名：变化后重建 el-upload，避免内部列表与外部数据不一致（见模板 key）
+const listKey = computed(() => (fileList.value ?? []).map((item) => item?.url ?? item?.name ?? '').join('|'));
 //预览图片
 const handlePictureCardPreview = (uploadFile: UploadFile) => {
   const url = (uploadFile.url ?? fileList.value.find((item) => item.uid && item.uid === uploadFile.uid)?.url) || '';

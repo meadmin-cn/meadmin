@@ -20,6 +20,12 @@ export const routes: RouteRecordRaw[] = [
         component: Cms,
         meta: { title: 'CMS', hideMenu: true },
       },
+      {
+        path: 'tag/:slug',
+        name: 'cms-tag',
+        component: Cms,
+        meta: { title: 'CMS', hideMenu: true },
+      },
       { path: 'download', name: 'cms-download', component: Download, meta: { title: '下载中心', hideMenu: true, fullWidth: true } },
       { path: 'download/:slug', name: 'cms-download-detail', component: DownloadDetail, meta: { title: '下载详情', hideMenu: true } },
       { path: 'message', name: 'cms-message', component: Message, meta: { title: '留言板', hideMenu: true } },

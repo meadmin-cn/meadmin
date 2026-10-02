@@ -48,9 +48,10 @@ test('所有写接口都有明确权限，公开端没有写接口', () => {
   assert.doesNotMatch(source, /@AdminPermission\(/);
 });
 
-test('CMS 安装 SQL 覆盖评论树、下载和留言实体', () => {
+test('CMS 安装 SQL 覆盖评论树与留言实体', () => {
   const sql = fs.readFileSync(new URL('../../../addons/cms/install.sql', import.meta.url), 'utf8');
-  for (const fragment of ['parent_id varchar(20)', '"left" integer', '"right" integer', 'CREATE TABLE IF NOT EXISTS aon_cms_download', 'CREATE TABLE IF NOT EXISTS aon_cms_message']) {
+  for (const fragment of ['parent_id varchar(20)', '"left" integer', '"right" integer', 'CREATE TABLE IF NOT EXISTS aon_cms_message']) {
     assert.ok(sql.includes(fragment), `安装 SQL 缺少: ${fragment}`);
   }
+  assert.ok(!sql.includes('CREATE TABLE IF NOT EXISTS aon_cms_download'), '安装 SQL 不应再包含下载资源表');
 });

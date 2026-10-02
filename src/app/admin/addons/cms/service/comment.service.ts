@@ -3,6 +3,7 @@ import { AonCmsArticle } from '@/entities/aonCmsArticle.entity.js';
 import { AonCmsComment } from '@/entities/aonCmsComment.entity.js';
 import { AonCmsCommentReport } from '@/entities/aonCmsCommentReport.entity.js';
 import { AonCmsReviewLog } from '@/entities/aonCmsReviewLog.entity.js';
+import { User } from '@/entities/user.entity.js';
 import { Provide } from '@midwayjs/core';
 import { BadRequestError, NotFoundError } from '@midwayjs/core/dist/error/http.js';
 import { Attributes, Op, WhereOptions } from '@sequelize/core';
@@ -16,6 +17,7 @@ export class AonCmsCommentService {
   @InjectRepository(AonCmsArticle) articleRepository: typeof AonCmsArticle;
   @InjectRepository(AonCmsCommentReport) reportRepository: typeof AonCmsCommentReport;
   @InjectRepository(AonCmsReviewLog) reviewLogRepository: typeof AonCmsReviewLog;
+  @InjectRepository(User) userRepository: typeof User;
   async list(input: CmsQueryDto) {
     const q = validateCms<CmsQueryDto>(querySchema, input);
     const where: WhereOptions<Attributes<AonCmsComment>> = {};
@@ -27,7 +29,18 @@ export class AonCmsCommentService {
       where,
       offset: (q.page - 1) * q.pageSize,
       limit: q.pageSize,
-      order: q.status === 0 ? [['reportCount', 'DESC'], ['reportedAt', 'DESC'], ['createdAt', 'DESC'], ['id', 'DESC']] : [['createdAt', 'DESC'], ['id', 'DESC']],
+      order:
+        q.status === 0
+          ? [
+              ['reportCount', 'DESC'],
+              ['reportedAt', 'DESC'],
+              ['createdAt', 'DESC'],
+              ['id', 'DESC'],
+            ]
+          : [
+              ['createdAt', 'DESC'],
+              ['id', 'DESC'],
+            ],
     });
     return { list: rows, total: count, page: q.page, pageSize: q.pageSize };
   }
@@ -36,7 +49,13 @@ export class AonCmsCommentService {
     if (!row) throw new NotFoundError('CMS 记录不存在');
     return row;
   }
-  async reports(input: CmsQueryDto) {
+  // 详情在模型基础上补齐所属文章标题，后台编辑/详情弹窗不用再拿 ID 去猜
+  async detail(id: string) {
+    const row = await this.info(id);
+    const article = await this.articleRepository.findByPk(row.articleId, { attributes: ['id', 'title', 'slug'] });
+    return { ...row.toJSON(), articleTitle: article?.title ?? '', articleSlug: article?.slug ?? '' };
+  }
+  async reports(input: CmsQueryDto): Promise<any> {
     const q = validateCms<CmsQueryDto>(querySchema, input);
     const where: WhereOptions<any> = {};
     if (q.commentId) where.commentId = q.commentId;
@@ -44,12 +63,38 @@ export class AonCmsCommentService {
       where,
       offset: (q.page - 1) * q.pageSize,
       limit: q.pageSize,
-      order: [['createdAt', 'DESC'], ['id', 'DESC']],
+      order: [
+        ['createdAt', 'DESC'],
+        ['id', 'DESC'],
+      ],
     });
-    return { list: rows, total: count, page: q.page, pageSize: q.pageSize };
+    // 举报记录只存 ID，明细页需要展示可读的文章标题与举报人昵称，这里补齐。
+    const articleIds = [...new Set(rows.map((row) => row.articleId).filter(Boolean))];
+    const userIds = [...new Set(rows.map((row) => row.userId).filter(Boolean))];
+    const [articles, users] = await Promise.all([articleIds.length ? this.articleRepository.findAll({ attributes: ['id', 'title', 'slug'], where: { id: articleIds } }) : [], userIds.length ? this.userRepository.findAll({ attributes: ['id', 'username', 'nickname'], where: { id: userIds } }) : []]);
+    const articleMap = new Map(articles.map((row) => [row.id, row]));
+    const userMap = new Map(users.map((row) => [row.id, row]));
+    const list = rows.map((row) => ({
+      id: row.id,
+      commentId: row.commentId,
+      articleId: row.articleId,
+      articleTitle: articleMap.get(row.articleId)?.title ?? '',
+      articleSlug: articleMap.get(row.articleId)?.slug ?? '',
+      userId: row.userId,
+      userName: userMap.get(row.userId)?.nickname || userMap.get(row.userId)?.username || '',
+      reason: row.reason,
+      createdAt: row.createdAt,
+    }));
+    return { list, total: count, page: q.page, pageSize: q.pageSize };
   }
   async reviewHistory(id: string) {
-    return this.reviewLogRepository.findAll({ where: { contentType: 'comment', contentId: cmsId(id) }, order: [['createdAt', 'DESC'], ['id', 'DESC']] });
+    return this.reviewLogRepository.findAll({
+      where: { contentType: 'comment', contentId: cmsId(id) },
+      order: [
+        ['createdAt', 'DESC'],
+        ['id', 'DESC'],
+      ],
+    });
   }
   private async logReview(contentId: string, fromStatus: number, toStatus: number, action: 'submit' | 'approve' | 'reject' | 'offline', reason = '') {
     if (!this.reviewLogRepository) return;

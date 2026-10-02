@@ -135,4 +135,29 @@ export class AonCmsArticle extends AdminBaseModel<AonCmsArticle> {
   @Attribute({ type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false })
   @ApiPropertyRule({ description: '是否启用订单', rule: RuleType.boolean().default(false) })
   declare orderEnabled: CreationOptional<boolean>;
+
+  // 是否可下载（下载型内容）
+  @Attribute({ type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false })
+  @ApiPropertyRule({ description: '是否可下载', rule: RuleType.boolean().default(false) })
+  declare isDownload: CreationOptional<boolean>;
+
+  // 下载文件地址
+  @Attribute({ type: DataTypes.STRING(1000), allowNull: false, defaultValue: '' })
+  @ApiPropertyRule({ description: '下载文件地址', rule: RuleType.string().max(1000).allow('').default('') })
+  declare fileUrl: string;
+
+  // 下载文件名
+  @Attribute({ type: DataTypes.STRING(200), allowNull: false, defaultValue: '' })
+  @ApiPropertyRule({ description: '下载文件名', rule: RuleType.string().max(200).allow('').default('') })
+  declare fileName: string;
+
+  // 下载次数
+  @Attribute({ type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 })
+  @ApiPropertyRule({ description: '下载次数', rule: RuleType.number().integer().min(0).default(0) })
+  declare downloads: CreationOptional<number>;
+
+  // 是否图集精选（前台「图集精选」展示）
+  @Attribute({ type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false })
+  @ApiPropertyRule({ description: '是否图集精选', rule: RuleType.boolean().default(false) })
+  declare isGallery: CreationOptional<boolean>;
 }

@@ -1,6 +1,7 @@
 import { InjectRepository, Transaction } from '@/decorators/index.js';
 import { AonCmsPage } from '@/entities/aonCmsPage.entity.js';
 import { AonCmsReviewLog } from '@/entities/aonCmsReviewLog.entity.js';
+import { SystemAdmin } from '@/entities/systemAdmin.entity.js';
 import { Provide } from '@midwayjs/core';
 import { BadRequestError, NotFoundError } from '@midwayjs/core/dist/error/http.js';
 import { Attributes, Op, WhereOptions } from '@sequelize/core';
@@ -13,6 +14,7 @@ import { canSubmitCms, cmsId, validateCms } from './guard.js';
 export class AonCmsPageService {
   @InjectRepository(AonCmsPage) repository: typeof AonCmsPage;
   @InjectRepository(AonCmsReviewLog) reviewLogRepository: typeof AonCmsReviewLog;
+  @InjectRepository(SystemAdmin) adminRepository: typeof SystemAdmin;
 
   async list(input: CmsQueryDto) {
     const q = validateCms<CmsQueryDto>(querySchema, input);
@@ -37,11 +39,39 @@ export class AonCmsPageService {
     return row;
   }
   async reviewHistory(id: string) {
-    return this.reviewLogRepository.findAll({ where: { contentType: 'page', contentId: cmsId(id) }, order: [['createdAt', 'DESC'], ['id', 'DESC']] });
+    const rows = await this.reviewLogRepository.findAll({
+      where: { contentType: 'page', contentId: cmsId(id) },
+      order: [
+        ['createdAt', 'DESC'],
+        ['id', 'DESC'],
+      ],
+    });
+    const adminIds = [...new Set(rows.map((row) => row.createdAdminId).filter(Boolean))] as string[];
+    const admins = adminIds.length ? await this.adminRepository.findAll({ where: { id: { [Op.in]: adminIds } } }) : [];
+    const adminMap = new Map(admins.map((admin) => [admin.id, admin.nickname || admin.username]));
+    return rows.map((row) => ({ ...row.toJSON(), createdAdminName: row.createdAdminId ? (adminMap.get(row.createdAdminId) ?? '') : '' }));
   }
-  private async logReview(contentId: string, fromStatus: number, toStatus: number, action: 'submit' | 'approve' | 'reject' | 'offline', reason = '') {
+  // 审核快照：记录操作当时的完整内容，便于在审核历史里「查看当时详情」
+  private buildSnapshot(row: AonCmsPage) {
+    return JSON.stringify({
+      title: row.title,
+      slug: row.slug,
+      summary: row.summary,
+      coverUrl: row.coverUrl,
+      kind: row.kind,
+      link: row.link,
+      target: row.target,
+      seoTitle: row.seoTitle,
+      seoKeywords: row.seoKeywords,
+      seoDescription: row.seoDescription,
+      publishAt: row.publishAt,
+      orderNum: row.orderNum,
+      mdContent: row.mdContent,
+    });
+  }
+  private async logReview(contentId: string, fromStatus: number, toStatus: number, action: 'submit' | 'approve' | 'reject' | 'offline', reason = '', snapshot: string | null = null) {
     if (!this.reviewLogRepository) return;
-    await this.reviewLogRepository.create({ contentId, contentType: 'page', fromStatus, toStatus, action, reason });
+    await this.reviewLogRepository.create({ contentId, contentType: 'page', fromStatus, toStatus, action, reason, snapshot });
   }
   // 所有 CMS 写入共用事务锁，保证树移动、引用检查与删除之间不出现并发穿透。
   private async lock() {
@@ -76,7 +106,7 @@ export class AonCmsPageService {
     if (!row.mdContent.trim()) throw new BadRequestError('内容不能为空');
     const fromStatus = row.status;
     const result = await row.update({ status: 1 });
-    await this.logReview(row.id, fromStatus, 1, 'submit');
+    await this.logReview(row.id, fromStatus, 1, 'submit', '', this.buildSnapshot(row));
     return result;
   }
   @Transaction()
@@ -86,7 +116,7 @@ export class AonCmsPageService {
     if (row.status !== 2) throw new BadRequestError('仅发布内容可以下线');
     const fromStatus = row.status;
     const result = await row.update({ status: 4 });
-    await this.logReview(row.id, fromStatus, 4, 'offline');
+    await this.logReview(row.id, fromStatus, 4, 'offline', '', this.buildSnapshot(row));
     return result;
   }
   @Transaction()
@@ -98,7 +128,7 @@ export class AonCmsPageService {
     if (!data.approve && !(data.reason ?? '').trim()) throw new BadRequestError('拒绝审核时必须填写原因');
     const nextStatus = data.approve ? 2 : 3;
     const result = await row.update({ status: nextStatus, publishAt: data.approve ? (row.publishAt ?? new Date()) : row.publishAt });
-    await this.logReview(row.id, 1, nextStatus, data.approve ? 'approve' : 'reject', data.reason);
+    await this.logReview(row.id, 1, nextStatus, data.approve ? 'approve' : 'reject', data.reason, this.buildSnapshot(row));
     return result;
   }
 }

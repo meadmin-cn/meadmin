@@ -2,12 +2,12 @@ import { RuleType } from '@/ruleType/index.js';
 import { Body, Controller, Get, Inject, Param, Post, Query } from '@midwayjs/core';
 import { BadRequestError, UnauthorizedError } from '@midwayjs/core/dist/error/http.js';
 import { Context } from '@midwayjs/koa';
+import { CmsPublicCommentDto } from '../../../../admin/addons/cms/dto/comment.dto.js';
 import { CmsQueryDto } from '../../../../admin/addons/cms/dto/common.dto.js';
+import type { CmsOrderCreateDto, CmsOrderQueryDto } from '../../../../admin/addons/cms/dto/order.dto.js';
 import { BaseController } from '../../../controller/base.controller.js';
 import { AonCmsPublicService } from '../service/cms.service.js';
 import { AonCmsPublicOrderService } from '../service/order.service.js';
-import type { CmsOrderCreateDto, CmsOrderQueryDto } from '../../../../admin/addons/cms/dto/order.dto.js';
-import { CmsPublicCommentDto } from '../../../../admin/addons/cms/dto/comment.dto.js';
 import { CmsNotFoundMiddleware } from './notfound.middleware.js';
 
 const slugValue = (value: string) => {
@@ -34,6 +34,10 @@ export class AonCmsPublicController extends BaseController {
   async article(@Param('slug') slug: string) {
     return this.success(await this.service.articleDetail(slugValue(slug)));
   }
+  @Post('/article/:slug/download')
+  async downloadArticle(@Param('slug') slug: string) {
+    return this.success(await this.service.downloadArticle(slugValue(slug)));
+  }
   @Get('/page/:slug')
   async page(@Param('slug') slug: string) {
     return this.success(await this.service.pageDetail(slugValue(slug)));
@@ -45,6 +49,14 @@ export class AonCmsPublicController extends BaseController {
   @Get('/navigation')
   async navigation() {
     return this.success(await this.service.navigation());
+  }
+  @Get('/home')
+  async home() {
+    return this.success(await this.service.home());
+  }
+  @Get('/article/:slug/related')
+  async relatedArticles(@Param('slug') slug: string) {
+    return this.success(await this.service.relatedArticles(slugValue(slug)));
   }
   @Get('/blocks/:position')
   async blocks(@Param('position') position: string) {

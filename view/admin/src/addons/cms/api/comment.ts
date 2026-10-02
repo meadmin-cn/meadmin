@@ -4,7 +4,7 @@ export interface CmsComment {
   author: string;
   content: string;
 }
-export type CmsCommentInfo = CmsComment & { id: string; status: number; reportCount: number; reportReason: string; reportedAt?: string | null; createdAt: string; children?: CmsCommentInfo[] };
+export type CmsCommentInfo = CmsComment & { id: string; status: number; reportCount: number; reportReason: string; reportedAt?: string | null; createdAt: string; articleTitle?: string; articleSlug?: string; children?: CmsCommentInfo[] };
 export const defaults = (): CmsComment => ({ articleId: '', author: '', content: '' });
 export const listApi = () => request<{ list: CmsCommentInfo[]; total: number }, [{ page: number; pageSize: number; keyword?: string; status?: number }]>((data) => ({ url: 'addons/cms/comment/', method: 'post', data }), { noLoading: true, clearEmpty: ['', undefined] });
 export const infoApi = () => request<CmsCommentInfo, [string]>((id) => ({ url: 'addons/cms/comment/info/' + id, method: 'get' }), { noLoading: true });
@@ -12,11 +12,15 @@ export interface CmsCommentReport {
   id: string;
   commentId: string;
   articleId: string;
+  articleTitle: string;
+  articleSlug: string;
   userId: string;
+  userName: string;
   reason: string;
   createdAt: string;
 }
 export const reportsApi = () => request<{ list: CmsCommentReport[]; total: number }, [{ page: number; pageSize: number; commentId?: string }]>((data) => ({ url: 'addons/cms/comment/reports', method: 'post', data }), { noLoading: true });
 export const saveApi = () => request<CmsCommentInfo, [string | undefined, CmsComment]>((id, data) => ({ url: 'addons/cms/comment/' + (id ? 'up/' + id : 'add'), method: 'post', data }), { success: true });
 export const deleteApi = () => request<null, [string]>((id) => ({ url: 'addons/cms/comment/del/' + id, method: 'post' }), { success: true });
-export const actionApi = () => request<CmsCommentInfo, [string, 'review', boolean?]>((id, action, approve) => ({ url: 'addons/cms/comment/' + action + '/' + id, method: 'post', data: action === 'review' ? { approve } : undefined }), { success: true });
+// 关闭（拒绝）评论时后端要求填写原因，这里与文章/单页保持一致带上 reason
+export const actionApi = () => request<CmsCommentInfo, [string, 'review', boolean?, string?]>((id, action, approve, reason = '') => ({ url: 'addons/cms/comment/' + action + '/' + id, method: 'post', data: action === 'review' ? { approve, reason } : undefined }), { success: true });

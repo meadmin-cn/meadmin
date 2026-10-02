@@ -11,9 +11,9 @@
         </div>
         <p class="comment-content">{{ comment.content }}</p>
         <div class="comment-actions">
-          <span>{{ formatDate(comment.createdAt) }}</span>
-          <button type="button" :class="{ active: replyTargetId === comment.id }" @click="$emit('reply', comment)">{{ replyTargetId === comment.id ? '取消回复' : '回复' }}</button>
-          <button type="button" @click="$emit('report', comment)">举报</button>
+          <span class="comment-time"><cms-icon name="clock" :size="13" />{{ formatDate(comment.createdAt) }}</span>
+          <button type="button" class="action-btn" :class="{ active: replyTargetId === comment.id, disabled }" :aria-disabled="disabled" @click="$emit('reply', comment)"><cms-icon name="reply" :size="14" />{{ replyTargetId === comment.id ? '取消回复' : '回复' }}</button>
+          <button type="button" class="action-btn" :class="{ disabled }" :aria-disabled="disabled" @click="$emit('report', comment)"><cms-icon name="report" :size="14" />举报</button>
         </div>
         <div v-if="replyTargetId === comment.id" class="inline-reply-editor">
           <textarea :value="replyContent" maxlength="2000" :placeholder="`回复${comment.author}...`" autofocus @input="updateReplyContent" />
@@ -37,9 +37,9 @@
           </div>
           <p class="comment-content">{{ reply.content }}</p>
           <div class="comment-actions">
-            <span>{{ formatDate(reply.createdAt) }}</span>
-            <button type="button" :class="{ active: replyTargetId === reply.id }" @click="$emit('reply', reply)">{{ replyTargetId === reply.id ? '取消回复' : '回复' }}</button>
-            <button type="button" @click="$emit('report', reply)">举报</button>
+            <span class="comment-time"><cms-icon name="clock" :size="13" />{{ formatDate(reply.createdAt) }}</span>
+            <button type="button" class="action-btn" :class="{ active: replyTargetId === reply.id, disabled }" :aria-disabled="disabled" @click="$emit('reply', reply)"><cms-icon name="reply" :size="14" />{{ replyTargetId === reply.id ? '取消回复' : '回复' }}</button>
+            <button type="button" class="action-btn" :class="{ disabled }" :aria-disabled="disabled" @click="$emit('report', reply)"><cms-icon name="report" :size="14" />举报</button>
           </div>
           <div v-if="replyTargetId === reply.id" class="inline-reply-editor">
             <textarea :value="replyContent" maxlength="2000" :placeholder="`回复${reply.author}...`" autofocus @input="updateReplyContent" />
@@ -54,15 +54,18 @@
   </div>
 </template>
 <script setup lang="ts">
+import { formatterAtExec } from '@/utils/helper';
 import { computed } from 'vue';
 import type { CmsComment } from '../../api/cms';
+import CmsIcon from '../../components/cmsIcon.vue';
 
 type CommentNode = CmsComment & { children?: CommentNode[] };
 type FlatReply = CommentNode & { replyToAuthor: string };
-const props = withDefaults(defineProps<{ comment: CommentNode; replyTargetId?: string; replyContent?: string; submitting?: boolean }>(), {
+const props = withDefaults(defineProps<{ comment: CommentNode; replyTargetId?: string; replyContent?: string; submitting?: boolean; disabled?: boolean }>(), {
   replyTargetId: '',
   replyContent: '',
   submitting: false,
+  disabled: false,
 });
 const emit = defineEmits<{
   'reply': [comment: CmsComment];
@@ -71,7 +74,7 @@ const emit = defineEmits<{
   'submit-reply': [];
 }>();
 const avatarText = (author: string) => author.trim().slice(0, 1).toUpperCase() || '访';
-const formatDate = (value: string) => value?.replace('T', ' ').slice(0, 16) ?? '';
+const formatDate = (value: string) => formatterAtExec(value, 'YYYY-MM-DD HH:mm');
 const flatReplies = computed<FlatReply[]>(() => {
   const result: FlatReply[] = [];
   const append = (nodes: CommentNode[], parentAuthor: string) => {

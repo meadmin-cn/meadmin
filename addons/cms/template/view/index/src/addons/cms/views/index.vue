@@ -657,6 +657,16 @@ const load = async () => {
       detail.value = row;
       document.title = row.seoTitle || row.title;
       if (kind.value === 'topic') {
+        // 专题可配置跳转目标（外链/文章/表单/栏目/单页），有落地地址时直接跳转，否则渲染本页内容
+        if (row.type && row.type !== 1 && row.link) {
+          if (row.type === 2) {
+            if (row.openMode === 1) window.open(row.link, '_blank', 'noopener');
+            else window.location.href = row.link;
+          } else {
+            router.replace(row.link);
+          }
+          return;
+        }
         query.topicId = row.id;
         await fetchArticles();
       }

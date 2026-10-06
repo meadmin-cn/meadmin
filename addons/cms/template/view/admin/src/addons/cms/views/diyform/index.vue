@@ -14,7 +14,7 @@
       >
       <vxe-column field="dataCount" :title="t('提交数据')" width="110"
         ><template #default="{ row }"
-          ><router-link class="data-link" :to="{ path: '/addons/cms/diyform-data', query: { formId: row.id } }">{{ row.dataCount ?? 0 }} 条</router-link></template
+          ><span class="data-link" @click="openData(row)">{{ row.dataCount ?? 0 }} 条</span></template
         ></vxe-column
       >
       <vxe-column field="isMessageBoard" :title="t('留言板')" width="100"
@@ -40,6 +40,7 @@
       >
     </me-vxe-table>
     <ActionConfirm v-model="confirmVisible" title="删除确认" question="确定要删除这个表单吗？" desc="删除后不可恢复。表单下若仍有提交数据需先清空，前台留言板使用的表单不可删除。" alert-type="error" button-type="danger" confirm-text="确认删除" :items="confirmItems" :loading="confirmActing" @confirm="runConfirm" />
+    <DataDialog v-model="dataVisible" :form="activeForm" />
   </page>
 </template>
 <script setup lang="ts">
@@ -48,23 +49,28 @@ import { useLocalesI18n } from '@/locales/i18n';
 import { formatterAt } from '@/utils/helper.js';
 import { permission } from '@/utils/permission';
 import { computed, reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
 import { deleteApi, listApi, parseFields } from '../../api/diyform';
 import { cmsDiyformUrl } from '../../components/accessUrl';
 import AccessUrl from '../../components/accessUrl.vue';
 import type { CmsConfirmItem } from '../../components/actionConfirm';
 import ActionConfirm from '../../components/actionConfirm.vue';
 import Editor from './components/editor.vue';
+import DataDialog from './components/dataDialog.vue';
 
 const { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../../lang/${locale}.json`), 'cms']);
-const router = useRouter();
 const params = reactive({ page: 1, pageSize: 20, keyword: '', status: undefined as number | undefined });
 const { data, loading, runAsync } = listApi();
 const { runAsync: del } = deleteApi();
 const search = (page = params.page, pageSize = params.pageSize) => runAsync(Object.assign(params, { page, pageSize }));
 const { open } = useActionModel(Editor);
 const openEditor = (id?: string, readonly = false) => open({ id, readonly, onSuccess: () => search() });
-const openData = (row: { id: string; title: string }) => router.push({ path: '/addons/cms/diyform-data', query: { formId: row.id } });
+// 查看数据：弹出对话框展示该表单的提交数据，而非跳转到独立页面
+const dataVisible = ref(false);
+const activeForm = ref<any>();
+const openData = (row: any) => {
+  activeForm.value = row;
+  dataVisible.value = true;
+};
 const confirmVisible = ref(false);
 const confirmRow = ref<any>();
 const confirmActing = ref(false);
@@ -102,5 +108,9 @@ await Promise.all([loadRes, search()]);
 <style scoped>
 .data-link {
   color: #2b5cff;
+  cursor: pointer;
+}
+.data-link:hover {
+  text-decoration: underline;
 }
 </style>

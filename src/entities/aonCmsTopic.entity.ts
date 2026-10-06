@@ -61,4 +61,19 @@ export class AonCmsTopic extends AdminBaseModel<AonCmsTopic> {
   @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 0 })
   @ApiPropertyRule({ description: '排序', rule: RuleType.number().integer().min(-9999).max(9999).default(0) })
   declare orderNum: number;
+
+  // 内容类型：1内置内容(本页 Markdown) 2外链 3文章 4自定义表单 5目录(栏目) 6单页
+  @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 1 })
+  @ApiPropertyRule({ description: '内容类型：1内置内容 2外链 3文章 4自定义表单 5目录 6单页', rule: RuleType.number().integer().valid(1, 2, 3, 4, 5, 6).default(1) })
+  declare type: number;
+
+  // 关联目标：类型=2 时为外链地址；类型=3/4/5/6 时为对应记录的 ID
+  @Attribute({ type: DataTypes.STRING(200), allowNull: false, defaultValue: '' })
+  @ApiPropertyRule({ description: '关联目标：外链地址或文章/表单/栏目/单页的 ID', rule: RuleType.string().max(200).allow('').default('') })
+  declare target: string;
+
+  // 外链打开方式：0当前窗口 1新窗口（仅类型=2 生效）
+  @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 0 })
+  @ApiPropertyRule({ description: '外链打开方式：0当前窗口 1新窗口', rule: RuleType.number().integer().valid(0, 1).default(0) })
+  declare targetBlank: number;
 }

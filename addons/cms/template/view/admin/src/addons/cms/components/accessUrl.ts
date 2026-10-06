@@ -40,15 +40,47 @@ export const cmsAbsoluteUrl = (link?: string | null): string => {
 /** 文章详情页：/aon/cms/article/{slug} */
 export const cmsArticleUrl = (slug?: string | null): string => (trim(slug) ? cmsFrontUrl(`${CMS_FRONT_PREFIX}/article/${slug}`) : '');
 
-/** 栏目页：跳转链接型栏目直接访问其外链，其余走栏目列表页 */
-export const cmsCategoryUrl = (row?: { slug?: string | null; type?: number | null; linkUrl?: string | null }): string => {
+/** 栏目页：外链型直接访问其外链；自定义表单/单页型需借助 id→标识映射解析真实地址；其余走栏目列表页 */
+export interface CmsCategoryUrlMaps {
+  diyname?: (id: string) => string | undefined;
+  pageSlug?: (id: string) => string | undefined;
+}
+export const cmsCategoryUrl = (row?: { slug?: string | null; type?: number | null; linkUrl?: string | null; target?: string | null }, maps?: CmsCategoryUrlMaps): string => {
   if (!row) return '';
-  if (Number(row.type) === 3) return cmsAbsoluteUrl(row.linkUrl);
+  const type = Number(row.type);
+  if (type === 3) return cmsAbsoluteUrl(row.linkUrl);
+  if (type === 4) {
+    const diyname = maps?.diyname?.(trim(row.target));
+    return diyname ? cmsDiyformUrl(diyname) : '';
+  }
+  if (type === 5) {
+    const slug = maps?.pageSlug?.(trim(row.target));
+    return slug ? cmsPageUrl(slug) : '';
+  }
   return trim(row.slug) ? cmsFrontUrl(`${CMS_FRONT_PREFIX}/category/${row.slug}`) : '';
 };
 
 /** 自定义表单页：/aon/cms/form/{diyname} */
 export const cmsDiyformUrl = (diyname?: string | null): string => (trim(diyname) ? cmsFrontUrl(`${CMS_FRONT_PREFIX}/form/${diyname}`) : '');
+
+/** 单页：/aon/cms/page/{slug} */
+export const cmsPageUrl = (slug?: string | null): string => (trim(slug) ? cmsFrontUrl(`${CMS_FRONT_PREFIX}/page/${slug}`) : '');
+
+/** 专题：/aon/cms/topic/{slug}（专题可在后台配置跳转目标，访问该地址会自动解析到目标） */
+export const cmsTopicUrl = (slug?: string | null): string => (trim(slug) ? cmsFrontUrl(`${CMS_FRONT_PREFIX}/topic/${slug}`) : '');
+
+/**
+ * 专题解析后的前台访问地址：根据专题类型返回实际落地地址。
+ * type: 1内置内容→专题页；2外链→target；3文章→文章页；4自定义表单→表单页；5目录→栏目页；6单页→单页。
+ * 仅用于后台列表展示“访问地址”，实际跳转以后台配置为准。
+ */
+export const cmsTopicResolvedUrl = (row?: { type?: number | null; slug?: string | null; target?: string | null; diyname?: string | null } | null): string => {
+  if (!row) return '';
+  const type = Number(row.type);
+  if (type === 2) return trim(row.target) ? cmsAbsoluteUrl(row.target) : '';
+  if (type === 3 || type === 4 || type === 5 || type === 6) return cmsTopicUrl(row.slug);
+  return cmsTopicUrl(row.slug);
+};
 
 /** 复制文本：优先用剪贴板 API，非安全上下文（http 访问）下退回临时输入框 */
 export const copyText = async (text: string): Promise<boolean> => {

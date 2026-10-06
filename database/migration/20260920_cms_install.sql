@@ -8,8 +8,9 @@ CREATE TABLE IF NOT EXISTS aon_cms_category (
   slug varchar(120) NOT NULL DEFAULT '' UNIQUE,
   status smallint NOT NULL DEFAULT 1 CHECK (status IN (0,1)),
   order_num smallint NOT NULL DEFAULT 0,
-  type smallint NOT NULL DEFAULT 1 CHECK (type IN (1,2,3)),
+  type smallint NOT NULL DEFAULT 1 CHECK (type IN (1,2,3,4,5)),
   link_url varchar(1000) NOT NULL DEFAULT '',
+  target varchar(200) NOT NULL DEFAULT '',
   is_nav boolean NOT NULL DEFAULT true,
   is_recommend boolean NOT NULL DEFAULT false,
   cover_url varchar(1000) NOT NULL DEFAULT '',
@@ -48,6 +49,12 @@ CREATE TABLE IF NOT EXISTS aon_cms_topic (
   cover_url varchar(1000) NOT NULL DEFAULT '',
   status smallint NOT NULL DEFAULT 1 CHECK (status IN (0,1)),
   order_num smallint NOT NULL DEFAULT 0,
+  -- 内容类型：1内置内容 2外链 3文章 4自定义表单 5目录 6单页
+  type smallint NOT NULL DEFAULT 1 CHECK (type IN (1, 2, 3, 4, 5, 6)),
+  -- 关联目标：类型=2 时为外链地址；类型=3/4/5/6 时为对应记录 ID
+  target varchar(200) NOT NULL DEFAULT '',
+  -- 外链打开方式：0当前窗口 1新窗口（仅类型=2 生效）
+  target_blank smallint NOT NULL DEFAULT 0 CHECK (target_blank IN (0, 1)),
   created_admin_id varchar(20),
   updated_admin_id varchar(20),
   created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -321,4 +328,28 @@ BEGIN
   INSERT INTO system_menu(id,title,menu_type,status,rule,order_num,path,is_link,component,hide_menu,cache,icon,affix,always_show,breadcrumb,parent_id,"left","right",lock_version,created_at,updated_at) VALUES ('820260920000000062','关闭',3,1,'aon_cms_order_close',50,'',0,'',0,0,'',0,0,1,'820260920000000054',base+123,base+124,'',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
   INSERT INTO system_menu(id,title,menu_type,status,rule,order_num,path,is_link,component,hide_menu,cache,icon,affix,always_show,breadcrumb,parent_id,"left","right",lock_version,created_at,updated_at) VALUES ('820260920000000063','删除',3,1,'aon_cms_order_del',50,'',0,'',0,0,'',0,0,1,'820260920000000054',base+125,base+126,'',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
 END $$;
+
+-- 自定义表单（留言板）后台菜单：父+5按钮，嵌套集插入到 CMS 父节点内部
+LOCK TABLE system_menu IN SHARE ROW EXCLUSIVE MODE;
+DO $$
+DECLARE cms_left bigint;
+DECLARE cms_right bigint;
+DECLARE span integer := 12;
+BEGIN
+  IF EXISTS (SELECT 1 FROM system_menu WHERE rule = 'aon_cms_diyform') THEN
+    RETURN;
+  END IF;
+  SELECT "left", "right" INTO cms_left, cms_right FROM system_menu WHERE id = '820260920000000000';
+  UPDATE system_menu SET "left" = "left" + span WHERE "left" > cms_left;
+  UPDATE system_menu SET "right" = "right" + span WHERE "right" > cms_left;
+  INSERT INTO system_menu(id, title, menu_type, status, rule, order_num, path, is_link, component, hide_menu, cache, icon, affix, always_show, breadcrumb, parent_id, "left", "right", lock_version, created_at, updated_at)
+  VALUES
+    ('820260920000000064', '自定义表单', 2, 1, 'aon_cms_diyform', 15, '/addons/cms/diyform', 0, 'addons/cms/views/diyform/index', 0, 0, '', 0, 1, 1, '820260920000000000', cms_left + 1, cms_left + 12, '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('820260920000000065', '列表', 3, 1, 'aon_cms_diyform_list', 50, '', 0, '', 0, 0, '', 0, 1, 1, '820260920000000064', cms_left + 2, cms_left + 3, '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('820260920000000066', '详情', 3, 1, 'aon_cms_diyform_info', 50, '', 0, '', 0, 0, '', 0, 1, 1, '820260920000000064', cms_left + 4, cms_left + 5, '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('820260920000000067', '新增', 3, 1, 'aon_cms_diyform_add', 50, '', 0, '', 0, 0, '', 0, 1, 1, '820260920000000064', cms_left + 6, cms_left + 7, '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('820260920000000068', '编辑', 3, 1, 'aon_cms_diyform_edit', 50, '', 0, '', 0, 0, '', 0, 1, 1, '820260920000000064', cms_left + 8, cms_left + 9, '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('820260920000000069', '删除', 3, 1, 'aon_cms_diyform_del', 50, '', 0, '', 0, 0, '', 0, 1, 1, '820260920000000064', cms_left + 10, cms_left + 11, '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+END $$;
+
 COMMIT;

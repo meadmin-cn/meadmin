@@ -12,6 +12,16 @@
       <el-form-item v-if="form.type === 3" :label="t('跳转链接')" prop="linkUrl">
         <el-input v-model="form.linkUrl" maxlength="1000" placeholder="站内路径（如 /aon/cms/download）或完整网址（如 https://www.meadmin.cn）" />
       </el-form-item>
+      <el-form-item v-else-if="form.type === 4" :label="t('选择表单')" prop="target">
+        <el-select v-model="form.target" filterable placeholder="选择自定义表单">
+          <el-option v-for="f in diyforms ?? []" :key="f.id" :value="f.id" :label="f.title" />
+        </el-select>
+      </el-form-item>
+      <el-form-item v-else-if="form.type === 5" :label="t('选择单页')" prop="target">
+        <el-select v-model="form.target" filterable placeholder="选择单页">
+          <el-option v-for="p in pages ?? []" :key="p.id" :value="p.id" :label="p.title" />
+        </el-select>
+      </el-form-item>
       <el-form-item :label="t('状态')" prop="status"
         ><el-select v-model="form.status"><el-option :value="0" :label="t('禁用')" /><el-option :value="1" :label="t('启用')" /></el-select
       ></el-form-item>
@@ -38,6 +48,8 @@ import { useLocalesI18n } from '@/locales/i18n';
 import type { FormInstance, FormRules } from 'element-plus';
 import { computed, reactive, ref, watch } from 'vue';
 import { cmsCategoryTypes, defaults, infoApi, saveApi, treeApi } from '../../../api/category';
+import { listApi as diyformListApi } from '../../../api/diyform';
+import { listApi as pageListApi } from '../../../api/page';
 
 const { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../../../lang/${locale}.json`), 'cms']);
 const props = defineProps<{ id?: string; readonly?: boolean }>();
@@ -48,6 +60,8 @@ const formEl = ref<FormInstance>();
 const { runAsync: getInfo, loading } = infoApi();
 const { runAsync: saveInfo, loading: saving } = saveApi();
 const { runAsync: getTree, data: treeData } = treeApi();
+const { runAsync: loadDiyforms, data: diyforms } = diyformListApi();
+const { runAsync: loadPages, data: pages } = pageListApi();
 // 类型说明随选择变化，帮助运营理解每种类型在前台的表现
 const typeDesc = computed(() => cmsCategoryTypes.find((item) => item.value === form.type)?.desc ?? '');
 // el-upload 通过 TransitionGroup 渲染列表，key 取 uid || name，回显文件必须带上唯一 uid 才会渲染
@@ -57,6 +71,7 @@ const rules = computed<FormRules>(() => ({
   title: [{ required: true, message: t('必填'), trigger: 'blur' }],
   slug: [{ required: true, message: t('必填'), trigger: 'blur' }],
   ...(form.type === 3 ? { linkUrl: [{ required: true, message: t('必填'), trigger: 'blur' }] } : {}),
+  ...(form.type === 4 || form.type === 5 ? { target: [{ required: true, message: t('必选'), trigger: 'change' }] } : {}),
 }));
 const save = async () => {
   if (!(await formEl.value?.validate().catch(() => false))) return;
@@ -74,7 +89,7 @@ watch(
       const data = await getInfo(id);
       for (const key of Object.keys(form) as Array<keyof typeof form>) Object.assign(form, { [key]: data[key] });
     }
-    await getTree();
+    await Promise.all([getTree(), loadDiyforms({ page: 1, pageSize: 1000, status: 1 }), loadPages({ page: 1, pageSize: 1000, status: 2 })]);
   },
   { immediate: true },
 );

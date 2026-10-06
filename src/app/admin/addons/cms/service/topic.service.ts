@@ -46,7 +46,7 @@ export class AonCmsTopicService {
     const duplicate = await this.repository.findOne({ where: { slug: data.slug, ...(id ? { id: { [Op.ne]: id } } : {}) } });
     if (duplicate) throw new BadRequestError('SEO 标识已存在');
 
-    const values = { title: data.title, slug: data.slug, summary: data.summary, mdContent: data.mdContent, coverUrl: data.coverUrl, status: data.status, orderNum: data.orderNum };
+    const values = { title: data.title, slug: data.slug, summary: data.summary, mdContent: data.mdContent, coverUrl: data.coverUrl, status: data.status, orderNum: data.orderNum, type: data.type, target: data.target, targetBlank: data.targetBlank };
     if (!row) return this.repository.create(values);
     return row.update(values);
   }

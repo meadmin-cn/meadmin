@@ -5,6 +5,9 @@
     <el-form ref="formEl" :model="form" :rules="rules" :disabled="readonly || loading" label-position="top">
       <el-form-item :label="t('标题')" prop="title"><el-input v-model="form.title" /></el-form-item>
       <el-form-item :label="t('SEO 标识')" prop="slug"><el-input v-model="form.slug" /></el-form-item>
+      <el-form-item :label="t('前台访问地址')" v-if="form.slug">
+        <AccessUrl :url="cmsPageUrl(form.slug)" />
+      </el-form-item>
       <el-form-item :label="t('摘要')" prop="summary"><el-input v-model="form.summary" type="textarea" :rows="3" /></el-form-item>
       <el-form-item :label="t('Markdown 内容')" prop="mdContent"><el-input v-model="form.mdContent" type="textarea" :rows="14" maxlength="200000" /><cms-preview :content="form.mdContent" /></el-form-item>
       <el-form-item :label="t('封面')" prop="coverUrl">
@@ -30,6 +33,8 @@ import { useLocalesI18n } from '@/locales/i18n';
 import type { FormInstance, FormRules } from 'element-plus';
 import { reactive, ref, watch } from 'vue';
 import { defaults, infoApi, saveApi } from '../../../api/page';
+import { cmsPageUrl } from '../../../components/accessUrl';
+import AccessUrl from '../../../components/accessUrl.vue';
 import CmsPreview from '../../../components/cmsPreview.vue';
 
 const { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../../../lang/${locale}.json`), 'cms']);

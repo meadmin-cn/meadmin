@@ -22,6 +22,12 @@ export interface CmsContent {
   seoTitle?: string;
   seoKeywords?: string;
   seoDescription?: string;
+  /** 专题内容类型（仅 kind=topic 时有效）：1内置内容 2外链 3文章 4自定义表单 5目录 6单页 */
+  type?: number;
+  /** 专题解析后的前台落地地址（仅 kind=topic 且 type≠1 时非空） */
+  link?: string;
+  /** 外链打开方式：0当前窗口 1新窗口 */
+  openMode?: number;
 }
 export interface CmsNavigation {
   categories: CmsCategory[];
@@ -37,19 +43,27 @@ export interface CmsOption {
   kind?: number;
   link?: string;
   target?: number;
+  /** 专题内容类型：1内置内容 2外链 3文章 4自定义表单 5目录 6单页 */
+  type?: number;
+  /** 专题解析后的前台落地地址（外链/文章/表单/栏目/单页） */
+  openMode?: number;
 }
 /** 栏目类型：1文章列表 2目录 3跳转链接，决定前台头部菜单的跳转行为 */
-export const CMS_CATEGORY_TYPE = { list: 1, channel: 2, link: 3 } as const;
+export const CMS_CATEGORY_TYPE = { list: 1, channel: 2, link: 3, form: 4, page: 5 } as const;
 export interface CmsCategory {
   id: string;
   title: string;
   slug: string;
   parentId?: string | null;
   children?: CmsCategory[];
-  /** 类型：1文章列表 2目录 3跳转链接 */
+  /** 类型：1文章列表 2目录 3外链 4自定义表单 5单页 */
   type?: number;
   /** 跳转链接，仅类型=3 时使用 */
   linkUrl?: string;
+  /** 解析后的前台落地地址（后端按类型生成：1/2 栏目页、3 外链、4 表单页、5 单页） */
+  link?: string;
+  /** 外链打开方式：0当前窗口 1新窗口（仅类型=3） */
+  openMode?: number;
   /** 是否显示在前台头部菜单 */
   isNav?: boolean;
   isRecommend?: boolean;

@@ -16,6 +16,11 @@
       >
       <vxe-column field="publishAt" :title="t('发布时间')" min-width="180" :formatter="formatterAt" />
       <vxe-column field="createdAt" :title="t('创建时间')" min-width="180" :formatter="formatterAt" />
+      <!-- 前台访问地址：已发布单页可在前台 /aon/cms/page/{slug} 直接访问 -->
+      <vxe-column :title="t('访问地址')" min-width="210" fixed="right"
+        ><template #default="{ row }"><AccessUrl :url="cmsPageUrl(row.slug)" :muted="row.status !== 2" /></template
+      ></vxe-column
+      >
       <vxe-column :title="t('操作')" fixed="right" min-width="320"
         ><template #default="{ row }">
           <el-button v-if="permission('aon_cms_page_info') || permission('aon_cms_page_review')" link type="primary" :disabled="row.status !== 1 || acting" @click="openReview(row.id)">{{ t('审核') }}</el-button>
@@ -83,6 +88,8 @@ import { computed, reactive, ref } from 'vue';
 import { actionApi, deleteApi, infoApi, listApi, parseSnapshot, reviewHistoryApi } from '../../api/page';
 import type { CmsConfirmAlertType, CmsConfirmButtonType, CmsConfirmItem } from '../../components/actionConfirm';
 import ActionConfirm from '../../components/actionConfirm.vue';
+import { cmsPageUrl } from '../../components/accessUrl';
+import AccessUrl from '../../components/accessUrl.vue';
 import Detail from './components/detail.vue';
 import Editor from './components/editor.vue';
 import PageInfo from './components/pageInfo.vue';

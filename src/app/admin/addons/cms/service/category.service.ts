@@ -1,6 +1,8 @@
 import { InjectRepository, Transaction } from '@/decorators/index.js';
 import { AonCmsArticle } from '@/entities/aonCmsArticle.entity.js';
 import { AonCmsCategory } from '@/entities/aonCmsCategory.entity.js';
+import { AonCmsDiyform } from '@/entities/aonCmsDiyform.entity.js';
+import { AonCmsPage } from '@/entities/aonCmsPage.entity.js';
 import { Provide } from '@midwayjs/core';
 import { BadRequestError, NotFoundError } from '@midwayjs/core/dist/error/http.js';
 import { Attributes, Op, WhereOptions } from '@sequelize/core';
@@ -12,6 +14,8 @@ import { assertCmsParent, cmsId, validateCms } from './guard.js';
 export class AonCmsCategoryService {
   @InjectRepository(AonCmsCategory) repository: typeof AonCmsCategory;
   @InjectRepository(AonCmsArticle) articleRepository: typeof AonCmsArticle;
+  @InjectRepository(AonCmsDiyform) diyformRepository: typeof AonCmsDiyform;
+  @InjectRepository(AonCmsPage) pageRepository: typeof AonCmsPage;
   async list(input: CmsQueryDto) {
     const q = validateCms<CmsQueryDto>(querySchema, input);
     const where: WhereOptions<Attributes<AonCmsCategory>> = {};
@@ -47,10 +51,19 @@ export class AonCmsCategoryService {
     if (duplicate) throw new BadRequestError('SEO 标识已存在');
     // 跳转链接栏目必须给出目标地址，否则前台菜单点击后无处可去。
     if (data.type === 3 && !data.linkUrl) throw new BadRequestError('跳转链接类型的栏目必须填写跳转链接');
+    if ((data.type === 4 || data.type === 5) && !data.target) throw new BadRequestError('请选择跳转目标（自定义表单 / 单页）');
+    if (data.type === 4) {
+      const form = await this.diyformRepository.findOne({ where: { id: data.target, status: 1 } });
+      if (!form) throw new BadRequestError('所选自定义表单不存在或未启用');
+    }
+    if (data.type === 5) {
+      const page = await this.pageRepository.findOne({ where: { id: data.target, status: 2 } });
+      if (!page) throw new BadRequestError('所选单页不存在或未发布');
+    }
     const nodes = await this.repository.findAll({ attributes: ['id', 'parentId'] });
     assertCmsParent(id, data.parentId, nodes);
 
-    const values = { title: data.title, slug: data.slug, status: data.status, orderNum: data.orderNum, parentId: data.parentId, type: data.type, linkUrl: data.type === 3 ? data.linkUrl : '', isNav: data.isNav, isRecommend: data.isRecommend, coverUrl: data.coverUrl };
+    const values = { title: data.title, slug: data.slug, status: data.status, orderNum: data.orderNum, parentId: data.parentId, type: data.type, linkUrl: data.type === 3 ? data.linkUrl : '', target: data.type === 4 || data.type === 5 ? data.target : '', isNav: data.isNav, isRecommend: data.isRecommend, coverUrl: data.coverUrl };
     if (!row) return this.repository.create(values);
     return row.update(values);
   }

@@ -14,8 +14,15 @@
           ><el-tag>{{ t(states[row.status] ?? '') }}</el-tag></template
         ></vxe-column
       >
-
+      <vxe-column field="type" :title="t('内容类型')" width="130"
+        ><template #default="{ row }"><el-tag :type="row.type === 1 ? 'info' : 'warning'" effect="light" disable-transitions>{{ topicTypeLabel(row.type) }}</el-tag></template></vxe-column
+      >
       <vxe-column field="createdAt" :title="t('创建时间')" min-width="180" :formatter="formatterAt" />
+      <!-- 前台访问地址：每个专题都有独立前台入口，打开后按后台配置跳转目标 -->
+      <vxe-column :title="t('访问地址')" min-width="210" fixed="right"
+        ><template #default="{ row }"><AccessUrl :url="cmsTopicUrl(row.slug)" :muted="row.status !== 1" /></template
+      ></vxe-column
+      >
       <vxe-column :title="t('操作')" fixed="right" min-width="300"
         ><template #default="{ row }">
           <el-button v-if="permission('aon_cms_topic_info')" link @click="openEditor(row.id, true)">{{ t('详情') }}</el-button>
@@ -36,11 +43,23 @@ import { formatterAt } from '@/utils/helper.js';
 import { permission } from '@/utils/permission';
 import { computed, reactive, ref } from 'vue';
 import { deleteApi, listApi } from '../../api/topic';
+import { cmsTopicUrl } from '../../components/accessUrl';
+import AccessUrl from '../../components/accessUrl.vue';
 import type { CmsConfirmItem } from '../../components/actionConfirm';
 import ActionConfirm from '../../components/actionConfirm.vue';
 import Editor from './components/editor.vue';
 const { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../../lang/${locale}.json`), 'cms']);
 const states = ['禁用', '启用'];
+// 专题内容类型：1内置内容 2外链 3文章 4自定义表单 5目录 6单页
+const topicTypes: Array<{ value: number; label: string }> = [
+  { value: 1, label: '内置内容' },
+  { value: 2, label: '外链' },
+  { value: 3, label: '文章' },
+  { value: 4, label: '自定义表单' },
+  { value: 5, label: '目录' },
+  { value: 6, label: '单页' },
+];
+const topicTypeLabel = (type?: number): string => topicTypes.find((item) => item.value === type)?.label ?? '内置内容';
 const params = reactive({ page: 1, pageSize: 20, keyword: '', status: undefined as number | undefined });
 const { data, loading, runAsync } = listApi();
 const { runAsync: del } = deleteApi();

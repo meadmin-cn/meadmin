@@ -40,9 +40,9 @@ export class AonCmsCategory extends AdminTreeModel<AonCmsCategory> {
   @ApiPropertyRule({ description: '排序', rule: RuleType.number().integer().min(-9999).max(9999).default(0) })
   declare orderNum: number;
 
-  // 栏目类型：1文章列表 2目录 3跳转链接（决定前台头部菜单的跳转行为）
+  // 栏目类型：1文章列表 2目录 3外链 4自定义表单 5单页（决定前台头部菜单的跳转行为）
   @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 1 })
-  @ApiPropertyRule({ description: '类型：1文章列表 2目录 3跳转链接', rule: RuleType.number().integer().valid(1, 2, 3).default(1) })
+  @ApiPropertyRule({ description: '类型：1文章列表 2目录 3外链 4自定义表单 5单页', rule: RuleType.number().integer().valid(1, 2, 3, 4, 5).default(1) })
   declare type: number;
 
   // 跳转链接（类型=3 跳转链接 时生效，支持外链与站内相对路径）
@@ -56,6 +56,11 @@ export class AonCmsCategory extends AdminTreeModel<AonCmsCategory> {
       .default(''),
   })
   declare linkUrl: string;
+
+  // 跳转目标：类型=4 自定义表单时存表单 id；类型=5 单页时存单页 id（外链类型仍用 linkUrl）
+  @Attribute({ type: DataTypes.STRING(200), allowNull: false, defaultValue: '' })
+  @ApiPropertyRule({ description: '跳转目标：表单/单页 id（类型 4/5 使用）', rule: RuleType.string().max(200).allow('').default('') })
+  declare target: string;
 
   // 是否在前台头部导航显示（前台头部菜单完全由栏目驱动）
   @Attribute({ type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true })

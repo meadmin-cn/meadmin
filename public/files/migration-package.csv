@@ -1,0 +1,4 @@
+﻿version,change,rollback
+20260920,"Create CMS content tables",drop migration objects
+20261008,"Add category content links",restore previous category links
+current,"Run migrations before demo data",backup database first

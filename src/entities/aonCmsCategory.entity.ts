@@ -40,9 +40,9 @@ export class AonCmsCategory extends AdminTreeModel<AonCmsCategory> {
   @ApiPropertyRule({ description: '排序', rule: RuleType.number().integer().min(-9999).max(9999).default(0) })
   declare orderNum: number;
 
-  // 栏目类型：1文章列表 2目录 3外链 4自定义表单 5单页（决定前台头部菜单的跳转行为）
+  // 栏目类型：1文章列表 2目录 3外链 4自定义表单 5单页 6下载列表（决定前台头部菜单的跳转行为）
   @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 1 })
-  @ApiPropertyRule({ description: '类型：1文章列表 2目录 3外链 4自定义表单 5单页', rule: RuleType.number().integer().valid(1, 2, 3, 4, 5).default(1) })
+  @ApiPropertyRule({ description: '类型：1文章列表 2目录 3外链 4自定义表单 5单页 6下载列表', rule: RuleType.number().integer().valid(1, 2, 3, 4, 5, 6).default(1) })
   declare type: number;
 
   // 跳转链接（类型=3 跳转链接 时生效，支持外链与站内相对路径）

@@ -103,4 +103,15 @@ export class AonCmsPage extends AdminBaseModel<AonCmsPage> {
   @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 0 })
   @ApiPropertyRule({ description: '排序', rule: RuleType.number().integer().min(-9999).max(9999).default(0) })
   declare orderNum: number;
+
+  // 所属栏目：仅可关联「5 单页」型栏目，与文章.categoryId 同一套逻辑（栏目.target 仍表示菜单跳转目标）
+  @Attribute({ type: DataTypes.STRING(20), allowNull: true, defaultValue: null })
+  @ApiPropertyRule({
+    description: '所属栏目（仅单页型栏目）',
+    rule: RuleType.string()
+      .pattern(/^[0-9]{1,20}$/)
+      .allow(null)
+      .default(null),
+  })
+  declare categoryId: string | null;
 }

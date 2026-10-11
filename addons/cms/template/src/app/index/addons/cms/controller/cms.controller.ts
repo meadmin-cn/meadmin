@@ -1,3 +1,4 @@
+import { IndexPermission } from '@/decorators/index.js';
 import { RuleType } from '@/ruleType/index.js';
 import { Body, Controller, Get, Inject, Param, Post, Query } from '@midwayjs/core';
 import { BadRequestError, UnauthorizedError } from '@midwayjs/core/dist/error/http.js';
@@ -83,5 +84,10 @@ export class AonCmsPublicController extends BaseController {
   @Get('/orders/query')
   async queryOrder(@Query() query: CmsOrderQueryDto) {
     return this.success(await this.orderService.query(query));
+  }
+  @Get('/orders/mine')
+  @IndexPermission()
+  async myOrders(@Query() query: { page?: number; pageSize?: number }) {
+    return this.success(await this.orderService.listMine(query));
   }
 }

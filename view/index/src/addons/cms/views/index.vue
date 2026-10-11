@@ -4,15 +4,17 @@
       <el-alert v-if="failed" title="加载失败" type="error" :closable="false"><el-button @click="load">重试</el-button></el-alert>
 
       <template v-else-if="showDetail">
-        <div v-if="detail" class="detail-container" :class="{ 'has-side': kind === 'article' }">
-          <router-link to="/aon/cms" class="breadcrumb-link">返回内容中心</router-link>
+        <div v-if="detail" class="detail-container">
+          <router-link to="/" class="breadcrumb-link">返回首页</router-link>
           <article class="detail-article">
             <h1 class="detail-title">{{ detail.title }}</h1>
             <div class="detail-meta">
               <span class="meta-item"><cms-icon name="calendar" :size="15" />{{ formatDate(detail.publishAt) }}</span
-              ><span class="meta-item"><cms-icon name="view" :size="15" />浏览 {{ detail.views }}</span
-              ><span class="meta-item"><cms-icon name="like" :size="15" />点赞 {{ detail.likes }}</span
-              ><span class="meta-item"><cms-icon name="comment" :size="15" />评论 {{ detail.comments }}</span>
+              ><template v-if="kind === 'article'"
+                ><span class="meta-item"><cms-icon name="view" :size="15" />浏览 {{ detail.views }}</span
+                ><span class="meta-item"><cms-icon name="like" :size="15" />点赞 {{ detail.likes }}</span
+                ><span class="meta-item"><cms-icon name="comment" :size="15" />评论 {{ detail.comments }}</span></template
+              >
             </div>
             <img v-if="safeUrl(detail.coverUrl)" class="detail-cover" :src="detail.coverUrl" :alt="detail.title" />
             <p v-if="detail.summary" class="detail-summary">{{ detail.summary }}</p>
@@ -43,7 +45,7 @@
               <span class="article-total">友善交流，理性发言</span>
             </div>
             <!-- 未登录时评论区保持可见但整体置灰，点击后弹出登录引导，避免入口消失 -->
-            <div class="comment-editor" :class="{ 'is-locked': !isLoggedIn }" @click.capture="onCommentAreaClick">
+            <div class="comment-editor">
               <div class="comment-editor-identity">
                 <div class="comment-editor-avatar">
                   <img v-if="isLoggedIn && currentUserAvatar" :src="currentUserAvatar" :alt="currentUserName" /><span v-else>{{ isLoggedIn ? currentUserName.slice(0, 1) || '我' : '访' }}</span>
@@ -57,63 +59,10 @@
                 <el-button v-else type="primary" plain @click="requireCommentLogin">登录</el-button>
               </div>
             </div>
-            <div v-if="commentTree.length" class="comment-list" :class="{ 'is-locked': !isLoggedIn }"><CommentTree v-for="comment in commentTree" :key="comment.id" :comment="comment" :reply-target-id="replyTarget?.id" :reply-content="replyContent" :submitting="commentSubmitting" :disabled="!isLoggedIn" @reply="startReply" @report="openReport" @update:reply-content="replyContent = $event" @submit-reply="submitReply" /></div>
-            <div v-else class="comment-empty"><strong>还没有评论</strong><span>来发表第一条友善的评论吧</span></div>
-            <el-pagination v-if="comments?.total" v-model:current-page="commentPage" :page-size="comments.pageSize || 3" :total="comments.total" layout="prev, pager, next" class="comment-pagination" @current-change="loadComments" />
-          </section>
-          <!-- 详情页右侧评论列表：只展示摘要，点击后弹窗展开完整评论列表组件 -->
-          <section v-if="kind === 'article'" class="detail-side-card">
-            <div class="section-header">
-              <h3 class="section-title">
-                评论 <span class="count-badge">{{ comments?.total ?? 0 }}</span>
-              </h3>
-              <button class="text-action" @click="() => openCommentDialog()">全部评论</button>
-            </div>
-            <p class="detail-side-hint">点击任意一条评论可查看对应内容信息与完整讨论。</p>
-            <div v-if="commentPreview.length" class="comment-preview-list">
-              <button v-for="comment in commentPreview" :key="comment.id" class="comment-preview" @click="openCommentDialog(comment)">
-                <span class="comment-preview-avatar">{{ (comment.author || '匿').slice(0, 1) }}</span>
-                <span class="comment-preview-body">
-                  <span class="comment-preview-top"
-                    ><strong>{{ comment.author }}</strong
-                    ><small>{{ formatDate(comment.createdAt) }}</small></span
-                  >
-                  <span class="comment-preview-text">{{ comment.content }}</span>
-                  <span v-if="comment.reportCount" class="comment-preview-flag">已举报 {{ comment.reportCount }} 次</span>
-                </span>
-              </button>
-            </div>
-            <div v-else class="comment-preview-empty"><strong>还没有评论</strong><span>点击下方按钮成为第一个评论者</span></div>
-            <div class="detail-side-footer">
-              <el-button v-if="isLoggedIn" :disabled="!commentForm.content.trim()" @click="() => openCommentDialog()">发表评论</el-button>
-              <el-button v-else @click="requireCommentLogin">登录后参与评论</el-button>
-            </div>
-          </section>
-
-          <!-- 评论弹窗：复用下方评论列表组件，并在顶部展示当前文章的核心信息 -->
-          <el-dialog v-model="commentDialog" title="评论列表" width="calc(100% - 32px)" style="max-width: 720px" class="comment-dialog" @closed="closeCommentDialog">
-            <div class="comment-article-card">
-              <img v-if="safeUrl(detail.coverUrl)" class="comment-article-cover" :src="detail.coverUrl" :alt="detail.title" />
-              <div class="comment-article-body">
-                <router-link class="comment-article-title" :to="`/aon/cms/article/${detail.slug}`" @click="commentDialog = false">{{ detail.title }}</router-link>
-                <div class="comment-article-meta">
-                  <span v-if="activeCategory" class="comment-article-cat"><cms-icon name="folder" :size="13" />{{ activeCategory.title }}</span>
-                  <span v-for="tag in articleTags(detail).slice(0, 2)" :key="tag.id" class="comment-article-tag">#{{ tag.title }}</span>
-                  <span class="comment-article-stat"><cms-icon name="view" :size="13" />{{ detail.views }}</span>
-                  <span class="comment-article-stat"><cms-icon name="like" :size="13" />{{ detail.likes }}</span>
-                  <span class="comment-article-stat"><cms-icon name="comment" :size="13" />{{ comments?.total ?? detail.comments ?? 0 }}</span>
-                </div>
-                <p v-if="detail.summary" class="comment-article-summary" :title="detail.summary">{{ detail.summary }}</p>
-              </div>
-            </div>
-            <div class="comment-dialog-toolbar">
-              <span>共 {{ comments?.total ?? 0 }} 条评论</span><span>友善交流，理性发言</span>
-            </div>
             <div v-if="commentTree.length" class="comment-list"><CommentTree v-for="comment in commentTree" :key="comment.id" :comment="comment" :reply-target-id="replyTarget?.id" :reply-content="replyContent" :submitting="commentSubmitting" @reply="startReply" @report="openReport" @update:reply-content="replyContent = $event" @submit-reply="submitReply" /></div>
             <div v-else class="comment-empty"><strong>还没有评论</strong><span>来发表第一条友善的评论吧</span></div>
             <el-pagination v-if="comments?.total" v-model:current-page="commentPage" :page-size="comments.pageSize || 3" :total="comments.total" layout="prev, pager, next" class="comment-pagination" @current-change="loadComments" />
-          </el-dialog>
-
+          </section>
           <section v-if="kind === 'article' && relatedList.length" class="related-section panel">
             <div class="section-header">
               <h3 class="section-title">相关推荐</h3>
@@ -173,19 +122,21 @@
 
       <template v-else>
         <section class="home-container" :class="{ 'is-list': isListPage }">
-          <el-carousel v-if="slides.length && !isListPage" height="300px" class="hero-carousel">
-            <el-carousel-item v-for="slide in slides" :key="slide.id">
-              <component :is="safeUrl(slide.link) ? 'a' : 'div'" :href="safeUrl(slide.link)" class="carousel-link" :title="blockTitle(slide)">
-                <img v-if="safeUrl(slide.coverUrl)" :src="slide.coverUrl" :alt="slide.title" class="carousel-image" />
-                <div class="carousel-overlay">
-                  <div class="carousel-content">
-                    <span class="carousel-kicker">精选内容</span>
-                    <h2>{{ slide.title }}</h2>
+          <div v-if="slides.length && !isListPage" class="hero-carousel">
+            <div class="cms-carousel">
+              <div v-for="(slide, index) in slides" :key="slide.id" class="cms-carousel-slide" :class="{ 'is-active': activeSlide === index }" :aria-hidden="activeSlide !== index">
+                <component :is="safeUrl(slide.link) ? 'a' : 'div'" :href="safeUrl(slide.link)" class="carousel-link" :title="blockTitle(slide)">
+                  <img v-if="safeUrl(slide.coverUrl)" :src="slide.coverUrl" :alt="slide.title" class="carousel-image" />
+                  <div class="carousel-overlay">
+                    <div class="carousel-content">
+                      <span class="carousel-kicker">精选内容</span>
+                      <h2>{{ slide.title }}</h2>
+                    </div>
                   </div>
-                </div>
-              </component>
-            </el-carousel-item>
-          </el-carousel>
+                </component>
+              </div>
+            </div>
+          </div>
 
           <div v-if="homeBlocks.length && !isListPage" class="block-stream">
             <section v-for="block in homeBlocks" :key="block.id" class="panel block-panel" :class="{ 'has-cover': safeUrl(block.coverUrl) }" :title="blockTitle(block)">
@@ -212,44 +163,40 @@
                   <span class="article-total">精选 {{ recommendCategories.length }} 个栏目</span>
                 </div>
                 <div class="cat-grid">
-                  <router-link v-for="cat in recommendCategories" :key="cat.id" :to="`/aon/cms/category/${cat.slug}`" class="cat-card" tabindex="0">
-                    <img v-if="safeUrl(cat.coverUrl)" :src="cat.coverUrl" :alt="cat.title" />
-                    <div class="cat-body">
-                      <h4>{{ cat.title }}</h4>
-                      <span>进入栏目 →</span>
-                    </div>
-                  </router-link>
-                </div>
-              </section>
-              <section v-if="!isTagPage && gallery.length && !isListPage" class="panel gallery-section">
-                <div class="section-header">
-                  <h3 class="section-title">图集精选</h3>
-                  <span class="article-total">精选 {{ gallery.length }} 组</span>
-                </div>
-                <div class="gallery-grid">
-                  <div v-for="item in gallery" :key="item.id" class="gallery-item" tabindex="0" @click="handleArticleClick(item)" @keyup.enter="handleArticleClick(item)">
-                    <div class="gallery-cover">
-                      <img v-if="hasGalleryCover(item)" :src="item.coverUrl" :alt="item.title" loading="lazy" @error="markGalleryCoverFailed(item.id)" />
-                      <span v-else class="gallery-fallback">{{ item.title.slice(0, 1) }}</span>
-                      <span class="gallery-overlay"><span>查看图集 →</span></span>
-                    </div>
-                    <h4>{{ item.title }}</h4>
-                  </div>
+                  <template v-for="cat in recommendCategories" :key="cat.id">
+                    <a v-if="cat.type === 3" :href="cat.link" :target="cat.openMode === 1 ? '_blank' : undefined" rel="noopener" class="cat-card" tabindex="0">
+                      <img v-if="safeUrl(cat.coverUrl)" :src="cat.coverUrl" :alt="cat.title" />
+                      <div class="cat-body">
+                        <h4>{{ cat.title }}</h4>
+                        <span>进入栏目 →</span>
+                      </div>
+                    </a>
+                    <router-link v-else-if="cat.link" :to="cat.link" class="cat-card" tabindex="0">
+                      <img v-if="safeUrl(cat.coverUrl)" :src="cat.coverUrl" :alt="cat.title" />
+                      <div class="cat-body">
+                        <h4>{{ cat.title }}</h4>
+                        <span>进入栏目 →</span>
+                      </div>
+                    </router-link>
+                  </template>
                 </div>
               </section>
               <section class="panel list-panel">
                 <div class="articles-header">
-                  <nav v-if="isListPage" class="me-breadcrumb" aria-label="面包屑">
-                    <router-link to="/">首页</router-link>
-                    <span class="me-breadcrumb-sep">/</span>
-                    <router-link v-if="isTagPage" to="/aon/cms">产品动态</router-link>
-                    <router-link v-else-if="parentCategory" :to="`/aon/cms/category/${parentCategory.slug}`">{{ parentCategory.title }}</router-link>
-                    <span v-else class="me-breadcrumb-plain">产品动态</span>
-                    <span class="me-breadcrumb-sep">/</span>
-                    <span class="me-breadcrumb-current">{{ isTagPage ? '标签：' + (tagPageTag?.title ?? '') : (activeCategory?.title ?? '全部内容') }}</span>
-                  </nav>
-                  <div class="articles-heading">
-                    <span class="article-total">共 {{ articles?.total ?? 0 }} 篇</span>
+                  <!-- 面包屑与篇数同处一行：把栏目层级与内容规模压到同一条基线上，避免头部占用过多竖向空间 -->
+                  <div class="articles-topline">
+                    <nav v-if="isListPage" class="me-breadcrumb" aria-label="面包屑">
+                      <router-link to="/">首页</router-link>
+                      <span class="me-breadcrumb-sep">/</span>
+                      <template v-if="parentCategory">
+                        <router-link :to="`/aon/cms/category/${parentCategory.slug}`">{{ parentCategory.title }}</router-link>
+                        <span class="me-breadcrumb-sep">/</span>
+                      </template>
+                      <span class="me-breadcrumb-current">{{ breadcrumbCurrent }}</span>
+                    </nav>
+                    <div class="articles-heading">
+                      <span class="article-total">共 {{ articles?.total ?? 0 }} 篇</span>
+                    </div>
                   </div>
                   <div class="filter-bar">
                     <div class="search-field">
@@ -308,10 +255,16 @@
               </section>
               <section v-if="topCategories.length" class="sidebar-card">
                 <h3 class="sidebar-title">栏目导航</h3>
-                <router-link v-for="cat in topCategories" :key="cat.id" class="category-item" :to="`/aon/cms/category/${cat.slug}`" tabindex="0">
-                  <span>{{ cat.title }}</span
-                  ><span>进入</span>
-                </router-link>
+                <template v-for="cat in topCategories" :key="cat.id">
+                  <a v-if="cat.type === 3" class="category-item" :href="cat.link" :target="cat.openMode === 1 ? '_blank' : undefined" rel="noopener" tabindex="0">
+                    <span>{{ cat.title }}</span
+                    ><span>进入</span>
+                  </a>
+                  <router-link v-else class="category-item" :to="cat.link || `/aon/cms/category/${cat.slug}`" tabindex="0">
+                    <span>{{ cat.title }}</span
+                    ><span>进入</span>
+                  </router-link>
+                </template>
               </section>
               <section v-if="displayTags.length" class="sidebar-card">
                 <h3 class="sidebar-title">热门标签</h3>
@@ -339,7 +292,7 @@ import { PageEnum } from '@/dict/pageEnum';
 import { useUserStore } from '@/store';
 import { formatterAtExec } from '@/utils/helper';
 import { ElMessage } from 'element-plus';
-import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { CmsComment, CmsContent, CmsOption, CmsOrder, CmsQuery } from '../api/cms';
 import { articleDownloadApi, articlesApi, blocksApi, commentsApi, createCommentApi, createOrderApi, detailApi, homeApi, navigationApi, queryOrderApi, relatedApi, reportCommentApi } from '../api/cms';
@@ -410,27 +363,6 @@ const activeCategory = ref<CmsOption>();
 // 面包屑中的上级栏目（如「产品动态」），仅栏目页存在
 const parentCategory = ref<{ title: string; slug: string }>();
 const commentPage = ref(1);
-// 评论弹窗：详情页右侧评论列表点击后引用同一套评论列表组件
-const commentDialog = ref(false);
-const commentPreview = computed(() => (comments.value?.list ?? []).slice(0, 4));
-const openCommentDialog = async (comment?: CmsComment) => {
-  if (!isLoggedIn.value) return requireCommentLogin();
-  // 点击某条评论时若它不在当前页，先跳到所在页再打开弹窗
-  const index = comment ? (comments.value?.list ?? []).findIndex((item) => item.id === comment.id) : -1;
-  if (index >= 0) {
-    const size = comments.value?.pageSize || 3;
-    const target = Math.floor(index / size) + 1;
-    if (target !== commentPage.value) {
-      commentPage.value = target;
-      await loadComments();
-    }
-  }
-  commentDialog.value = true;
-};
-const closeCommentDialog = () => {
-  replyTarget.value = undefined;
-  replyContent.value = '';
-};
 const sortOptions: Array<{ label: string; value: NonNullable<CmsQuery['sortBy']> }> = [
   { label: '最新发布', value: 'latest' },
   { label: '点赞最多', value: 'likes' },
@@ -441,30 +373,27 @@ const kind = computed(() => route.params.kind as 'article' | 'page' | 'topic' | 
 const slug = computed(() => String(route.params.slug ?? ''));
 // 是否处于「详情」视图：由路由决定，而非由数据是否就绪决定，避免详情页跳转时短暂回落首页
 const showDetail = computed(() => Boolean(kind.value && slug.value));
-// 图集封面加载失败兜底（与下载中心一致）
-const galleryFailedCovers = ref(new Set<string>());
-const hasGalleryCover = (item: CmsContent) => Boolean(safeUrl(item.coverUrl) && !galleryFailedCovers.value.has(item.id));
-const markGalleryCoverFailed = (id: string) => {
-  galleryFailedCovers.value = new Set([...galleryFailedCovers.value, id]);
-};
 // 区块按「展示位置」投放：下面每个请求对应后台区块字典中的一个位置
 const { runAsync: getHomeBanner, data: homeBanner } = blocksApi();
 const { runAsync: getHomeContent, data: homeContent } = blocksApi();
 const { runAsync: getSidebarPromos, data: sidebarPromos } = blocksApi();
 const { runAsync: getDetailBlocks, data: detailBlocks } = blocksApi();
 const slides = computed(() => homeBanner.value ?? []);
+const activeSlide = ref(0);
+let slideTimer: ReturnType<typeof setInterval> | undefined;
 const homeBlocks = computed(() => homeContent.value ?? []);
 const promoBlocks = computed(() => sidebarPromos.value ?? []);
 const detailBottomBlocks = computed(() => detailBlocks.value ?? []);
 const hotTags = computed(() => home.value?.hotTags ?? []);
 const recommendCategories = computed(() => home.value?.recommendCategories ?? []);
-const gallery = computed(() => home.value?.gallery ?? []);
 const ranking = computed(() => home.value?.ranking ?? []);
 const relatedList = computed(() => related.value ?? []);
 const displayTags = computed(() => (hotTags.value.length ? hotTags.value : (navigation.value?.tags ?? [])));
 const isTagPage = computed(() => route.name === 'cms-tag');
 const isListPage = computed(() => route.name === 'cms-category' || route.name === 'cms-tag');
 const tagPageTag = computed(() => (isTagPage.value ? (navigation.value?.tags ?? []).find((tag) => tag.slug === slug.value) : undefined));
+// 面包屑末级：严格按栏目树取当前栏目名（标签页显示标签名），不再硬编码站点文案
+const breadcrumbCurrent = computed(() => (isTagPage.value ? `标签：${tagPageTag.value?.title ?? ''}` : (activeCategory.value?.title ?? '全部内容')));
 const articleTags = (article: CmsContent) => (navigation.value?.tags ?? []).filter((tag) => article.tagIds?.includes(tag.id)).slice(0, 5);
 const articleCategoryName = (article: CmsContent) => {
   const find = (list: CmsOption[]): string => {
@@ -485,7 +414,10 @@ const articleTopicName = (article: CmsContent) => {
 };
 const topCategories = computed(() => {
   const leaves = (items: CmsOption[]): CmsOption[] => items.flatMap((item) => (item.children?.length ? leaves(item.children) : [item]));
-  return leaves(navigation.value?.categories ?? []).slice(0, 8);
+  // 侧边栏栏目导航同样严格按栏目渲染：只展示能解析出落地地址的栏目（类型 4/5 未配置目标时自动跳过）
+  return leaves(navigation.value?.categories ?? [])
+    .filter((item) => item.link)
+    .slice(0, 8);
 });
 const categoryGroups = computed(() => {
   const items = navigation.value?.categories ?? [];
@@ -533,13 +465,7 @@ const goRegister = () => {
 const requireCommentLogin = () => {
   loginDialog.value = true;
 };
-// 未登录时评论区整体置灰，任何点击都转为登录引导（回复/举报按钮置灰但仍可见）
-const onCommentAreaClick = (event: MouseEvent) => {
-  if (isLoggedIn.value) return;
-  event.preventDefault();
-  event.stopPropagation();
-  requireCommentLogin();
-};
+// 未登录用户仍可浏览评论列表；回复、举报等操作点击后引导登录。
 const startReply = (comment: CmsComment) => {
   if (!isLoggedIn.value) return requireCommentLogin();
   if (replyTarget.value?.id === comment.id) {
@@ -670,6 +596,11 @@ const load = async () => {
         query.topicId = row.id;
         await fetchArticles();
       }
+      if (kind.value === 'page' && row.kind === 2 && row.link) {
+        if (row.target === 1) window.open(row.link, '_blank', 'noopener');
+        else window.location.href = row.link;
+        return;
+      }
       if (kind.value === 'article') {
         commentPage.value = 1;
         await Promise.all([loadComments(), getDetailBlocks('content-detail-bottom').catch(() => undefined)]);
@@ -689,7 +620,7 @@ const load = async () => {
       activeCategory.value = undefined;
       parentCategory.value = undefined;
       if (route.name === 'cms-category') {
-        // 逐层下钻，顺带记录命中栏目的上级，供面包屑展示「产品动态 / 版本发布」层级
+        // 逐层下钻并按栏目类型执行唯一的落地行为，直接访问错误的 category URL 也不会退化成全站文章。
         const findCategory = (items: CmsOption[], parent?: CmsOption): CmsOption | undefined => {
           for (const category of items) {
             if (category.slug === slug.value) {
@@ -702,8 +633,18 @@ const load = async () => {
           return undefined;
         };
         currentCategory = findCategory(nav.categories ?? []);
-        query.categoryId = currentCategory?.id;
+        if (!currentCategory) throw new Error('栏目不存在或不可见');
         activeCategory.value = currentCategory;
+        if (![1, 2, 6].includes(currentCategory.type ?? 1)) {
+          if (!currentCategory.link) throw new Error('栏目跳转目标未配置');
+          if (currentCategory.type === 3) {
+            window.location.href = currentCategory.link;
+          } else {
+            router.replace(currentCategory.link);
+          }
+          return;
+        }
+        query.categoryId = currentCategory.id;
       }
       if (isTagPage.value) {
         const tag = (nav.tags || []).find((t) => t.slug === slug.value);
@@ -723,13 +664,34 @@ const load = async () => {
     if (current === generation) loading.value = false;
   }
 };
-onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
+onMounted(() => {
+  watch(() => route.fullPath, load, { immediate: true });
+  const startSlideTimer = () => {
+    if (slideTimer || slides.value.length < 2) return;
+    slideTimer = setInterval(() => {
+      activeSlide.value = (activeSlide.value + 1) % slides.value.length;
+    }, 4000);
+  };
+  const stopSlideTimer = () => {
+    if (slideTimer) clearInterval(slideTimer);
+    slideTimer = undefined;
+  };
+  watch(
+    slides,
+    (items) => {
+      activeSlide.value = items.length ? activeSlide.value % items.length : 0;
+      if (items.length > 1) startSlideTimer();
+      else stopSlideTimer();
+    },
+    { immediate: true },
+  );
+  onBeforeUnmount(stopSlideTimer);
+});
 </script>
 
 <style scoped>
 .cms-container {
   min-height: 100vh;
-  background: #f5f7fb;
   color: #253148;
 }
 .cms-main {
@@ -737,9 +699,21 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
   margin: 0 auto;
 }
 .hero-carousel {
+  grid-column: 1 / -1;
   overflow: hidden;
   border-radius: 0 0 14px 14px;
   box-shadow: 0 12px 30px rgba(24, 45, 88, 0.12);
+}
+.cms-carousel {
+  position: relative;
+  height: 300px;
+}
+.cms-carousel-slide {
+  display: none;
+  height: 100%;
+  &.is-active {
+    display: block;
+  }
 }
 .carousel-link {
   position: relative;
@@ -793,9 +767,9 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
 }
 .home-container.is-list .content-layout > .articles-section {
   grid-column: 1 / -1;
-}
-.hero-carousel {
-  grid-column: 1 / -1;
+  /* 列表页没有轮播与区块流，必须显式落在第 1 行：否则仍占第 3 行，
+     前两行的 22px 行间距会变成 44px 空白，把卡片整体往下顶。 */
+  grid-row: 1;
 }
 .main-content {
   display: none;
@@ -814,9 +788,6 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
 .articles-section {
   min-width: 0;
   padding: 0;
-}
-.articles-section .articles-header {
-  margin-bottom: 14px;
 }
 .filter-card .filter-select {
   width: 100%;
@@ -843,35 +814,6 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
   color: #566176;
   font-size: 12px;
   line-height: 1.5;
-}
-.gallery-side-item {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 0;
-  text-align: left;
-  border: 0;
-  border-bottom: 1px solid #f0f2f6;
-  background: transparent;
-  cursor: pointer;
-}
-.gallery-side-item img {
-  width: 66px;
-  height: 48px;
-  flex: 0 0 66px;
-  object-fit: cover;
-  border-radius: 4px;
-}
-.gallery-side-item span {
-  overflow: hidden;
-  color: #566176;
-  font-size: 13px;
-  line-height: 1.45;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
 }
 .panel,
 .sidebar-card,
@@ -1058,88 +1000,6 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
   padding-top: 12px;
   color: #98a1af;
   font-size: 12px;
-}
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 20px;
-}
-.gallery-item {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid #e7eaf0;
-  border-radius: 8px;
-  cursor: pointer;
-  transform: translateY(0);
-  transition:
-    transform 0.24s ease,
-    border-color 0.24s ease,
-    box-shadow 0.24s ease;
-}
-.gallery-item:hover,
-.gallery-item:focus-visible {
-  border-color: #d3d9e3;
-  box-shadow: 0 12px 26px rgba(44, 68, 126, 0.12);
-  transform: translateY(-4px);
-  outline: none;
-}
-.gallery-cover {
-  position: relative;
-  overflow: hidden;
-}
-.gallery-item img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 4/3;
-  object-fit: cover;
-  transition: transform 0.32s ease;
-}
-.gallery-item:hover img,
-.gallery-item:focus-visible img {
-  transform: scale(1.06);
-}
-.gallery-fallback {
-  display: flex;
-  width: 100%;
-  aspect-ratio: 4/3;
-  align-items: center;
-  justify-content: center;
-  font-size: 40px;
-  font-weight: 700;
-  color: #fff;
-  background: linear-gradient(135deg, #5b6b86, #3a465c);
-}
-.gallery-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: flex-end;
-  padding: 10px 12px;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  background: linear-gradient(to top, rgba(20, 28, 40, 0.55), rgba(20, 28, 40, 0) 55%);
-  opacity: 0;
-  transition: opacity 0.24s ease;
-  pointer-events: none;
-}
-.gallery-item:hover .gallery-overlay,
-.gallery-item:focus-visible .gallery-overlay {
-  opacity: 1;
-}
-.gallery-item h4 {
-  margin: 0;
-  padding: 12px;
-  overflow: hidden;
-  font-size: 13px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  transition: color 0.2s ease;
-}
-.gallery-item:hover h4,
-.gallery-item:focus-visible h4 {
-  color: #181c28;
 }
 .block-stream {
   display: grid;
@@ -1352,6 +1212,18 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
   margin-bottom: 15px;
   font-size: 16px;
 }
+/* 侧栏「热门排行」卡片：标题与「更多」按文字基线对齐，列表紧贴标题，末条不再留分隔线 */
+.sidebar-card .section-header {
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 0;
+}
+.sidebar-card .section-header .sidebar-title {
+  margin-bottom: 0;
+}
+.sidebar-card .section-header + .rank-item {
+  margin-top: 10px;
+}
 .rank-item,
 .category-item {
   display: flex;
@@ -1367,14 +1239,25 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
   background: transparent;
   cursor: pointer;
 }
+/* 排行条目：序号与标题首行顶部对齐，行距收紧，末条去掉分隔线 */
+.rank-item {
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 0;
+}
+.rank-item:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
 .rank-item:hover .rank-copy strong {
   color: #181c28;
 }
 .rank-number {
   display: grid;
-  width: 24px;
-  height: 24px;
-  flex: 0 0 24px;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  margin-top: 1px;
   place-items: center;
   color: #8e98a8;
   border-radius: 5px;
@@ -1392,6 +1275,7 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
   overflow: hidden;
   color: #394459;
   font-size: 13px;
+  line-height: 1.45;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -1399,6 +1283,7 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  margin-top: 2px;
   color: #a0a8b5;
 }
 .category-item {
@@ -1420,14 +1305,19 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
 .articles-section {
   padding: 0;
 }
-.articles-section .articles-header {
-  padding: 18px 20px;
-}
 .articles-heading {
   align-items: center;
 }
-.filter-bar {
-  margin-top: 14px;
+/* 面包屑 + 篇数同行展示，去掉面包屑单独占行留下的底部间距 */
+.articles-topline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+.articles-topline .me-breadcrumb {
+  margin-bottom: 0;
 }
 
 .articles-header {
@@ -1439,7 +1329,7 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
-  margin-top: 18px;
+  margin-top: 14px;
   padding: 12px;
   border: 1px solid #edf0f5;
   border-radius: 10px;
@@ -1549,184 +1439,6 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
   max-width: 940px;
   margin: 0 auto;
   padding: 28px;
-}
-/* 文章详情保留原有居中列，右侧评论列表悬浮在列右侧，窄屏下自动隐藏 */
-.detail-container.has-side {
-  position: relative;
-}
-.detail-side-card {
-  position: absolute;
-  top: 0;
-  left: calc(100% + 20px);
-  width: 288px;
-  padding: 18px;
-  background: #fff;
-  border: 1px solid #e7ebf2;
-  border-radius: 12px;
-  box-shadow: 0 8px 26px rgba(30, 48, 90, 0.045);
-}
-.detail-side-card .count-badge {
-  margin-left: 4px;
-  color: #2b5cff;
-}
-.detail-side-hint {
-  margin: 8px 0 12px;
-  font-size: 12.5px;
-  color: #8a93a6;
-}
-.comment-preview-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.comment-preview {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  text-align: left;
-  background: #f8fafd;
-  border: 1px solid #eef2f8;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.comment-preview:hover {
-  background: #f0f5ff;
-  border-color: #d6e2ff;
-}
-.comment-preview-avatar {
-  display: flex;
-  flex: 0 0 28px;
-  width: 28px;
-  height: 28px;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 700;
-  color: #fff;
-  background: linear-gradient(135deg, #4a7bff, #2b5cff);
-  border-radius: 50%;
-}
-.comment-preview-body {
-  display: flex;
-  flex: 1;
-  min-width: 0;
-  flex-direction: column;
-  gap: 3px;
-}
-.comment-preview-top {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-}
-.comment-preview-top strong {
-  font-size: 13.5px;
-  color: #253148;
-}
-.comment-preview-top small {
-  font-size: 11.5px;
-  color: #9aa3b5;
-}
-.comment-preview-text {
-  display: -webkit-box;
-  overflow: hidden;
-  font-size: 13px;
-  line-height: 1.55;
-  color: #5b6478;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-.comment-preview-flag {
-  font-size: 11.5px;
-  color: #e6a23c;
-}
-.comment-preview-empty {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 16px 0;
-  font-size: 12.5px;
-  color: #8a93a6;
-}
-.detail-side-footer {
-  margin-top: 14px;
-}
-.detail-side-footer :deep(.el-button) {
-  width: 100%;
-}
-/* 未登录时评论区整体置灰但仍可见，点击引导登录 */
-.comment-editor.is-locked,
-.comment-list.is-locked {
-  opacity: 0.62;
-  cursor: pointer;
-}
-.comment-list.is-locked :deep(.comment-reply-actions .el-button) {
-  color: #b6bcc9;
-}
-/* 评论弹窗顶部的文章信息卡 */
-.comment-article-card {
-  display: flex;
-  gap: 14px;
-  padding: 12px;
-  background: #f8fafd;
-  border: 1px solid #eef2f8;
-  border-radius: 10px;
-}
-.comment-article-cover {
-  flex: 0 0 108px;
-  width: 108px;
-  height: 81px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-.comment-article-body {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  gap: 6px;
-}
-.comment-article-title {
-  font-size: 15.5px;
-  font-weight: 700;
-  color: #253148;
-}
-.comment-article-title:hover {
-  color: #2b5cff;
-}
-.comment-article-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  font-size: 12.5px;
-  color: #7b8499;
-}
-.comment-article-cat,
-.comment-article-stat {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-.comment-article-tag {
-  color: #2b5cff;
-}
-.comment-article-summary {
-  display: -webkit-box;
-  overflow: hidden;
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.6;
-  color: #5b6478;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-.comment-dialog-toolbar {
-  display: flex;
-  justify-content: space-between;
-  margin: 14px 0 6px;
-  font-size: 12.5px;
-  color: #8a93a6;
 }
 .detail-skeleton {
   max-width: 940px;
@@ -2168,27 +1880,6 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
 .comment-reply p {
   margin-bottom: 0;
 }
-/* 右侧评论列表需要额外 288px 空间，不足时收成正文上方的横向条，保证入口始终可见 */
-@media (max-width: 1560px) {
-  .detail-container.has-side {
-    padding-bottom: 0;
-  }
-  .detail-side-card {
-    position: static;
-    width: auto;
-    margin: 0 0 18px;
-  }
-  .comment-preview-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  }
-  .comment-preview-empty {
-    padding: 14px 6px;
-  }
-  .detail-side-footer {
-    margin-top: 14px;
-  }
-}
 @media (max-width: 1024px) {
   .home-container {
     grid-template-columns: 1fr;
@@ -2210,12 +1901,6 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
   }
   .sidebar-card {
     margin-bottom: 0;
-  }
-  .gallery-sidebar {
-    grid-column: 1 / -1;
-  }
-  .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
   }
 }
 @media (max-width: 768px) {
@@ -2242,9 +1927,6 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
     grid-template-columns: 1fr;
     gap: 12px;
   }
-  .gallery-sidebar {
-    grid-column: auto;
-  }
   .panel {
     padding: 18px;
   }
@@ -2254,9 +1936,6 @@ onMounted(() => watch(() => route.fullPath, load, { immediate: true }));
   .recommend-card {
     grid-template-columns: 38% minmax(0, 1fr);
     min-height: 154px;
-  }
-  .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
   }
   .filter-bar {
     flex-direction: column;

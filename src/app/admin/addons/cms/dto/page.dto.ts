@@ -1,7 +1,7 @@
 import { AonCmsPage } from '@/entities/aonCmsPage.entity.js';
 import { PickDtoType } from '@/helper/dto.js';
 import { RuleType } from '@/ruleType/index.js';
-export class AonCmsPageSaveDto extends PickDtoType(AonCmsPage, ['title', 'slug', 'summary', 'mdContent', 'coverUrl', 'kind', 'link', 'target', 'seoTitle', 'seoKeywords', 'seoDescription', 'publishAt', 'orderNum']) {}
+export class AonCmsPageSaveDto extends PickDtoType(AonCmsPage, ['title', 'slug', 'summary', 'mdContent', 'coverUrl', 'kind', 'link', 'target', 'seoTitle', 'seoKeywords', 'seoDescription', 'publishAt', 'orderNum', 'categoryId']) {}
 export const pageSchema: ReturnType<typeof RuleType.object> = RuleType.object({
   title: RuleType.string().max(200).trim().min(1).required(),
   slug: RuleType.string()
@@ -27,4 +27,9 @@ export const pageSchema: ReturnType<typeof RuleType.object> = RuleType.object({
   seoDescription: RuleType.string().max(500).allow('').default(''),
   publishAt: RuleType.date().iso().allow(null).default(null),
   orderNum: RuleType.number().integer().min(-9999).max(9999).default(0),
+  // 所属栏目：仅允许「5 单页」型栏目，保存时由 service 校验
+  categoryId: RuleType.string()
+    .pattern(/^[0-9]{1,20}$/)
+    .allow(null)
+    .default(null),
 }).unknown(false);

@@ -18,6 +18,10 @@
       <el-form-item :label="t('SEO 标题')" prop="seoTitle"><el-input v-model="form.seoTitle" /></el-form-item>
       <el-form-item :label="t('SEO 关键词')" prop="seoKeywords"><el-input v-model="form.seoKeywords" /></el-form-item>
       <el-form-item :label="t('SEO 描述')" prop="seoDescription"><el-input v-model="form.seoDescription" type="textarea" :rows="3" /></el-form-item>
+      <el-form-item :label="t('关联栏目')" prop="categoryId">
+        <el-tree-select v-model="form.categoryId" :data="categoryTree" :props="{ label: 'title', children: 'children', disabled: 'disabled' }" node-key="id" check-strictly clearable placeholder="选择单页型栏目" />
+        <el-alert class="field-tip" title="只能关联「单页」型栏目；选择后该栏目在后台单页列表与前台菜单中都会指向本单页。" type="info" :closable="false" />
+      </el-form-item>
       <el-form-item :label="t('发布时间')" prop="publishAt"><el-date-picker v-model="form.publishAt" type="datetime" value-format="YYYY-MM-DDTHH:mm:ssZ" clearable /></el-form-item>
       <el-form-item :label="t('排序')" prop="orderNum"><el-input-number :key="String(readonly || loading)" v-model="form.orderNum" :min="-9999" :max="9999" /></el-form-item>
     </el-form>
@@ -31,10 +35,12 @@
 import type { FileInfo } from '@/api/file';
 import { useLocalesI18n } from '@/locales/i18n';
 import type { FormInstance, FormRules } from 'element-plus';
-import { reactive, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
+import { treeApi } from '../../../api/category';
 import { defaults, infoApi, saveApi } from '../../../api/page';
 import { cmsPageUrl } from '../../../components/accessUrl';
 import AccessUrl from '../../../components/accessUrl.vue';
+import { cmsCategoryLinkableTypes, markCategoryTree } from '../../../components/categoryTree';
 import CmsPreview from '../../../components/cmsPreview.vue';
 
 const { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../../../lang/${locale}.json`), 'cms']);
@@ -45,6 +51,9 @@ const form = reactive(defaults());
 const formEl = ref<FormInstance>();
 const { runAsync: getInfo, loading } = infoApi();
 const { runAsync: saveInfo, loading: saving } = saveApi();
+// 关联栏目：只有「单页」型栏目可选，其它类型的栏目在下拉里置灰
+const { runAsync: getCategories, data: categories } = treeApi();
+const categoryTree = computed(() => markCategoryTree(categories.value, cmsCategoryLinkableTypes.page));
 
 // el-upload 通过 TransitionGroup 渲染列表，key 取 uid || name，回显文件必须带上唯一 uid 才会渲染
 let uploadUid = 0;
@@ -66,7 +75,13 @@ watch(
       const data = await getInfo(id);
       for (const key of Object.keys(form) as Array<keyof typeof form>) Object.assign(form, { [key]: data[key] });
     }
+    await getCategories();
   },
   { immediate: true },
 );
 </script>
+<style scoped>
+.field-tip {
+  margin: 8px 0 0;
+}
+</style>

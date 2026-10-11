@@ -20,6 +20,10 @@
             ><el-select v-model="form.needReview"><el-option :value="1" :label="t('需审核后展示')" /><el-option :value="0" :label="t('直接通过')" /></el-select
           ></el-form-item>
         </div>
+        <el-form-item :label="t('关联栏目')" prop="categoryId">
+          <el-tree-select v-model="form.categoryId" :data="categoryTree" :props="{ label: 'title', children: 'children', disabled: 'disabled' }" node-key="id" check-strictly clearable placeholder="选择自定义表单型栏目" />
+          <el-alert class="field-tip" title="只能关联「自定义表单」型栏目；选择后该栏目在后台表单列表与前台菜单中都会指向本表单。" type="info" :closable="false" />
+        </el-form-item>
         <el-form-item label="前台留言板" prop="isMessageBoard">
           <el-switch v-model="form.isMessageBoard" active-text="作为前台留言板表单" inactive-text="普通表单" />
           <el-alert class="field-tip" title="前台留言板页面会读取该表单的字段并渲染；整个站点只允许一个表单作为留言板。" type="info" :closable="false" />
@@ -90,9 +94,11 @@
 import { useLocalesI18n } from '@/locales/i18n';
 import type { FormInstance, FormRules } from 'element-plus';
 import { ElMessage } from 'element-plus';
-import { reactive, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
+import { treeApi } from '../../../api/category';
 import type { CmsDiyformField } from '../../../api/diyform';
 import { cmsDiyformFieldTypes, defaults, infoApi, parseFields, saveApi } from '../../../api/diyform';
+import { cmsCategoryLinkableTypes, markCategoryTree } from '../../../components/categoryTree';
 
 const { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../../../lang/${locale}.json`), 'cms']);
 const props = defineProps<{ id?: string; readonly?: boolean }>();
@@ -103,6 +109,9 @@ const fields = ref<CmsDiyformField[]>([]);
 const formEl = ref<FormInstance>();
 const { runAsync: getInfo, loading } = infoApi();
 const { runAsync: saveInfo, loading: saving } = saveApi();
+// 关联栏目：只有「自定义表单」型栏目可选，其它类型的栏目在下拉里置灰
+const { runAsync: getCategories, data: categories } = treeApi();
+const categoryTree = computed(() => markCategoryTree(categories.value, cmsCategoryLinkableTypes.diyform));
 
 const rules: FormRules = {
   title: [{ required: true, message: t('必填'), trigger: 'blur' }],
@@ -157,6 +166,7 @@ watch(
     } else {
       addField();
     }
+    await getCategories();
   },
   { immediate: true },
 );

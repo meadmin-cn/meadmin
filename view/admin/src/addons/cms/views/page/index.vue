@@ -6,32 +6,40 @@
         ><el-form-item :label="t('状态')"
           ><el-select v-model="params.status" clearable style="width: 160px"><el-option v-for="(label, value) in states" :key="value" :value="value" :label="t(label)" /></el-select></el-form-item></me-search-form
     ></template>
-    <me-vxe-table border :loading="loading" :data="data?.list ?? []" :on-add="permission('aon_cms_page_add') ? () => openEditor() : undefined" :pagination-options="{ currentPage: params.page, pageSize: params.pageSize, total: data?.total ?? 0, change: search }" @refresh="search()">
-      <vxe-column field="title" :title="t('标题')" min-width="220" />
-      <vxe-column field="slug" :title="t('SEO 标识')" min-width="140" />
-      <vxe-column field="status" :title="t('状态')" width="120"
-        ><template #default="{ row }"
-          ><el-tag>{{ t(states[row.status] ?? '') }}</el-tag></template
-        ></vxe-column
-      >
-      <vxe-column field="publishAt" :title="t('发布时间')" min-width="180" :formatter="formatterAt" />
-      <vxe-column field="createdAt" :title="t('创建时间')" min-width="180" :formatter="formatterAt" />
-      <!-- 前台访问地址：已发布单页可在前台 /aon/cms/page/{slug} 直接访问 -->
-      <vxe-column :title="t('访问地址')" min-width="210" fixed="right"
-        ><template #default="{ row }"><AccessUrl :url="cmsPageUrl(row.slug)" :muted="row.status !== 2" /></template
-      ></vxe-column
-      >
-      <vxe-column :title="t('操作')" fixed="right" min-width="320"
-        ><template #default="{ row }">
-          <el-button v-if="permission('aon_cms_page_info') || permission('aon_cms_page_review')" link type="primary" :disabled="row.status !== 1 || acting" @click="openReview(row.id)">{{ t('审核') }}</el-button>
-          <el-button v-if="permission('aon_cms_page_info')" link @click="openDetail(row.id)">{{ t('详情') }}</el-button>
-          <el-button v-if="permission('aon_cms_page_edit')" link type="primary" @click="openEditor(row.id)">{{ t('编辑') }}</el-button>
-          <el-button v-if="permission('aon_cms_page_edit')" link :disabled="![0, 3, 4].includes(row.status) || acting" @click="openConfirm(row, 'submit')">{{ t('提交审核') }}</el-button>
-          <el-button v-if="permission('aon_cms_page_review')" link :disabled="row.status !== 2 || acting" @click="openConfirm(row, 'offline')">{{ t('下线') }}</el-button>
-          <el-button v-if="permission('aon_cms_page_del')" link type="danger" @click="openConfirm(row, 'del')">{{ t('删除') }}</el-button>
-        </template></vxe-column
-      >
-    </me-vxe-table>
+    <!-- 左侧栏目树：单页只能挂在「单页」型栏目下，其余类型的栏目置灰不可选（与文章列表同一套交互） -->
+    <CategoryWorkspace :categories="categories ?? []" :allow-types="cmsCategoryLinkableTypes.page" :current="params.categoryId ?? undefined" @select="selectCategory">
+      <me-vxe-table border :loading="loading" :data="data?.list ?? []" :on-add="permission('aon_cms_page_add') ? () => openEditor() : undefined" :pagination-options="{ currentPage: params.page, pageSize: params.pageSize, total: data?.total ?? 0, change: search }" @refresh="search()">
+        <vxe-column field="title" :title="t('标题')" min-width="200" />
+        <vxe-column field="slug" :title="t('SEO 标识')" min-width="140" />
+        <vxe-column field="categoryTitle" :title="t('关联栏目')" min-width="140"
+          ><template #default="{ row }"
+            ><span v-if="row.categoryTitle">{{ row.categoryTitle }}</span
+            ><span v-else class="muted-text">{{ t('未关联') }}</span></template
+          ></vxe-column
+        >
+        <vxe-column field="status" :title="t('状态')" width="120"
+          ><template #default="{ row }"
+            ><el-tag>{{ t(states[row.status] ?? '') }}</el-tag></template
+          ></vxe-column
+        >
+        <vxe-column field="publishAt" :title="t('发布时间')" min-width="180" :formatter="formatterAt" />
+        <vxe-column field="createdAt" :title="t('创建时间')" min-width="180" :formatter="formatterAt" />
+        <!-- 前台访问地址：已发布单页可在前台 /aon/cms/page/{slug} 直接访问 -->
+        <vxe-column :title="t('访问地址')" min-width="210" fixed="right"
+          ><template #default="{ row }"><AccessUrl :url="cmsPageUrl(row.slug)" :muted="row.status !== 2" /></template
+        ></vxe-column>
+        <vxe-column :title="t('操作')" fixed="right" min-width="320"
+          ><template #default="{ row }">
+            <el-button v-if="permission('aon_cms_page_info') || permission('aon_cms_page_review')" link type="primary" :disabled="row.status !== 1 || acting" @click="openReview(row.id)">{{ t('审核') }}</el-button>
+            <el-button v-if="permission('aon_cms_page_info')" link @click="openDetail(row.id)">{{ t('详情') }}</el-button>
+            <el-button v-if="permission('aon_cms_page_edit')" link type="primary" @click="openEditor(row.id)">{{ t('编辑') }}</el-button>
+            <el-button v-if="permission('aon_cms_page_edit')" link :disabled="![0, 3, 4].includes(row.status) || acting" @click="openConfirm(row, 'submit')">{{ t('提交审核') }}</el-button>
+            <el-button v-if="permission('aon_cms_page_review')" link :disabled="row.status !== 2 || acting" @click="openConfirm(row, 'offline')">{{ t('下线') }}</el-button>
+            <el-button v-if="permission('aon_cms_page_del')" link type="danger" @click="openConfirm(row, 'del')">{{ t('删除') }}</el-button>
+          </template></vxe-column
+        >
+      </me-vxe-table>
+    </CategoryWorkspace>
     <!-- 操作二次确认：提交审核 / 下线 / 删除 统一确认后再执行，审核通过/拒绝在审核弹窗内完成 -->
     <ActionConfirm v-model="confirmVisible" :title="confirmMeta.title" :question="confirmMeta.question" :desc="confirmMeta.desc" :alert-type="confirmMeta.alertType" :button-type="confirmMeta.buttonType" :confirm-text="confirmMeta.confirmText" :items="confirmItems" :loading="confirmActing" @confirm="runConfirm" />
     <el-dialog v-model="reviewVisible" title="审核详情与历史" width="min(1180px, calc(100% - 32px))" top="4vh" destroy-on-close class="review-dialog">
@@ -85,20 +93,29 @@ import { formatterAt, formatterAtExec } from '@/utils/helper.js';
 import { permission } from '@/utils/permission';
 import { ElMessage } from 'element-plus';
 import { computed, reactive, ref } from 'vue';
+import { treeApi } from '../../api/category';
 import { actionApi, deleteApi, infoApi, listApi, parseSnapshot, reviewHistoryApi } from '../../api/page';
-import type { CmsConfirmAlertType, CmsConfirmButtonType, CmsConfirmItem } from '../../components/actionConfirm';
-import ActionConfirm from '../../components/actionConfirm.vue';
 import { cmsPageUrl } from '../../components/accessUrl';
 import AccessUrl from '../../components/accessUrl.vue';
+import type { CmsConfirmAlertType, CmsConfirmButtonType, CmsConfirmItem } from '../../components/actionConfirm';
+import ActionConfirm from '../../components/actionConfirm.vue';
+import { cmsCategoryLinkableTypes } from '../../components/categoryTree';
+import CategoryWorkspace from '../../components/categoryWorkspace.vue';
 import Detail from './components/detail.vue';
 import Editor from './components/editor.vue';
 import PageInfo from './components/pageInfo.vue';
 const { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../../lang/${locale}.json`), 'cms']);
 const states = ['草稿', '待审核', '发布', '拒绝', '下线'];
-const params = reactive({ page: 1, pageSize: 20, keyword: '', status: undefined as number | undefined });
+const params = reactive({ page: 1, pageSize: 20, keyword: '', status: undefined as number | undefined, categoryId: undefined as string | undefined });
 const { data, loading, runAsync } = listApi();
+const { data: categories, runAsync: loadCategories } = treeApi();
 const { runAsync: del } = deleteApi();
 const search = (page = params.page, pageSize = params.pageSize) => runAsync(Object.assign(params, { page, pageSize }));
+// 左侧栏目树：点击栏目后按 categoryId 过滤，点「全部」恢复完整列表
+const selectCategory = (categoryId?: string) => {
+  params.categoryId = categoryId;
+  search(1);
+};
 const { open } = useActionModel(Editor);
 const openEditor = (id?: string, readonly = false) => open({ id, readonly, onSuccess: () => search() });
 const detailVisible = ref(false);
@@ -149,6 +166,7 @@ const confirmItems = computed<CmsConfirmItem[]>(() => {
   const items: CmsConfirmItem[] = [
     { label: '单页标题', value: row.title },
     { label: 'SEO 标识', value: row.slug },
+    { label: '关联栏目', value: row.categoryTitle || '未关联' },
     { label: '当前状态', value: t(states[row.status] ?? ''), tag: true, tagType: statusTagType(row.status) },
   ];
   const next = confirmMeta.value.nextStatus;
@@ -241,9 +259,12 @@ const reviewAction = async (approve: boolean) => {
     reviewActing.value = false;
   }
 };
-await Promise.all([loadRes, search()]);
+await Promise.all([loadRes, loadCategories(), search()]);
 </script>
 <style scoped>
+.muted-text {
+  color: var(--el-text-color-placeholder);
+}
 .review-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 400px;

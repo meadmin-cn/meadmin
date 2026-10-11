@@ -1,8 +1,8 @@
 <template>
   <div class="index">
     <div class="header-banner">
-      <el-carousel :interval="4000" height="auto">
-        <el-carousel-item v-for="item in info.banner" :key="item.title" style="height: max-content">
+      <div class="header-carousel" aria-label="首页精选内容">
+        <div v-for="(item, index) in info.banner" :key="item.title" class="carousel-slide" :class="{ 'is-active': activeBanner === index }" :aria-hidden="activeBanner !== index">
           <div class="banner">
             <div class="content">
               <div class="title">{{ item.title }}</div>
@@ -10,8 +10,11 @@
             </div>
             <img :src="item.bgImg" />
           </div>
-        </el-carousel-item>
-      </el-carousel>
+        </div>
+        <div v-if="info.banner.length > 1" class="carousel-indicators" aria-hidden="true">
+          <span v-for="(_, index) in info.banner" :key="index" class="carousel-indicator" :class="{ 'is-active': activeBanner === index }" />
+        </div>
+      </div>
     </div>
     <div class="body">
       <div v-for="item in info.info" :key="item.title" class="item">
@@ -30,8 +33,19 @@
 
 <script setup lang="ts" name="Index">
 import { indexApi } from '@/api';
-//接口必须在顶级异步调用，才会在服务端调用。
+import { onBeforeUnmount, ref } from 'vue';
+// 接口必须在顶级异步调用，才会在服务端调用。
 const info = await indexApi().runAsync();
+const activeBanner = ref(0);
+let bannerTimer: ReturnType<typeof setInterval> | undefined;
+if (!import.meta.env.SSR && info.banner.length > 1) {
+  bannerTimer = setInterval(() => {
+    activeBanner.value = (activeBanner.value + 1) % info.banner.length;
+  }, 4000);
+}
+onBeforeUnmount(() => {
+  if (bannerTimer) clearInterval(bannerTimer);
+});
 </script>
 <style lang="scss" scoped>
 .index {
@@ -43,6 +57,34 @@ const info = await indexApi().runAsync();
     overflow: hidden;
     border-radius: 16px;
     box-shadow: 0 16px 40px -16px rgba(24, 36, 88, 0.25);
+  }
+  .header-carousel {
+    position: relative;
+  }
+  .carousel-slide {
+    display: none;
+    &.is-active {
+      display: block;
+    }
+  }
+  .carousel-indicators {
+    position: absolute;
+    right: 24px;
+    bottom: 16px;
+    z-index: 2;
+    display: flex;
+    gap: 6px;
+  }
+  .carousel-indicator {
+    width: 18px;
+    height: 4px;
+    border-radius: 999px;
+    opacity: 0.5;
+    background: #fff;
+    &.is-active {
+      width: 28px;
+      opacity: 1;
+    }
   }
   .banner {
     position: relative;
@@ -82,26 +124,6 @@ const info = await indexApi().runAsync();
         line-height: 1.8;
         color: rgba(255, 255, 255, 0.88);
       }
-    }
-  }
-
-  /* 轮播指示器/箭头：胶囊指示条 + 毛玻璃箭头 */
-  .header-banner :deep(.el-carousel__button) {
-    width: 18px;
-    height: 4px;
-    border-radius: 999px;
-    opacity: 0.5;
-    transition: all 0.25s;
-  }
-  .header-banner :deep(.el-carousel__indicator.is-active .el-carousel__button) {
-    width: 28px;
-    opacity: 1;
-  }
-  .header-banner :deep(.el-carousel__arrow) {
-    background: rgba(16, 20, 34, 0.35);
-    backdrop-filter: blur(6px);
-    &:hover {
-      background: rgba(16, 20, 34, 0.55);
     }
   }
 

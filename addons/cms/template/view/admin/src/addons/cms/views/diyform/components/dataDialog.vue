@@ -1,11 +1,9 @@
 <template>
   <me-dialog v-model="show" :title="dialogTitle" :full="true" @open="onOpen" @closed="onClosed">
-    <template #searchForm
-      ><me-search-form :model="params" @search="onSearch"
-        ><el-form-item :label="t('状态')"
-          ><el-select v-model="params.status" clearable style="width: 150px"><el-option v-for="(label, index) in cmsDiyformDataStates" :key="index" :value="index" :label="t(label)" /></el-select></el-form-item
-        ><el-form-item :label="t('搜索')"><el-input v-model="params.keyword" clearable placeholder="称呼、联系方式或内容" /></el-form-item><el-form-item><el-button type="primary" :disabled="!params.formId" :loading="exporting" @click="exportCsv">导出当前表单数据</el-button></el-form-item></me-search-form
-      ></template
+    <me-search-form :model="params" @search="onSearch"
+      ><el-form-item :label="t('状态')"
+        ><el-select v-model="params.status" clearable style="width: 150px"><el-option v-for="(label, index) in cmsDiyformDataStates" :key="index" :value="index" :label="t(label)" /></el-select></el-form-item
+      ><el-form-item :label="t('搜索')"><el-input v-model="params.keyword" clearable placeholder="称呼、联系方式或内容" /></el-form-item><el-form-item><el-button type="primary" :disabled="!params.formId" :loading="exporting" @click="exportCsv">导出当前表单数据</el-button></el-form-item></me-search-form
     >
     <div class="data-page">
       <el-alert class="data-tip" type="info" :closable="false" show-icon :title="`当前表单：${form?.title ?? ''}（导出会按当前筛选条件输出该表单的全部数据）`" />

@@ -10,6 +10,16 @@ import { installStore } from './store/index.js';
 import { setApp } from './utils/request.js';
 export const ssrVersionKey = Symbol('ssrVersionKey');
 export async function bootscrapt(app: App, ssrVersion: string = '') {
+  // 全局错误兜底：组件生命周期（含 Element Plus 轮播等第三方组件在卸载时的清理竞态）
+  // 抛出的错误不应冒泡为未捕获异常而中断路由过渡 / 整页白屏，仅记录即可。
+  app.config.errorHandler = (err, _instance, info) => {
+    console.error('[vue error]', err, info);
+  };
+  app.config.warnHandler = (msg, _instance, _trace) => {
+    // 过滤掉与第三方组件无关的噪音告警，保留真实问题
+    if (/findComponent |Extraneous non-emits/.test(msg)) return;
+    console.warn('[vue warn]', msg, _instance, _trace);
+  };
   app.config.globalProperties.$start = true;
   if (import.meta.env.SSR) {
     app.config.globalProperties.$ssrVersion = ssrVersion;

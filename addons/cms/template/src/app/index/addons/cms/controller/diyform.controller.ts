@@ -28,11 +28,6 @@ export class AonCmsPublicDiyformController extends BaseController {
   @InjectRepository(AonCmsDiyform) formRepository: typeof AonCmsDiyform;
   @InjectRepository(AonCmsDiyformData) dataRepository: typeof AonCmsDiyformData;
 
-  /** 取启用的留言板表单定义 */
-  private async messageForm() {
-    return this.formRepository.findOne({ where: { isMessageBoard: true, status: 1 } });
-  }
-
   private parseFields(raw: string): CmsDiyformField[] {
     try {
       const parsed = JSON.parse(raw || '[]');
@@ -69,12 +64,6 @@ export class AonCmsPublicDiyformController extends BaseController {
       page,
       pageSize,
     });
-  }
-
-  /** 留言板：返回表单定义 + 已通过审核的公开数据 */
-  @Get('/message')
-  async message(@Query() query: { page?: number; pageSize?: number }): Promise<unknown> {
-    return this.publicPage(await this.messageForm(), query);
   }
 
   /** 按表单标识取表单定义与公开数据，供每个自定义表单的前台独立访问页使用 */

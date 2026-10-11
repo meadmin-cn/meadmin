@@ -70,4 +70,15 @@ export class AonCmsDiyform extends AdminBaseModel<AonCmsDiyform> {
   @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 0 })
   @ApiPropertyRule({ description: '排序', rule: RuleType.number().integer().min(-9999).max(9999).default(0) })
   declare orderNum: number;
+
+  // 所属栏目：仅可关联「4 自定义表单」型栏目，与文章.categoryId 同一套逻辑（栏目.target 仍表示菜单跳转目标）
+  @Attribute({ type: DataTypes.STRING(20), allowNull: true, defaultValue: null })
+  @ApiPropertyRule({
+    description: '所属栏目（仅自定义表单型栏目）',
+    rule: RuleType.string()
+      .pattern(/^[0-9]{1,20}$/)
+      .allow(null)
+      .default(null),
+  })
+  declare categoryId: string | null;
 }

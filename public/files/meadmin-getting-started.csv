@@ -1,0 +1,5 @@
+﻿section,details
+Environment,"Node.js >=22.14.0, pnpm, PostgreSQL, Redis"
+Initialize,"pnpm install; copy .env; run database migrations"
+First CRUD,"Create an addon, define entity/service/controller, then start pnpm dev"
+Troubleshooting,"Check logs/ and verify SERVER_PORT=7001"

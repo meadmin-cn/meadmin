@@ -8,8 +8,9 @@ CREATE TABLE IF NOT EXISTS aon_cms_category (
   slug varchar(120) NOT NULL DEFAULT '' UNIQUE,
   status smallint NOT NULL DEFAULT 1 CHECK (status IN (0,1)),
   order_num smallint NOT NULL DEFAULT 0,
-  type smallint NOT NULL DEFAULT 1 CHECK (type IN (1,2,3)),
+  type smallint NOT NULL DEFAULT 1 CHECK (type IN (1, 2, 3, 4, 5, 6)),
   link_url varchar(1000) NOT NULL DEFAULT '',
+  target varchar(200) NOT NULL DEFAULT '',
   is_nav boolean NOT NULL DEFAULT true,
   is_recommend boolean NOT NULL DEFAULT false,
   cover_url varchar(1000) NOT NULL DEFAULT '',
@@ -104,6 +105,8 @@ CREATE TABLE IF NOT EXISTS aon_cms_page (
   status smallint NOT NULL DEFAULT 0 CHECK (status IN (0,1,2,3,4)),
   publish_at timestamptz,
   order_num smallint NOT NULL DEFAULT 0,
+  -- 所属栏目：仅可关联「5 单页」型栏目，与文章.category_id 同一套逻辑
+  category_id varchar(20),
   created_admin_id varchar(20),
   updated_admin_id varchar(20),
   created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -111,6 +114,7 @@ CREATE TABLE IF NOT EXISTS aon_cms_page (
   CHECK (status <> 2 OR publish_at IS NOT NULL)
 );
 CREATE INDEX IF NOT EXISTS aon_cms_page_created_idx ON aon_cms_page(created_at);
+CREATE INDEX IF NOT EXISTS aon_cms_page_category_idx ON aon_cms_page(category_id);
 CREATE INDEX IF NOT EXISTS aon_cms_page_publish_idx ON aon_cms_page(status, publish_at);
 
 CREATE TABLE IF NOT EXISTS aon_cms_block (

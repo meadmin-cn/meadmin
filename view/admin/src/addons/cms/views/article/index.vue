@@ -14,59 +14,51 @@
         ></me-search-form
       ></template
     >
-    <div class="article-workspace">
-      <aside class="article-category-panel">
-        <div class="category-panel-header">
-          <span>{{ t('栏目') }}</span>
-          <el-button v-if="params.categoryId" link type="primary" @click="selectCategory()">{{ t('全部') }}</el-button>
-        </div>
-        <el-tree :data="categories ?? []" node-key="id" :props="{ label: 'title', children: 'children' }" default-expand-all highlight-current :current-node-key="params.categoryId ?? undefined" empty-text="暂无栏目" @node-click="selectCategory" />
-      </aside>
-      <section class="article-list-panel">
-        <me-vxe-table border :loading="loading" :data="data?.list ?? []" :on-add="permission('aon_cms_article_add') ? () => openEditor() : undefined" :pagination-options="{ currentPage: params.page, pageSize: params.pageSize, total: data?.total ?? 0, change: search }" @refresh="search()">
-          <vxe-column field="title" :title="t('标题')" min-width="220" />
-          <vxe-column field="slug" :title="t('SEO 标识')" min-width="140" />
-          <vxe-column field="status" :title="t('状态')" width="120"
-            ><template #default="{ row }"
-              ><el-tag>{{ t(states[row.status] ?? '') }}</el-tag></template
-            ></vxe-column
-          >
-          <vxe-column field="categoryTitle" :title="t('栏目')" min-width="120" />
-          <vxe-column field="topicTitle" :title="t('专题')" min-width="120" />
-          <vxe-column field="tagTitles" :title="t('标签')" min-width="160"
-            ><template #default="{ row }"
-              ><span v-for="(tag, i) in row.tagTitles || []" :key="i" class="grid-tag">{{ tag }}</span></template
-            ></vxe-column
-          >
-          <vxe-column :title="t('类型')" width="150"
-            ><template #default="{ row }"
-              ><el-tag v-if="row.isDownload" type="success" size="small" effect="light">可下载</el-tag><el-tag v-if="row.orderEnabled" type="warning" size="small" effect="light">可下单</el-tag><span v-if="!row.isDownload && !row.orderEnabled" class="muted-text">{{ t('普通') }}</span></template
-            ></vxe-column
-          >
-          <vxe-column field="publishAt" :title="t('发布时间')" min-width="180" :formatter="formatterAt" />
-          <vxe-column field="createdAt" :title="t('创建时间')" min-width="180" :formatter="formatterAt" />
-          <vxe-column field="views" :title="t('浏览')" width="90" align="right" />
-          <vxe-column field="likes" :title="t('点赞')" width="90" align="right" />
-          <vxe-column field="comments" :title="t('评论')" width="90" align="right" />
-          <vxe-column field="downloads" :title="t('下载')" width="90" align="right" />
-          <vxe-column field="orderCount" :title="t('下单')" width="90" align="right" />
-          <!-- 前台访问地址：复制到剪贴板后可直接分享或粘贴到菜单外链 -->
-          <vxe-column :title="t('访问地址')" min-width="230" fixed="right"
-            ><template #default="{ row }"><AccessUrl :url="cmsArticleUrl(row.slug)" :muted="row.status !== 2" /></template
-          ></vxe-column>
-          <vxe-column :title="t('操作')" fixed="right" min-width="320"
-            ><template #default="{ row }">
-              <el-button v-if="permission('aon_cms_article_info') || permission('aon_cms_article_review')" link type="primary" :disabled="row.status !== 1 || acting" @click="openReview(row.id)">{{ t('审核') }}</el-button>
-              <el-button v-if="permission('aon_cms_article_info')" link @click="openDetail(row.id)">{{ t('详情') }}</el-button>
-              <el-button v-if="permission('aon_cms_article_edit')" link type="primary" @click="openEditor(row.id)">{{ t('编辑') }}</el-button>
-              <el-button v-if="permission('aon_cms_article_edit')" link :disabled="![0, 3, 4].includes(row.status) || acting" @click="openConfirm(row, 'submit')">{{ t('提交审核') }}</el-button>
-              <el-button v-if="permission('aon_cms_article_review')" link :disabled="row.status !== 2 || acting" @click="openConfirm(row, 'offline')">{{ t('下线') }}</el-button>
-              <el-button v-if="permission('aon_cms_article_del')" link type="danger" @click="openConfirm(row, 'del')">{{ t('删除') }}</el-button>
-            </template></vxe-column
-          >
-        </me-vxe-table>
-      </section>
-    </div>
+    <!-- 左侧栏目树：只有「文章列表 / 目录」型栏目能挂文章，单页 / 外链 / 自定义表单 / 下载列表栏目置灰不可选 -->
+    <CategoryWorkspace :categories="categories ?? []" :allow-types="cmsCategoryLinkableTypes.article" :current="params.categoryId ?? undefined" @select="selectCategory">
+      <me-vxe-table border :loading="loading" :data="data?.list ?? []" :on-add="permission('aon_cms_article_add') ? () => openEditor() : undefined" :pagination-options="{ currentPage: params.page, pageSize: params.pageSize, total: data?.total ?? 0, change: search }" @refresh="search()">
+        <vxe-column field="title" :title="t('标题')" min-width="220" />
+        <vxe-column field="slug" :title="t('SEO 标识')" min-width="140" />
+        <vxe-column field="status" :title="t('状态')" width="120"
+          ><template #default="{ row }"
+            ><el-tag>{{ t(states[row.status] ?? '') }}</el-tag></template
+          ></vxe-column
+        >
+        <vxe-column field="categoryTitle" :title="t('栏目')" min-width="120" />
+        <vxe-column field="topicTitle" :title="t('专题')" min-width="120" />
+        <vxe-column field="tagTitles" :title="t('标签')" min-width="160"
+          ><template #default="{ row }"
+            ><span v-for="(tag, i) in row.tagTitles || []" :key="i" class="grid-tag">{{ tag }}</span></template
+          ></vxe-column
+        >
+        <vxe-column :title="t('类型')" width="150"
+          ><template #default="{ row }"
+            ><el-tag v-if="row.isDownload" type="success" size="small" effect="light">可下载</el-tag><el-tag v-if="row.orderEnabled" type="warning" size="small" effect="light">可下单</el-tag><span v-if="!row.isDownload && !row.orderEnabled" class="muted-text">{{ t('普通') }}</span></template
+          ></vxe-column
+        >
+        <vxe-column field="publishAt" :title="t('发布时间')" min-width="180" :formatter="formatterAt" />
+        <vxe-column field="createdAt" :title="t('创建时间')" min-width="180" :formatter="formatterAt" />
+        <vxe-column field="views" :title="t('浏览')" width="90" align="right" />
+        <vxe-column field="likes" :title="t('点赞')" width="90" align="right" />
+        <vxe-column field="comments" :title="t('评论')" width="90" align="right" />
+        <vxe-column field="downloads" :title="t('下载')" width="90" align="right" />
+        <vxe-column field="orderCount" :title="t('下单')" width="90" align="right" />
+        <!-- 前台访问地址：复制到剪贴板后可直接分享或粘贴到菜单外链 -->
+        <vxe-column :title="t('访问地址')" min-width="230" fixed="right"
+          ><template #default="{ row }"><AccessUrl :url="cmsArticleUrl(row.slug)" :muted="row.status !== 2" /></template
+        ></vxe-column>
+        <vxe-column :title="t('操作')" fixed="right" min-width="320"
+          ><template #default="{ row }">
+            <el-button v-if="permission('aon_cms_article_info') || permission('aon_cms_article_review')" link type="primary" :disabled="row.status !== 1 || acting" @click="openReview(row.id)">{{ t('审核') }}</el-button>
+            <el-button v-if="permission('aon_cms_article_info')" link @click="openDetail(row.id)">{{ t('详情') }}</el-button>
+            <el-button v-if="permission('aon_cms_article_edit')" link type="primary" @click="openEditor(row.id)">{{ t('编辑') }}</el-button>
+            <el-button v-if="permission('aon_cms_article_edit')" link :disabled="![0, 3, 4].includes(row.status) || acting" @click="openConfirm(row, 'submit')">{{ t('提交审核') }}</el-button>
+            <el-button v-if="permission('aon_cms_article_review')" link :disabled="row.status !== 2 || acting" @click="openConfirm(row, 'offline')">{{ t('下线') }}</el-button>
+            <el-button v-if="permission('aon_cms_article_del')" link type="danger" @click="openConfirm(row, 'del')">{{ t('删除') }}</el-button>
+          </template></vxe-column
+        >
+      </me-vxe-table>
+    </CategoryWorkspace>
     <!-- 操作二次确认：提交审核 / 下线 / 删除 统一确认后再执行 -->
     <ActionConfirm v-model="confirmVisible" :title="confirmMeta.title" :question="confirmMeta.question" :desc="confirmMeta.desc" :alert-type="confirmMeta.alertType" :button-type="confirmMeta.buttonType" :confirm-text="confirmMeta.confirmText" :items="confirmItems" :loading="confirmActing" @confirm="runConfirm" />
     <el-dialog v-model="reviewVisible" title="审核详情与历史" width="min(1180px, calc(100% - 32px))" top="4vh" destroy-on-close class="review-dialog">
@@ -128,6 +120,8 @@ import { cmsArticleUrl } from '../../components/accessUrl';
 import AccessUrl from '../../components/accessUrl.vue';
 import type { CmsConfirmAlertType, CmsConfirmButtonType, CmsConfirmItem } from '../../components/actionConfirm';
 import ActionConfirm from '../../components/actionConfirm.vue';
+import { cmsCategoryLinkableTypes } from '../../components/categoryTree';
+import CategoryWorkspace from '../../components/categoryWorkspace.vue';
 import ArticleInfo from './components/articleInfo.vue';
 import Detail from './components/detail.vue';
 import Editor from './components/editor.vue';
@@ -144,8 +138,8 @@ const { data: tagData, runAsync: loadTags } = tagListApi();
 const tags = computed(() => tagData.value?.list ?? []);
 const { runAsync: del } = deleteApi();
 const search = (page = params.page, pageSize = params.pageSize) => runAsync(Object.assign(params, { page, pageSize }));
-const selectCategory = (category?: { id: string }) => {
-  params.categoryId = category?.id;
+const selectCategory = (categoryId?: string) => {
+  params.categoryId = categoryId;
   search(1);
 };
 const { open } = useActionModel(Editor);
@@ -309,15 +303,7 @@ const reviewAction = async (approve: boolean) => {
 await Promise.all([loadRes, loadCategories(), loadTags({ page: 1, pageSize: 100 }), search()]);
 </script>
 <style scoped>
-/* 工作区占满内容卡片高度，列表与栏目各自内部滚动，避免整页滚动导致头部错位 */
-.article-workspace {
-  display: grid;
-  grid-template-columns: 236px minmax(0, 1fr);
-  grid-template-rows: minmax(0, 1fr);
-  gap: 16px;
-  height: 100%;
-  min-width: 0;
-}
+/* 左侧栏目树与列表的布局由 components/categoryWorkspace.vue 统一提供 */
 .grid-tag {
   display: inline-block;
   margin: 0 4px 2px 0;
@@ -330,45 +316,6 @@ await Promise.all([loadRes, loadCategories(), loadTags({ page: 1, pageSize: 100 
 }
 .muted-text {
   color: var(--el-text-color-placeholder);
-}
-.article-category-panel,
-.article-list-panel {
-  min-width: 0;
-  min-height: 0;
-  border: 1px solid var(--el-border-color-lighter);
-  border-radius: 8px;
-  background: var(--el-bg-color);
-}
-.article-category-panel {
-  overflow: auto;
-  padding: 12px 10px;
-}
-.category-panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0 6px 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--el-border-color-lighter);
-  color: var(--el-text-color-primary);
-  font-weight: 600;
-}
-.article-category-panel :deep(.el-tree-node__content) {
-  height: 34px;
-  margin: 2px 0;
-  padding-right: 6px;
-  border-radius: 6px;
-}
-.article-category-panel :deep(.el-tree-node__content:hover),
-.article-category-panel :deep(.is-current > .el-tree-node__content) {
-  color: var(--el-color-primary);
-  background: var(--el-color-primary-light-9);
-}
-/* 不能设置 overflow:hidden，否则表格工具栏“列设置”等内嵌浮层会被裁切；改为靠高度约束避免溢出 */
-.article-list-panel {
-  display: flex;
-  flex-direction: column;
-  padding: 6px 14px 14px;
 }
 .review-layout {
   display: grid;
@@ -442,16 +389,6 @@ await Promise.all([loadRes, loadCategories(), loadTags({ page: 1, pageSize: 100 
   color: var(--el-text-color-secondary);
 }
 @media (max-width: 900px) {
-  /* 窄屏下高度有限，改为整页滚动，列表不再内部限高 */
-  .article-workspace {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-    height: auto;
-    min-height: 100%;
-  }
-  .article-category-panel {
-    max-height: 240px;
-  }
   .review-layout {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto;

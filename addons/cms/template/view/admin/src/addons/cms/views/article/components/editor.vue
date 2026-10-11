@@ -22,7 +22,13 @@
       <aside class="editor-side-column">
         <section class="editor-side-section">
           <h4>发布设置</h4>
-          <el-form-item :label="t('栏目')" prop="categoryId"><el-tree-select v-model="form.categoryId" :data="categories ?? []" :props="{ label: 'title' }" node-key="id" check-strictly clearable /></el-form-item>
+          <el-form-item :label="t('栏目')" prop="categoryId"
+            ><el-tree-select v-model="form.categoryId" :data="categoryTree" :props="{ label: 'title', children: 'children', disabled: 'disabled' }" node-key="id" check-strictly clearable /><el-alert
+              class="category-tip"
+              title="只有「文章列表 / 目录 / 下载列表」型栏目能发布文章，单页、外链、自定义表单栏目不可选；下载列表栏目只收「可下载」且已上传文件的文章。"
+              type="info"
+              :closable="false"
+          /></el-form-item>
           <el-form-item :label="t('专题')" prop="topicId"
             ><el-select v-model="form.topicId" clearable filterable remote :remote-method="lookupTopics"><el-option v-for="option in topics" :key="option.id" :value="option.id" :label="option.title" /></el-select
           ></el-form-item>
@@ -40,8 +46,11 @@
             <el-alert class="cover-tip" title="建议上传 1200×800（3:2）图片，单张体积不超过 500MB" type="info" :closable="false" />
           </el-form-item>
           <el-form-item label="详情页订单" prop="orderEnabled"><el-switch v-model="form.orderEnabled" active-text="启用创建订单" inactive-text="关闭" /></el-form-item>
-          <el-form-item label="可下载" prop="isDownload"><el-switch v-model="form.isDownload" active-text="作为下载内容" inactive-text="普通文章" /></el-form-item>
-          <el-form-item label="图集精选" prop="isGallery"><el-switch v-model="form.isGallery" active-text="展示在首页图集精选" inactive-text="普通文章" /></el-form-item>
+          <!-- 挂到下载列表型栏目时「可下载」为强制项，锁定为开启，避免栏目页出现无法下载的条目 -->
+          <el-form-item label="可下载" prop="isDownload">
+            <el-switch v-model="form.isDownload" :disabled="downloadCategory" active-text="作为下载内容" inactive-text="普通文章" />
+            <el-alert v-if="downloadCategory" class="category-tip" title="下载列表型栏目只收录可下载内容，已自动开启并锁定，请上传下载文件。" type="info" :closable="false" />
+          </el-form-item>
         </section>
         <section v-if="form.isDownload" class="editor-side-section">
           <h4>下载文件</h4>
@@ -75,15 +84,32 @@ import type { FileInfo } from '@/api/file';
 import MeWangEditor from '@/components/meWangEditor/index.vue';
 import { useLocalesI18n } from '@/locales/i18n';
 import type { FormInstance, FormRules } from 'element-plus';
-import { reactive, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { defaults, infoApi, saveApi } from '../../../api/article';
+import type { CmsCategoryInfo } from '../../../api/category';
 import { treeApi } from '../../../api/category';
 import { lookupApi } from '../../../api/options';
+import { cmsCategoryLinkableTypes, markCategoryTree } from '../../../components/categoryTree';
 const editorConfig = { editor: { placeholder: '请输入文章正文内容...' } };
 // el-upload 通过 TransitionGroup 渲染列表，key 取 uid || name，回显文件必须带上唯一 uid 才会渲染
 let uploadUid = 0;
 const uploadValue = (url: unknown): FileInfo[] => (typeof url === 'string' && url ? ([{ uid: -++uploadUid, url, name: url.split('/').pop() ?? 'image' }] as unknown as FileInfo[]) : []);
 const { runAsync: getCategories, data: categories } = treeApi();
+// 栏目下拉按可关联类型标记：单页 / 外链 / 自定义表单栏目置灰不可选（后端保存时同样校验）
+const categoryTree = computed(() => markCategoryTree(categories.value, cmsCategoryLinkableTypes.article));
+// 栏目 id → 类型，供「可下载」联动判定当前是否挂在下载列表型栏目下
+const categoryTypeMap = computed(() => {
+  const map = new Map<string, number>();
+  const walk = (list?: CmsCategoryInfo[]) => {
+    for (const node of list ?? []) {
+      map.set(node.id, node.type ?? 1);
+      walk(node.children);
+    }
+  };
+  walk(categories.value);
+  return map;
+});
+const downloadCategory = computed(() => (form.categoryId ? categoryTypeMap.value.get(form.categoryId) === 6 : false));
 const { runAsync: getTags, loading: tagsLoading } = lookupApi();
 const { runAsync: getTopics } = lookupApi();
 const tags = ref<Array<{ id: string; title: string }>>([]);
@@ -99,6 +125,10 @@ const props = defineProps<{ id?: string; readonly?: boolean }>();
 const emit = defineEmits<{ success: []; closed: [] }>();
 const show = defineModel<boolean>();
 const form = reactive(defaults());
+// 选到下载列表型栏目时自动开启「可下载」（开关同步锁定）；放在 form 之后注册，避免求值早于 form 初始化
+watch(downloadCategory, (yes) => {
+  if (yes) form.isDownload = true;
+});
 // 详情加载完成后才渲染表单（详见模板中的说明）
 const ready = ref(false);
 const formEl = ref<FormInstance>();
@@ -182,6 +212,9 @@ watch(
 .article-editor-form :deep(.el-form-item__label) {
   margin-bottom: 4px;
   line-height: 1.4;
+}
+.category-tip {
+  margin-top: 8px;
 }
 .seo-grid {
   display: grid;

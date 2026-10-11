@@ -4,7 +4,7 @@ import { RuleType } from '@/ruleType/index.js';
 export class CmsQueryDto {
   @ApiPropertyRule({ rule: RuleType.number().integer().min(1).max(100000).default(1) })
   page: number;
-  @ApiPropertyRule({ rule: RuleType.number().integer().min(1).max(100).default(20) })
+  @ApiPropertyRule({ rule: RuleType.number().integer().min(1).default(20) })
   pageSize: number;
   @ApiPropertyRule({ rule: RuleType.string().max(100).allow('') })
   keyword?: string;
@@ -48,7 +48,7 @@ export class CmsReviewDto {
 
 export const querySchema: ReturnType<typeof RuleType.object> = RuleType.object({
   page: RuleType.number().integer().min(1).max(100000).default(1),
-  pageSize: RuleType.number().integer().min(1).max(100).default(20),
+  pageSize: RuleType.number().integer().min(1).default(20),
   keyword: RuleType.string().max(100).allow(''),
   status: RuleType.number().integer().valid(0, 1, 2, 3, 4),
   categoryId: RuleType.string().pattern(/^[0-9]{1,20}$/),

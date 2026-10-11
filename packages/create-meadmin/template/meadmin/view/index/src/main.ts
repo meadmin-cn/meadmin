@@ -10,7 +10,7 @@ import type { Pinia } from 'pinia';
 // SSR requires a fresh app instance per request, therefore we export a function
 // that creates a fresh app instance. If using Vuex, we'd also be creating a
 // fresh store here.
-const addonsModules = import.meta.glob('./addons/*/module.js', {
+const addonsModules = import.meta.glob('./addons/*/module.{ts,js}', {
   import: 'init',
   eager: true,
 }) as Record<string, (app: AppType, router: Router, pinia: Pinia) => void>;

@@ -8,6 +8,12 @@ const targets = [
   'view/admin/src/addons/cms',
   'view/index/src/addons/cms',
   'public/index/images/cms',
+  // CMS 前台依赖主 layout 的 menus/active 属性与头部菜单溢出折叠能力，
+  // 这两个文件属于插件随包交付的宿主文件（此前漏配，导致模板长期停留在旧版本）
+  'view/index/src/layout/default/components/header/index.vue',
+  'view/index/src/layout/default/components/header/components/navMenu.vue',
+  // CMS 异步表单页依赖宿主路由视图的即时空白 fallback，避免切换时保留并重绘首页。
+  'view/index/src/layout/default/page.vue',
   ...fs
     .readdirSync(path.join(root, 'src/entities'))
     .filter((name) => /^aonCms.*\.entity\.ts$/.test(name))

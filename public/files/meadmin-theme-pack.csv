@@ -1,0 +1,5 @@
+﻿asset,usage
+color-tokens,"Neutral surfaces, accent actions, status colors"
+light-theme,"Default admin workspace theme"
+dark-theme,"Optional dark workspace variables"
+component-demo,"Button, form, table and navigation examples"

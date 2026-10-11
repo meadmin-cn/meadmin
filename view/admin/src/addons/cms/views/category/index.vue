@@ -18,7 +18,7 @@
       <!-- 前台访问地址：跳转链接型栏目直接展示外链，其余为栏目列表页 -->
       <vxe-column :title="t('访问地址')" min-width="230"
         ><template #default="{ row }"><AccessUrl :url="cmsCategoryUrl(row, categoryUrlMaps)" :muted="!row.status" /></template
-        ></vxe-column>
+      ></vxe-column>
       <vxe-column :title="t('操作')" min-width="200"
         ><template #default="{ row }">
           <el-button v-if="permission('aon_cms_category_info')" link @click="openEditor(row.id, true)">{{ t('详情') }}</el-button>
@@ -46,11 +46,12 @@ import ActionConfirm from '../../components/actionConfirm.vue';
 import Editor from './components/editor.vue';
 const { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../../lang/${locale}.json`), 'cms']);
 const { data, loading, runAsync: search } = treeApi();
-const { runAsync: loadDiy, data: diyforms } = diyformListApi();
-const { runAsync: loadPages, data: pages } = pageListApi();
+// 列表接口返回 { list, total }，这里统一取 list 用于解析表单/单页的落地标识
+const { runAsync: loadDiy, data: diyformResult } = diyformListApi();
+const { runAsync: loadPages, data: pageResult } = pageListApi();
 const categoryUrlMaps = computed<CmsCategoryUrlMaps>(() => ({
-  diyname: (id) => diyforms.value?.find((d) => d.id === id)?.diyname,
-  pageSlug: (id) => pages.value?.find((p) => p.id === id)?.slug,
+  diyname: (id) => diyformResult.value?.list?.find((d) => d.id === id)?.diyname,
+  pageSlug: (id) => pageResult.value?.list?.find((p) => p.id === id)?.slug,
 }));
 const { runAsync: del } = deleteApi();
 const { open } = useActionModel(Editor);
@@ -86,5 +87,5 @@ const runConfirm = async () => {
     confirmActing.value = false;
   }
 };
-await Promise.all([loadRes, search(), loadDiy({ page: 1, pageSize: 1000, status: 1 }), loadPages({ page: 1, pageSize: 1000, status: 2 })]);
+await Promise.all([loadRes, search(), loadDiy({ page: 1, pageSize: 200, status: 1 }), loadPages({ page: 1, pageSize: 200, status: 2 })]);
 </script>

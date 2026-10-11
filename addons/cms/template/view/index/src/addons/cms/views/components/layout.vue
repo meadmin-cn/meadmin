@@ -31,7 +31,7 @@ import Layout from '@/layout/default/index.vue';
 import { Search } from '@element-plus/icons-vue';
 import type { RouteRecordRaw } from 'vue-router';
 import type { CmsNavigation } from '../../api/cms';
-import { CMS_CATEGORY_TYPE, navigationApi } from '../../api/cms';
+import { CMS_CATEGORY_TYPE, detailApi, navigationApi } from '../../api/cms';
 
 const router = useRouter();
 const route = useRoute();
@@ -39,9 +39,13 @@ const route = useRoute();
 const searchKeyword = ref('');
 const showMobileSearch = ref(false);
 const navigation = ref<CmsNavigation>({ categories: [], tags: [], topics: [], pages: [] });
+const detailCategoryId = ref<string>();
+const { runAsync: getDetail } = detailApi();
 
-// 头部菜单完全由栏目驱动：后端已按栏目类型解析出 link 与 openMode，
-// 1/2 文章列表/目录 → 栏目聚合页；3 外链 → 新窗口打开 linkUrl；4 自定义表单 → 表单页；5 单页 → 单页。
+// 头部菜单完全由栏目驱动：首页固定在最前，其余菜单项全部来自后台「CMS - 栏目」，
+// 栏目类型决定落地地址：1/2 文章列表/目录 → 栏目聚合页；3 外链 → 新窗口打开 linkUrl；
+// 4 自定义表单 → 表单页（如留言板）；5 单页 → 单页（如关于我们）；6 下载列表 → 下载中心。
+// 因此不再需要在前台硬编码「下载中心 / 留言板」等站点入口，它们本身就是可配置的栏目。
 const categoryMenus = (items: CmsNavigation['categories']): RouteRecordRaw[] => {
   const list: RouteRecordRaw[] = [];
   for (const cat of items) {
@@ -69,35 +73,61 @@ const categoryMenus = (items: CmsNavigation['categories']): RouteRecordRaw[] => 
   return list;
 };
 
-// 动态生成头部菜单
-const headerMenus = computed<RouteRecordRaw[]>(() => {
-  const menus: RouteRecordRaw[] = [{ path: '/aon/cms', meta: { title: '首页' } } as RouteRecordRaw];
-  menus.push(...categoryMenus(navigation.value.categories));
-  navigation.value.pages.forEach((page) => {
-    if (page.kind === 2 && page.link) menus.push({ path: page.link, meta: { title: page.title, isLink: true, target: page.target === 1 ? '_blank' : '_self' } } as unknown as RouteRecordRaw);
-    else menus.push({ path: `/aon/cms/page/${page.slug}`, meta: { title: page.title } } as RouteRecordRaw);
-  });
-  // 下载中心与留言板是站点功能入口，不属于内容栏目，固定放在菜单末尾
-  menus.push({ path: '/aon/cms/download', meta: { title: '下载中心' } } as RouteRecordRaw);
-  menus.push({ path: '/aon/cms/message', meta: { title: '留言板' } } as RouteRecordRaw);
-  return menus;
-});
+// 动态生成头部菜单：首页 + 全部栏目，不掺入任何硬编码入口
+const headerMenus = computed<RouteRecordRaw[]>(() => [{ path: '/aon/cms', meta: { title: '首页' } } as RouteRecordRaw, ...categoryMenus(navigation.value.categories)]);
 
-// 计算当前激活的菜单路径：栏目页按实际栏目路由激活，详情页回到首页。
+const findCategoryPath = (items: CmsNavigation['categories'], categoryId: string, parents: CmsNavigation['categories'] = []): CmsNavigation['categories'] => {
+  for (const category of items) {
+    const path = [...parents, category];
+    if (category.id === categoryId) return path;
+    if (category.children?.length) {
+      const hit = findCategoryPath(category.children, categoryId, path);
+      if (hit.length) return hit;
+    }
+  }
+  return [];
+};
+
+const categoryMenuLink = (categoryId?: string) => {
+  if (!categoryId) return '';
+  const path = findCategoryPath(navigation.value.categories, categoryId);
+  return [...path].reverse().find((category) => category.link)?.link || '';
+};
+
+// 当前激活的菜单路径：栏目页（含下载列表型栏目）/自定义表单页/单页各自对齐自己的菜单项；
+// 文章详情按返回的 categoryId 递归定位栏目，避免详情页错误高亮首页。
 const activeMenu = computed(() => {
-  if (route.path.startsWith('/aon/cms/category/') || route.path === '/aon/cms/download' || route.path === '/aon/cms/message' || route.path.startsWith('/aon/cms/page/')) return route.path;
-  if (route.path.startsWith('/aon/cms/topic')) return '/aon/cms/topic';
+  if (['cms-category', 'cms-diyform'].includes(String(route.name))) return route.path;
+  if (route.path.startsWith('/aon/cms/page/')) return route.path;
+  if (route.params.kind === 'article' || route.path.startsWith('/aon/cms/article/')) return categoryMenuLink(detailCategoryId.value) || '/aon/cms';
   return '/aon/cms';
 });
 
-// 加载导航数据
-onMounted(async () => {
-  try {
-    navigation.value = await navigationApi().runAsync();
-  } catch (error) {
-    console.error('Failed to load navigation:', error);
+const loadDetailCategory = async () => {
+  detailCategoryId.value = undefined;
+  if (route.path.startsWith('/aon/cms/article/') && route.params.slug) {
+    try {
+      detailCategoryId.value = (await getDetail('article', String(route.params.slug))).categoryId;
+    } catch {
+      detailCategoryId.value = undefined;
+    }
   }
-});
+};
+
+// SSR 与客户端首帧都使用同一份栏目导航，避免头部先渲染旧路由菜单、再异步替换造成布局水合错位。
+try {
+  navigation.value = await navigationApi().runAsync();
+  await loadDetailCategory();
+} catch (error) {
+  console.error('Failed to load navigation:', error);
+}
+
+watch(
+  () => route.fullPath,
+  () => {
+    void loadDetailCategory();
+  },
+);
 
 const handleSearch = () => {
   if (searchKeyword.value.trim()) {
@@ -122,7 +152,8 @@ const handleSearchMobile = () => {
   }
 
   .cms-search-input {
-    width: 220px;
+    /* 头部菜单已完全由栏目驱动，栏目较多时需要给导航让出空间，这里收窄搜索框 */
+    width: 148px;
   }
 }
 

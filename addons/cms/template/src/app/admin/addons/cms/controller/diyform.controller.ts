@@ -16,7 +16,7 @@ const csvCell = (value: unknown): string => {
 export class AonCmsDiyformController extends BaseController {
   @Inject() service: AonCmsDiyformService;
 
-  @Post('/') @AdminPermission('aon_cms_diyform_list') async list(@Body() data: { page: number; pageSize: number; keyword?: string; status?: number }) {
+  @Post('/') @AdminPermission('aon_cms_diyform_list') async list(@Body() data: { page: number; pageSize: number; keyword?: string; status?: number; categoryId?: string }) {
     return this.success(await this.service.list(data));
   }
   @Get('/info/:id') @AdminPermission(['aon_cms_diyform_info', 'aon_cms_diyform_edit']) async info(@Param('id') id: string) {

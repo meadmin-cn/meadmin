@@ -2,7 +2,7 @@ import { AdminPermission } from '@/decorators/index.js';
 import { Body, Controller, Get, Inject, Param, Post } from '@midwayjs/core';
 import { Validate } from '@midwayjs/validate';
 import { BaseController } from '../../../controller/base.controller.js';
-import { AonCmsArticleSaveDto } from '../dto/article.dto.js';
+import { AonCmsArticleFileDto, AonCmsArticleSaveDto } from '../dto/article.dto.js';
 import { CmsQueryDto, CmsReviewDto } from '../dto/common.dto.js';
 import { AonCmsArticleService } from '../service/article.service.js';
 import { CmsPermissionMiddleware } from './permission.middleware.js';
@@ -31,6 +31,12 @@ export class AonCmsArticleController extends BaseController {
   @AdminPermission('aon_cms_article_edit')
   async update(@Param('id') id: string, @Body() data: AonCmsArticleSaveDto) {
     return this.success(await this.service.save(id, data));
+  }
+  @Post('/file/:id')
+  @Validate({ validationOptions: { stripUnknown: false, allowUnknown: false } })
+  @AdminPermission('aon_cms_article_edit')
+  async updateFile(@Param('id') id: string, @Body() data: AonCmsArticleFileDto) {
+    return this.success(await this.service.updateFile(id, data));
   }
   @Post('/del/:id')
   @AdminPermission('aon_cms_article_del')

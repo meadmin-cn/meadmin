@@ -1,4 +1,4 @@
-@use './fonts.scss';
+// 字体资源由业务部署侧提供时再启用；当前仓库不包含 Plus Jakarta Sans 文件，避免 SSR 页面产生错误字体请求。
 @use './element-plus.scss';
 @use './transition.scss';
 

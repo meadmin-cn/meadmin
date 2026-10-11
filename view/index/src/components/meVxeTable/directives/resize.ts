@@ -1,30 +1,28 @@
-// 监听元素大小变化的指令
-const map = new WeakMap();
-const ob = new ResizeObserver((entries) => {
-  for (const entry of entries) {
-    // 获取dom元素的回调
-    const handler = map.get(entry.target);
-    //存在回调函数
-    if (handler) {
-      // 将监听的值给回调函数
-      handler({
-        width: entry.borderBoxSize[0].inlineSize,
-        height: entry.borderBoxSize[0].blockSize,
-      });
+// 监听元素大小变化的指令；SSR 环境没有 ResizeObserver，必须延迟到浏览器挂载时创建。
+const map = new WeakMap<Element, (size: { width: number; height: number }) => void>();
+let observer: ResizeObserver | undefined;
+const getObserver = () => {
+  if (typeof window === 'undefined' || typeof ResizeObserver === 'undefined') return undefined;
+  if (observer) return observer;
+  observer = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      const handler = map.get(entry.target);
+      if (!handler) continue;
+      const box = Array.isArray(entry.borderBoxSize) ? entry.borderBoxSize[0] : entry.borderBoxSize;
+      handler({ width: box?.inlineSize ?? entry.contentRect.width, height: box?.blockSize ?? entry.contentRect.height });
     }
-  }
-});
+  });
+  return observer;
+};
 
 export const Resize = {
-  mounted(el: any, binding: any) {
-    //将dom与回调的关系塞入map
+  mounted(el: Element, binding: { value: (size: { width: number; height: number }) => void }) {
     map.set(el, binding.value);
-    //监听el元素的变化
-    ob.observe(el);
+    getObserver()?.observe(el);
   },
-  unmounted(el: any) {
-    //取消监听
-    ob.unobserve(el);
+  unmounted(el: Element) {
+    observer?.unobserve(el);
+    map.delete(el);
   },
 };
 

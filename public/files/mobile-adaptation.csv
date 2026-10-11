@@ -1,0 +1,5 @@
+﻿viewport,layout,behavior
+Small,"Single column content",collapse secondary actions
+Medium,"Two column workspace",keep table tools visible
+Large,"Sidebar plus main content",show full navigation
+Accessibility,"Keyboard focus order",retain visible focus state

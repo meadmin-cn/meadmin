@@ -54,7 +54,14 @@ const availableMenuWidth = ref(0);
 
 const menus = computed(() => props.menus ?? routeStore.routes);
 const menuTitle = (item: RouteRecordRaw) => String(item.meta?.title ?? '');
-const estimateMenuWidth = (item: RouteRecordRaw) => Math.max(86, Array.from(menuTitle(item)).reduce((total, char) => total + (/[\u4e00-\u9fff]/.test(char) ? 15 : 8), 0) + 34 + (item.children?.length ? 18 : 0));
+// 估算一级菜单宽度：中英文分别按 15/8 计字宽，叠加左右内边距（10×2）与下拉箭头。
+// 这里刻意与真实渲染宽度对齐（此前用 Math.max(86, …) 兜底会把「首页」估成 86px，实际仅 58px，
+// 导致明明放得下的菜单被提前折叠进「…」）。
+const estimateMenuWidth = (item: RouteRecordRaw) => {
+  const text = Array.from(menuTitle(item)).reduce((total, char) => total + (/[\u4e00-\u9fff]/.test(char) ? 15 : 8), 0);
+  const caret = item.children?.some((child) => !child.meta?.hideMenu) ? 15 : 0;
+  return text + 20 + caret;
+};
 const desktopMenus = computed<RouteRecordRaw[]>(() => {
   const source = menus.value.filter((item) => !item.meta?.hideMenu && !item.meta?.overflowMenu && item.path !== '/__more__');
   const available = Math.max(120, availableMenuWidth.value || viewportWidth.value - 560);

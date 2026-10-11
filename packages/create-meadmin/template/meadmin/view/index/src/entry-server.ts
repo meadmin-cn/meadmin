@@ -2,6 +2,7 @@ import { basename } from 'node:path';
 import serialize from 'serialize-javascript';
 import { renderToString } from 'vue/server-renderer';
 import { createApp } from './main';
+import { normalizeRouteUrl } from './router/index.js';
 import { useGlobalStore } from './store/index.js';
 import { setServerCookies } from './utils/cookies.js';
 import { cleanServerCache, getAllServerCache } from './utils/server.js';
@@ -11,7 +12,7 @@ export async function render(url: string, manifest: Record<string, string[]>, co
   const globalStore = useGlobalStore(store);
   globalStore.websiteName = context.assign.websiteName;
   // set the router to the desired URL before rendering
-  await router.push(url === router.options.history.base ? '/' : url);
+  await router.push(normalizeRouteUrl(url));
   await router.isReady();
   // passing SSR context object which will be available via useSSRContext()
   // @vitejs/plugin-vue injects code into a component's setup() that registers

@@ -3,13 +3,18 @@
     <template v-for="item in visibleItems" :key="item.path">
       <!-- 有可见子菜单：递归渲染 -->
       <div v-if="kids(item).length" class="nv-item" :class="{ top: depth === 0 && mode === 'desktop', overflow: mode === 'desktop' && depth === 0 && item.meta?.overflowMenu }">
-        <a class="nv-link" :class="{ 'is-active': isActive(item), 'is-overflow': item.meta?.overflowMenu }" @click="onGroupClick(item)">
-          <span class="nv-text">{{ item.meta?.title }}</span>
-          <svg v-if="mode === 'desktop' || kids(item).length" class="nv-caret" :class="{ side: mode === 'desktop' && depth > 0, open: mode === 'mobile' && expanded.has(item.path) }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path v-if="mode === 'desktop' && depth > 0" d="m9 6 6 6-6 6" />
+        <div class="nv-group-control">
+          <a class="nv-link" :class="{ 'is-active': isActive(item), 'is-overflow': item.meta?.overflowMenu }" @click="onGroupClick(item)">
+            <span class="nv-text">{{ item.meta?.title }}</span>
+          </a>
+          <button v-if="mode === 'mobile'" class="nv-caret-toggle" :aria-label="`${item.meta?.title ?? '栏目'}子菜单`" :aria-expanded="expanded.has(item.path)" @click="toggleGroup(item)">
+            <svg class="nv-caret" :class="{ open: expanded.has(item.path) }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+          </button>
+          <svg v-else class="nv-caret" :class="{ side: depth > 0 }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path v-if="depth > 0" d="m9 6 6 6-6 6" />
             <path v-else d="m6 9 6 6 6-6" />
           </svg>
-        </a>
+        </div>
         <!-- 桌面端：悬停下拉（任意层级向右展开） -->
         <div v-if="mode === 'desktop'" class="nv-drop" :class="{ side: depth > 0 }">
           <nav-menu :items="kids(item)" :depth="depth + 1" mode="desktop" :active="active" @navigate="emit('navigate')" />
@@ -96,15 +101,18 @@ const firstLeaf = (item: RouteRecordRaw): RouteRecordRaw => {
 };
 const onGroupClick = (item: RouteRecordRaw) => {
   if (props.mode === 'desktop') {
-    if (!item.meta?.overflowMenu) go(firstLeaf(item));
+    // 分组自身带可访问页面时优先进入该页面（如 CMS 栏目聚合页），否则进入第一个子项。
+    if (item.meta?.overflowMenu) return;
+    const groupPath = item.meta?.groupPath ? String(item.meta.groupPath) : '';
+    go(groupPath ? ({ ...item, path: groupPath } as RouteRecordRaw) : firstLeaf(item));
     return;
   }
-  // 移动端保留展开/收起，确保仍可选择其他子栏目。
-  if (expanded.has(item.path)) {
-    expanded.delete(item.path);
-  } else {
-    expanded.add(item.path);
-  }
+  // 移动端父项文字负责进入父栏目，箭头按钮独立控制子菜单展开。
+  go(item);
+};
+const toggleGroup = (item: RouteRecordRaw) => {
+  if (expanded.has(item.path)) expanded.delete(item.path);
+  else expanded.add(item.path);
 };
 </script>
 
@@ -116,7 +124,9 @@ const onGroupClick = (item: RouteRecordRaw) => {
   min-width: max-content;
 }
 .nv-list > .nv-item,
-.nv-list > .nv-link { flex: 0 0 auto; }
+.nv-list > .nv-link {
+  flex: 0 0 auto;
+}
 .nv-list > .nv-item.overflow {
   display: flex;
   min-width: 58px;
@@ -126,12 +136,23 @@ const onGroupClick = (item: RouteRecordRaw) => {
 .nv-item {
   position: relative;
 }
+.nv-group-control {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 8px;
+}
+.nv-group-control > .nv-link {
+  padding-right: 3px;
+}
+.nv-group-control > .nv-caret {
+  margin-right: 10px;
+}
 .nv-link {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 9px 14px;
+  gap: 3px;
+  padding: 9px 10px;
   font-size: 15px;
   font-weight: 500;
   color: #454b5c;
@@ -141,7 +162,10 @@ const onGroupClick = (item: RouteRecordRaw) => {
   transition: 0.2s;
   user-select: none;
 }
-.nv-text { display: inline-block; white-space: nowrap; }
+.nv-text {
+  display: inline-block;
+  white-space: nowrap;
+}
 .nv-link.is-overflow {
   width: 46px;
   height: 42px;
@@ -161,15 +185,17 @@ const onGroupClick = (item: RouteRecordRaw) => {
   line-height: 1;
   transform: translateY(-2px);
 }
-.nv-link.is-overflow .nv-caret { display: none; }
+.nv-link.is-overflow .nv-caret {
+  display: none;
+}
 .nv-caret {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   opacity: 0.55;
   transition: transform 0.2s;
   &.side {
-    width: 13px;
-    height: 13px;
+    width: 12px;
+    height: 12px;
   }
   &.open {
     transform: rotate(180deg);
@@ -177,7 +203,7 @@ const onGroupClick = (item: RouteRecordRaw) => {
 }
 
 /* ---- 顶部一级：胶囊样式 ---- */
-.nv-item.top > .nv-link:hover,
+.nv-item.top > .nv-group-control > .nv-link:hover,
 .nv-link:hover {
   color: #181c28;
   background: #f6f8fc;
@@ -187,7 +213,7 @@ const onGroupClick = (item: RouteRecordRaw) => {
   font-weight: 600;
 }
 /* 顶部一级菜单：当前页面位于其子树内时，显示明显选中态 */
-.nv-item.top > .nv-link.is-active {
+.nv-item.top > .nv-group-control > .nv-link.is-active {
   color: #2b5cff;
   background: #eef2ff;
 }
@@ -260,6 +286,30 @@ const onGroupClick = (item: RouteRecordRaw) => {
   gap: 4px;
   width: 100%;
 }
+.nv-list.mobile .nv-group-control {
+  display: flex;
+  width: 100%;
+}
+.nv-list.mobile .nv-group-control > .nv-link {
+  flex: 1;
+  padding-right: 12px;
+}
+.nv-caret-toggle {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  color: #454b5c;
+  background: transparent;
+  cursor: pointer;
+}
+.nv-caret-toggle:hover {
+  background: #f6f8fc;
+}
 .nv-list.mobile .nv-link {
   justify-content: space-between;
   padding: 12px;
@@ -271,7 +321,7 @@ const onGroupClick = (item: RouteRecordRaw) => {
   background: #f0f4ff;
 }
 /* 父级组选中：仅文字高亮不加背景，与子项的背景选中态区分开，避免两块背景粘连 */
-.nv-list.mobile .nv-item > .nv-link.is-active {
+.nv-list.mobile .nv-item > .nv-group-control > .nv-link.is-active {
   background: none;
 }
 .nv-list.mobile .nv-sub {

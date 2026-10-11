@@ -10,7 +10,7 @@ import { SystemAdmin } from '@/entities/systemAdmin.entity.js';
 import { Provide } from '@midwayjs/core';
 import { BadRequestError, NotFoundError } from '@midwayjs/core/dist/error/http.js';
 import { Attributes, col, fn, literal, Op, WhereOptions } from '@sequelize/core';
-import { AonCmsArticleSaveDto, articleSchema } from '../dto/article.dto.js';
+import { AonCmsArticleFileDto, AonCmsArticleSaveDto, articleFileSchema, articleSchema } from '../dto/article.dto.js';
 import { CmsQueryDto, CmsReviewDto, querySchema, reviewSchema } from '../dto/common.dto.js';
 import { canSubmitCms, cmsId, validateCms } from './guard.js';
 
@@ -162,7 +162,14 @@ export class AonCmsArticleService {
     const duplicate = await this.repository.findOne({ where: { slug: data.slug, ...(id ? { id: { [Op.ne]: id } } : {}) } });
     if (duplicate) throw new BadRequestError('SEO 标识已存在');
 
-    if (data.categoryId && !(await this.categoryRepository.findByPk(data.categoryId))) throw new BadRequestError('栏目不存在');
+    // 只有「1文章列表 / 2目录 / 6下载列表」型栏目能承载文章；单页、外链、自定义表单栏目不能关联文章
+    if (data.categoryId) {
+      const category = await this.categoryRepository.findByPk(data.categoryId);
+      if (!category) throw new BadRequestError('栏目不存在');
+      if (![1, 2, 6].includes(category.type)) throw new BadRequestError(`「${category.title}」是${['', '文章列表', '目录', '外链', '自定义表单', '单页', '下载列表'][category.type] ?? '其他'}型栏目，不能关联文章`);
+      // 下载列表型栏目只收「可下载」且已上传下载文件的文章，避免下载中心出现无法下载的条目
+      if (category.type === 6 && (!data.isDownload || !data.fileUrl)) throw new BadRequestError(`「${category.title}」是下载列表型栏目，只能关联已开启「可下载」并上传下载文件的文章`);
+    }
     if (data.topicId && !(await this.topicRepository.findByPk(data.topicId))) throw new BadRequestError('专题不存在');
     if (data.tagIds.length && (await this.tagRepository.count({ where: { id: { [Op.in]: data.tagIds } } })) !== data.tagIds.length) throw new BadRequestError('标签不存在');
 
@@ -192,6 +199,12 @@ export class AonCmsArticleService {
     };
     if (!row) return this.repository.create(values);
     return row.update(values);
+  }
+  async updateFile(id: string, input: AonCmsArticleFileDto) {
+    const data = validateCms<AonCmsArticleFileDto>(articleFileSchema, input);
+    const row = await this.info(id);
+    if (!row.isDownload) throw new BadRequestError('仅可下载文章支持绑定文件');
+    return row.update({ fileUrl: data.fileUrl, fileName: data.fileName });
   }
   @Transaction()
   async remove(id: string) {

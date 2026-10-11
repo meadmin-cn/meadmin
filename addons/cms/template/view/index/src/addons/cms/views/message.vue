@@ -4,8 +4,8 @@
       <header class="page-heading">
         <div>
           <span class="page-kicker">交流反馈</span>
-          <h1>{{ form?.title || (diyname ? '表单' : '留言板') }}</h1>
-          <p>{{ form?.description || (diyname ? '请按表单要求填写内容，提交后由管理员处理。' : '欢迎提出建议或反馈问题，公开留言会在审核后展示。') }}</p>
+          <h1>{{ form?.title || '表单' }}</h1>
+          <p>{{ form?.description || '请按表单要求填写内容，提交后由管理员处理。' }}</p>
         </div>
         <el-button v-if="fields.length" type="primary" @click="editorOpen = !editorOpen">{{ editorOpen ? '收起表单' : '填写表单' }}</el-button>
       </header>
@@ -43,7 +43,7 @@
           </div>
         </el-form>
       </section>
-      <el-alert v-if="!loading && !fields.length" class="message-alert" type="warning" :closable="false" :title="diyname ? '表单不存在或已停用' : '留言板表单尚未配置'" :description="diyname ? '请在后台「CMS - 自定义表单」中确认表单标识并启用该表单。' : '请在后台「CMS - 自定义表单」中新建表单并开启「作为前台留言板」。'" />
+      <el-alert v-if="!loading && !fields.length" class="message-alert" type="warning" :closable="false" title="表单不存在或已停用" description="请在后台「CMS - 自定义表单」中确认栏目关联的表单标识并启用该表单。" />
 
       <section class="message-stream">
         <div class="stream-header">
@@ -87,12 +87,12 @@
 import type { FileInfo } from '@/api/file';
 import { formatterAtExec } from '@/utils/helper';
 import { ElMessage } from 'element-plus';
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import type { CmsDiyformField, CmsDiyformRecord } from '../api/cms';
-import { diyformApi, messageBoardApi, submitDiyformApi } from '../api/cms';
+import { diyformApi, submitDiyformApi } from '../api/cms';
 
-// 走 /aon/cms/form/{diyname} 时渲染指定表单，走 /aon/cms/message 时渲染留言板表单
+// 所有前台表单均由栏目类型 4 解析为 /aon/cms/form/{diyname}。
 const route = useRoute();
 const diyname = computed(() => String(route.params.diyname ?? ''));
 const editorOpen = ref(false);
@@ -102,10 +102,9 @@ const page = ref(1);
 const pageSize = 10;
 // 提交内容以字段名称为键，结构完全来自后台配置
 const formData = reactive<Record<string, unknown>>({});
-const { data: boardData, runAsync: fetchBoard } = messageBoardApi();
 const { data: formDiyData, runAsync: fetchDiyform } = diyformApi();
 const { runAsync: submitForm } = submitDiyformApi();
-const data = computed(() => (diyname.value ? formDiyData.value : boardData.value));
+const data = computed(() => formDiyData.value);
 
 const form = computed(() => data.value?.form ?? null);
 const fields = computed<CmsDiyformField[]>(() => form.value?.fields ?? []);
@@ -130,15 +129,21 @@ const extraEntries = (item: CmsDiyformRecord) => {
   return fields.value.filter((field) => field.name !== contentField?.name && !['text', 'number'].includes(field.type) && item.data?.[field.name]).map((field) => ({ label: field.label, value: Array.isArray(item.data[field.name]) ? (item.data[field.name] as string[]).join('、') : String(item.data[field.name]) }));
 };
 
+let loadGeneration = 0;
 const load = async () => {
+  const current = ++loadGeneration;
   loading.value = true;
+  editorOpen.value = false;
+  page.value = 1;
+  for (const key of Object.keys(formData)) delete formData[key];
   try {
-    if (diyname.value) await fetchDiyform(diyname.value, { page: page.value, pageSize });
-    else await fetchBoard({ page: page.value, pageSize });
-    // 首次拿到字段配置后初始化表单模型，避免输入后配置刷新导致内容丢失
-    for (const field of fields.value) if (!(field.name in formData)) formData[field.name] = field.type === 'checkbox' ? [] : '';
+    if (!diyname.value) throw new Error('表单地址缺少标识');
+    await fetchDiyform(diyname.value, { page: page.value, pageSize });
+    if (current !== loadGeneration) return;
+    // 每个表单独立初始化字段，避免 A 表单切换到 B 后残留字段值与提交目标。
+    for (const field of fields.value) formData[field.name] = field.type === 'checkbox' ? [] : '';
   } finally {
-    loading.value = false;
+    if (current === loadGeneration) loading.value = false;
   }
 };
 const submit = async () => {
@@ -159,6 +164,7 @@ const submit = async () => {
     submitting.value = false;
   }
 };
+watch(() => route.params.diyname, () => void load());
 await load();
 </script>
 
@@ -167,7 +173,6 @@ await load();
   min-height: 100%;
   padding: 28px 20px 60px;
   color: #273248;
-  background: #f4f6f9;
   box-sizing: border-box;
 }
 .message-shell {

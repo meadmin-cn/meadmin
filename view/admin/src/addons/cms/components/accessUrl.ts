@@ -40,7 +40,7 @@ export const cmsAbsoluteUrl = (link?: string | null): string => {
 /** 文章详情页：/aon/cms/article/{slug} */
 export const cmsArticleUrl = (slug?: string | null): string => (trim(slug) ? cmsFrontUrl(`${CMS_FRONT_PREFIX}/article/${slug}`) : '');
 
-/** 栏目页：外链型直接访问其外链；自定义表单/单页型需借助 id→标识映射解析真实地址；其余走栏目列表页 */
+/** 栏目页：外链型直接访问其外链；自定义表单/单页型需借助 id→标识映射解析真实地址；下载列表型与文章列表同构走栏目列表页（只展示可下载文章）；其余走栏目列表页 */
 export interface CmsCategoryUrlMaps {
   diyname?: (id: string) => string | undefined;
   pageSlug?: (id: string) => string | undefined;

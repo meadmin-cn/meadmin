@@ -5,7 +5,7 @@ export interface CmsCategory {
   status: number;
   orderNum: number;
   parentId: string | null;
-  /** 类型：1文章列表 2目录 3外链 4自定义表单 5单页 */
+  /** 类型：1文章列表 2目录 3外链 4自定义表单 5单页 6下载列表 */
   type: number;
   /** 跳转链接，仅类型=3 时使用 */
   linkUrl: string;
@@ -31,6 +31,7 @@ export const cmsCategoryTypes: CmsCategoryType[] = [
   { value: 3, label: '外链', desc: '点击后在新窗口打开「跳转链接」填写的地址，可填站内路径或完整网址。' },
   { value: 4, label: '自定义表单', desc: '点击进入「选择表单」指定的自定义表单提交页（如留言板）。' },
   { value: 5, label: '单页', desc: '点击进入「选择单页」指定的单页内容（如关于我们）。' },
+  { value: 6, label: '下载列表', desc: '点击进入该栏目的内容列表页，只展示可挂到本栏目（或子栏目）且已开启「可下载」的文章（如下载中心）。' },
 ];
 export const cmsCategoryTypeLabel = (type?: number): string => cmsCategoryTypes.find((item) => item.value === (type ?? 1))?.label ?? '文章列表';
 export const listApi = () => request<{ list: CmsCategoryInfo[]; total: number }, [{ page: number; pageSize: number; keyword?: string; status?: number }]>((data) => ({ url: 'addons/cms/category/', method: 'post', data }), { noLoading: true, clearEmpty: ['', undefined] });

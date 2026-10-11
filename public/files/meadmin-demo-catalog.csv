@@ -1,0 +1,12 @@
+﻿slug,purpose,file
+ demo-res-04,"component inventory",component-inventory.csv
+ demo-res-05,"deployment operations",deployment-operations.csv
+ demo-res-06,"API reference",api-reference.csv
+ demo-res-07,"migration package",migration-package.csv
+ demo-res-08,"permission middleware",permission-middleware.csv
+ demo-res-09,"export center",export-center.csv
+ demo-res-10,"mobile adaptation",mobile-adaptation.csv
+ demo-res-11,"dashboard template",dashboard-template.csv
+ demo-res-12,"form engine",form-engine.csv
+ demo-res-13,"plugin scaffold",plugin-scaffold.csv
+ demo-res-14,"sample database",sample-database.csv

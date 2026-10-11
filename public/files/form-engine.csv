@@ -1,0 +1,5 @@
+﻿field,type,validation
+name,text,required max 100
+email,email,valid email format
+category,select,one configured option
+message,textarea,required max 2000

@@ -5,6 +5,12 @@ import type { Router, RouteRecordRaw } from 'vue-router';
 import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router';
 export const asyncRoutes = concatObjectValue<RouteRecordRaw>(import.meta.glob('./routes/*.ts', { eager: true, import: 'routes' }));
 
+// Vite 的 BASE_URL 是静态资源前缀（开发环境由 midway-vite-view 自动推导为 /index/），
+// 不能拿它作为业务路由前缀。前台业务地址固定从根路径开始，CMS 才能使用 /aon/cms/...。
+// 当前前台部署在站点根路径；CMS 规范地址固定为 /aon/cms/...，不带 /index。
+export const routeBase = '/';
+export const normalizeRouteUrl = (url: string) => url || '/';
+
 export const constantRoutes: RouteRecordRaw[] = [
   {
     path: '/page404',
@@ -67,7 +73,7 @@ export const jump = (route: Pick<RouteRecordRaw, 'path' | 'meta'>, router: Route
  */
 export function installRoute() {
   const router = createRouter({
-    history: import.meta.env.SSR ? createMemoryHistory(import.meta.env.VIEW_ADMIN_PATH_PRE) : createWebHistory(import.meta.env.VIEW_ADMIN_PATH_PRE),
+    history: import.meta.env.SSR ? createMemoryHistory(routeBase) : createWebHistory(routeBase),
     routes: formatRoutes(constantRoutes),
   });
   return router;

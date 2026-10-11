@@ -36,9 +36,6 @@
       <el-descriptions-item label="是否可下单">
         <el-tag :type="article.orderEnabled ? 'warning' : 'info'" size="small" effect="light">{{ article.orderEnabled ? '可下单' : '不可下单' }}</el-tag>
       </el-descriptions-item>
-      <el-descriptions-item label="图集精选">
-        <el-tag :type="article.isGallery ? 'success' : 'info'" size="small" effect="light">{{ article.isGallery ? '是' : '否' }}</el-tag>
-      </el-descriptions-item>
       <el-descriptions-item v-if="article.seoTitle !== undefined" label="SEO 标题" :span="2">{{ article.seoTitle || '—' }}</el-descriptions-item>
       <el-descriptions-item v-if="article.seoKeywords !== undefined" label="SEO 关键词" :span="2">{{ article.seoKeywords || '—' }}</el-descriptions-item>
       <el-descriptions-item v-if="article.seoDescription !== undefined" label="SEO 描述" :span="2">{{ article.seoDescription || '—' }}</el-descriptions-item>

@@ -5,6 +5,10 @@ import type { Router, RouteRecordRaw } from 'vue-router';
 import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router';
 export const asyncRoutes = concatObjectValue<RouteRecordRaw>(import.meta.glob('./routes/*.ts', { eager: true, import: 'routes' }));
 
+// 业务路由基址与 Vite 静态资源 BASE_URL 分离；前台 CMS 规范地址从根路径开始。
+export const routeBase = '/';
+export const normalizeRouteUrl = (url: string) => url || '/';
+
 export const constantRoutes: RouteRecordRaw[] = [
   {
     path: '/page404',
@@ -67,7 +71,7 @@ export const jump = (route: Pick<RouteRecordRaw, 'path' | 'meta'>, router: Route
  */
 export function installRoute() {
   const router = createRouter({
-    history: import.meta.env.SSR ? createMemoryHistory(import.meta.env.VIEW_ADMIN_PATH_PRE) : createWebHistory(import.meta.env.VIEW_ADMIN_PATH_PRE),
+    history: import.meta.env.SSR ? createMemoryHistory(routeBase) : createWebHistory(routeBase),
     routes: formatRoutes(constantRoutes),
   });
   return router;

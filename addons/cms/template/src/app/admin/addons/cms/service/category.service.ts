@@ -42,6 +42,18 @@ export class AonCmsCategoryService {
   private async lock() {
     await this.repository.sequelize.query('SELECT pg_advisory_xact_lock(82026, 920)');
   }
+  // 栏目 → 内容反向回填：栏目指定「选择单页 / 选择表单」后，把栏目 id 写回内容侧的 categoryId，
+  // 这样单页 / 表单列表的左侧栏目树也能像文章一样按栏目过滤到它，两侧始终一致。
+  private async syncContentCategory(type: number, target: string, categoryId: string) {
+    if (type === 5 && target) {
+      const page = await this.pageRepository.findByPk(target);
+      if (page && page.categoryId !== categoryId) await page.update({ categoryId });
+    }
+    if (type === 4 && target) {
+      const form = await this.diyformRepository.findByPk(target);
+      if (form && form.categoryId !== categoryId) await form.update({ categoryId });
+    }
+  }
   @Transaction()
   async save(id: string | undefined, input: AonCmsCategorySaveDto) {
     const data = validateCms<AonCmsCategorySaveDto>(categorySchema, input);
@@ -64,8 +76,9 @@ export class AonCmsCategoryService {
     assertCmsParent(id, data.parentId, nodes);
 
     const values = { title: data.title, slug: data.slug, status: data.status, orderNum: data.orderNum, parentId: data.parentId, type: data.type, linkUrl: data.type === 3 ? data.linkUrl : '', target: data.type === 4 || data.type === 5 ? data.target : '', isNav: data.isNav, isRecommend: data.isRecommend, coverUrl: data.coverUrl };
-    if (!row) return this.repository.create(values);
-    return row.update(values);
+    const saved = row ? await row.update(values) : await this.repository.create(values);
+    await this.syncContentCategory(saved.type, saved.target, saved.id);
+    return saved;
   }
   @Transaction()
   async remove(id: string) {
@@ -74,6 +87,9 @@ export class AonCmsCategoryService {
     if (await this.repository.count({ where: { parentId: id } })) throw new BadRequestError('请先删除子栏目');
     if (await this.articleRepository.count({ where: { categoryId: id } })) throw new BadRequestError('仍被文章引用，不能删除');
 
+    // 单页 / 自定义表单 的归属是可空的，删栏目时解绑引用而不是阻止删除（文章仍保持强约束）
+    await this.pageRepository.update({ categoryId: null }, { where: { categoryId: id } });
+    await this.diyformRepository.update({ categoryId: null }, { where: { categoryId: id } });
     await row.destroy();
   }
   async tree() {

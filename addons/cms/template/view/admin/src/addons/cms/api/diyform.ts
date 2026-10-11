@@ -23,9 +23,11 @@ export interface CmsDiyform {
   isMessageBoard: boolean;
   status: number;
   orderNum: number;
+  /** 关联栏目：仅「4 自定义表单」型栏目可选，与文章.categoryId 同一套逻辑 */
+  categoryId: string | null;
 }
-export type CmsDiyformInfo = CmsDiyform & { id: string; createdAt: string; dataCount?: number };
-export const defaults = (): CmsDiyform => ({ title: '', diyname: '', description: '', fields: '[]', submitText: '提交', needReview: 1, isMessageBoard: false, status: 1, orderNum: 0 });
+export type CmsDiyformInfo = CmsDiyform & { id: string; createdAt: string; dataCount?: number; categoryTitle?: string };
+export const defaults = (): CmsDiyform => ({ title: '', diyname: '', description: '', fields: '[]', submitText: '提交', needReview: 1, isMessageBoard: false, status: 1, orderNum: 0, categoryId: null });
 
 /** 可用字段类型（与前台渲染器一一对应） */
 export const cmsDiyformFieldTypes: Array<{ value: CmsDiyformField['type']; label: string }> = [
@@ -39,7 +41,7 @@ export const cmsDiyformFieldTypes: Array<{ value: CmsDiyformField['type']; label
   { value: 'image', label: '图片上传' },
 ];
 
-export const listApi = () => request<{ list: CmsDiyformInfo[]; total: number }, [{ page: number; pageSize: number; keyword?: string; status?: number }]>((data) => ({ url: 'addons/cms/diyform/', method: 'post', data }), { noLoading: true, clearEmpty: ['', undefined] });
+export const listApi = () => request<{ list: CmsDiyformInfo[]; total: number }, [{ page: number; pageSize: number; keyword?: string; status?: number; categoryId?: string }]>((data) => ({ url: 'addons/cms/diyform/', method: 'post', data }), { noLoading: true, clearEmpty: ['', undefined] });
 export const infoApi = () => request<CmsDiyformInfo, [string]>((id) => ({ url: 'addons/cms/diyform/info/' + id, method: 'get' }), { noLoading: true });
 export const saveApi = () => request<CmsDiyformInfo, [string | undefined, CmsDiyform]>((id, data) => ({ url: 'addons/cms/diyform/' + (id ? 'up/' + id : 'add'), method: 'post', data }), { success: true });
 export const deleteApi = () => request<null, [string]>((id) => ({ url: 'addons/cms/diyform/del/' + id, method: 'post' }), { success: true });

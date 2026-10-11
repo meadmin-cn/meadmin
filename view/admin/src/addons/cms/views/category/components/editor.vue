@@ -60,8 +60,11 @@ const formEl = ref<FormInstance>();
 const { runAsync: getInfo, loading } = infoApi();
 const { runAsync: saveInfo, loading: saving } = saveApi();
 const { runAsync: getTree, data: treeData } = treeApi();
-const { runAsync: loadDiyforms, data: diyforms } = diyformListApi();
-const { runAsync: loadPages, data: pages } = pageListApi();
+// 列表接口返回 { list, total }，这里统一取 list 供下拉使用
+const { runAsync: loadDiyforms, data: diyformResult } = diyformListApi();
+const { runAsync: loadPages, data: pageResult } = pageListApi();
+const diyforms = computed(() => diyformResult.value?.list ?? []);
+const pages = computed(() => pageResult.value?.list ?? []);
 // 类型说明随选择变化，帮助运营理解每种类型在前台的表现
 const typeDesc = computed(() => cmsCategoryTypes.find((item) => item.value === form.type)?.desc ?? '');
 // el-upload 通过 TransitionGroup 渲染列表，key 取 uid || name，回显文件必须带上唯一 uid 才会渲染
@@ -89,7 +92,7 @@ watch(
       const data = await getInfo(id);
       for (const key of Object.keys(form) as Array<keyof typeof form>) Object.assign(form, { [key]: data[key] });
     }
-    await Promise.all([getTree(), loadDiyforms({ page: 1, pageSize: 1000, status: 1 }), loadPages({ page: 1, pageSize: 1000, status: 2 })]);
+    await Promise.all([getTree(), loadDiyforms({ page: 1, pageSize: 200, status: 1 }), loadPages({ page: 1, pageSize: 200, status: 2 })]);
   },
   { immediate: true },
 );

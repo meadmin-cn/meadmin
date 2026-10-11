@@ -1,0 +1,5 @@
+﻿topic,summary
+Download flag,"Article isDownload must be true"
+File URL,"Use an HTTPS or root-relative static URL"
+File name,"Use a safe filename without path separators"
+Counter,"Successful download requests increment downloads"

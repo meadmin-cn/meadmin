@@ -19,6 +19,7 @@ export const routes: RouteRecordRaw[] = [
         meta: {
           hideMenu: true,
           title: '用户中心',
+          needLogin: true,
         },
       },
     ],

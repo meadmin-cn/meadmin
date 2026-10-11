@@ -5,7 +5,7 @@ import { AonCmsOrderLog } from '@/entities/aonCmsOrderLog.entity.js';
 import { Inject, Provide } from '@midwayjs/core';
 import { NotFoundError } from '@midwayjs/core/dist/error/http.js';
 import { Context } from '@midwayjs/koa';
-import { Op } from '@sequelize/core';
+import { Attributes, Op, WhereOptions } from '@sequelize/core';
 import { CmsOrderCreateDto, orderCreateSchema, orderQuerySchema } from '../../../../admin/addons/cms/dto/order.dto.js';
 import { validateCms } from '../../../../admin/addons/cms/service/guard.js';
 
@@ -42,9 +42,28 @@ export class AonCmsPublicOrderService {
 
   async query(input: { orderNo: string; contactPhone: string }): Promise<Record<string, unknown>> {
     const data = validateCms<{ orderNo: string; contactPhone: string }>(orderQuerySchema, input);
-    const row = await this.repository.findOne({ where: { orderNo: data.orderNo, contactPhone: data.contactPhone } });
+    const where: WhereOptions<Attributes<AonCmsOrder>> = { orderNo: data.orderNo, contactPhone: data.contactPhone };
+    if (this.ctx.userInfo) where.userId = this.ctx.userInfo.id;
+    const row = await this.repository.findOne({ where });
     if (!row) throw new NotFoundError('订单不存在或联系方式不匹配');
     return this.publicRow(row);
+  }
+
+  async listMine(input: { page?: number; pageSize?: number }) {
+    const page = Math.max(Number(input?.page) || 1, 1);
+    const pageSize = Math.min(Math.max(Number(input?.pageSize) || 10, 1), 50);
+    const userId = this.ctx.userInfo?.id;
+    if (!userId) throw new NotFoundError('请登录后查看订单');
+    const { rows, count } = await this.repository.findAndCountAll({
+      where: { userId },
+      offset: (page - 1) * pageSize,
+      limit: pageSize,
+      order: [
+        ['createdAt', 'DESC'],
+        ['id', 'DESC'],
+      ],
+    });
+    return { list: rows.map((row) => this.publicRow(row)), total: count, page, pageSize };
   }
 
   private publicRow(row: AonCmsOrder): Record<string, unknown> {

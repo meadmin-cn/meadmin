@@ -16,7 +16,7 @@ import { CmsPublicCommentDto, publicCommentReportSchema, publicCommentSchema } f
 import { CmsQueryDto, querySchema } from '../../../../admin/addons/cms/dto/common.dto.js';
 import { validateCms } from '../../../../admin/addons/cms/service/guard.js';
 
-const articleAttributes: Array<keyof Attributes<AonCmsArticle>> = ['id', 'title', 'slug', 'summary', 'coverUrl', 'categoryId', 'topicId', 'tagIds', 'publishAt', 'seoTitle', 'seoKeywords', 'seoDescription', 'views', 'likes', 'comments', 'orderEnabled', 'isDownload', 'fileUrl', 'fileName', 'downloads', 'isGallery'];
+const articleAttributes: Array<keyof Attributes<AonCmsArticle>> = ['id', 'title', 'slug', 'summary', 'coverUrl', 'categoryId', 'topicId', 'tagIds', 'publishAt', 'seoTitle', 'seoKeywords', 'seoDescription', 'views', 'likes', 'comments', 'orderEnabled', 'isDownload', 'fileUrl', 'fileName', 'downloads'];
 @Provide()
 export class AonCmsPublicService {
   @InjectRepository(AonCmsArticle) article: typeof AonCmsArticle;
@@ -89,12 +89,29 @@ export class AonCmsPublicService {
         ];
   }
 
+  // 判断栏目本身或其任一祖先是否为「下载列表」型：是则当前及子孙栏目下的列表只展示可下载文章。
+  private async inDownloadCategory(categoryId: string): Promise<boolean> {
+    const rows = await this.category.findAll({ attributes: ['id', 'parentId', 'type'] });
+    const map = new Map(rows.map((row) => [row.id, row]));
+    const seen = new Set<string>();
+    let current = map.get(categoryId);
+    while (current) {
+      if (seen.has(current.id)) return false;
+      seen.add(current.id);
+      if (current.type === 6) return true;
+      current = current.parentId ? map.get(current.parentId) : undefined;
+    }
+    return false;
+  }
   async articles(input: CmsQueryDto) {
     const q = validateCms<CmsQueryDto>(querySchema, input);
     const filter = {
       ...(q.keyword ? { [Op.or]: [{ title: { [Op.iLike]: '%' + q.keyword + '%' } }, { summary: { [Op.iLike]: '%' + q.keyword + '%' } }] } : {}),
-    } as NonNullable<WhereOptions<Attributes<AonCmsArticle>>> & { categoryId?: string | { [Op.in]: string[] }; topicId?: string; tagIds?: { [Op.contains]: string[] } };
-    if (q.categoryId) filter.categoryId = { [Op.in]: await this.descendantCategoryIds(q.categoryId) } as never;
+    } as NonNullable<WhereOptions<Attributes<AonCmsArticle>>> & { categoryId?: string | { [Op.in]: string[] }; topicId?: string; tagIds?: { [Op.contains]: string[] }; isDownload?: boolean };
+    if (q.categoryId) {
+      filter.categoryId = { [Op.in]: await this.descendantCategoryIds(q.categoryId) } as never;
+      if (await this.inDownloadCategory(q.categoryId)) filter.isDownload = true;
+    }
     if (q.topicId) {
       if (!(await this.topic.findOne({ where: { id: q.topicId, status: 1 } }))) throw new NotFoundError('专题不存在');
       filter.topicId = q.topicId;
@@ -135,27 +152,37 @@ export class AonCmsPublicService {
     topics: Array<{ id: string; title: string; slug: string; summary: string; coverUrl: string; type: number; link: string; openMode: number }>;
     pages: unknown;
   }> {
-    const [categories, tags, topicRows, pages, diyforms] = await Promise.all([
+    const [categories, tags, topicRows] = await Promise.all([
       this.category.getTree({ attributes: ['id', 'title', 'slug', 'parentId', 'type', 'linkUrl', 'target', 'isNav', 'isRecommend', 'coverUrl'], where: { id: { [Op.in]: await this.visibleCategoryIds() } }, order: [['orderNum', 'DESC']] }),
       this.tag.findAll({ attributes: ['id', 'title', 'slug', 'isHot'], where: { status: 1 }, limit: 100, order: [['orderNum', 'DESC']] }),
       this.topic.findAll({ attributes: ['id', 'title', 'slug', 'summary', 'coverUrl', 'type', 'target', 'targetBlank'], where: { status: 1 }, limit: 100, order: [['orderNum', 'DESC']] }),
-      this.page.findAll({ attributes: ['id', 'title', 'slug', 'kind', 'link', 'target'], where: { status: 2, publishAt: { [Op.lte]: new Date() } }, limit: 100, order: [['orderNum', 'DESC']] }),
-      this.diyform.findAll({ attributes: ['id', 'diyname', 'status'], where: { status: 1 }, limit: 100 }),
     ]);
+    const categoryRows = await this.category.findAll({ attributes: ['id', 'type', 'target'], where: { id: { [Op.in]: await this.visibleCategoryIds() }, type: { [Op.in]: [4, 5] }, status: 1 } });
+    const pageIds = [...new Set(categoryRows.filter((row) => row.type === 5 && row.target).map((row) => row.target))];
+    const formIds = [...new Set(categoryRows.filter((row) => row.type === 4 && row.target).map((row) => row.target))];
+    const pageCategoryIds = categoryRows.filter((row) => row.type === 5).map((row) => row.id);
+    const formCategoryIds = categoryRows.filter((row) => row.type === 4).map((row) => row.id);
+    const pageConditions = [...(pageIds.length ? [{ id: { [Op.in]: pageIds } }] : []), ...(pageCategoryIds.length ? [{ categoryId: { [Op.in]: pageCategoryIds } }] : [])];
+    const formConditions = [...(formIds.length ? [{ id: { [Op.in]: formIds } }] : []), ...(formCategoryIds.length ? [{ categoryId: { [Op.in]: formCategoryIds } }] : [])];
+    const [pages, diyforms] = await Promise.all([pageConditions.length ? this.page.findAll({ attributes: ['id', 'title', 'slug', 'kind', 'link', 'target', 'categoryId'], where: { [Op.or]: pageConditions, status: 2, publishAt: { [Op.lte]: new Date() } } }) : [], formConditions.length ? this.diyform.findAll({ attributes: ['id', 'diyname', 'status', 'categoryId'], where: { [Op.or]: formConditions, status: 1 } }) : []]);
     // 预建 id→标识映射，避免在栏目树递归中逐条查库
     const pageMap = new Map(pages.map((p) => [p.id, p]));
     const diyMap = new Map(diyforms.map((d) => [d.id, d]));
-    // 栏目跳转解析：1/2 文章列表/目录→栏目聚合页；3 外链→linkUrl 新窗口；4 自定义表单→/aon/cms/form/:diyname；5 单页→/aon/cms/page/:slug
-    const categoryLink = (cat: { type: number; linkUrl?: string; target?: string; slug?: string }): string => {
+    // 内容侧归属映射：栏目未单独指定 target 时，用挂在它下面的单页/表单兜底，保证菜单点得开
+    const pageByCategory = new Map(pages.filter((p) => p.categoryId).map((p) => [p.categoryId as string, p]));
+    const diyByCategory = new Map(diyforms.filter((d) => d.categoryId).map((d) => [d.categoryId as string, d]));
+    // 栏目跳转解析：1/2/6 文章列表/目录/下载列表→栏目聚合页（6 只展示可下载文章）；3 外链→linkUrl 新窗口；4 自定义表单→/aon/cms/form/:diyname；5 单页→/aon/cms/page/:slug
+    const categoryLink = (cat: { id?: string; type: number; linkUrl?: string; target?: string; slug?: string }): string => {
       if (cat.type === 3) return cat.linkUrl || '';
       if (cat.type === 4) {
-        const f = diyMap.get(cat.target ?? '');
+        const f = diyMap.get(cat.target ?? '') ?? diyByCategory.get(cat.id ?? '');
         return f ? `/aon/cms/form/${f.diyname}` : '';
       }
       if (cat.type === 5) {
-        const p = pageMap.get(cat.target ?? '');
+        const p = pageMap.get(cat.target ?? '') ?? pageByCategory.get(cat.id ?? '');
         return p ? `/aon/cms/page/${p.slug}` : '';
       }
+      // 6 下载列表：与文章列表同构，进入栏目聚合页（列表内只展示「可下载」文章）
       return `/aon/cms/category/${cat.slug}`;
     };
     const decorate = (list: any[]): any[] =>
@@ -204,10 +231,10 @@ export class AonCmsPublicService {
     const { link } = await this.resolveTopicLink(plain.type, plain.target);
     return { ...plain, link, openMode: plain.type === 2 ? plain.targetBlank : 0 };
   }
-  // 首页聚合数据：热门标签、推荐栏目、图集精选、热门排行（规则来自区块配置）。
+  // 首页聚合数据：热门标签、推荐栏目、热门排行（规则来自区块配置）。
   async home() {
     const visible = await this.visibleArticles();
-    const [hotTags, recommendCategories, gallery, rankingBlock] = await Promise.all([
+    const [hotTags, recommendCategoryRows, rankingBlock] = await Promise.all([
       this.tag.findAll({
         attributes: ['id', 'title', 'slug', 'isHot'],
         where: { isHot: true, status: 1 },
@@ -218,7 +245,7 @@ export class AonCmsPublicService {
         limit: 30,
       }),
       this.category.findAll({
-        attributes: ['id', 'title', 'slug', 'coverUrl', 'isRecommend'],
+        attributes: ['id', 'title', 'slug', 'parentId', 'type', 'linkUrl', 'target', 'isNav', 'isRecommend', 'coverUrl'],
         where: { isRecommend: true, status: 1 },
         order: [
           ['orderNum', 'DESC'],
@@ -226,7 +253,6 @@ export class AonCmsPublicService {
         ],
         limit: 30,
       }),
-      this.article.findAll({ attributes: articleAttributes, where: { ...visible, isGallery: true }, order: this.articleOrder('latest'), limit: 8 }),
       this.block.findOne({ where: { position: 'home-ranking', kind: 1, status: 1 } }),
     ]);
     const rule: { sortBy: NonNullable<CmsQueryDto['sortBy']>; limit: number } = { sortBy: 'views', limit: 6 };
@@ -240,7 +266,18 @@ export class AonCmsPublicService {
       }
     }
     const ranking = await this.article.findAndCountAll({ attributes: articleAttributes, where: visible, order: this.articleOrder(rule.sortBy), limit: rule.limit });
-    return { hotTags, recommendCategories, gallery, ranking: ranking.rows, rankingRule: rule };
+    // 推荐栏目复用导航解析结果，保证类型 3/4/5 与头部菜单使用同一落地地址。
+    const nav = await this.navigation();
+    const navCategories = new Map<string, any>();
+    const indexCategories = (items: any[]) => {
+      for (const item of items) {
+        navCategories.set(item.id, item);
+        if (item.children?.length) indexCategories(item.children);
+      }
+    };
+    indexCategories(nav.categories as any[]);
+    const recommendCategories = recommendCategoryRows.map((row) => navCategories.get(row.id)).filter(Boolean);
+    return { hotTags, recommendCategories, ranking: ranking.rows, rankingRule: rule };
   }
   // 内容详情相关推荐：同栏目或共享标签，排除自身。
   async relatedArticles(slug: string) {

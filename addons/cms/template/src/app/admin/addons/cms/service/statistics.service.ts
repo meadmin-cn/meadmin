@@ -82,11 +82,7 @@ export class AonCmsStatisticsService {
     // 上一周期（再往前 14 天），用于大卡环比：当前窗口 [today-13, today+1)，上一周期 [today-27, today-13)
     const prevEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 13);
     const prevStart = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 27);
-    const [prevArticles, prevComments, prevOrders] = await Promise.all([
-      this.article.count({ where: { createdAt: { [Op.gte]: prevStart, [Op.lt]: prevEnd } } }),
-      this.comment.count({ where: { createdAt: { [Op.gte]: prevStart, [Op.lt]: prevEnd } } }),
-      this.order.count({ where: { createdAt: { [Op.gte]: prevStart, [Op.lt]: prevEnd } } }),
-    ]);
+    const [prevArticles, prevComments, prevOrders] = await Promise.all([this.article.count({ where: { createdAt: { [Op.gte]: prevStart, [Op.lt]: prevEnd } } }), this.comment.count({ where: { createdAt: { [Op.gte]: prevStart, [Op.lt]: prevEnd } } }), this.order.count({ where: { createdAt: { [Op.gte]: prevStart, [Op.lt]: prevEnd } } })]);
 
     // 栏目文章分布（取文章数最多的前 8 个栏目）
     const catRows = (await this.article.findAll({

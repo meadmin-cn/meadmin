@@ -40,7 +40,9 @@
         <el-descriptions-item label="来源">{{ detailRow.source || '-' }}</el-descriptions-item>
         <el-descriptions-item label="提交时间">{{ formatterAt({ cellValue: detailRow.createdAt }) }}</el-descriptions-item>
       </el-descriptions>
-      <template #footer><el-button @click="detailVisible = false">{{ t('关闭') }}</el-button></template>
+      <template #footer
+        ><el-button @click="detailVisible = false">{{ t('关闭') }}</el-button></template
+      >
     </me-dialog>
 
     <!-- 审核：通过 / 拒绝 -->
@@ -49,13 +51,19 @@
         <el-radio :value="1">{{ t('通过（前台公开展示）') }}</el-radio>
         <el-radio :value="2">{{ t('拒绝') }}</el-radio>
       </el-radio-group>
-      <template #footer><el-button @click="reviewVisible = false">{{ t('取消') }}</el-button><el-button type="primary" :loading="acting" @click="submitReview">{{ t('确定') }}</el-button></template>
+      <template #footer
+        ><el-button @click="reviewVisible = false">{{ t('取消') }}</el-button
+        ><el-button type="primary" :loading="acting" @click="submitReview">{{ t('确定') }}</el-button></template
+      >
     </me-dialog>
 
     <!-- 回复 -->
     <me-dialog v-model="replyVisible" title="回复提交数据" :full="false" width="520px" @closed="replyRow = undefined">
       <el-input v-model="replyText" type="textarea" :rows="4" maxlength="2000" show-word-limit placeholder="回复内容会展示在前台对应条目下" />
-      <template #footer><el-button @click="replyVisible = false">{{ t('取消') }}</el-button><el-button type="primary" :loading="acting" @click="submitReply">{{ t('保存回复') }}</el-button></template>
+      <template #footer
+        ><el-button @click="replyVisible = false">{{ t('取消') }}</el-button
+        ><el-button type="primary" :loading="acting" @click="submitReply">{{ t('保存回复') }}</el-button></template
+      >
     </me-dialog>
 
     <ActionConfirm v-model="confirmVisible" title="删除确认" question="确定要删除这条提交数据吗？" desc="删除后不可恢复。" alert-type="error" button-type="danger" confirm-text="确认删除" :items="confirmItems" :loading="acting" @confirm="runConfirm" />

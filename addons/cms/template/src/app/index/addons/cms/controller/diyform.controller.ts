@@ -78,9 +78,7 @@ export class AonCmsPublicDiyformController extends BaseController {
     const { rows, count } = await this.dataRepository.findAndCountAll({ where: { formId: form.id, status: 1 }, offset: (page - 1) * pageSize, limit: pageSize, order: [['createdAt', 'DESC']] });
     // 正文优先取多行文本域（textarea），仅在表单没有 textarea 时才回退到单行文本。
     // 直接用 ['textarea','text'].includes() 会按字段声明顺序命中 author 这类单行字段，导致列表正文显示成用户名。
-    const contentField =
-      fields.find((field) => field.type === 'textarea' && !field.contact) ??
-      fields.find((field) => field.type === 'text' && !field.contact);
+    const contentField = fields.find((field) => field.type === 'textarea' && !field.contact) ?? fields.find((field) => field.type === 'text' && !field.contact);
     return this.success({
       form: { id: form.id, title: form.title, diyname: form.diyname, description: form.description, submitText: form.submitText || '提交', needReview: form.needReview, fields, displayConfig },
       // author/content 为列表展示的便捷字段，原始提交内容一并返回便于扩展

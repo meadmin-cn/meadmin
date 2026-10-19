@@ -76,7 +76,10 @@
               </div>
             </div>
           </article>
-          <div v-if="data && !data.total" class="empty-state"><strong>{{ displayConfig.emptyText }}</strong><span>点击右上角按钮提交第一条</span></div>
+          <div v-if="data && !data.total" class="empty-state">
+            <strong>{{ displayConfig.emptyText }}</strong
+            ><span>点击右上角按钮提交第一条</span>
+          </div>
         </div>
         <el-pagination v-if="data?.total" v-model:current-page="page" :page-size="displayConfig.pageSize" :total="data.total" layout="prev,pager,next" class="pagination" @current-change="load" />
       </section>

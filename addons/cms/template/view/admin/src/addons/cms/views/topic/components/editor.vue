@@ -67,7 +67,9 @@
       </template>
 
       <el-alert v-if="previewUrl" class="cover-tip" type="success" :closable="false">
-        <template #title>{{ t('前台访问地址') }}：<span class="topic-link">{{ previewUrl }}</span></template>
+        <template #title
+          >{{ t('前台访问地址') }}：<span class="topic-link">{{ previewUrl }}</span></template
+        >
       </el-alert>
 
       <el-form-item :label="t('封面')" prop="coverUrl">
@@ -91,11 +93,11 @@ import type { FileInfo } from '@/api/file';
 import { useLocalesI18n } from '@/locales/i18n';
 import type { FormInstance, FormRules } from 'element-plus';
 import { computed, reactive, ref, watch } from 'vue';
-import { defaults, infoApi, saveApi } from '../../../api/topic';
 import { listApi as articleListApi } from '../../../api/article';
+import { treeApi as categoryTreeApi } from '../../../api/category';
 import { listApi as diyformListApi } from '../../../api/diyform';
 import { listApi as pageListApi } from '../../../api/page';
-import { treeApi as categoryTreeApi } from '../../../api/category';
+import { defaults, infoApi, saveApi } from '../../../api/topic';
 import { cmsFrontRoot } from '../../../components/accessUrl';
 import CmsPreview from '../../../components/cmsPreview.vue';
 
@@ -133,12 +135,7 @@ const flattenCategory = (items: Array<{ id: string; title: string; children?: an
 };
 const loadOptions = async () => {
   try {
-    const [articles, forms, pages, categories] = await Promise.all([
-      articleListApi().runAsync({ page: 1, pageSize: 200 }),
-      diyformListApi().runAsync({ page: 1, pageSize: 200 }),
-      pageListApi().runAsync({ page: 1, pageSize: 200 }),
-      categoryTreeApi().runAsync(),
-    ]);
+    const [articles, forms, pages, categories] = await Promise.all([articleListApi().runAsync({ page: 1, pageSize: 200 }), diyformListApi().runAsync({ page: 1, pageSize: 200 }), pageListApi().runAsync({ page: 1, pageSize: 200 }), categoryTreeApi().runAsync()]);
     articleOptions.value = (articles.list ?? []).map((item: any) => ({ id: item.id, title: item.title }));
     formOptions.value = (forms.list ?? []).map((item: any) => ({ id: item.id, title: item.title, diyname: item.diyname }));
     pageOptions.value = (pages.list ?? []).map((item: any) => ({ id: item.id, title: item.title }));

@@ -99,8 +99,8 @@ import { BarChart, LineChart, PieChart } from 'echarts/charts';
 import { GraphicComponent, GridComponent, LegendComponent, TitleComponent, TooltipComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import type { Component } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 echarts.use([BarChart, LineChart, PieChart, GridComponent, LegendComponent, TitleComponent, TooltipComponent, GraphicComponent, CanvasRenderer]);
 
 // 统一色系（方案 A · 现代简约）

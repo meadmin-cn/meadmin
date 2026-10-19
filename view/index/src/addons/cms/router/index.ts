@@ -6,6 +6,9 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/aon/cms',
     component: Layout,
+    // CMS 各页面自行通过 layout 的 headerMenus 渲染站点菜单；
+    // 该父路由若不加 hideMenu，会因无 meta.title 在框架默认页（/index）菜单里渲染成空白项。
+    meta: { title: 'CMS', hideMenu: true },
     children: [
       {
         path: '',

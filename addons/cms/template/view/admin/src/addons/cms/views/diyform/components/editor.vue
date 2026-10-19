@@ -111,7 +111,7 @@ import { ElMessage } from 'element-plus';
 import { computed, reactive, ref, watch } from 'vue';
 import { treeApi } from '../../../api/category';
 import type { CmsDiyformField } from '../../../api/diyform';
-import { cmsDiyformDisplayRoles, cmsDiyformFieldTypes, defaults, defaultDisplayConfig, infoApi, parseDisplayConfig, parseFields, saveApi } from '../../../api/diyform';
+import { cmsDiyformDisplayRoles, cmsDiyformFieldTypes, defaultDisplayConfig, defaults, infoApi, parseDisplayConfig, parseFields, saveApi } from '../../../api/diyform';
 import { cmsCategoryLinkableTypes, markCategoryTree } from '../../../components/categoryTree';
 
 const { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../../../lang/${locale}.json`), 'cms']);

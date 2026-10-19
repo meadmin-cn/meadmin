@@ -1,0 +1,5 @@
+﻿phase,check,owner
+Build,"Run pnpm build and archive dist output",release
+Config,"Inject database and Redis environment variables",operations
+Health,"Verify API health and static files",operations
+Rollback,"Keep previous image and migration notes",release

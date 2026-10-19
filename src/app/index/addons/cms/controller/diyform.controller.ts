@@ -16,7 +16,19 @@ interface CmsDiyformField {
   maxlength?: number;
   options?: string[];
   contact?: boolean;
+  /** 前台展示角色：title标题 body正文 meta辅助信息 normal普通信息 hidden仅后台可见 */
+  displayRole?: 'title' | 'body' | 'meta' | 'normal' | 'hidden';
 }
+
+/** 表单前台展示配置（缺省值与后台一致） */
+interface CmsDiyformDisplayConfig {
+  layout: string;
+  showAvatar: boolean;
+  showTime: boolean;
+  pageSize: number;
+  emptyText: string;
+}
+const defaultDisplayConfig: CmsDiyformDisplayConfig = { layout: 'card', showAvatar: true, showTime: true, pageSize: 10, emptyText: '暂无公开数据' };
 
 /**
  * 前台自定义表单：留言板由后台「自定义表单」中标记为留言板的表单驱动。
@@ -37,16 +49,38 @@ export class AonCmsPublicDiyformController extends BaseController {
     }
   }
 
+  /** 解析前台展示配置，非法 JSON 或字段缺失时回退默认值 */
+  private parseDisplayConfig(raw: string): CmsDiyformDisplayConfig {
+    let parsed: Partial<CmsDiyformDisplayConfig> = {};
+    try {
+      const value = JSON.parse(raw || '{}');
+      if (value && typeof value === 'object' && !Array.isArray(value)) parsed = value as Partial<CmsDiyformDisplayConfig>;
+    } catch {
+      parsed = {};
+    }
+    return {
+      layout: typeof parsed.layout === 'string' && parsed.layout ? parsed.layout : defaultDisplayConfig.layout,
+      showAvatar: typeof parsed.showAvatar === 'boolean' ? parsed.showAvatar : defaultDisplayConfig.showAvatar,
+      showTime: typeof parsed.showTime === 'boolean' ? parsed.showTime : defaultDisplayConfig.showTime,
+      pageSize: Number.isFinite(Number(parsed.pageSize)) && Number(parsed.pageSize) > 0 ? Math.min(Math.max(Number(parsed.pageSize), 1), 50) : defaultDisplayConfig.pageSize,
+      emptyText: typeof parsed.emptyText === 'string' && parsed.emptyText ? parsed.emptyText : defaultDisplayConfig.emptyText,
+    };
+  }
+
   /** 表单定义 + 已通过审核的公开数据（留言板与按标识访问共用同一套输出） */
   private async publicPage(form: AonCmsDiyform | null, query: { page?: number; pageSize?: number }): Promise<unknown> {
     const page = Math.max(Number(query?.page) || 1, 1);
-    const pageSize = Math.min(Math.max(Number(query?.pageSize) || 10, 1), 50);
-    if (!form) return this.success({ form: null, list: [], total: 0, page, pageSize });
-    const { rows, count } = await this.dataRepository.findAndCountAll({ where: { formId: form.id, status: 1 }, offset: (page - 1) * pageSize, limit: pageSize, order: [['createdAt', 'DESC']] });
+    if (!form) return this.success({ form: null, list: [], total: 0, page, pageSize: defaultDisplayConfig.pageSize });
     const fields = this.parseFields(form.fields);
-    const contentField = fields.find((field) => ['textarea', 'text'].includes(field.type) && !field.contact);
+    const displayConfig = this.parseDisplayConfig(form.displayConfig);
+    // 未显式传 pageSize 时按表单展示配置分页，保证前台分页条与实际数据量一致
+    const pageSize = Math.min(Math.max(Number(query?.pageSize) || displayConfig.pageSize, 1), 50);
+    const { rows, count } = await this.dataRepository.findAndCountAll({ where: { formId: form.id, status: 1 }, offset: (page - 1) * pageSize, limit: pageSize, order: [['createdAt', 'DESC']] });
+    // 正文优先取多行文本域（textarea），仅在表单没有 textarea 时才回退到单行文本。
+    // 直接用 ['textarea','text'].includes() 会按字段声明顺序命中 author 这类单行字段，导致列表正文显示成用户名。
+    const contentField = fields.find((field) => field.type === 'textarea' && !field.contact) ?? fields.find((field) => field.type === 'text' && !field.contact);
     return this.success({
-      form: { id: form.id, title: form.title, diyname: form.diyname, description: form.description, submitText: form.submitText || '提交', needReview: form.needReview, fields },
+      form: { id: form.id, title: form.title, diyname: form.diyname, description: form.description, submitText: form.submitText || '提交', needReview: form.needReview, fields, displayConfig },
       // author/content 为列表展示的便捷字段，原始提交内容一并返回便于扩展
       list: rows.map((row) => ({
         id: row.id,

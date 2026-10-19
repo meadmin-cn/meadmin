@@ -3,7 +3,7 @@ export interface CmsArticle {
   title: string;
   slug: string;
   summary: string;
-  mdContent: string;
+  htmlContent: string;
   coverUrl: string;
   seoTitle: string;
   seoKeywords: string;
@@ -21,7 +21,7 @@ export interface CmsArticle {
 // 详情接口返回时已补齐关联标题（categoryTitle/topicTitle/tagTitles）与下单数（orderCount）
 export type CmsArticleInfo = CmsArticle & { id: string; status: number; createdAt: string; updatedAt?: string; views: number; likes: number; comments: number; downloads: number; orderCount: number; categoryTitle?: string; topicTitle?: string; tagTitles?: string[]; children?: CmsArticleInfo[] };
 // 审核快照：兼容历史纯正文快照与新版完整内容 JSON
-export type CmsArticleSnapshot = Partial<CmsArticle> & { mdContent?: string };
+export type CmsArticleSnapshot = Partial<CmsArticle> & { htmlContent?: string };
 export const parseSnapshot = (snapshot?: string | null): CmsArticleSnapshot | null => {
   if (!snapshot) return null;
   const text = String(snapshot).trim();
@@ -30,12 +30,12 @@ export const parseSnapshot = (snapshot?: string | null): CmsArticleSnapshot | nu
     try {
       return JSON.parse(text) as CmsArticleSnapshot;
     } catch {
-      return { mdContent: text };
+      return { htmlContent: text };
     }
   }
-  return { mdContent: text };
+  return { htmlContent: text };
 };
-export const defaults = (): CmsArticle => ({ title: '', slug: '', summary: '', mdContent: '', coverUrl: '', seoTitle: '', seoKeywords: '', seoDescription: '', publishAt: null, orderNum: 0, categoryId: null, topicId: null, tagIds: [], orderEnabled: false, isDownload: false, fileUrl: '', fileName: '' });
+export const defaults = (): CmsArticle => ({ title: '', slug: '', summary: '', htmlContent: '', coverUrl: '', seoTitle: '', seoKeywords: '', seoDescription: '', publishAt: null, orderNum: 0, categoryId: null, topicId: null, tagIds: [], orderEnabled: false, isDownload: false, fileUrl: '', fileName: '' });
 export const listApi = () => request<{ list: CmsArticleInfo[]; total: number }, [{ page: number; pageSize: number; keyword?: string; status?: number; categoryId?: string; isDownload?: boolean; type?: 'download' | 'order' | 'normal'; orderBy?: string; orderDirection?: 'asc' | 'desc' }]>((data) => ({ url: 'addons/cms/article/', method: 'post', data }), { noLoading: true, clearEmpty: ['', undefined] });
 export const infoApi = () => request<CmsArticleInfo, [string]>((id) => ({ url: 'addons/cms/article/info/' + id, method: 'get' }), { noLoading: true });
 export const saveApi = () => request<CmsArticleInfo, [string | undefined, CmsArticle]>((id, data) => ({ url: 'addons/cms/article/' + (id ? 'up/' + id : 'add'), method: 'post', data }), { success: true });

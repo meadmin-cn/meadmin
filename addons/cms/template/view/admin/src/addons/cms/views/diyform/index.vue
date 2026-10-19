@@ -12,8 +12,11 @@
         <vxe-column field="title" :title="t('表单名称')" min-width="160" />
         <vxe-column field="diyname" :title="t('表单标识')" min-width="140" />
         <vxe-column field="categoryTitle" :title="t('关联栏目')" min-width="140"
-          ><template #default="{ row }"><span v-if="row.categoryTitle">{{ row.categoryTitle }}</span><span v-else class="muted-text">{{ t('未关联') }}</span></template
-        ></vxe-column>
+          ><template #default="{ row }"
+            ><span v-if="row.categoryTitle">{{ row.categoryTitle }}</span
+            ><span v-else class="muted-text">{{ t('未关联') }}</span></template
+          ></vxe-column
+        >
         <vxe-column field="fields" :title="t('字段')" min-width="120"
           ><template #default="{ row }">{{ parseFields(row.fields).length }} 个</template></vxe-column
         >
@@ -63,8 +66,8 @@ import type { CmsConfirmItem } from '../../components/actionConfirm';
 import ActionConfirm from '../../components/actionConfirm.vue';
 import { cmsCategoryLinkableTypes } from '../../components/categoryTree';
 import CategoryWorkspace from '../../components/categoryWorkspace.vue';
-import Editor from './components/editor.vue';
 import DataDialog from './components/dataDialog.vue';
+import Editor from './components/editor.vue';
 
 const { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../../lang/${locale}.json`), 'cms']);
 const params = reactive({ page: 1, pageSize: 20, keyword: '', status: undefined as number | undefined, categoryId: undefined as string | undefined });

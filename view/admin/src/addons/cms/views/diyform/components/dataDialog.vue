@@ -1,5 +1,5 @@
 <template>
-  <me-dialog v-model="show" :title="dialogTitle" :full="true" @open="onOpen" @closed="onClosed">
+  <me-dialog v-model="show" :title="dialogTitle" :full="true" width="80%" style="height: 80vh" body-class="cms-diyform-data-body" @open="onOpen" @closed="onClosed">
     <me-search-form :model="params" @search="onSearch"
       ><el-form-item :label="t('状态')"
         ><el-select v-model="params.status" clearable style="width: 150px"><el-option v-for="(label, index) in cmsDiyformDataStates" :key="index" :value="index" :label="t(label)" /></el-select></el-form-item
@@ -8,7 +8,10 @@
     <div class="data-page">
       <el-alert class="data-tip" type="info" :closable="false" show-icon :title="`当前表单：${form?.title ?? ''}（导出会按当前筛选条件输出该表单的全部数据）`" />
       <me-vxe-table border :loading="loading" :data="data?.list ?? []" :pagination-options="{ currentPage: params.page, pageSize: params.pageSize, total: data?.total ?? 0, change: search }" @refresh="search()">
-        <vxe-column v-for="column in dynamicColumns" :key="column.name" :field="column.name" :title="column.label" min-width="160" show-overflow :formatter="({ cellValue }) => formatValue(cellValue)" />
+        <!-- 用户提交的字段值都存放在行记录的 data(JSON 字符串) 里，顶层没有同名字段，需解析 data 后取值；顶层仅作冗余列(author/contact)的回退 -->
+        <vxe-column v-for="column in dynamicColumns" :key="column.name" :field="column.name" :title="column.label" min-width="160" show-overflow>
+          <template #default="{ row }">{{ formatValue(parseData(row.data)[column.name] ?? row[column.name]) }}</template>
+        </vxe-column>
         <vxe-column field="status" :title="t('状态')" width="110"
           ><template #default="{ row }"
             ><el-tag :type="statusTagType(row.status)" disable-transitions>{{ t(cmsDiyformDataStates[row.status] ?? '未知') }}</el-tag></template
@@ -37,7 +40,9 @@
         <el-descriptions-item label="来源">{{ detailRow.source || '-' }}</el-descriptions-item>
         <el-descriptions-item label="提交时间">{{ formatterAt({ cellValue: detailRow.createdAt }) }}</el-descriptions-item>
       </el-descriptions>
-      <template #footer><el-button @click="detailVisible = false">{{ t('关闭') }}</el-button></template>
+      <template #footer
+        ><el-button @click="detailVisible = false">{{ t('关闭') }}</el-button></template
+      >
     </me-dialog>
 
     <!-- 审核：通过 / 拒绝 -->
@@ -46,13 +51,19 @@
         <el-radio :value="1">{{ t('通过（前台公开展示）') }}</el-radio>
         <el-radio :value="2">{{ t('拒绝') }}</el-radio>
       </el-radio-group>
-      <template #footer><el-button @click="reviewVisible = false">{{ t('取消') }}</el-button><el-button type="primary" :loading="acting" @click="submitReview">{{ t('确定') }}</el-button></template>
+      <template #footer
+        ><el-button @click="reviewVisible = false">{{ t('取消') }}</el-button
+        ><el-button type="primary" :loading="acting" @click="submitReview">{{ t('确定') }}</el-button></template
+      >
     </me-dialog>
 
     <!-- 回复 -->
     <me-dialog v-model="replyVisible" title="回复提交数据" :full="false" width="520px" @closed="replyRow = undefined">
       <el-input v-model="replyText" type="textarea" :rows="4" maxlength="2000" show-word-limit placeholder="回复内容会展示在前台对应条目下" />
-      <template #footer><el-button @click="replyVisible = false">{{ t('取消') }}</el-button><el-button type="primary" :loading="acting" @click="submitReply">{{ t('保存回复') }}</el-button></template>
+      <template #footer
+        ><el-button @click="replyVisible = false">{{ t('取消') }}</el-button
+        ><el-button type="primary" :loading="acting" @click="submitReply">{{ t('保存回复') }}</el-button></template
+      >
     </me-dialog>
 
     <ActionConfirm v-model="confirmVisible" title="删除确认" question="确定要删除这条提交数据吗？" desc="删除后不可恢复。" alert-type="error" button-type="danger" confirm-text="确认删除" :items="confirmItems" :loading="acting" @confirm="runConfirm" />
@@ -223,11 +234,26 @@ watch(
 );
 </script>
 <style scoped>
+/* 让弹窗 body 成为纵向 flex 容器，表格才能吃满剩余高度（body 是 teleport 出去的，需非 scoped 全局样式按 class 限定） */
+:global(.cms-diyform-data-body) {
+  display: flex;
+  flex-direction: column;
+}
 .data-page {
   min-width: 0;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 .data-tip {
-  margin-bottom: 4px;
+  flex-shrink: 0;
+  margin-bottom: 0;
   border-radius: 8px;
+}
+.data-page :deep(.me-vxe-table) {
+  flex: 1;
+  min-height: 0;
 }
 </style>

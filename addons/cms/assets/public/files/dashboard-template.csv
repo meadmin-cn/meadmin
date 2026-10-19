@@ -1,0 +1,5 @@
+﻿widget,data,display
+KPI,"views, likes, comments",summary cards
+Trend,"daily downloads",line chart source
+Ranking,"popular resources",ordered list
+Filter,"date and category",query controls

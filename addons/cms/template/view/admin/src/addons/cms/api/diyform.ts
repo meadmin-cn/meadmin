@@ -1,5 +1,8 @@
 import request from '@/utils/request.js';
 
+/** 前台展示角色：决定该字段在公开数据卡片中的位置 */
+export type CmsDiyformDisplayRole = 'title' | 'body' | 'meta' | 'normal' | 'hidden';
+
 /** 表单字段定义：前台按此渲染，后台据此生成导出表头 */
 export interface CmsDiyformField {
   name: string;
@@ -11,6 +14,8 @@ export interface CmsDiyformField {
   options?: string[];
   /** 该字段作为「联系方式」抽取，仅后台可见 */
   contact?: boolean;
+  /** 前台展示角色 */
+  displayRole?: CmsDiyformDisplayRole;
 }
 
 export interface CmsDiyform {
@@ -25,9 +30,49 @@ export interface CmsDiyform {
   orderNum: number;
   /** 关联栏目：仅「4 自定义表单」型栏目可选，与文章.categoryId 同一套逻辑 */
   categoryId: string | null;
+  /** 前台展示配置（JSON 字符串） */
+  displayConfig: string;
 }
 export type CmsDiyformInfo = CmsDiyform & { id: string; createdAt: string; dataCount?: number; categoryTitle?: string };
-export const defaults = (): CmsDiyform => ({ title: '', diyname: '', description: '', fields: '[]', submitText: '提交', needReview: 1, isMessageBoard: false, status: 1, orderNum: 0, categoryId: null });
+export const defaults = (): CmsDiyform => ({ title: '', diyname: '', description: '', fields: '[]', submitText: '提交', needReview: 1, isMessageBoard: false, status: 1, orderNum: 0, categoryId: null, displayConfig: '{}' });
+
+/** 前台展示角色可选值（与前台渲染位置一一对应） */
+export const cmsDiyformDisplayRoles: Array<{ value: CmsDiyformDisplayRole; label: string }> = [
+  { value: 'title', label: '标题/用户名' },
+  { value: 'body', label: '正文' },
+  { value: 'meta', label: '辅助信息' },
+  { value: 'normal', label: '普通信息' },
+  { value: 'hidden', label: '仅后台可见' },
+];
+
+/** 前台展示配置 */
+export interface CmsDiyformDisplayConfig {
+  layout: string;
+  showAvatar: boolean;
+  showTime: boolean;
+  pageSize: number;
+  emptyText: string;
+}
+export const defaultDisplayConfig: CmsDiyformDisplayConfig = { layout: 'card', showAvatar: true, showTime: true, pageSize: 10, emptyText: '暂无公开数据' };
+
+/** 安全解析前台展示配置，非法 JSON 或字段缺失时回退默认值 */
+export const parseDisplayConfig = (raw: string | CmsDiyformDisplayConfig | null | undefined): CmsDiyformDisplayConfig => {
+  if (raw && typeof raw === 'object') return { ...defaultDisplayConfig, ...raw };
+  let parsed: Partial<CmsDiyformDisplayConfig> = {};
+  try {
+    const value = JSON.parse(raw || '{}');
+    if (value && typeof value === 'object' && !Array.isArray(value)) parsed = value as Partial<CmsDiyformDisplayConfig>;
+  } catch {
+    parsed = {};
+  }
+  return {
+    layout: typeof parsed.layout === 'string' && parsed.layout ? parsed.layout : defaultDisplayConfig.layout,
+    showAvatar: typeof parsed.showAvatar === 'boolean' ? parsed.showAvatar : defaultDisplayConfig.showAvatar,
+    showTime: typeof parsed.showTime === 'boolean' ? parsed.showTime : defaultDisplayConfig.showTime,
+    pageSize: Number.isFinite(Number(parsed.pageSize)) && Number(parsed.pageSize) > 0 ? Math.min(Math.max(Number(parsed.pageSize), 1), 50) : defaultDisplayConfig.pageSize,
+    emptyText: typeof parsed.emptyText === 'string' && parsed.emptyText ? parsed.emptyText : defaultDisplayConfig.emptyText,
+  };
+};
 
 /** 可用字段类型（与前台渲染器一一对应） */
 export const cmsDiyformFieldTypes: Array<{ value: CmsDiyformField['type']; label: string }> = [

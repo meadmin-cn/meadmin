@@ -1,7 +1,7 @@
 import { AonCmsPage } from '@/entities/aonCmsPage.entity.js';
 import { PickDtoType } from '@/helper/dto.js';
 import { RuleType } from '@/ruleType/index.js';
-export class AonCmsPageSaveDto extends PickDtoType(AonCmsPage, ['title', 'slug', 'summary', 'mdContent', 'coverUrl', 'kind', 'link', 'target', 'seoTitle', 'seoKeywords', 'seoDescription', 'publishAt', 'orderNum', 'categoryId']) {}
+export class AonCmsPageSaveDto extends PickDtoType(AonCmsPage, ['title', 'slug', 'summary', 'htmlContent', 'coverUrl', 'kind', 'link', 'target', 'seoTitle', 'seoKeywords', 'seoDescription', 'publishAt', 'orderNum', 'categoryId']) {}
 export const pageSchema: ReturnType<typeof RuleType.object> = RuleType.object({
   title: RuleType.string().max(200).trim().min(1).required(),
   slug: RuleType.string()
@@ -9,7 +9,7 @@ export const pageSchema: ReturnType<typeof RuleType.object> = RuleType.object({
     .pattern(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
     .required(),
   summary: RuleType.string().max(1000).allow('').default(''),
-  mdContent: RuleType.string().max(200000).allow('').default(''),
+  htmlContent: RuleType.string().max(200000).allow('').default(''),
   coverUrl: RuleType.string()
     .max(1000)
     .pattern(/^(?:https?:\/\/[^\s]+|\/(?!\/)[^\s]*)$/)

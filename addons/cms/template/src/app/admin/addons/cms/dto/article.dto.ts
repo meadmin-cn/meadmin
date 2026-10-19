@@ -1,14 +1,18 @@
 import { AonCmsArticle } from '@/entities/aonCmsArticle.entity.js';
 import { PickDtoType } from '@/helper/dto.js';
 import { RuleType } from '@/ruleType/index.js';
-export class AonCmsArticleSaveDto extends PickDtoType(AonCmsArticle, ['title', 'slug', 'summary', 'mdContent', 'coverUrl', 'seoTitle', 'seoKeywords', 'seoDescription', 'publishAt', 'orderNum', 'categoryId', 'topicId', 'tagIds', 'orderEnabled', 'isDownload', 'fileUrl', 'fileName', 'isGallery']) {}
+export class AonCmsArticleSaveDto extends PickDtoType(AonCmsArticle, ['title', 'slug', 'summary', 'htmlContent', 'coverUrl', 'seoTitle', 'seoKeywords', 'seoDescription', 'publishAt', 'orderNum', 'categoryId', 'topicId', 'tagIds', 'orderEnabled', 'isDownload', 'fileUrl', 'fileName', 'isGallery']) {}
 export class AonCmsArticleFileDto extends PickDtoType(AonCmsArticle, ['fileUrl', 'fileName']) {}
 export const articleFileSchema: ReturnType<typeof RuleType.object> = RuleType.object({
   fileUrl: RuleType.string()
     .max(1000)
     .pattern(/^(?:https?:\/\/[^\s]+|\/(?!\/)[^\s]*)$/)
     .required(),
-  fileName: RuleType.string().max(200).trim().pattern(/^(?!\.{1,2}$)[^/\\\p{Cc}]+$/u).required(),
+  fileName: RuleType.string()
+    .max(200)
+    .trim()
+    .pattern(/^(?!\.{1,2}$)[^/\\\p{Cc}]+$/u)
+    .required(),
 }).unknown(false);
 export const articleSchema: ReturnType<typeof RuleType.object> = RuleType.object({
   title: RuleType.string().max(200).trim().min(1).required(),
@@ -17,7 +21,7 @@ export const articleSchema: ReturnType<typeof RuleType.object> = RuleType.object
     .pattern(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
     .required(),
   summary: RuleType.string().max(1000).allow('').default(''),
-  mdContent: RuleType.string().max(200000).allow('').default(''),
+  htmlContent: RuleType.string().max(200000).allow('').default(''),
   coverUrl: RuleType.string()
     .max(1000)
     .pattern(/^(?:https?:\/\/[^\s]+|\/(?!\/)[^\s]*)$/)

@@ -130,7 +130,7 @@ export class AonCmsArticleService {
       fileUrl: row.fileUrl,
       fileName: row.fileName,
       isGallery: row.isGallery,
-      mdContent: row.mdContent,
+      htmlContent: row.htmlContent,
     });
   }
   async reviewHistory(id: string) {
@@ -177,7 +177,7 @@ export class AonCmsArticleService {
       title: data.title,
       slug: data.slug,
       summary: data.summary,
-      mdContent: data.mdContent,
+      htmlContent: data.htmlContent,
       coverUrl: data.coverUrl,
       seoTitle: data.seoTitle,
       seoKeywords: data.seoKeywords,
@@ -220,7 +220,7 @@ export class AonCmsArticleService {
     await this.lock();
     const row = await this.info(id);
     if (!canSubmitCms(row.status)) throw new BadRequestError('当前状态不能提交审核');
-    if (!row.mdContent.trim()) throw new BadRequestError('内容不能为空');
+    if (!row.htmlContent.trim()) throw new BadRequestError('内容不能为空');
     const fromStatus = row.status;
     const result = await row.update({ status: 1 });
     await this.logReview(row.id, fromStatus, 1, 'submit', '', this.buildSnapshot(row));

@@ -38,7 +38,7 @@
     <template v-if="showBody">
       <div class="info-block-label">正文</div>
       <div class="info-body" :style="{ maxHeight: bodyMaxHeight }">
-        <RichTextView :content="page.mdContent" />
+        <RichTextView :content="page.htmlContent" />
       </div>
     </template>
   </div>

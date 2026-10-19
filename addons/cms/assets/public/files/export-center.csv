@@ -1,0 +1,5 @@
+﻿stage,behavior,notes
+Collect,"Read records in pages",bounded memory
+Transform,"Map fields to CSV columns",escape commas and quotes
+Write,"Stream output to file",UTF-8 text
+Notify,"Expose completed download URL",increment download count

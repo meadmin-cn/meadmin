@@ -5,7 +5,7 @@ export interface CmsContent {
   slug: string;
   summary: string;
   coverUrl: string;
-  mdContent?: string;
+  htmlContent?: string;
   publishAt?: string;
   categoryId?: string;
   topicId?: string;
@@ -96,7 +96,7 @@ export interface CmsBlockItem {
   /** 前台标题：渲染到区块的 title 属性上，鼠标移入时以原生提示展示 */
   displayTitle: string;
   coverUrl: string;
-  mdContent: string;
+  htmlContent: string;
   link: string;
 }
 /** 按「展示位置」取区块；位置在前台渲染点与后台字典中一一对应 */
@@ -151,6 +151,8 @@ export interface CmsHome {
 export const homeApi = () => request<CmsHome, []>(() => ({ url: 'addons/cms/home', method: 'get' }), { noLoading: true });
 export const relatedApi = () => request<CmsContent[], [string]>((slug) => ({ url: 'addons/cms/article/' + encodeURIComponent(slug) + '/related', method: 'get' }), { noLoading: true });
 // ---- 自定义表单（前台留言板由后台「自定义表单」驱动） ----
+/** 字段前台展示角色 */
+export type CmsDiyformDisplayRole = 'title' | 'body' | 'meta' | 'normal' | 'hidden';
 export interface CmsDiyformField {
   name: string;
   label: string;
@@ -160,7 +162,39 @@ export interface CmsDiyformField {
   maxlength?: number;
   options?: string[];
   contact?: boolean;
+  /** 后台配置的前台展示角色；未配置时按字段类型推断 */
+  displayRole?: CmsDiyformDisplayRole;
 }
+/** 表单前台展示配置 */
+export interface CmsDiyformDisplayConfig {
+  layout: string;
+  showAvatar: boolean;
+  showTime: boolean;
+  pageSize: number;
+  emptyText: string;
+}
+export const defaultDiyformDisplayConfig: CmsDiyformDisplayConfig = { layout: 'card', showAvatar: true, showTime: true, pageSize: 10, emptyText: '暂无公开数据' };
+/** 安全解析展示配置：接口正常返回对象，兼容历史字符串与非法值 */
+export const parseDisplayConfig = (raw: unknown): CmsDiyformDisplayConfig => {
+  let parsed: Partial<CmsDiyformDisplayConfig> = {};
+  if (typeof raw === 'string') {
+    try {
+      const value = JSON.parse(raw || '{}');
+      if (value && typeof value === 'object' && !Array.isArray(value)) parsed = value as Partial<CmsDiyformDisplayConfig>;
+    } catch {
+      parsed = {};
+    }
+  } else if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+    parsed = raw as Partial<CmsDiyformDisplayConfig>;
+  }
+  return {
+    layout: typeof parsed.layout === 'string' && parsed.layout ? parsed.layout : defaultDiyformDisplayConfig.layout,
+    showAvatar: typeof parsed.showAvatar === 'boolean' ? parsed.showAvatar : defaultDiyformDisplayConfig.showAvatar,
+    showTime: typeof parsed.showTime === 'boolean' ? parsed.showTime : defaultDiyformDisplayConfig.showTime,
+    pageSize: Number.isFinite(Number(parsed.pageSize)) && Number(parsed.pageSize) > 0 ? Math.min(Math.max(Number(parsed.pageSize), 1), 50) : defaultDiyformDisplayConfig.pageSize,
+    emptyText: typeof parsed.emptyText === 'string' && parsed.emptyText ? parsed.emptyText : defaultDiyformDisplayConfig.emptyText,
+  };
+};
 export interface CmsDiyform {
   id: string;
   title: string;
@@ -169,6 +203,7 @@ export interface CmsDiyform {
   submitText: string;
   needReview: number;
   fields: CmsDiyformField[];
+  displayConfig?: CmsDiyformDisplayConfig;
 }
 export interface CmsDiyformRecord {
   id: string;
@@ -186,5 +221,5 @@ export interface CmsDiyformDetail {
   pageSize: number;
 }
 /** 按表单标识取表单及其公开数据：每个自定义表单都有独立的前台访问页 /aon/cms/form/{diyname} */
-export const diyformApi = () => request<CmsDiyformDetail, [string, { page: number; pageSize: number }]>((diyname, params) => ({ url: 'addons/cms/diyform/' + encodeURIComponent(diyname), method: 'get', params }), { noLoading: true });
+export const diyformApi = () => request<CmsDiyformDetail, [string, { page: number; pageSize?: number }]>((diyname, params) => ({ url: 'addons/cms/diyform/' + encodeURIComponent(diyname), method: 'get', params }), { noLoading: true });
 export const submitDiyformApi = () => request<unknown, [string, Record<string, unknown>]>((diyname, data) => ({ url: 'addons/cms/diyform/' + encodeURIComponent(diyname), method: 'post', data }), { success: true });

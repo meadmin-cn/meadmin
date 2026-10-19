@@ -130,19 +130,19 @@ export class AonCmsPublicService {
     return { list: rows, total: count, page: q.page, pageSize: q.pageSize };
   }
   async articleDetail(slug: string) {
-    const row = await this.article.findOne({ attributes: [...articleAttributes, 'mdContent'], where: { [Op.and]: [await this.visibleArticles(), { slug }] } });
+    const row = await this.article.findOne({ attributes: [...articleAttributes, 'htmlContent'], where: { [Op.and]: [await this.visibleArticles(), { slug }] } });
     if (!row) throw new NotFoundError('内容不存在');
     return row;
   }
   async downloadArticle(slug: string) {
-    const row = await this.article.findOne({ attributes: [...articleAttributes, 'mdContent'], where: { [Op.and]: [await this.visibleArticles(), { slug }] } });
+    const row = await this.article.findOne({ attributes: [...articleAttributes, 'htmlContent'], where: { [Op.and]: [await this.visibleArticles(), { slug }] } });
     if (!row) throw new NotFoundError('内容不存在');
     if (!row.isDownload || !row.fileUrl) throw new BadRequestError('该内容不可下载');
     await row.increment('downloads', { by: 1 });
     return { url: row.fileUrl, title: row.fileName || row.title, downloads: (row.downloads ?? 0) + 1 };
   }
   async pageDetail(slug: string) {
-    const row = await this.page.findOne({ attributes: ['title', 'slug', 'mdContent', 'summary', 'coverUrl', 'kind', 'link', 'target', 'publishAt', 'seoTitle', 'seoKeywords', 'seoDescription'], where: { slug, status: 2, publishAt: { [Op.lte]: new Date() } } });
+    const row = await this.page.findOne({ attributes: ['title', 'slug', 'htmlContent', 'summary', 'coverUrl', 'kind', 'link', 'target', 'publishAt', 'seoTitle', 'seoKeywords', 'seoDescription'], where: { slug, status: 2, publishAt: { [Op.lte]: new Date() } } });
     if (!row) throw new NotFoundError('内容不存在');
     return row;
   }
@@ -162,18 +162,9 @@ export class AonCmsPublicService {
     const formIds = [...new Set(categoryRows.filter((row) => row.type === 4 && row.target).map((row) => row.target))];
     const pageCategoryIds = categoryRows.filter((row) => row.type === 5).map((row) => row.id);
     const formCategoryIds = categoryRows.filter((row) => row.type === 4).map((row) => row.id);
-    const pageConditions = [
-      ...(pageIds.length ? [{ id: { [Op.in]: pageIds } }] : []),
-      ...(pageCategoryIds.length ? [{ categoryId: { [Op.in]: pageCategoryIds } }] : []),
-    ];
-    const formConditions = [
-      ...(formIds.length ? [{ id: { [Op.in]: formIds } }] : []),
-      ...(formCategoryIds.length ? [{ categoryId: { [Op.in]: formCategoryIds } }] : []),
-    ];
-    const [pages, diyforms] = await Promise.all([
-      pageConditions.length ? this.page.findAll({ attributes: ['id', 'title', 'slug', 'kind', 'link', 'target', 'categoryId'], where: { [Op.or]: pageConditions, status: 2, publishAt: { [Op.lte]: new Date() } } }) : [],
-      formConditions.length ? this.diyform.findAll({ attributes: ['id', 'diyname', 'status', 'categoryId'], where: { [Op.or]: formConditions, status: 1 } }) : [],
-    ]);
+    const pageConditions = [...(pageIds.length ? [{ id: { [Op.in]: pageIds } }] : []), ...(pageCategoryIds.length ? [{ categoryId: { [Op.in]: pageCategoryIds } }] : [])];
+    const formConditions = [...(formIds.length ? [{ id: { [Op.in]: formIds } }] : []), ...(formCategoryIds.length ? [{ categoryId: { [Op.in]: formCategoryIds } }] : [])];
+    const [pages, diyforms] = await Promise.all([pageConditions.length ? this.page.findAll({ attributes: ['id', 'title', 'slug', 'kind', 'link', 'target', 'categoryId'], where: { [Op.or]: pageConditions, status: 2, publishAt: { [Op.lte]: new Date() } } }) : [], formConditions.length ? this.diyform.findAll({ attributes: ['id', 'diyname', 'status', 'categoryId'], where: { [Op.or]: formConditions, status: 1 } }) : []]);
     // 预建 id→标识映射，避免在栏目树递归中逐条查库
     const pageMap = new Map(pages.map((p) => [p.id, p]));
     const diyMap = new Map(diyforms.map((d) => [d.id, d]));
@@ -306,7 +297,7 @@ export class AonCmsPublicService {
   async blocks(position: string) {
     const now = new Date();
     return this.block.findAll({
-      attributes: ['id', 'title', 'displayTitle', 'kind', 'mdContent', 'coverUrl', 'link'],
+      attributes: ['id', 'title', 'displayTitle', 'kind', 'htmlContent', 'coverUrl', 'link'],
       where: { position, status: 1, [Op.and]: [{ [Op.or]: [{ startAt: null }, { startAt: { [Op.lte]: now } }] }, { [Op.or]: [{ endAt: null }, { endAt: { [Op.gt]: now } }] }] },
       order: [
         ['orderNum', 'DESC'],

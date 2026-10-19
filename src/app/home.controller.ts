@@ -15,7 +15,10 @@ export class HomeController {
     const baseConfig = await this.configService.getValues('base');
     const websiteName = this.configService.valuesToValue(baseConfig, 'site_name');
     const siteDescription = this.configService.valuesToValue(baseConfig, 'site_description');
-    const requestPath = this.ctx.path;
+    // vite 开发中间件在处理非静态资源请求时会 strip base 改写 req.url（/admin/login → /login），
+    // 导致 ctx.path 丢失 /admin 前缀、误判为前台路由；用 originalUrl 保留原始路径。
+    // 生产环境无该改写，originalUrl 与 path 一致，行为不变。
+    const requestPath = (this.ctx.originalUrl || this.ctx.path).split('?')[0];
     const normalizePrefix = (value?: string) => {
       const prefix = (value ?? '').trim().replace(/^\/+|\/+$/g, '');
       return prefix ? `/${prefix}` : '';

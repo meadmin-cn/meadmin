@@ -1,0 +1,5 @@
+﻿step,rule,result
+Request,"Read bearer token",authenticate admin
+Decorator,"Check aon_cms_article_edit",allow or reject
+Service,"Validate article id and payload",update file fields only
+Response,"Return sanitized business result",no credential data

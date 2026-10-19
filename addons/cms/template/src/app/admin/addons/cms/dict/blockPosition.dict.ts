@@ -17,7 +17,7 @@ export interface CmsBlockPosition {
   /** 该位置允许同时投放的区块数量（0 表示不限） */
   limit: number;
   /** 区块在该位置动用到的字段说明 */
-  usage: Array<{ field: 'coverUrl' | 'mdContent' | 'link' | 'config'; label: string; hint: string }>;
+  usage: Array<{ field: 'coverUrl' | 'htmlContent' | 'link' | 'config'; label: string; hint: string }>;
   /** 用于兼容旧数据的区块类型：1区块 2轮播 3广告 */
   kind: number;
   /** 图片建议尺寸等提示 */
@@ -41,7 +41,7 @@ export const cmsBlockPositions: CmsBlockPosition[] = [
     imageRequired: true,
     usage: [
       { field: 'coverUrl', label: '封面图', hint: '作为轮播大图铺满整个轮播区域' },
-      { field: 'mdContent', label: '正文', hint: '该位置不展示正文，留空即可' },
+      { field: 'htmlContent', label: '正文', hint: '该位置不展示正文，留空即可' },
       { field: 'link', label: '链接', hint: '点击轮播图后跳转的地址，可填站内路径或完整网址' },
     ],
   },
@@ -56,7 +56,7 @@ export const cmsBlockPositions: CmsBlockPosition[] = [
     imageHint: '可选封面图，建议 800×600（4:3），上传后以左图右文展示',
     imageRequired: false,
     usage: [
-      { field: 'mdContent', label: '正文', hint: '卡片右侧的正文内容，支持富文本' },
+      { field: 'htmlContent', label: '正文', hint: '卡片右侧的正文内容，支持富文本' },
       { field: 'coverUrl', label: '封面图', hint: '可选，配置后卡片变为左图右文布局' },
       { field: 'link', label: '链接', hint: '可选，填写后卡片底部显示「查看详情」按钮' },
     ],
@@ -74,7 +74,7 @@ export const cmsBlockPositions: CmsBlockPosition[] = [
     usage: [
       { field: 'coverUrl', label: '封面图', hint: '侧边栏展示的推广图，未上传时降级显示名称文字' },
       { field: 'link', label: '链接', hint: '点击图片后跳转的地址，可填站内路径或完整网址' },
-      { field: 'mdContent', label: '正文', hint: '该位置不展示正文，留空即可' },
+      { field: 'htmlContent', label: '正文', hint: '该位置不展示正文，留空即可' },
     ],
   },
   {
@@ -88,7 +88,7 @@ export const cmsBlockPositions: CmsBlockPosition[] = [
     imageHint: '可选封面图，建议 800×600（4:3），上传后以左图右文展示',
     imageRequired: false,
     usage: [
-      { field: 'mdContent', label: '正文', hint: '详情页底部展示的正文内容，支持富文本' },
+      { field: 'htmlContent', label: '正文', hint: '详情页底部展示的正文内容，支持富文本' },
       { field: 'coverUrl', label: '封面图', hint: '可选，配置后区块变为左图右文布局' },
       { field: 'link', label: '链接', hint: '可选，填写后区块底部显示「查看详情」按钮' },
     ],
@@ -106,7 +106,7 @@ export const cmsBlockPositions: CmsBlockPosition[] = [
     configSample: '{"sortBy":"views","limit":6}',
     usage: [
       { field: 'config', label: '配置', hint: 'sortBy 可选 latest / likes / comments / views；limit 取值 1-50' },
-      { field: 'mdContent', label: '正文', hint: '该位置不展示正文，留空即可' },
+      { field: 'htmlContent', label: '正文', hint: '该位置不展示正文，留空即可' },
     ],
   },
 ];

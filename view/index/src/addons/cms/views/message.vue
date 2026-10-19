@@ -55,16 +55,17 @@
         </div>
         <div v-loading="loading" class="stream-list">
           <article v-for="item in data?.list" :key="item.id" class="message-item">
-            <div class="message-avatar">{{ (item.author || '匿').slice(0, 1) }}</div>
+            <div v-if="displayConfig.showAvatar" class="message-avatar">{{ avatarText(item) }}</div>
             <div class="message-copy">
               <header>
-                <strong>{{ item.author || '匿名' }}</strong
-                ><time>{{ formatterAtExec(item.createdAt, 'YYYY-MM-DD') }}</time>
+                <strong>{{ titleText(item) }}</strong>
+                <span v-for="entry in metaEntries(item)" :key="entry.name" class="message-meta">{{ entry.label }}：{{ entry.value }}</span>
+                <time v-if="displayConfig.showTime">{{ formatterAtExec(item.createdAt, 'YYYY-MM-DD') }}</time>
               </header>
-              <p>{{ item.content }}</p>
-              <!-- 其余字段按表单配置补充展示 -->
-              <div v-if="extraEntries(item).length" class="message-extra">
-                <span v-for="entry in extraEntries(item)" :key="entry.label"
+              <p>{{ bodyText(item) }}</p>
+              <!-- 普通信息字段按配置展示为「标签：值」 -->
+              <div v-if="normalEntries(item).length" class="message-extra">
+                <span v-for="entry in normalEntries(item)" :key="entry.name"
                   ><b>{{ entry.label }}</b
                   >{{ entry.value }}</span
                 >
@@ -75,9 +76,12 @@
               </div>
             </div>
           </article>
-          <div v-if="data && !data.total" class="empty-state"><strong>暂无公开数据</strong><span>点击右上角按钮提交第一条</span></div>
+          <div v-if="data && !data.total" class="empty-state">
+            <strong>{{ displayConfig.emptyText }}</strong
+            ><span>点击右上角按钮提交第一条</span>
+          </div>
         </div>
-        <el-pagination v-if="data?.total" v-model:current-page="page" :page-size="pageSize" :total="data.total" layout="prev,pager,next" class="pagination" @current-change="load" />
+        <el-pagination v-if="data?.total" v-model:current-page="page" :page-size="displayConfig.pageSize" :total="data.total" layout="prev,pager,next" class="pagination" @current-change="load" />
       </section>
     </div>
   </section>
@@ -89,8 +93,8 @@ import { formatterAtExec } from '@/utils/helper';
 import { ElMessage } from 'element-plus';
 import { computed, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import type { CmsDiyformField, CmsDiyformRecord } from '../api/cms';
-import { diyformApi, submitDiyformApi } from '../api/cms';
+import type { CmsDiyformDisplayRole, CmsDiyformField, CmsDiyformRecord } from '../api/cms';
+import { diyformApi, parseDisplayConfig, submitDiyformApi } from '../api/cms';
 
 // 所有前台表单均由栏目类型 4 解析为 /aon/cms/form/{diyname}。
 const route = useRoute();
@@ -99,7 +103,6 @@ const editorOpen = ref(false);
 const submitting = ref(false);
 const loading = ref(false);
 const page = ref(1);
-const pageSize = 10;
 // 提交内容以字段名称为键，结构完全来自后台配置
 const formData = reactive<Record<string, unknown>>({});
 const { data: formDiyData, runAsync: fetchDiyform } = diyformApi();
@@ -108,6 +111,8 @@ const data = computed(() => formDiyData.value);
 
 const form = computed(() => data.value?.form ?? null);
 const fields = computed<CmsDiyformField[]>(() => form.value?.fields ?? []);
+// 前台展示配置完全由后台「自定义表单」驱动，接口返回对象，这里再做一次兼容解析
+const displayConfig = computed(() => parseDisplayConfig(form.value?.displayConfig));
 // el-upload 通过 TransitionGroup 渲染列表，key 取 uid || name，回显文件必须带上唯一 uid 才会渲染
 let uploadUid = 0;
 const uploadValue = (url: unknown): FileInfo[] => (typeof url === 'string' && url ? ([{ uid: -++uploadUid, url, name: url.split('/').pop() ?? 'image' }] as unknown as FileInfo[]) : []);
@@ -123,11 +128,59 @@ const canSubmit = computed(() =>
   }),
 );
 
-// 公开数据里除正文外的其它字段，按表单配置展示
-const extraEntries = (item: CmsDiyformRecord) => {
-  const contentField = fields.value.find((field) => field.type === 'textarea');
-  return fields.value.filter((field) => field.name !== contentField?.name && !['text', 'number'].includes(field.type) && item.data?.[field.name]).map((field) => ({ label: field.label, value: Array.isArray(item.data[field.name]) ? (item.data[field.name] as string[]).join('、') : String(item.data[field.name]) }));
+/**
+ * 字段展示角色：优先使用后台配置的 displayRole，未配置时按类型推断（兼容存量数据）：
+ * 1. contact 字段 → hidden；2. 第一个 textarea → body；3. 第一个 text → title；4. 其余 → normal。
+ * 存量留言板表单的 contact 字段未写 contact 标记，按字段名兜底识别，避免联系方式公开。
+ */
+const fieldRoles = computed<Record<string, CmsDiyformDisplayRole>>(() => {
+  const roles: Record<string, CmsDiyformDisplayRole> = {};
+  const claimed = new Set<CmsDiyformDisplayRole>();
+  for (const field of fields.value) {
+    if (!field.displayRole) continue;
+    roles[field.name] = field.displayRole;
+    claimed.add(field.displayRole);
+  }
+  const isContactField = (field: CmsDiyformField) => field.contact === true || field.name === 'contact';
+  for (const field of fields.value) if (!roles[field.name] && isContactField(field)) roles[field.name] = 'hidden';
+  if (!claimed.has('body')) {
+    const body = fields.value.find((field) => !roles[field.name] && field.type === 'textarea');
+    if (body) {
+      roles[body.name] = 'body';
+      claimed.add('body');
+    }
+  }
+  if (!claimed.has('title')) {
+    const title = fields.value.find((field) => !roles[field.name] && field.type === 'text');
+    if (title) {
+      roles[title.name] = 'title';
+      claimed.add('title');
+    }
+  }
+  for (const field of fields.value) if (!roles[field.name]) roles[field.name] = 'normal';
+  return roles;
+});
+const fieldByRole = (role: CmsDiyformDisplayRole) => fields.value.find((field) => fieldRoles.value[field.name] === role);
+const titleField = computed(() => fieldByRole('title'));
+const bodyField = computed(() => fieldByRole('body'));
+/** 读取提交数据里的字段值，数组按顿号拼接 */
+const fieldValue = (item: CmsDiyformRecord, field?: CmsDiyformField): string => {
+  if (!field) return '';
+  const value = item.data?.[field.name];
+  if (Array.isArray(value)) return value.map((entry) => String(entry)).join('、');
+  if (value === null || value === undefined) return '';
+  return String(value);
 };
+const roleEntries = (item: CmsDiyformRecord, role: CmsDiyformDisplayRole) =>
+  fields.value
+    .filter((field) => fieldRoles.value[field.name] === role)
+    .map((field) => ({ name: field.name, label: field.label, value: fieldValue(item, field) }))
+    .filter((entry) => entry.value);
+const metaEntries = (item: CmsDiyformRecord) => roleEntries(item, 'meta');
+const normalEntries = (item: CmsDiyformRecord) => roleEntries(item, 'normal');
+const titleText = (item: CmsDiyformRecord) => fieldValue(item, titleField.value) || item.author || '匿名';
+const avatarText = (item: CmsDiyformRecord) => fieldValue(item, titleField.value).slice(0, 1) || '匿';
+const bodyText = (item: CmsDiyformRecord) => fieldValue(item, bodyField.value) || item.content;
 
 let loadGeneration = 0;
 const load = async () => {
@@ -138,7 +191,8 @@ const load = async () => {
   for (const key of Object.keys(formData)) delete formData[key];
   try {
     if (!diyname.value) throw new Error('表单地址缺少标识');
-    await fetchDiyform(diyname.value, { page: page.value, pageSize });
+    // 不传 pageSize：由后端按表单「前台展示配置」决定每页条数
+    await fetchDiyform(diyname.value, { page: page.value });
     if (current !== loadGeneration) return;
     // 每个表单独立初始化字段，避免 A 表单切换到 B 后残留字段值与提交目标。
     for (const field of fields.value) formData[field.name] = field.type === 'checkbox' ? [] : '';
@@ -341,12 +395,18 @@ await load();
 }
 .message-copy header {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
 }
 .message-copy header strong {
   color: #34415a;
   font-size: 14px;
+}
+.message-meta {
+  color: #8a94a5;
+  font-size: 12px;
+  line-height: 1.5;
 }
 .message-copy time {
   color: #a0a8b5;

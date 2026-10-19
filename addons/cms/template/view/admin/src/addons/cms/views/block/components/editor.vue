@@ -49,7 +49,7 @@
             <me-upload accept=".png,.jpg,.jpeg,.webp" :limit="1" list-type="picture" :model-value="uploadValue(form.coverUrl)" @update:model-value="(files) => (form.coverUrl = files[0]?.url ?? '')" />
             <el-alert class="field-tip" :title="currentPosition.imageHint" type="info" :closable="false" />
           </el-form-item>
-          <el-form-item v-if="showEditor" :label="t('正文内容')" prop="mdContent"><me-wang-editor v-model="form.mdContent" :config="editorConfig" /></el-form-item>
+          <el-form-item v-if="showEditor" :label="t('正文内容')" prop="htmlContent"><me-wang-editor v-model="form.htmlContent" :config="editorConfig" /></el-form-item>
           <el-form-item v-if="showLink" :label="t('链接')" prop="link"><el-input v-model="form.link" placeholder="站内路径如 /aon/cms/download，或完整网址 https://" /></el-form-item>
           <el-form-item v-if="currentPosition.render === 'config'" label="排行规则" prop="config">
             <el-input v-model="form.config" type="textarea" :rows="3" maxlength="20000" :placeholder="currentPosition.configSample ?? ''" />
@@ -111,7 +111,7 @@ const rules: FormRules = {
   slug: [{ required: true, message: t('必填'), trigger: 'blur' }],
   position: [{ required: true, message: t('必填'), trigger: 'change' }],
   link: [{ validator: (_rule: unknown, value: string, callback: (error?: Error) => void) => (currentPosition.value?.render === 'image-link' && !value ? callback(new Error('图片推广位必须填写链接')) : callback()), trigger: 'blur' }],
-  mdContent: [{ validator: (_rule: unknown, value: string, callback: (error?: Error) => void) => (currentPosition.value?.render === 'content' && !value?.trim() ? callback(new Error('请填写正文内容')) : callback()), trigger: 'blur' }],
+  htmlContent: [{ validator: (_rule: unknown, value: string, callback: (error?: Error) => void) => (currentPosition.value?.render === 'content' && !value?.trim() ? callback(new Error('请填写正文内容')) : callback()), trigger: 'blur' }],
 };
 
 const materialTitle = computed(() => {

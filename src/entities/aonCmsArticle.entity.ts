@@ -38,7 +38,7 @@ export class AonCmsArticle extends AdminBaseModel<AonCmsArticle> {
   // Markdown 内容
   @Attribute({ type: DataTypes.TEXT, allowNull: false, defaultValue: '' })
   @ApiPropertyRule({ description: 'Markdown 内容', rule: RuleType.string().max(200000).allow('').default('') })
-  declare mdContent: string;
+  declare htmlContent: string;
 
   // 封面
   @Attribute({ type: DataTypes.STRING(1000), allowNull: false, defaultValue: '' })

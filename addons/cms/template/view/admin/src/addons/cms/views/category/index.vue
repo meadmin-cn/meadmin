@@ -18,7 +18,7 @@
       <!-- 前台访问地址：跳转链接型栏目直接展示外链，其余为栏目列表页 -->
       <vxe-column :title="t('访问地址')" min-width="230"
         ><template #default="{ row }"><AccessUrl :url="cmsCategoryUrl(row, categoryUrlMaps)" :muted="!row.status" /></template
-        ></vxe-column>
+      ></vxe-column>
       <vxe-column :title="t('操作')" min-width="200"
         ><template #default="{ row }">
           <el-button v-if="permission('aon_cms_category_info')" link @click="openEditor(row.id, true)">{{ t('详情') }}</el-button>

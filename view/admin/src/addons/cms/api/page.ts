@@ -3,7 +3,7 @@ export interface CmsPage {
   title: string;
   slug: string;
   summary: string;
-  mdContent: string;
+  htmlContent: string;
   coverUrl: string;
   seoTitle: string;
   seoKeywords: string;
@@ -15,7 +15,7 @@ export interface CmsPage {
 }
 export type CmsPageInfo = CmsPage & { id: string; status: number; createdAt: string; updatedAt?: string; kind?: number; link?: string; target?: string; categoryTitle?: string; children?: CmsPageInfo[] };
 // 审核快照：兼容历史纯正文快照与新版完整内容 JSON
-export type CmsPageSnapshot = Partial<CmsPage> & { kind?: number; link?: string; target?: string; mdContent?: string };
+export type CmsPageSnapshot = Partial<CmsPage> & { kind?: number; link?: string; target?: string; htmlContent?: string };
 export const parseSnapshot = (snapshot?: string | null): CmsPageSnapshot | null => {
   if (!snapshot) return null;
   const text = String(snapshot).trim();
@@ -24,10 +24,10 @@ export const parseSnapshot = (snapshot?: string | null): CmsPageSnapshot | null 
     try {
       return JSON.parse(text) as CmsPageSnapshot;
     } catch {
-      return { mdContent: text };
+      return { htmlContent: text };
     }
   }
-  return { mdContent: text };
+  return { htmlContent: text };
 };
 export interface CmsReviewLog {
   id: string;
@@ -42,7 +42,7 @@ export interface CmsReviewLog {
   createdAdminName?: string;
   createdAt: string;
 }
-export const defaults = (): CmsPage => ({ title: '', slug: '', summary: '', mdContent: '', coverUrl: '', seoTitle: '', seoKeywords: '', seoDescription: '', publishAt: null, orderNum: 0, categoryId: null });
+export const defaults = (): CmsPage => ({ title: '', slug: '', summary: '', htmlContent: '', coverUrl: '', seoTitle: '', seoKeywords: '', seoDescription: '', publishAt: null, orderNum: 0, categoryId: null });
 export const listApi = () => request<{ list: CmsPageInfo[]; total: number }, [{ page: number; pageSize: number; keyword?: string; status?: number; categoryId?: string }]>((data) => ({ url: 'addons/cms/page/', method: 'post', data }), { noLoading: true, clearEmpty: ['', undefined] });
 export const infoApi = () => request<CmsPageInfo, [string]>((id) => ({ url: 'addons/cms/page/info/' + id, method: 'get' }), { noLoading: true });
 export const saveApi = () => request<CmsPageInfo, [string | undefined, CmsPage]>((id, data) => ({ url: 'addons/cms/page/' + (id ? 'up/' + id : 'add'), method: 'post', data }), { success: true });

@@ -61,6 +61,11 @@ export class AonCmsDiyform extends AdminBaseModel<AonCmsDiyform> {
   @ApiPropertyRule({ description: '是否前台留言板', rule: RuleType.boolean().default(false) })
   declare isMessageBoard: boolean;
 
+  // 前台展示配置（JSON）：布局、头像、时间、分页、空态文案
+  @Attribute({ type: DataTypes.TEXT, allowNull: false, defaultValue: '{}' })
+  @ApiPropertyRule({ description: '前台展示配置(JSON)', rule: RuleType.string().max(5000).allow('').default('{}') })
+  declare displayConfig: string;
+
   // 状态：0禁用 1启用
   @Attribute({ type: DataTypes.SMALLINT, allowNull: false, defaultValue: 1 })
   @ApiPropertyRule({ description: '状态：0禁用 1启用', rule: RuleType.number().integer().valid(0, 1).default(1) })

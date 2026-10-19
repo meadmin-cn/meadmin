@@ -8,8 +8,8 @@
       <div class="editor-main-column">
         <el-form-item :label="t('标题')" prop="title"><el-input v-model="form.title" size="large" placeholder="请输入文章标题" /></el-form-item>
         <el-form-item :label="t('摘要')" prop="summary"><el-input v-model="form.summary" type="textarea" :rows="3" placeholder="用于列表、搜索和 SEO 摘要展示" /></el-form-item>
-        <el-form-item :label="t('正文内容')" prop="mdContent">
-          <me-wang-editor v-model="form.mdContent" :config="editorConfig" />
+        <el-form-item :label="t('正文内容')" prop="htmlContent">
+          <me-wang-editor v-model="form.htmlContent" :config="editorConfig" />
         </el-form-item>
         <el-divider content-position="left">SEO 设置</el-divider>
         <el-form-item :label="t('SEO 标识')" prop="slug"><el-input v-model="form.slug" placeholder="例如：getting-started" /></el-form-item>

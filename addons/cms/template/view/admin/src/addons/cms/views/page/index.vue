@@ -12,8 +12,11 @@
         <vxe-column field="title" :title="t('标题')" min-width="200" />
         <vxe-column field="slug" :title="t('SEO 标识')" min-width="140" />
         <vxe-column field="categoryTitle" :title="t('关联栏目')" min-width="140"
-          ><template #default="{ row }"><span v-if="row.categoryTitle">{{ row.categoryTitle }}</span><span v-else class="muted-text">{{ t('未关联') }}</span></template
-        ></vxe-column>
+          ><template #default="{ row }"
+            ><span v-if="row.categoryTitle">{{ row.categoryTitle }}</span
+            ><span v-else class="muted-text">{{ t('未关联') }}</span></template
+          ></vxe-column
+        >
         <vxe-column field="status" :title="t('状态')" width="120"
           ><template #default="{ row }"
             ><el-tag>{{ t(states[row.status] ?? '') }}</el-tag></template
@@ -24,8 +27,7 @@
         <!-- 前台访问地址：已发布单页可在前台 /aon/cms/page/{slug} 直接访问 -->
         <vxe-column :title="t('访问地址')" min-width="210" fixed="right"
           ><template #default="{ row }"><AccessUrl :url="cmsPageUrl(row.slug)" :muted="row.status !== 2" /></template
-        ></vxe-column
-        >
+        ></vxe-column>
         <vxe-column :title="t('操作')" fixed="right" min-width="320"
           ><template #default="{ row }">
             <el-button v-if="permission('aon_cms_page_info') || permission('aon_cms_page_review')" link type="primary" :disabled="row.status !== 1 || acting" @click="openReview(row.id)">{{ t('审核') }}</el-button>
@@ -93,10 +95,10 @@ import { ElMessage } from 'element-plus';
 import { computed, reactive, ref } from 'vue';
 import { treeApi } from '../../api/category';
 import { actionApi, deleteApi, infoApi, listApi, parseSnapshot, reviewHistoryApi } from '../../api/page';
-import type { CmsConfirmAlertType, CmsConfirmButtonType, CmsConfirmItem } from '../../components/actionConfirm';
-import ActionConfirm from '../../components/actionConfirm.vue';
 import { cmsPageUrl } from '../../components/accessUrl';
 import AccessUrl from '../../components/accessUrl.vue';
+import type { CmsConfirmAlertType, CmsConfirmButtonType, CmsConfirmItem } from '../../components/actionConfirm';
+import ActionConfirm from '../../components/actionConfirm.vue';
 import { cmsCategoryLinkableTypes } from '../../components/categoryTree';
 import CategoryWorkspace from '../../components/categoryWorkspace.vue';
 import Detail from './components/detail.vue';

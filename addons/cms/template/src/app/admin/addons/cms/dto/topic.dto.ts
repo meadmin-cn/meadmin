@@ -1,7 +1,7 @@
 import { AonCmsTopic } from '@/entities/aonCmsTopic.entity.js';
 import { PickDtoType } from '@/helper/dto.js';
 import { RuleType } from '@/ruleType/index.js';
-export class AonCmsTopicSaveDto extends PickDtoType(AonCmsTopic, ['title', 'slug', 'summary', 'mdContent', 'coverUrl', 'status', 'orderNum', 'type', 'target', 'targetBlank']) {}
+export class AonCmsTopicSaveDto extends PickDtoType(AonCmsTopic, ['title', 'slug', 'summary', 'htmlContent', 'coverUrl', 'status', 'orderNum', 'type', 'target', 'targetBlank']) {}
 export const topicSchema: ReturnType<typeof RuleType.object> = RuleType.object({
   title: RuleType.string().max(200).trim().min(1).required(),
   slug: RuleType.string()
@@ -9,7 +9,7 @@ export const topicSchema: ReturnType<typeof RuleType.object> = RuleType.object({
     .pattern(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
     .required(),
   summary: RuleType.string().max(1000).allow('').default(''),
-  mdContent: RuleType.string().max(200000).allow('').default(''),
+  htmlContent: RuleType.string().max(200000).allow('').default(''),
   coverUrl: RuleType.string()
     .max(1000)
     .pattern(/^(?:https?:\/\/[^\s]+|\/(?!\/)[^\s]*)$/)

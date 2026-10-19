@@ -5,7 +5,7 @@ export interface CmsBlock {
   displayTitle: string;
   slug: string;
   position: string;
-  mdContent: string;
+  htmlContent: string;
   coverUrl: string;
   link: string;
   status: number;
@@ -23,13 +23,13 @@ export interface CmsBlockPosition {
   renderLabel: string;
   desc: string;
   limit: number;
-  usage: Array<{ field: 'coverUrl' | 'mdContent' | 'link' | 'config'; label: string; hint: string }>;
+  usage: Array<{ field: 'coverUrl' | 'htmlContent' | 'link' | 'config'; label: string; hint: string }>;
   kind: number;
   imageHint: string;
   imageRequired: boolean;
   configSample?: string;
 }
-export const defaults = (): CmsBlock => ({ title: '', displayTitle: '', slug: '', position: 'home-content', mdContent: '', coverUrl: '', link: '', status: 1, startAt: null, endAt: null, orderNum: 0, config: '' });
+export const defaults = (): CmsBlock => ({ title: '', displayTitle: '', slug: '', position: 'home-content', htmlContent: '', coverUrl: '', link: '', status: 1, startAt: null, endAt: null, orderNum: 0, config: '' });
 export const listApi = () => request<{ list: CmsBlockInfo[]; total: number }, [{ page: number; pageSize: number; keyword?: string; status?: number; position?: string }]>((data) => ({ url: 'addons/cms/block/', method: 'post', data }), { noLoading: true, clearEmpty: ['', undefined] });
 export const infoApi = () => request<CmsBlockInfo, [string]>((id) => ({ url: 'addons/cms/block/info/' + id, method: 'get' }), { noLoading: true });
 export const saveApi = () => request<CmsBlockInfo, [string | undefined, CmsBlock]>((id, data) => ({ url: 'addons/cms/block/' + (id ? 'up/' + id : 'add'), method: 'post', data }), { success: true });

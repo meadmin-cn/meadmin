@@ -14,7 +14,7 @@
 
       <!-- 内置内容：保留原有 Markdown 编辑 -->
       <template v-if="form.type === 1">
-        <el-form-item :label="t('Markdown 内容')" prop="mdContent"><el-input v-model="form.mdContent" type="textarea" :rows="14" maxlength="200000" /><cms-preview :content="form.mdContent" /></el-form-item>
+        <el-form-item :label="t('Markdown 内容')" prop="htmlContent"><el-input v-model="form.htmlContent" type="textarea" :rows="14" maxlength="200000" /><cms-preview :content="form.htmlContent" /></el-form-item>
       </template>
 
       <!-- 外链：填写目标地址与打开方式 -->
@@ -67,7 +67,9 @@
       </template>
 
       <el-alert v-if="previewUrl" class="cover-tip" type="success" :closable="false">
-        <template #title>{{ t('前台访问地址') }}：<span class="topic-link">{{ previewUrl }}</span></template>
+        <template #title
+          >{{ t('前台访问地址') }}：<span class="topic-link">{{ previewUrl }}</span></template
+        >
       </el-alert>
 
       <el-form-item :label="t('封面')" prop="coverUrl">
@@ -91,11 +93,11 @@ import type { FileInfo } from '@/api/file';
 import { useLocalesI18n } from '@/locales/i18n';
 import type { FormInstance, FormRules } from 'element-plus';
 import { computed, reactive, ref, watch } from 'vue';
-import { defaults, infoApi, saveApi } from '../../../api/topic';
 import { listApi as articleListApi } from '../../../api/article';
+import { treeApi as categoryTreeApi } from '../../../api/category';
 import { listApi as diyformListApi } from '../../../api/diyform';
 import { listApi as pageListApi } from '../../../api/page';
-import { treeApi as categoryTreeApi } from '../../../api/category';
+import { defaults, infoApi, saveApi } from '../../../api/topic';
 import { cmsFrontRoot } from '../../../components/accessUrl';
 import CmsPreview from '../../../components/cmsPreview.vue';
 
@@ -133,12 +135,7 @@ const flattenCategory = (items: Array<{ id: string; title: string; children?: an
 };
 const loadOptions = async () => {
   try {
-    const [articles, forms, pages, categories] = await Promise.all([
-      articleListApi().runAsync({ page: 1, pageSize: 200 }),
-      diyformListApi().runAsync({ page: 1, pageSize: 200 }),
-      pageListApi().runAsync({ page: 1, pageSize: 200 }),
-      categoryTreeApi().runAsync(),
-    ]);
+    const [articles, forms, pages, categories] = await Promise.all([articleListApi().runAsync({ page: 1, pageSize: 200 }), diyformListApi().runAsync({ page: 1, pageSize: 200 }), pageListApi().runAsync({ page: 1, pageSize: 200 }), categoryTreeApi().runAsync()]);
     articleOptions.value = (articles.list ?? []).map((item: any) => ({ id: item.id, title: item.title }));
     formOptions.value = (forms.list ?? []).map((item: any) => ({ id: item.id, title: item.title, diyname: item.diyname }));
     pageOptions.value = (pages.list ?? []).map((item: any) => ({ id: item.id, title: item.title }));

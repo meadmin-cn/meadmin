@@ -1,0 +1,4 @@
+﻿module,method,path,permission
+CMS,GET,/api/index/addons/cms/article/:slug,public
+CMS,POST,/api/index/addons/cms/article/:slug/download,public
+Admin,POST,/api/admin/addons/cms/article/file/:id,aon_cms_article_edit

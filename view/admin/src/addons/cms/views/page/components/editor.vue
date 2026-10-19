@@ -9,7 +9,7 @@
         <AccessUrl :url="cmsPageUrl(form.slug)" />
       </el-form-item>
       <el-form-item :label="t('摘要')" prop="summary"><el-input v-model="form.summary" type="textarea" :rows="3" /></el-form-item>
-      <el-form-item :label="t('Markdown 内容')" prop="mdContent"><el-input v-model="form.mdContent" type="textarea" :rows="14" maxlength="200000" /><cms-preview :content="form.mdContent" /></el-form-item>
+      <el-form-item :label="t('Markdown 内容')" prop="htmlContent"><el-input v-model="form.htmlContent" type="textarea" :rows="14" maxlength="200000" /><cms-preview :content="form.htmlContent" /></el-form-item>
       <el-form-item :label="t('封面')" prop="coverUrl">
         <!-- 图片统一由上传按钮产生，上传后可即时预览 -->
         <me-upload accept=".png,.jpg,.jpeg,.webp" :limit="1" list-type="picture" :model-value="uploadValue(form.coverUrl)" @update:model-value="(files) => (form.coverUrl = files[0]?.url ?? '')" />

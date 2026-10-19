@@ -18,7 +18,7 @@
             </div>
             <img v-if="safeUrl(detail.coverUrl)" class="detail-cover" :src="detail.coverUrl" :alt="detail.title" />
             <p v-if="detail.summary" class="detail-summary">{{ detail.summary }}</p>
-            <cms-preview :content="detail.mdContent ?? ''" />
+            <cms-preview :content="detail.htmlContent ?? ''" />
             <div v-if="kind === 'article' && detail.orderEnabled" class="detail-actions"><el-button type="primary" @click="orderDialog = true">创建订单</el-button><span>线下支付，提交后可凭订单号查询处理进度</span></div>
             <div v-if="kind === 'article' && detail.isDownload && detail.fileUrl" class="detail-actions download-actions">
               <div class="download-meta">
@@ -33,7 +33,7 @@
                 <img v-if="safeUrl(block.coverUrl)" class="block-cover" :src="block.coverUrl" :alt="block.title" loading="lazy" />
                 <div class="block-body">
                   <h3 class="section-title">{{ block.title }}</h3>
-                  <cms-preview :content="block.mdContent ?? ''" :title="blockTitle(block)" />
+                  <cms-preview :content="block.htmlContent ?? ''" :title="blockTitle(block)" />
                   <a v-if="safeUrl(block.link)" :href="block.link" class="block-link" target="_blank" rel="noopener">查看详情 →</a>
                 </div>
               </section>
@@ -145,7 +145,7 @@
                 <div class="section-header">
                   <h3 class="section-title">{{ block.title }}</h3>
                 </div>
-                <cms-preview :content="block.mdContent ?? ''" :title="blockTitle(block)" />
+                <cms-preview :content="block.htmlContent ?? ''" :title="blockTitle(block)" />
                 <a v-if="safeUrl(block.link)" :href="block.link" class="block-link" target="_blank" rel="noopener">查看详情 →</a>
               </div>
             </section>

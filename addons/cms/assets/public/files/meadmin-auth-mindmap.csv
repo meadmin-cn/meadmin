@@ -1,0 +1,5 @@
+﻿layer,scope,example
+Menu,"Navigation visibility","system/user/list"
+Button,"Action permission","aon_cms_article_edit"
+Data,"Record visibility","organization scope"
+Review,"Content lifecycle","submit, approve, offline"

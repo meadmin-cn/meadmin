@@ -28,6 +28,14 @@
           <el-switch v-model="form.isMessageBoard" active-text="作为前台留言板表单" inactive-text="普通表单" />
           <el-alert class="field-tip" title="前台留言板页面会读取该表单的字段并渲染；整个站点只允许一个表单作为留言板。" type="info" :closable="false" />
         </el-form-item>
+        <el-form-item label="前台展示">
+          <div class="display-config">
+            <div class="display-config-item"><span>显示头像</span><el-switch v-model="displayConfig.showAvatar" /></div>
+            <div class="display-config-item"><span>显示提交时间</span><el-switch v-model="displayConfig.showTime" /></div>
+            <div class="display-config-item"><span>每页条数</span><el-input-number :key="String(readonly || loading)" v-model="displayConfig.pageSize" :min="1" :max="50" controls-position="right" /></div>
+          </div>
+          <el-alert class="field-tip" title="控制公开数据卡片的头像、时间与分页；每个字段的展示位置在下方「前台展示」中单独设置。" type="info" :closable="false" />
+        </el-form-item>
       </section>
 
       <section class="editor-section">
@@ -79,6 +87,12 @@
               <el-switch v-model="field.contact" />
               <span class="field-hint">开启后该字段会抽取到数据列表的「联系方式」列，仅管理员可见。</span>
             </el-form-item>
+            <el-form-item label="前台展示">
+              <el-select v-model="field.displayRole" clearable placeholder="按字段类型自动推断">
+                <el-option v-for="role in cmsDiyformDisplayRoles" :key="role.value" :value="role.value" :label="role.label" />
+              </el-select>
+              <span class="field-hint">标题=卡片主标识，正文=主体内容，辅助信息=标题行右侧小字，普通信息=正文下方「标签：值」，仅后台可见=前台不展示。</span>
+            </el-form-item>
           </div>
         </div>
         <el-empty v-else description="尚未配置字段，请先添加" />
@@ -97,7 +111,7 @@ import { ElMessage } from 'element-plus';
 import { computed, reactive, ref, watch } from 'vue';
 import { treeApi } from '../../../api/category';
 import type { CmsDiyformField } from '../../../api/diyform';
-import { cmsDiyformFieldTypes, defaults, infoApi, parseFields, saveApi } from '../../../api/diyform';
+import { cmsDiyformDisplayRoles, cmsDiyformFieldTypes, defaults, defaultDisplayConfig, infoApi, parseDisplayConfig, parseFields, saveApi } from '../../../api/diyform';
 import { cmsCategoryLinkableTypes, markCategoryTree } from '../../../components/categoryTree';
 
 const { t, loadRes } = useLocalesI18n({}, [(locale: string) => import(`../../../lang/${locale}.json`), 'cms']);
@@ -106,6 +120,8 @@ const emit = defineEmits<{ success: []; closed: [] }>();
 const show = defineModel<boolean>();
 const form = reactive(defaults());
 const fields = ref<CmsDiyformField[]>([]);
+// 前台展示配置以本地响应式对象承载，保存时序列化回 form.displayConfig
+const displayConfig = reactive({ ...defaultDisplayConfig });
 const formEl = ref<FormInstance>();
 const { runAsync: getInfo, loading } = infoApi();
 const { runAsync: saveInfo, loading: saving } = saveApi();
@@ -147,7 +163,7 @@ const save = async () => {
     }
     names.add(field.name);
   }
-  await saveInfo(props.id, { ...form, fields: JSON.stringify(fields.value) });
+  await saveInfo(props.id, { ...form, displayConfig: JSON.stringify(displayConfig), fields: JSON.stringify(fields.value) });
   show.value = false;
   emit('success');
 };
@@ -157,10 +173,12 @@ watch(
   () => props.id,
   async (id) => {
     Object.assign(form, defaults());
+    Object.assign(displayConfig, defaultDisplayConfig);
     fields.value = [];
     if (id) {
       const data = await getInfo(id);
       for (const key of Object.keys(form) as Array<keyof typeof form>) Object.assign(form, { [key]: data[key] });
+      Object.assign(displayConfig, parseDisplayConfig(data.displayConfig));
       fields.value = parseFields(data.fields);
       if (!fields.value.length) addField();
     } else {
@@ -198,6 +216,19 @@ watch(
 }
 .field-tip {
   margin-bottom: 12px;
+}
+.display-config {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 22px;
+}
+.display-config-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #59667a;
+  font-size: 13px;
 }
 .field-hint {
   display: block;

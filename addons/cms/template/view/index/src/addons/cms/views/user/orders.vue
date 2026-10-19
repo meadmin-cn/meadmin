@@ -23,10 +23,18 @@
           </div>
         </div>
         <div class="order-item-body">
-          <div><span>数量</span><strong>{{ order.quantity }}</strong></div>
-          <div><span>应收金额</span><strong>¥{{ order.amount }}</strong></div>
-          <div><span>联系电话</span><strong>{{ order.contactPhone }}</strong></div>
-          <div><span>提交时间</span><strong>{{ formatDate(order.createdAt) }}</strong></div>
+          <div>
+            <span>数量</span><strong>{{ order.quantity }}</strong>
+          </div>
+          <div>
+            <span>应收金额</span><strong>¥{{ order.amount }}</strong>
+          </div>
+          <div>
+            <span>联系电话</span><strong>{{ order.contactPhone }}</strong>
+          </div>
+          <div>
+            <span>提交时间</span><strong>{{ formatDate(order.createdAt) }}</strong>
+          </div>
         </div>
         <div class="order-item-footer">
           <span>收件人：{{ order.contactName }}</span>
@@ -36,15 +44,7 @@
       </article>
     </div>
 
-    <el-pagination
-      v-if="orderData?.total"
-      v-model:current-page="page"
-      :page-size="orderData.pageSize || pageSize"
-      :total="orderData.total"
-      layout="prev, pager, next"
-      class="pagination"
-      @current-change="loadOrders"
-    />
+    <el-pagination v-if="orderData?.total" v-model:current-page="page" :page-size="orderData.pageSize || pageSize" :total="orderData.total" layout="prev, pager, next" class="pagination" @current-change="loadOrders" />
   </div>
 </template>
 

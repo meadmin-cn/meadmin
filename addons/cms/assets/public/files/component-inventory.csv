@@ -1,0 +1,5 @@
+﻿category,component,usage
+Navigation,Header,"Global navigation and account actions"
+Data,VxeTable,"Dense lists with sorting and pagination"
+Forms,ElementPlus,"Validated editor controls"
+Feedback,Message,"Success and error notifications"

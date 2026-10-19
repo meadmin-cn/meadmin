@@ -9,13 +9,14 @@
   "files": [
     "src",
     "template",
+    "assets",
     "addons.json",
     "install.sql",
+    "uninstall.sql",
     "scripts",
     "tsconfig.json"
   ],
   "dependencies": {
-    "md-editor-v3": "6.3.1",
     "dompurify": "3.3.3"
   },
   "peerDependencies": {

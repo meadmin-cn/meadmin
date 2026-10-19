@@ -16,6 +16,8 @@ export interface CmsStatisticsResult {
   orderTotalMap: Record<string, number>;
   paidAmount: number;
   trends: Array<{ date: string; articles: number; comments: number; orders: number }>;
+  /** 上一周期（再往前 14 天）的新增数，供大卡环比使用 */
+  previous: { articles: number; comments: number; orders: number };
   categoryDistribution: Array<{ title: string; total: number }>;
   downloadRanking: Array<{ title: string; slug: string; total: number }>;
   viewRanking: Array<{ title: string; slug: string; total: number }>;
@@ -77,6 +79,15 @@ export class AonCmsStatisticsService {
       trends.push({ date: `${start.getFullYear()}-${pad(start.getMonth() + 1)}-${pad(start.getDate())}`, articles, comments, orders });
     }
 
+    // 上一周期（再往前 14 天），用于大卡环比：当前窗口 [today-13, today+1)，上一周期 [today-27, today-13)
+    const prevEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 13);
+    const prevStart = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 27);
+    const [prevArticles, prevComments, prevOrders] = await Promise.all([
+      this.article.count({ where: { createdAt: { [Op.gte]: prevStart, [Op.lt]: prevEnd } } }),
+      this.comment.count({ where: { createdAt: { [Op.gte]: prevStart, [Op.lt]: prevEnd } } }),
+      this.order.count({ where: { createdAt: { [Op.gte]: prevStart, [Op.lt]: prevEnd } } }),
+    ]);
+
     // 栏目文章分布（取文章数最多的前 8 个栏目）
     const catRows = (await this.article.findAll({
       attributes: ['categoryId', [this.article.sequelize.fn('COUNT', this.article.sequelize.col('id')), 'total']],
@@ -101,6 +112,7 @@ export class AonCmsStatisticsService {
       orderTotalMap,
       paidAmount,
       trends,
+      previous: { articles: prevArticles, comments: prevComments, orders: prevOrders },
       categoryDistribution,
       downloadRanking,
       viewRanking,

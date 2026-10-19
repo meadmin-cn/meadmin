@@ -75,7 +75,7 @@ export class AonCmsPageService {
       seoDescription: row.seoDescription,
       publishAt: row.publishAt,
       orderNum: row.orderNum,
-      mdContent: row.mdContent,
+      htmlContent: row.htmlContent,
     });
   }
   private async logReview(contentId: string, fromStatus: number, toStatus: number, action: 'submit' | 'approve' | 'reject' | 'offline', reason = '', snapshot: string | null = null) {
@@ -117,7 +117,7 @@ export class AonCmsPageService {
 
     if (data.kind === 2 && !data.link) throw new BadRequestError('外链地址不能为空');
     const prevCategoryId = row?.categoryId ?? null;
-    const values = { title: data.title, slug: data.slug, summary: data.summary, mdContent: data.mdContent, coverUrl: data.coverUrl, kind: data.kind, link: data.kind === 2 ? data.link : '', target: data.target, seoTitle: data.seoTitle, seoKeywords: data.seoKeywords, seoDescription: data.seoDescription, publishAt: data.publishAt, orderNum: data.orderNum, status: 0, categoryId: data.categoryId ?? null };
+    const values = { title: data.title, slug: data.slug, summary: data.summary, htmlContent: data.htmlContent, coverUrl: data.coverUrl, kind: data.kind, link: data.kind === 2 ? data.link : '', target: data.target, seoTitle: data.seoTitle, seoKeywords: data.seoKeywords, seoDescription: data.seoDescription, publishAt: data.publishAt, orderNum: data.orderNum, status: 0, categoryId: data.categoryId ?? null };
     const saved = row ? await row.update(values) : await this.repository.create(values);
     await this.syncCategoryTarget(values.categoryId, prevCategoryId, saved.id);
     return saved;
@@ -138,7 +138,7 @@ export class AonCmsPageService {
     await this.lock();
     const row = await this.info(id);
     if (!canSubmitCms(row.status)) throw new BadRequestError('当前状态不能提交审核');
-    if (!row.mdContent.trim()) throw new BadRequestError('内容不能为空');
+    if (!row.htmlContent.trim()) throw new BadRequestError('内容不能为空');
     const fromStatus = row.status;
     const result = await row.update({ status: 1 });
     await this.logReview(row.id, fromStatus, 1, 'submit', '', this.buildSnapshot(row));

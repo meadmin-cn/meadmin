@@ -117,7 +117,7 @@ export class AonCmsDiyformService {
       if (exists) throw new BadRequestError('已存在留言板表单，请先取消原表单的留言板标记');
     }
     const prevCategoryId = id ? ((await this.info(id)).categoryId ?? null) : null;
-    const values = { title: data.title, diyname: data.diyname, description: data.description, fields: data.fields, submitText: data.submitText, needReview: data.needReview, isMessageBoard: data.isMessageBoard, status: data.status, orderNum: data.orderNum, categoryId: data.categoryId ?? null };
+    const values = { title: data.title, diyname: data.diyname, description: data.description, fields: data.fields, submitText: data.submitText, needReview: data.needReview, isMessageBoard: data.isMessageBoard, displayConfig: data.displayConfig || '{}', status: data.status, orderNum: data.orderNum, categoryId: data.categoryId ?? null };
     const saved = id ? await (await this.info(id)).update(values) : await this.repository.create(values);
     await this.syncCategoryTarget(values.categoryId, prevCategoryId, saved.id);
     return saved;

@@ -3,7 +3,7 @@ import { AonCmsDiyformData } from '@/entities/aonCmsDiyformData.entity.js';
 import { PickDtoType } from '@/helper/dto.js';
 import { RuleType } from '@/ruleType/index.js';
 
-export class AonCmsDiyformSaveDto extends PickDtoType(AonCmsDiyform, ['title', 'diyname', 'description', 'fields', 'submitText', 'needReview', 'isMessageBoard', 'status', 'orderNum', 'categoryId']) {}
+export class AonCmsDiyformSaveDto extends PickDtoType(AonCmsDiyform, ['title', 'diyname', 'description', 'fields', 'submitText', 'needReview', 'isMessageBoard', 'status', 'orderNum', 'categoryId', 'displayConfig']) {}
 export const diyformSchema: ReturnType<typeof RuleType.object> = RuleType.object({
   title: RuleType.string().max(100).trim().min(1).required(),
   diyname: RuleType.string()
@@ -15,6 +15,7 @@ export const diyformSchema: ReturnType<typeof RuleType.object> = RuleType.object
   submitText: RuleType.string().max(60).trim().allow('').default(''),
   needReview: RuleType.number().integer().valid(0, 1).default(1),
   isMessageBoard: RuleType.boolean().default(false),
+  displayConfig: RuleType.string().max(5000).allow('').default('{}'),
   status: RuleType.number().integer().valid(0, 1).default(1),
   orderNum: RuleType.number().integer().min(-9999).max(9999).default(0),
   // 所属栏目：仅允许「4 自定义表单」型栏目，保存时由 service 校验

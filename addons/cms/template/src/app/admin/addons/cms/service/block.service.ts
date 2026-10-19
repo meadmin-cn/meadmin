@@ -62,7 +62,7 @@ export class AonCmsBlockService {
       if (existing >= position.limit) throw new BadRequestError('[' + position.label + '] 最多只能投放 ' + position.limit + ' 个区块');
     }
     // 区块类型由展示位置推导，避免表单里再选一次「类型」造成歧义
-    const values = { title: data.title, displayTitle: data.displayTitle, slug: data.slug, position: data.position, kind: blockKindFromPosition(data.position), mdContent: data.mdContent, coverUrl: data.coverUrl, link: data.link, status: data.status, startAt: data.startAt, endAt: data.endAt, orderNum: data.orderNum, config: data.config };
+    const values = { title: data.title, displayTitle: data.displayTitle, slug: data.slug, position: data.position, kind: blockKindFromPosition(data.position), htmlContent: data.htmlContent, coverUrl: data.coverUrl, link: data.link, status: data.status, startAt: data.startAt, endAt: data.endAt, orderNum: data.orderNum, config: data.config };
     if (!row) return this.repository.create(values);
     return row.update(values);
   }

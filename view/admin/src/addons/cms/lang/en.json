@@ -62,5 +62,9 @@
   "近14天新增（UTC）": "Created in the last 14 days (UTC)",
   "日期": "Date",
   "刷新": "Refresh",
-  "暂无数据": "No data"
+  "暂无数据": "No data",
+  "总订单": "Total orders",
+  "总文章": "Total articles",
+  "单位：条": "Unit: items",
+  "近 14 天": "Last 14 days"
 }

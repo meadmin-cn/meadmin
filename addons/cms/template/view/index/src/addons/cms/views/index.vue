@@ -18,7 +18,7 @@
             </div>
             <img v-if="safeUrl(detail.coverUrl)" class="detail-cover" :src="detail.coverUrl" :alt="detail.title" />
             <p v-if="detail.summary" class="detail-summary">{{ detail.summary }}</p>
-            <cms-preview :content="detail.mdContent ?? ''" />
+            <cms-preview :content="detail.htmlContent ?? ''" />
             <div v-if="kind === 'article' && detail.orderEnabled" class="detail-actions"><el-button type="primary" @click="orderDialog = true">创建订单</el-button><span>线下支付，提交后可凭订单号查询处理进度</span></div>
             <div v-if="kind === 'article' && detail.isDownload && detail.fileUrl" class="detail-actions download-actions">
               <div class="download-meta">
@@ -33,7 +33,7 @@
                 <img v-if="safeUrl(block.coverUrl)" class="block-cover" :src="block.coverUrl" :alt="block.title" loading="lazy" />
                 <div class="block-body">
                   <h3 class="section-title">{{ block.title }}</h3>
-                  <cms-preview :content="block.mdContent ?? ''" :title="blockTitle(block)" />
+                  <cms-preview :content="block.htmlContent ?? ''" :title="blockTitle(block)" />
                   <a v-if="safeUrl(block.link)" :href="block.link" class="block-link" target="_blank" rel="noopener">查看详情 →</a>
                 </div>
               </section>
@@ -145,7 +145,7 @@
                 <div class="section-header">
                   <h3 class="section-title">{{ block.title }}</h3>
                 </div>
-                <cms-preview :content="block.mdContent ?? ''" :title="blockTitle(block)" />
+                <cms-preview :content="block.htmlContent ?? ''" :title="blockTitle(block)" />
                 <a v-if="safeUrl(block.link)" :href="block.link" class="block-link" target="_blank" rel="noopener">查看详情 →</a>
               </div>
             </section>
@@ -166,11 +166,17 @@
                   <template v-for="cat in recommendCategories" :key="cat.id">
                     <a v-if="cat.type === 3" :href="cat.link" :target="cat.openMode === 1 ? '_blank' : undefined" rel="noopener" class="cat-card" tabindex="0">
                       <img v-if="safeUrl(cat.coverUrl)" :src="cat.coverUrl" :alt="cat.title" />
-                      <div class="cat-body"><h4>{{ cat.title }}</h4><span>进入栏目 →</span></div>
+                      <div class="cat-body">
+                        <h4>{{ cat.title }}</h4>
+                        <span>进入栏目 →</span>
+                      </div>
                     </a>
                     <router-link v-else-if="cat.link" :to="cat.link" class="cat-card" tabindex="0">
                       <img v-if="safeUrl(cat.coverUrl)" :src="cat.coverUrl" :alt="cat.title" />
-                      <div class="cat-body"><h4>{{ cat.title }}</h4><span>进入栏目 →</span></div>
+                      <div class="cat-body">
+                        <h4>{{ cat.title }}</h4>
+                        <span>进入栏目 →</span>
+                      </div>
                     </router-link>
                   </template>
                 </div>
@@ -251,10 +257,12 @@
                 <h3 class="sidebar-title">栏目导航</h3>
                 <template v-for="cat in topCategories" :key="cat.id">
                   <a v-if="cat.type === 3" class="category-item" :href="cat.link" :target="cat.openMode === 1 ? '_blank' : undefined" rel="noopener" tabindex="0">
-                    <span>{{ cat.title }}</span><span>进入</span>
+                    <span>{{ cat.title }}</span
+                    ><span>进入</span>
                   </a>
                   <router-link v-else class="category-item" :to="cat.link || `/aon/cms/category/${cat.slug}`" tabindex="0">
-                    <span>{{ cat.title }}</span><span>进入</span>
+                    <span>{{ cat.title }}</span
+                    ><span>进入</span>
                   </router-link>
                 </template>
               </section>
@@ -668,11 +676,15 @@ onMounted(() => {
     if (slideTimer) clearInterval(slideTimer);
     slideTimer = undefined;
   };
-  watch(slides, (items) => {
-    activeSlide.value = items.length ? activeSlide.value % items.length : 0;
-    if (items.length > 1) startSlideTimer();
-    else stopSlideTimer();
-  }, { immediate: true });
+  watch(
+    slides,
+    (items) => {
+      activeSlide.value = items.length ? activeSlide.value % items.length : 0;
+      if (items.length > 1) startSlideTimer();
+      else stopSlideTimer();
+    },
+    { immediate: true },
+  );
   onBeforeUnmount(stopSlideTimer);
 });
 </script>

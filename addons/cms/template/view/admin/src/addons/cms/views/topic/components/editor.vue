@@ -14,7 +14,7 @@
 
       <!-- 内置内容：保留原有 Markdown 编辑 -->
       <template v-if="form.type === 1">
-        <el-form-item :label="t('Markdown 内容')" prop="mdContent"><el-input v-model="form.mdContent" type="textarea" :rows="14" maxlength="200000" /><cms-preview :content="form.mdContent" /></el-form-item>
+        <el-form-item :label="t('Markdown 内容')" prop="htmlContent"><el-input v-model="form.htmlContent" type="textarea" :rows="14" maxlength="200000" /><cms-preview :content="form.htmlContent" /></el-form-item>
       </template>
 
       <!-- 外链：填写目标地址与打开方式 -->

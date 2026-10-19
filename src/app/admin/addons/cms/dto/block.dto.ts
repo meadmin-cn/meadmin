@@ -2,7 +2,7 @@ import { AonCmsBlock } from '@/entities/aonCmsBlock.entity.js';
 import { PickDtoType } from '@/helper/dto.js';
 import { RuleType } from '@/ruleType/index.js';
 import { cmsBlockKindOf, cmsBlockPositionValues } from '../dict/blockPosition.dict.js';
-export class AonCmsBlockSaveDto extends PickDtoType(AonCmsBlock, ['title', 'displayTitle', 'slug', 'position', 'mdContent', 'coverUrl', 'link', 'status', 'startAt', 'endAt', 'orderNum', 'config']) {}
+export class AonCmsBlockSaveDto extends PickDtoType(AonCmsBlock, ['title', 'displayTitle', 'slug', 'position', 'htmlContent', 'coverUrl', 'link', 'status', 'startAt', 'endAt', 'orderNum', 'config']) {}
 export const blockSchema: ReturnType<typeof RuleType.object> = RuleType.object({
   title: RuleType.string().max(200).trim().min(1).required(),
   displayTitle: RuleType.string().max(200).trim().allow('').default(''),
@@ -14,7 +14,7 @@ export const blockSchema: ReturnType<typeof RuleType.object> = RuleType.object({
     .max(100)
     .valid(...cmsBlockPositionValues)
     .required(),
-  mdContent: RuleType.string().max(200000).allow('').default(''),
+  htmlContent: RuleType.string().max(200000).allow('').default(''),
   coverUrl: RuleType.string()
     .max(1000)
     .pattern(/^(?:https?:\/\/[^\s]+|\/(?!\/)[^\s]*)$/)

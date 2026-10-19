@@ -1,0 +1,33 @@
+{
+  "public": [
+    "files/api-reference.csv",
+    "files/component-inventory.csv",
+    "files/dashboard-template.csv",
+    "files/deployment-operations.csv",
+    "files/export-center.csv",
+    "files/form-engine.csv",
+    "files/meadmin-auth-mindmap.csv",
+    "files/meadmin-auth.txt",
+    "files/meadmin-components.txt",
+    "files/meadmin-demo-catalog.csv",
+    "files/meadmin-deploy.txt",
+    "files/meadmin-download-guide.csv",
+    "files/meadmin-getting-started.csv",
+    "files/meadmin-quickstart.txt",
+    "files/meadmin-resource-catalog.csv",
+    "files/meadmin-theme-pack.csv",
+    "files/meadmin-theme.txt",
+    "files/migration-package.csv",
+    "files/mobile-adaptation.csv",
+    "files/mobile_adaptation.txt",
+    "files/permission-middleware.csv",
+    "files/plugin-scaffold.csv",
+    "files/sample-database.csv",
+    "index/images/cms/cms-ai-editorial.png",
+    "index/images/cms/cms-analytics-guide.txt",
+    "index/images/cms/cms-category-guide.txt",
+    "index/images/cms/cms-cloud-analytics.png",
+    "index/images/cms/cms-content-checklist.txt",
+    "index/images/cms/cms-design-system.png"
+  ]
+}

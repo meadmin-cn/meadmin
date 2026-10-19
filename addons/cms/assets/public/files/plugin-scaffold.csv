@@ -1,0 +1,6 @@
+﻿path,purpose
+src/entities,"Addon data models"
+src/app/admin,"Protected management APIs"
+src/app/index,"Public APIs"
+view/admin,"Management UI"
+view/index,"Public UI"

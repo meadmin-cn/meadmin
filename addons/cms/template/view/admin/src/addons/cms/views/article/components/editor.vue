@@ -8,8 +8,8 @@
       <div class="editor-main-column">
         <el-form-item :label="t('标题')" prop="title"><el-input v-model="form.title" size="large" placeholder="请输入文章标题" /></el-form-item>
         <el-form-item :label="t('摘要')" prop="summary"><el-input v-model="form.summary" type="textarea" :rows="3" placeholder="用于列表、搜索和 SEO 摘要展示" /></el-form-item>
-        <el-form-item :label="t('正文内容')" prop="mdContent">
-          <me-wang-editor v-model="form.mdContent" :config="editorConfig" />
+        <el-form-item :label="t('正文内容')" prop="htmlContent">
+          <me-wang-editor v-model="form.htmlContent" :config="editorConfig" />
         </el-form-item>
         <el-divider content-position="left">SEO 设置</el-divider>
         <el-form-item :label="t('SEO 标识')" prop="slug"><el-input v-model="form.slug" placeholder="例如：getting-started" /></el-form-item>
@@ -22,13 +22,7 @@
       <aside class="editor-side-column">
         <section class="editor-side-section">
           <h4>发布设置</h4>
-          <el-form-item :label="t('栏目')" prop="categoryId"
-            ><el-tree-select v-model="form.categoryId" :data="categoryTree" :props="{ label: 'title', children: 'children', disabled: 'disabled' }" node-key="id" check-strictly clearable /><el-alert
-              class="category-tip"
-              title="只有「文章列表 / 目录 / 下载列表」型栏目能发布文章，单页、外链、自定义表单栏目不可选；下载列表栏目只收「可下载」且已上传文件的文章。"
-              type="info"
-              :closable="false"
-          /></el-form-item>
+          <el-form-item :label="t('栏目')" prop="categoryId"><el-tree-select v-model="form.categoryId" :data="categoryTree" :props="{ label: 'title', children: 'children', disabled: 'disabled' }" node-key="id" check-strictly clearable /><el-alert class="category-tip" title="只有「文章列表 / 目录 / 下载列表」型栏目能发布文章，单页、外链、自定义表单栏目不可选；下载列表栏目只收「可下载」且已上传文件的文章。" type="info" :closable="false" /></el-form-item>
           <el-form-item :label="t('专题')" prop="topicId"
             ><el-select v-model="form.topicId" clearable filterable remote :remote-method="lookupTopics"><el-option v-for="option in topics" :key="option.id" :value="option.id" :label="option.title" /></el-select
           ></el-form-item>

@@ -8,10 +8,10 @@ import { Command } from 'commander';
 import { omit } from 'lodash-es';
 import { existsSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { join, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import * as prettier from 'prettier';
-import { getConfig } from '../utils/db.js';
+import { defaultDbConfig, getConfig } from '../utils/db.js';
 import { delFileSync, recursionWriteFileSync } from '../utils/file.js';
 import { getKeyInfo, lowerFirstCase, normalizeToKebabOrSnakeCase, relativePath, resovePath, toHump, upFirstCase } from '../utils/formatting.js';
 import { Log } from '../utils/log.js';
@@ -523,7 +523,7 @@ export const crudInit = (program: Command) => {
     .requiredOption('--model <char>', 'model名称会放到app/{model}下对应的文件夹', 'admin')
     .option('-f, --force', '强制覆盖')
     .option('-n, --name <char>', '使用的数据库配置defaultDataSourceName')
-    .option('-d, --dbConfig <char>', '数据库配置文件地址默认为当前目录下dist/config/database.js', join(process.cwd(), 'dist/config/database.js'))
+    .option('-d, --dbConfig <char>', '数据库配置文件，默认优先读取 src/config/database.ts，不存在时用 dist/config/database.js', defaultDbConfig())
     .option('--del', '删除crud创建的文件')
     .option('--path <char>', '生成的路径，默认根据驼峰转多级路径')
     .option('-c, --controller <char>', '生成的controller路径，默认使用path')

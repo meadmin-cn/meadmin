@@ -1,8 +1,7 @@
 import { Sequelize } from '@sequelize/core';
 import { Command } from 'commander';
 import { upperFirst } from 'lodash-es';
-import { join } from 'node:path';
-import { getConfig } from '../utils/db.js';
+import { defaultDbConfig, getConfig } from '../utils/db.js';
 import { Log } from '../utils/log.js';
 
 export const syncInit = (program: Command) => {
@@ -10,11 +9,11 @@ export const syncInit = (program: Command) => {
     .command('sync')
     .description('同步数据库结构')
     .argument('<file>', '需要同步的entity实例name(支持,隔开的多个name)或*(*代表所有)')
-    .option('-d, --dbConfig <char>', '数据库配置文件地址默认为当前目录下dist/config/database.js', join(process.cwd(), 'dist/config/database.js'))
+    .option('-d, --dbConfig <char>', '数据库配置文件，默认优先读取 src/config/database.ts，不存在时用 dist/config/database.js', defaultDbConfig())
     .option('-n, --name <char>', '使用的数据库配置defaultDataSourceName')
     .action(async (file: string, options) => {
       const config = Object.assign(await getConfig(options.dbConfig, options.name), {
-        logging: (message:string) => Log.log(message),
+        logging: (message: string) => Log.log(message),
       });
       const sequelize = new Sequelize(config);
       if (file === '*') {

@@ -2,8 +2,8 @@ import Sequelize from '@sequelize/core';
 import { Command } from 'commander';
 import { execSync } from 'node:child_process';
 import { cpSync, existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
-import { getConfig } from '../utils/db.js';
+import { resolve } from 'node:path';
+import { defaultDbConfig, getConfig } from '../utils/db.js';
 import { checkPathFile, copyFile, copyPath } from '../utils/file.js';
 import { upFirstCase } from '../utils/formatting.js';
 import { Log } from '../utils/log.js';
@@ -85,7 +85,7 @@ export const addonInit = (program: Command) => {
     .option('--cp', '从现有应用目录copy文件到插件模块')
     .option('-f, --force', '强制执行(重复文件会被覆盖)')
     .option('--rm', '卸载插件(会删除插件文件及对应数据库内容)')
-    .option('-d, --dbConfig <char>', '数据库配置文件地址默认为当前目录下dist/config/database.js', join(process.cwd(), 'dist/config/database.js'))
+    .option('-d, --dbConfig <char>', '数据库配置文件，默认优先读取 src/config/database.ts，不存在时用 dist/config/database.js', defaultDbConfig())
     .option('-n, --name <char>', '使用的数据库配置defaultDataSourceName')
     .option('--nsql', '不执行对应的sql语句')
     .option('--nr', '不执行对应的脚本命令')

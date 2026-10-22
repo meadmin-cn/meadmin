@@ -394,7 +394,7 @@ export function generateUpdateSql(source: string, version: string): UpdateSql {
   const header = `-- 更新 SQL，版本 ${JSON.stringify(version).replace(/[\u2028\u2029]/g, ' ')}
 -- 仅生成文本，不自动执行。请按以下顺序操作：
 -- 1. 先备份数据库，再编译更新后的后端代码。
--- 2. 缺表或字段时仍须先手动执行 pnpm exec meadmin sync '*' 同步表结构（默认读取 dist，alter:true）。
+-- 2. 缺表或字段时仍须先手动执行 pnpm exec meadmin sync '*' 同步表结构（默认读取 src/config/database.ts，未安装 tsx 时回退 dist，alter:true）。
 -- 3. 对照现有数据库谨慎比较 update.sql 和 manual 清单，确认后再手动执行 update.sql。
 -- INSERT 按模板已解析的可靠键逐行判重，实际库没有对应 PRIMARY KEY / UNIQUE 约束也可补齐数据，不输出 DDL。
 -- 独立 UPDATE 按源顺序原样保留，执行可能修改已有数据，不保证业务幂等；执行前务必先备份并逐条审阅。

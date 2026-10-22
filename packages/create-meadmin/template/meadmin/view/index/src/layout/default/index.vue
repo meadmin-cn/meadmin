@@ -43,7 +43,7 @@ const isFullWidth = computed(() => Boolean(route.meta?.fullWidth));
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #fff;
+  background-color: #f5f5f5;
   .layout-header {
     background-color: #fff;
     width: 100%;

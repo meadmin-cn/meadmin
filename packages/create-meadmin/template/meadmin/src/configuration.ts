@@ -8,6 +8,7 @@ import DefaultConfig from '@/config/config.default.js';
 import * as meadmin from '@meadmin/core';
 import * as viteView from '@meadmin/midway-vite-view'; //引入view组件
 import * as bullmq from '@midwayjs/bullmq';
+import { BullMQ } from '@midwayjs/bullmq';
 import * as busboy from '@midwayjs/busboy';
 import * as cacheManager from '@midwayjs/cache-manager';
 import * as captcha from '@midwayjs/captcha';
@@ -101,7 +102,7 @@ export class MainConfiguration {
     setTimeout(() => {
       //监听队列状态,放到下一个宏任务才能监听到，在生命周期内监听不到
       this.bullmqFramework.getQueueList()?.forEach((queue) => {
-        queue.on('waiting', (job) => {
+        (queue as BullMQ.Queue).on('waiting', (job: BullMQ.Job) => {
           //TODO::midway更新为可设置独立执行worker后待优化为仅在投递进程监听
           // Job is waiting to be processed.
           jobRepository
@@ -122,8 +123,8 @@ export class MainConfiguration {
             });
         });
         if (process.env.MODE !== 'ONLY_API') {
-          this.bullmqFramework.getWorkers(queue.name)?.forEach((worker) => {
-            worker.on('active', (job) => {
+          this.bullmqFramework.getWorkers((queue as BullMQ.Queue).name)?.forEach((worker) => {
+            worker.on('active', (job: BullMQ.Job) => {
               jobRepository
                 .update(
                   { status: 'active', jobId: job.id },
@@ -138,7 +139,7 @@ export class MainConfiguration {
                   this.appLogger.error('Error updating job status to active:', err.stack || '');
                 });
             });
-            worker.on('progress', (job, progress) => {
+            worker.on('progress', (job: BullMQ.Job, progress: any) => {
               jobRepository
                 .update(
                   { status: 'active', progress: Number(progress), jobId: job.id },
@@ -153,7 +154,7 @@ export class MainConfiguration {
                   this.appLogger.error('Error updating job progress:', err.stack || '');
                 });
             });
-            worker.on('completed', (job, result) => {
+            worker.on('completed', (job: BullMQ.Job, result: any) => {
               const successResult = JSON.stringify({
                 result: result,
                 jobId: job.id,
@@ -173,7 +174,7 @@ export class MainConfiguration {
                   this.appLogger.error('Error updating job status to completed:' + err.message, err.stack || '');
                 });
             });
-            worker.on('failed', (job, error) => {
+            worker.on('failed', (job: BullMQ.Job | undefined, error: Error) => {
               if (job) {
                 const jobRepository = dataSourceManager.getDataSource(dataSourceManager.getDataSourceNameByModel(Job) || dataSourceManager.getDefaultDataSourceName()).models.get<Job>(Job.name)!;
                 const failedResponse = JSON.stringify({

@@ -1,3 +1,4 @@
+import type { SiteConfig } from '@/router/site';
 import { ElTable } from 'element-plus';
 import { DefineComponent, Prop } from 'vue';
 declare global {
@@ -47,6 +48,11 @@ declare global {
 
   declare interface Window {
     __serverCache: Record<string, Array<any>>;
+    __siteConfig?: SiteConfig;
     customConfig?: Record<string, any>;
   }
+
+  // SSR 渲染期间按请求注入的站点配置（entry-server 写入，渲染结束后清理）。
+  // eslint-disable-next-line no-var
+  var __SITE_CONFIG__: SiteConfig | undefined;
 }

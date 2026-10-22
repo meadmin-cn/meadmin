@@ -1,5 +1,5 @@
 // organize-imports-ignore
-import type { App as AppType} from 'vue';
+import type { App as AppType } from 'vue';
 import { createApp as createClientApp, createSSRApp } from 'vue';
 import { ID_INJECTION_KEY, ZINDEX_INJECTION_KEY } from 'element-plus';
 import { bootscrapt } from './app';

@@ -244,6 +244,10 @@ export function formatterStr<T>({ cellValue }: { cellValue: T }) {
 export function formatterAt<T extends string | null | undefined | Date>({ cellValue }: { cellValue: T }, formatStr = 'YYYY-MM-DD HH:mm:ss') {
   return cellValue ? dayjs(cellValue).format(formatStr) : formatterStr({ cellValue });
 }
+//直接执行版：将时间格式化为本地时区，避免直接展示 ISO 的 T/UTC 国际时间
+export function formatterAtExec(str: string | null | undefined | Date, formatStr = 'YYYY-MM-DD HH:mm:ss') {
+  return str ? dayjs(str).format(formatStr) : '--';
+}
 
 //根据文件名判断是否是图片
 export function isImage(filename: string) {

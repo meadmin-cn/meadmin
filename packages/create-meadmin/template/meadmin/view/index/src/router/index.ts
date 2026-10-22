@@ -5,7 +5,9 @@ import type { Router, RouteRecordRaw } from 'vue-router';
 import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router';
 export const asyncRoutes = concatObjectValue<RouteRecordRaw>(import.meta.glob('./routes/*.ts', { eager: true, import: 'routes' }));
 
-// 业务路由基址与 Vite 静态资源 BASE_URL 分离；前台 CMS 规范地址从根路径开始。
+// Vite 的 BASE_URL 是静态资源前缀（开发环境由 midway-vite-view 自动推导为 /index/），
+// 不能拿它作为业务路由前缀。前台业务地址固定从根路径开始，CMS 才能使用 /aon/cms/...。
+// 当前前台部署在站点根路径；CMS 规范地址固定为 /aon/cms/...，不带 /index。
 export const routeBase = '/';
 export const normalizeRouteUrl = (url: string) => url || '/';
 

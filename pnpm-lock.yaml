@@ -174,9 +174,6 @@ importers:
       dompurify:
         specifier: 3.3.3
         version: 3.3.3
-      md-editor-v3:
-        specifier: 6.3.1
-        version: 6.3.1(vue@3.5.25(typescript@5.9.3))
 
   addons/doc:
     dependencies:

@@ -20,14 +20,21 @@ const copyFiles = {
   },
   '.vscode/': {},
   'src/': {
-    ignore: ['index/addons', 'admin/addons'],
+    //插件源码由 npx meadmin addon <name> 安装，不随模板发布；
+    //插件实体统一以 aon 开头（aon_cms_article → aonCmsArticle.entity.ts），一并排除
+    ignore: ['app/index/addons', 'app/admin/addons', /^entities\/aon[A-Za-z0-9]+\.entity\.ts$/],
   },
   'test/': {},
   'public/admin/': {},
-  'public/index/': {},
+  'public/index/': {
+    //插件演示图片与下载资源由插件安装脚本投放
+    ignore: ['images/cms'],
+  },
   'view/admin/': {
     ignore: ['node_modules', '.eslintcache', 'dist', 'src/addons'], //忽略的值
     fileSetFunction: {
+      //插件组件类型声明由 vite 插件扫描 src/addons 生成，模板里按「无插件」的空骨架重新生成
+      'types/addonsComponents.d.ts': () => readFileSync(resolve(fromPath, 'view/admin/template/components.d.ts')).toString(),
       'package.json': async (content: string) => {
         const jsonObj = JSON.parse(content);
         Object.keys(jsonObj.devDependencies).forEach((key) => {
@@ -158,32 +165,43 @@ const makeFiles = {
   'view/index/src/addons/.gitkeep': {},
 };
 
+/**
+ * 生成模板文件：把项目根目录下需要随包发布的文件拷贝到 cli 内置的 template 目录。
+ * @param file 模板目录名
+ * @param cwd 项目根目录，默认当前执行目录
+ */
+export const generateTemplate = async (file: string, cwd = process.cwd()) => {
+  const toPath = resolve(import.meta.dirname, '../template/', file + '/');
+  rmSync(toPath, { force: true, recursive: true });
+  fromPath = resolve(cwd);
+  //创建文件夹或文件
+  Object.keys(makeFiles).forEach((key) => {
+    const path = resolve(toPath, key);
+    if (key.endsWith('/')) {
+      mkdirSync(path, { recursive: true });
+    } else {
+      recursionWriteFileSync(path, '');
+    }
+  });
+  await Promise.all(
+    Object.keys(copyFiles).map(async (key) => {
+      if (key.endsWith('/')) {
+        await copyPath(resolve(fromPath, key), resolve(toPath, key), '', copyFiles[key].ignore || [], copyFiles[key].fileSetFunction, true);
+      } else {
+        await copyFile(resolve(fromPath, key), resolve(toPath, key), typeof copyFiles[key] === 'function' ? copyFiles[key] : undefined, true);
+      }
+    }),
+  );
+};
+
 export const setMeadminTemplate = (program: Command) => {
   program
     .command('setMeadminTemplate')
+    //命令名较长，兼容 setTemplate 简写
+    .alias('setTemplate')
     .description('生成meadmin模板, （输入模板目录名）')
     .argument('<file>', '文件夹名称')
     .action(async (file: string) => {
-      const toPath = resolve(import.meta.dirname, '../template/', file + '/');
-      rmSync(toPath, { force: true, recursive: true });
-      fromPath = resolve(process.cwd());
-      //创建文件夹或文件
-      Object.keys(makeFiles).forEach((key) => {
-        const path = resolve(toPath, key);
-        if (key.endsWith('/')) {
-          mkdirSync(path, { recursive: true });
-        } else {
-          recursionWriteFileSync(path, '');
-        }
-      });
-      await Promise.all(
-        Object.keys(copyFiles).map(async (key) => {
-          if (key.endsWith('/')) {
-            await copyPath(resolve(fromPath, key), resolve(toPath, key), '', copyFiles[key].ignore || [], copyFiles[key].fileSetFunction, true);
-          } else {
-            await copyFile(resolve(fromPath, key), resolve(toPath, key), typeof copyFiles[key] === 'function' ? copyFiles[key] : undefined, true);
-          }
-        }),
-      );
+      await generateTemplate(file);
     });
 };

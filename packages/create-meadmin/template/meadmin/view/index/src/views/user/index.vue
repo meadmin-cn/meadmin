@@ -22,8 +22,8 @@
 <script setup lang="ts" name="UserIndex">
 import { PageEnum } from '@/dict/pageEnum.js';
 import { useUserStore } from '@/store/index.js';
-import { computed } from 'vue';
 import { getUserCenterMenus, type UserCenterMenuItem } from '@/userCenter';
+import { computed } from 'vue';
 import editPass from './components/editPass.vue';
 import userInfo from './components/userInfo.vue';
 const userStore = useUserStore();

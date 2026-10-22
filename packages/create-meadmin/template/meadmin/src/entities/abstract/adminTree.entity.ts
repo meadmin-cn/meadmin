@@ -14,7 +14,7 @@ export class AdminTreeModel<M extends AdminTreeModel<any> = any> extends AdminBa
     type: DataTypes.STRING(100),
   })
   @ApiPropertyRule({ description: '父级id', rule: RuleType.string().max(100).allow(null) })
-  parentId: string;
+  parentId: string | null;
 
   @Attribute({
     comment: '左树边界',

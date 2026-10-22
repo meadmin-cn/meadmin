@@ -36,6 +36,9 @@ export default async (configEnv: ConfigEnv): Promise<UserConfigExport> => {
       __FEATURE_PROD_DEVTOOLS__: `false`,
     },
     server: {
+      // 站点域名绑定允许任意 Host 访问前台（开发环境由 Vite 中间件直接托管），
+      // Vite 默认只允许 localhost/IP，这里放开 Host 校验；仅影响开发服务器。
+      allowedHosts: true,
       warmup: {
         //提前转换和缓存文件以进行预热。可以在服务器启动时提高初始页面加载速度，并防止转换瀑布
         clientFiles: [

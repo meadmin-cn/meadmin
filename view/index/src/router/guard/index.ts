@@ -1,14 +1,30 @@
 import { PageEnum } from '@/dict/pageEnum';
 import { event, mitter } from '@/event';
+import { createSitePathMapper, readSiteConfig } from '@/router/site';
 import { useUserStore } from '@/store';
 import { done, remove, start } from '@/utils/nProgress';
 import type { Pinia } from 'pinia';
 import type { NavigationFailure, Router } from 'vue-router';
 // Don't change the order of creation
 export function setupRouterGuard(router: Router, store: Pinia) {
+  createSiteAliasGuard(router);
   createPermissionGuard(router, store);
   createProgressGuard(router);
   triggerRouteChange(router);
+}
+
+/**
+ * 站点伪静态：把站内跳转到真实路由的链接改写成伪静态地址，保持地址栏不变。
+ * 仅当当前域名命中站点配置时生效；未命中规则的路径原样放行。
+ */
+function createSiteAliasGuard(router: Router) {
+  const mapper = createSitePathMapper(readSiteConfig());
+  if (!mapper) return;
+  router.beforeEach((to) => {
+    const mapped = mapper(to.path);
+    if (!mapped) return true;
+    return { path: mapped, query: to.query, hash: to.hash };
+  });
 }
 
 /**

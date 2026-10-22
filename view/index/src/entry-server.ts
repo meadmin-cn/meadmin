@@ -3,11 +3,15 @@ import serialize from 'serialize-javascript';
 import { renderToString } from 'vue/server-renderer';
 import { createApp } from './main';
 import { normalizeRouteUrl } from './router/index.js';
+import { parseSiteConfig } from './router/site.js';
 import { useGlobalStore } from './store/index.js';
 import { setServerCookies } from './utils/cookies.js';
 import { cleanServerCache, getAllServerCache } from './utils/server.js';
 export async function render(url: string, manifest: Record<string, string[]>, context: Record<string, any>) {
   setServerCookies(context.ssrVersion, context.cookies);
+  // 站点伪静态配置必须在 createApp 之前写入，动态路由生成时会读取并挂载 alias。
+  const siteConfig = parseSiteConfig(context.assign?.siteConfig);
+  globalThis.__SITE_CONFIG__ = siteConfig ?? undefined;
   const { app, router, store } = await createApp(context.ssrVersion);
   const globalStore = useGlobalStore(store);
   globalStore.websiteName = context.assign.websiteName;
@@ -26,10 +30,14 @@ export async function render(url: string, manifest: Record<string, string[]>, co
   const __pinia = serialize(store.state.value, { ignoreFunction: true });
   const serverCache = getAllServerCache(context.ssrVersion);
   const __serverCache = serialize(serverCache, { ignoreFunction: true });
-  const preloadLinks = `<script>window.__pinia=${__pinia};</script>\n` + `<script>window.__serverCache=${__serverCache};</script>\n` + renderPreloadLinks(ctx.modules, manifest);
+  // 站点配置同步注入浏览器端：序列化时转义 `<`，避免闭合 script 造成 XSS。
+  const __siteConfig = siteConfig ? serialize(siteConfig, { ignoreFunction: true }).replace(/</g, '\\u003C') : '';
+  const preloadLinks = (siteConfig ? `<script>window.__siteConfig=${__siteConfig};</script>\n` : '') + `<script>window.__pinia=${__pinia};</script>\n` + `<script>window.__serverCache=${__serverCache};</script>\n` + renderPreloadLinks(ctx.modules, manifest);
   const teleports = renderTeleports(ctx.teleports);
   setServerCookies(context.ssrVersion, null);
   cleanServerCache(context.ssrVersion);
+  // 避免同一个 SSR 进程内的后续请求误用本次站点的配置。
+  globalThis.__SITE_CONFIG__ = undefined;
   return [html, preloadLinks, teleports];
 }
 

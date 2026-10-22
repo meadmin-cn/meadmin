@@ -369,7 +369,11 @@ const sortOptions: Array<{ label: string; value: NonNullable<CmsQuery['sortBy']>
   { label: '评论最多', value: 'comments' },
   { label: '浏览最多', value: 'views' },
 ];
-const kind = computed(() => route.params.kind as 'article' | 'page' | 'topic' | undefined);
+// article/page/topic 已拆成字面量路由，类型由 meta.cmsKind 提供；
+// :kind(...) 通配路由仍保留，用于兼容旧地址。
+const kind = computed(
+  () => (route.meta.cmsKind as 'article' | 'page' | 'topic' | undefined) ?? (route.params.kind as 'article' | 'page' | 'topic' | undefined),
+);
 const slug = computed(() => String(route.params.slug ?? ''));
 // 是否处于「详情」视图：由路由决定，而非由数据是否就绪决定，避免详情页跳转时短暂回落首页
 const showDetail = computed(() => Boolean(kind.value && slug.value));

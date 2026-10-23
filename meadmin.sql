@@ -1,5 +1,5 @@
 -- meadmin 数据库结构与初始数据
--- 生成时间: 2026-10-22 19:38:04
+-- 生成时间: 2026-10-23 09:13:41
 -- 来源: meadmin（schema: meadmin）
 -- 已排除插件表: aon_cms_article、aon_cms_block、aon_cms_category、aon_cms_comment、aon_cms_comment_report、aon_cms_diyform、aon_cms_diyform_data、aon_cms_order、aon_cms_order_log、aon_cms_page、aon_cms_review_log、aon_cms_tag、aon_cms_topic、aon_doc、aon_doc_config
 -- 已排除插件菜单: 82 条（addons_cms、addons_doc）
@@ -373,10 +373,14 @@ CREATE TABLE "system_rewrite" (
   "remark" character varying(500) NOT NULL DEFAULT ''::character varying,
   "created_admin_id" character varying(20),
   "updated_admin_id" character varying(20),
-  "created_at" timestamp with time zone NOT NULL,
-  "updated_at" timestamp with time zone NOT NULL,
+  "created_at" timestamp(6) with time zone NOT NULL,
+  "updated_at" timestamp(6) with time zone NOT NULL,
   CONSTRAINT "system_rewrite_pkey" PRIMARY KEY (id)
 );
+COMMENT ON COLUMN "system_rewrite"."created_admin_id" IS '创建者(管理员)Id';
+COMMENT ON COLUMN "system_rewrite"."updated_admin_id" IS '最后更新者(管理员)Id';
+COMMENT ON COLUMN "system_rewrite"."created_at" IS '创建时间';
+COMMENT ON COLUMN "system_rewrite"."updated_at" IS '最后更新时间';
 CREATE INDEX system_rewrite_site_idx ON system_rewrite USING btree (site_id, status, order_num);
 
 CREATE TABLE "system_role" (
@@ -427,10 +431,14 @@ CREATE TABLE "system_site" (
   "remark" character varying(500) NOT NULL DEFAULT ''::character varying,
   "created_admin_id" character varying(20),
   "updated_admin_id" character varying(20),
-  "created_at" timestamp with time zone NOT NULL,
-  "updated_at" timestamp with time zone NOT NULL,
+  "created_at" timestamp(6) with time zone NOT NULL,
+  "updated_at" timestamp(6) with time zone NOT NULL,
   CONSTRAINT "system_site_pkey" PRIMARY KEY (id)
 );
+COMMENT ON COLUMN "system_site"."created_admin_id" IS '创建者(管理员)Id';
+COMMENT ON COLUMN "system_site"."updated_admin_id" IS '最后更新者(管理员)Id';
+COMMENT ON COLUMN "system_site"."created_at" IS '创建时间';
+COMMENT ON COLUMN "system_site"."updated_at" IS '最后更新时间';
 CREATE INDEX system_site_status_idx ON system_site USING btree (status, order_num);
 
 CREATE TABLE "user" (

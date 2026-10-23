@@ -34,6 +34,16 @@ async function tryRegisterTsx(root: string) {
 const configRoot = (dbConfig: string) => resolve(dirname(dbConfig), '..');
 
 /**
+ * 直接导入项目内的模块；TS 源码会自动注册 tsx 加载器，等价 vite 直接读 vite.config.ts。
+ */
+export async function importModule(file: string, root = process.cwd()) {
+  if (/\.(ts|mts|cts)$/i.test(file) && !(await tryRegisterTsx(root))) {
+    throw new Error(`读取 ${file} 需要 tsx，但项目里没有安装。请执行 pnpm add -D tsx，或改用编译后的 dist 文件`);
+  }
+  return await import(pathToFileURL(file).href);
+}
+
+/**
  * 源码模式下配置里的实体 glob 通常按编译产物写成 *.entity.js（只有 dist 里才有 .js），
  * 直接用它匹配不到任何模型。这里按同一目录补一次 *.entity.ts。
  */
@@ -54,7 +64,7 @@ export async function getConfig(dbConfig: string, name: string, root = process.c
     Log.warn(`项目未安装 tsx，已改用 ${fallback}`);
     file = fallback;
   }
-  const infos = await import(pathToFileURL(file).href);
+  const infos = await importModule(file, root);
   const config = await (infos.__esModule ? infos.default : infos).default();
   const configName = name ?? config.defaultDataSourceName ?? 'default';
   const dataSource = config.dataSource[configName];

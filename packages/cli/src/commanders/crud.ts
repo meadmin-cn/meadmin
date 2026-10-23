@@ -11,7 +11,7 @@ import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import * as prettier from 'prettier';
-import { defaultDbConfig, getConfig } from '../utils/db.js';
+import { defaultDbConfig, getConfig, importModule } from '../utils/db.js';
 import { delFileSync, recursionWriteFileSync } from '../utils/file.js';
 import { getKeyInfo, lowerFirstCase, normalizeToKebabOrSnakeCase, relativePath, resovePath, toHump, upFirstCase } from '../utils/formatting.js';
 import { Log } from '../utils/log.js';
@@ -559,9 +559,10 @@ export const crudInit = (program: Command) => {
         replaceNames.addonsPath = options.addons;
       }
       //初始化需要创建的文件路径
-      writeServerFiles.entityPath = resovePath(noSuffixEntityPath + '.entity.js', [], process.cwd() + '/src/entities');
+      //实体直接读取 src 下的源码（tsx 解析），不再依赖 dist 编译产物，改完实体不用先 build
+      writeServerFiles.entityPath = resovePath(noSuffixEntityPath + '.entity.ts', [], process.cwd() + '/src/entities');
       writeServerFiles.baseControllerPath = resovePath(`src/app/${options.model}/controller/base`, ['.controller', '.js']);
-      const entity = await import(pathToFileURL(writeServerFiles.entityPath.replace('/src/', '/dist/')).href);
+      const entity = await importModule(writeServerFiles.entityPath);
       writeServerFiles.createDtoPath = resovePath(`src/app/${options.model}/${options.addons}dto/${replaceNames.namePath}Create`, ['.dto', '.js']);
       writeServerFiles.updateDtoPath = resovePath(`src/app/${options.model}/${options.addons}dto/${replaceNames.namePath}Update`, ['.dto', '.js']);
       writeServerFiles.queryDtoPath = resovePath(`src/app/${options.model}/${options.addons}dto/${replaceNames.namePath}Query`, ['.dto', '.js']);

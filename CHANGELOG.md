@@ -1,5 +1,35 @@
 
 
+## [1.3.16](https://github.com/meadmin-cn/meadmin/compare/main-1.3.14...main-1.3.16) (2026-10-23)
+
+
+### 新功能[feat]
+
+* **cli:** sync命令改为使用ts原始文件 ([91bc788](https://github.com/meadmin-cn/meadmin/commit/91bc7885544440244bf65c5abfe25005b02bfad5))
+* cms ([c2c9fa3](https://github.com/meadmin-cn/meadmin/commit/c2c9fa325f6a003f5bda54699fff0f7fa606da02))
+* cms插件初步完成 ([beb1bbd](https://github.com/meadmin-cn/meadmin/commit/beb1bbdf004ff3df3254b0c849b42a31419c666e))
+* cms插件更新 ([b3fc66e](https://github.com/meadmin-cn/meadmin/commit/b3fc66e189af6220d88ec8e5e4e7bbc33808cfdf))
+* cms优化 ([b0dccd1](https://github.com/meadmin-cn/meadmin/commit/b0dccd19c58358fe4491eb42d505a044adab0328))
+* **create-meadmin:** 更新创建sql ([2774584](https://github.com/meadmin-cn/meadmin/commit/2774584cba139300d9911af53ba015ba7c3b30e0))
+* **create-meadmin:** 加上自动创建meadmin发布文件命令 ([bc5a85d](https://github.com/meadmin-cn/meadmin/commit/bc5a85d0b086668a6f8b2f6abd8fe336377a8ac2))
+* **index:** 背景色改为灰色 ([6cc935a](https://github.com/meadmin-cn/meadmin/commit/6cc935a5748d2f36f9b6b7bfdd51f69aa8907e58))
+* **meadmin:** 加上站点与伪静态配置 ([80581ed](https://github.com/meadmin-cn/meadmin/commit/80581ed941b09278308e3bc163f0c6b6b5757ac5))
+* **meadmin:** cms升级优化 ([2a24e93](https://github.com/meadmin-cn/meadmin/commit/2a24e93704b9f6810740eb2b23f39c98458a90d6))
+* **meadmin:** cms完善完成 ([9c651ef](https://github.com/meadmin-cn/meadmin/commit/9c651ef32c4d9a057444f6e02af2c6c2dd424150))
+
+
+### Bug 修复[fix]
+
+* 删除多余的图片 ([73473cb](https://github.com/meadmin-cn/meadmin/commit/73473cb3a05247764aa6c900f9e5ce1d2f1b4bad))
+* cms插件路由首页展示错误 ([2c734b6](https://github.com/meadmin-cn/meadmin/commit/2c734b6d53c68b5cae3b9e0e2554e32bc861c5c9))
+* cms插件优化 ([1f1ff11](https://github.com/meadmin-cn/meadmin/commit/1f1ff11f2b6ca674cf3a9e1d0a445da04a75094c))
+* **meadmin-view-admin:** cms插件优化 ([b5e1873](https://github.com/meadmin-cn/meadmin/commit/b5e18737f9db6801fdfa868229ce7eaeb473208a))
+
+
+### 性能改进[perf]
+
+* **cli:** crud命令直接读取源码无需dev启动 ([97bfa18](https://github.com/meadmin-cn/meadmin/commit/97bfa18e8650e1fa4a2acac7a31ca186e7e106ee))
+
 ## [1.3.14](https://github.com/meadmin-cn/meadmin/compare/main-1.3.13...main-1.3.14) (2026-09-19)
 
 

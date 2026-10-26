@@ -21,6 +21,7 @@ const REWRITE_TABLE = 'system_rewrite';
 
 type ReleaseOptions = {
   env?: string;
+  mode?: string;
   releaseVersion?: string;
   schema?: string;
   out: string;
@@ -175,7 +176,8 @@ export const releaseMeadmin = (program: Command) => {
     .command('meadmin')
     .description('一键发布 meadmin：导出数据库（自动剔除插件表与插件菜单）→ 生成 meadmin.sql → 生成模板')
     .argument('[file]', '模板目录名', 'meadmin')
-    .option('--env <file>', '数据库配置文件，默认依次查找 .env.local、.env')
+    .option('-m, --mode <env>', '按环境加载 .env + .env.<env>，如 -m local')
+    .option('--env <file>', '数据库配置文件路径，优先于 -m；默认依次查找 .env.local、.env')
     .option('--release-version <x.y.z>', '发布版本号；不传则交互询问（回车保持当前版本）')
     .option('--schema <name>', '数据库模式名，默认取配置文件中的 DATABASE_SCHEMA')
     .option('--out <dir>', '备份与报告输出目录', '.workbuddy/release')
@@ -212,7 +214,7 @@ export const releaseMeadmin = (program: Command) => {
 
         if (!options.onlyTemplate) {
           step(++index, '读取数据库配置');
-          const config = loadDbConfig(cwd, options.env, options.schema);
+          const config = loadDbConfig(cwd, options.env, options.schema, options.mode);
           ok(`配置文件 ${basename(config.envFile)}`);
           ok(`连接 ${config.host}:${config.port}/${config.database}，模式 ${config.schema}`);
           const client = createSequelize(config, Boolean(options.debug));

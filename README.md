@@ -63,22 +63,22 @@ Me-Admin 是一个免费开源的nodejs + vue 全栈一站式中后台解决方�
 
 ### 发版前
 
-- 确认 `.env.local`（或 `.env`）指向**参考库**，其中 `DATABASE_SCHEMA` 即导出使用的模式
+- 准备好参考库对应的环境文件（如 `.env.local`），确认其中的 `DATABASE_SCHEMA` 就是导出使用的模式
 - 确认工作区干净；提交信息遵循 Conventional Commits（`feat:` / `fix:` / `chore:`），CHANGELOG 由 release-it 生成
 
 ### 一键生成 SQL 与模板
 
-在仓库根目录执行：
+在仓库根目录执行，用 `-m` 指定环境（`-m local` 会加载 `.env` + `.env.local`，后者覆盖前者）：
 
 ```bash
-node packages/create-meadmin/bin/cli.js meadmin
+node packages/create-meadmin/bin/cli.js meadmin -m local
 ```
 
 **第一步就会询问版本号**：直接回车保持当前版本，输入新版本则一次性写入 `packages/{core,midway-vite-view,cli,create-meadmin}` 与仓库根 `package.json`。只接受 `x.y.z` 稳定版本（这正是 `meadmin update` 的要求，提前卡住比发完才发现好）。非交互环境（CI、管道）不会阻塞，用 `--release-version 1.3.17` 指定。
 
 之后按顺序完成，任一步失败即中止、不写半成品：
 
-1. 读取数据库配置
+1. 读取数据库配置（`-m` 展开为 `.env` + `.env.<env>`，空值视为未配置）
 2. 只读分析插件资产：`aon_` 前缀的表、`addons_` 根菜单及其后代、指向 `/aon/<插件>` 的站点绑定与伪静态
 3. 生成干净的 `meadmin.sql`（剔除插件内容，并按 `parent_id` 重算菜单嵌套集）
 4. 校验菜单树：左右边界唯一、子级均落在父级区间内
@@ -99,8 +99,9 @@ node packages/create-meadmin/bin/cli.js meadmin
 
 | 参数 | 说明 |
 |---|---|
+| `-m, --mode <env>` | 按环境加载 `.env` + `.env.<env>`，如 `-m local` |
 | `--release-version <x.y.z>` | 直接指定版本号，跳过交互询问 |
-| `--env <file>` | 指定配置文件，默认依次查找 `.env.local`、`.env` |
+| `--env <file>` | 指定配置文件路径，优先于 `-m`；都不传时依次查找 `.env.local`、`.env` |
 | `--schema <name>` | 覆盖 `DATABASE_SCHEMA` |
 | `--only-template` | 跳过数据库导出，用现有 `meadmin.sql` 重新生成模板 |
 | `--skip-template` | 只导出 SQL，不生成模板 |

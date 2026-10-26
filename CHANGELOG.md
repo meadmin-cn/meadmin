@@ -1,5 +1,26 @@
 
 
+## [1.3.17](https://github.com/meadmin-cn/meadmin/compare/main-1.3.16...main-1.3.17) (2026-10-26)
+
+
+### 新功能[feat]
+
+* **cli:** 加上升级命令自动同步表结构，自动执行sql文件，自动修复树结构 ([31287ba](https://github.com/meadmin-cn/meadmin/commit/31287ba3a17f5bc475575c306588a4c5e79b0b79))
+* **create-meadmin:** 发布命令meadmin 简化 ([ffea983](https://github.com/meadmin-cn/meadmin/commit/ffea9832fc542f4983cbcc30c6b4309e3eec596e))
+* **create-meadmin:** 加上 env 环境变量识别 ([1c945e1](https://github.com/meadmin-cn/meadmin/commit/1c945e1f6f062e643c3fbc4bd5fee92de527fed8))
+
+
+### Bug 修复[fix]
+
+* 修复登录页样式错误，优化地址重定向配置设置页，修复cms首页菜单 ([b54762a](https://github.com/meadmin-cn/meadmin/commit/b54762affb949fd0d2e819a8a1191d155cd30e4b))
+* 修复前台ssr识别$异常 ([8d50c7d](https://github.com/meadmin-cn/meadmin/commit/8d50c7d54e5be05d3f77711639fed9d3c47aef32))
+* cms插件安装和同步错误优化 ([bc06944](https://github.com/meadmin-cn/meadmin/commit/bc069445a4f973de0ebc5cb5e7206047a881c075))
+
+
+### CI发版[ci]
+
+* **meadmin:** 构建1.3.17 ([b9c7a97](https://github.com/meadmin-cn/meadmin/commit/b9c7a97919d65be0b2c94a23ad284196e221b3c0))
+
 ## [1.3.16](https://github.com/meadmin-cn/meadmin/compare/main-1.3.14...main-1.3.16) (2026-10-23)
 
 

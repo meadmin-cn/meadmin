@@ -1,5 +1,5 @@
 -- meadmin 数据库结构与初始数据
--- 生成时间: 2026-10-23 09:13:41
+-- 生成时间: 2026-10-26 20:49:24
 -- 来源: meadmin（schema: meadmin）
 -- 已排除插件表: aon_cms_article、aon_cms_block、aon_cms_category、aon_cms_comment、aon_cms_comment_report、aon_cms_diyform、aon_cms_diyform_data、aon_cms_order、aon_cms_order_log、aon_cms_page、aon_cms_review_log、aon_cms_tag、aon_cms_topic、aon_doc、aon_doc_config
 -- 已排除插件菜单: 82 条（addons_cms、addons_doc）

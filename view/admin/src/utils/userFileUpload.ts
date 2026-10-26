@@ -1,9 +1,16 @@
-import type { UserFileInfo} from '@/api/userFile.js';
+import type { UserFileInfo } from '@/api/userFile.js';
 import { uploadFileApi } from '@/api/userFile.js';
 import type { UploadProgressEvent, UploadRawFile, UploadRequestOptions } from 'element-plus';
 import SparkMD5 from 'spark-md5';
-import md5WorkerURL from './fileMd5Work.js?url';
-const md5Worker = new Worker(md5WorkerURL, { type: 'module' });
+
+// 注意：这里必须用 new Worker(new URL(...))，不能用 `?url` 导入。
+// .ts 的 worker 只有 3KB 左右，会被 assetsInlineLimit 内联成 data:video/mp2t;base64 的原始 TS 源码
+// （.ts 被当成 MPEG-TS 类型），生产环境 worker 解析失败且不报错，表现为「选完文件不发上传请求」。
+let md5Worker: Worker | null = null;
+const getMd5Worker = () => {
+  if (!md5Worker) md5Worker = new Worker(new URL('./fileMd5Work.js', import.meta.url), { type: 'module' });
+  return md5Worker;
+};
 
 //上传前台文件
 export class UploadAjaxError extends Error {
@@ -29,27 +36,28 @@ export class UploadAjaxError extends Error {
  */
 const getMd5 = (file: UploadRawFile, chunkSize = 1024 * 1024, progress?: (progress: string) => void) =>
   new Promise<string>((resolve, reject) => {
+    const worker = getMd5Worker();
     const workHandler = (e: MessageEvent) => {
       const data = e.data;
       if (data.uid !== file.uid) {
         return;
       }
       if (data.status === 'success') {
-        md5Worker.removeEventListener('message', workHandler);
+        worker.removeEventListener('message', workHandler);
         resolve(data.md5);
       } else if (data.status === 'progress') {
         // 计算中，更新进度
         progress?.(data.percent);
       } else if (data.status === 'failed') {
-        md5Worker.removeEventListener('message', workHandler);
+        worker.removeEventListener('message', workHandler);
         // 计算中，更新进度
         reject(data.error);
       }
     };
     // worker 的监听
-    md5Worker.addEventListener('message', workHandler);
+    worker.addEventListener('message', workHandler);
     // 通知 worker 计算 MD5
-    md5Worker.postMessage({ file, chunkSize, uid: file.uid });
+    worker.postMessage({ file, chunkSize, uid: file.uid });
   });
 
 //执行分片上传

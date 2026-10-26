@@ -139,7 +139,7 @@ const deriveSitePaths = (fullPath: string, basePath: string): string[] | null =>
   if (current !== base && !current.startsWith(base + '/')) return null;
   const rest = current === base ? '/' : current.slice(base.length);
   if (!rest || rest === '/') return ['/'];
-  // index 段在对外地址里省略：/aon/cms/index → / ；/aon/cms/user/index → /user
+  // index 段在对外地址里省略：/aon/cms/user/index → /user（CMS 首页本身已是 /aon/cms，不再走这条）
   if (rest === '/index') return ['/', '/index'];
   if (rest.endsWith('/index')) return [rest.slice(0, -'/index'.length), rest];
   return [rest];
@@ -174,10 +174,15 @@ export function applySiteAliases(routes: RouteRecordRaw[], config: SiteConfig | 
         if (!mapping) continue;
         addAlias(record, renameAlias(ruleAlias(rule), mapping), fullPath);
       }
-      // 布局父路由（basePath 本身且有子路由）不挂别名，站点首页交给 index 子路由
+      // 布局父路由（basePath 本身且有子路由）不挂别名，站点首页交给 path 为空的那个子路由
       const isLayoutRoot = Boolean(basePath) && trimPath(fullPath) === trimPath(basePath) && Boolean(record.children?.length);
       if (basePath && !isLayoutRoot) {
-        for (const alias of deriveSitePaths(fullPath, basePath) ?? []) addAlias(record, alias, fullPath);
+        for (const alias of deriveSitePaths(fullPath, basePath) ?? []) {
+          // 重定向记录（如 /aon/cms/index → /aon/cms）不抢站点根路径，避免与首页别名冲突；
+          // 但 /index 这类次级别名保留，旧地址仍能落到重定向上
+          if (record.redirect && trimPath(alias) === '/') continue;
+          addAlias(record, alias, fullPath);
+        }
       }
       if (record.children?.length) visit(record.children, fullPath);
     }

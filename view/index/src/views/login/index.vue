@@ -18,7 +18,8 @@ watchEffect(() => {
 </script>
 <style lang="scss" scoped>
 .index {
-  padding-top: 15vh;
+  //顶部留白沿用 15vh，底部必须单独留出间距：卡片固定 550px 高，窗口偏矮时内容会顶到页脚
+  padding: 15vh 0 80px;
   .content {
     width: 800px;
     height: 550px;

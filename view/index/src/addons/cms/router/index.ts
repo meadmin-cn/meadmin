@@ -10,9 +10,18 @@ export const routes: RouteRecordRaw[] = [
     // 该父路由若不加 hideMenu，会因无 meta.title 在框架默认页（/index）菜单里渲染成空白项。
     meta: { title: 'CMS', hideMenu: true },
     children: [
+      // 首页直接挂在 /aon/cms（不再用 /aon/cms/index），这样头部「首页」菜单和站点根路径都指向同一个地址
+      {
+        path: '',
+        name: 'cms-index',
+        component: Cms,
+        meta: { title: 'CMS', hideMenu: true },
+      },
+      // 旧地址兼容：/aon/cms/index 跳回 /aon/cms
+      // 站点域名映射时这条重定向只保留 /index 这个次级别名，根路径 `/` 由上面的首页路由独占（见 router/site.ts）
       {
         path: 'index',
-        component: Cms,
+        redirect: '/aon/cms',
         meta: { title: 'CMS', hideMenu: true },
       },
       {

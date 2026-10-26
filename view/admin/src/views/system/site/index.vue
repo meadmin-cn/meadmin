@@ -133,7 +133,7 @@
         </el-form-item>
         <el-form-item label="根路径映射">
           <el-input v-model="siteForm.basePath" placeholder="如：/aon/cms" />
-          <div class="form-tip">填写该站点真实路由前缀（CMS 为 <code>/aon/cms</code>）。该前缀下的所有前端路由会自动对外去掉前缀，例如 <code>/aon/cms/category/:slug</code> → <code>/category/:slug</code>、<code>/aon/cms/index</code> → <code>/</code>，无需逐条配置规则。留空表示不映射。</div>
+          <div class="form-tip">填写该站点真实路由前缀（CMS 为 <code>/aon/cms</code>）。该前缀下的所有前端路由会自动对外去掉前缀，例如 <code>/aon/cms/category/:slug</code> → <code>/category/:slug</code>、<code>/aon/cms</code> → <code>/</code>，无需逐条配置规则。留空表示不映射。</div>
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="siteForm.status">

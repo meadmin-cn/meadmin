@@ -27,11 +27,13 @@ export async function render(url: string, manifest: Record<string, string[]>, co
   const html = await renderToString(app, ctx);
   // which we can then use to determine what files need to be preloaded for this
   // request.
-  const __pinia = serialize(store.state.value, { ignoreFunction: true });
+  // 内联脚本序列化：`<` 防止提前闭合 script；`$` 防止被模板字符串的 replace 当成 $&、$` 等替换模式。
+  const escapeInlineScript = (value: string) => value.replace(/</g, '\\u003C').replace(/\$/g, '\\u0024');
+  const __pinia = escapeInlineScript(serialize(store.state.value, { ignoreFunction: true }));
   const serverCache = getAllServerCache(context.ssrVersion);
-  const __serverCache = serialize(serverCache, { ignoreFunction: true });
+  const __serverCache = escapeInlineScript(serialize(serverCache, { ignoreFunction: true }));
   // 站点配置同步注入浏览器端：序列化时转义 `<`，避免闭合 script 造成 XSS。
-  const __siteConfig = siteConfig ? serialize(siteConfig, { ignoreFunction: true }).replace(/</g, '\\u003C') : '';
+  const __siteConfig = siteConfig ? escapeInlineScript(serialize(siteConfig, { ignoreFunction: true })) : '';
   const preloadLinks = (siteConfig ? `<script>window.__siteConfig=${__siteConfig};</script>\n` : '') + `<script>window.__pinia=${__pinia};</script>\n` + `<script>window.__serverCache=${__serverCache};</script>\n` + renderPreloadLinks(ctx.modules, manifest);
   const teleports = renderTeleports(ctx.teleports);
   setServerCookies(context.ssrVersion, null);

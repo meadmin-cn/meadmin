@@ -3,7 +3,7 @@
     <template v-for="item in visibleItems" :key="item.path">
       <!-- 有可见子菜单：递归渲染 -->
       <div v-if="kids(item).length" class="nv-item" :class="{ top: depth === 0 && mode === 'desktop', overflow: mode === 'desktop' && depth === 0 && item.meta?.overflowMenu }">
-        <div class="nv-group-control">
+        <div class="nv-group-control" :class="{ 'is-active': isActive(item) }">
           <a class="nv-link" :class="{ 'is-active': isActive(item), 'is-overflow': item.meta?.overflowMenu }" @click="onGroupClick(item)">
             <span class="nv-text">{{ item.meta?.title }}</span>
           </a>
@@ -140,6 +140,7 @@ const toggleGroup = (item: RouteRecordRaw) => {
   display: inline-flex;
   align-items: center;
   border-radius: 8px;
+  transition: background 0.2s;
 }
 .nv-group-control > .nv-link {
   padding-right: 3px;
@@ -203,7 +204,6 @@ const toggleGroup = (item: RouteRecordRaw) => {
 }
 
 /* ---- 顶部一级：胶囊样式 ---- */
-.nv-item.top > .nv-group-control > .nv-link:hover,
 .nv-link:hover {
   color: #181c28;
   background: #f6f8fc;
@@ -212,10 +212,23 @@ const toggleGroup = (item: RouteRecordRaw) => {
   color: #2b5cff;
   font-weight: 600;
 }
-/* 顶部一级菜单：当前页面位于其子树内时，显示明显选中态 */
-.nv-item.top > .nv-group-control > .nv-link.is-active {
-  color: #2b5cff;
+/* 带箭头的父项：箭头是 .nv-link 的兄弟节点，背景必须画在 .nv-group-control 上才能盖住箭头，
+   否则会出现「文字有底色、箭头裸在外面」的断层。此时 link 自身不再画背景。 */
+.nv-group-control > .nv-link:hover,
+.nv-group-control > .nv-link.is-active {
+  background: transparent;
+}
+.nv-list:not(.mobile) > .nv-item > .nv-group-control:not(.is-active):hover,
+.nv-drop .nv-item > .nv-group-control:not(.is-active):hover {
+  color: #181c28;
+  background: #f6f8fc;
+}
+/* 顶部一级菜单：当前页面位于其子树内时，显示明显选中态（整行含箭头） */
+.nv-item.top > .nv-group-control.is-active {
   background: #eef2ff;
+}
+.nv-item.top > .nv-group-control.is-active > .nv-caret {
+  color: #2b5cff;
 }
 
 /* ---- 桌面端下拉（支持任意层级） ---- */
@@ -277,6 +290,16 @@ const toggleGroup = (item: RouteRecordRaw) => {
 .nv-drop .nv-link.is-active {
   color: #2b5cff;
   background: #f0f4ff;
+}
+/* 下拉内的父项（带箭头）：底色同样画在整行上，link 自身不着色 */
+.nv-drop .nv-group-control > .nv-link.is-active {
+  background: transparent;
+}
+.nv-drop .nv-item > .nv-group-control.is-active {
+  background: #f0f4ff;
+}
+.nv-drop .nv-item > .nv-group-control.is-active > .nv-caret {
+  color: #2b5cff;
 }
 
 /* ---- 移动端手风琴 ---- */

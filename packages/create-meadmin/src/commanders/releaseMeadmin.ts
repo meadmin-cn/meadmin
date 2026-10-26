@@ -7,6 +7,7 @@ import { cleanAddonMenus, cleanAddonSites, collectAddonMenuIds, filterRowsByColu
 import { loadDbConfig, type DbConfig } from '../utils/dbConfig.js';
 import { recursionWriteFileSync } from '../utils/file.js';
 import { createSequelize, dumpSchema, execute, listTables, queryRows, quoteIdent, type DumpResult, type RowValues } from '../utils/pgDump.js';
+import { assertVersion, readVersion, setVersions } from '../utils/version.js';
 import { generateTemplate } from './setMeadminTemplate.js';
 
 /** 菜单表（树形结构，需要重算左右边界） */
@@ -20,6 +21,7 @@ const REWRITE_TABLE = 'system_rewrite';
 
 type ReleaseOptions = {
   env?: string;
+  releaseVersion?: string;
   schema?: string;
   out: string;
   tablePrefix: string;
@@ -37,6 +39,34 @@ const log = (message: string) => console.log(message);
 const step = (index: number, message: string) => console.log(`\n[${index}] ${message}`);
 const ok = (message: string) => console.log(`    √ ${message}`);
 const warn = (message: string) => console.log(`    ! ${message}`);
+
+/**
+ * 询问本次发布版本号：直接回车保持当前版本，输入则校验 x.y.z。
+ * 非交互环境（CI / 管道）不阻塞，保持当前版本并提示可用 --release-version 指定。
+ */
+async function askVersion(current: string, preset?: string): Promise<string> {
+  if (preset) return assertVersion(preset);
+  if (!process.stdin.isTTY) {
+    warn(`非交互环境，版本号保持 ${current}；需要修改请加 --release-version <x.y.z>`);
+    return current;
+  }
+  const { createInterface } = await import('node:readline/promises');
+  const rl = createInterface({ input: process.stdin, output: process.stdout });
+  try {
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      const answer = (await rl.question(`请输入本次发布版本号（当前 ${current}，直接回车保持不变）\n`)).trim();
+      if (!answer) return current;
+      try {
+        return assertVersion(answer);
+      } catch (error) {
+        warn((error as Error).message);
+      }
+    }
+    throw new Error('版本号输入多次无效，已中止');
+  } finally {
+    rl.close();
+  }
+}
 
 /** 校验当前目录是不是 meadmin 项目根目录 */
 const assertProjectRoot = (cwd: string) => {
@@ -146,6 +176,7 @@ export const releaseMeadmin = (program: Command) => {
     .description('一键发布 meadmin：导出数据库（自动剔除插件表与插件菜单）→ 生成 meadmin.sql → 生成模板')
     .argument('[file]', '模板目录名', 'meadmin')
     .option('--env <file>', '数据库配置文件，默认依次查找 .env.local、.env')
+    .option('--release-version <x.y.z>', '发布版本号；不传则交互询问（回车保持当前版本）')
     .option('--schema <name>', '数据库模式名，默认取配置文件中的 DATABASE_SCHEMA')
     .option('--out <dir>', '备份与报告输出目录', '.workbuddy/release')
     .option('--table-prefix <prefix>', '插件表前缀', 'aon_')
@@ -164,6 +195,20 @@ export const releaseMeadmin = (program: Command) => {
         assertProjectRoot(cwd);
         log(`项目目录: ${cwd}`);
         log(`模板名称: ${file}`);
+
+        // 第一步就定版本：四个包 + 仓库根一起改，避免发完才发现 update 只认 x.y.z
+        step(++index, '设置版本号');
+        const currentVersion = readVersion(cwd);
+        const releaseVersion = await askVersion(currentVersion, options.releaseVersion);
+        if (releaseVersion === currentVersion) {
+          ok(`保持 ${currentVersion}`);
+        } else if (options.dryRun) {
+          warn(`dry-run：将把 ${currentVersion} 改为 ${releaseVersion}，本次不写文件`);
+        } else {
+          const changes = setVersions(cwd, releaseVersion);
+          changes.forEach((change) => ok(`${change.name}: ${change.from} → ${releaseVersion}`));
+          if (!changes.length) ok(`全部包已是 ${releaseVersion}`);
+        }
 
         if (!options.onlyTemplate) {
           step(++index, '读取数据库配置');

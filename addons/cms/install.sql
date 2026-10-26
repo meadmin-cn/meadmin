@@ -1,8 +1,8 @@
 -- CMS 插件安装脚本（表结构 + 后台权限菜单 + 演示数据，一步到位）。
 -- 已合并全部历史迁移，全新项目执行一次即可得到当前演示效果。
--- 注意：默认 schema 为 meadmin，部署前请按实际 schema 调整下方 search_path。
+-- schema 由连接决定：`meadmin addon cms` 会按项目 DATABASE_SCHEMA 设置 search_path，这里不要再写死。
+-- 手动执行时请先 `SET search_path TO <你的 schema>;`，或用 PGOPTIONS='-c search_path=xxx' psql -f。
 BEGIN;
-SET LOCAL search_path TO meadmin;
 
 CREATE TABLE IF NOT EXISTS aon_cms_article (
   id varchar(20) NOT NULL,

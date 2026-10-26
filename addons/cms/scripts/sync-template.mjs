@@ -1,4 +1,8 @@
 // 仅同步 CMS 所属代码与资产，保护宿主项目的其他文件；不执行 SQL。
+// 原则：template/ 里只能有插件自有文件（src/app/*/addons/cms、src/entities/aonCms*.entity.ts、
+// view/*/src/addons/cms）。宿主框架文件（如 view/index/src/layout/**）一律不进模板——
+// CMS 用到的 Header menus/active、菜单溢出折叠、路由切换空白 fallback 都是框架能力，
+// 由 @meadmin/core（>= 1.3.16）提供，插件安装不得覆盖项目根文件。
 import fs from 'node:fs';
 import path from 'node:path';
 const root = path.resolve(import.meta.dirname, '../../..');
@@ -8,12 +12,6 @@ const targets = [
   'src/app/index/addons/cms',
   'view/admin/src/addons/cms',
   'view/index/src/addons/cms',
-  // CMS 前台依赖主 layout 的 menus/active 属性与头部菜单溢出折叠能力，
-  // 这两个文件属于插件随包交付的宿主文件（此前漏配，导致模板长期停留在旧版本）
-  'view/index/src/layout/default/components/header/index.vue',
-  'view/index/src/layout/default/components/header/components/navMenu.vue',
-  // CMS 异步表单页依赖宿主路由视图的即时空白 fallback，避免切换时保留并重绘首页。
-  'view/index/src/layout/default/page.vue',
   ...fs
     .readdirSync(path.join(root, 'src/entities'))
     .filter((name) => /^aonCms.*\.entity\.ts$/.test(name))

@@ -10,7 +10,10 @@
 npx meadmin addon cms
 ```
 
-执行后自动完成：复制插件代码（`template/`）→ 执行 `installShells`（安装封面与示例下载资源）→ 执行 `install.sql`（建表 + 权限菜单 + 携带演示数据）。装完即可访问前台查看演示效果。
+执行后自动完成：复制插件代码（`template/`）→ 执行 `installShells`（安装封面与示例下载资源、把 `meadmin-addons-cms` 加入后台/前台两个工作区的依赖、执行 `pnpm install` 安装插件自身依赖如 `dompurify`）→ 执行 `install.sql`（建表 + 权限菜单 + 携带演示数据）。装完即可访问前台查看演示效果。
+
+> **插件只写自己的目录**：`template/` 里只有 `src/app/*/addons/cms`、`src/entities/aonCms*.entity.ts`、`view/*/src/addons/cms` 这些插件自有文件，不会覆盖宿主项目的 `view/index/src/layout/**` 等框架文件。
+> 前台导航所需的 `Header` 的 `menus`/`active` 属性、菜单溢出折叠、以及路由切换时的空白 fallback（`layout/default/page.vue`）都属于框架能力，由 `@meadmin/core` 提供；请确保宿主框架 **>= 1.3.6**，老项目先执行 `npx meadmin update` 再装插件。
 
 > 已安装过请加 `-f` 强制重装：`npx meadmin addon cms -f`
 > 指定环境读取对应数据库配置：`npx meadmin -m local addon cms`
@@ -105,7 +108,7 @@ CMS 的默认地址是 `/aon/cms/...`。想让 `cms.example.com` 直接访问站
 
 | 真实路由 | 自动对外地址 |
 |----------|--------------|
-| `/aon/cms/index` | `/` 和 `/index` |
+| `/aon/cms` | `/` |
 | `/aon/cms/category/:slug` | `/category/:slug` |
 | `/aon/cms/tag/:slug` | `/tag/:slug` |
 | `/aon/cms/article/:slug` | `/article/:slug` |
@@ -160,7 +163,8 @@ URL 模式使用 nginx `location` 风格的模糊匹配写法：
 
 ## 依赖
 
-- `dompurify` - HTML 消毒（正文展示）
+- `meadmin` 核心框架 **>= 1.3.6**（`@meadmin/core` + `@meadmin/midway-vite-view`）
+- `dompurify` - HTML 消毒（正文展示），安装时由 `pnpm install` 自动装到插件目录
 
 富文本编辑器复用宿主项目的 wangEditor 组件（`@wangeditor/editor`），由 meadmin 宿主提供，CMS 插件无需自带。
 
@@ -168,7 +172,7 @@ URL 模式使用 nginx `location` 风格的模糊匹配写法：
 
 ## 配置
 
-数据库连接在 `src/config/database.ts` 中配置，注意 `install.sql` 默认 `search_path` 为 `meadmin`，需与数据库 schema 一致。
+数据库连接在 `src/config/database.ts` 中配置；`install.sql` 不写死 schema，建表跟随连接上的 `search_path`（来自项目的 `DATABASE_SCHEMA`）。
 
 ## 常见问题
 

@@ -132,7 +132,9 @@ test('事务内各表首次有效插入前仅加一次锁，拒绝语句不输�
     assert.ok(lock < result.content.indexOf(`INSERT INTO "${schema}"."t"`));
     assert.ok(lock < result.content.indexOf('\nCOMMIT;'));
   }
-  assert.doesNotMatch(result.content, /rejected|dangerous|SELECT (?:90|91|4)\b/);
+  // 头部会列出「只有结构没有数据」的表名（含 rejected），这里只校验事务体里没有泄漏被拒绝的语句
+  const body = result.content.slice(result.content.indexOf('\nBEGIN;'));
+  assert.doesNotMatch(body, /rejected|dangerous|SELECT (?:90|91|4)\b/);
 });
 
 test('词法扫描：单双引号转义、E 字符串、嵌套注释、dollar quoting 和分隔符', () => {
@@ -707,4 +709,24 @@ test('真实 meadmin.sql：id 和复合主键保留，普通/partial 唯一索�
     const name = /^INSERT INTO (?:"[^"]+"\.)?"([^"]+)"/.exec(line)[1];
     assert.ok(summaries.has(name) || result.manual.some(message => message.includes(`${name}：整条 INSERT 转人工`)), `${name} 不可静默漏掉`);
   }
+});
+
+test('头部列出「只有结构、没有初始数据」的表，提示需要 sync 建表', () => {
+  const result = generate(`CREATE TABLE system_menu (id int PRIMARY KEY);
+    CREATE TABLE system_site (id int PRIMARY KEY);
+    CREATE TABLE system_rewrite (id int PRIMARY KEY);
+    INSERT INTO system_menu (id) VALUES (1);`);
+  const head = result.content.slice(0, result.content.indexOf('BEGIN;'));
+  assert.match(head, /以下 2 张表在模板中只有结构、没有初始数据/);
+  assert.match(head, /system_site, system_rewrite/);
+  assert.doesNotMatch(head, /system_menu,/, '有数据的表不应进入清单');
+  // 有数据的表照常生成
+  assert.match(result.content, /INSERT INTO "system_menu"/);
+});
+
+test('所有表都有数据时不输出「只有结构」提示', () => {
+  const result = generate(`CREATE TABLE t (id int PRIMARY KEY);
+    INSERT INTO t (id) VALUES (1);`);
+  assert.doesNotMatch(result.content, /只有结构/);
+  assert.equal(result.content.slice(result.content.indexOf('BEGIN;')), 'BEGIN;\n\nLOCK TABLE "t" IN SHARE ROW EXCLUSIVE MODE;\n\nINSERT INTO "t" ("id") SELECT 1\nWHERE NOT EXISTS (SELECT 1 FROM "t" AS existing WHERE existing."id" IS NOT DISTINCT FROM 1);\n\nCOMMIT;\n');
 });

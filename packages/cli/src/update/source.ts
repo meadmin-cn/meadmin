@@ -99,6 +99,30 @@ function resolveArray(node: ts.Expression, declarations: Map<string, ts.Variable
   return declaration?.initializer && declaration.parent.flags & ts.NodeFlags.Const ? resolveArray(declaration.initializer, declarations, seen) : undefined;
 }
 
+/**
+ * 本地文件里是否存在「模板里没有」的内容。
+ *
+ * 用于判断用户到底有没有往框架文件里加过东西。判据取「本地是目标的子集」而不是「本地等于基线」：
+ * 后者只要有一次升级漏更新就永远不成立，前者即使本地停在很旧的版本也能成立 —— 旧版本的内容本来
+ * 就都在新模板里。判定成立时整体取模板字节是**无损**的，不需要再靠增量合并去拼。
+ *
+ * 保守起见：语法无法解析、导入绑定不一致（名字/来源/type-only）、任何一条非导入语句在模板里找不到
+ * 原文，都视为「有本地独有内容」。
+ */
+export function hasLocalOnlyCode(localText: string, targetText: string): boolean {
+  const local = parse(localText, 'local.ts');
+  const target = parse(targetText, 'target.ts');
+  if (!local || !target) return true;
+  const localImports = imports(local.file),
+    targetImports = imports(target.file);
+  for (const [name, binding] of localImports) {
+    const other = targetImports.get(name);
+    if (!other || other.module !== binding.module || other.imported !== binding.imported || other.typeOnly !== binding.typeOnly) return true;
+  }
+  const targetStatements = new Set(target.file.statements.map((statement) => statement.getText()));
+  return local.file.statements.some((statement) => !ts.isImportDeclaration(statement) && !targetStatements.has(statement.getText()));
+}
+
 /** 只识别静态集成入口；包含类、函数或执行语句的入口仍交由其他规则处理。 */
 export function isIntegrationSource(text: string): boolean {
   const parsed = parse(text, 'integration.ts');
@@ -237,8 +261,9 @@ function importLine(binding: ImportBinding): string {
 export function mergeSource(localText: string, targetText: string, baseText: string | undefined, mode: SourceMergeMode, path = 'source.ts'): SourceMergeResult {
   const local = parse(localText, 'local.ts');
   const target = parse(targetText, 'target.ts');
-  // 保留调用签名；旧模板内容及其语法不参与合并或人工提示判定。
-  void baseText;
+  // 基线（上一版模板）只用于一处判断：本地内容与基线一致 ⇒ 用户没改过，可以整体跟随模板。
+  // 其余场景仍只看本地与目标，避免旧模板的语法问题影响合并。
+  const base = baseText === undefined ? undefined : parse(baseText, 'base.ts');
   if (!local || !target) return { content: localText, manual: [`${path}: TypeScript 语法无效，保留本地文件`], changed: false };
   const edits: Edit[] = [];
   const manual: string[] = [];
@@ -254,7 +279,8 @@ export function mergeSource(localText: string, targetText: string, baseText: str
   const appended: string[] = [];
   const append = (text: string) => appended.push(text);
   const localVariables = variables(local.file),
-    targetVariables = variables(target.file);
+    targetVariables = variables(target.file),
+    baseVariables = base ? variables(base.file) : new Map<string, ts.VariableDeclaration>();
 
   function importProblem(binding: ImportBinding): string | undefined {
     const existing = localImports.get(binding.name) ?? pendingImports.get(binding.name);
@@ -541,6 +567,28 @@ export function mergeSource(localText: string, targetText: string, baseText: str
 
   const arrayAdditions = new Map<ts.ArrayLiteralExpression, string[]>();
   const arrayKeys = new Map<ts.ArrayLiteralExpression, Set<string>>();
+  /**
+   * 本地数组与上一版模板一致 ⇒ 用户没往这个注册表里加过东西，直接整段换成新模板的数组。
+   * 只靠 mergeArray 追加会有「模板改了某个已有项，本地还是旧值」的盲区：
+   * 追加逻辑只认 key 集合，key 没变就什么都不做，旧实现于是留在原地。
+   */
+  function replaceArray(left: ts.ArrayLiteralExpression, right: ts.ArrayLiteralExpression): void {
+    if (left.getText() === right.getText()) return;
+    edits.push({ start: left.getStart(), end: left.end, text: right.getText() });
+  }
+
+  function followBase(name: string, left: ts.ArrayLiteralExpression, right: ts.ArrayLiteralExpression, label: string): boolean {
+    const declaration = baseVariables.get(name);
+    const baseArray = declaration?.initializer ? resolveArray(declaration.initializer, baseVariables) : undefined;
+    // 本地与基线不一致＝用户改过，保持追加语义，不能整体覆盖。
+    // 动态数组（含 spread、调用表达式）说明注册表是运行时拼出来的，整体替换会改变语义，同样交回追加逻辑。
+    if (!baseArray || left.getText() !== baseArray.getText() || !staticValue(left) || !staticValue(right)) return false;
+    // 新数组里的元素可能引用模板新增的导入，先确认能补齐，补不齐就退回追加
+    if (!commitReferences([...right.elements], label)) return false;
+    replaceArray(left, right);
+    return true;
+  }
+
   function mergeArray(left: ts.ArrayLiteralExpression, right: ts.ArrayLiteralExpression, label: string): void {
     if (!staticValue(left) || !staticValue(right)) {
       report(`${label}: 动态数组注册需人工合并`);
@@ -601,8 +649,9 @@ export function mergeSource(localText: string, targetText: string, baseText: str
           report(`导出名 ${name} 冲突，保留本地`);
           continue;
         }
-        if (right && left) mergeArray(left, right, name);
-        else if (existing || !right || !ensureVariable(name)) {
+        if (right && left) {
+          if (!followBase(name, left, right, name)) mergeArray(left, right, name);
+        } else if (existing || !right || !ensureVariable(name)) {
           report(`注册 ${name} 结构或依赖不兼容，需人工合并`);
           continue;
         }
@@ -664,7 +713,7 @@ export function mergeSource(localText: string, targetText: string, baseText: str
           next = targetVariables.get(imported);
         const left = existing?.initializer && resolveArray(existing.initializer, localVariables),
           right = next?.initializer && resolveArray(next.initializer, targetVariables);
-        if (mode === 'exports' && left && right) mergeArray(left, right, name);
+        if (mode === 'exports' && left && right && !followBase(imported, left, right, name)) mergeArray(left, right, name);
       }
       exportNames.set(name, identity);
       additions.push(item.getText());

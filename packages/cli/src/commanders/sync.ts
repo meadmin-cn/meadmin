@@ -1,7 +1,7 @@
-import { Sequelize } from '@sequelize/core';
+import type { Sequelize as SequelizeInstance } from '@sequelize/core';
 import { Command } from 'commander';
 import { upperFirst } from 'lodash-es';
-import { defaultDbConfig, getConfig } from '../utils/db.js';
+import { defaultDbConfig, getConfig, projectCore } from '../utils/db.js';
 import { Log } from '../utils/log.js';
 
 export const syncInit = (program: Command) => {
@@ -15,7 +15,9 @@ export const syncInit = (program: Command) => {
       const config = Object.assign(await getConfig(options.dbConfig, options.name), {
         logging: (message: string) => Log.log(message),
       });
-      const sequelize = new Sequelize(config);
+      // 用项目自己的 Sequelize：实体里的 DataTypes 属于项目那份副本，混用会报 normalizing attribute
+      const { Sequelize } = await projectCore(process.cwd());
+      const sequelize: SequelizeInstance = new Sequelize(config);
       if (file === '*') {
         await sequelize.sync({ alter: true });
       } else {

@@ -327,7 +327,7 @@ test('planner 旧目标相同或缺失无效基线时，各专用策略和人工
   ['pnpm-workspace.yaml','packages: [local]\noverrides: { old: "10" }\n','packages: [target]\noverrides: { old: "1", added: "2" }\n','merge'],
   ['tsconfig.json','{"compilerOptions":{"strict":false}}','{"compilerOptions":{"strict":true,"skipLibCheck":true}}','merge'],
   ['.env','VALUE=local\n','VALUE=target\nADDED=yes\n','merge'],
-  ['view/index/src/router/routes.ts','export const routes = [{path: "/same", meta: {value: "local"}}]; function helper(){return 10;}','export const routes = [{path: "/same", meta: {value: "target"}}, {path: "/added"}]; function helper(){return 1;}','merge'],
+  ['view/index/src/router/routes.ts','export const routes = [{path: "/same", meta: {value: "local"}}]; function helper(){return 10;}','export const routes = [{path: "/same", meta: {value: "target"}}, {path: "/added"}]; function helper(){return 1;}','overwrite'],
   ['src/filter/index.ts',"export { local } from './local.js';", "export { target } from './target.js';",'merge'],
  ];
  for(const baseline of ['target','invalid','missing']) {
@@ -358,7 +358,7 @@ test('planner 旧目标相同或缺失无效基线时，各专用策略和人工
   assert.match(content('pnpm-workspace.yaml'),/packages: \[\s*local\s*\]/);assert.match(content('pnpm-workspace.yaml'),/old: "10"/);assert.match(content('pnpm-workspace.yaml'),/added/);
   assert.deepEqual(JSON.parse(content('tsconfig.json')).compilerOptions,{strict:false,skipLibCheck:true});
   assert.equal(content('.env'),'VALUE=local\nADDED=yes\n');
-  assert.match(content('view/index/src/router/routes.ts'),/value: "local"/);assert.match(content('view/index/src/router/routes.ts'),/path: "\/added"/);assert.match(content('view/index/src/router/routes.ts'),/return 10/);
+  assert.match(content('view/index/src/router/routes.ts'),/value: "target"/);assert.match(content('view/index/src/router/routes.ts'),/path: "\/added"/);assert.match(content('view/index/src/router/routes.ts'),/return 1/);
   assert.match(content('src/filter/index.ts'),/export \{ local \}/);assert.match(content('src/filter/index.ts'),/export \{ target \}/);
   assert.deepEqual(plan.skipped,['protected.txt: 存在时跳过']);
   const protectedPlan=makePlan(f.root,f.base,f.target,'1.3.11',{...rules,...Object.fromEntries(cases.map(([path])=>[path,true]))});

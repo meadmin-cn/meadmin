@@ -84,8 +84,10 @@ export async function copyPath(pathFile: string, toPath: string, relativePath = 
   const ancestors = new Set<string>();
   async function copyDirectory(source: string, target: string, prefix: string): Promise<Array<boolean | void>> {
     const sourceReal = await realpath(source);
-    if (isPathInside(sourceReal, targetRoot) || isPathInside(targetRoot, sourceReal) || ancestors.has(sourceReal)) {
-      throw new Error(`复制目录不能相互包含或形成循环: ${source} -> ${targetRoot}`);
+    //只拦「目标位于源内部」和重复遍历同一个源目录这两种真正的循环；
+    //「源位于目标内部」是插件安装的正常场景（addons/<name>/template -> 项目根目录），必须放行。
+    if (isPathInside(sourceReal, targetRoot) || ancestors.has(sourceReal)) {
+      throw new Error(`复制目录不能互相包含或形成循环: ${source} -> ${targetRoot}`);
     }
     ancestors.add(sourceReal);
     mkdirSync(target, { recursive: true });

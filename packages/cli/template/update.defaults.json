@@ -35,6 +35,7 @@
   },
   "mergeSource": {
     "**/package.json": "package",
+    "**/entities/abstract/**/*.ts": "overwrite",
     "**/entities/**/*.ts": "entity",
     "**/src/config/**/*.ts": "config",
     "**/.env*": "manual",
@@ -51,7 +52,6 @@
     "**/{.prettierrc,.eslintrc,.mocharc}.{js,ts,cjs,mjs,cts,mts}": "script",
     "**/{.editorconfig,.yarnrc,.yarnrc.*,.pnpmfile,.pnpmfile.*,.eslintrc,.mocharc}": "manual",
     "**/{.eslintrc,.mocharc}.!(json|js|ts|cjs|mjs|cts|mts)": "manual",
-    "view/index/src/router/**/*.ts": "routes",
     "src/ruleType/**/*.ts": "validation",
     "src/ruleType/index.ts": false,
     "src/api/**/*.ts": "functions",
@@ -67,6 +67,7 @@
     "view/index/src/api/**/*.ts": "functions",
     "view/index/src/utils/**/*.ts": "functions",
     "view/index/src/helper/**/*.ts": "functions",
+    "view/*/src/router/routes/**": "manual",
     "src/filter/index.ts": "exports"
   }
 }

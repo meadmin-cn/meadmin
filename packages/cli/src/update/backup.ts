@@ -4,6 +4,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { stdin, stdout } from 'node:process';
 import { assertTreePath, assertUpdatePath, pathsOverlap } from './paths.js';
 import { hash, readLocal, type Plan } from './planner.js';
+import { readTemplateState, saveTemplateState, statePath } from './state.js';
 import { versionParts } from './template.js';
 
 /** 新批次包含源/目标版本；兼容原有纯 UUID 目录。 */
@@ -162,6 +163,9 @@ export function applyPlan(root: string, plan: Plan, from: string, to: string): s
   const directory = join(root, 'node_modules/.meadmin/updates', `v${from}_to_v${to}_${randomUUID()}`);
   mkdirSync(directory, { recursive: true });
   const record: UpgradeRecord = { root: resolve(root), from, to, phase: 'prepared', files: [], manual: plan.manual, installation: 'not-run' };
+  // 清单先快照到备份目录，rollback 时按快照还原，避免「文件回滚了、清单还停在新版」导致下次误判
+  const previousState = readTemplateState(root);
+  atomic(join(directory, 'template-state.before.json'), JSON.stringify(previousState, null, 2));
   for (const change of plan.changes) {
     const before = readLocal(root, change.path);
     if ((before ? hash(before) : null) !== change.previous) throw new Error(`备份时文件发生变化：${change.path}`);
@@ -182,6 +186,16 @@ export function applyPlan(root: string, plan: Plan, from: string, to: string): s
     }
     record.phase = 'files-complete';
     saveRecord(directory, record);
+    // 写盘成功后再更新清单：只记「内容完全由模板决定」的文件。
+    // merge 的结果里含用户代码，来源不明，必须从清单里摘掉，否则下一轮会把它当成模板原样直接覆盖。
+    const next = readTemplateState(root);
+    next.version = to;
+    for (const change of plan.changes) {
+      if (change.action === 'merge') delete next.files[change.path];
+      else next.files[change.path] = hash(change.content);
+    }
+    for (const item of plan.pristine ?? []) next.files[item.path] = item.hash;
+    saveTemplateState(root, next);
   } catch (error) {
     record.phase = 'failed';
     try {
@@ -229,6 +243,17 @@ export function rollback(root: string, directory: string): void {
     if (file.before) atomic(destination, readFileSync(join(directory, 'original', file.path)));
     else if (existsSync(destination)) unlinkSync(destination);
   }
+  // 清单回到升级前的状态；没有快照（旧备份）就整体清掉，下次按「本地 == 上一版模板」保守判断
+  const snapshot = join(directory, 'template-state.before.json');
+  if (existsSync(snapshot)) {
+    try {
+      const previous = JSON.parse(readFileSync(snapshot, 'utf8')) as undefined | Record<string, unknown>;
+      if (previous && typeof previous === 'object') saveTemplateState(root, { version: typeof previous.version === 'string' ? previous.version : '', files: (previous.files ?? {}) as Record<string, string> });
+      else rmSync(join(root, statePath), { force: true });
+    } catch {
+      rmSync(join(root, statePath), { force: true });
+    }
+  } else rmSync(join(root, statePath), { force: true });
   record.phase = 'rolled-back';
   saveRecord(directory, record);
 }

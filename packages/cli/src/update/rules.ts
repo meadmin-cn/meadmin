@@ -28,7 +28,9 @@ function resolveRule<T>(path: string, rules: Record<string, T>, ignoreCase = fal
   const within = (specific: string, broad: string) => {
     if (broad === '**') return specific !== '**';
     if (!/[?*[{(]/.test(specific)) return matchesGlob(specific, broad);
-    if (broad.startsWith('**/') && specific.startsWith('**/') && !specific.slice(3).includes('/')) return within(specific.slice(3), broad.slice(3));
+    // 两边都带 **/ 前缀时先剥掉再比：否则下面 prefix() 把首字符当通配，双双算成空串，判不出谁更具体
+    // （典型：**/entities/abstract/**/*.ts 应该比 **/entities/**/*.ts 更具体）
+    if (broad.startsWith('**/') && specific.startsWith('**/')) return within(specific.slice(3), broad.slice(3));
     // 常见文件名通配子集，例如 .env.?* 优先于 .env*。
     if (broad.endsWith('*') && !broad.endsWith('**') && specific.startsWith(broad.slice(0, -1))) return specific.length > broad.length;
     if (!broad.endsWith('/**') && !broad.endsWith('/**/*.ts')) return false;

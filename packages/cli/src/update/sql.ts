@@ -405,9 +405,21 @@ export function generateUpdateSql(source: string, version: string): UpdateSql {
 -- 仅跳过所选判重键已存在的行；其他唯一冲突由数据库抛错，请人工核对处理。
 -- 每张插入表在首次插入前获取 SHARE ROW EXCLUSIVE 锁，持有至事务结束，会短暂阻塞写入，请谨慎比较执行。
 -- 4. 数据更新后，手动修复菜单、组织、角色及其关联与权限。
-BEGIN;
 `;
-  const result = (): UpdateSql => ({ content: `${header}${output.length ? '\n' + output.join('\n\n') + '\n' : ''}\nCOMMIT;\n`, manual, tables: [...summaries.values()] });
+  /**
+   * 模板里只有 CREATE TABLE、没有任何 INSERT 的表。
+   * 这类表不会出现在 update.sql 里（本文件只输出数据、不输出 DDL），容易被误判成「模板里没有这张表」，
+   * 所以显式列出来，指明要靠 meadmin sync 建表。
+   */
+  const schemaOnlyNotice = (): string => {
+    const only = [...tables.values()].filter((table) => !summaries.has(tableId(table.parts))).map((table) => label(table.parts));
+    if (!only.length) return '';
+    return `-- 以下 ${only.length} 张表在模板中只有结构、没有初始数据，因此本文件不含它们的数据。
+-- 升级后缺少这些表时，先执行 pnpm exec meadmin sync '*' 建表（update.sql 不输出 DDL），再按业务需要自行补数据：
+--   ${only.join(', ')}
+`;
+  };
+  const result = (): UpdateSql => ({ content: `${header}${schemaOnlyNotice()}BEGIN;\n${output.length ? '\n' + output.join('\n\n') + '\n' : ''}\nCOMMIT;\n`, manual, tables: [...summaries.values()] });
   let statements: Statement[];
   try {
     statements = scan(source);

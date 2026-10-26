@@ -292,10 +292,15 @@ test('routes 语法错误和缺少静态导出数组安全转人工', () => {
   }
 });
 
-test('routes 配置默认覆盖 router 全目录，支持自定义路径、覆盖和禁用', () => {
-  for (const path of ['index.ts', 'guard/index.ts', 'routes/demo/001-demo.ts']) assert.equal(sourceMode(`view/index/src/router/${path}`), 'routes');
-  assert.equal(sourceMode('view/admin/src/router/index.ts'), undefined);
+test('routes 策略默认不再接管 router 目录；routes/** 以本地为准，可按需显式配置', () => {
+  // router 目录其余文件以模板为准，避免本地停在旧版本导致新代码引用不到导出
+  for (const path of ['index.ts', 'guard/index.ts']) assert.equal(sourceMode(`view/index/src/router/${path}`), undefined);
+  // routes/** 是用户加路由的地方，很可能改过：默认保留本地，不覆盖不合并
+  for (const path of ['routes/a.ts', 'routes/demo/001-demo.ts']) assert.equal(sourceMode(`view/index/src/router/${path}`), 'manual');
+  assert.equal(sourceMode('view/index/src/router/index.ts', { 'view/index/src/router/**/*.ts': 'routes' }), 'routes');
   assert.equal(sourceMode('view/index/src/router/index.ts', { 'view/index/src/router/index.ts': false }), false);
+  // 精确路径优先于通配符：想让某个 routes 文件继续跟随模板，可以单点覆盖
+  assert.equal(sourceMode('view/index/src/router/routes/099-aon.ts', { 'view/index/src/router/routes/099-aon.ts': 'overwrite' }), 'overwrite');
   assert.equal(sourceMode('view/index/src/router/routes/a.ts', { 'view/index/src/router/routes/**/*.ts': 'overwrite' }), 'overwrite');
   assert.equal(validateConfig({ mergeSource: { 'custom/**/*.ts': 'routes' } }).mergeSource['custom/**/*.ts'], 'routes');
 });
@@ -314,7 +319,8 @@ test('routes planner 命中、同版本补齐、guard 不覆盖、新文件创�
   put('target', guard, 'export function guard() { return false; }');
   const created = 'view/index/src/router/routes/new.ts';
   put('target', created, source("{ path: '/new' }"));
-  const plan = () => makePlan(roots.local, roots.base, roots.target, '1.3.9', {});
+  const routesRules = { 'view/index/src/router/**/*.ts': 'routes' };
+  const plan = () => makePlan(roots.local, roots.base, roots.target, '1.3.9', {}, routesRules);
   const result = plan();
   assert.equal(result.changes.find(item => item.path === path).action, 'merge');
   assert.equal(result.changes.find(item => item.path === created).action, 'create');
@@ -323,10 +329,21 @@ test('routes planner 命中、同版本补齐、guard 不覆盖、新文件创�
   for (const item of result.changes) put('local', item.path, item.content);
   assert.equal(plan().changes.length, 0);
   for (const mode of [false, 'overwrite']) assert.equal(makePlan(roots.local, roots.base, roots.target, '1.3.9', {}, { [path]: mode }).changes.find(item => item.path === path).action, 'overwrite');
-  assert.equal(makePlan(roots.local, roots.base, roots.target, '1.3.9', { [path]: true }).changes.length, 0);
+  assert.equal(makePlan(roots.local, roots.base, roots.target, '1.3.9', { [path]: true }, routesRules).changes.length, 0);
   const custom = 'src/config/custom-routes.ts';
   put('local', custom, source("{ path: '/local' }"));
   put('target', custom, source("{ path: '/new' }"));
   const configured = makePlan(roots.local, roots.base, roots.target, '1.3.9', {}, { [custom]: 'routes' });
   assert.deepEqual(paths(array(configured.changes.find(item => item.path === custom).content.toString())), ['/local', '/new']);
+});
+
+test('实体基类走 overwrite，普通实体仍走 entity 合并', () => {
+  // 基类里是框架逻辑（如 perfectTree），合并模式只补字段、不合并方法体，会把逻辑永久冻在旧版本
+  assert.equal(sourceMode('src/entities/abstract/adminTree.entity.ts'), 'overwrite');
+  assert.equal(sourceMode('src/entities/abstract/adminBase.entity.ts'), 'overwrite');
+  // 具体模型仍按实体合并，保留用户加的字段
+  assert.equal(sourceMode('src/entities/systemMenu.entity.ts'), 'entity');
+  assert.equal(sourceMode('src/entities/aonCmsArticle.entity.ts'), 'entity');
+  // 用户仍可用精确路径覆盖
+  assert.equal(sourceMode('src/entities/abstract/adminTree.entity.ts', { 'src/entities/abstract/adminTree.entity.ts': 'entity' }), 'entity');
 });

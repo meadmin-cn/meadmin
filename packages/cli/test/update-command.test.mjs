@@ -117,7 +117,9 @@ test('同版本命令补齐真实bullmq与嵌套配置，创建缺失文件但�
     assert.deepEqual(readFileSync(join(root, 'uploadFile/images/existing.png')), localImage);
     assert.deepEqual(readFileSync(join(root, 'uploadFile/local-only.png')), localImage);
     assert.ok(changes.some(line => /^overwrite.*: ordinary\.txt$/.test(line)));
-    for (const path of ['src/ruleType/string.ts', 'view/index/src/router/routes.ts', 'src/filter/index.ts']) assert.ok(changes.some(line => /^merge/.test(line) && line.endsWith(': ' + path)), result.text);
+    for (const path of ['src/ruleType/string.ts', 'src/filter/index.ts']) assert.ok(changes.some(line => /^merge/.test(line) && line.endsWith(': ' + path)), result.text);
+    // 路由目录默认以模板为准（不再默认合并），避免 router 停在旧版本导致新 entry-server 引用不到导出
+    assert.ok(changes.some(line => /^overwrite/.test(line) && line.endsWith(': view/index/src/router/routes.ts')), result.text);
     for (const label of ['声明 limit', '类型 Shape', '类 Demo', 'instance:field:value', 'entity.User: 类装饰器']) assert.ok(result.text.includes(label), label + '\n' + result.text);
     assert.match(result.text, /跳过: view\/admin\/src\/views\/index\/index.vue: 存在时跳过/);
     for (const path of ['identical.txt', 'only-local.txt', 'src/utils/manual.ts']) assert.ok(!changes.some(line => line.endsWith(': ' + path)), result.text);
@@ -161,7 +163,7 @@ test('同版本命令补齐真实bullmq与嵌套配置，创建缺失文件但�
     assert.match(entity, /class User<T>/);assert.match(entity, /added = 1;/);assert.match(entity, /local = 1;/);
     assert.doesNotMatch(readFileSync(join(root, 'src/ruleType/string.ts'), 'utf8'), /legacy|local mobile/);
     const routes = readFileSync(join(root, 'view/index/src/router/routes.ts'), 'utf8');
-    assert.match(routes, /value: "local"/);assert.match(routes, /path: "\/added"/);assert.match(routes, /return 10/);
+    assert.match(routes, /value: "target"/);assert.match(routes, /path: "\/added"/);assert.match(routes, /return 1/);
     const exports = readFileSync(join(root, 'src/filter/index.ts'), 'utf8');
     assert.match(exports, /export \{ local \}/);assert.match(exports, /export \{ target \}/);
     const repeated = await execute(root, ['--dry-run', '--registry', origin]);

@@ -1,5 +1,18 @@
 
 
+## [1.3.18](https://github.com/meadmin-cn/meadmin/compare/main-1.3.17...main-1.3.18) (2026-10-26)
+
+
+### Bug 修复[fix]
+
+* 修复后台 userUpload组件，打包后上传失败问题 ([add2071](https://github.com/meadmin-cn/meadmin/commit/add2071a17409c92adade714651ec6521ed5e22f))
+* **meadmin:** 修复后台上传前台附件组件打包后不上传问题 ([738e909](https://github.com/meadmin-cn/meadmin/commit/738e909c7c8d13c6e4a3f44a5a5b3dba9feb0752))
+
+
+### CI发版[ci]
+
+* 1.3.18版本 ([fb75b66](https://github.com/meadmin-cn/meadmin/commit/fb75b66cd19d7c46f43332a15e2389ec16ee2bda))
+
 ## [1.3.17](https://github.com/meadmin-cn/meadmin/compare/main-1.3.16...main-1.3.17) (2026-10-26)
 
 

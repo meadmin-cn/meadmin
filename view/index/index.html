@@ -18,6 +18,8 @@
       window.customConfig = {
         websiteName: '{{websiteName}}',
       };
+      // 站点域名映射配置：由服务端按访问域名注入，SSR 与 CSR 兜底渲染都要能读到
+      window.__siteConfig = {{siteConfig}};
     </script>
     <!--preload-links-->
   </head>

@@ -34,6 +34,8 @@ export class HomeController {
       // 替换 html 元素，同时会传入服务端渲染上下文。
       websiteName: websiteName || process.env.WEBSITE_NAME,
       siteDescription: siteDescription || '',
+      // 未命中站点时也必须给出合法的 JSON 字面量，模板里的 window.__siteConfig 才能正常执行
+      siteConfig: 'null',
     };
     if (isUnder(adminPrefix)) {
       return await this.ctx.render('admin', { assign });
@@ -41,15 +43,22 @@ export class HomeController {
     if (!indexPrefix || isUnder(indexPrefix) || requestPath === '/' || requestPath === '/index' || requestPath.startsWith('/index/') || requestPath.startsWith('/aon/')) {
       // 按访问域名解析站点伪静态配置，注入 SSR 上下文与 HTML（供浏览器端路由复用）。
       // 查询失败不能影响页面渲染，缺失配置时保持框架默认行为。
-      let siteConfig: string | undefined;
       try {
         const resolved = await this.systemSiteService.resolveByHost(this.ctx.host);
-        if (resolved) siteConfig = JSON.stringify({ basePath: resolved.basePath, rules: resolved.rules });
+        if (resolved) assign.siteConfig = this.toInlineJson(JSON.stringify({ basePath: resolved.basePath, rules: resolved.rules }));
       } catch (error) {
         this.ctx.logger.error('解析站点伪静态配置失败', error);
       }
-      return await this.ctx.render('index', { assign: siteConfig ? { ...assign, siteConfig } : assign });
+      return await this.ctx.render('index', { assign });
     }
     return '404 not found';
+  }
+
+  /**
+   * 转义要内联到 HTML 脚本里的 JSON：
+   * `<` 防止提前闭合 script 标签；`$` 防止被模板的字符串替换当成 $&、$1 等替换模式。
+   */
+  private toInlineJson(json: string) {
+    return json.replace(/</g, '\\u003C').replace(/\$/g, '\\u0024');
   }
 }

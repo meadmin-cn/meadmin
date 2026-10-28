@@ -12,35 +12,38 @@ export async function render(url: string, manifest: Record<string, string[]>, co
   // 站点伪静态配置必须在 createApp 之前写入，动态路由生成时会读取并挂载 alias。
   const siteConfig = parseSiteConfig(context.assign?.siteConfig);
   globalThis.__SITE_CONFIG__ = siteConfig ?? undefined;
-  const { app, router, store } = await createApp(context.ssrVersion);
-  const globalStore = useGlobalStore(store);
-  globalStore.websiteName = context.assign.websiteName;
-  // set the router to the desired URL before rendering
-  // SSR 收到的是浏览器原始 URL；先去掉可配置的前台路由前缀，再交给 memory history。
-  await router.push(normalizeRouteUrl(url));
-  await router.isReady();
-  // passing SSR context object which will be available via useSSRContext()
-  // @vitejs/plugin-vue injects code into a component's setup() that registers
-  // itself on ctx.modules. After the render, ctx.modules would contain all the
-  // components that have been instantiated during this render call.
-  const ctx = {} as Record<string, any>;
-  const html = await renderToString(app, ctx);
-  // which we can then use to determine what files need to be preloaded for this
-  // request.
-  // 内联脚本序列化：`<` 防止提前闭合 script；`$` 防止被模板字符串的 replace 当成 $&、$` 等替换模式。
-  const escapeInlineScript = (value: string) => value.replace(/</g, '\\u003C').replace(/\$/g, '\\u0024');
-  const __pinia = escapeInlineScript(serialize(store.state.value, { ignoreFunction: true }));
-  const serverCache = getAllServerCache(context.ssrVersion);
-  const __serverCache = escapeInlineScript(serialize(serverCache, { ignoreFunction: true }));
-  // 站点配置同步注入浏览器端：序列化时转义 `<`，避免闭合 script 造成 XSS。
-  const __siteConfig = siteConfig ? escapeInlineScript(serialize(siteConfig, { ignoreFunction: true })) : '';
-  const preloadLinks = (siteConfig ? `<script>window.__siteConfig=${__siteConfig};</script>\n` : '') + `<script>window.__pinia=${__pinia};</script>\n` + `<script>window.__serverCache=${__serverCache};</script>\n` + renderPreloadLinks(ctx.modules, manifest);
-  const teleports = renderTeleports(ctx.teleports);
-  setServerCookies(context.ssrVersion, null);
-  cleanServerCache(context.ssrVersion);
-  // 避免同一个 SSR 进程内的后续请求误用本次站点的配置。
-  globalThis.__SITE_CONFIG__ = undefined;
-  return [html, preloadLinks, teleports];
+  try {
+    const { app, router, store } = await createApp(context.ssrVersion);
+    const globalStore = useGlobalStore(store);
+    globalStore.websiteName = context.assign.websiteName;
+    // set the router to the desired URL before rendering
+    // SSR 收到的是浏览器原始 URL；先去掉可配置的前台路由前缀，再交给 memory history。
+    await router.push(normalizeRouteUrl(url));
+    await router.isReady();
+    // passing SSR context object which will be available via useSSRContext()
+    // @vitejs/plugin-vue injects code into a component's setup() that registers
+    // itself on ctx.modules. After the render, ctx.modules would contain all the
+    // components that have been instantiated during this render call.
+    const ctx = {} as Record<string, any>;
+    const html = await renderToString(app, ctx);
+    // which we can then use to determine what files need to be preloaded for this
+    // request.
+    // 内联脚本序列化：`<` 防止提前闭合 script；`$` 防止被模板字符串的 replace 当成 $&、$` 等替换模式。
+    const escapeInlineScript = (value: string) => value.replace(/</g, '\\u003C').replace(/\$/g, '\\u0024');
+    const __pinia = escapeInlineScript(serialize(store.state.value, { ignoreFunction: true }));
+    const serverCache = getAllServerCache(context.ssrVersion);
+    const __serverCache = escapeInlineScript(serialize(serverCache, { ignoreFunction: true }));
+    // 站点配置由服务端写入 index.html 模板（window.__siteConfig），这里不再重复注入，
+    // 保证 SSR 与 CSR 兜底渲染都能拿到同一份站点配置。
+    const preloadLinks = `<script>window.__pinia=${__pinia};</script>\n` + `<script>window.__serverCache=${__serverCache};</script>\n` + renderPreloadLinks(ctx.modules, manifest);
+    const teleports = renderTeleports(ctx.teleports);
+    return [html, preloadLinks, teleports];
+  } finally {
+    setServerCookies(context.ssrVersion, null);
+    cleanServerCache(context.ssrVersion);
+    // 渲染失败也要清理，避免同一个 SSR 进程内的后续请求误用本次站点的配置。
+    globalThis.__SITE_CONFIG__ = undefined;
+  }
 }
 
 function renderPreloadLinks(modules: string[], manifest: Record<string, string[]>) {

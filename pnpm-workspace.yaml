@@ -1,5 +1,8 @@
 autoInstallPeers: false #当值为 fasle 时，不会自动安装任何缺少的非可选对等依赖(Peer Dependency )如果一个依赖项需要 react@^16.0.0，而另一个需要 react@^17.0.0，则会产生冲突，自动安装将不会进行。。
 dedupePeerDependents: true
+# pnpm 10+ 从本文件读取提升配置（.npmrc 中的 public-hoist-pattern 仅对 pnpm 9 生效） 因 unplugin-auto-import 路径识别问题，将 @vueuse 提升到最外层 node_modules
+publicHoistPattern:
+  - '@vueuse/core'
 packages:
   - packages/*
   - view/* #pnpm 安装包时管理view前端包

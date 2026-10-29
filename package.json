@@ -63,6 +63,11 @@
   "engines": {
     "node": ">=22.14.0"
   },
+  "pnpm": {
+    "overrides": {
+      "bullmq": "~5.81.3"
+    }
+  },
   "scripts": {
     "start": "cross-env NODE_ENV=prod MODE=ONLY_API node ./bootstrap.js",
     "worker_start": "cross-env NODE_ENV=prod MODE=ONLY_WORKER node ./bootstrap.js",

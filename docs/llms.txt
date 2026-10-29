@@ -1,0 +1,30 @@
+# Me-Admin
+
+> Me-Admin is a free, MIT-licensed full-stack admin framework based on Midway 3 (Node.js, native ESM) + Sequelize + PostgreSQL on the backend and Vue 3 + Vite + Element Plus + vxeTable on the frontend. Define a Sequelize entity, run `pnpm exec meadmin sync <entity>` and `pnpm exec meadmin crud <entity> --menu`, and a complete CRUD module (controller, service, API, frontend pages, menu permissions) is generated as plain readable source code. Built-in RBAC (menu/button/API), users, roles, dictionaries, file storage, and a plugin system. Suited for solo developers and small teams building admin systems, SaaS backends, and mini-program backends.
+
+This file helps AI coding assistants use Me-Admin correctly. The links below point to Markdown sources that are safe to fetch.
+
+## Key Facts
+
+- Install: `pnpm create meadminjs@latest` (requires Node.js >= 22.14, pnpm 9/10/11/12)
+- Start dev: `pnpm dev` → admin panel at http://127.0.0.1:7001/admin (admin / meAdmin#202507!P)
+- CLI is invoked via `pnpm exec meadmin <command>` — NOT `pnpm meadmin`
+- Main commands: `sync <entity>` (sync DB schema), `crud <entity> --menu` (generate full module), `addon <file>` (install plugin), `compress` (deploy archive), `update` (upgrade framework)
+- CLI does NOT auto-load `.env.local`; pass `-m local` when connecting to the local/dev database
+- The project is native ESM ("type": "module", tsconfig module: NodeNext)
+- Code generation is deterministic and idempotent; menu creation uses find-or-create, safe to re-run
+
+## Docs
+
+- [README (English)](https://github.com/meadmin-cn/meadmin/blob/master/README.md): Framework intro, quick start, features, CLI usage
+- [README (中文)](https://github.com/meadmin-cn/meadmin/blob/master/README_CN.md): 框架介绍、快速开始、功能特性、CLI 用法
+- [Official website](https://www.meadmin.cn): Product homepage, docs entry, plugin marketplace
+
+## Repository
+
+- [GitHub repository](https://github.com/meadmin-cn/meadmin): Source code, issues, releases
+- [npm CLI package](https://www.npmjs.com/package/@meadmin/cli): @meadmin/cli, provides the `meadmin` bin
+
+## Optional
+
+- [Demo assets](https://github.com/meadmin-cn/meadmin/tree/master/docs/assets): Screenshots and CRUD demo GIF

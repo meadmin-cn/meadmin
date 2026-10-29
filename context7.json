@@ -1,0 +1,15 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "Me-Admin",
+  "description": "Full-stack admin framework: Midway 3 + Sequelize + PostgreSQL backend (native ESM) with Vue 3 + Vite + Element Plus frontend. Define a Sequelize entity, run two CLI commands, and get a complete CRUD module with controllers, API, frontend pages, and menu permissions. Built-in RBAC, users, roles, dictionaries, file storage, and plugin system. MIT licensed.",
+  "excludeFolders": ["node_modules", "dist", ".workbuddy", "uploadFile", "**/dist"],
+  "excludeFiles": ["CHANGELOG.md", "README_CN.md", "AI-README.md"],
+  "rules": [
+    "Invoke the CLI via `pnpm exec meadmin <command>`; there is no root npm script named `meadmin`.",
+    "The project is native ESM (type: module, module: NodeNext); always use import/export, never require().",
+    "To add a business module: define a Sequelize entity in src/entities/, then run `pnpm exec meadmin sync <entity> -m local` and `pnpm exec meadmin crud <entity> --menu -m local`.",
+    "The CLI does not auto-load .env.local; pass `-m local` (or the appropriate -m <env>) for commands that touch the database.",
+    "Generated CRUD output is plain source code owned by the project; edit it directly to implement business logic.",
+    "Requires Node.js >= 22.14 and pnpm; pnpm 9/10/11/12 are all supported."
+  ]
+}

@@ -1,61 +1,108 @@
 # Me-Admin
+
+[![npm version](https://img.shields.io/npm/v/@meadmin/core)](https://www.npmjs.com/package/@meadmin/cli)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D22.14-blue)](https://nodejs.org/)
+[![GitHub stars](https://img.shields.io/github/stars/meadmin-cn/meadmin?style=social)](https://github.com/meadmin-cn/meadmin/stargazers)
+
 [English](README_EN.md) | [Simplified Chinese](README.md)
-## Introduction 
 
-Me-Admin is a free and open-source all-in-one solution for the front and back end of a web application, built with Node.js and Vue. The back end is based on Medwayjs, and the front end is constructed with Vue 3, ready to use out of the box. This project is licensed under the most permissive MIT license and uses the latest technology stack to help you quickly create enterprise-level web front and back end projects.
+<p align="center">
+  <img src="docs/assets/crud-demo.gif" alt="Me-Admin one-command CRUD demo" width="820" />
+</p>
 
-## Related Documentation [https://www.meadmin.cn/](https://www.meadmin.cn/)
+<p align="center">
+  <img src="docs/assets/admin-dashboard.png" alt="Me-Admin dashboard" width="820" />
+</p>
+<p align="center">
+  <img src="docs/assets/admin-list.png" alt="Me-Admin one-command CRUD list" width="49%" />
+  &nbsp;
+  <img src="docs/assets/rbac-config.png" alt="Me-Admin menu & role permissions (RBAC)" width="49%" />
+</p>
 
+**All-in-one full-stack admin solution** — Me-Admin is a free, open-source admin framework built on Node.js + Vue. The backend is based on Midway.js 3 and the frontend on Vue 3, with one-command CRUD, SSR and a full permission system out of the box. MIT licensed: no encryption, no license restrictions, free for commercial use.
+
+- 🌐 Website: https://www.meadmin.cn
+- 📖 Docs: https://www.meadmin.cn/aon/doc/
+- 🐛 Issues: https://github.com/meadmin-cn/meadmin/issues
+
+## Generate a business module in 30 seconds
+
+Once your Sequelize entity is defined, two commands are all it takes:
+
+```bash
+# Sync the database schema
+pnpm exec meadmin sync exampleDemo
+
+# Generate controllers, API endpoints, frontend pages and menu permissions
+pnpm exec meadmin crud exampleDemo --menu
+```
+
+> `meadmin` is the CLI entry provided by `@meadmin/cli`; always invoke it as `pnpm exec meadmin <command>`.
+
+Refresh the admin panel — the menu is already there. List page, search, pagination, full CRUD, endpoints and menu permissions, all wired up. Everything is generated as readable, editable source code: no black boxes, no dead ends.
 
 ## Key Features
-- Based on TypeScript, an application-level JavaScript language
-- Built on Sequelize 7, MidwayJS 3.x, Vue 3, Vite 8, Pinia, Element Plus, and Vue-Request@next
-- Offers one-click generation of CRUD and menus, significantly simplifying the development process and greatly enhancing project construction efficiency
-- Equipped with a comprehensive Auth permission control system, supporting unlimited parent-child groupings and free authorization. Administrators can cross groups, and the permission configuration is both flexible and strict.
-- Provides out-of-the-box server-side rendering capabilities for the front-end
-- Configurable themes, including theme colors and theme modes
-- User-friendly internationalization solution, with the front-end supporting asynchronous loading of language packs by component
-- Customizable keepAlive caching, allowing Vue keep-alive based on keys to solve the issue of unified components under different routes not being able to refresh their caches independently
-- Permissions: Built-in dynamic route permission generation solution, with button-level permissions. Supports two modes: dynamic menu and interface menu acquisition
-- Automatic component on-demand import: Automatically imports component definitions under the components directory, and supports custom import locations and modes, truly achieving on-demand imports
-- Convenient type generation: Automatically generates TypeScript types to minimize workload
-- Integrated with vxeTable: The most feature-rich open-source Vue table component by Chinese developers 
 
-## Technology Stack - typescript
-- Cache: Redis
-- Database: PostgreSQL
-- Backend: Node.js, Midway.js v3.x
-- Frontend: Vue 3, Vite, Element Plus 
+- **One-command CRUD**: generate controllers, models, views and menu permissions from the CLI — repetitive work goes to the framework
+- **SSR + CSR hybrid rendering**: server-side rendering for the public site (better SEO and first paint), client-side rendering for the admin panel
+- **Built-in RBAC**: menu / button / API three-level access control, unlimited nested groups, cross-group authorization; dynamic route permissions with button-level granularity; supports both frontend-driven and API-driven menu modes
+- **Plugin architecture**: features are installable/uninstallable plugins — the ecosystem keeps growing while the core stays lean
+- **Full TypeScript**: auto-generated TS types keep frontend-backend contracts in sync for free
+- **On-demand component imports**: components under the `components` directory are imported on demand automatically, with customizable import locations and modes
+- **Friendly i18n**: language packs are loaded asynchronously per component
+- **Custom keepAlive**: key-based Vue keep-alive that solves cache pollution when different routes share one component
+- **Configurable themes**: theme color and theme mode are both configurable
+- **vxeTable integration**: the most feature-rich open-source Vue table component
 
-## Quick Start 
+## Tech Stack
 
-### Environment Dependencies
-- PostgreSQL database
-- Redis cache database
-- Node.js >= 22.14.0 - pnpm
-### Initialize the Project 
+| Layer | Technologies |
+|---|---|
+| Frontend | Vue 3 · Vite · TypeScript · Pinia · Element Plus · vue-request@next |
+| Backend | Node.js · Midway.js 3.x · Sequelize 7 |
+| Storage | PostgreSQL · Redis |
 
-Run the command `pnpm create meadminjs@latest` and follow the prompts to configure the options! 
+## Quick Start
 
-Debugging Project 
+### Requirements
 
-- Run `pnpm dev` in the project root directory.
-- Access the backend at [http://127.0.0.1:7001/admin](http://127.0.0.1:7001/admin).
-- Access the frontend at [http://127.0.0.1:7001/](http://127.0.0.1:7001/). 
+- PostgreSQL
+- Redis
+- Node.js >= 22.14.0
+- pnpm
 
-### Packaging Project - pnpm build
+### Create a project
 
+```bash
+pnpm create meadminjs@latest
+```
 
-Default Account 
+Follow the prompts to configure your database and other options.
 
-## Back-end
-Default account: admin
-Default password: meAdmin#202507! P
+### Development
 
+```bash
+pnpm dev
+```
 
-## Front Desk
-Default account: test
-Default password: 123456789
+- Admin panel: http://127.0.0.1:7001/admin
+- Public site: http://127.0.0.1:7001/
+
+### Production build
+
+```bash
+pnpm build
+```
+
+### Default accounts
+
+**Admin panel**: `admin` / `meAdmin#202507!P`
+**Public site**: `test` / `123456789`
+
+## Support the project
+
+If Me-Admin saves you time, please consider leaving a ⭐ [Star](https://github.com/meadmin-cn/meadmin/stargazers). Found a problem? Open an [Issue](https://github.com/meadmin-cn/meadmin/issues) — I answer all of them.
 
 ## Release Process
 

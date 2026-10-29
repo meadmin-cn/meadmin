@@ -1,61 +1,108 @@
 # Me-Admin
-[English](README_EN.md) | [简体中文](README.md)
-## 简介
 
-Me-Admin 是一个免费开源的nodejs + vue 全栈一站式中后台解决方案,后端基于medwayjs ,前台基于vue3构建，开箱即用。本项目采用最宽松的MIT协议，最新技术栈，助力你快速创建企业级web中后台项目。
-## 相关文档
-[https://www.meadmin.cn/](https://www.meadmin.cn/)
+[![npm version](https://img.shields.io/npm/v/@meadmin/core)](https://www.npmjs.com/package/@meadmin/cli)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D22.14-blue)](https://nodejs.org/)
+[![GitHub stars](https://img.shields.io/github/stars/meadmin-cn/meadmin?style=social)](https://github.com/meadmin-cn/meadmin/stargazers)
+
+[English](README_EN.md) | [简体中文](README.md)
+
+<p align="center">
+  <img src="docs/assets/crud-demo.gif" alt="Me-Admin 一键 CRUD 演示" width="820" />
+</p>
+
+<p align="center">
+  <img src="docs/assets/admin-dashboard.png" alt="Me-Admin 仪表盘" width="820" />
+</p>
+<p align="center">
+  <img src="docs/assets/admin-list.png" alt="Me-Admin 一键 CRUD 列表" width="49%" />
+  &nbsp;
+  <img src="docs/assets/rbac-config.png" alt="Me-Admin 菜单权限（RBAC）" width="49%" />
+</p>
+
+**全栈一站式解决方案** —— Me-Admin 是一个免费开源的 Node.js + Vue 全栈中后台框架，后端基于 Midway.js 3，前端基于 Vue 3，一键 CRUD、SSR 渲染、权限体系开箱即用。MIT 协议，无加密、无授权限制，可商用。
+
+- 🌐 官网：https://www.meadmin.cn
+- 📖 文档：https://www.meadmin.cn/aon/doc/
+- 💬 问题反馈：https://github.com/meadmin-cn/meadmin/issues
+
+## 30 秒生成一个业务模块
+
+定义好 Sequelize 实体之后，只需两条命令：
+
+```bash
+# 同步数据库结构
+pnpm exec meadmin sync exampleDemo
+
+# 一键生成：控制器、接口、前端页面、菜单权限
+pnpm exec meadmin crud exampleDemo --menu
+```
+
+> meadmin 由 `@meadmin/cli` 提供命令行入口，统一通过 `pnpm exec meadmin <命令>` 调用。
+
+刷新后台，菜单已经出现——列表、搜索、分页、增删改查、接口与菜单权限全部就位。生成的都是可读可改的源码，后续业务直接在上面写，没有黑盒。
 
 ## 主要特性
-- 基于typescript 应用级JavaScript 的语言
-- 基于sequelize7 、midwayjs3.x、vue3、vite8、pinia、elment-plus、vue-request@next
-- 提供一键生成CRUD与菜单的自动化能力，大幅简化开发流程，显著提升项目构建效率
-- 搭载完善的Auth权限控制，支持无限父子级分组与自由授权，管理员可跨组别，权限配置既灵活又严密。
-- 提供开箱即用的前台服务端渲染能力
-- 可配置主题 可配置主题色及主题模式
-- 友好的国际化方案 前端支持按组件异步加载语言包。
-- 自定义keepAlive缓存 可根据key进行vue keep-alive,解决不同路由统一组件不能独立刷新缓存问题
-- 权限 内置完善的动态路由权限生成方案，按钮级权限。支持前端菜单和接口动态获取菜单两种模式
-- 组件自动按需引入 自动按需引入components下的组件定义,支持自定义引入位置和模式，真正的按需引入。
-- 便捷的类型自动生成 自动生成ts type 最大程度减少工作量
-- 集成vxeTable 功能最完善的国人开源vue table组件
+
+- **一键 CRUD**：命令行一键生成控制器、模型、视图与菜单权限，重复工作交给框架
+- **SSR · CSR 混合渲染**：前台 SSR 提升 SEO 与首屏速度，后台 CSR 保证交互体验
+- **内置权限系统**：RBAC 权限模型开箱即用，菜单、按钮、接口三级管控；支持无限父子级分组与自由授权，管理员可跨组别；动态路由权限方案，支持按钮级权限，前端菜单与接口动态获取两种模式
+- **插件化架构**：功能以插件形式自由安装卸载，生态持续扩展，系统保持精简
+- **全 TypeScript**：自动生成 TS 类型，前后端契约免维护
+- **组件自动按需引入**：自动按需引入 components 下的组件定义，支持自定义引入位置和模式，真正的按需引入
+- **友好的国际化**：前端支持按组件异步加载语言包
+- **自定义 keepAlive**：可按 key 进行 vue keep-alive，解决不同路由统一组件不能独立刷新缓存的问题
+- **可配置主题**：主题色与主题模式均可配置
+- **集成 vxeTable**：功能最完善的 Vue 表格组件
 
 ## 技术栈
-- typescript
-- 缓存 reids
-- 数据库 pgsql
-- 后端 nodejs、midwayjs v3.x
-- 前端 vue3、vite、element-plus
+
+| 层 | 技术 |
+|---|---|
+| 计算层 | Vue 3 · Vite · TypeScript · Pinia · Element Plus · vue-request@next |
+| 服务层 | Node.js · Midway.js 3.x · Sequelize 7 |
+| 存储层 | PostgreSQL · Redis |
 
 ## 快速启动
 
 ### 依赖环境
-- pgsql数据库
-- redis缓存数据库
-- nodejs >= 22.14.0
+
+- PostgreSQL 数据库
+- Redis 缓存数据库
+- Node.js >= 22.14.0
 - pnpm
+
 ### 初始化项目
 
-执行命令 `pnpm create meadminjs@latest` 根据提示，配置选项即可！
+```bash
+pnpm create meadminjs@latest
+```
+
+根据提示配置数据库等选项即可。
 
 ### 调试项目
 
-- 在项目根目录执行 `pnpm dev`
-- 后台访问 [http://127.0.0.1:7001/admin](http://127.0.0.1:7001/admin)
-- 前台访问 [http://127.0.0.1:7001/](http://127.0.0.1:7001/)
+```bash
+pnpm dev
+```
+
+- 后台访问：http://127.0.0.1:7001/admin
+- 前台访问：http://127.0.0.1:7001/
 
 ### 打包项目
-- pnpm build
+
+```bash
+pnpm build
+```
 
 ### 默认账户
 
-## 后台
-默认账户 admin
-默认密码 meAdmin#202507!P
+**后台**：账户 `admin` / 密码 `meAdmin#202507!P`
+**前台**：账户 `test` / 密码 `123456789`
 
-## 前台
-默认账户 test
-默认密码 123456789
+## 支持一下
+
+如果 Me-Admin 帮你省了时间，欢迎点一个 ⭐ [Star](https://github.com/meadmin-cn/meadmin/stargazers)，遇到问题直接提 [Issue](https://github.com/meadmin-cn/meadmin/issues)，我都会回。
 
 ## 发布流程
 
@@ -145,6 +192,3 @@ pnpm release
 - `meadmin.sql` 必须是干净的核心数据，插件表 / 插件菜单 / 指向插件的站点绑定由脚本自动剔除，不要手工绕开这段逻辑
 - 导出结果里**不能出现 `SET` 语句**，含反斜杠的字面量必须写成 `E'...'`，否则 `update` 的 SQL 解析会判定为不安全而退化
 - 即使本次没有数据库结构变更，也要重新导一次 `meadmin.sql`：`update` 的数据升级完全依赖它
-
-
-
